@@ -1,0 +1,17 @@
+.box {
+  margin: auto;
+  max-width: 800px;
+  width: 100%;
+}
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.publishContainer {
+  gap: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}

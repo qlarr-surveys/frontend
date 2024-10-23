@@ -1,0 +1,97 @@
+import React from "react";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import styles from "./IconScq.module.css";
+import { valueChange } from "~/state/runState";
+import { useTheme } from "@emotion/react";
+import { Box, Grid } from "@mui/material";
+
+function IconScq(props) {
+  const theme = useTheme();
+  const state = useSelector((state) => {
+    let questionState = state.runState.values[props.component.qualifiedCode];
+    let show_errors = state.runState.values.Survey.show_errors;
+    let isDirty = state.templateState[props.component.qualifiedCode];
+    return {
+      value: questionState?.value || "",
+      showValidation:
+        (show_errors || isDirty) && questionState?.validity === false,
+    };
+  }, shallowEqual);
+  const dispatch = useDispatch();
+
+  const handleChange = (componentCode, value) => {
+    dispatch(valueChange({ componentCode, value }));
+  };
+
+  const hideText = props.component?.hideText || false;
+
+  const lang = useSelector((state) => {
+    return state.runState.values["Survey"].lang;
+  });
+
+  return (
+    <Box
+      sx={{
+        gap: `${props.component.spacing || 8}px`,
+      }}
+      className={styles.iconFlexContainer}
+    >
+      {props.component.answers.map((option) => {
+        const isSelected = state.value == option.code;
+        return (
+          <Box
+            key={option.code}
+            sx={{
+              flex: `0 1 calc(${100 / props.component.columns}% - ${props.component.spacing || 8}px)`,
+              textAlign: "center",
+              cursor: "pointer",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                width: "100%",
+              }}
+            >
+              <Box
+                onClick={() =>
+                  handleChange(props.component.qualifiedCode, option.code)
+                }
+                style={{
+                  height: (props.component.iconSize || 64) + "px",
+                  width: (props.component.iconSize || 64) + "px",
+                  borderRadius: "8px",
+                  color: isSelected
+                    ? theme.palette.primary.main
+                    : theme.textStyles.text.color,
+                }}
+                className={styles.svgContainer}
+                dangerouslySetInnerHTML={{
+                  __html: option.icon ? option.icon : "",
+                }}
+              />
+            </div>
+
+            {!hideText && (
+              <Box
+                sx={{
+                  textAlign: "center",
+                  fontFamily: theme.textStyles.text.font,
+                  color: isSelected
+                    ? theme.palette.primary.main
+                    : theme.textStyles.text.color,
+                  fontSize: theme.textStyles.text.size,
+                }}
+              >
+                {option.content?.label}
+              </Box>
+            )}
+          </Box>
+        );
+      })}
+    </Box>
+  );
+}
+
+export default IconScq;

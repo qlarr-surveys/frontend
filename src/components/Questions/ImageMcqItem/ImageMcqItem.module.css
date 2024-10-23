@@ -1,0 +1,10 @@
+.imageContainer {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.selection {
+  border-radius: 0 !important;
+  background-color: #ffffffcc !important;
+}

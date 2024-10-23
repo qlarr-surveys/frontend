@@ -1,0 +1,19 @@
+.mainContainer {
+  margin: auto;
+  max-width: 800px;
+  min-width: 300px;
+  height: calc(100vh - 64px);
+  overflow: auto;
+}
+
+.createUserCard {
+  padding: 25px;
+}
+
+.formGroup {
+  max-width: 400px;
+}
+
+.errorText {
+  color: #eb5757 !important;
+}

@@ -1,0 +1,24 @@
+.loadingWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+  z-index: 99999;
+  /* background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(.5px); */
+}
+
+.loadingDots {
+  width: 60px;
+  aspect-ratio: 4;
+  clip-path: inset(0 100% 0 0);
+  animation: l1 1s steps(4) infinite;
+}
+
+@keyframes l1 {
+  to {
+    clip-path: inset(0 -34% 0 0);
+  }
+}

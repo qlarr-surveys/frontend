@@ -1,0 +1,40 @@
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0rem 3.5rem;
+  height: 4rem;
+}
+@media (max-width: 768px) {
+  .header {
+    justify-content: space-between;
+    padding: 0rem 0.5rem;
+  }
+  .imageContainer.imageContainer {
+    position: relative;
+  }
+  .userInfo.userInfo {
+    right: auto;
+    position: relative;
+  }
+  .textCenter.textCenter {
+    display: none;
+  }
+}
+
+.textCenter {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.userInfo {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.imageContainer {
+  position: absolute;
+}

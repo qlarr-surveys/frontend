@@ -1,0 +1,38 @@
+.imageIconButton {
+  float: right;
+  border-radius: 0 !important;
+  padding: 4px !important;
+  margin: 4px !important;
+}
+
+.imageContainer {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  width: 100%;
+}
+
+.addAnswerIcon {
+  scale: 2;
+}
+
+.loadingContainer {
+  top: 50%;
+  left: 50%;
+  position: absolute;
+}
+
+.addAnswerButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.buttonContainers {
+  width: 100%;
+  top: 0;
+  position: absolute;
+}

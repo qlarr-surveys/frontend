@@ -1,0 +1,66 @@
+.createUserCard.createUserCard {
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+    rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  margin-bottom: 50px;
+}
+
+.formGroup.formGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.rightContainer.rightContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 2.5rem;
+  flex: auto;
+  justify-content: flex-end;
+}
+
+.createButton.createButton {
+  text-transform: none;
+  color: white;
+  padding: 0.75rem 7rem;
+  background-color: #04bdf3;
+  border-radius: 20px;
+  height: fit-content;
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+.createButton.createButton:hover {
+  border: 1px solid #04bdf3;
+  color: #04bdf3;
+  background-color: #fff;
+}
+
+.surveyNameInput {
+  padding-left: 14px;
+}
+
+@media only screen and (max-width: 768px) {
+  .createUserCard.createUserCard {
+    padding: 1rem;
+  }
+  .formGroup.formGroup {
+    flex-direction: column;
+  }
+  .rightContainer.rightContainer {
+    width: 100%;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .selectInput {
+    width: 100% !important;
+  }
+  .surveyNameInput.surveyNameInput {
+    width: 100%;
+  }
+}
+
+.errorText {
+  color: #eb5757 !important;
+  padding-left: 14px;
+}

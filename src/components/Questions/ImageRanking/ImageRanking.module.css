@@ -1,0 +1,30 @@
+.imageGrid {
+  margin-top: 16px;
+}
+
+.imageContainer {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.rankContainer {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  cursor: pointer;
+  padding: .25rem .5rem;
+  border-radius: 50%;
+}
+
+.rankValue {
+  color: white;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.imageFlexContainer {
+  display: flex;
+  flex-wrap: wrap;
+}

@@ -1,0 +1,30 @@
+.content {
+  width: 100%;
+  margin: 0;
+  letter-spacing: 0.1px;
+  word-break: break-word;
+}
+
+.content.question {
+  margin-bottom: 4px;
+}
+
+.content .required {
+  margin-left: 5px;
+}
+
+.header {
+  margin-bottom: 12px;
+}
+
+.textDescription {
+  max-width: 100%;
+  margin-bottom: 4px;
+}
+
+.groupQuestion {
+  padding: 1rem;
+  word-wrap: break-word;
+  page-break-inside: avoid;
+  transition: all 200ms cubic-bezier(0, 0, 0.2, 1);
+}

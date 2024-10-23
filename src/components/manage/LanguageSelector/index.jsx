@@ -1,0 +1,56 @@
+import { useTranslation } from "react-i18next";
+import { Select, MenuItem } from "@mui/material";
+import CookiesService from "~/services/CookiesService";
+import { setDocumentLang } from "~/utils/common";
+import { KeyboardArrowDown } from "@mui/icons-material";
+
+export const LanguageSelector = () => {
+  const { i18n } = useTranslation();
+
+  const handleChange = (event) => {
+    CookiesService.setValue(event.target.value, "lang");
+    i18n.changeLanguage(event.target.value);
+    setDocumentLang(event.target.value);
+  };
+
+  return (
+    <Select
+      onChange={handleChange}
+      value={i18n.language}
+      IconComponent={KeyboardArrowDown}
+      sx={{
+        ".MuiOutlinedInput-input": {
+          padding: "5.5px 15px",
+          position: "relative",
+          color: "#181735",
+          fontSize: ".875rem",
+          fontWeight: "600",
+          "&::after": {
+            content: '""',
+            height: "30px",
+            borderRight: "2px solid #ececfd",
+            margin: "0px 15px",
+          },
+        },
+        "& .MuiOutlinedInput-notchedOutline": {
+          borderRadius: "10px",
+          border: "1px solid #ececfd",
+        },
+        "& .MuiSvgIcon-root": {
+          color: "#181735",
+          right: "15px",
+        },
+      }}
+    >
+      <MenuItem value="en" title="English">
+        EN
+      </MenuItem>
+      <MenuItem value="de" title="Deutsch">
+        DE
+      </MenuItem>
+      <MenuItem value="ar" title="العربية">
+        AR
+      </MenuItem>
+    </Select>
+  );
+};

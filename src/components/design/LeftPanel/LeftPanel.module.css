@@ -1,0 +1,9 @@
+.box {
+  width: 0px;
+  position: absolute;
+  z-index: 99;
+}
+
+.boxHasSetup {
+  width: 15rem;
+}

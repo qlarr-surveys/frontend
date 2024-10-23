@@ -1,0 +1,20 @@
+.sectionTitle {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.rightContent {
+  width: 18rem;
+  overflow-y: auto;
+  background-color: white;
+  height: calc(100vh - 64px);
+}
+
+.close {
+  text-align: right;
+}
+
+.accordionStyle.accordionStyle {
+  box-shadow: none;
+  border-bottom: 1px solid #d7d7d7;
+}

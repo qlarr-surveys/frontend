@@ -1,0 +1,292 @@
+.surveyHeader {
+  padding: 5px;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+.contentCard {
+  padding: 5px;
+}
+
+.actionBtn {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.card {
+  border-radius: 5px !important;
+  box-shadow: none !important;
+}
+
+.cardContent {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.imageContainer {
+  padding: 1rem;
+  background-color: #f7f8fc;
+  display: flex;
+  justify-content: center;
+}
+
+.surveyContent {
+  display: flex;
+  align-items: center;
+  gap: 7rem;
+  flex: 1;
+  width: 100%;
+}
+
+.surveyTitle {
+  width: 13rem;
+  color: #181735;
+}
+
+.surveyStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 5rem;
+}
+
+.badge {
+  height: 0.5rem;
+  width: 0.5rem;
+  border-radius: 99999px;
+}
+
+.textTransform {
+  text-transform: capitalize;
+}
+
+.surveyResponse {
+  display: flex;
+  align-items: center;
+  width: 9rem;
+  gap: 0.5rem;
+}
+
+.surveyActions {
+  display: flex;
+  flex-direction: row !important;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  margin-right: 1rem;
+  flex: auto;
+  width: 15rem;
+}
+
+.iconButton {
+  border: 2px solid #d7d7d7 !important;
+  border-radius: 14px !important;
+  padding: 0.3rem 1rem !important;
+  height: fit-content;
+  width: 6rem;
+}
+
+
+
+
+@media only screen and (max-width: 1024px) {
+  .cardContent {
+    flex-direction: column;
+    padding: 0rem 1rem 1rem 1rem;
+  }
+
+  .surveyContent {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .imageContainer {
+    width: 100%;
+  }
+
+  .surveyActions {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1440px) {
+  .surveyContent {
+    gap: 2rem;
+  }
+
+  .surveyResponse {
+    width: 7rem;
+  }
+}
+
+
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo img {
+  margin: auto;
+  display: block;
+  object-fit: contain;
+}
+
+
+.logoImageWrapper {
+  position: relative;
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+
+.cameraIconWrapper {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+
+}
+
+.logoImageWrapper:hover .cameraIconWrapper {
+  opacity: 1;
+}
+
+.cameraIcon {
+  color: white;
+  pointer-events: none;
+
+}
+
+
+.logoImageWrapper {
+  position: relative;
+  display: inline-block;
+  flex: 1;
+}
+
+.relativeContainer {
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.absoluteOverlay {
+  width: 100%;
+  position: absolute;
+  z-index: 99999;
+  bottom: 0;
+  color: white;
+}
+
+
+
+
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.truncatedText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  line-height: 1.5em;
+  max-height: 4.5em;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.exampleTruncatedText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  line-height: 1.5em;
+  max-height: 15em;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 10;
+  line-clamp: 10;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  position: relative;
+}
+
+.surveyLink {
+  flex-grow: 1;
+  color: inherit;
+}
+
+.nameIcon {
+  position: absolute !important;
+  right: 3px;
+  opacity: 0;
+}
+
+.titleContainer:hover .nameIcon {
+  opacity: 1;
+}
+
+
+.descriptionContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  position: relative;
+}
+
+.truncatedText {
+  flex-grow: 1;
+  color: inherit;
+}
+
+.descriptionIcon {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.descriptionContainer:hover .descriptionIcon {
+  opacity: 1;
+}
+
+.photoIcon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+
+.logoImageWrapper:hover .photoIcon {
+  opacity: 1;
+}

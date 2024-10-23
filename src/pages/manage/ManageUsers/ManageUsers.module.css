@@ -1,0 +1,11 @@
+.mainContainer {
+  margin: auto;
+  max-width: 800px;
+  min-width: 300px;
+  height: calc(100vh - 64px);
+  overflow: auto;
+}
+
+.content {
+  margin-top: 30px;
+}

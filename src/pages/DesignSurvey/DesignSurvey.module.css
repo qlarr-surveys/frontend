@@ -1,0 +1,20 @@
+.mainContainer {
+  display: flex;
+}
+
+.updateButtons {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.save {
+  margin-left: 10px;
+}
+
+.header {
+  max-width: 800px;
+}

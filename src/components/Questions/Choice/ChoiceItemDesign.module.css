@@ -1,0 +1,55 @@
+.answerItem {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  /*margin-bottom: 15px;*/
+  transition: all 200ms;
+  height: auto;
+}
+
+.answerIcon {
+  display: flex;
+}
+
+.answerItem .answerIcon:hover {
+  cursor: pointer;
+}
+
+.answerItem .answerIconOther {
+  align-self: center;
+  margin-right: 10px;
+}
+
+.answerItem .answerIconOther:hover {
+  cursor: pointer;
+}
+
+.answerItem .answerNumberOrder {
+  width: 30px;
+  text-align: center;
+}
+
+.answerItem .answerControl {
+  margin-left: 7px;
+  width: calc(100% - 88px);
+}
+
+.answerItem .answerControlRtl {
+  margin-right: 7px;
+  width: calc(100% - 88px);
+}
+
+.answerItem .answerControlOther {
+  margin-left: 7px;
+  width: calc(100% - 140px);
+}
+
+.answerItem .answerControlOtherRtl {
+  margin-right: 7px;
+  width: calc(100% - 140px);
+}
+
+.answerItem .answerOtherControl {
+  margin-left: 43px;
+  width: 50%;
+}

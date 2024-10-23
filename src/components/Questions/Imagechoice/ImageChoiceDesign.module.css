@@ -1,0 +1,16 @@
+.addAnswerIcon {
+  scale: 2;
+}
+
+.questionItem{
+  overflow: hidden;
+  padding-top: 16px;
+}
+
+.addAnswerButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+}

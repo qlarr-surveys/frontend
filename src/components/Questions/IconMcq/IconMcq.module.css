@@ -1,0 +1,28 @@
+.imageContainer {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.imageGrid {
+  margin-top: 16px;
+}
+
+.selection {
+  border-radius: 0 !important;
+  background-color: #ffffffcc !important;
+}
+
+.svgContainer {
+  text-align: center;
+}
+
+.svgContainer>svg {
+  width: 100%;
+  height: 100%;
+}
+
+.iconFlexContainer {
+  display: flex;
+  flex-wrap: wrap;
+}

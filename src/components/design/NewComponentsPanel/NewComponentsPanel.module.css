@@ -1,0 +1,47 @@
+.leftPanelGroupItem {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.topBar.topBar {
+  display: flex;
+  justify-content: end;
+}
+.groupTitle {
+  margin-bottom: 10px;
+  font-size: 20px;
+  padding-right: 12px;
+  padding-left: 12px;
+  font-weight: bold;
+}
+
+.iconMenu {
+  min-width: 35px;
+}
+
+.tabHeader {
+  position: relative;
+}
+
+.tabHeader::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  border-bottom: 1px solid;
+}
+
+.leftContent {
+  background-color: white;
+  width: 15rem;
+  padding-top: 16px;
+  overflow-y: auto;
+  height: calc(100vh - 64px);
+}
+
+.close {
+  padding: 8px;
+  text-align: right;
+}

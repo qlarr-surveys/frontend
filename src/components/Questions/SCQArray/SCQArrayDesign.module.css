@@ -1,0 +1,38 @@
+.noPadding {
+  padding: 0;
+}
+
+.addRow {
+  margin-top: 16px;
+}
+
+.addColumn {
+  text-align: right;
+}
+
+.addIcon {
+  width: 64px;
+  height: 64px;
+}
+
+.addIcon > svg {
+  width: 100%;
+  height: 100%;
+}
+
+.svgContainer {
+  text-align: center;
+}
+
+.svgContainer > svg {
+  width: 100%;
+  height: 100%;
+}
+.addButton.addButton {
+  text-transform: none;
+  color: #16205b;
+  font-weight: bolder;
+  background-color: #e0e2ef;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+}

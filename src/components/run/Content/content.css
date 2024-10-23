@@ -1,0 +1,16 @@
+.rtl {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.no-padding {
+  padding: 0 !important;
+}
+
+.no-padding > :last-child {
+  margin-bottom: 0;
+}
+
+.no-padding > :first-child {
+  margin-top: 0;
+}

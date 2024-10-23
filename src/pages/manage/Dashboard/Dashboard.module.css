@@ -1,0 +1,33 @@
+.mainContainer {
+  margin: auto;
+  min-width: 300px;
+  height: calc(100vh - 64px);
+  overflow: auto;
+}
+
+.content {
+  margin-top: 30px;
+}
+
+.loadingWrapper {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding-top: 50px;
+}
+
+.allButton {
+  margin-top: 2rem !important;
+  background-color: #16205b !important;
+  color: #fff !important;
+  border-radius: 50px !important;
+  font-size: 1.5rem !important;
+  padding: 0.25rem 6rem !important;
+  text-transform: none !important;
+}
+
+@media only screen and (max-width: 1024px) {
+  .content {
+    padding: 0 1rem;
+  }
+}

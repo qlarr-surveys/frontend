@@ -1,0 +1,13 @@
+.mainContainer {
+  height: calc(100vh - 64px);
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  width: 100vw;
+}
+
+.content {
+  margin-top: 30px;
+}
+

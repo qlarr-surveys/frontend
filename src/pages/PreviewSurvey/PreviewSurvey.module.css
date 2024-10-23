@@ -1,0 +1,51 @@
+.container {
+  background-color: #d7ccc8;
+  display: flex;
+  text-align: center;
+  vertical-align: middle;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+  height: 100%;
+}
+
+.onlinePreview {
+  flex: 1;
+  border: none;
+  width: 100%;
+}
+
+.icon {
+  height: 1em;
+  width: 1em;
+}
+
+.offlinePreview {
+  position: absolute;
+  top: 158px;
+  left: calc(50% - 189.5px);
+  border: 0;
+  width: 375px;
+  height: 664px;
+}
+
+.wrapperMob {
+  padding-top: 50px;
+  height: calc(100vh - 64px);
+  overflow: auto;
+  position: relative;
+}
+
+.phoneBg {
+  width: 472px;
+  max-height: 888px;
+}
+
+.iconButton.iconButton {
+  border: 1px solid #ececfd;
+  border-radius: 10px;
+  padding: 0.25rem 2rem;
+  height: fit-content;
+  position: absolute;
+  right: 3.5rem;
+}

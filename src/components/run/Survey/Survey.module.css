@@ -1,0 +1,44 @@
+.surveyContent {
+  margin: 0;
+}
+
+.surveyGroups {
+  margin: auto;
+  max-width: 800px;
+  min-width: 300px;
+}
+
+.cardImage {
+  max-height: 22.5vw;
+  height: 160px;
+  margin: 12px auto;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+}
+
+.mainContainer {
+  margin: auto;
+  height: 100vh;
+  overflow: auto;
+}
+
+.stepperContent {
+  position: absolute;
+  background-color: white;
+  width: 400px;
+  padding: 1rem;
+  border-radius: 0px 8px 8px 0px;
+  height: 700px;
+  overflow: auto;
+  margin-top: 3rem;
+  /* max-width: 800px;
+  min-width: 350px;
+  margin: auto;
+  overflow: auto;
+  display: flex; */
+}
+
+.menuButton.menuButton {
+  position: fixed;
+}

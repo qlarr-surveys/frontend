@@ -1,0 +1,19 @@
+.answerAdd {
+  display: flex;
+  align-items: baseline;
+  padding-left: 18px;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.questionItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.choicesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

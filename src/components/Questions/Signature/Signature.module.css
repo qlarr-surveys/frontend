@@ -1,0 +1,16 @@
+.signatureCanvas {
+  background-color: white;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  width: 100%;
+  margin: auto;
+  text-align: center;
+}
+
+.container {
+  padding: 8px;
+}
+
+.buttonContainer {
+  text-align: end;
+}

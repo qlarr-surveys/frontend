@@ -1,0 +1,31 @@
+.textDescription {
+  max-width: 100%;
+  margin-top: 8px;
+}
+
+.titleRow {
+  display: block;
+  justify-content: space-between;
+  align-items: center;
+  box-align: center;
+  margin: 24px;
+  flex-wrap: wrap;
+  box-pack: justify;
+}
+
+.groupHeader {
+  padding: 1rem;
+}
+
+.topLevel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 800px;
+  min-width: 320px;
+  margin-right: 16px;
+  margin-left: 16px;
+  padding: .5rem 0rem 2rem .5rem;
+  margin: auto;
+  position: relative;
+}

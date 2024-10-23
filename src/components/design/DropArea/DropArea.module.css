@@ -1,0 +1,136 @@
+.groupDropArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  height: 6rem;
+  padding: 0;
+  max-width: 800px;
+  min-width: 350px;
+  width: 100%;
+  color: rgba(0, 0, 0, 0.5);
+  margin: auto;
+  color: rgba(0, 0, 0, 0.5);
+  background-color: #f9f9f9;
+  border: 1px dotted #16205b;
+  border-radius: 2px;
+  opacity: 1;
+  transition: padding 200ms, background-color 200ms, height 200ms ease-in-out,
+    opacity 200ms;
+  margin-top: 20px;
+  margin-bottom: 35px;
+}
+
+.groupDragging {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  height: 50px;
+  padding: 0;
+  max-width: 800px;
+  min-width: 350px;
+  width: 100%;
+  margin: auto;
+  color: rgba(0, 0, 0, 0.5);
+  background-color: #f9f9f9;
+  border: 1px dotted #16205b;
+  border-radius: 2px;
+  opacity: 1;
+  transition: padding 200ms, background-color 200ms, opacity 200ms;
+  margin-top: 20px;
+  margin-bottom: 35px;
+}
+
+.questionDropArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  height: 6rem;
+  max-width: 800px;
+  min-width: 350px;
+  padding: 0;
+  width: 100%;
+  margin: auto;
+  font-size: 2rem;
+  color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.1);
+  border: 1px dotted #16205b;
+  border-radius: 2px;
+  opacity: 1;
+  transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
+}
+
+/* .groupDropArea {
+  margin: auto;
+  width: 100%;
+  max-width: 800px;
+  min-width: 350px;
+} */
+
+.groupDropAreaWrapper {
+  padding: 1rem 0;
+  max-width: 800px;
+  width: 100%;
+  min-width: 350px;
+}
+
+.groupDropAreaWrapper.hide {
+  padding: 0;
+}
+
+.hidden {
+  height: 1px;
+  margin: auto;
+  max-width: 800px;
+  width: 100%;
+  min-width: 350px;
+  transition: height 200ms, padding 200ms;
+}
+
+.isDragging {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dotted #16205b;
+  height: 50px;
+  margin: 0;
+  background-color: #f9f9f9;
+  opacity: 1;
+  transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
+}
+
+.groupHidden {
+  height: 6rem;
+  margin: auto;
+  max-width: 800px;
+  min-width: 350px;
+}
+
+.groupEmptyHint {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 35px;
+  height: 50px;
+  margin: auto;
+  max-width: 800px;
+  width: 100%;
+  min-width: 350px;
+  color: gray;
+  border: 1px dotted #16205b;
+  border-radius: 2px;
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 200ms;
+}
+
+.groupEmptyHintHover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dropText {
+  font-size: 20px;
+}

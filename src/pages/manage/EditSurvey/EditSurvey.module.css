@@ -1,0 +1,62 @@
+.mainContainer {
+  padding: 1rem 3rem;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.loadingWrapper {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding-top: 100px;
+}
+
+.accordionContainer.accordionContainer {
+  margin: 0px;
+  box-shadow: none;
+  border-radius: 15px;
+  padding: 2rem;
+  width: 100%;
+  background-color: white;
+}
+
+.accordionDetails {
+  padding: 1.5rem 4rem;
+}
+
+@media (max-width: 600px) {
+  .mainContainer {
+    padding: 0.5rem;
+  }
+  .accordionContainer {
+    padding: 0.25rem;
+  }
+  .accordionDetails {
+    padding: 1rem;
+  }
+}
+@media (min-width: 601px) and (max-width: 1024px) {
+  .mainContainer {
+    padding: 1rem;
+  }
+  .accordionContainer {
+    padding: 0.75rem;
+  }
+  .accordionDetails {
+    padding: 1.5rem;
+  }
+}
+
+.accordionContainer:first-of-type {
+  border-radius: 15px;
+}
+.accordionContainer::before {
+  display: none;
+}
+
+.launchContainer{
+  background-color: white;
+}

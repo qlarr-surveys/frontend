@@ -1,0 +1,55 @@
+.sliderContainer {
+  margin-top: 2rem;
+  background-color: #f7f7f9;
+  padding: 2rem;
+}
+
+.sliderStyle {
+  padding: 0 7rem;
+}
+
+.surveyName{
+  display: block;
+  margin: 8px 8px 8px 8px;
+}
+
+.cardContent {
+  padding: 2rem 0rem;
+  border-radius: 20px;
+  background-color: #fff;
+  gap: 1rem;
+  margin: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.cardLink {
+  padding: 0.5rem 2.25rem;
+  border-radius: 9999px;
+  background-color: #04bdf3;
+  text-align: center;
+  width: fit-content;
+  font-weight: 600;
+  display: block;
+  margin: 8px;
+}
+@media only screen and (max-width: 751px) {
+  .sliderStyle {
+    padding: 0rem 1rem;
+  }
+}
+
+.nextArrow {
+  cursor: pointer;
+  position: absolute;
+  top: 40%;
+  right: 65px;
+  transform: translateY(-50%);
+}
+.backArrow {
+  cursor: pointer;
+  position: absolute;
+  top: 40%;
+  left: 60px;
+  transform: translate(0, -50%);
+}
