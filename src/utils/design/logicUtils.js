@@ -133,12 +133,12 @@ export const jsonToJs = (json, nested, getComponentType) => {
       const questionCode = capture(value[0]);
       return `[${value[1].map(
         (el) => questionCode + el + ".value"
-      )}].filter(Boolean).length > 0`;
+      )}].filter(x=>x).length > 0`;
     case "none_in":
       const questionCode1 = capture(value[0]);
       return `[${value[1].map(
         (el) => questionCode1 + el + ".value"
-      )}].filter(Boolean).length == 0`;
+      )}].filter(x=>x).length == 0`;
     default:
       return "";
   }

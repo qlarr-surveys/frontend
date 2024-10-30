@@ -68,54 +68,6 @@ export const {
 
 export default runState.reducer;
 
-function onDependencyChanged(
-  values,
-  componentName,
-  variableName,
-  newValue,
-  source
-) {
-  if (typeof values[componentName] === "undefined") {
-    return;
-  }
-
-  if (values[componentName][variableName] === newValue) {
-    console.log(
-      "same value - " + componentName + "." + variableName + ": " + newValue
-    );
-  } else {
-    console.log(
-      componentName +
-        "." +
-        variableName +
-        ": " +
-        JSON.stringify(newValue) +
-        " due to " +
-        source
-    );
-    values[componentName][variableName] = newValue;
-    getDependents(componentName, variableName).forEach((dependent) => {
-      onDependencyChanged(
-        values,
-        dependent[0],
-        dependent[1],
-        window.qlarrRuntime[dependent[0]][dependent[1]](values),
-        componentName + "." + variableName
-      );
-    });
-  }
-}
-
-function getDependents(componentName, variableName) {
-  if (
-    typeof qlarrDependents[componentName] !== "undefined" &&
-    typeof qlarrDependents[componentName][variableName] !== "undefined"
-  ) {
-    return qlarrDependents[componentName][variableName];
-  } else {
-    return [];
-  }
-}
 
 function setValueInState(state, payload) {
   let componentCode = payload.componentCode;
@@ -123,13 +75,15 @@ function setValueInState(state, payload) {
   let element = state.values[componentCode];
   if (typeof element !== "undefined" && element["value"] !== value) {
     let time = Date.now();
-    onDependencyChanged(
+    window.qlarrStateMachine(
       state.values,
+      qlarrDependents,
+      window.qlarrRuntime,
       componentCode,
       "value",
       value,
       "VALUE CHANGE"
-    );
+  )
     console.log("NEW STATE in: " + (Date.now() - time) + " millis");
     console.log(current(state))
   }
