@@ -71,6 +71,7 @@ export default runState.reducer;
 
 function setValueInState(state, payload) {
   let componentCode = payload.componentCode;
+  logTimes(state, componentCode);
   let value = payload.value;
   let element = state.values[componentCode];
   if (typeof element !== "undefined" && element["value"] !== value) {
@@ -86,6 +87,29 @@ function setValueInState(state, payload) {
   )
     console.log("NEW STATE in: " + (Date.now() - time) + " millis");
     console.log(current(state))
+  }
+}
+
+function logTimes(state, code) {
+  if (!state.saveTimings) {
+    return;
+  }
+  if (!state.timings) {
+    state.timings = [];
+  }
+  let element = {
+    code,
+    time: new Date().toISOString().split(".")[0].replace("T", " "),
+    name: "ValueTiming",
+  };
+
+  if (
+    state.timings.length > 0 &&
+    state.timings[state.timings.length - 1].code === code
+  ) {
+    state.timings[state.timings.length - 1] = element;
+  } else {
+    state.timings.push(element);
   }
 }
 
