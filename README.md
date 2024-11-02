@@ -1,7 +1,7 @@
 # Qlarr Frontend
 A React frontend built for Qlarr Survey Engnine, a UI-agnostic tool that lets you create and run customizable, scientific & offline-first surveys as code on all platforms.
 
-As mentioned, Qlarr Survey engine is a UI agnostic tool, this project aims to
+As mentioned, Qlarr Survey engine is a UI agnostic tool, meaning it doesn't render UI. Instead, this project aims to
 1. WYSIWYG editor to surveys, in Qlarr Survey Engnine DSL
 2. Render surveys that are executed by Qlarr Survey Engnine (used both in Web and Android Apps)
 3. GUI for Survey management and administrive functionalities exposed by our open source backend, like login, adding using, cloning surveys....etc.
