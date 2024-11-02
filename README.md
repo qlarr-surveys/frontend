@@ -49,7 +49,3 @@ To run this locally, follow these steps:
    npm run build
    ```
 
----
-
-This setup will get you up and running with `@qlarr-surveys/frankie-react` for local development. Adjust `.env` settings or port numbers as needed.
-
