@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import path from "path";
 import react from "@vitejs/plugin-react";
 import legacy from "@vitejs/plugin-legacy";
-import mkcert from "vite-plugin-mkcert";
 
 export default defineConfig(({ mode }) => {
   console.log(mode);
@@ -45,7 +44,7 @@ export default defineConfig(({ mode }) => {
         },
         server: {
           port: 3000,
-          host: "qlarr.app",
+          host: "localhost",
         },
         build: {
           outDir: "build",
@@ -55,7 +54,7 @@ export default defineConfig(({ mode }) => {
             "~": path.resolve(__dirname, "src"),
           },
         },
-        plugins: [react(), mkcert()],
+        plugins: [react()],
       };
     case "android":
     default:
