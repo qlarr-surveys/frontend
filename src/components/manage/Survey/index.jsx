@@ -152,11 +152,16 @@ const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
   );
 };
 
-const EditableSurveyDescription = ({ survey, onSave, isEditable = true, isExample }) => {
+const EditableSurveyDescription = ({
+  survey,
+  onSave,
+  isEditable = true,
+  isExample,
+}) => {
   const [isDescriptionEditing, setIsDescriptionEditing] = useState(false);
   const [description, setDescription] = useState(survey.description);
 
-  const charLimit = isExample ? 450 : 125
+  const charLimit = isExample ? 450 : 125;
 
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
@@ -204,7 +209,9 @@ const EditableSurveyDescription = ({ survey, onSave, isEditable = true, isExampl
                 color: description ? "inherit" : "gray",
                 flexGrow: 1,
               }}
-              className={`${isExample ? styles.exampleTruncatedText : styles.truncatedText}`}
+              className={`${
+                isExample ? styles.exampleTruncatedText : styles.truncatedText
+              }`}
             >
               {truncateWithEllipsis(description, charLimit) ||
                 "Click to add a description..."}
@@ -290,21 +297,24 @@ export const Survey = ({
     const reader = new FileReader();
 
     reader.onload = () => {
-      const uploadResourcePromise = designService.uploadResource(
-        image,
-        survey.id
-      );
-      const updateSurveyPromise = surveyService.putSurvey(
-        { image: fileName },
-        survey.id
-      );
-
-      Promise.all([uploadResourcePromise, updateSurveyPromise])
-        .then(([uploadResponse, updateResponse]) => {
-          onUpdateImage(survey.id, fileName);
+      designService
+        .uploadResource(image, survey.id)
+        .then((response) => {
+          surveyService
+            .putSurvey({ image: response.name }, survey.id)
+            .then((result) => {
+              onUpdateImage(survey.id, response.name);
+            })
+            .catch((err) => {
+              setError(t(`processed_errors.${err.name}`));
+              setOpenSnackbar(true);
+            })
+            .finally(() => {
+              dispatch(setLoading(false));
+            });
         })
         .catch((err) => {
-          setError(t(`processed_errors.${processedError.name}`));
+          setError(t(`processed_errors.${err.name}`));
           setOpenSnackbar(true);
         })
         .finally(() => {

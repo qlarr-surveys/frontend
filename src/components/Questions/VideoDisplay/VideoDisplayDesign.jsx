@@ -28,7 +28,7 @@ function VideoDisplayDesign({ code, t, onMainLang }) {
       .uploadResource(file)
       .then((response) => {
         setUploading(false);
-        dispatch(changeResources({ code, key: "videoUrl", value: file.name }));
+        dispatch(changeResources({ code, key: "videoUrl", value: response.name }));
       })
       .catch((err) => {
         console.error(err);

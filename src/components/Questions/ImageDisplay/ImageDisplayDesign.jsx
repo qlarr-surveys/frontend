@@ -27,7 +27,7 @@ function ImageDisplayDesign({ code, t, onMainLang }) {
       .uploadResource(file)
       .then((response) => {
         setUploading(false);
-        dispatch(changeResources({ code, key: "imageUrl", value: file.name }));
+        dispatch(changeResources({ code, key: "imageUrl", value: response.name }));
       })
       .catch((err) => {
         console.error(err);

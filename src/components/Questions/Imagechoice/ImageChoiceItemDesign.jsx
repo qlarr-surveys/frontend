@@ -84,7 +84,7 @@ function ImageChoiceItemDesign({
           changeResources({
             code: qualifiedCode,
             key: "image",
-            value: file.name,
+            value: response.name,
           })
         );
       })

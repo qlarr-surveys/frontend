@@ -155,7 +155,7 @@ function Theming({ t }) {
           changeResources({
             code: "Survey",
             key: "headerImage",
-            value: file.name,
+            value: response.name,
           })
         );
       })
@@ -184,7 +184,7 @@ function Theming({ t }) {
           changeResources({
             code: "Survey",
             key: "backgroundImage",
-            value: file.name,
+            value: response.name,
           })
         );
         dispatch(
