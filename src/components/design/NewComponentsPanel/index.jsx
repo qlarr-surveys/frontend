@@ -2,7 +2,8 @@ import React from "react";
 import styles from "./NewComponentsPanel.module.css";
 import NewComponentsItem from "~/components/design/NewComponentsItem";
 import { QUESTION_TYPES } from "~/components/Questions/utils";
-import { FormatListBulleted, StopCircle } from "@mui/icons-material";
+import { FormatListBulleted } from "@mui/icons-material";
+import { Tooltip } from "@mui/material";
 
 const groups = [
   {
@@ -20,53 +21,59 @@ const groups = [
 
 function NewComponentsPanel({ t }) {
   return (
-    <div className={styles.leftContent}>
-      {groups.map((item, index) => (
-        <div className={styles.leftPanelGroupItem} key={index}>
-          <div className={styles.groupTitle}>{t(item.name)}</div>
-          <div className={styles.leftItems}>
+    <Tooltip
+      title="Drag items to add them to your survey"
+      placement="right"
+      arrow
+    >
+      <div className={styles.leftContent}>
+        {groups.map((item, index) => (
+          <div className={styles.leftPanelGroupItem} key={index}>
+            <div className={styles.groupTitle}>{t(item.name)}</div>
+            <div className={styles.leftItems}>
+              {item.items.map((question, index) => {
+                const dragItem = {
+                  type: "groups",
+                  itemType: question.type,
+                  droppableId: "new-groups",
+                  draggableId: question.type,
+                  icon: question.icon,
+                };
+
+                return (
+                  <div className={"Draggable"} key={question.type}>
+                    <NewComponentsItem t={t} item={dragItem} />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+        {QUESTION_TYPES.map((item, index) => (
+          <div className={styles.leftPanelGroupItem} key={index}>
+            <div className={styles.groupTitle}>{t(item.name)}</div>
             {item.items.map((question, index) => {
               const dragItem = {
-                type: "groups",
+                type: "new-questions",
                 itemType: question.type,
-                droppableId: "new-groups",
+                offlineOnly: question.offlineOnly || false,
+                droppableId: "new-questions",
                 draggableId: question.type,
                 icon: question.icon,
               };
 
               return (
-                <div className={"Draggable"} key={question.type}>
-                  <NewComponentsItem t={t} item={dragItem} />
+                <div key={`draggable-${index}`}>
+                  <div className={"Draggable"}>
+                    <NewComponentsItem t={t} item={dragItem} />
+                  </div>
                 </div>
               );
             })}
           </div>
-        </div>
-      ))}
-      {QUESTION_TYPES.map((item, index) => (
-        <div className={styles.leftPanelGroupItem} key={index}>
-          <div className={styles.groupTitle}>{t(item.name)}</div>
-          {item.items.map((question, index) => {
-            const dragItem = {
-              type: "new-questions",
-              itemType: question.type,
-              offlineOnly: question.offlineOnly || false,
-              droppableId: "new-questions",
-              draggableId: question.type,
-              icon: question.icon,
-            };
-
-            return (
-              <div key={`draggable-${index}`}>
-                <div className={"Draggable"}>
-                  <NewComponentsItem t={t} item={dragItem} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </Tooltip>
   );
 }
 
