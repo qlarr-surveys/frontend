@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Box, Container, TablePagination } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Fade,
+  IconButton,
+  Stack,
+  TablePagination,
+} from "@mui/material";
 import TokenService from "~/services/TokenService";
 import styles from "./Dashboard.module.css";
 import { HeaderContent } from "~/components/manage/HeaderContent";
@@ -15,6 +23,7 @@ import { SurveyClone } from "~/components/manage/SurveyClone";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import DeleteModal from "~/components/common/DeleteModal";
+import { Add, Close } from "@mui/icons-material";
 
 function Dashboard() {
   const surveyService = useService("survey");
@@ -87,18 +96,36 @@ function Dashboard() {
     return false;
   };
 
-
   const [description, setDescription] = useState("");
   const [actionType, setActionType] = useState("");
   const [selectedSurvey, setSelectedSurvey] = useState(null);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState(t("action_btn.delete"));
+  const [isCreateSurveyOpen, setCreateSurveyOpen] = useState(false);
+  const [isTemplateSliderOpen, setTemplateSliderOpen] = useState(false);
 
+  const handleButtonClick = () => {
+    setCreateSurveyOpen(true);
+  };
+
+  const handleTemplateButtonClick = () => {
+    setTemplateSliderOpen(true);
+  };
+
+  const handleCloseClick = () => {
+    setCreateSurveyOpen(false);
+  };
+
+  const handleTemplateCloseClick = () => {
+    setTemplateSliderOpen(false);
+  };
   const onDelete = (survey) => {
     setActionType("delete");
     setTitle(t("action_btn.delete"));
     setSelectedSurvey(survey);
-    setDescription(t("edit_survey.delete_survey", { survey_name: survey.name }));
+    setDescription(
+      t("edit_survey.delete_survey", { survey_name: survey.name })
+    );
     setOpen(true);
   };
 
@@ -110,7 +137,6 @@ function Dashboard() {
     setOpen(true);
   };
 
-
   const handleAction = () => {
     if (actionType === "delete") {
       deleteSurvey(selectedSurvey.id);
@@ -120,8 +146,6 @@ function Dashboard() {
       setOpen(false);
     }
   };
-
-
 
   const onClone = (survey) => {
     setCloningSurvey(survey);
@@ -175,7 +199,9 @@ function Dashboard() {
   const handleUpdateSurveyDescription = (surveyId, newDescription) => {
     setSurveys((prevSurveys) => {
       const updatedSurveys = prevSurveys.surveys.map((survey) =>
-        survey.id === surveyId ? { ...survey, description: newDescription } : survey
+        survey.id === surveyId
+          ? { ...survey, description: newDescription }
+          : survey
       );
       return {
         ...prevSurveys,
@@ -194,16 +220,56 @@ function Dashboard() {
         surveys: updatedSurveys,
       };
     });
-  }
-
+  };
 
   return (
     <Box className={styles.mainContainer}>
       <Container>
         <Box className={styles.content}>
-          {shouldShowClickAdd() && (
-            <CreateSurvey onSurveyCreated={fetchSurveys} />
+          <Stack direction="row" spacing={2} justifyContent="flex-end">
+            {shouldShowClickAdd() && !isCreateSurveyOpen && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<Add />}
+                onClick={handleButtonClick}
+              >
+                Survey
+              </Button>
+            )}
+            {shouldShowClickAdd() && !isTemplateSliderOpen && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<Add />}
+                onClick={handleTemplateButtonClick}
+              >
+                Templates
+              </Button>
+            )}
+          </Stack>
+
+          {isCreateSurveyOpen && (
+            <Fade in={isCreateSurveyOpen} timeout={300}>
+              <div style={{ position: "relative" }}>
+                <IconButton
+                  onClick={handleCloseClick}
+                  aria-label="close"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    color: "black",
+                    zIndex: 1,
+                  }}
+                >
+                  <Close color="#000" />
+                </IconButton>
+                <CreateSurvey onSurveyCreated={fetchSurveys} />
+              </div>
+            </Fade>
           )}
+
           <HeaderContent
             filter={status}
             onFilterSelected={(el) => {
@@ -242,7 +308,6 @@ function Dashboard() {
                     onUpdateTitle={handleUpdateSurveyName}
                     onUpdateDescription={handleUpdateSurveyDescription}
                     onUpdateImage={handleUpdateSurveyImage}
-
                   />
                 );
               })}
@@ -271,11 +336,29 @@ function Dashboard() {
             />
           )}
         </Box>
-        {shouldShowClickAdd() && (
-          <TemplateSlider
-            surveys={guestSurveys}
-            onClone={(survey) => onClone(survey)}
-          />
+
+        {isTemplateSliderOpen && (
+          <Fade in={isTemplateSliderOpen} timeout={300}>
+            <div style={{ position: "relative" }}>
+              <IconButton
+                onClick={handleTemplateCloseClick}
+                aria-label="close"
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  color: "black",
+                  zIndex: 1,
+                }}
+              >
+                <Close color="#000" />
+              </IconButton>
+              <TemplateSlider
+                surveys={guestSurveys}
+                onClone={(survey) => onClone(survey)}
+              />
+            </div>
+          </Fade>
         )}
       </Container>
       <SurveyClone
