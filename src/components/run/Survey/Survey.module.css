@@ -3,6 +3,7 @@
 }
 
 .surveyGroups {
+  position: relative;
   margin: auto;
   max-width: 800px;
   min-width: 300px;
@@ -41,4 +42,20 @@
 
 .menuButton.menuButton {
   position: fixed;
+}
+
+
+.copyrightContainer{
+  display: flex;
+  width: 100%;
+  justify-content: end;
+}
+
+.copyright {
+  position: fixed;
+  bottom: 0px;
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.85rem;
+  font-style: italic;
 }

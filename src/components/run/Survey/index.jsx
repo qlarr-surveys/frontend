@@ -7,7 +7,7 @@ import { FORM_ID } from "~/constants/run";
 import Group from "~/components/Group";
 import Navigation from "~/components/run/Navigation";
 import styles from "./Survey.module.css";
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from "react-redux";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { isTouchDevice } from "~/utils/isTouchDevice";
 function Survey() {
@@ -45,19 +45,24 @@ function Survey() {
           ) : null}
           {survey && survey.groups
             ? survey.groups
-              .filter((group) => group.inCurrentNavigation)
-              .map((group, index) => (
-                <div
-                  key={group.code}
-                  id={`group-${index}`}
-                  data-index={index}
-                  className="groupContainer"
-                >
-                  <Group group={group} lang={lang.code} groupIndex={index} />
-                </div>
-              ))
+                .filter((group) => group.inCurrentNavigation)
+                .map((group, index) => (
+                  <div
+                    key={group.code}
+                    id={`group-${index}`}
+                    data-index={index}
+                    className="groupContainer"
+                  >
+                    <Group group={group} lang={lang.code} groupIndex={index} />
+                  </div>
+                ))
             : ""}
           <Navigation navigationIndex={navigationIndex} />
+          <div className={styles.copyrightContainer}>
+            <p className={styles.copyright}>
+              Powered by Qlarr © {new Date().getFullYear()}
+            </p>
+          </div>
         </div>
       </form>
     </DndProvider>
