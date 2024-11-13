@@ -421,15 +421,6 @@ export const Survey = ({
                   </Typography>
                 </Stack>
                 <Box sx={{ px: 3, display: "flex", gap: 2 }}>
-                  {!example && (
-                    <>
-                      <Tooltip
-                        title={survey.publicWithinOrg ? "Public" : "Private"}
-                      >
-                        <ShieldIcon sx={{ color: "text.secondary" }} />
-                      </Tooltip>
-                    </>
-                  )}
                   {!example &&
                     survey.status !== "closed" &&
                     survey.latestVersion.published === false && (
