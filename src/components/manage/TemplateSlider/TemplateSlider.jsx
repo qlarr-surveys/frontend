@@ -1,41 +1,47 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 import styles from "./TemplateSlider.module.css";
-import "./TemplateSlider.css";
 import { Survey } from "../Survey";
+import { useTranslation } from "react-i18next";
 
 const TemplateSlider = ({ surveys, onClone }) => {
+  const { t } = useTranslation("manage");
   return (
-    <Box className={styles.sliderContainer}>
+    <>
       <Typography
         variant="h5"
         marginBottom={2}
         fontWeight={600}
-        color="#181735"
+        textTransform="uppercase"
       >
-        Surveys Forms
+        {t("example_surveys")}
       </Typography>
-
-      <div
-        style={{
-          width: "100%",
-          overflow: "auto",
-          display: "flex",
-          gap: "40px",
+      <Box
+        className={styles.exampleSurveysContainer}
+        sx={{
+          mt: 3,
+          columnGap: 4,
+          display: "grid",
+          rowGap: { xs: 4, md: 5 },
+          gridTemplateColumns: {
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(3, 1fr)",
+          },
         }}
       >
-        {surveys.map((survey, index) => (
-          <Box key={index} sx={{ minWidth: "21rem", margin: "1rem 0rem" }}>
+        {surveys?.map((survey) => {
+          return (
             <Survey
               key={survey.id}
               survey={survey}
               onClone={() => onClone(survey)}
               example={true}
             />
-          </Box>
-        ))}
-      </div>
-    </Box>
+          );
+        })}
+      </Box>
+    </>
   );
 };
 

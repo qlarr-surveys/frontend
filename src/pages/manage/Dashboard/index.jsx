@@ -23,7 +23,7 @@ import { SurveyClone } from "~/components/manage/SurveyClone";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import DeleteModal from "~/components/common/DeleteModal";
-import { Add, Close } from "@mui/icons-material";
+import { Add, Close, CopyAll } from "@mui/icons-material";
 
 function Dashboard() {
   const surveyService = useService("survey");
@@ -226,7 +226,7 @@ function Dashboard() {
     <Box className={styles.mainContainer}>
       <Container>
         <Box className={styles.content}>
-          <Stack direction="row" spacing={2} justifyContent="flex-end">
+          <Stack className={styles.newSurveysButton} direction="row" spacing={2}>
             {shouldShowClickAdd() && !isCreateSurveyOpen && (
               <Button
                 variant="contained"
@@ -234,17 +234,17 @@ function Dashboard() {
                 startIcon={<Add />}
                 onClick={handleButtonClick}
               >
-                Survey
+                {t("create_new_survey")}
               </Button>
             )}
             {shouldShowClickAdd() && !isTemplateSliderOpen && (
               <Button
                 variant="contained"
                 color="primary"
-                startIcon={<Add />}
+                startIcon={<CopyAll />}
                 onClick={handleTemplateButtonClick}
               >
-                Templates
+                {t("copy_example_surveys")}
               </Button>
             )}
           </Stack>
@@ -266,6 +266,30 @@ function Dashboard() {
                   <Close color="#000" />
                 </IconButton>
                 <CreateSurvey onSurveyCreated={fetchSurveys} />
+              </div>
+            </Fade>
+          )}
+
+          {isTemplateSliderOpen && (
+            <Fade in={isTemplateSliderOpen} timeout={300}>
+              <div style={{ position: "relative" }}>
+                <IconButton
+                  onClick={handleTemplateCloseClick}
+                  aria-label="close"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    color: "black",
+                    zIndex: 1,
+                  }}
+                >
+                  <Close color="#000" />
+                </IconButton>
+                <TemplateSlider
+                  surveys={guestSurveys}
+                  onClone={(survey) => onClone(survey)}
+                />
               </div>
             </Fade>
           )}
@@ -336,30 +360,6 @@ function Dashboard() {
             />
           )}
         </Box>
-
-        {isTemplateSliderOpen && (
-          <Fade in={isTemplateSliderOpen} timeout={300}>
-            <div style={{ position: "relative" }}>
-              <IconButton
-                onClick={handleTemplateCloseClick}
-                aria-label="close"
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  color: "black",
-                  zIndex: 1,
-                }}
-              >
-                <Close color="#000" />
-              </IconButton>
-              <TemplateSlider
-                surveys={guestSurveys}
-                onClone={(survey) => onClone(survey)}
-              />
-            </div>
-          </Fade>
-        )}
       </Container>
       <SurveyClone
         open={openCloneModal}

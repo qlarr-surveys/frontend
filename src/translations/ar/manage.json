@@ -134,6 +134,9 @@
   },
   "my_surveys": "استبياناتك",
   "new_survey": "استبيان جديد",
+  "example_surveys": "نماذج إستطلاع",
+  "create_new_survey": "إنشاء استطلاع جديد",
+  "copy_example_surveys": "نسخ نماذج إستطلاع",
   "password_required": "كلمة المرور مطلوبة",
   "processed_errors": {
     "backend_down": "الخلفية لا يمكن الوصول إليها ... يرجى المحاولة مرة أخرى لاحقًا",
