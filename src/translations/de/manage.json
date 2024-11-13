@@ -133,6 +133,9 @@
   },
   "my_surveys": "Ihre Umfragen",
   "new_survey": "Neue Umfrage",
+  "example_surveys": "Beispielumfragen",
+  "create_new_survey": "Neue Umfrage erstellen",
+  "copy_example_surveys": "Beispielumfragen kopieren",
   "password_required": "Passwort ist erforderlich",
   "processed_errors": {
     "backend_down": "Backend ist nicht erreichbar... Bitte versuchen Sie es später erneut",
