@@ -54,6 +54,7 @@
 .copyright {
   position: fixed;
   bottom: 0px;
+  right: 8px;
   text-align: center;
   color: #6c757d;
   font-size: 0.85rem;
