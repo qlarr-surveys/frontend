@@ -14,7 +14,7 @@ import { HeaderContent } from "~/components/manage/HeaderContent";
 import { ROLES } from "~/constants/roles";
 import { setLoading } from "~/state/edit/editState";
 import { useDispatch } from "react-redux";
-import TemplateSlider from "~/components/manage/TemplateSlider/TemplateSlider";
+import ExampleSurveys from "~/components/manage/ExampleSurveys/ExampleSurveys";
 import CreateSurvey from "~/components/manage/CreateSurvey/CreateSurvey";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { useTranslation } from "react-i18next";
@@ -28,7 +28,7 @@ import { Add, Close, CopyAll } from "@mui/icons-material";
 function Dashboard() {
   const surveyService = useService("survey");
   const [surveys, setSurveys] = useState(null);
-  const [guestSurveys, setGuestSurveys] = useState([]);
+  
   const [fetchingSurveys, setFetchingSurveys] = useState(true);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
@@ -60,21 +60,6 @@ function Dashboard() {
   useEffect(() => {
     fetchSurveys();
   }, [page, perPage, sortBy, status]);
-
-  useEffect(() => {
-    surveyService
-      .getGuestsSurveys()
-      .then((data) => {
-        if (data) {
-          const updatedData = data.map((survey) => ({
-            ...survey,
-            example: true,
-          }));
-          setGuestSurveys(updatedData);
-        }
-      })
-      .catch((e) => processApirror(e));
-  }, []);
 
   const handleSurveyStatusChange = (id, newStatus) => {
     setSurveys((prevState) => ({
@@ -286,8 +271,7 @@ function Dashboard() {
                 >
                   <Close color="#000" />
                 </IconButton>
-                <TemplateSlider
-                  surveys={guestSurveys}
+                <ExampleSurveys
                   onClone={(survey) => onClone(survey)}
                 />
               </div>
