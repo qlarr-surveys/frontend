@@ -19,8 +19,8 @@ function SurveyQuota() {
   const { t } = useTranslation("manage");
   const survey = useSelector((state) => state.editState.survey);
 
-  const [checked, setChecked] = useState(survey.quota > 0);
-  const [limit, setLimit] = useState(survey.quota >= 0 ? survey.quota : "");
+  const [checked, setChecked] = useState(survey?.quota > 0);
+  const [limit, setLimit] = useState(survey?.quota >= 0 ? survey.quota : "");
 
   const changeLimit = (value) => {
     const intValue = parseInt(value);
@@ -52,7 +52,7 @@ function SurveyQuota() {
 
 
   const isDisabled =
-    !isSurveyAdmin() || survey.status == SURVEY_STATUS.CLOSED;
+    !isSurveyAdmin() || survey?.status == SURVEY_STATUS.CLOSED;
 
   return (
     <Box className={styles.mainContainer}>
