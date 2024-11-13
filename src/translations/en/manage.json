@@ -22,7 +22,7 @@
   "admins": "admins",
   "analysts": "analysts",
   "base_language_required": "Base Language is Required",
-  "confirm_password_required": "You must repeat password",  
+  "confirm_password_required": "You must repeat password",
   "create_survey": {
     "title": "Create Survey"
   },
@@ -134,6 +134,9 @@
   },
   "my_surveys": "Your Surveys",
   "new_survey": "New Survey",
+  "example_surveys": "Example Surveys",
+  "create_new_survey": "Create New Surey",
+  "copy_example_surveys": "Copy Example Surveys",
   "password_required": "Password is Required",
   "processed_errors": {
     "backend_down": "Backend is Unreachable... Please Try again later",
@@ -227,9 +230,9 @@
     "roles": "Roles",
     "title_delete": "Delete",
     "title_edit": "Edit",
-    "status" : "Status",
-    "active" : "Active",
-    "invitation_sent" : "Invitation Sent"
+    "status": "Status",
+    "active": "Active",
+    "invitation_sent": "Invitation Sent"
   },
   "launch": {
     "publish_text": "Don’t forget to publish your survey to apply the changes you’ve made.",

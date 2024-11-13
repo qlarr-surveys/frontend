@@ -5,7 +5,15 @@
   overflow: auto;
 }
 
+.newSurveysButton {
+  margin-bottom: 48px;
+  justify-content: flex-start;
+}
+
 .content {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
   margin-top: 30px;
 }
 
