@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { changeValidationValue } from "~/state/design/designState";
 
 function ValidationSetupItem({ rule, t, code }) {
-  console.log("ValidationSetupItem: " + code);
+  console.debug("ValidationSetupItem: " + code);
 
   const dispatch = useDispatch();
   const validationRule = useSelector((state) => {

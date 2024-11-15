@@ -31,7 +31,7 @@ function QuestionDesign({
   onMainLang,
   parentIndex,
 }) {
-  console.log(code + ": " + index);
+  console.debug(code + ": " + index);
   const [hovered, setHovered] = useState(false);
 
   const containerRef = useRef();

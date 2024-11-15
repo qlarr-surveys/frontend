@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { deleteGroup } from "~/state/design/designState";
 
 function GroupHeader({ t, code, collapsed, children }) {
-  console.log("Group Header: " + code);
+  console.debug("Group Header: " + code);
 
   const dispatch = useDispatch();
   const langInfo = useSelector((state) => {

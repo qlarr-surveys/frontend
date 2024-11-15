@@ -55,7 +55,7 @@ const SCQIconArray = React.lazy(() =>
 );
 
 const Question = forwardRef((props, ref) => {
-  console.log("rendering: " + props.component.code);
+  console.debug("rendering: " + props.component.code);
   const relevance = useSelector((state) => {
     let questionState = state.runState.values[props.component.qualifiedCode];
     return (
