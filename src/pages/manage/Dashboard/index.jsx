@@ -210,8 +210,6 @@ function Dashboard() {
 
   const isRtl = getDirFromSession();
 
-  console.log("isrtl ", isRtl);
-
   return (
     <Box className={styles.mainContainer}>
       <Container>
