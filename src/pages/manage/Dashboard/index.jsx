@@ -24,11 +24,12 @@ import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import DeleteModal from "~/components/common/DeleteModal";
 import { Add, Close, CopyAll } from "@mui/icons-material";
+import { getDirFromSession } from "~/utils/common";
 
 function Dashboard() {
   const surveyService = useService("survey");
   const [surveys, setSurveys] = useState(null);
-  
+
   const [fetchingSurveys, setFetchingSurveys] = useState(true);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
@@ -207,11 +208,19 @@ function Dashboard() {
     });
   };
 
+  const isRtl = getDirFromSession();
+
+  console.log("isrtl ", isRtl);
+
   return (
     <Box className={styles.mainContainer}>
       <Container>
         <Box className={styles.content}>
-          <Stack className={styles.newSurveysButton} direction="row" spacing={2}>
+          <Stack
+            className={styles.newSurveysButton}
+            direction="row"
+            spacing={2}
+          >
             {shouldShowClickAdd() && !isCreateSurveyOpen && (
               <Button
                 variant="contained"
@@ -243,7 +252,7 @@ function Dashboard() {
                   style={{
                     position: "absolute",
                     top: 0,
-                    right: 0,
+                    ...(isRtl === "ltr" ? { right: 0 } : { left: 0 }),
                     color: "black",
                     zIndex: 1,
                   }}
@@ -264,16 +273,14 @@ function Dashboard() {
                   style={{
                     position: "absolute",
                     top: 0,
-                    right: 0,
+                    ...(isRtl === "ltr" ? { right: 0 } : { left: 0 }),
                     color: "black",
                     zIndex: 1,
                   }}
                 >
                   <Close color="#000" />
                 </IconButton>
-                <ExampleSurveys
-                  onClone={(survey) => onClone(survey)}
-                />
+                <ExampleSurveys onClone={(survey) => onClone(survey)} />
               </div>
             </Fade>
           )}
