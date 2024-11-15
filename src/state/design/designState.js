@@ -96,7 +96,6 @@ export const designState = createSlice({
     },
     changeAttribute: (state, action) => {
       let payload = action.payload;
-      console.log(payload);
       if (
         action.payload.key == "content" ||
         action.payload.key == "instructionList" ||
@@ -474,50 +473,25 @@ export const designState = createSlice({
 
     addComponent: (state, action) => {
       const { type, questionType } = action.payload;
-      const survey = state.Survey;
-
-      const lastGroupIndex = survey.children
-        .map((group) => state[group.code])
-        .slice(0, -1)
-        .map((group, index) => (group.groupType !== "END" ? index : -1))
-        .filter((index) => index !== -1)
-        .pop();
-
       if (type === "group") {
-        const newGroup = createGroup("GROUP", nextGroupId(survey.children));
-        survey.children.splice(lastGroupIndex + 1, 0, newGroup.newGroup);
-        state[newGroup.newGroup.code] = newGroup.state;
+        const survey = state.Survey;
+        const lastGroupIndex = Math.max(0, survey.children.length - 1);
+        newGroup(state, { toIndex: lastGroupIndex });
       } else if (type === "question") {
-        let questionId = nextQuestionId(state, survey.children);
-
-        const questionObject = createQuestion(
-          questionType,
-          questionId,
-          state.langInfo.mainLang
-        );
-        const newCode = `Q${questionId}`;
-
-        const group = state[survey.children[lastGroupIndex].code];
-
-        if (!group.children) {
-          group.children = [];
+        if (state.Survey.children.length == 1) {
+          newGroup(state, { toIndex: 0 });
         }
-
-        Object.keys(questionObject)
-          .filter((key) => key !== "question")
-          .forEach((key) => {
-            state[key] = questionObject[key];
-          });
-        addMaskedValuesInstructions(newCode, questionObject[newCode], state);
-
-        group.children.push(questionObject.question);
-
-        designState.caseReducers.setup(state, {
-          payload: { code: newCode, rules: setupOptions(questionType) },
+        const survey = state.Survey;
+        const lastGroupIndex = Math.max(0, survey.children.length - 2);
+        const destinationGroupCode = survey.children[lastGroupIndex].code;
+        const destinationGroup = state[destinationGroupCode]
+        const toIndex = destinationGroup.children?.length || 0;
+        newQuestion(state, {
+          destination: destinationGroupCode,
+          questionType,
+          toIndex,
         });
       }
-
-      cleanupRandomRules(survey);
     },
   },
 });
@@ -745,7 +719,6 @@ const newQuestion = (state, payload) => {
     });
   const newCode = `Q${questionId}`;
 
-  console.log("newQ", questionObject[newCode]);
   addMaskedValuesInstructions(newCode, questionObject[newCode], state);
   destinationGroup.children.splice(
     destinationQuestionIndex,
@@ -753,9 +726,6 @@ const newQuestion = (state, payload) => {
     questionObject.question
   );
   cleanupRandomRules(destinationGroup);
-  designState.caseReducers.setup(state, {
-    payload: { code: newCode, rules: setupOptions(payload.questionType) },
-  });
 };
 
 const newGroup = (state, payload) => {
@@ -770,12 +740,6 @@ const newGroup = (state, payload) => {
     survey.children.splice(payload.toIndex, 0, group.newGroup);
   }
   state[group.newGroup.code] = group.state;
-  designState.caseReducers.setup(state, {
-    payload: {
-      code: group.newGroup.code,
-      rules: setupOptions(group.newGroup.type),
-    },
-  });
   cleanupRandomRules(survey);
 };
 

@@ -86,7 +86,6 @@ function setValueInState(state, payload) {
       "VALUE CHANGE"
   )
     console.log("NEW STATE in: " + (Date.now() - time) + " millis");
-    console.log(current(state))
   }
 }
 

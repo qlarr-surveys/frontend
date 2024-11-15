@@ -116,7 +116,6 @@ function Theming({ t }) {
 
         const newVal = `rgba(${r}, ${g}, ${b}, ${a})`;
 
-        console.log("New bgColor:", newVal);
 
         dispatch(
           changeAttribute({

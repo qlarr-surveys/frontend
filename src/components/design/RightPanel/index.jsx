@@ -21,7 +21,6 @@ function RightPanel({ t }) {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      console.log("I am listenting")
       if (event.ctrlKey && event.key === 'd') {
         document.removeEventListener('keydown', handleKeyDown);
         dispatch(resetSetup());

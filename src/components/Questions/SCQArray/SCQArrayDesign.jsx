@@ -260,7 +260,6 @@ function SCQArrayRowDesign({
           variant="standard"
           value={content || ""}
           onChange={(e) => {
-            console.log(e.target.value);
             dispatch(
               changeContent({
                 code: item.qualifiedCode,
@@ -451,7 +450,6 @@ function SCQArrayHeaderDesign({
         variant="standard"
         value={content || ""}
         onChange={(e) => {
-          console.log(e.target.value);
           dispatch(
             changeContent({
               code: item.qualifiedCode,
