@@ -471,6 +471,54 @@ export const designState = createSlice({
         (group) => (state[group.code].collapsed = true)
       );
     },
+
+    addComponent: (state, action) => {
+      const { type, questionType } = action.payload;
+      const survey = state.Survey;
+
+      const lastGroupIndex = survey.children
+        .map((group) => state[group.code])
+        .slice(0, -1)
+        .map((group, index) => (group.groupType !== "END" ? index : -1))
+        .filter((index) => index !== -1)
+        .pop();
+
+      if (type === "group") {
+        const newGroup = createGroup("GROUP", nextGroupId(survey.children));
+        survey.children.splice(lastGroupIndex + 1, 0, newGroup.newGroup);
+        state[newGroup.newGroup.code] = newGroup.state;
+      } else if (type === "question") {
+        let questionId = nextQuestionId(state, survey.children);
+
+        const questionObject = createQuestion(
+          questionType,
+          questionId,
+          state.langInfo.mainLang
+        );
+        const newCode = `Q${questionId}`;
+
+        const group = state[survey.children[lastGroupIndex].code];
+
+        if (!group.children) {
+          group.children = [];
+        }
+
+        Object.keys(questionObject)
+          .filter((key) => key !== "question")
+          .forEach((key) => {
+            state[key] = questionObject[key];
+          });
+        addMaskedValuesInstructions(newCode, questionObject[newCode], state);
+
+        group.children.push(questionObject.question);
+
+        designState.caseReducers.setup(state, {
+          payload: { code: newCode, rules: setupOptions(questionType) },
+        });
+      }
+
+      cleanupRandomRules(survey);
+    },
   },
 });
 
@@ -507,6 +555,7 @@ export const {
   editSkipToEnd,
   changeRelevance,
   onDrag,
+  addComponent,
   collapseAllGroups,
   setSaving,
   setUpdating,
@@ -695,6 +744,8 @@ const newQuestion = (state, payload) => {
       state[key] = questionObject[key];
     });
   const newCode = `Q${questionId}`;
+
+  console.log("newQ", questionObject[newCode]);
   addMaskedValuesInstructions(newCode, questionObject[newCode], state);
   destinationGroup.children.splice(
     destinationQuestionIndex,
