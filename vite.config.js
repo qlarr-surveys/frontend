@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 import legacy from "@vitejs/plugin-legacy";
 
 export default defineConfig(({ mode }) => {
-  console.log(mode);
+  console.debug(mode);
   switch (mode) {
     case "android-debuggable":
     case "staging":

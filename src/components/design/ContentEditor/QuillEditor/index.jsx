@@ -11,7 +11,7 @@ Quill.register("modules/clipboard", SurveyFormClipboard, true);
 
 
 function DraftEditor({ value, onBlurListener, extended, isRtl, lang, code }) {
-  console.log("DraftEditor for: " + code);
+  console.debug("DraftEditor for: " + code);
 
   const oneLine = (value, oneLine) => {
     return !oneLine

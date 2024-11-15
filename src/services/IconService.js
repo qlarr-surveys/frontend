@@ -13,7 +13,7 @@ class IconService {
         })
         .catch((err) => {
           if (axios.isCancel(err)) {
-            console.log("Request canceled:", err.message);
+            console.debug("Request canceled:", err.message);
           } else {
             reject(err);
           }
