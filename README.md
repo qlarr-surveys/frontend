@@ -23,7 +23,7 @@ To run this locally, follow these steps:
 
 2. **Clone the Repository**:
    ```bash
-   git clone https://github.com/yourusername/qlarr-surveys.git
+   git clone https://github.com/qlarr-surveys/frontend
    cd frontend
    ```
 
