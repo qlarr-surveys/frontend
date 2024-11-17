@@ -10,6 +10,7 @@ import {
   Alert,
   Box,
   CardMedia,
+  Badge,
 } from "@mui/material";
 import { Stop } from "@mui/icons-material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -432,8 +433,18 @@ export const Survey = ({
                   <Tooltip
                     title={`Complete Responses: ${survey.completeResponseCount}`}
                   >
-                    <TableRowsIcon sx={{ color: "text.secondary" }} />
+                    <Badge
+                      badgeContent={survey.completeResponseCount}
+                      color="primary"
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                    >
+                      <TableRowsIcon sx={{ color: "text.secondary" }} />
+                    </Badge>
                   </Tooltip>
+
                   <Tooltip
                     title={
                       survey.surveyQuota > 0
@@ -441,7 +452,18 @@ export const Survey = ({
                         : "No Quota"
                     }
                   >
-                    <FormatQuoteIcon sx={{ color: "text.secondary" }} />
+                    <Badge
+                      badgeContent={
+                        survey.surveyQuota > 0 ? survey.surveyQuota : 0
+                      }
+                      color="primary"
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                    >
+                      <FormatQuoteIcon sx={{ color: "text.secondary" }} />
+                    </Badge>
                   </Tooltip>
                 </Box>
               </>
