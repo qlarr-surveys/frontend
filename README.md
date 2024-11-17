@@ -13,10 +13,7 @@ Wanis
 ## Support
 Wanis
 
-## Operations
-If you wish to run this project for a production environment, we recommend you to use our docker repo that packages both frontend and backend
-
-To run this locally, follow these steps:
+## Run Locally
 
 1. **Prerequisites**:
    - Ensure you have [Node.js](https://nodejs.org/) (version 16 or later) and [npm](https://www.npmjs.com/) installed.
@@ -48,4 +45,6 @@ To run this locally, follow these steps:
    ```bash
    npm run build
    ```
+   
+## Production Build using Docker
 
