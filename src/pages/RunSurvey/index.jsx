@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { shallowEqual, useDispatch } from "react-redux";
 import styles from "./RunSurvey.module.css";
 import { useTranslation } from "react-i18next";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -43,6 +43,11 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
   const navResponseId = useSelector((state) => {
     return state.runState.data?.responseId;
   });
+
+  const canJump = useSelector(
+    (state) => state.runState.data?.survey?.allowJump,
+    shallowEqual
+  );
 
   const backgroundImage = useSelector((state) => {
     return state.runState.data?.survey?.resources?.backgroundImage;
@@ -147,18 +152,17 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
 
   const backgroundStyle = backgroundImage
     ? {
-      backgroundImage: `url(${buildResourceUrl(backgroundImage)})`,
-      backgroundSize: "cover",
-      backgroundRepeat: "no-repeat",
-      // backgroundSize: "100% 100%",
-      backgroundPosition: "center",
-    }
+        backgroundImage: `url(${buildResourceUrl(backgroundImage)})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        // backgroundSize: "100% 100%",
+        backgroundPosition: "center",
+      }
     : {};
 
   return (
     <>
       <CacheProvider value={cacheRtlMemo}>
-
         <ThemeProvider theme={theme}>
           {error && (
             <ErrorLayout
@@ -179,7 +183,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
                 ...backgroundStyle,
               }}
             >
-              <SurveyIndex />
+              {canJump && <SurveyIndex />}
               <RunLoadingDots />
               <SurveyMemo key="Survey" />
             </div>
@@ -217,7 +221,6 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
           </CompactLayout>
         </Box>
       )}
-
     </>
   );
 }

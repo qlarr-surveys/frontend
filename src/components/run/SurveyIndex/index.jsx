@@ -120,7 +120,7 @@ function SurveyIndex() {
           onClick={toggleIndexVisibility}
           aria-label="open index"
         >
-          <MenuIcon />
+          <MenuIcon fontSize="small" />
         </IconButton>
       )}
       {isIndexOpen && (
@@ -128,8 +128,13 @@ function SurveyIndex() {
           style={{ backgroundColor: theme.palette.background.paper }}
           className={`${styles.surveyContent} ${styles.slideInLeft}`}
         >
-          <IconButton onClick={toggleIndexVisibility} sx={{ width: 'fit-content' }} aria-label="close index">
+          <IconButton
+            onClick={toggleIndexVisibility}
+            sx={{ width: "fit-content" }}
+            aria-label="close index"
+          >
             <ArrowBack
+              fontSize="small"
               sx={{ color: theme.textStyles.group.color, marginRight: "auto" }}
             />
           </IconButton>
@@ -146,7 +151,7 @@ function SurveyIndex() {
                   <Box
                     className={`${styles.groupTitle} ${
                       isCurrentGroup(group.code) ? styles.boldText : ""
-                      }`}
+                    }`}
                   >
                     {groupIconByType(
                       `${group.groupType}`,
@@ -163,6 +168,7 @@ function SurveyIndex() {
                           onClick={() => onGroupClicked(group.code)}
                         >
                           <Shortcut
+                            fontSize="small"
                             sx={{ color: theme.textStyles.group.color }}
                           />
                         </IconButton>
@@ -173,10 +179,12 @@ function SurveyIndex() {
                     >
                       {expandedGroups[groupIndex] ? (
                         <ExpandLessIcon
+                          fontSize="small"
                           sx={{ color: theme.textStyles.group.color }}
                         />
                       ) : (
                         <ExpandMoreIcon
+                          fontSize="small"
                           sx={{ color: theme.textStyles.group.color }}
                         />
                       )}
@@ -201,20 +209,20 @@ function SurveyIndex() {
                                                         ${styles.questionText} 
                                                         ${
                                                           isCurrentQuestion(
-                            question.code
-                          )
-                              ? styles.boldText
-                              : ""
-                            } 
+                                                            question.code
+                                                          )
+                                                            ? styles.boldText
+                                                            : ""
+                                                        } 
                                                         ${
                                                           isCurrentGroup(
-                              group.code
-                            ) &&
-                              navigationIndex.name !==
-                              "question"
-                              ? styles.boldText
-                              : ""
-                            }
+                                                            group.code
+                                                          ) &&
+                                                          navigationIndex.name !==
+                                                            "question"
+                                                            ? styles.boldText
+                                                            : ""
+                                                        }
                                                         `}
                           style={{
                             cursor: isQuestionClickable(question.code)

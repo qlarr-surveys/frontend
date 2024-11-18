@@ -1,7 +1,16 @@
 .menuIcon.menuIcon {
   position: absolute;
-  top: 16px;
+  top: 28px;
   left: 16px;
+  padding: 3px;
+  z-index: 999;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 825px) {
+  .menuIcon.menuIcon {
+    left: 0px;
+  }
 }
 
 .surveyContent {
@@ -27,7 +36,7 @@
 .actionsContainer {
   display: flex;
   align-items: center;
-  gap: .25rem;
+  gap: 0.25rem;
 }
 
 .groupTitle,
@@ -52,7 +61,6 @@
   right: 8px;
 }
 
-
 .questionContainer {
   position: relative;
   padding-left: 10px;
@@ -62,27 +70,24 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: .5rem;
+  gap: 0.5rem;
   padding: 8px;
 }
-
 
 .boldText {
   font-weight: 600;
 }
 
-
 .redAsterix {
-  margin-left: .5rem;
+  margin-left: 0.5rem;
   color: red;
 }
-
 
 .slideInLeft {
   -webkit-animation-name: slideInLeft;
   animation-name: slideInLeft;
-  -webkit-animation-duration: .3s;
-  animation-duration: .3s;
+  -webkit-animation-duration: 0.3s;
+  animation-duration: 0.3s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
