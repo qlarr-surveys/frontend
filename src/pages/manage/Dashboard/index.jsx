@@ -299,13 +299,13 @@ function Dashboard() {
             <Box
               sx={{
                 mt: 3,
-                columnGap: 4,
+                columnGap: 2,
                 display: "grid",
                 rowGap: { xs: 4, md: 5 },
                 gridTemplateColumns: {
-                  xs: "repeat(1, 1fr)",
-                  sm: "repeat(2, 1fr)",
-                  md: "repeat(3, 1fr)",
+                  xs: "1fr", 
+                  sm: "repeat(auto-fit, minmax(280px, 1fr))", 
+                  md: "repeat(auto-fit, minmax(330px, 1fr))", 
                 },
               }}
             >
