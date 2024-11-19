@@ -1,3 +1,4 @@
+import { jwtDecode } from "jwt-decode";
 import CookiesService from "./CookiesService";
 
 class TokenService {
@@ -16,7 +17,17 @@ class TokenService {
 
   isAuthenticated() {
     const authToken = this.getAuthToken();
-    return authToken && authToken.length > 0;
+
+    if (!authToken || authToken.length === 0) {
+      return false;
+    }
+
+    try {
+      const decodedToken = jwtDecode(authToken);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   setSession(user) {
