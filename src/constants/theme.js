@@ -1,9 +1,9 @@
-export const BG_COLOR = "#d7ccc8";
-export const TEXT_COLOR = "#000000CC";
-export const PRIMARY_COLOR = "#3f51b5";
+export const BG_COLOR = "#f7f8fc";
+export const TEXT_COLOR = "#0b1029";
+export const PRIMARY_COLOR = "#69ac3b";
 export const SECONDARY_COLOR = "#5e35b1";
 export const ERR_COLOR = "#f44336";
-export const PAPER_COLOR = "#fafafa";
+export const PAPER_COLOR = "#ffffff";
 
 export const defualtTheme = (theme) => {
   return {
