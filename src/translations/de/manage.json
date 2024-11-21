@@ -24,7 +24,8 @@
   "base_language_required": "Basissprache ist erforderlich",
   "confirm_password_required": "Sie müssen das Passwort wiederholen",
   "create_survey": {
-    "title": "Umfrage erstellen"
+    "title": "Umfrage erstellen",
+    "empty_state_message": "Keine Umfragen verfügbar. Erstellen Sie eine neue Umfrage oder kopieren Sie ein Beispiel, um loszulegen!"
   },
   "edit_survey": {
     "close_title": "Umfrage schließen",
