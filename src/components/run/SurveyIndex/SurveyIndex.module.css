@@ -27,6 +27,12 @@
   box-sizing: border-box;
 }
 
+@media screen and (max-width: 825px) {
+  .surveyContent {
+    width: 18rem;
+    padding: 8px;
+  }
+}
 .groupTitleContainer {
   display: flex;
   align-items: center;
