@@ -338,8 +338,7 @@ function Dashboard() {
                 <Box className={styles.emptyStateBox}>
                   <Description sx={{ fontSize: 48, color: "#ccc" }} />
                   <Typography variant="h6" color="textSecondary" sx={{ mt: 2 }}>
-                    No surveys available. Create a new survey or copy an example
-                    to get started!
+                    {t("create_survey.empty_state_message")}
                   </Typography>
                 </Box>
               )}
