@@ -24,7 +24,8 @@
   "base_language_required": "Base Language is Required",
   "confirm_password_required": "You must repeat password",
   "create_survey": {
-    "title": "Create Survey"
+    "title": "Create Survey",
+    "empty_state_message": "No surveys available. Create a new survey or copy an example to get started!"
   },
   "edit_survey": {
     "close_title": "Close Survey",

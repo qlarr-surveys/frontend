@@ -421,7 +421,7 @@ export const Survey = ({
                     {t(`status.${surveyStatus}`)}
                   </Typography>
                 </Stack>
-                <Box sx={{ px: 3, display: "flex", gap: 2 }}>
+                <Box sx={{ px: 3, display: "flex", gap: 2, my: 0.5 }}>
                   {!example &&
                     survey.status !== "closed" &&
                     survey.latestVersion.published === false && (

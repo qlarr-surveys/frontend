@@ -7,6 +7,7 @@ import {
   IconButton,
   Stack,
   TablePagination,
+  Typography,
 } from "@mui/material";
 import TokenService from "~/services/TokenService";
 import styles from "./Dashboard.module.css";
@@ -23,7 +24,13 @@ import { SurveyClone } from "~/components/manage/SurveyClone";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import DeleteModal from "~/components/common/DeleteModal";
-import { Add, Close, CopyAll } from "@mui/icons-material";
+import {
+  Add,
+  Close,
+  CopyAll,
+  Description,
+  SentimentDissatisfied,
+} from "@mui/icons-material";
 import { getDirFromSession } from "~/utils/common";
 
 function Dashboard() {
@@ -295,39 +302,53 @@ function Dashboard() {
               setSortBy(el.target.value);
             }}
           />
+          <Box className={styles.surveyCardsContainer}>
           {!fetchingSurveys ? (
-            <Box
-              sx={{
-                mt: 3,
-                columnGap: 2,
-                display: "grid",
-                rowGap: { xs: 4, md: 5 },
-                gridTemplateColumns: {
-                  xs: "1fr", 
-                  sm: "repeat(auto-fit, minmax(280px, 1fr))", 
-                  md: "repeat(auto-fit, minmax(330px, 1fr))", 
-                },
-              }}
-            >
-              {surveys?.surveys?.map((survey) => {
-                return (
-                  <Survey
-                    key={survey.id}
-                    survey={survey}
-                    onStatusChange={handleSurveyStatusChange}
-                    onClone={() => onClone(survey)}
-                    onDelete={() => onDelete(survey)}
-                    onClose={() => onCloseSurvey(survey)}
-                    onUpdateTitle={handleUpdateSurveyName}
-                    onUpdateDescription={handleUpdateSurveyDescription}
-                    onUpdateImage={handleUpdateSurveyImage}
-                  />
-                );
-              })}
-            </Box>
+            <>
+              {surveys?.surveys?.length > 0 ? (
+                <Box
+                  sx={{
+                    mt: 3,
+                    columnGap: 2,
+                    display: "grid",
+                    rowGap: { xs: 4, md: 5 },
+                    gridTemplateColumns: {
+                      xs: "1fr",
+                      sm: "repeat(auto-fit, minmax(280px, 1fr))",
+                      md: "repeat(auto-fit, minmax(330px, 350px))",
+                    },
+                  }}
+                >
+                  {surveys?.surveys?.map((survey) => {
+                    return (
+                      <Survey
+                        key={survey.id}
+                        survey={survey}
+                        onStatusChange={handleSurveyStatusChange}
+                        onClone={() => onClone(survey)}
+                        onDelete={() => onDelete(survey)}
+                        onClose={() => onCloseSurvey(survey)}
+                        onUpdateTitle={handleUpdateSurveyName}
+                        onUpdateDescription={handleUpdateSurveyDescription}
+                        onUpdateImage={handleUpdateSurveyImage}
+                      />
+                    );
+                  })}
+                </Box>
+              ) : (
+                <div className={styles.noSurveys}>
+                  <Description sx={{ fontSize: 48, color: "#ccc" }} />
+                  <Typography variant="h6" color="textSecondary" sx={{ mt: 2 }}>
+                    {t("create_survey.empty_state_message")}
+                  </Typography>
+                </div>
+              )}
+            </>
           ) : (
             <LoadingDots />
           )}
+          </Box>
+
           {surveys && (
             <TablePagination
               rowsPerPageOptions={[5, 10, 20, 50]}
