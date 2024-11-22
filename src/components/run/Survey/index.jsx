@@ -29,9 +29,9 @@ function Survey() {
 
   const surveyState = useSelector((state) => state.runState.data, shallowEqual);
 
-  const { defaultLang, additionalLang } = surveyState.survey || {};
+  const { lang: surveyLang, additionalLang } = surveyState || {};
   const languageOptions = [
-    { code: defaultLang.code, name: defaultLang.name },
+    { code: surveyLang.code, name: surveyLang.name },
     ...(additionalLang || []),
   ];
 
@@ -42,7 +42,6 @@ function Survey() {
       })
     );
   };
-
 
   return (
     <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
@@ -66,7 +65,7 @@ function Survey() {
             }}
             name="language"
             label="Select Language"
-            value={defaultLang.code}
+            value={surveyLang.code}
             onChange={(event) => handleLanguageChange(event.target.value)}
           >
             {languageOptions.map((lang) => (
