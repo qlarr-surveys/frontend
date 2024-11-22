@@ -1,6 +1,6 @@
 export const BG_COLOR = '#dfe2ef';
 export const TEXT_COLOR = '#091133';
-export const PRIMARY_COLOR = '#091133';
+export const PRIMARY_COLOR = '#2d3cb1';
 export const SECONDARY_COLOR = '#672ebf';
 export const ERR_COLOR = '#d13e17';
 export const PAPER_COLOR = "#ffffff"
@@ -61,8 +61,8 @@ export const defaultSurveyTheme = {
       color: TEXT_COLOR,
     },
   },
-  primaryColor: '#2d3cb1',
-  bgColor: '#dfe2ef',
-  paperColor: "#fafafa",
+  primaryColor: PRIMARY_COLOR,
+  bgColor: BG_COLOR,
+  paperColor: PAPER_COLOR,
 };
 
