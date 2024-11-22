@@ -40,11 +40,14 @@
   }
 }
 
-.emptyStateBox {
+.surveyCardsContainer {
   margin-top: 24px;
-  text-align: center;
   padding: 16px;
   border: 2px dashed #ccc;
   border-radius: 8px;
   background-color: #f9f9f9;
+}
+
+.noSurveys {
+  text-align: center;
 }

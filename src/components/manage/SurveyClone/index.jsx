@@ -29,10 +29,6 @@ export const SurveyClone = ({ open, onClose, survey }) => {
       setNewSurveyNameError(t("survey_required"));
       return false;
     }
-    if (survey.name === newSurveyName) {
-      setNewSurveyNameError(t("processed_errors.duplicate_survey_name"));
-      return false;
-    }
     return true;
   };
 

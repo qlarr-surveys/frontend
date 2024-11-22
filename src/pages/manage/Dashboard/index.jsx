@@ -302,6 +302,7 @@ function Dashboard() {
               setSortBy(el.target.value);
             }}
           />
+          <Box className={styles.surveyCardsContainer}>
           {!fetchingSurveys ? (
             <>
               {surveys?.surveys?.length > 0 ? (
@@ -335,17 +336,19 @@ function Dashboard() {
                   })}
                 </Box>
               ) : (
-                <Box className={styles.emptyStateBox}>
+                <div className={styles.noSurveys}>
                   <Description sx={{ fontSize: 48, color: "#ccc" }} />
                   <Typography variant="h6" color="textSecondary" sx={{ mt: 2 }}>
                     {t("create_survey.empty_state_message")}
                   </Typography>
-                </Box>
+                </div>
               )}
             </>
           ) : (
             <LoadingDots />
           )}
+          </Box>
+
           {surveys && (
             <TablePagination
               rowsPerPageOptions={[5, 10, 20, 50]}

@@ -1,9 +1,9 @@
-export const BG_COLOR = "#f7f8fc";
-export const TEXT_COLOR = "#0b1029";
-export const PRIMARY_COLOR = "#69ac3b";
-export const SECONDARY_COLOR = "#5e35b1";
-export const ERR_COLOR = "#f44336";
-export const PAPER_COLOR = "#ffffff";
+export const BG_COLOR = '#dfe2ef';
+export const TEXT_COLOR = '#091133';
+export const PRIMARY_COLOR = '#091133';
+export const SECONDARY_COLOR = '#672ebf';
+export const ERR_COLOR = '#d13e17';
+export const PAPER_COLOR = "#ffffff"
 
 export const defualtTheme = (theme) => {
   return {
@@ -61,7 +61,8 @@ export const defaultSurveyTheme = {
       color: TEXT_COLOR,
     },
   },
-  primaryColor: PRIMARY_COLOR,
-  bgColor: BG_COLOR,
-  paperColor: PAPER_COLOR,
+  primaryColor: '#2d3cb1',
+  bgColor: '#dfe2ef',
+  paperColor: "#fafafa",
 };
+

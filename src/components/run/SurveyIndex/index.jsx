@@ -37,8 +37,7 @@ function SurveyIndex() {
     shallowEqual
   );
   const canJump = useSelector(
-    (state) => state.runState.data.survey.allowJump,
-    shallowEqual
+    (state) => state.runState.data.survey.allowJump
   );
 
   const isCurrentQuestion = (questionCode) =>
