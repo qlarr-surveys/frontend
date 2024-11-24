@@ -108,15 +108,6 @@ class SurveyService extends BaseService {
     );
     return response;
   }
-
-  async responseAttach(surveyId, filename) {
-    const response = await this.handleRequest(() =>
-      authenticatedApi.get(`/survey/${surveyId}/response/attach/${filename}`, {
-        responseType: "blob",
-      })
-    );
-    return response.data;
-  }
 }
 
 export default SurveyService;
