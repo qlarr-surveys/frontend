@@ -4,8 +4,6 @@ import { Box, IconButton } from "@mui/material";
 import {
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
-  Menu as MenuIcon,
-  ArrowBack,
   Shortcut,
 } from "@mui/icons-material";
 import { stripTags, truncateWithEllipsis } from "~/utils/design/utils";
@@ -17,7 +15,7 @@ import {
   questionIconByType,
 } from "~/components/Questions/utils";
 
-function SurveyIndex() {
+function SurveyIndex({ isVisible }) {
   const dispatch = useDispatch();
   const theme = useTheme();
 
@@ -30,15 +28,12 @@ function SurveyIndex() {
   }, shallowEqual);
 
   const [expandedGroups, setExpandedGroups] = useState({});
-  const [isIndexOpen, setIsIndexOpen] = useState(false);
 
   const relevance_map = useSelector(
     (state) => state.runState.values["Survey"].relevance_map,
     shallowEqual
   );
-  const canJump = useSelector(
-    (state) => state.runState.data.survey.allowJump
-  );
+  const canJump = useSelector((state) => state.runState.data.survey.allowJump);
 
   const isCurrentQuestion = (questionCode) =>
     navigationIndex.name === "question" &&
@@ -82,10 +77,6 @@ function SurveyIndex() {
     setExpandedGroups((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
-  const toggleIndexVisibility = () => {
-    setIsIndexOpen((prev) => !prev);
-  };
-
   const validity_map = useSelector((state) => {
     return state.runState.values["Survey"].validity_map;
   }, shallowEqual);
@@ -111,100 +102,83 @@ function SurveyIndex() {
     }
   }, [navigationIndex, survey.groups]);
   if (navigationIndex.name == "groups") return <></>;
+
+  if (!isVisible) return null;
+
   return (
     <>
-      {!isIndexOpen && (
-        <IconButton
-          className={`${styles.menuIcon} ${styles.slideInLeft}`}
-          onClick={toggleIndexVisibility}
-          aria-label="open index"
-        >
-          <MenuIcon fontSize="small" />
-        </IconButton>
-      )}
-      {isIndexOpen && (
-        <div
-          style={{ backgroundColor: theme.palette.background.paper }}
-          className={`${styles.surveyContent} ${styles.slideInLeft}`}
-        >
-          <IconButton
-            onClick={toggleIndexVisibility}
-            sx={{ width: "fit-content" }}
-            aria-label="close index"
-          >
-            <ArrowBack
-              fontSize="small"
-              sx={{ color: theme.textStyles.group.color, marginRight: "auto" }}
-            />
-          </IconButton>
-          {survey.groups
-            .filter(
-              (group) => relevance_map[group.code] && group.groupType !== "END"
-            )
-            .map((group, groupIndex) => (
-              <div key={group.code}>
-                <div
-                  className={styles.groupTitleContainer}
-                  onClick={() => onGroupClicked(group.code)}
+      <div
+        style={{ backgroundColor: theme.palette.background.paper }}
+        className={`${styles.surveyContent} ${styles.slideInLeft}`}
+      >
+        {survey.groups
+          .filter(
+            (group) => relevance_map[group.code] && group.groupType !== "END"
+          )
+          .map((group, groupIndex) => (
+            <div key={group.code}>
+              <div
+                className={styles.groupTitleContainer}
+                onClick={() => onGroupClicked(group.code)}
+              >
+                <Box
+                  className={`${styles.groupTitle} ${
+                    isCurrentGroup(group.code) ? styles.boldText : ""
+                  }`}
                 >
-                  <Box
-                    className={`${styles.groupTitle} ${
-                      isCurrentGroup(group.code) ? styles.boldText : ""
-                    }`}
-                  >
-                    {groupIconByType(
-                      `${group.groupType}`,
-                      undefined,
-                      theme.textStyles.group.color
+                  {groupIconByType(
+                    `${group.groupType}`,
+                    undefined,
+                    theme.textStyles.group.color
+                  )}
+                  {truncateWithEllipsis(stripTags(group.content?.label), 30)}
+                </Box>
+                <div className={styles.actionsContainer}>
+                  {navigationIndex.name == "group" &&
+                    !isCurrentGroup(group.code) && (
+                      <IconButton
+                        className={styles.jumpIcon}
+                        onClick={() => onGroupClicked(group.code)}
+                      >
+                        <Shortcut
+                          fontSize="small"
+                          sx={{ color: theme.textStyles.group.color }}
+                        />
+                      </IconButton>
                     )}
-                    {truncateWithEllipsis(stripTags(group.content?.label), 30)}
-                  </Box>
-                  <div className={styles.actionsContainer}>
-                    {navigationIndex.name == "group" &&
-                      !isCurrentGroup(group.code) && (
-                        <IconButton
-                          className={styles.jumpIcon}
-                          onClick={() => onGroupClicked(group.code)}
-                        >
-                          <Shortcut
-                            fontSize="small"
-                            sx={{ color: theme.textStyles.group.color }}
-                          />
-                        </IconButton>
-                      )}
-                    <IconButton
-                      className={styles.expandIcon}
-                      onClick={(e) => toggleGroupExpansion(e, groupIndex)}
-                    >
-                      {expandedGroups[groupIndex] ? (
-                        <ExpandLessIcon
-                          fontSize="small"
-                          sx={{ color: theme.textStyles.group.color }}
-                        />
-                      ) : (
-                        <ExpandMoreIcon
-                          fontSize="small"
-                          sx={{ color: theme.textStyles.group.color }}
-                        />
-                      )}
-                    </IconButton>
-                  </div>
+                  <IconButton
+                    className={styles.expandIcon}
+                    onClick={(e) => toggleGroupExpansion(e, groupIndex)}
+                  >
+                    {expandedGroups[groupIndex] ? (
+                      <ExpandLessIcon
+                        fontSize="small"
+                        sx={{ color: theme.textStyles.group.color }}
+                      />
+                    ) : (
+                      <ExpandMoreIcon
+                        fontSize="small"
+                        sx={{ color: theme.textStyles.group.color }}
+                      />
+                    )}
+                  </IconButton>
                 </div>
-                {expandedGroups[groupIndex] && (
-                  <div className={styles.questionContainer}>
-                    {group.questions
-                      .filter((question) => relevance_map[question.code])
-                      .map((question, questionIndex) => (
-                        <Box
-                          key={question.code}
-                          onClick={() =>
-                            onQuestionClicked(
-                              question.code,
-                              groupIndex,
-                              questionIndex
-                            )
-                          }
-                          className={`
+              </div>
+              {expandedGroups[groupIndex] && (
+                <div className={styles.questionContainer}>
+                  {group.questions
+                    .filter((question) => relevance_map[question.code])
+                    .map((question, questionIndex) => (
+                      <Box
+                        key={question.code}
+                        onClick={() =>
+                          onQuestionClicked(
+                            question.code,
+                            groupIndex,
+                            questionIndex
+                          )
+                        }
+                        className={`
                                                         ${styles.questionText} 
                                                         ${
                                                           isCurrentQuestion(
@@ -223,42 +197,42 @@ function SurveyIndex() {
                                                             : ""
                                                         }
                                                         `}
-                          style={{
-                            cursor: isQuestionClickable(question.code)
-                              ? "pointer"
-                              : "default",
-                          }}
-                        >
-                          <Box display="flex" alignItems="center" gap={1}>
-                            {questionIconByType(
-                              `${question.type}`,
-                              undefined,
-                              theme.textStyles.group.color
-                            )}
-                            {truncateWithEllipsis(
-                              stripTags(question.content?.label),
-                              25
-                            )}
-                            {!validity_map[question.code] && (
-                              <span className={styles.redAsterix}>*</span>
-                            )}
-                          </Box>
-                          {navigationIndex.name == "question" &&
-                            !isCurrentQuestion(question.code) && (
-                              <IconButton className={styles.jumpIcon}>
-                                <Shortcut
-                                  sx={{ color: theme.textStyles.group.color }}
-                                />
-                              </IconButton>
-                            )}
+                        style={{
+                          cursor: isQuestionClickable(question.code)
+                            ? "pointer"
+                            : "default",
+                        }}
+                      >
+                        <Box display="flex" alignItems="center" gap={1}>
+                          {questionIconByType(
+                            `${question.type}`,
+                            undefined,
+                            theme.textStyles.group.color
+                          )}
+                          {truncateWithEllipsis(
+                            stripTags(question.content?.label),
+                            25
+                          )}
+                          {!validity_map[question.code] && (
+                            <span className={styles.redAsterix}>*</span>
+                          )}
                         </Box>
-                      ))}
-                  </div>
-                )}
-              </div>
-            ))}
-        </div>
-      )}
+                        {navigationIndex.name == "question" &&
+                          !isCurrentQuestion(question.code) && (
+                            <IconButton className={styles.jumpIcon}>
+                              <Shortcut
+                                sx={{ color: theme.textStyles.group.color }}
+                              />
+                            </IconButton>
+                          )}
+                      </Box>
+                    ))}
+                </div>
+              )}
+            </div>
+          ))}
+      </div>
+      {/* )} */}
     </>
   );
 }

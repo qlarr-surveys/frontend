@@ -14,7 +14,8 @@
 }
 
 .surveyContent {
-  height: 100%;
+  height: calc(100vh - 64px);
+  margin-top: 64px;
   width: 22rem;
   overflow: auto;
   position: absolute;

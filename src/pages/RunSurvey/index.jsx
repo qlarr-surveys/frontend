@@ -26,6 +26,7 @@ import CompactLayout from "~/layouts/compact";
 import SurveyIndex from "~/components/run/SurveyIndex";
 import { isEquivalent } from "~/utils/design/utils";
 import RunLoadingDots from "~/components/common/RunLoadingDots";
+import SurveyToolbar from "~/components/run/SurveyToolbar";
 
 function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
   const runService = useService("run");
@@ -35,6 +36,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
   const [render, setRender] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [inlineError, setInlineError] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const surveyTheme = useSelector((state) => {
     return state.runState.data?.survey?.theme;
@@ -160,6 +162,10 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
       }
     : {};
 
+  const handleMenuToggle = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+
   return (
     <>
       <CacheProvider value={cacheRtlMemo}>
@@ -172,6 +178,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
               }}
             />
           )}
+
           {render && (
             <div
               className={styles.mainContainer}
@@ -183,7 +190,12 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
                 ...backgroundStyle,
               }}
             >
-              {canJump && <SurveyIndex />}
+              <SurveyToolbar
+                onMenuToggle={handleMenuToggle}
+                isMenuOpen={isMenuOpen}
+              />
+              {canJump && <SurveyIndex isVisible={isMenuOpen} />}
+
               <RunLoadingDots />
               <SurveyMemo key="Survey" />
             </div>
