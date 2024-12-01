@@ -27,12 +27,20 @@ import SurveyIndex from "~/components/run/SurveyIndex";
 import { isEquivalent } from "~/utils/design/utils";
 import RunLoadingDots from "~/components/common/RunLoadingDots";
 
+import SurveyDrawer, {
+  COLLAPSE,
+  COLLAPSE_IMMEDIATE,
+  EXPAND,
+} from "~/components/run/SurveyDrawer";
+import SurveyAppBar from "~/components/run/SurveyAppBar";
+
 function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
   const runService = useService("run");
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const lang = searchParams.get("lang");
   const [render, setRender] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(COLLAPSE);
   const [error, setError] = React.useState(false);
   const [inlineError, setInlineError] = React.useState(false);
 
@@ -150,6 +158,16 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
 
   const navigate = useNavigate();
 
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setExpanded(open ? EXPAND : COLLAPSE);
+  };
+
   const backgroundStyle = backgroundImage
     ? {
         backgroundImage: `url(${buildResourceUrl(backgroundImage)})`,
@@ -183,9 +201,15 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
                 ...backgroundStyle,
               }}
             >
-              {canJump && <SurveyIndex />}
               <RunLoadingDots />
+              <SurveyAppBar
+                toggleDrawer={toggleDrawer}
+              />
               <SurveyMemo key="Survey" />
+              <SurveyDrawer
+                expanded={expanded}
+                toggleDrawer={toggleDrawer}
+              />
             </div>
           )}
         </ThemeProvider>

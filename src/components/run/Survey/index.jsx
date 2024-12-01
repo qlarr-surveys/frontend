@@ -10,7 +10,6 @@ import styles from "./Survey.module.css";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { isTouchDevice } from "~/utils/isTouchDevice";
-import { RHFSelect } from "~/components/hook-form";
 import { langChange } from "~/state/runState";
 function Survey() {
   const theme = useTheme();
@@ -55,25 +54,6 @@ function Survey() {
         }}
       >
         <div className={styles.surveyGroups}>
-          <RHFSelect
-            style={{
-              position: "absolute",
-              right: 0,
-              top: 20,
-              zIndex: 1000,
-              width: "150px",
-            }}
-            name="language"
-            label="Select Language"
-            value={surveyLang.code}
-            onChange={(event) => handleLanguageChange(event.target.value)}
-          >
-            {languageOptions.map((lang) => (
-              <option key={lang.code} value={lang.code}>
-                {lang.name}
-              </option>
-            ))}
-          </RHFSelect>
           {survey.resources?.headerImage ? (
             <CardMedia
               className={styles.cardImage}

@@ -1,9 +1,22 @@
 import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Content from "../Content";
+import ChangeLang from "../ChangeLang";
+import { shallowEqual, useSelector } from "react-redux";
 
-function SurveyAppBar({ showBack, label, onBackClick, toggleDrawer }) {
+function SurveyAppBar({ toggleDrawer }) {
+  const label = useSelector((state) => {
+    return state.runState.data?.content?.label;
+  }, shallowEqual);
+
+  const lang = useSelector((state) => {
+    return state.runState.data?.lang;
+  }, shallowEqual);
+
+  const additionalLang = useSelector((state) => {
+    return state.runState.data?.additionalLang;
+  }, shallowEqual);
+
   return (
     <AppBar position="fixed">
       <Toolbar
@@ -13,18 +26,6 @@ function SurveyAppBar({ showBack, label, onBackClick, toggleDrawer }) {
           fontWeight: "400",
         }}
       >
-        {showBack && (
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={onBackClick}
-          >
-            <ArrowBackIcon />
-          </IconButton>
-        )}
         <IconButton
           size="large"
           edge="start"
@@ -35,7 +36,10 @@ function SurveyAppBar({ showBack, label, onBackClick, toggleDrawer }) {
         >
           <MenuIcon />
         </IconButton>
-        <Content elementCode="Survey" name="label" content={label} />
+        <div style={{ width: "100%" }}>
+          <Content elementCode="Survey" name="label" content={label} />
+        </div>
+        <ChangeLang lang={lang} additionalLang={additionalLang} />
       </Toolbar>
     </AppBar>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { shallowEqual, useDispatch } from "react-redux";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, MenuItem, Select } from "@mui/material";
 import { langChange } from "~/state/runState";
 import { useTranslation } from "react-i18next";
 
@@ -17,11 +17,10 @@ function ChangeLang(props) {
   const { t } = useTranslation("run");
 
   return (
-    <FormControl variant="standard">
-      <InputLabel id="change-lang-label">{t("lang")}</InputLabel>
+    <FormControl style={{maxWidth:"250px"}} variant="standard">
       <Select
         labelId="change-lang-label"
-        sx={{ backgroundColor: "background.paper", color: "primary.main" }}
+        sx={{ backgroundColor: "background.paper", color: "primary.main", paddingLeft:"8px" }}
         id="ChangeLang"
         label={t("lang")}
         value={props.lang.code}

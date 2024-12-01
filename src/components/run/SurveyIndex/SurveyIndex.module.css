@@ -1,125 +1,32 @@
-.menuIcon.menuIcon {
-  position: absolute;
-  top: 28px;
-  left: 16px;
-  padding: 3px;
-  z-index: 999;
-  cursor: pointer;
-}
-
-@media screen and (max-width: 825px) {
-  .menuIcon.menuIcon {
-    left: 0px;
-  }
-}
-
-.surveyContent {
-  height: 100%;
-  width: 22rem;
-  overflow: auto;
-  position: absolute;
-  padding: 16px;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  border-radius: 0px 0px 8px 0px;
-  box-sizing: border-box;
-}
-
-@media screen and (max-width: 825px) {
-  .surveyContent {
-    width: 18rem;
-    padding: 8px;
-  }
-}
-.groupTitleContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.actionsContainer {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.groupTitle,
-.questionText {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 2;
+.groupCard {
+  padding: 8px;
+  margin: 8px;
 }
 
 .groupTitle {
+  font-weight: bolder;
+}
+
+.questionTitle {
   display: flex;
-  align-items: center;
   padding: 8px;
-  cursor: pointer;
-  border-radius: 4px;
+  margin: 8px;
 }
 
-.expandIcon {
-  position: absolute;
-  right: 8px;
+.questionIcon {
+  margin-left: 8px;
+  margin-right: 8px;
+  color: green;
+  font-size: 1.2rem;
 }
 
-.questionContainer {
-  position: relative;
-  padding-left: 10px;
-}
-
-.questionText {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding: 8px;
-}
-
-.boldText {
-  font-weight: 600;
+.bullet {
+  margin-right: 8px;
+  margin-left: 8px;
+  font-size: 1.2rem;
 }
 
 .redAsterix {
   margin-left: 0.5rem;
   color: red;
-}
-
-.slideInLeft {
-  -webkit-animation-name: slideInLeft;
-  animation-name: slideInLeft;
-  -webkit-animation-duration: 0.3s;
-  animation-duration: 0.3s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-}
-
-@-webkit-keyframes slideInLeft {
-  0% {
-    -webkit-transform: translateX(-100%);
-    transform: translateX(-100%);
-    visibility: visible;
-  }
-
-  100% {
-    -webkit-transform: translateX(0);
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInLeft {
-  0% {
-    -webkit-transform: translateX(-100%);
-    transform: translateX(-100%);
-    visibility: visible;
-  }
-
-  100% {
-    -webkit-transform: translateX(0);
-    transform: translateX(0);
-  }
 }
