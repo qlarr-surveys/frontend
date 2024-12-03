@@ -175,7 +175,9 @@
     "hint": "Wenn Sie Ihre E-Mail-Adresse oder Ihr Passwort ändern, werden Sie abgemeldet",
     "password_required": "Aktuelles Passwort ist erforderlich, um Ihre E-Mail oder Ihr Passwort bearbeiten zu können",
     "save": "Speichern",
-    "title": "Profil"
+    "title": "Profil",
+    "manage_users": "Benutzer verwalten",
+    "logout": "Abmelden"
   },
   "registered": "eingetragen",
   "reset_password": {

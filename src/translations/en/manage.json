@@ -133,7 +133,6 @@
     "login": "Login",
     "title": "Sign In"
   },
-  "manage_users": "Manage Users",
   "mode": {
     "mixed": "Web and Offline",
     "offline": "Offline",
@@ -176,7 +175,9 @@
     "hint": "When you change your email or password, you will be logged out",
     "password_required": "Current Password is Required to be able to edit your email or password",
     "save": "Save",
-    "title": "Profile"
+    "title": "Profile",
+    "manage_users": "Manage Users",
+    "logout": "Logout"
   },
   "registered": "registered",
   "reset_password": {
