@@ -50,7 +50,13 @@
     "survey_users": "مسح المستخدمين",
     "surveyor": "مساح",
     "title": "تحرير الاستطلاع",
-    "to": "ل"
+    "to": "ل",
+    "metadata": {
+      "created": "تم الإنشاء",
+      "last_modified": "آخر تعديل",
+      "start_date": "تاريخ البدء",
+      "end_date": "تاريخ الانتهاء"
+    }
   },
   "edit_user": {
     "title": "تحرير العضو"

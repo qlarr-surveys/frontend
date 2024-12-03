@@ -50,7 +50,13 @@
     "survey_users": "Survey Users",
     "surveyor": "Surveyor",
     "title": "Edit Survey",
-    "to": "to"
+    "to": "to",
+    "metadata": {
+      "created": "Created",
+      "last_modified": "Last Modified",
+      "start_date": "Start Date",
+      "end_date": "End Date"
+    }
   },
   "edit_user": {
     "title": "Edit User"

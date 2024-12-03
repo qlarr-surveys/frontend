@@ -50,7 +50,13 @@
     "survey_users": "Benutzer befragen",
     "surveyor": "Landvermesserin",
     "title": "Umfrage bearbeiten",
-    "to": "zu"
+    "to": "zu",
+    "metadata": {
+      "created": "Erstellt",
+      "last_modified": "Zuletzt geändert",
+      "start_date": "Startdatum",
+      "end_date": "Enddatum"
+    }
   },
   "edit_user": {
     "title": "Benutzer bearbeiten"
