@@ -292,7 +292,7 @@ function ResponsesSurvey({ viewEvents }) {
                         </Box>
                       </TableCell>
                       <TableCell key="id" align="left">
-                        {response.id}
+                        {response.index}
                       </TableCell>
 
                       <TableCell key="surveyor" align="left">
@@ -327,9 +327,10 @@ function ResponsesSurvey({ viewEvents }) {
                       <TableCell key="lang" align="left">
                         {response.lang}
                       </TableCell>
-                      {response.values.map((value, index) => {
+                      {Object.keys(response.values).map((key) => {
+                        const value = response.values[key]
                         return (
-                          <TableCell align="left" key={index}>
+                          <TableCell align="left" key={key}>
                             {value === null ||
                               value === undefined ||
                               value === "" ? (
@@ -345,7 +346,7 @@ function ResponsesSurvey({ viewEvents }) {
                               <a
                                 target="_blank"
                                 download={value.stored_filename}
-                                href={previewUrl(value.stored_filename)}
+                                href={previewUrl(response.id, key.split('.')[0])}
                               >
                                 {value.filename} -
                                 {Math.round(value.size / 1000) + "K"}

@@ -1,4 +1,4 @@
-import { BACKEND_BASE_URL } from '~/constants/networking';
+import { BACKEND_BASE_URL } from "~/constants/networking";
 
 export const getparam = (params, key) => {
   if (window["Android"]) {
@@ -112,8 +112,12 @@ export const loadScript = (runService, preview, guest) =>
       });
   });
 
-
-  export const previewUrl = (fileName) => {
-    const surveyId = sessionStorage.getItem("surveyId");
-    return BACKEND_BASE_URL + `/survey/${surveyId}/response/attach/${fileName}`;
-  };
+export const previewUrl = (fileName, questionCode) => {
+  const surveyId = sessionStorage.getItem("surveyId");
+  return (
+    BACKEND_BASE_URL +
+    `/survey/${surveyId}/response/attach/${fileName}${
+      questionCode ? "/" + questionCode : ""
+    }`
+  );
+};
