@@ -21,6 +21,7 @@ function SurveyAppBar({ toggleDrawer }) {
     <AppBar position="fixed">
       <Toolbar
         style={{
+          minHeight: "56px",
           fontSize: "32px",
           lineHeight: "1.334",
           fontWeight: "400",

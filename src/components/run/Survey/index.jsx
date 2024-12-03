@@ -46,7 +46,6 @@ function Survey() {
     <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
       <form
         id={FORM_ID}
-        className={styles.mainContainer}
         style={{
           fontFamily: theme.textStyles.text.font,
           color: theme.textStyles.text.color,
