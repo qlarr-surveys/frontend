@@ -19,9 +19,11 @@ import { isSuperAdmin } from "~/constants/roles";
 import { useSelector } from "react-redux";
 import { getDirFromSession } from "~/utils/common";
 import { useService } from "~/hooks/use-service";
+import { useTranslation } from "react-i18next";
 
 export const Header = () => {
   const authService = useService("auth");
+  const { t } = useTranslation("manage");
 
   const nav = useNavigate();
   const dispatch = useDispatch();
@@ -157,7 +159,7 @@ export const Header = () => {
                 }}
                 sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                Profile
+                {t("profile.title")}
                 <Person sx={{ color: "#16205b", width: 25, height: 25 }} />
               </MenuItem>
               <MenuItem
@@ -168,7 +170,7 @@ export const Header = () => {
                 }}
                 sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                Manage Users
+                {t("profile.manage_users")}
                 <GroupsIcon sx={{ color: "#16205b", width: 25, height: 25 }} />
               </MenuItem>
               <MenuItem
@@ -178,7 +180,7 @@ export const Header = () => {
                 }}
                 sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                Logout
+                {t("profile.logout")}
                 <LogoutOutlined
                   sx={{ color: "#16205b", width: 25, height: 25 }}
                 />
