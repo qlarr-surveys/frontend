@@ -1,8 +1,7 @@
 import authenticatedApi from "./authenticatedApi";
 import publicApi from "./publicApi";
 import BaseService from "./BaseService";
-import { CLOUD_URL } from '~/constants/networking';
-
+import { CLOUD_URL } from "~/constants/networking";
 
 class SurveyService extends BaseService {
   async getAllSurveys(page, perpage, status, sortBy) {
@@ -76,8 +75,8 @@ class SurveyService extends BaseService {
     const response = await this.handleRequest(() =>
       authenticatedApi.get(
         `/survey/${surveyId}/response/all?db_values=${dbValues}&page=${page}&per_page=${per_page}` +
-        `${shouldAddComplete ? `&complete=${complete}` : ""}` +
-        `${surveyor ? `&surveyor=${surveyor}` : ""}`
+          `${shouldAddComplete ? `&complete=${complete}` : ""}` +
+          `${surveyor ? `&surveyor=${surveyor}` : ""}`
       )
     );
     return response.data;
@@ -88,7 +87,7 @@ class SurveyService extends BaseService {
     const response = await this.handleRequest(() =>
       authenticatedApi.get(
         `/survey/${surveyId}/response/export?db_values=${dbValues}&timezone=${timezone}` +
-        `${shouldAddComplete ? `&complete=${complete}` : ""}`
+          `${shouldAddComplete ? `&complete=${complete}` : ""}`
       )
     );
     return response.data;

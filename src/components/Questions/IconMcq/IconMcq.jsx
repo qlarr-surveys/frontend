@@ -5,6 +5,8 @@ import { valueChange } from "~/state/runState";
 import { useTheme } from "@emotion/react";
 import { Box, Grid } from "@mui/material";
 import { rtlLanguage } from "~/utils/common";
+import DynamicSvg from "~/components/DynamicSvg";
+import { buildResourceUrl } from "~/networking/common";
 
 function IconMcq(props) {
   const theme = useTheme();
@@ -55,7 +57,15 @@ function IconMcq(props) {
   );
 }
 
-function IconMcqChoice({ key, component, iconSize, columns, spacing, hideText, theme }) {
+function IconMcqChoice({
+  key,
+  component,
+  iconSize,
+  columns,
+  spacing,
+  hideText,
+  theme,
+}) {
   const dispatch = useDispatch();
   const checked = useSelector(
     (state) => state.runState.values[component.qualifiedCode].value || false
@@ -76,27 +86,23 @@ function IconMcqChoice({ key, component, iconSize, columns, spacing, hideText, t
           width: "100%",
         }}
       >
-        <Box
-          onClick={() =>
-            dispatch(
-              valueChange({
-                componentCode: component.qualifiedCode,
-                value: !checked,
-              })
-            )
+        <DynamicSvg
+        onIconClick={() =>
+          dispatch(
+            valueChange({
+              componentCode: component.qualifiedCode,
+              value: !checked,
+            })
+          )}
+          imageHeightPx={iconSize}
+          iconColor={
+            checked ? theme.palette.primary.main : theme.textStyles.text.color
           }
-          style={{
-            height: iconSize + "px",
-            width: iconSize + "px",
-            borderRadius: "8px",
-            color: checked
-              ? theme.palette.primary.main
-              : theme.textStyles.text.color,
-          }}
-          className={styles.svgContainer}
-          dangerouslySetInnerHTML={{
-            __html: component.icon ? component.icon : "",
-          }}
+          svgUrl={
+            component?.resources?.icon
+              ? buildResourceUrl(component?.resources?.icon)
+              : undefined
+          }
         />
       </div>
 

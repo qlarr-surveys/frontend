@@ -18,6 +18,7 @@ import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
   changeAttribute,
   changeContent,
+  changeResources,
   onDrag,
   removeAnswer,
 } from "~/state/design/designState";
@@ -27,6 +28,9 @@ import { rtlLanguage } from "~/utils/common";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import IconSelector from "~/components/design/IconSelector";
 import { getContrastColor } from "../utils";
+import DynamicSvg from "~/components/DynamicSvg";
+import { buildResourceUrl } from "~/networking/common";
+import { useService } from "~/hooks/use-service";
 
 function SCQIconArrayDesign(props) {
   const theme = useTheme();
@@ -45,7 +49,7 @@ function SCQIconArrayDesign(props) {
   const columns = children?.filter((el) => el.type == "column") || [];
 
   const icons = useSelector((state) =>
-    columns.map((col) => state.designState[col.qualifiedCode].icon)
+    columns.map((col) => state.designState[col.qualifiedCode].resources?.icon)
   );
 
   return (
@@ -76,7 +80,6 @@ function SCQIconArrayDesign(props) {
                 <TableCell
                   sx={{
                     padding: "0",
-
                   }}
                   key="move"
                 ></TableCell>
@@ -241,8 +244,7 @@ function SCQArrayRowDesign({
           key="move"
           sx={{
             padding: "0",
-            color: theme.textStyles.text.color
-
+            color: theme.textStyles.text.color,
           }}
         >
           <DragIndicatorIcon />
@@ -295,18 +297,14 @@ function SCQArrayRowDesign({
             }}
           >
             {icons[index] && (
-              <div
-                style={{
-                  opacity: 0.2,
-                  height: "64px",
-                  width: "px",
-                  borderRadius: "8px",
-                  color: theme.textStyles.text.color
-                }}
-                className={styles.svgContainer}
-                dangerouslySetInnerHTML={{
-                  __html: icons[index],
-                }}
+              <DynamicSvg
+                opacity={0.2}
+                iconColor={theme.textStyles.text.color}
+                onIconClick={() => {}}
+                imageHeightPx={64}
+                svgUrl={
+                  icons[index] ? buildResourceUrl(icons[index]) : undefined
+                }
               />
             )}
           </TableCell>
@@ -318,7 +316,7 @@ function SCQArrayRowDesign({
           key="remove"
           sx={{
             padding: "0",
-            color: theme.textStyles.text.color
+            color: theme.textStyles.text.color,
           }}
         >
           <CloseIcon />
@@ -337,6 +335,7 @@ function SCQArrayHeaderDesign({
   parentQualifiedCode,
   styles,
 }) {
+  const designService = useService("design");
   const icon = icons[index];
   const [iconSelectoOpen, setIconSelectorOpen] = useState(false);
   const dispatch = useDispatch();
@@ -408,6 +407,28 @@ function SCQArrayHeaderDesign({
     },
   });
 
+  const uploadAsResource = (svgContent) => {
+    const svgBlob = new Blob([svgContent], { type: "image/svg+xml" });
+
+    // Create a File object to simulate a file upload
+    const svgFile = new File([svgBlob], "file.svg", { type: "image/svg+xml" });
+
+    designService
+      .uploadResource(svgFile)
+      .then((response) => {
+        dispatch(
+          changeResources({
+            code: item.qualifiedCode,
+            key: "icon",
+            value: response.name,
+          })
+        );
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  };
+
   drop(preview(ref));
   return (
     <>
@@ -433,13 +454,12 @@ function SCQArrayHeaderDesign({
                 padding: "0",
               }}
             >
-              < DragIndicatorIcon />
+              <DragIndicatorIcon />
             </div>
             <div
               sx={{
                 padding: "0",
-                color: theme.textStyles.text.color
-
+                color: theme.textStyles.text.color,
               }}
               onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
             >
@@ -447,18 +467,12 @@ function SCQArrayHeaderDesign({
             </div>
           </div>
         )}
-        
 
         {icon ? (
-          <div
-            onClick={() => setIconSelectorOpen(true)}
-            style={{
-              height: "64px",
-              width: "px",
-              borderRadius: "8px",
-            }}
-            className={styles.svgContainer}
-            dangerouslySetInnerHTML={{ __html: icon }}
+          <DynamicSvg
+            onIconClick={() => setIconSelectorOpen(true)}
+            imageHeightPx={64}
+            svgUrl={icon ? buildResourceUrl(icon) : undefined}
           />
         ) : (
           <>
@@ -475,13 +489,7 @@ function SCQArrayHeaderDesign({
         <IconSelector
           currentIcon=""
           onIconSelected={(icon) => {
-            dispatch(
-              changeAttribute({
-                code: item.qualifiedCode,
-                key: "icon",
-                value: icon,
-              })
-            );
+            uploadAsResource(icon);
             setIconSelectorOpen(false);
           }}
         />
