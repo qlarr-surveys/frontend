@@ -3,14 +3,12 @@ import React from "react";
 import styles from "./SurveyIndex.module.css";
 import { Card } from "@mui/material";
 import { Box } from "@mui/system";
-import { stripTags } from "~/utils/design/utils";
+import { stripTags, truncateWithEllipsis } from "~/utils/design/utils";
 import { shallowEqual, useSelector } from "react-redux";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CircleIcon from "@mui/icons-material/Circle";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
 import { jump } from "~/state/runState";
-import { questionIconByType } from '~/components/Questions/utils';
+import { questionIconByType } from "~/components/Questions/utils";
 
 function SurveyIndex(props) {
   const theme = useTheme();
@@ -65,7 +63,7 @@ function SurveyIndex(props) {
   };
 
   return (
-    <div className={styles.surveyContent}>
+    <>
       {props.survey && props.survey.groups
         ? props.survey.groups
             .filter(
@@ -108,11 +106,13 @@ function SurveyIndex(props) {
                               : "default",
                           }}
                         >
-                          <span className={styles.questionIcon}>{questionIconByType(question.type)}</span>
-                          {stripTags(question.content?.label)}
+                          <span className={styles.questionIcon}>
+                            {questionIconByType(question.type)}
+                          </span>
+                          {stripTags(truncateWithEllipsis(question.content?.label,32))}
                           {!validity_map[question.code] && (
-                              <span className={styles.redAsterix}>*</span>
-                            )}
+                            <span className={styles.redAsterix}>*</span>
+                          )}
                         </Box>
                       );
                     })}
@@ -120,7 +120,7 @@ function SurveyIndex(props) {
               );
             })
         : ""}
-    </div>
+    </>
   );
 }
 

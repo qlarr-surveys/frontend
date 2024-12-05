@@ -6,9 +6,8 @@ import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import { Box, IconButton, Tab, Tabs } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import { isSurveyAdmin } from "~/constants/roles";
-import { useService } from "~/hooks/use-service";
 import { SurveyClone } from "~/components/manage/SurveyClone";
-import { BG_COLOR } from '~/constants/theme';
+import { BG_COLOR } from "~/constants/theme";
 
 function PreviewSurvey({ guest = false }) {
   const navigate = useNavigate();
@@ -120,10 +119,11 @@ function PreviewSurvey({ guest = false }) {
       </Box>
 
       <div
-      style={{
-        backgroundColor: BG_COLOR,
-      }}>
-
+        className={styles.container}
+        style={{
+          backgroundColor: BG_COLOR,
+        }}
+      >
         {previewMode == "online" ? (
           <div style={{ height: "calc(100vh - 112px)" }}>
             <iframe

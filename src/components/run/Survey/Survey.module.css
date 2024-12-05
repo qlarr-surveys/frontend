@@ -18,14 +18,6 @@
   border-radius: 8px;
 }
 
-.mainContainer {
-  margin: auto;
-  margin-top: 56px;
-  padding-top: 1em;
-  height: 100vh;
-  overflow: auto;
-}
-
 .stepperContent {
   position: absolute;
   background-color: white;
