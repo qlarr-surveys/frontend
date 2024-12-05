@@ -21,7 +21,7 @@
 
 .offlinePreview {
   position: absolute;
-  top: 158px;
+  top: 108px;
   left: calc(50% - 189.5px);
   border: 0;
   width: 375px;
@@ -29,7 +29,6 @@
 }
 
 .wrapperMob {
-  padding-top: 50px;
   height: calc(100vh - 64px);
   overflow: auto;
   position: relative;
