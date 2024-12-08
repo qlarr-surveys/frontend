@@ -1,10 +1,11 @@
 .loadingWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100%;
-  position: absolute;
   z-index: 99999;
   /* background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(.5px); */
