@@ -125,7 +125,7 @@ function PreviewSurvey({ guest = false }) {
         }}
       >
         {previewMode == "online" ? (
-          <div style={{ height: "calc(100vh - 112px)" }}>
+          <div style={{ height: "calc(100vh - 48px)" }}>
             <iframe
               src={withEmbeddedParam()}
               className={styles.onlinePreview}

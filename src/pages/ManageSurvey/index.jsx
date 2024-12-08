@@ -6,12 +6,10 @@ import {
   designStateReceived,
   onAddComponentsVisibilityChange,
   resetSetup,
-  setup,
 } from "~/state/design/designState";
 import { GetData } from "~/networking/design";
 import { setLoading, surveyReceived } from "~/state/edit/editState";
 import SavingSurvey from "~/components/design/SavingSurvey";
-import { themeSetup } from "~/constants/design";
 import { isAnalyst, isSurveyAdmin } from "~/constants/roles";
 import TokenService from "~/services/TokenService";
 import { useParams } from "react-router-dom";
@@ -24,7 +22,6 @@ import { useService } from "~/hooks/use-service";
 const ResponsesSurvey = React.lazy(() => import("../manage/ResponsesSurvey"));
 const EditSurvey = React.lazy(() => import("../manage/EditSurvey"));
 const DesignSurvey = React.lazy(() => import("../DesignSurvey"));
-const PreviewSurvey = React.lazy(() => import("../PreviewSurvey"));
 
 function ManageSurvey({ landingPage }) {
   const surveyService = useService("survey");
@@ -65,17 +62,6 @@ function ManageSurvey({ landingPage }) {
     loadSurvey();
   }, []);
 
-  useEffect(() => {
-    if (selectedTab == MANAGE_SURVEY_LANDING_PAGES.THEME) {
-      dispatch(onAddComponentsVisibilityChange(false));
-      dispatch(setup(themeSetup));
-    } else if (selectedTab == MANAGE_SURVEY_LANDING_PAGES.DESIGN) {
-      dispatch(resetSetup());
-    } else if (selectedTab == MANAGE_SURVEY_LANDING_PAGES.LANGUAGE) {
-      dispatch(onAddComponentsVisibilityChange(false));
-      dispatch(resetSetup());
-    }
-  }, [selectedTab]);
 
   const loadSurvey = () => {
     surveyService
@@ -88,25 +74,29 @@ function ManageSurvey({ landingPage }) {
       .catch((err) => {});
   };
 
+  useEffect(() => {
+    const handlePopState = () => {
+        const currentPath = window.location.pathname;
+        const currentTab = currentPath.split('/')[1];
+        setSelectedTab(currentTab);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+        window.removeEventListener("popstate", handlePopState);
+    };
+}, []);
+
   const shouldShowDesign = () =>
-    (selectedTab == MANAGE_SURVEY_LANDING_PAGES.DESIGN ||
-      selectedTab == MANAGE_SURVEY_LANDING_PAGES.LANGUAGE ||
-      selectedTab == MANAGE_SURVEY_LANDING_PAGES.LANGUAGE ||
-      selectedTab == MANAGE_SURVEY_LANDING_PAGES.THEME) &&
-    designAvailable;
+    selectedTab == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designAvailable;
 
   const shouldShowResponses = () =>
     selectedTab == MANAGE_SURVEY_LANDING_PAGES.RESPONSES;
 
   const shouldShowEditSurvey = () =>
     selectedTab == MANAGE_SURVEY_LANDING_PAGES.SETTINGS;
-
-  const shouldShowPreview = () =>
-    selectedTab == MANAGE_SURVEY_LANDING_PAGES.PREVIEW;
   
   const changeTabs = useCallback((tab) => {
     setSelectedTab(tab);
-    window.history.replaceState(null, "", `/${tab}/${params.surveyId}`);
   }, []);
 
   return (
@@ -129,8 +119,6 @@ function ManageSurvey({ landingPage }) {
               <ResponsesSurvey />
             ) : shouldShowEditSurvey() ? (
               <EditSurvey onPublish={() => loadSurvey()} />
-            ) : shouldShowPreview() ? (
-              <PreviewSurvey />
             ) : shouldShowDesign() ? (
               <DesignSurvey />
             ) : (
@@ -184,6 +172,6 @@ export const landingTab = (landingPage, user) => {
   ) {
     return landingPage;
   } else {
-    return MANAGE_SURVEY_LANDING_PAGES.PREVIEW;
+    return "";
   }
 };

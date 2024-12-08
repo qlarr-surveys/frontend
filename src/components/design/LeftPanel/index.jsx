@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
 import NewComponentsPanel from "~/components/design/NewComponentsPanel";
 import React from "react";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { useTheme } from "@emotion/react";
 import styles from "./LeftPanel.module.css";
 function LeftPanel({ t }) {
   const setup = useSelector((state) => {
     return state.designState?.setup || {};
-  });
+  }, shallowEqual);
 
   const theme = useTheme();
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { shallowEqual, useDispatch } from "react-redux";
 import styles from "./RunSurvey.module.css";
 import { useTranslation } from "react-i18next";

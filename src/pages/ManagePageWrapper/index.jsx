@@ -11,7 +11,7 @@ import { StatefulLoadingIndicator } from "~/components/common/LoadingIndicator";
 import ThemeProvider from "~/theme";
 import UnsupportedView from "../UnsupportedView";
 
-export const ManagePageWrapper = ({ children }) => {
+export const ManagePageWrapper = ({ showHeader=true, children }) => {
   const lang = CookiesService.getValue("lang");
 
   const { i18n } = useTranslation("manage");
@@ -56,7 +56,7 @@ export const ManagePageWrapper = ({ children }) => {
     <CacheProvider value={cacheRtlMemo}>
       <Provider store={manageStore}>
         <ThemeProvider>
-          <Header />
+          {showHeader && <Header />}
           <ErrorWrapper />
           <StatefulLoadingIndicator />
           {children}

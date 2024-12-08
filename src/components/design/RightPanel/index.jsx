@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import React, { useEffect } from "react";
 import SetupPanel from "../setup/SetupPanel";
 import { useTheme } from "@emotion/react";
@@ -15,7 +15,7 @@ function RightPanel({ t }) {
 
   const setup = useSelector((state) => {
     return state.designState?.setup || {};
-  });
+  }, shallowEqual);
 
   const hasSetup = Object.keys(setup).length > 0;
 
