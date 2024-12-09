@@ -20,6 +20,7 @@ import { useDrag, useDrop } from "react-dnd";
 import ActionToolbar from "~/components/design/ActionToolbar";
 import QuestionDesignBody from "./QuestionDesignBody";
 import { getContrastColor, questionIconByType } from "../Questions/utils";
+import { hasMajorSetup } from "~/constants/design";
 
 function QuestionDesign({
   code,
@@ -53,6 +54,10 @@ function QuestionDesign({
       state.designState["globalSetup"]?.reorder_setup === "collapse_questions"
     );
   });
+
+  const noMajorSetup = useSelector(
+    (state) => !hasMajorSetup(state.designState.setup)
+  );
 
   const onDelete = useCallback(() => dispatch(deleteQuestion(code)), []);
   const onClone = useCallback(() => dispatch(cloneQuestion(code)), []);
@@ -281,7 +286,7 @@ function QuestionDesign({
             <ViewCompactIcon style={{ color: textColor }} />
           </div>
         )}
-        {!collapsed && (isInSetup || hovered) && onMainLang && (
+        {noMajorSetup && (isInSetup || hovered) && onMainLang && (
           <div className={styles.actionToolbarVisible}>
             <ActionToolbar
               t={t}

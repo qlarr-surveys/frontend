@@ -1,6 +1,7 @@
 export const MANAGE_SURVEY_LANDING_PAGES = {
   DESIGN: "design-survey",
   LAUNCH: "launch",
+  PREVIEW: "preview",
   RESPONSES: "responses",
   SETTINGS: "edit-survey",
   RESPONSE: "response",

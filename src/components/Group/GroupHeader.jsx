@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import ActionToolbar from "../design/ActionToolbar";
 import { useDispatch } from "react-redux";
 import { deleteGroup } from "~/state/design/designState";
+import { hasMajorSetup } from "~/constants/design";
 
 function GroupHeader({ t, code, collapsed, children }) {
   console.debug("Group Header: " + code);
@@ -25,23 +26,15 @@ function GroupHeader({ t, code, collapsed, children }) {
 
   const theme = useTheme();
 
-  const noCollapse = useSelector((state) => {
-    return state.designState["globalSetup"]?.reorder_setup === "collapse_none";
-  });
+  const noMajorSetup = useSelector((state) => !hasMajorSetup(state.designState.setup));
 
   const onDelete = useCallback(() => dispatch(deleteGroup(code)), [code]);
 
-
   return (
     <Box className={styles.headerContent}>
-      <Box
-        className={styles.groupHeader}
-        data-code={code}
-      >
-        <Box
-          className={styles.contentContainer}
-        >
-          {noCollapse && onMainLang && (
+      <Box className={styles.groupHeader} data-code={code}>
+        <Box className={styles.contentContainer}>
+          {noMajorSetup && onMainLang && (
             <div className={styles.actionToolbarVisible}>
               <ActionToolbar
                 code={code}

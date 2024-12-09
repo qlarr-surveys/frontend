@@ -25,6 +25,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import Theming from "../Theming";
 import { ManageLanguages } from "~/pages/manage/ManageTranslations";
 import { useTheme } from "@emotion/react";
+import { hasMajorSetup } from "~/constants/design";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -46,6 +47,10 @@ function SetupPanel({ t }) {
   const { code, expanded, highlighted, rules, isSingleRule } =
     useSelector(selectSetupData);
 
+  const noMajorSetup = useSelector(
+    (state) => !hasMajorSetup(state.designState.setup)
+  );
+
   return (
     <div
       className={styles.rightContent}
@@ -53,15 +58,17 @@ function SetupPanel({ t }) {
         left: theme.direction == "rtl" ? "0px" : "",
       }}
     >
-      <div className={styles.close}>
-        <IconButton
-          onClick={() => {
-            dispatch(resetSetup());
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </div>
+      {noMajorSetup && (
+        <div className={styles.close}>
+          <IconButton
+            onClick={() => {
+              dispatch(resetSetup());
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
+      )}
 
       {rules?.map((rule) => (
         <SetupSection

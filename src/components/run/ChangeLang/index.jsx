@@ -17,33 +17,40 @@ function ChangeLang(props) {
   const { t } = useTranslation("run");
 
   return (
-    <FormControl style={{maxWidth:"250px"}} variant="standard">
-      <Select
-        labelId="change-lang-label"
-        sx={{ backgroundColor: "background.paper", color: "primary.main", paddingLeft:"8px" }}
-        id="ChangeLang"
-        label={t("lang")}
-        value={props.lang.code}
-        onChange={(event) => {
-          dispatch(
-            langChange({
-              lang: event.target.value,
-            })
-          );
-        }}
-      >
-        <MenuItem value={props.lang.code}>{props.lang.name}</MenuItem>
-        {props.additionalLang
-          ? props.additionalLang.map((lang, index) => {
-              return (
-                <MenuItem key={index} value={lang.code}>
-                  {lang.name}
-                </MenuItem>
-              );
-            })
-          : ""}
-      </Select>
-    </FormControl>
+    props.additionalLang &&
+    props.additionalLang.length ? (
+      <FormControl style={{ maxWidth: "250px" }} variant="standard">
+        <Select
+          labelId="change-lang-label"
+          sx={{
+            backgroundColor: "background.paper",
+            color: "primary.main",
+            paddingLeft: "8px",
+          }}
+          id="ChangeLang"
+          label={t("lang")}
+          value={props.lang.code}
+          onChange={(event) => {
+            dispatch(
+              langChange({
+                lang: event.target.value,
+              })
+            );
+          }}
+        >
+          <MenuItem value={props.lang.code}>{props.lang.name}</MenuItem>
+          {props.additionalLang
+            ? props.additionalLang.map((lang, index) => {
+                return (
+                  <MenuItem key={index} value={lang.code}>
+                    {lang.name}
+                  </MenuItem>
+                );
+              })
+            : ""}
+        </Select>
+      </FormControl>
+    ) : <></>
   );
 }
 

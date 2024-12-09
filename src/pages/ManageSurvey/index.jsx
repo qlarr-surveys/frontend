@@ -6,6 +6,7 @@ import {
   designStateReceived,
   onAddComponentsVisibilityChange,
   resetSetup,
+  setup,
 } from "~/state/design/designState";
 import { GetData } from "~/networking/design";
 import { setLoading, surveyReceived } from "~/state/edit/editState";
@@ -19,6 +20,7 @@ import styles from "./ManageSurvey.module.css";
 import ManageTranslations from "../manage/ManageTranslations";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
+import { languageSetup, reorderSetup, themeSetup } from "~/constants/design";
 const ResponsesSurvey = React.lazy(() => import("../manage/ResponsesSurvey"));
 const EditSurvey = React.lazy(() => import("../manage/EditSurvey"));
 const DesignSurvey = React.lazy(() => import("../DesignSurvey"));
@@ -62,7 +64,6 @@ function ManageSurvey({ landingPage }) {
     loadSurvey();
   }, []);
 
-
   const loadSurvey = () => {
     surveyService
       .getSurvey()
@@ -76,15 +77,26 @@ function ManageSurvey({ landingPage }) {
 
   useEffect(() => {
     const handlePopState = () => {
-        const currentPath = window.location.pathname;
-        const currentTab = currentPath.split('/')[1];
-        setSelectedTab(currentTab);
+      const currentPath = window.location.pathname;
+      const currentTab = currentPath.split("/")[1];
+      setSelectedTab(currentTab);
+      const searchParams = new URLSearchParams(window.location.search);
+      const mode = searchParams.get("mode");
+      if (mode == "theme") {
+        dispatch(setup(themeSetup));
+      } else if (mode == "languages") {
+        dispatch(setup(languageSetup));
+      } else if (mode == "reorder") {
+        dispatch(setup(reorderSetup));
+      } else {
+        dispatch(resetSetup());
+      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => {
-        window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("popstate", handlePopState);
     };
-}, []);
+  }, []);
 
   const shouldShowDesign = () =>
     selectedTab == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designAvailable;
@@ -94,7 +106,7 @@ function ManageSurvey({ landingPage }) {
 
   const shouldShowEditSurvey = () =>
     selectedTab == MANAGE_SURVEY_LANDING_PAGES.SETTINGS;
-  
+
   const changeTabs = useCallback((tab) => {
     setSelectedTab(tab);
   }, []);
@@ -107,11 +119,6 @@ function ManageSurvey({ landingPage }) {
           selectedTab={selectedTab}
           surveyId={params.surveyId}
           onTabChange={changeTabs}
-          onClick={(tab) => {
-            if (tab == MANAGE_SURVEY_LANDING_PAGES.DESIGN) {
-              dispatch(resetSetup());
-            }
-          }}
         />
         <Suspense fallback={<LoadingDots />}>
           <Box className={styles.wrapper}>

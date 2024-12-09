@@ -3,14 +3,12 @@ import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import { buildResourceUrl } from "~/networking/common";
-import ReorderIcon from "@mui/icons-material/Reorder";
-import { Box, Button, CardMedia } from "@mui/material";
+import { Box, CardMedia } from "@mui/material";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
 import { GroupDropArea } from "~/components/design/DropArea/DropArea";
 import { Virtuoso } from "react-virtuoso";
-import { GTranslate, Palette } from "@mui/icons-material";
 import { languageSetup, reorderSetup, themeSetup } from "~/constants/design";
 import { useDispatch } from "react-redux";
 import { setup } from "~/state/design/designState";
@@ -32,13 +30,6 @@ function ContentPanel({ onMainLang }, ref) {
   const backgroundImage = useSelector(
     (state) => state.designState["Survey"]?.resources?.backgroundImage
   );
-
-  const anyCollapse = useSelector((state) => {
-    return (
-      state.designState["globalSetup"]?.reorder_setup === "collapse_groups" ||
-      state.designState["globalSetup"]?.reorder_setup === "collapse_questions"
-    );
-  });
 
   const groupsEmpty = !groups.length;
 
@@ -139,36 +130,6 @@ function ContentPanel({ onMainLang }, ref) {
         fontSize: theme.textStyles.text.size,
       }}
     >
-      {onMainLang && !anyCollapse && (
-        <Box className={styles.buttonContainer}>
-          <Button
-            onClick={showTranslation}
-            color="primary"
-            variant="contained"
-            className={styles.button}
-          >
-            <GTranslate />
-          </Button>
-
-          <Button
-            color="primary"
-            onClick={showTheme}
-            variant="contained"
-            className={styles.button}
-          >
-            <Palette />
-          </Button>
-
-          <Button
-            color="primary"
-            onClick={reOrder}
-            variant="contained"
-            className={styles.button}
-          >
-            <ReorderIcon />
-          </Button>
-        </Box>
-      )}
       <Box ref={virtuosoWrapperRef} width="100%" height="100%">
         <Virtuoso
           ref={virtuosoRef}

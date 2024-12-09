@@ -20,6 +20,8 @@ export const reorderSetup = {
   ],
 };
 
+
+
 export const themeSetup = {
   code: "Survey",
   rules: [
@@ -498,3 +500,8 @@ export const setupOptions = (type) => {
       ];
   }
 };
+
+
+const majorSetup = [themeSetup, reorderSetup, languageSetup]
+
+export const hasMajorSetup = (setup) => majorSetup.indexOf(setup) > -1

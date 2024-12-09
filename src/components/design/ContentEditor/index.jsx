@@ -35,11 +35,6 @@ function ContentEditor({ placeholder, extended, contentKey, code }) {
   const mainLang = langInfo.mainLang;
   const onMainLang = langInfo.onMainLang;
 
-  const setSetup = () => {
-    if (onMainLang) {
-      dispatch(setup({ code, rules: setupOptions(type) }));
-    }
-  };
 
   const value = content?.[lang] || "";
 
@@ -65,7 +60,6 @@ function ContentEditor({ placeholder, extended, contentKey, code }) {
   const onContainerClicked = (event) => {
     event.preventDefault();
     setActive(true);
-    setSetup();
   };
 
   const isRtl = rtlLanguage.includes(lang);

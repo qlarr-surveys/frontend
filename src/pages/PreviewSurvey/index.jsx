@@ -1,18 +1,21 @@
 import { getparam } from "~/networking/run";
 import styles from "./PreviewSurvey.module.css";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import React, { useState } from "react";
+import {
+  Link,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import { Box, IconButton, Tab, Tabs } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import { isSurveyAdmin } from "~/constants/roles";
 import { SurveyClone } from "~/components/manage/SurveyClone";
 import { BG_COLOR } from "~/constants/theme";
+import { routes } from "~/routes";
 
 function PreviewSurvey({ guest = false }) {
-  const navigate = useNavigate();
-  const params = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [previewMode, setPreviewMode] = useState(
     searchParams.get("mode") || "online"
   );
@@ -23,38 +26,28 @@ function PreviewSurvey({ guest = false }) {
     example: true,
   };
 
-  const resolveMode = (mode) => {
-    if (mode == "offline") return "offline";
-    return "online";
-  };
+  useEffect(() => {
+    const handlePopState = () => {
+      console.log("handlePopState")
+      const searchParams = new URLSearchParams(window.location.search);
+      const mode = searchParams.get("mode") || "online";
+      setPreviewMode(mode);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
-  const withEmbeddedParam = () => {
-    const surveyId = getparam(useParams(), "surveyId");
-    let location = guest
+  const withEmbeddedParam = (surveyId, previewMode) => {
+    return guest
       ? `/preview-guest-survey/${surveyId}`
-      : `/preview-survey/${surveyId}`;
-    if (location.indexOf("?mode") == -1) {
-      location = location + "?mode=" + resolveMode(previewMode);
-    } else {
-      location = location.replace(
-        "?mode=offline",
-        `?mode=${resolveMode(previewMode)}`
-      );
-      location = location.replace(
-        "?mode=online",
-        `?mode=${resolveMode(previewMode)}`
-      );
-    }
-    return location;
+      : `/preview-survey/${surveyId}` + "?mode=" + previewMode;
   };
 
   const handleChange = (event, newValue) => {
+    console.log("handleChange")
     setPreviewMode(newValue);
-
-    navigate(
-      `${guest ? "/guest" : ""}/preview/${params.surveyId}?mode=${newValue}`,
-      { replace: true }
-    );
   };
   const [openCloneModal, setOpenCloneModal] = useState(false);
 
@@ -82,28 +75,31 @@ function PreviewSurvey({ guest = false }) {
           aria-label="Preview mode tabs"
         >
           <Tab
+            component={Link}
+            to={`${(guest ? routes.guestPreview : routes.preview).replace(
+              ":surveyId",
+              surveyId
+            )}?mode=online`}
             value="online"
-            label={
-              <>
-                <SurveyIcon name="pc" />
-              </>
-            }
+            label={<SurveyIcon name="pc" />}
           />
           <Tab
+            component={Link}
+            to={`${(guest ? routes.guestPreview : routes.preview).replace(
+              ":surveyId",
+              surveyId
+            )}?mode=online-phone`}
             value="online-phone"
-            label={
-              <>
-                <SurveyIcon name="phone" />
-              </>
-            }
+            label={<SurveyIcon name="phone" />}
           />
           <Tab
             value="offline"
-            label={
-              <>
-                <SurveyIcon name="offline" />
-              </>
-            }
+            component={Link}
+            to={`${(guest ? routes.guestPreview : routes.preview).replace(
+              ":surveyId",
+              surveyId
+            )}?mode=offline`}
+            label={<SurveyIcon name="offline" />}
           />
         </Tabs>
         {guest && isSurveyAdmin() && (
@@ -127,7 +123,7 @@ function PreviewSurvey({ guest = false }) {
         {previewMode == "online" ? (
           <div style={{ height: "calc(100vh - 48px)" }}>
             <iframe
-              src={withEmbeddedParam()}
+              src={withEmbeddedParam(surveyId, previewMode)}
               className={styles.onlinePreview}
               style={{ width: "100%", height: "100%" }}
             />
@@ -137,7 +133,7 @@ function PreviewSurvey({ guest = false }) {
             <div className={styles.wrapperMob}>
               <img src="/phone-android.png" className={styles.phoneBg} />
               <iframe
-                src={withEmbeddedParam()}
+                src={withEmbeddedParam(surveyId, previewMode)}
                 className={styles.offlinePreview}
               />
             </div>
@@ -146,7 +142,7 @@ function PreviewSurvey({ guest = false }) {
           <div className={styles.wrapperMob}>
             <img src="/phone-android.png" className={styles.phoneBg} />
             <iframe
-              src={withEmbeddedParam()}
+              src={withEmbeddedParam(surveyId, previewMode)}
               className={styles.offlinePreview}
             />
           </div>
