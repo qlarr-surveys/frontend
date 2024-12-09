@@ -12,7 +12,7 @@ import FileCopyIcon from "@mui/icons-material/FileCopy";
 import { isSurveyAdmin } from "~/constants/roles";
 import { SurveyClone } from "~/components/manage/SurveyClone";
 import { BG_COLOR } from "~/constants/theme";
-import { routes } from "~/routes";
+import { PREVIEW_MODE, routes } from "~/routes";
 
 function PreviewSurvey({ guest = false }) {
   const [searchParams] = useSearchParams();
@@ -28,7 +28,6 @@ function PreviewSurvey({ guest = false }) {
 
   useEffect(() => {
     const handlePopState = () => {
-      console.log("handlePopState")
       const searchParams = new URLSearchParams(window.location.search);
       const mode = searchParams.get("mode") || "online";
       setPreviewMode(mode);
@@ -40,13 +39,12 @@ function PreviewSurvey({ guest = false }) {
   }, []);
 
   const withEmbeddedParam = (surveyId, previewMode) => {
-    return guest
-      ? `/preview-guest-survey/${surveyId}`
-      : `/preview-survey/${surveyId}` + "?mode=" + previewMode;
+    return (guest
+      ? routes.iframePreviewGuestSurvey
+      : routes.iframePreviewSurvey).replace(":surveyId",surveyId) + "?mode=" + previewMode;
   };
 
   const handleChange = (event, newValue) => {
-    console.log("handleChange")
     setPreviewMode(newValue);
   };
   const [openCloneModal, setOpenCloneModal] = useState(false);
@@ -79,8 +77,8 @@ function PreviewSurvey({ guest = false }) {
             to={`${(guest ? routes.guestPreview : routes.preview).replace(
               ":surveyId",
               surveyId
-            )}?mode=online`}
-            value="online"
+            )}?mode=${PREVIEW_MODE.ONLINE}`}
+            value={PREVIEW_MODE.ONLINE}
             label={<SurveyIcon name="pc" />}
           />
           <Tab
@@ -88,17 +86,18 @@ function PreviewSurvey({ guest = false }) {
             to={`${(guest ? routes.guestPreview : routes.preview).replace(
               ":surveyId",
               surveyId
-            )}?mode=online-phone`}
-            value="online-phone"
+            )}?mode=${PREVIEW_MODE.ONLINE_PHONE}`}
+            value={PREVIEW_MODE.ONLINE_PHONE}
             label={<SurveyIcon name="phone" />}
           />
           <Tab
-            value="offline"
+            
             component={Link}
             to={`${(guest ? routes.guestPreview : routes.preview).replace(
               ":surveyId",
               surveyId
-            )}?mode=offline`}
+            )}?mode=${PREVIEW_MODE.OFFLINE}`}
+            value={PREVIEW_MODE.OFFLINE}
             label={<SurveyIcon name="offline" />}
           />
         </Tabs>

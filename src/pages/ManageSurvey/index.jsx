@@ -1,10 +1,10 @@
 import React, { Suspense, useCallback, useEffect, useState } from "react";
 
-import TopBanner from "~/components/design/TopBanner";
 import { useDispatch } from "react-redux";
 import {
   designStateReceived,
   onAddComponentsVisibilityChange,
+  resetLang,
   resetSetup,
   setup,
 } from "~/state/design/designState";
@@ -14,13 +14,14 @@ import SavingSurvey from "~/components/design/SavingSurvey";
 import { isAnalyst, isSurveyAdmin } from "~/constants/roles";
 import TokenService from "~/services/TokenService";
 import { useParams } from "react-router-dom";
-import { MANAGE_SURVEY_LANDING_PAGES } from "~/routes";
+import { DESIGN_SURVEY_MODE, MANAGE_SURVEY_LANDING_PAGES } from "~/routes";
 import { Box } from "@mui/material";
 import styles from "./ManageSurvey.module.css";
 import ManageTranslations from "../manage/ManageTranslations";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import { languageSetup, reorderSetup, themeSetup } from "~/constants/design";
+import SideTabs from '~/components/design/SideTabs';
 const ResponsesSurvey = React.lazy(() => import("../manage/ResponsesSurvey"));
 const EditSurvey = React.lazy(() => import("../manage/EditSurvey"));
 const DesignSurvey = React.lazy(() => import("../DesignSurvey"));
@@ -31,7 +32,7 @@ function ManageSurvey({ landingPage }) {
 
   const params = useParams();
   const user = TokenService.getUser();
-  const [selectedTab, setSelectedTab] = useState(landingTab(landingPage, user));
+  const [selectedPage, setSelectedTab] = useState(landingTab(landingPage, user));
   const [designAvailable, setDesignAvailable] = useState(false);
 
   const dispatch = useDispatch();
@@ -82,11 +83,13 @@ function ManageSurvey({ landingPage }) {
       setSelectedTab(currentTab);
       const searchParams = new URLSearchParams(window.location.search);
       const mode = searchParams.get("mode");
-      if (mode == "theme") {
+      if (mode == DESIGN_SURVEY_MODE.THEME) {
+        dispatch(resetLang());
         dispatch(setup(themeSetup));
-      } else if (mode == "languages") {
+      } else if (mode == DESIGN_SURVEY_MODE.LANGUAGES) {
         dispatch(setup(languageSetup));
-      } else if (mode == "reorder") {
+      } else if (mode == DESIGN_SURVEY_MODE.REORDER) {
+        dispatch(resetLang());
         dispatch(setup(reorderSetup));
       } else {
         dispatch(resetSetup());
@@ -99,26 +102,26 @@ function ManageSurvey({ landingPage }) {
   }, []);
 
   const shouldShowDesign = () =>
-    selectedTab == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designAvailable;
+    selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designAvailable;
 
   const shouldShowResponses = () =>
-    selectedTab == MANAGE_SURVEY_LANDING_PAGES.RESPONSES;
+    selectedPage == MANAGE_SURVEY_LANDING_PAGES.RESPONSES;
 
   const shouldShowEditSurvey = () =>
-    selectedTab == MANAGE_SURVEY_LANDING_PAGES.SETTINGS;
+    selectedPage == MANAGE_SURVEY_LANDING_PAGES.SETTINGS;
 
-  const changeTabs = useCallback((tab) => {
+  const changePage = useCallback((tab) => {
     setSelectedTab(tab);
   }, []);
 
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        <TopBanner
-          availableTabs={availableTabs(user)}
-          selectedTab={selectedTab}
+        <SideTabs
+          availablePages={availablePages(user)}
+          selectedPage={selectedPage}
           surveyId={params.surveyId}
-          onTabChange={changeTabs}
+          onPageChange={changePage}
         />
         <Suspense fallback={<LoadingDots />}>
           <Box className={styles.wrapper}>
@@ -137,7 +140,7 @@ function ManageSurvey({ landingPage }) {
         <SavingSurvey />
       </Box>
       {designAvailable &&
-        selectedTab == MANAGE_SURVEY_LANDING_PAGES.LANGUAGE && (
+        selectedPage == MANAGE_SURVEY_LANDING_PAGES.LANGUAGE && (
           <ManageTranslations
             onManageTranslationsClose={() => {
               setSelectedTab(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
@@ -151,7 +154,7 @@ function ManageSurvey({ landingPage }) {
 }
 export default React.memo(ManageSurvey);
 
-const availableTabs = (user) => {
+const availablePages = (user) => {
   if (isSurveyAdmin(user)) {
     return [
       MANAGE_SURVEY_LANDING_PAGES.DESIGN,

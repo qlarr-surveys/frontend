@@ -94,6 +94,16 @@ export const designState = createSlice({
       state.globalSetup.reorder_setup = "collapse_none";
       delete state["setup"];
     },
+    resetLang(state) {
+      if (state.langInfo) {
+        state.langInfo.lang = state.langInfo.mainLang;
+        state.langInfo.onMainLang = true;
+      }
+      if (!state.globalSetup) {
+        state.globalSetup = {};
+      }
+      state.globalSetup.reorder_setup = "collapse_none";
+    },
     changeAttribute: (state, action) => {
       let payload = action.payload;
       if (
@@ -514,7 +524,7 @@ export const {
   cloneQuestion,
   deleteGroup,
   addNewAnswer,
-  resetSetupRightPanel,
+  resetLang,
   removeAnswer,
   setup,
   setupToggleExpand,

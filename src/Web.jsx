@@ -57,7 +57,7 @@ function Web() {
         }
       />
       <Route
-        path={routes.previewSurvey}
+        path={routes.iframePreviewSurvey}
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <Provider store={runStore}>
@@ -67,7 +67,7 @@ function Web() {
         }
       />
       <Route
-        path={routes.previewGuestSurvey}
+        path={routes.iframePreviewGuestSurvey}
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <Provider store={runStore}>
@@ -141,19 +141,6 @@ function Web() {
             <ManagePageWrapper>
               <PrivateDesignSurvey
                 landingPage={MANAGE_SURVEY_LANDING_PAGES.LANGUAGE}
-              />
-            </ManagePageWrapper>
-          </Suspense>
-        }
-      />
-
-      <Route
-        path={routes.launch}
-        element={
-          <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.LAUNCH}
               />
             </ManagePageWrapper>
           </Suspense>
