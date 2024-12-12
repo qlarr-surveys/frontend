@@ -188,13 +188,13 @@ export default React.memo(SideTabs);
 function SideTab({ tooltip, style, link, onClick, icon }) {
   return (
     <Tooltip title={tooltip} placement="right">
-      <ListItem disablePadding style={style}>
-        <ListItemButton>
-          <Link to={link}>
-            <ListItemIcon onClick={() => onClick()}>{icon}</ListItemIcon>
-          </Link>
-        </ListItemButton>
-      </ListItem>
+      <Link to={link} onClick={() => onClick()}>
+        <ListItem disablePadding style={style}>
+          <ListItemButton>
+            <ListItemIcon>{icon}</ListItemIcon>
+          </ListItemButton>
+        </ListItem>
+      </Link>
     </Tooltip>
   );
 }
