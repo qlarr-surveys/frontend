@@ -23,15 +23,10 @@ import { useService } from "~/hooks/use-service";
 import { buildResourceUrl } from "~/networking/common";
 import Image from "~/components/image/image";
 import CompactLayout from "~/layouts/compact";
-import SurveyIndex from "~/components/run/SurveyIndex";
 import { isEquivalent } from "~/utils/design/utils";
 import RunLoadingDots from "~/components/common/RunLoadingDots";
 
-import SurveyDrawer, {
-  COLLAPSE,
-  COLLAPSE_IMMEDIATE,
-  EXPAND,
-} from "~/components/run/SurveyDrawer";
+import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
 import SurveyAppBar from "~/components/run/SurveyAppBar";
 
 function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
@@ -202,13 +197,12 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
               }}
             >
               <RunLoadingDots />
-              <SurveyAppBar
-                toggleDrawer={toggleDrawer}
-              />
+              <SurveyAppBar toggleDrawer={toggleDrawer} />
               <SurveyMemo key="Survey" />
               <SurveyDrawer
                 expanded={expanded}
                 toggleDrawer={toggleDrawer}
+                t={t}
               />
             </div>
           )}
