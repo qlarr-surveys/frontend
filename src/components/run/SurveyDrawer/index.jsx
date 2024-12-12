@@ -5,7 +5,7 @@ import React from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import { Close } from "@mui/icons-material";
 
-function SurveyDrawer({ expanded, toggleDrawer }) {
+function SurveyDrawer({ expanded, toggleDrawer, t }) {
   const navigationIndex = useSelector((state) => {
     return state.runState.data?.navigationIndex;
   }, shallowEqual);
@@ -32,7 +32,7 @@ function SurveyDrawer({ expanded, toggleDrawer }) {
       <div className={styles.drawer}>
         <div className={styles.drawerHeader}>
           <Typography variant="h6" className={styles.drawerTitle}>
-            Survey Navigation
+            {t("survey_navigation")}
           </Typography>
           <IconButton
             className={styles.closeButton}

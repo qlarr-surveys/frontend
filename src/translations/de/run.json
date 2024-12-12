@@ -7,6 +7,7 @@
     "previous": "Zuruck",
     "error":"Fehler",
     "goBack":"Zurückgehen",
+    "survey_navigation": "Umfragenavigation",
     "processed_errors": {
         "survey_closed": "Diese Umfrage ist nicht aktiv",
         "survey_design_error": "Fehler im Umfragedesign... Überprüfen Sie das Umfragedesign",
