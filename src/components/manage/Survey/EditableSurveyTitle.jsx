@@ -2,23 +2,32 @@ import { Box, IconButton, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import styles from "./Survey.module.css";
 import { truncateWithEllipsis } from "~/utils/design/utils";
-import { Edit } from "@mui/icons-material";
+import { Edit, Check } from "@mui/icons-material";
 
 export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(survey.name);
 
   const handleTitleChange = (event) => {
-    setTitle(event.target.value);
+    const newTitle = event.target.value;
+    if (newTitle.length <= 50) {
+      setTitle(newTitle);
+    }
   };
 
-  const handleBlur = () => {
+  const handleSave = () => {
     if (title.trim() === "") {
       setTitle(survey.name);
     } else if (title !== survey.name) {
       onSave(title, () => setTitle(survey.name));
     }
     setIsEditing(false);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSave();
+    }
   };
 
   const handleEditClick = (event) => {
@@ -29,25 +38,32 @@ export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
   return (
     <Box className={styles.titleContainer}>
       {isEditing ? (
-        <TextField
-          sx={{ px: 3, flexGrow: 1 }}
-          value={title}
-          onChange={handleTitleChange}
-          onBlur={handleBlur}
-          autoFocus
-          variant="standard"
-          fullWidth
-          InputProps={{
-            style: { color: "white" },
-          }}
-        />
+        <>
+          <TextField
+            sx={{ px: 3, flexGrow: 1 }}
+            value={title}
+            onChange={handleTitleChange}
+            onKeyDown={handleKeyDown}
+            autoFocus
+            variant="standard"
+            fullWidth
+            InputProps={{
+              style: { color: "white" },
+            }}
+          />
+          <IconButton
+            className={styles.saveIcon}
+            onClick={handleSave}
+            sx={{ ml: 1 }}
+          >
+            <Check sx={{ color: "white" }} />
+          </IconButton>
+        </>
       ) : (
         <>
           <Tooltip
             title={title.length > 20 ? title : ""}
-            sx={{
-              fontSize: "1.2rem",
-            }}
+            sx={{ fontSize: "1.2rem" }}
             arrow
           >
             <Typography variant="h4" sx={{ px: 3 }} noWrap>

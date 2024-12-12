@@ -2,7 +2,7 @@ import { Box, IconButton, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import styles from "./Survey.module.css";
 import { truncateWithEllipsis } from "~/utils/design/utils";
-import { Edit } from "@mui/icons-material";
+import { Edit, Check } from "@mui/icons-material";
 
 export const EditableSurveyDescription = ({
   survey,
@@ -19,11 +19,17 @@ export const EditableSurveyDescription = ({
     setDescription(event.target.value);
   };
 
-  const handleDescriptionBlur = () => {
+  const handleSave = () => {
     if (description !== survey.description) {
       onSave(description, () => setDescription(survey.description));
     }
     setIsDescriptionEditing(false);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSave();
+    }
   };
 
   const handleEditClick = (event) => {
@@ -34,24 +40,31 @@ export const EditableSurveyDescription = ({
   return (
     <Box className={styles.descriptionContainer}>
       {isDescriptionEditing ? (
-        <TextField
-          sx={{ px: 3 }}
-          value={description}
-          onChange={handleDescriptionChange}
-          onBlur={handleDescriptionBlur}
-          autoFocus
-          variant="standard"
-          fullWidth
-          multiline
-          rows={3}
-        />
+        <>
+          <TextField
+            sx={{ px: 3 }}
+            value={description}
+            onChange={handleDescriptionChange}
+            onKeyDown={handleKeyDown}
+            autoFocus
+            variant="standard"
+            fullWidth
+            multiline
+            rows={3}
+          />
+          <IconButton
+            className={`${styles.saveIcon}`}
+            onClick={handleSave}
+            sx={{ ml: 1 }}
+          >
+            <Check sx={{ color: "gray" }} />
+          </IconButton>
+        </>
       ) : (
         <>
           <Tooltip
             title={description?.length > charLimit ? description : ""}
-            sx={{
-              fontSize: "1.2rem",
-            }}
+            sx={{ fontSize: "1.2rem" }}
             arrow
           >
             <Typography
