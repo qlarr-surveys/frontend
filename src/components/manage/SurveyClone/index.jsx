@@ -99,21 +99,27 @@ export const SurveyClone = ({ open, onClose, survey }) => {
             value={newSurveyName}
             label={t("label.new_survey_name")}
             onChange={onSurveyNameChanged}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                cloneSurvey();
+              }
+            }}
             helperText={newSurveyNameError}
           />
 
           <Box className={styles.action}>
             <Button
               size="medium"
-              color="inherit"
-              variant="contained"
+              color="primary"
+              variant="secondary"
               onClick={() => onClose(false)} // Pass false when just closing without cloning
             >
               {t("action_btn.cancel")}
             </Button>
             <Button
               size="medium"
-              color="inherit"
+              color="primary"
               variant="contained"
               type="submit"
               onClick={cloneSurvey}
