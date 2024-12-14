@@ -26,7 +26,8 @@ import {
   reorderSetup,
   themeSetup,
 } from "~/constants/design";
-import { GTranslate, Palette } from "@mui/icons-material";
+import TranslateIcon from '@mui/icons-material/Translate';
+import { Palette } from "@mui/icons-material";
 import ReorderIcon from "@mui/icons-material/Reorder";
 
 function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
@@ -90,7 +91,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
                 routes.designSurvey.replace(":surveyId", surveyId) +
                 `?mode=${DESIGN_SURVEY_MODE.LANGUAGES}`
               }
-              icon={<GTranslate sx={{ color: "#fff" }} />}
+              icon={<TranslateIcon sx={{ color: "#fff" }} />}
               onClick={() => {
                 onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
                 showTranslation();

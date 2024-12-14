@@ -62,7 +62,7 @@ export const validationEquation = (
       }
       instructionText =
         `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& !RegExp("${validation.pattern}").test(${qualifiedCode}.value)`;
+        `&& !(new RegExp("${validation.pattern}").test(${qualifiedCode}.value))`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_pattern_email":
       instructionText =
@@ -400,7 +400,7 @@ export const conditionalRelevanceEquation = (logic, rule, state) => {
   } else if (rule == "hide_if") {
     return {
       code,
-      text: `!${text}`,
+      text: `!(${text})`,
       isActive: true,
       returnType: { name: "Boolean" },
     };

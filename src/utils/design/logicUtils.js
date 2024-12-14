@@ -1,4 +1,7 @@
 export const jsonToJs = (json, nested, getComponentType) => {
+  if (typeof json !=="object"){
+    return ""
+  }
   const key = Object.keys(json)[0];
   const value = json[key];
   switch (key) {
@@ -85,30 +88,30 @@ export const jsonToJs = (json, nested, getComponentType) => {
     case "startsWith":
       return wrapIfNested(
         nested,
-        `(${capture(value[0])}.value && ${capture(
+        `${capture(
           value[0]
-        )}.value.startsWith(${capture(value[1])})`
+        )}.value?.startsWith(${capture(value[1])})`
       );
     case "endsWith":
       return wrapIfNested(
         nested,
-        `(${capture(value[0])}.value && ${capture(
+        `${capture(
           value[0]
-        )}.value.endsWith(${capture(value[1])})`
+        )}.value?.endsWith(${capture(value[1])})`
       );
     case "contains":
       return wrapIfNested(
         nested,
-        `(${capture(value[0])}.value && ${capture(
+        `${capture(
           value[0]
-        )}.value.contains(${capture(value[1])})`
+        )}.value?.indexOf(${capture(value[1])}) > -1`
       );
     case "not_contains":
       return wrapIfNested(
         nested,
-        `(${capture(value[0])}.value && !${capture(
+        `${capture(value[0])}.value && !${capture(
           value[0]
-        )}.value.contains(${capture(value[1])})`
+        )}.value?.indexOf(${capture(value[1])}) == -1`
       );
     case "in":
       const code = capture(value[0]);
@@ -121,14 +124,15 @@ export const jsonToJs = (json, nested, getComponentType) => {
         (el) => '"' + el + '"'
       )}].indexOf(${code}.value) !== -1`;
     case "not_in":
-      if (code == "survey_lang") {
+      const code1 = capture(value[0]);
+      if (code1 == "survey_lang") {
         return `[${value[1].map(
           (el) => '"' + el + '"'
         )}].indexOf(Survey.lang) == -1`;
       }
       return `[${value[1].map(
         (el) => '"' + el + '"'
-      )}].indexOf(${code}.value) == -1`;
+      )}].indexOf(${code1}.value) == -1`;
     case "any_in":
       const questionCode = capture(value[0]);
       return `[${value[1].map(

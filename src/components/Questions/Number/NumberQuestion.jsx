@@ -90,7 +90,7 @@ function NumberQuestion(props) {
         }
         id={props.component.qualifiedCode}
         name={props.component.qualifiedCode}
-        label={props.component.content?.hint || ""}
+        label={(props.component.showHint && props.component.content?.hint )|| ""}
         onChange={handleChange}
         onBlur={lostFocus}
         inputProps={{ maxLength: props.component.maxChars || undefined }}

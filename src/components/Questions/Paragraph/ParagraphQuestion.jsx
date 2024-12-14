@@ -54,7 +54,7 @@ function ParagraphQuestion(props) {
         id={props.component.qualifiedCode}
         name={props.component.qualifiedCode}
         minRows={props.component.minRows || 2}
-        label={props.component.content?.hint || ""}
+        label={(props.component.showHint && props.component.content?.hint )|| ""}
         onChange={handleChange}
         onBlur={lostFocus}
         value={state.value}

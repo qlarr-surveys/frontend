@@ -5,7 +5,7 @@ import { Box, useTheme } from "@mui/material";
 import styles from "./Question.module.css";
 import { stripTags } from "~/utils/design/utils";
 import LoadingDots from "../common/LoadingDots";
-import Validation from '../run/Validation';
+import Validation from "../run/Validation";
 
 const DateTimeQuestion = React.lazy(() =>
   import("../Questions/DateTime/DateTimeQuestion")
@@ -66,6 +66,7 @@ const Question = forwardRef((props, ref) => {
 
   const theme = useTheme();
   const showDescription =
+    props.component.showDescription &&
     props.component.content?.description &&
     stripTags(props.component.content.description).length > 0;
   const showTitle =

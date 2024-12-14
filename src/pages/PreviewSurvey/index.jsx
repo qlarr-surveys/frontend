@@ -19,6 +19,9 @@ function PreviewSurvey({ guest = false }) {
   const [previewMode, setPreviewMode] = useState(
     searchParams.get("mode") || "online"
   );
+  const [lang, setLang] = useState(
+    searchParams.get("lang")
+  );
   const surveyId = getparam(useParams(), "surveyId");
 
   const surveyModel = {
@@ -38,10 +41,11 @@ function PreviewSurvey({ guest = false }) {
     };
   }, []);
 
-  const withEmbeddedParam = (surveyId, previewMode) => {
+  const withEmbeddedParam = (surveyId, previewMode, lang) => {
+    console.log(lang)
     return (guest
       ? routes.iframePreviewGuestSurvey
-      : routes.iframePreviewSurvey).replace(":surveyId",surveyId) + "?mode=" + previewMode;
+      : routes.iframePreviewSurvey).replace(":surveyId",surveyId) + "?mode=" + previewMode + (lang ? "&lang=" + lang : "");
   };
 
   const handleChange = (event, newValue) => {
@@ -122,7 +126,7 @@ function PreviewSurvey({ guest = false }) {
         {previewMode == "online" ? (
           <div style={{ height: "calc(100vh - 48px)" }}>
             <iframe
-              src={withEmbeddedParam(surveyId, previewMode)}
+              src={withEmbeddedParam(surveyId, previewMode, lang)}
               className={styles.onlinePreview}
               style={{ width: "100%", height: "100%" }}
             />
@@ -132,7 +136,7 @@ function PreviewSurvey({ guest = false }) {
             <div className={styles.wrapperMob}>
               <img src="/phone-android.png" className={styles.phoneBg} />
               <iframe
-                src={withEmbeddedParam(surveyId, previewMode)}
+                src={withEmbeddedParam(surveyId, previewMode, lang)}
                 className={styles.offlinePreview}
               />
             </div>
@@ -141,7 +145,7 @@ function PreviewSurvey({ guest = false }) {
           <div className={styles.wrapperMob}>
             <img src="/phone-android.png" className={styles.phoneBg} />
             <iframe
-              src={withEmbeddedParam(surveyId, previewMode)}
+              src={withEmbeddedParam(surveyId, previewMode, lang)}
               className={styles.offlinePreview}
             />
           </div>
