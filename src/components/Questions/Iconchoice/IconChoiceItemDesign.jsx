@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import PhotoCamera from "@mui/icons-material/Photo";
 import {
-  changeAttribute,
   changeContent,
   changeResources,
   onDrag,
@@ -21,7 +20,7 @@ import { useDrag, useDrop } from "react-dnd";
 import { useService } from "~/hooks/use-service";
 import { buildResourceUrl } from "~/networking/common";
 import DynamicSvg from "~/components/DynamicSvg";
-import { svgIcon } from "~/theme/overrides/components/svg-icon";
+import { contentEditable, inDesign } from '~/routes';
 
 function IconChoiceItemDesign({
   parentCode,
@@ -29,6 +28,7 @@ function IconChoiceItemDesign({
   qualifiedCode,
   type,
   columnNumber,
+  designMode,
   imageHeight,
   hideText,
   t,
@@ -228,7 +228,7 @@ function IconChoiceItemDesign({
         key={qualifiedCode}
       >
         <div ref={ref} data-handler-id={handlerId}>
-          {onMainLang && (
+          {inDesign(designMode) && (
             <div className={styles.buttonContainers}>
               <IconButton
                 sx={{ color: theme.textStyles.text.color }}
@@ -264,7 +264,7 @@ function IconChoiceItemDesign({
             }}
           >
             <DynamicSvg
-              imageHeightPx={imageHeight}
+              imageHeight={imageHeight + "px"}
               svgUrl={svgIconName ? buildResourceUrl(svgIconName) : undefined}
             />
           </div>
@@ -272,6 +272,7 @@ function IconChoiceItemDesign({
             <TextField
               dir={isRtl ? "rtl" : "ltr"}
               variant="standard"
+              disabled={!contentEditable(designMode)}
               value={content || ""}
               onChange={(e) =>
                 dispatch(

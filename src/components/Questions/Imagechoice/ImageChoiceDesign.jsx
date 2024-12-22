@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { Box, Grid } from "@mui/material";
 import ImageChoiceItemDesign from "./ImageChoiceItemDesign";
 import IconChoiceItemDesign from "../Iconchoice/IconChoiceItemDesign";
+import { inDesign } from '~/routes';
 
 function ImageChoiceQuestion(props) {
   const state = useSelector((state) => {
@@ -19,7 +20,7 @@ function ImageChoiceQuestion(props) {
 
   const questionType = state.type;
 
-  const childrenWithAdd = props.onMainLang
+  const childrenWithAdd = inDesign(props.designMode)
     ? [...children, { type: "add", code: "add" }]
     : children;
 
@@ -56,6 +57,7 @@ function ImageChoiceQuestion(props) {
                   parentCode={props.code}
                   index={index}
                   columnNumber={columnNumber}
+                  designMode={props.designMode}
                   hideText={hideText}
                   imageHeight={imageHeight}
                   t={props.t}
@@ -80,6 +82,7 @@ function ImageChoiceQuestion(props) {
                   imageAspectRatio={imageAspectRatio}
                   columnNumber={columnNumber}
                   hideText={hideText}
+                  designMode={props.designMode}
                   imageHeight={imageHeight}
                   t={props.t}
                   addAnswer={() => props.addNewAnswer(props.code, questionType)}

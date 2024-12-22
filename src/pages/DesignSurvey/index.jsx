@@ -15,15 +15,15 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import RightPanel from "~/components/design/RightPanel";
 import { isTouchDevice } from "~/utils/isTouchDevice";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { resetSetup, setup } from '~/state/design/designState';
-import { languageSetup, reorderSetup, themeSetup } from '~/constants/design';
-import { DESIGN_SURVEY_MODE } from '~/routes';
+import { resetSetup, setup } from "~/state/design/designState";
+import { languageSetup, reorderSetup, themeSetup } from "~/constants/design";
+import { DESIGN_SURVEY_MODE } from "~/routes";
 
-function DesignSurvey() {
+function DesignSurvey({ designMode }) {
   const { t, i18n } = useTranslation(["design", "run"]);
   const childI18n = i18n.cloneInstance();
   const contentRef = useRef(null);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
@@ -31,7 +31,6 @@ function DesignSurvey() {
 
   const lang = langInfo?.lang;
 
-  const onMainLang = langInfo && langInfo?.onMainLang;
 
   const theme = useSelector((state) => {
     return state.designState["Survey"]?.theme;
@@ -84,12 +83,12 @@ function DesignSurvey() {
   return (
     <div className={styles.mainContainer}>
       <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
-        {onMainLang && <LeftPanel t={t} />}
+        {designMode == DESIGN_SURVEY_MODE.DESIGN && <LeftPanel t={t} />}
         <CacheProvider value={cacheRtlMemo}>
           <ThemeProvider theme={surveyTheme}>
             <I18nextProvider i18n={childI18n}>
               <ContentPanel
-                onMainLang={onMainLang}
+                designMode={designMode}
                 ref={contentRef}
                 className={styles.contentPanel}
               />

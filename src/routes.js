@@ -7,17 +7,25 @@ export const MANAGE_SURVEY_LANDING_PAGES = {
 };
 
 export const DESIGN_SURVEY_MODE = {
+  DESIGN: "design",
   THEME: "theme",
   LANGUAGES: "languages",
-  REORDER: "reorder"
+  REORDER: "reorder",
+};
+
+export const inDesign = (mode) => {
+  return DESIGN_SURVEY_MODE.DESIGN == mode;
+};
+
+export const contentEditable = (mode) => {
+  return DESIGN_SURVEY_MODE.DESIGN == mode || DESIGN_SURVEY_MODE.LANGUAGES == mode;
 };
 
 export const PREVIEW_MODE = {
   ONLINE: "online",
   ONLINE_PHONE: "online-phone",
-  OFFLINE: "offline"
+  OFFLINE: "offline",
 };
-
 
 export const routes = {
   designSurvey: `/${MANAGE_SURVEY_LANDING_PAGES.DESIGN}/:surveyId`,

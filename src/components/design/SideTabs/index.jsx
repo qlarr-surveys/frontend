@@ -26,11 +26,17 @@ import {
   reorderSetup,
   themeSetup,
 } from "~/constants/design";
-import TranslateIcon from '@mui/icons-material/Translate';
+import TranslateIcon from "@mui/icons-material/Translate";
 import { Palette } from "@mui/icons-material";
 import ReorderIcon from "@mui/icons-material/Reorder";
 
-function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
+function SideTabs({
+  selectedPage,
+  onPageChange,
+  designMode,
+  availablePages,
+  surveyId,
+}) {
   const tabAvailable = (tab) => availablePages.indexOf(tab) !== -1;
   const { t } = useTranslation("design");
   const dispatch = useDispatch();
@@ -72,7 +78,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
               tooltip={t("design")}
               style={getTabButtonStyle(
                 selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN &&
-                  !hasMajorSetup(setupInfo)
+                  designMode == DESIGN_SURVEY_MODE.DESIGN
               )}
               link={routes.designSurvey.replace(":surveyId", surveyId)}
               icon={<Edit sx={{ color: "#fff" }} />}
@@ -85,7 +91,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
               tooltip={t("design")}
               style={getTabButtonStyle(
                 selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN &&
-                  setupInfo == languageSetup
+                  designMode == DESIGN_SURVEY_MODE.LANGUAGES
               )}
               link={
                 routes.designSurvey.replace(":surveyId", surveyId) +
@@ -101,7 +107,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
               tooltip={t("design")}
               style={getTabButtonStyle(
                 selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN &&
-                  setupInfo == themeSetup
+                  designMode == DESIGN_SURVEY_MODE.THEME
               )}
               link={
                 routes.designSurvey.replace(":surveyId", surveyId) +
@@ -117,7 +123,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
               tooltip={t("design")}
               style={getTabButtonStyle(
                 selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN &&
-                  setupInfo == reorderSetup
+                designMode == DESIGN_SURVEY_MODE.REORDER
               )}
               link={
                 routes.designSurvey.replace(":surveyId", surveyId) +

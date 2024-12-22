@@ -11,11 +11,14 @@ import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
 import { onDrag } from "~/state/design/designState";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
-function GroupDesign({ t, code, index }) {
+import { DESIGN_SURVEY_MODE } from '~/routes';
+function GroupDesign({ t, code, index, designMode }) {
   const dispatch = useDispatch();
   const group = useSelector((state) => {
     return state.designState[code];
   });
+
+  const inDesign = designMode == DESIGN_SURVEY_MODE.DESIGN
 
   const collapsed = useSelector((state) => {
     return (
@@ -150,7 +153,6 @@ function GroupDesign({ t, code, index }) {
       style={getStyles(isDragging)}
     >
       {collapsed == true &&
-        onMainLang &&
         type !== "welcome" &&
         type !== "end" ? (
         <div className={styles.moveBox} ref={drag}>
@@ -159,8 +161,8 @@ function GroupDesign({ t, code, index }) {
       ) : (
         <br />
       )}
-      <GroupHeader t={t} code={code} index={index} collapsed={collapsed} children={children} />
-      {(collapsed !== true || !onMainLang) && (
+      <GroupHeader t={t} code={code} index={index} designMode={designMode} children={children} />
+      {(collapsed !== true) && (
         <>
           {children && children.length > 0 && (
             <QuestionDropArea
@@ -183,7 +185,8 @@ function GroupDesign({ t, code, index }) {
                   isLast={children.length == childIndex + 1}
                   type={quest.type}
                   code={quest.code}
-                  onMainLang={onMainLang}
+                  designMode={designMode}
+                  onMainLang={inDesign}
                 />
                 <QuestionDropArea
                   isLast={children.length == childIndex + 1}
@@ -196,7 +199,7 @@ function GroupDesign({ t, code, index }) {
               </React.Fragment>
             );
           })}
-          {(!children || !children.length) && onMainLang && (
+          {(!children || !children.length) && inDesign && (
             <QuestionDropArea
               t={t}
               index={0}

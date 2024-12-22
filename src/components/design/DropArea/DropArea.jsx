@@ -84,11 +84,6 @@ export function QuestionDropArea({
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const collapsed = useSelector((state) => {
-    return (
-      state.designState["globalSetup"]?.reorder_setup === "collapse_questions"
-    );
-  });
 
   // This is a "hack" to make these components refresh when questions are being reordered.
   // So the first and the last Drag elements can refresh and resize accordingly

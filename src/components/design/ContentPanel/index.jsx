@@ -13,11 +13,13 @@ import { languageSetup, reorderSetup, themeSetup } from "~/constants/design";
 import { useDispatch } from "react-redux";
 import { setup } from "~/state/design/designState";
 import useDragNearViewportEdge from "~/utils/useDragEdgeDetection";
+import { DESIGN_SURVEY_MODE } from '~/routes';
 
-function ContentPanel({ onMainLang }, ref) {
+function ContentPanel({ onMainLang, designMode }, ref) {
   const { t } = useTranslation(["design", "run"]);
   const theme = useTheme();
   const dispatch = useDispatch();
+  const inDesgin = designMode == DESIGN_SURVEY_MODE.DESIGN
 
   const groups = useSelector((state) => {
     return state.designState["Survey"]?.children || [];
@@ -147,7 +149,7 @@ function ContentPanel({ onMainLang }, ref) {
                       image={buildResourceUrl(headerImage)}
                       height="140"
                     />
-                    {onMainLang && <ErrorDisplay code="Survey" />}
+                    {inDesgin && <ErrorDisplay code="Survey" />}
                   </Box>
                 );
 
@@ -164,6 +166,7 @@ function ContentPanel({ onMainLang }, ref) {
                 return (
                   <GroupDesign
                     t={t}
+                    designMode={designMode}
                     code={item.group.code}
                     index={item.index}
                   />

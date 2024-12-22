@@ -16,7 +16,6 @@ import React, { useRef, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
-  changeAttribute,
   changeContent,
   changeResources,
   onDrag,
@@ -27,10 +26,10 @@ import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import IconSelector from "~/components/design/IconSelector";
-import { getContrastColor } from "../utils";
 import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
+import { DESIGN_SURVEY_MODE } from '~/routes';
 
 function SCQIconArrayDesign(props) {
   const theme = useTheme();
@@ -39,7 +38,8 @@ function SCQIconArrayDesign(props) {
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
   });
-  const onMainLang = langInfo.lang === langInfo.mainLang;
+
+  const inDesgin = props.designMode == DESIGN_SURVEY_MODE .DESIGN
 
   const children = useSelector((state) => {
     return state.designState[props.code].children;
@@ -54,7 +54,7 @@ function SCQIconArrayDesign(props) {
 
   return (
     <>
-      {props.onMainLang && (
+      {inDesgin && (
         <div className={styles.addColumn}>
           <Button
             sx={{
@@ -76,7 +76,7 @@ function SCQIconArrayDesign(props) {
         <Table>
           <TableHead>
             <TableRow>
-              {onMainLang && (
+              {inDesgin && (
                 <TableCell
                   sx={{
                     padding: "0",
@@ -93,13 +93,14 @@ function SCQIconArrayDesign(props) {
                     t={props.t}
                     key={item.qualifiedCode}
                     item={item}
+                    inDesgin={inDesgin}
                     icons={icons}
                     styles={styles}
                     index={index}
                   />
                 );
               })}
-              {onMainLang && (
+              {inDesgin && (
                 <TableCell
                   sx={{
                     padding: "0",
@@ -118,6 +119,7 @@ function SCQIconArrayDesign(props) {
                   t={props.t}
                   key={item.qualifiedCode}
                   item={item}
+                  inDesgin={inDesgin}
                   columns={columns}
                   icons={icons}
                   index={index}
@@ -127,7 +129,7 @@ function SCQIconArrayDesign(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      {props.onMainLang && (
+      {props.inDesgin && (
         <div className={styles.addRow}>
           <Button
             sx={{
@@ -153,6 +155,7 @@ function SCQArrayRowDesign({
   index,
   columns,
   icons,
+  inDesgin,
   t,
   langInfo,
   parentQualifiedCode,
@@ -238,7 +241,7 @@ function SCQArrayRowDesign({
       key={item.code}
       data-handler-id={handlerId}
     >
-      {onMainLang && (
+      {inDesgin && (
         <TableCell
           ref={drag}
           key="move"
@@ -301,7 +304,7 @@ function SCQArrayRowDesign({
                 opacity={0.2}
                 iconColor={theme.textStyles.text.color}
                 onIconClick={() => {}}
-                imageHeightPx={64}
+                imageHeight="64px"
                 svgUrl={
                   icons[index] ? buildResourceUrl(icons[index]) : undefined
                 }
@@ -310,7 +313,7 @@ function SCQArrayRowDesign({
           </TableCell>
         );
       })}
-      {onMainLang && (
+      {inDesgin && (
         <TableCell
           onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
           key="remove"
@@ -330,6 +333,7 @@ function SCQArrayHeaderDesign({
   item,
   index,
   icons,
+  inDesgin,
   t,
   langInfo,
   parentQualifiedCode,
@@ -341,8 +345,6 @@ function SCQArrayHeaderDesign({
   const dispatch = useDispatch();
   const theme = useTheme();
   const ref = useRef();
-
-  const onMainLang = langInfo.lang === langInfo.mainLang;
 
   const isRtl = rtlLanguage.includes(langInfo.lang);
   const isLtr = !isRtl;
@@ -445,7 +447,7 @@ function SCQArrayHeaderDesign({
         }}
         key={item.qualifiedCode}
       >
-        {onMainLang && (
+        {inDesgin && (
           <div style={{ display: "inline-flex" }}>
             <div
               ref={drag}
@@ -471,7 +473,7 @@ function SCQArrayHeaderDesign({
         {icon ? (
           <DynamicSvg
             onIconClick={() => setIconSelectorOpen(true)}
-            imageHeightPx={64}
+            imageHeight="64px"
             svgUrl={icon ? buildResourceUrl(icon) : undefined}
           />
         ) : (

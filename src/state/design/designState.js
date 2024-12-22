@@ -15,7 +15,7 @@ import {
   reorder,
   buildReferenceInstruction,
 } from "./stateUtils";
-import { setupOptions } from "~/constants/design";
+import { reorderSetup, setupOptions } from "~/constants/design";
 import {
   createQuestion,
   questionDesignError,
@@ -91,7 +91,7 @@ export const designState = createSlice({
       if (!state.globalSetup) {
         state.globalSetup = {};
       }
-      state.globalSetup.reorder_setup = "collapse_none";
+      state.globalSetup.reorder_setup = undefined;
       delete state["setup"];
     },
     resetLang(state) {
@@ -102,7 +102,7 @@ export const designState = createSlice({
       if (!state.globalSetup) {
         state.globalSetup = {};
       }
-      state.globalSetup.reorder_setup = "collapse_none";
+      state.globalSetup.reorder_setup = undefined;
     },
     changeAttribute: (state, action) => {
       let payload = action.payload;

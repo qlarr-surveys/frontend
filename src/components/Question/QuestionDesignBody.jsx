@@ -19,7 +19,7 @@ import ChoiceQuestion from "../Questions/Choice/ChoiceDesign";
 import ImageChoiceQuestion from "../Questions/Imagechoice/ImageChoiceDesign";
 import SCQIconArrayDesign from "../Questions/SCQArray/SCQIconArrayDesign";
 
-function QuestionDesignBody({ code, type, t, onMainLang, addAnswer }) {
+function QuestionDesignBody({ code, type, t, onMainLang, addAnswer, designMode }) {
   switch (type) {
     case "video_display":
       return (
@@ -56,6 +56,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer }) {
         <ChoiceQuestion
           key={code}
           t={t}
+          designMode={designMode}
           onMainLang={onMainLang}
           addNewAnswer={addAnswer}
           code={code}
@@ -70,6 +71,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer }) {
           key={code}
           t={t}
           onMainLang={onMainLang}
+          designMode={designMode}
           addNewAnswer={addAnswer}
           code={code}
         />
@@ -82,6 +84,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer }) {
           key={code}
           t={t}
           onMainLang={onMainLang}
+          designMode={designMode}
           addNewAnswer={addAnswer}
           code={code}
         />
@@ -92,6 +95,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer }) {
           onMainLang={onMainLang}
           key={code}
           type={type}
+          designMode={designMode}
           addNewAnswer={addAnswer}
           code={code}
           t={t}
@@ -103,6 +107,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer }) {
           onMainLang={onMainLang}
           key={code}
           type={type}
+          designMode={designMode}
           addNewAnswer={addAnswer}
           code={code}
           t={t}
@@ -114,6 +119,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer }) {
       return (
         <ChoiceQuestion
           key={code}
+          designMode={designMode}
           addNewAnswer={addAnswer}
           code={code}
           onMainLang={onMainLang}
@@ -125,6 +131,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer }) {
       return (
         <ChoiceQuestion
           key={code}
+          designMode={designMode}
           onMainLang={onMainLang}
           addNewAnswer={addAnswer}
           code={code}
