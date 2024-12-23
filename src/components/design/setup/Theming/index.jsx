@@ -51,6 +51,7 @@ const listFont = [
   "Roboto",
   "Roboto Mono",
   "Roboto Serif",
+  "Rubik",
   "Spectral",
   "Times New Roman",
   "Trebuchet MS",

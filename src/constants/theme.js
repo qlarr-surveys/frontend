@@ -9,17 +9,17 @@ export const defualtTheme = (theme) => {
   return {
     textStyles: {
       group: {
-        font: theme?.textStyles?.group?.font || "Google Sans",
+        font: theme?.textStyles?.group?.font || "Rubik",
         size: theme?.textStyles?.group?.size || 26,
         color: theme?.textStyles?.group?.color || TEXT_COLOR,
       },
       question: {
-        font: theme?.textStyles?.question?.font || "Google Sans",
+        font: theme?.textStyles?.question?.font || "Rubik",
         size: theme?.textStyles?.question?.size || 18,
         color: theme?.textStyles?.question?.color || TEXT_COLOR,
       },
       text: {
-        font: theme?.textStyles?.text?.font || "Google Sans",
+        font: theme?.textStyles?.text?.font || "Rubik",
         size: theme?.textStyles?.text?.size || 14,
         color: theme?.textStyles?.text?.color || TEXT_COLOR,
       },
