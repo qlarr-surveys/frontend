@@ -4,7 +4,7 @@
 
 .imageContainer {
   position: relative;
-  background-size: contain;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;

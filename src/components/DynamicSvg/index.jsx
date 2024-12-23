@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styles from "./DynamicSvg.module.css";
 
-function DynamicSvg({ svgUrl, imageHeightPx, iconColor, onIconClick, opacity=1 }) {
+function DynamicSvg({
+  svgUrl,
+  imageHeight,
+  maxHeight = "inherit",
+  iconColor,
+  onIconClick,
+  opacity = 1,
+}) {
   const [svgContent, setSvgContent] = useState("");
 
   useEffect(() => {
@@ -18,10 +25,12 @@ function DynamicSvg({ svgUrl, imageHeightPx, iconColor, onIconClick, opacity=1 }
   return (
     <div
       style={{
-        opacity : opacity,
+        opacity: opacity,
         color: iconColor,
-        height: imageHeightPx + "px",
-        width: imageHeightPx + "px",
+        maxHeight: maxHeight,
+        maxWidth: maxHeight,
+        height: imageHeight,
+        width: imageHeight,
         borderRadius: "8px",
       }}
       onClick={onIconClick}

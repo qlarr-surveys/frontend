@@ -2,7 +2,6 @@ import styles from "./ChoiceItemDesign.module.css";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import CloseIcon from "@mui/icons-material/Close";
 import BuildIcon from "@mui/icons-material/Build";
-import { grey } from "@mui/material/colors";
 import { Box, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
@@ -18,6 +17,7 @@ import { rtlLanguage } from "~/utils/common";
 import { useDrag, useDrop } from "react-dnd";
 import { useRef } from "react";
 import { getContrastColor } from "../utils";
+import { contentEditable, inDesign } from "~/routes";
 
 function ChoiceItemDesign(props) {
   const dispatch = useDispatch();
@@ -146,8 +146,7 @@ function ChoiceItemDesign(props) {
         sx={{ backgroundColor: isInSetup ? "beige" : "inherit" }}
         className={styles.answerItem}
       >
-
-        {onMainLang && (
+        {inDesign(props.designMode) && (
           <div ref={drag} className={styles.answerIcon}>
             <DragIndicatorIcon
               ref={drag}
@@ -157,23 +156,18 @@ function ChoiceItemDesign(props) {
             />
           </div>
         )}
-        {props.label ? (
-          <b>
-            {props.label}
-          </b>
-        ) : (
-          ""
-        )}
+        {props.label ? <b>{props.label}</b> : ""}
         <TextField
           variant="standard"
+          disabled={!contentEditable(props.designMode)}
           className={
             answer.type === "other" && isRtl
               ? styles.answerControlOtherRtl
               : answer.type === "other"
-                ? styles.answerControlOther
-                : isRtl
-                  ? styles.answerControlRtl
-                  : styles.answerControl
+              ? styles.answerControlOther
+              : isRtl
+              ? styles.answerControlRtl
+              : styles.answerControl
           }
           value={content || ""}
           onChange={(e) =>
@@ -214,7 +208,7 @@ function ChoiceItemDesign(props) {
             }}
           />
         )}
-        {onMainLang && (
+        {inDesign(props.designMode) && (
           <CloseIcon
             key="close"
             sx={{ fontSize: 18 }}

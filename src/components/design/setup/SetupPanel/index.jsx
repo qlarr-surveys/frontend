@@ -338,7 +338,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
         />
       );
     case "iconSize":
-      const iconSizes = ["48", "64", "72", "96"];
+      const iconSizes = ["50", "100", "150", "200"];
       return (
         <SelectValue
           values={iconSizes}

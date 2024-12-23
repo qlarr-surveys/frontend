@@ -91,7 +91,7 @@ function SCQArrayRow(props) {
             >
               <DynamicSvg
                 onIconClick={() => handleChange(option.code)}
-                imageHeightPx={64}
+                imageHeight={"64px"}
                 iconColor={value == option.code ? theme.palette.primary.main : theme.textStyles.text.color
                 }
                 svgUrl={

@@ -62,7 +62,9 @@ function IconScq(props) {
                 onIconClick={() =>
                   handleChange(props.component.qualifiedCode, option.code)
                 }
-                imageHeightPx={option.iconSize || 64}
+                // imageHeightPx={props.component.iconSize || 150}
+                imageHeight={"100%"}
+                maxHeight={(props.component.iconSize || 150) + "px"}
                 iconColor={
                   isSelected
                     ? theme.palette.primary.main

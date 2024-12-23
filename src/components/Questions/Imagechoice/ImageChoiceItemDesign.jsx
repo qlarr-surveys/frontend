@@ -19,6 +19,7 @@ import { rtlLanguage } from "~/utils/common";
 import { useDrag, useDrop } from "react-dnd";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
+import { contentEditable, inDesign } from '~/routes';
 
 function ImageChoiceItemDesign({
   parentCode,
@@ -27,6 +28,7 @@ function ImageChoiceItemDesign({
   type,
   columnNumber,
   imageAspectRatio,
+  designMode,
   hideText,
   t,
   addAnswer,
@@ -242,7 +244,7 @@ function ImageChoiceItemDesign({
           ref={ref}
           data-handler-id={handlerId}
         >
-          {onMainLang && (
+          {inDesign(designMode) && (
             <div className={styles.buttonContainers}>
               <IconButton
                 sx={{
@@ -292,6 +294,7 @@ function ImageChoiceItemDesign({
             dir={isRtl ? "rtl" : "ltr"}
             variant="standard"
             value={content || ""}
+            disabled={!contentEditable(designMode)}
             onChange={(e) =>
               dispatch(
                 changeContent({

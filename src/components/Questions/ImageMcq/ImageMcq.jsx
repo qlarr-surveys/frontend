@@ -27,7 +27,7 @@ function ImageMcq(props) {
           <ImageMcqItem
             option={option}
             aspectRatio={props.component.imageAspectRatio}
-            columns={props.component.columns || 64}
+            columns={props.component.columns || 3}
             spacing={props.component.spacing || 8}
             hideText={props.component.hideText}
             parentCode={props.component.qualifiedCode}

@@ -45,10 +45,10 @@ function IconMcq(props) {
           <IconMcqChoice
             key={option.code}
             component={option}
-            columns={props.component.columns || 64}
+            columns={props.component.columns || 3}
+            iconSize={props.component.iconSize || 150}
             spacing={props.component.spacing || 8}
             theme={theme}
-            iconSize={props.component.iconSize || 64}
             hideText={hideText}
           />
         );
@@ -94,7 +94,8 @@ function IconMcqChoice({
               value: !checked,
             })
           )}
-          imageHeightPx={iconSize}
+          imageHeightPx="100%"
+          maxHeight={iconSize + "px"}
           iconColor={
             checked ? theme.palette.primary.main : theme.textStyles.text.color
           }

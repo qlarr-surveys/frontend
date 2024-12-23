@@ -21,6 +21,7 @@ import ActionToolbar from "~/components/design/ActionToolbar";
 import QuestionDesignBody from "./QuestionDesignBody";
 import { getContrastColor, questionIconByType } from "../Questions/utils";
 import { hasMajorSetup } from "~/constants/design";
+import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function QuestionDesign({
   code,
@@ -29,6 +30,7 @@ function QuestionDesign({
   parentCode,
   index,
   t,
+  designMode,
   onMainLang,
   parentIndex,
 }) {
@@ -281,12 +283,12 @@ function QuestionDesign({
       data-code={code}
     >
       <Box className={styles.contentContainer}>
-        {collapsed && onMainLang && (
+        {collapsed && (
           <div className={styles.moveBox} ref={drag}>
             <ViewCompactIcon style={{ color: textColor }} />
           </div>
         )}
-        {noMajorSetup && (isInSetup || hovered) && onMainLang && (
+        {designMode == DESIGN_SURVEY_MODE.DESIGN && (isInSetup || hovered) && (
           <div className={styles.actionToolbarVisible}>
             <ActionToolbar
               t={t}
@@ -316,6 +318,7 @@ function QuestionDesign({
         >
           <ContentEditor
             code={code}
+            editable={designMode == DESIGN_SURVEY_MODE.DESIGN || designMode == DESIGN_SURVEY_MODE.LANGUAGES}
             extended={false}
             placeholder={t("content_editor_placeholder_title")}
             contentKey="label"
@@ -327,6 +330,7 @@ function QuestionDesign({
         <Box className={styles.textDescriptionContent}>
           <ContentEditor
             code={code}
+            editable={designMode == DESIGN_SURVEY_MODE.DESIGN || designMode == DESIGN_SURVEY_MODE.LANGUAGES}
             extended={true}
             placeholder={t("content_editor_placeholder_description")}
             contentKey="description"
@@ -340,6 +344,7 @@ function QuestionDesign({
           type={type}
           t={t}
           addAnswer={addAnswer}
+          designMode={designMode}
           onMainLang={onMainLang}
           addNewAnswer={addAnswer}
         />
