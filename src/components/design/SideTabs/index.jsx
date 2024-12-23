@@ -12,28 +12,17 @@ import styles from "./TopBanner.module.css";
 import React from "react";
 import { Edit, Settings, Visibility } from "@mui/icons-material";
 import {
-  DESIGN_SURVEY_MODE,
   MANAGE_SURVEY_LANDING_PAGES,
   routes,
 } from "~/routes";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { resetLang, resetSetup, setup } from "~/state/design/designState";
-import {
-  hasMajorSetup,
-  languageSetup,
-  reorderSetup,
-  themeSetup,
-} from "~/constants/design";
-import TranslateIcon from "@mui/icons-material/Translate";
-import { Palette } from "@mui/icons-material";
-import ReorderIcon from "@mui/icons-material/Reorder";
+import { resetSetup } from "~/state/design/designState";
 
 function SideTabs({
   selectedPage,
   onPageChange,
-  designMode,
   availablePages,
   surveyId,
 }) {
@@ -47,20 +36,6 @@ function SideTabs({
     backgroundColor: selected ? "#2d3cb2" : undefined,
     color: "#fff",
   });
-
-  const setupInfo = useSelector((state) => state.designState.setup || {});
-
-  const showTheme = () => {
-    dispatch(resetLang());
-    dispatch(setup(themeSetup));
-  };
-  const showTranslation = () => {
-    dispatch(setup(languageSetup));
-  };
-  const reOrder = () => {
-    dispatch(resetLang());
-    dispatch(setup(reorderSetup));
-  };
 
   const versionDto = useSelector((state) => {
     return state.designState.versionDto;
@@ -77,62 +52,13 @@ function SideTabs({
             <SideTab
               tooltip={t("design")}
               style={getTabButtonStyle(
-                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN &&
-                  designMode == DESIGN_SURVEY_MODE.DESIGN
+                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN
               )}
               link={routes.designSurvey.replace(":surveyId", surveyId)}
               icon={<Edit sx={{ color: "#fff" }} />}
               onClick={() => {
                 dispatch(resetSetup());
                 onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
-              }}
-            />
-            <SideTab
-              tooltip={t("design")}
-              style={getTabButtonStyle(
-                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN &&
-                  designMode == DESIGN_SURVEY_MODE.LANGUAGES
-              )}
-              link={
-                routes.designSurvey.replace(":surveyId", surveyId) +
-                `?mode=${DESIGN_SURVEY_MODE.LANGUAGES}`
-              }
-              icon={<TranslateIcon sx={{ color: "#fff" }} />}
-              onClick={() => {
-                onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
-                showTranslation();
-              }}
-            />
-            <SideTab
-              tooltip={t("design")}
-              style={getTabButtonStyle(
-                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN &&
-                  designMode == DESIGN_SURVEY_MODE.THEME
-              )}
-              link={
-                routes.designSurvey.replace(":surveyId", surveyId) +
-                `?mode=${DESIGN_SURVEY_MODE.THEME}`
-              }
-              icon={<Palette sx={{ color: "#fff" }} />}
-              onClick={() => {
-                onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
-                showTheme();
-              }}
-            />
-            <SideTab
-              tooltip={t("design")}
-              style={getTabButtonStyle(
-                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN &&
-                designMode == DESIGN_SURVEY_MODE.REORDER
-              )}
-              link={
-                routes.designSurvey.replace(":surveyId", surveyId) +
-                `?mode=${DESIGN_SURVEY_MODE.REORDER}`
-              }
-              icon={<ReorderIcon sx={{ color: "#fff" }} />}
-              onClick={() => {
-                onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
-                reOrder();
               }}
             />
           </>

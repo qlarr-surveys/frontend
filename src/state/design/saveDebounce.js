@@ -56,7 +56,6 @@ const NONE_MUTATING = [
   "designState/setupToggleExpand",
   "designState/collapseAllGroups",
   "designState/resetSetup",
-  "designState/onResetLang",
   "designState/onAddComponentsVisibilityChange",
   "designState/setSaving",
   "designState/changeLang",

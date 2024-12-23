@@ -47,10 +47,6 @@ function SetupPanel({ t }) {
   const { code, expanded, highlighted, rules, isSingleRule } =
     useSelector(selectSetupData);
 
-  const noMajorSetup = useSelector(
-    (state) => !hasMajorSetup(state.designState.setup)
-  );
-
   return (
     <div
       className={styles.rightContent}
@@ -58,17 +54,15 @@ function SetupPanel({ t }) {
         left: theme.direction == "rtl" ? "0px" : "",
       }}
     >
-      {noMajorSetup && (
-        <div className={styles.close}>
-          <IconButton
-            onClick={() => {
-              dispatch(resetSetup());
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </div>
-      )}
+      <div className={styles.close}>
+        <IconButton
+          onClick={() => {
+            dispatch(resetSetup());
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </div>
 
       {rules?.map((rule) => (
         <SetupSection
@@ -317,12 +311,10 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
       );
     case "reorder_setup":
       const reorderLabels = [
-        t("collapse_none"),
         t("collapse_groups"),
         t("collapse_questions"),
       ];
       const reorderValues = [
-        "collapse_none",
         "collapse_groups",
         "collapse_questions",
       ];

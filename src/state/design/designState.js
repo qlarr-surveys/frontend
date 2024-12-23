@@ -15,11 +15,12 @@ import {
   reorder,
   buildReferenceInstruction,
 } from "./stateUtils";
-import { reorderSetup, setupOptions } from "~/constants/design";
+import { languageSetup, reorderSetup, setupOptions, themeSetup } from "~/constants/design";
 import {
   createQuestion,
   questionDesignError,
 } from "~/components/Questions/utils";
+import { DESIGN_SURVEY_MODE } from "~/routes";
 
 const reservedKeys = ["setup", "reorder_refresh_code"];
 
@@ -47,6 +48,7 @@ export const designState = createSlice({
         payload.expanded ||
         payload.highlighted
       ) {
+        console.log(payload)
         state.setup = action.payload;
       }
     },
@@ -93,16 +95,26 @@ export const designState = createSlice({
       }
       state.globalSetup.reorder_setup = undefined;
       delete state["setup"];
+      state.designMode = DESIGN_SURVEY_MODE.DESIGN;
     },
-    resetLang(state) {
-      if (state.langInfo) {
-        state.langInfo.lang = state.langInfo.mainLang;
-        state.langInfo.onMainLang = true;
-      }
+    setDesignModeToLang(state) {
+      designState.caseReducers.resetSetup(state);
+      designState.caseReducers.setup(state, { payload: languageSetup });
+      state.designMode = DESIGN_SURVEY_MODE.LANGUAGES;
+    },
+    setDesignModeToTheme(state) {
+      designState.caseReducers.resetSetup(state);
+      designState.caseReducers.setup(state, { payload: themeSetup });
+      state.designMode = DESIGN_SURVEY_MODE.THEME;
+    },
+    setDesignModeToReorder(state) {
+      designState.caseReducers.resetSetup(state);
+      designState.caseReducers.setup(state, { payload: reorderSetup });
       if (!state.globalSetup) {
         state.globalSetup = {};
       }
-      state.globalSetup.reorder_setup = undefined;
+      state.globalSetup.reorder_setup = "collapse_questions";
+      state.designMode = DESIGN_SURVEY_MODE.REORDER;
     },
     changeAttribute: (state, action) => {
       let payload = action.payload;
@@ -430,10 +442,7 @@ export const designState = createSlice({
       state.langInfo.onMainLang =
         state.langInfo.lang == state.langInfo.mainLang;
     },
-    onResetLang: (state) => {
-      state.langInfo.lang = state.langInfo.mainLang;
-      state.langInfo.onMainLang = true;
-    },
+
     setSaving: (state, action) => {
       state.isSaving = action.payload;
     },
@@ -494,7 +503,7 @@ export const designState = createSlice({
         const survey = state.Survey;
         const lastGroupIndex = Math.max(0, survey.children.length - 2);
         const destinationGroupCode = survey.children[lastGroupIndex].code;
-        const destinationGroup = state[destinationGroupCode]
+        const destinationGroup = state[destinationGroupCode];
         const toIndex = destinationGroup.children?.length || 0;
         newQuestion(state, {
           destination: destinationGroupCode,
@@ -513,7 +522,6 @@ export const {
   onAdditionalLangAdded,
   onAdditionalLangRemoved,
   changeLang,
-  onResetLang,
   onAddComponentsVisibilityChange,
   changeAttribute,
   resetCollapse,
@@ -524,7 +532,9 @@ export const {
   cloneQuestion,
   deleteGroup,
   addNewAnswer,
-  resetLang,
+  setDesignModeToLang,
+  setDesignModeToReorder,
+  setDesignModeToTheme,
   removeAnswer,
   setup,
   setupToggleExpand,

@@ -15,7 +15,7 @@ import { setup } from "~/state/design/designState";
 import useDragNearViewportEdge from "~/utils/useDragEdgeDetection";
 import { DESIGN_SURVEY_MODE } from '~/routes';
 
-function ContentPanel({ onMainLang, designMode }, ref) {
+function ContentPanel({ designMode }, ref) {
   const { t } = useTranslation(["design", "run"]);
   const theme = useTheme();
   const dispatch = useDispatch();

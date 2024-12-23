@@ -1,5 +1,12 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { ThemeProvider, createTheme } from "@mui/material";
+import {
+  Backdrop,
+  SpeedDial,
+  SpeedDialAction,
+  SpeedDialIcon,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
 
 import styles from "./DesignSurvey.module.css";
 import ContentPanel from "~/components/design/ContentPanel";
@@ -12,25 +19,35 @@ import { useDispatch, useSelector } from "react-redux";
 import LeftPanel from "~/components/design/LeftPanel";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import RightPanel from "~/components/design/RightPanel";
 import { isTouchDevice } from "~/utils/isTouchDevice";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { resetSetup, setup } from "~/state/design/designState";
-import { languageSetup, reorderSetup, themeSetup } from "~/constants/design";
+import {
+  setDesignModeToLang,
+  setDesignModeToReorder,
+  setDesignModeToTheme,
+} from "~/state/design/designState";
+import TranslateIcon from "@mui/icons-material/Translate";
+import { Palette } from "@mui/icons-material";
+import ReorderIcon from "@mui/icons-material/Reorder";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 
-function DesignSurvey({ designMode }) {
+function DesignSurvey() {
   const { t, i18n } = useTranslation(["design", "run"]);
   const childI18n = i18n.cloneInstance();
   const contentRef = useRef(null);
-  const dispatch = useDispatch();
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
   });
+  const dispatch = useDispatch();
+
+  const designMode = useSelector((state) => {
+    return state.designState.designMode;
+  });
+
+  const [optionsOpen, setOptionsOpen] = React.useState(false);
 
   const lang = langInfo?.lang;
-
 
   const theme = useSelector((state) => {
     return state.designState["Survey"]?.theme;
@@ -57,20 +74,6 @@ function DesignSurvey({ designMode }) {
     }
   }, [lang, contentRef]);
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const mode = searchParams.get("mode");
-    if (mode == DESIGN_SURVEY_MODE.THEME) {
-      dispatch(setup(themeSetup));
-    } else if (mode == DESIGN_SURVEY_MODE.LANGUAGES) {
-      dispatch(setup(languageSetup));
-    } else if (mode == DESIGN_SURVEY_MODE.REORDER) {
-      dispatch(setup(reorderSetup));
-    } else {
-      dispatch(resetSetup());
-    }
-  }, []);
-
   const cacheRtlMemo = useMemo(() => cacheRtl(lang), [lang]);
 
   const surveyTheme = React.useCallback(
@@ -80,13 +83,57 @@ function DesignSurvey({ designMode }) {
     }),
     [theme]
   );
+  const actions = [
+    {
+      icon: <TranslateIcon />,
+      name: "Language",
+      onClick: () => {
+        setOptionsOpen(false);
+        dispatch(setDesignModeToLang());
+      },
+    },
+    {
+      icon: <Palette />,
+      name: "Theme",
+      onClick: () => {
+        setOptionsOpen(false);
+        dispatch(setDesignModeToTheme());
+      },
+    },
+    {
+      icon: <ReorderIcon />,
+      name: "Reorder",
+      onClick: () => {
+        setOptionsOpen(false);
+        dispatch(setDesignModeToReorder());
+      },
+    },
+  ];
   return (
     <div className={styles.mainContainer}>
       <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
-        {designMode == DESIGN_SURVEY_MODE.DESIGN && <LeftPanel t={t} />}
+        <LeftPanel t={t} />
         <CacheProvider value={cacheRtlMemo}>
           <ThemeProvider theme={surveyTheme}>
             <I18nextProvider i18n={childI18n}>
+            <Backdrop style={{zIndex: 1}} open={optionsOpen} />
+              <SpeedDial
+                open={optionsOpen}
+                onClick={()=>setOptionsOpen(!optionsOpen)}
+                ariaLabel="SpeedDial basic example"
+                sx={{ position: "absolute", bottom: 16, right: 16 }}
+                icon={<SpeedDialIcon openIcon  />}
+              >
+                {actions.map((action) => (
+                  <SpeedDialAction
+                    onClick={action.onClick}
+                    key={action.name}
+                    icon={action.icon}
+                    tooltipOpen
+                    tooltipTitle={action.name}
+                  />
+                ))}
+              </SpeedDial>
               <ContentPanel
                 designMode={designMode}
                 ref={contentRef}
@@ -95,7 +142,6 @@ function DesignSurvey({ designMode }) {
             </I18nextProvider>
           </ThemeProvider>
         </CacheProvider>
-        {<RightPanel t={t} />}
       </DndProvider>
     </div>
   );

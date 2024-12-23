@@ -4,9 +4,7 @@ import { useDispatch } from "react-redux";
 import {
   designStateReceived,
   onAddComponentsVisibilityChange,
-  resetLang,
   resetSetup,
-  setup,
 } from "~/state/design/designState";
 import { GetData } from "~/networking/design";
 import { setLoading, surveyReceived } from "~/state/edit/editState";
@@ -14,13 +12,12 @@ import SavingSurvey from "~/components/design/SavingSurvey";
 import { isAnalyst, isSurveyAdmin } from "~/constants/roles";
 import TokenService from "~/services/TokenService";
 import { useParams } from "react-router-dom";
-import { DESIGN_SURVEY_MODE, MANAGE_SURVEY_LANDING_PAGES } from "~/routes";
+import {  MANAGE_SURVEY_LANDING_PAGES } from "~/routes";
 import { Box } from "@mui/material";
 import styles from "./ManageSurvey.module.css";
 import ManageTranslations from "../manage/ManageTranslations";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
-import { languageSetup, reorderSetup, themeSetup } from "~/constants/design";
 import SideTabs from "~/components/design/SideTabs";
 const ResponsesSurvey = React.lazy(() => import("../manage/ResponsesSurvey"));
 const EditSurvey = React.lazy(() => import("../manage/EditSurvey"));
@@ -29,10 +26,6 @@ const DesignSurvey = React.lazy(() => import("../DesignSurvey"));
 function ManageSurvey({ landingPage }) {
   const surveyService = useService("survey");
   const designService = useService("design");
-
-  const searchParams = new URLSearchParams(window.location.search);
-  const designMode = resolveDesignMode(searchParams.get("mode"));
-  console.log(designMode)
   const params = useParams();
   const user = TokenService.getUser();
   const [selectedPage, setSelectedTab] = useState(
@@ -86,19 +79,6 @@ function ManageSurvey({ landingPage }) {
       const currentPath = window.location.pathname;
       const currentTab = currentPath.split("/")[1];
       setSelectedTab(currentTab);
-      const searchParams = new URLSearchParams(window.location.search);
-      const mode = searchParams.get("mode");
-      if (mode == DESIGN_SURVEY_MODE.THEME) {
-        dispatch(resetLang());
-        dispatch(setup(themeSetup));
-      } else if (mode == DESIGN_SURVEY_MODE.LANGUAGES) {
-        dispatch(setup(languageSetup));
-      } else if (mode == DESIGN_SURVEY_MODE.REORDER) {
-        dispatch(resetLang());
-        dispatch(setup(reorderSetup));
-      } else {
-        dispatch(resetSetup());
-      }
     };
     window.addEventListener("popstate", handlePopState);
     return () => {
@@ -123,7 +103,6 @@ function ManageSurvey({ landingPage }) {
     <>
       <Box sx={{ display: "flex" }}>
         <SideTabs
-          designMode={designMode}
           availablePages={availablePages(user)}
           selectedPage={selectedPage}
           surveyId={params.surveyId}
@@ -136,7 +115,7 @@ function ManageSurvey({ landingPage }) {
             ) : shouldShowEditSurvey() ? (
               <EditSurvey onPublish={() => loadSurvey()} />
             ) : shouldShowDesign() ? (
-              <DesignSurvey designMode={designMode} />
+              <DesignSurvey />
             ) : (
               <></>
             )}
@@ -191,7 +170,3 @@ export const landingTab = (landingPage, user) => {
     return "";
   }
 };
-
-export const resolveDesignMode = (mode)=>{
-  return Object.values(DESIGN_SURVEY_MODE).indexOf(mode) > -1 ? mode : DESIGN_SURVEY_MODE.DESIGN;
-}
