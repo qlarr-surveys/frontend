@@ -22,42 +22,17 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useRef } from "react";
 
 const listFont = [
-  "Alegreya",
-  "Amatic SC",
-  "Arial",
-  "Bree Serif",
-  "Calibri",
-  "Cambria",
-  "Caveat",
-  "Comfortaa",
-  "Comic Sans MS",
-  "Courier New",
-  "EB Garamond",
-  "Georgia",
-  "Google Sans",
-  "Impact",
-  "Lexend",
-  "Lobster",
-  "Lora",
   "Merriweather",
-  "Montserrat",
-  "Nunito",
-  "Oswald",
-  "Pacifico",
-  "Permanent Marker",
-  "Pinyon Script",
-  "Playfair Display",
-  "Proxima Nova",
   "Roboto",
-  "Roboto Mono",
-  "Roboto Serif",
+  "Open Sans",
+  "Lato",
+  "Poppins",
+  "Raleway",
   "Rubik",
-  "Spectral",
   "Times New Roman",
-  "Trebuchet MS",
-  "Ultra",
-  "Varela Round",
-  "Verdana",
+  "Arial",
+  "Courier New",
+  "Georgia",
 ];
 
 function Theming({ t }) {
@@ -116,7 +91,6 @@ function Theming({ t }) {
         }
 
         const newVal = `rgba(${r}, ${g}, ${b}, ${a})`;
-
 
         dispatch(
           changeAttribute({

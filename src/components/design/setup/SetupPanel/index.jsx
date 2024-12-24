@@ -25,7 +25,6 @@ import { createSelector } from "@reduxjs/toolkit";
 import Theming from "../Theming";
 import { ManageLanguages } from "~/pages/manage/ManageTranslations";
 import { useTheme } from "@emotion/react";
-import { hasMajorSetup } from "~/constants/design";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -393,7 +392,7 @@ const SetupSection = React.memo(
       <Accordion
         expanded={expanded}
         className={styles.accordionStyle}
-        TransitionProps={{ unmountOnExit: true }}
+        slotProps={{ transition: { unmountOnExit: true } }}
       >
         <AccordionSummary
           onClick={() => toggleExpand(rule.key)}

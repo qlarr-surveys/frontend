@@ -150,3 +150,111 @@
   font-weight: 600;
   src: url('./raleway-v34-latin-600.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
+
+/* Times New Roman - regular */
+@font-face {
+  font-display: swap;
+  font-family: 'Times New Roman';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Times New Roman'), local('TimesNewRoman'), url('./times-new-roman-regular.woff2') format('woff2');
+}
+
+/* Times New Roman - italic */
+@font-face {
+  font-display: swap;
+  font-family: 'Times New Roman';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Times New Roman Italic'), local('TimesNewRoman-Italic'), url('./times-new-roman-italic.woff2') format('woff2');
+}
+
+/* Times New Roman - bold */
+@font-face {
+  font-display: swap;
+  font-family: 'Times New Roman';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Times New Roman Bold'), local('TimesNewRoman-Bold'), url('./times-new-roman-bold.woff2') format('woff2');
+}
+
+/* Arial - regular */
+@font-face {
+  font-display: swap;
+  font-family: 'Arial';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Arial'), url('./arial-regular.woff2') format('woff2');
+}
+
+/* Arial - italic */
+@font-face {
+  font-display: swap;
+  font-family: 'Arial';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Arial Italic'), url('./arial-italic.woff2') format('woff2');
+}
+
+/* Arial - bold */
+@font-face {
+  font-display: swap;
+  font-family: 'Arial';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Arial Bold'), url('./arial-bold.woff2') format('woff2');
+}
+
+/* Courier New - regular */
+@font-face {
+  font-display: swap;
+  font-family: 'Courier New';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Courier New'), url('./courier-new-regular.woff2') format('woff2');
+}
+
+/* Courier New - italic */
+@font-face {
+  font-display: swap;
+  font-family: 'Courier New';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Courier New Italic'), url('./courier-new-italic.woff2') format('woff2');
+}
+
+/* Courier New - bold */
+@font-face {
+  font-display: swap;
+  font-family: 'Courier New';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Courier New Bold'), url('./courier-new-bold.woff2') format('woff2');
+}
+
+/* Georgia - regular */
+@font-face {
+  font-display: swap;
+  font-family: 'Georgia';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Georgia'), url('./georgia-regular.woff2') format('woff2');
+}
+
+/* Georgia - italic */
+@font-face {
+  font-display: swap;
+  font-family: 'Georgia';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Georgia Italic'), url('./georgia-italic.woff2') format('woff2');
+}
+
+/* Georgia - bold */
+@font-face {
+  font-display: swap;
+  font-family: 'Georgia';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Georgia Bold'), url('./georgia-bold.woff2') format('woff2');
+}
