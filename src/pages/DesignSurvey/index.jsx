@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import {
   Backdrop,
+  Chip,
   SpeedDial,
   SpeedDialAction,
-  SpeedDialIcon,
   ThemeProvider,
   createTheme,
 } from "@mui/material";
@@ -22,13 +22,15 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { isTouchDevice } from "~/utils/isTouchDevice";
 import { TouchBackend } from "react-dnd-touch-backend";
 import {
+  resetSetup,
   setDesignModeToLang,
   setDesignModeToReorder,
   setDesignModeToTheme,
 } from "~/state/design/designState";
 import TranslateIcon from "@mui/icons-material/Translate";
-import { Palette } from "@mui/icons-material";
+import { Cancel, Palette } from "@mui/icons-material";
 import ReorderIcon from "@mui/icons-material/Reorder";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function DesignSurvey() {
@@ -83,6 +85,59 @@ function DesignSurvey() {
     }),
     [theme]
   );
+
+  const onCancel = () => {
+    dispatch(resetSetup());
+  };
+
+  return (
+    <div className={styles.mainContainer}>
+      <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
+        <LeftPanel t={t} />
+        <CacheProvider value={cacheRtlMemo}>
+          <ThemeProvider theme={surveyTheme}>
+            <I18nextProvider i18n={childI18n}>
+              <DesignOptions designMode={designMode} optionsOpen={optionsOpen} setOptionsOpen={setOptionsOpen} />
+              <ContentPanel
+                designMode={designMode}
+                ref={contentRef}
+                className={styles.contentPanel}
+              />
+              <DesignChip onCancel={onCancel} designMode={designMode} />
+            </I18nextProvider>
+          </ThemeProvider>
+        </CacheProvider>
+      </DndProvider>
+    </div>
+  );
+}
+
+export default React.memo(DesignSurvey);
+
+function DesignChip({ designMode, onCancel }) {
+  return (
+    designMode != DESIGN_SURVEY_MODE.DESIGN && (
+      <Chip
+        sx={{
+          borderRadius: "48px",
+          height: "48px",
+          fontSize: "24px",
+          position: "absolute",
+          bottom: "16px",
+          padding: "8px",
+          right: "16px",
+        }}
+        label="Back to Design"
+        icon={<Cancel />}
+        color="primary"
+        onClick={onCancel}
+      />
+    )
+  );
+}
+
+function DesignOptions({ setOptionsOpen, optionsOpen, designMode }) {
+  const dispatch = useDispatch()
   const actions = [
     {
       icon: <TranslateIcon />,
@@ -110,41 +165,27 @@ function DesignSurvey() {
     },
   ];
   return (
-    <div className={styles.mainContainer}>
-      <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
-        <LeftPanel t={t} />
-        <CacheProvider value={cacheRtlMemo}>
-          <ThemeProvider theme={surveyTheme}>
-            <I18nextProvider i18n={childI18n}>
-            <Backdrop style={{zIndex: 1}} open={optionsOpen} />
-              <SpeedDial
-                open={optionsOpen}
-                onClick={()=>setOptionsOpen(!optionsOpen)}
-                ariaLabel="SpeedDial basic example"
-                sx={{ position: "absolute", bottom: 16, right: 16 }}
-                icon={<SpeedDialIcon openIcon  />}
-              >
-                {actions.map((action) => (
-                  <SpeedDialAction
-                    onClick={action.onClick}
-                    key={action.name}
-                    icon={action.icon}
-                    tooltipOpen
-                    tooltipTitle={action.name}
-                  />
-                ))}
-              </SpeedDial>
-              <ContentPanel
-                designMode={designMode}
-                ref={contentRef}
-                className={styles.contentPanel}
-              />
-            </I18nextProvider>
-          </ThemeProvider>
-        </CacheProvider>
-      </DndProvider>
-    </div>
+    designMode == DESIGN_SURVEY_MODE.DESIGN && (
+      <>
+        <Backdrop style={{ zIndex: 1 }} open={optionsOpen} />
+        <SpeedDial
+          open={optionsOpen}
+          onClick={() => setOptionsOpen(!optionsOpen)}
+          ariaLabel="SpeedDial basic example"
+          sx={{ position: "absolute", bottom: 16, right: 16 }}
+          icon={<MoreHorizIcon />}
+        >
+          {actions.map((action) => (
+            <SpeedDialAction
+              onClick={action.onClick}
+              key={action.name}
+              icon={action.icon}
+              tooltipOpen
+              tooltipTitle={action.name}
+            />
+          ))}
+        </SpeedDial>
+      </>
+    )
   );
 }
-
-export default React.memo(DesignSurvey);

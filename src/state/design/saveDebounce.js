@@ -37,7 +37,7 @@ export const dataSaver = (store) => (next) => (action) => {
     return
   }
   if (
-    !NONE_MUTATING.includes(action.type) &&
+    MUTATING.includes(action.type) &&
     !action.type.startsWith("editState/")
   ) {
     if (!store.getState().designState.isUpdating) {
@@ -62,6 +62,32 @@ const NONE_MUTATING = [
   "designState/setup",
   "designState/designStateReceived",
   "designState/newVersionReceived",
+];
+
+const MUTATING = [
+  "templateState/onBaseLangChanged",
+  "designState/onAdditionalLangAdded",
+  "designState/onAdditionalLangRemoved",
+  "designState/changeAttribute",
+  "designState/changeTimeFormats",
+  "designState/changeContent",
+  "designState/changeResources",
+  "designState/deleteQuestion",
+  "designState/cloneQuestion",
+  "designState/deleteGroup",
+  "designState/addNewAnswer",
+  "designState/removeAnswer",
+  "designState/changeValidationValue",
+  "designState/updateRandom",
+  "designState/updatePriority",
+  "designState/updateRandomByType",
+  "designState/updatePriorityByType",
+  "designState/removeSkipDestination",
+  "designState/editSkipDestination",
+  "designState/editSkipToEnd",
+  "designState/changeRelevance",
+  "designState/addComponent",
+
 ];
 
 const setState = (store, state) => {
