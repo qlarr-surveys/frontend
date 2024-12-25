@@ -51,10 +51,6 @@ function ContentPanel({ designMode }, ref) {
     return state.designState["Survey"]?.resources?.headerImage;
   });
 
-  const backgroundImage = useSelector(
-    (state) => state.designState["Survey"]?.resources?.backgroundImage
-  );
-
   const groupsEmpty = !groups.length;
 
   const welcomeGroupExists = useMemo(() => {
@@ -125,21 +121,11 @@ function ContentPanel({ designMode }, ref) {
     };
   }, [isNearTop, isNearBottom]);
 
-  const backgroundStyle = backgroundImage
-    ? {
-        backgroundImage: `url(${buildResourceUrl(backgroundImage)})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        // backgroundSize: "100% 100%",
-        backgroundPosition: "center",
-      }
-    : {};
-
   return (
     <Box
       ref={ref}
       className={`content-panel ${styles.contentPanel}`}
-      sx={{ backgroundColor: "background.default", color: "text.primary" }}
+      sx={{  color: "text.primary" }}
       style={{
         fontFamily: theme.textStyles.text.font,
         color: theme.textStyles.text.color,
@@ -150,7 +136,6 @@ function ContentPanel({ designMode }, ref) {
         <Virtuoso
           ref={virtuosoRef}
           data={items}
-          style={backgroundStyle}
           className={styles.virtuosoStyle}
           itemContent={(index, item) => {
             switch (item.name) {
