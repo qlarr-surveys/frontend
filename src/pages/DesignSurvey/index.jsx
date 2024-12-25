@@ -88,10 +88,6 @@ function DesignSurvey() {
     [theme]
   );
 
-  const onCancel = () => {
-    dispatch(resetSetup());
-  };
-
   return (
     <div className={styles.mainContainer} ref={containerRef} >
       <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>

@@ -18,6 +18,11 @@
   border-radius: 8px;
 }
 
+.groupContianer {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
 .stepperContent {
   position: absolute;
   background-color: white;
@@ -27,11 +32,6 @@
   height: 700px;
   overflow: auto;
   margin-top: 3rem;
-  /* max-width: 800px;
-  min-width: 350px;
-  margin: auto;
-  overflow: auto;
-  display: flex; */
 }
 
 .menuButton.menuButton {

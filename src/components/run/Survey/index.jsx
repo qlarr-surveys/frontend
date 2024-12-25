@@ -68,7 +68,7 @@ function Survey() {
                     key={group.code}
                     id={`group-${index}`}
                     data-index={index}
-                    className="groupContainer"
+                    className={styles.groupContianer}
                   >
                     <Group group={group} lang={lang.code} groupIndex={index} />
                   </div>

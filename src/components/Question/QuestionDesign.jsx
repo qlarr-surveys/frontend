@@ -269,8 +269,6 @@ function QuestionDesign({
         isInSetup
           ? {
               border: `0.5px solid ${textColor}`,
-              paddingTop: "2rem",
-              paddingBottom: "2rem",
               backgroundColor: contrastColor,
               color: textColor,
             }

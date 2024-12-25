@@ -140,8 +140,6 @@ function GroupDesign({ t, code, index, designMode }) {
           ? {
             border: `0.5px solid ${textColor}`,
             color: textColor,
-            paddingTop: "2rem",
-            paddingBottom: "2rem",
             backgroundColor: contrastColor,
           }
           : {
