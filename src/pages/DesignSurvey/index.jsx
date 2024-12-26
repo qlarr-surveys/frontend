@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import {
   Backdrop,
-  Box,
   Chip,
   SpeedDial,
   SpeedDialAction,
@@ -33,7 +32,11 @@ import { Cancel, Palette } from "@mui/icons-material";
 import ReorderIcon from "@mui/icons-material/Reorder";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { DESIGN_SURVEY_MODE } from "~/routes";
+<<<<<<< HEAD
 import { buildResourceUrl } from "~/networking/common";
+=======
+import RightPanel from '~/components/design/RightPanel';
+>>>>>>> parent of 2b3aac0 (cleanup)
 
 function DesignSurvey() {
   const { t, i18n } = useTranslation(["design", "run"]);
@@ -93,6 +96,7 @@ function DesignSurvey() {
     [theme]
   );
 
+<<<<<<< HEAD
   const backgroundImage = useSelector(
     (state) => state.designState["Survey"]?.resources?.backgroundImage
   );
@@ -115,6 +119,10 @@ function DesignSurvey() {
       ref={containerRef}
       sx={{ ...backgroundStyle }}
     >
+=======
+  return (
+    <div className={styles.mainContainer} ref={containerRef} >
+>>>>>>> parent of 2b3aac0 (cleanup)
       <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
         <CacheProvider value={cacheRtlMemo}>
           <LeftPanel t={t} />
@@ -135,7 +143,7 @@ function DesignSurvey() {
           />
         </CacheProvider>
       </DndProvider>
-    </Box>
+    </div>
   );
 }
 
