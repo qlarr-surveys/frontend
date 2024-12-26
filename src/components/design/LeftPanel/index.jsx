@@ -1,9 +1,10 @@
-import { Collapse } from "@mui/material";
+import { Box, Collapse } from "@mui/material";
 import NewComponentsPanel from "~/components/design/NewComponentsPanel";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useTheme } from "@emotion/react";
 import { DESIGN_SURVEY_MODE } from "~/routes";
+import SetupPanel from "../setup/SetupPanel";
 function LeftPanel({ t }) {
   const show = useSelector((state) => {
     return (
@@ -13,21 +14,19 @@ function LeftPanel({ t }) {
     );
   });
 
+  const setup = useSelector((state) => {
+    return state.designState?.setup || {};
+  });
+
+  const hasSetup = Object.keys(setup).length > 0;
+
   const theme = useTheme();
 
   return (
-    <Collapse
-      in={show}
-      orientation="horizontal"  
-      timeout={500}
-      easing={{
-        enter: "linear", // Easing for the "entering" animation
-        exit: "linear", // Easing for the "exiting" animation
-      }}
-      unmountOnExit
-    >
-      <NewComponentsPanel t={t} />
-    </Collapse>
+    <Box sx={{width:"22rem", flex:"0 0 auto"}}>
+      {show &&  <NewComponentsPanel t={t} />}
+      {hasSetup &&  <SetupPanel t={t} />}
+    </Box>
   );
 }
 

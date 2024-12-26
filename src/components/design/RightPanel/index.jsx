@@ -16,9 +16,10 @@ function RightPanel({ t }) {
   return (
     <Collapse
       in={hasSetup}
+      // sx={{ flex: "0 0 auto" }}
       sx={{ flex: "0 0 auto" }}
       orientation="horizontal"
-      timeout={500}
+      timeout={200}
       easing={{
         enter: "linear", // Easing for the "entering" animation
         exit: "linear", // Easing for the "exiting" animation

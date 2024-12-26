@@ -4,48 +4,26 @@ import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import { buildResourceUrl } from "~/networking/common";
 import {
-  Backdrop,
   Box,
   CardMedia,
-  Chip,
-  SpeedDial,
-  SpeedDialAction,
 } from "@mui/material";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
 import { GroupDropArea } from "~/components/design/DropArea/DropArea";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Virtuoso } from "react-virtuoso";
-import TranslateIcon from "@mui/icons-material/Translate";
-import { Cancel, Palette } from "@mui/icons-material";
-import ReorderIcon from "@mui/icons-material/Reorder";
-import { languageSetup, reorderSetup, themeSetup } from "~/constants/design";
-import { useDispatch } from "react-redux";
-import {
-  resetSetup,
-  setDesignModeToLang,
-  setDesignModeToReorder,
-  setDesignModeToTheme,
-  setup,
-} from "~/state/design/designState";
 import useDragNearViewportEdge from "~/utils/useDragEdgeDetection";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function ContentPanel({ designMode }, ref) {
   const { t } = useTranslation(["design", "run"]);
   const theme = useTheme();
-  const [optionsOpen, setOptionsOpen] = React.useState(false);
-  const dispatch = useDispatch();
   const inDesgin = designMode == DESIGN_SURVEY_MODE.DESIGN;
 
   const groups = useSelector((state) => {
     return state.designState["Survey"]?.children || [];
   });
 
-  const toDesign = (() => {
-    dispatch(resetSetup())
-  });
 
   const headerImage = useSelector((state) => {
     return state.designState["Survey"]?.resources?.headerImage;
@@ -176,12 +154,7 @@ function ContentPanel({ designMode }, ref) {
           }}
         />
       </Box>
-      <DesignChip onCancel={toDesign} designMode={designMode} />
-      <DesignOptions
-        designMode={designMode}
-        optionsOpen={optionsOpen}
-        setOptionsOpen={setOptionsOpen}
-      />
+
     </Box>
   );
 }
@@ -195,78 +168,4 @@ const ELEMENTS = {
   FOOTER: "FOOTER",
 };
 
-function DesignOptions({ setOptionsOpen, optionsOpen, designMode }) {
-  const dispatch = useDispatch();
-  const actions = [
-    {
-      icon: <TranslateIcon />,
-      name: "Language",
-      onClick: () => {
-        setOptionsOpen(false);
-        dispatch(setDesignModeToLang());
-      },
-    },
-    {
-      icon: <Palette />,
-      name: "Theme",
-      onClick: () => {
-        setOptionsOpen(false);
-        dispatch(setDesignModeToTheme());
-      },
-    },
-    {
-      icon: <ReorderIcon />,
-      name: "Reorder",
-      onClick: () => {
-        setOptionsOpen(false);
-        dispatch(setDesignModeToReorder());
-      },
-    },
-  ];
-  return (
-    designMode == DESIGN_SURVEY_MODE.DESIGN && (
-      <>
-        <Backdrop style={{ zIndex: 1 }} open={optionsOpen} />
-        <SpeedDial
-          open={optionsOpen}
-          onClick={() => setOptionsOpen(!optionsOpen)}
-          ariaLabel="SpeedDial basic example"
-          sx={{ position: "absolute", bottom: 16, right: 16 }}
-          icon={<MoreHorizIcon />}
-        >
-          {actions.map((action) => (
-            <SpeedDialAction
-              onClick={action.onClick}
-              key={action.name}
-              icon={action.icon}
-              tooltipOpen
-              tooltipTitle={action.name}
-            />
-          ))}
-        </SpeedDial>
-      </>
-    )
-  );
-}
 
-function DesignChip({ designMode, onCancel }) {
-  return (
-    designMode != DESIGN_SURVEY_MODE.DESIGN && (
-      <Chip
-        sx={{
-          borderRadius: "48px",
-          height: "48px",
-          fontSize: "24px",
-          position: "absolute",
-          bottom: "16px",
-          padding: "8px",
-          right: "16px",
-        }}
-        label="Back to Design"
-        icon={<Cancel />}
-        color="primary"
-        onClick={onCancel}
-      />
-    )
-  );
-}

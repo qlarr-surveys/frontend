@@ -4,7 +4,7 @@
 }
 
 .rightContent {
-  width: 18rem;
+  width: 100%;
   overflow-y: auto;
   background-color: white;
   height: calc(100vh - 64px);
