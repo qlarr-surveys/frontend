@@ -103,22 +103,13 @@ function ContentPanel({ designMode }, ref) {
     };
   }, [isNearTop, isNearBottom]);
 
-  const backgroundStyle = backgroundImage
-    ? {
-        backgroundImage: `url(${buildResourceUrl(backgroundImage)})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        // backgroundSize: "100% 100%",
-        backgroundPosition: "center",
-      }
-    : {};
 
   return (
     <Box
       ref={ref}
       className={`content-panel ${styles.contentPanel}`}
-      sx={{ backgroundColor: "background.default", color: "text.primary" }}
       style={{
+        backgroundColor: theme.palette.background.default,
         fontFamily: theme.textStyles.text.font,
         color: theme.textStyles.text.color,
         fontSize: theme.textStyles.text.size,
@@ -128,7 +119,6 @@ function ContentPanel({ designMode }, ref) {
         <Virtuoso
           ref={virtuosoRef}
           data={items}
-          style={backgroundStyle}
           className={styles.virtuosoStyle}
           itemContent={(index, item) => {
             switch (item.name) {

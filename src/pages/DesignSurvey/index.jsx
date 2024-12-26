@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import {
   Backdrop,
+  Box,
   Chip,
   SpeedDial,
   SpeedDialAction,
@@ -13,7 +14,12 @@ import ContentPanel from "~/components/design/ContentPanel";
 
 import { defualtTheme } from "~/constants/theme";
 import { I18nextProvider, useTranslation } from "react-i18next";
-import { cacheRtl, rtlLanguage } from "~/utils/common";
+import {
+  cacheRtl,
+  getDirFromSession,
+  isSessionRtl,
+  rtlLanguage,
+} from "~/utils/common";
 import { CacheProvider } from "@emotion/react";
 import { useDispatch, useSelector } from "react-redux";
 import LeftPanel from "~/components/design/LeftPanel";
@@ -32,11 +38,8 @@ import { Cancel, Palette } from "@mui/icons-material";
 import ReorderIcon from "@mui/icons-material/Reorder";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { DESIGN_SURVEY_MODE } from "~/routes";
-<<<<<<< HEAD
+import RightPanel from "~/components/design/RightPanel";
 import { buildResourceUrl } from "~/networking/common";
-=======
-import RightPanel from '~/components/design/RightPanel';
->>>>>>> parent of 2b3aac0 (cleanup)
 
 function DesignSurvey() {
   const { t, i18n } = useTranslation(["design", "run"]);
@@ -55,11 +58,14 @@ function DesignSurvey() {
     return state.designState.designMode;
   });
 
-  const toDesign = (() => {
-    dispatch(resetSetup())
-  });
+  const toDesign = () => {
+    dispatch(resetSetup());
+  };
 
   const lang = langInfo?.lang;
+
+  const isRtl = isSessionRtl();
+  console.log(isRtl);
 
   const theme = useSelector((state) => {
     return state.designState["Survey"]?.theme;
@@ -96,7 +102,6 @@ function DesignSurvey() {
     [theme]
   );
 
-<<<<<<< HEAD
   const backgroundImage = useSelector(
     (state) => state.designState["Survey"]?.resources?.backgroundImage
   );
@@ -109,20 +114,14 @@ function DesignSurvey() {
         // backgroundSize: "100% 100%",
         backgroundPosition: "center",
       }
-    : {
-        backgroundColor: "background.default",
-      };
+    : {};
 
   return (
     <Box
       className={styles.mainContainer}
       ref={containerRef}
-      sx={{ ...backgroundStyle }}
+      sx={backgroundStyle}
     >
-=======
-  return (
-    <div className={styles.mainContainer} ref={containerRef} >
->>>>>>> parent of 2b3aac0 (cleanup)
       <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
         <CacheProvider value={cacheRtlMemo}>
           <LeftPanel t={t} />
@@ -135,22 +134,22 @@ function DesignSurvey() {
               />
             </I18nextProvider>
           </ThemeProvider>
-          <DesignChip onCancel={toDesign} designMode={designMode} />
+          <DesignChip onCancel={toDesign} designMode={designMode} isRtl={isRtl} />
           <DesignOptions
             designMode={designMode}
+            isRtl={isRtl}
             optionsOpen={optionsOpen}
             setOptionsOpen={setOptionsOpen}
           />
         </CacheProvider>
       </DndProvider>
-    </div>
+    </Box>
   );
 }
 
 export default React.memo(DesignSurvey);
 
-
-function DesignOptions({ setOptionsOpen, optionsOpen, designMode }) {
+function DesignOptions({ setOptionsOpen, optionsOpen, designMode, isRtl }) {
   const dispatch = useDispatch();
   const actions = [
     {
@@ -184,15 +183,21 @@ function DesignOptions({ setOptionsOpen, optionsOpen, designMode }) {
         <Backdrop style={{ zIndex: 1 }} open={optionsOpen} />
         <SpeedDial
           open={optionsOpen}
+          dir="rtl"
           onClick={() => setOptionsOpen(!optionsOpen)}
           ariaLabel="SpeedDial basic example"
-          sx={{ position: "absolute", bottom: 16, right: 16 }}
+          sx={
+            isRtl
+              ? { position: "absolute", bottom: 16, left: 16 }
+              : { position: "absolute", bottom: 16, right: 16 }
+          }
           icon={<MoreHorizIcon />}
         >
           {actions.map((action) => (
             <SpeedDialAction
               onClick={action.onClick}
               key={action.name}
+              dir='rtl'
               icon={action.icon}
               tooltipOpen
               tooltipTitle={action.name}
@@ -204,7 +209,7 @@ function DesignOptions({ setOptionsOpen, optionsOpen, designMode }) {
   );
 }
 
-function DesignChip({ designMode, onCancel }) {
+function DesignChip({ designMode, onCancel, isRtl }) {
   return (
     designMode != DESIGN_SURVEY_MODE.DESIGN && (
       <Chip
@@ -212,11 +217,13 @@ function DesignChip({ designMode, onCancel }) {
           borderRadius: "48px",
           height: "48px",
           fontSize: "24px",
-          position: "absolute",
-          bottom: "16px",
           padding: "8px",
-          right: "16px",
         }}
+        style={
+          isRtl
+            ? { position: "absolute", bottom: 16, left: 16 }
+            : { position: "absolute", bottom: 16, right: 16 }
+        }
         label="Back to Design"
         icon={<Cancel />}
         color="primary"
