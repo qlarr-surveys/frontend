@@ -107,6 +107,7 @@
   "group_title": "Titel der Seite",
   "font": "Schriftart",
   "groups_order": "Gruppenreihenfolge",
+  "value_beyond_bounds": "Ungültiger Wert für {{label}}, muss zwischen {{lower_bound}} und {{upper_bound}} liegen, aktueller Wert ist: {{setup_value}}",
   "groups_priority": "Gruppenpriorität",
   "hide_always": "Immer ausblenden",
   "hide_if": "Ausblenden, wenn",

@@ -99,6 +99,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           label={t("text_field_size")}
           rule={rule}
           lowerBound={1}
+          t={t}
           upperBound={500}
           defaultValue={20}
           code={code}
@@ -110,6 +111,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
         <FieldSize
           label={t("textarea_lines")}
           lowerBound={1}
+          t={t}
           upperBound={500}
           code={code}
           defaultValue={20}
@@ -358,6 +360,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           label={t("image_height")}
           lowerBound={50}
           upperBound={500}
+          t={t}
           code={code}
           defaultValue={250}
           rule={rule}
@@ -372,6 +375,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           lowerBound={2}
           upperBound={32}
           code={code}
+          t={t}
           defaultValue={8}
           rule={rule}
           key={code + rule}

@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeAttribute } from "~/state/design/designState";
+import { Trans } from "react-i18next";
 
 function FieldSize({
   label,
   rule,
+  t,
   defaultValue,
   code,
   lowerBound,
@@ -14,21 +16,26 @@ function FieldSize({
 }) {
   const dispatch = useDispatch();
 
-  const value = useSelector((state) => {
+  const stateValue = useSelector((state) => {
     return state.designState[code][rule] || defaultValue;
   });
 
+  const [value, setValue] = useState(stateValue);
+
   const onValueChange = (event) => {
-    dispatch(
-      changeAttribute({
-        code,
-        key: rule,
-        value: Math.max(lowerBound, Math.min(upperBound, event.target.value)),
-      })
-    );
+    setValue(event.target.value);
+    if (value >= lowerBound && value <= upperBound) {
+      dispatch(
+        changeAttribute({
+          code,
+          key: rule,
+          value: Math.max(lowerBound, Math.min(upperBound, event.target.value)),
+        })
+      );
+    }
   };
 
-  const isError = value < lowerBound || value > upperBound;
+  const isError = value != stateValue;
 
   return (
     <>
@@ -38,6 +45,20 @@ function FieldSize({
         error={isError}
         variant="outlined"
         type="number"
+        helperText={
+          isError ? (
+            <Trans
+              t={t}
+              values={{
+                lower_bound: lowerBound,
+                upper_bound: upperBound,
+                setup_value: stateValue,
+                label,
+              }}
+              i18nKey="value_beyond_bounds"
+            />
+          ) : null
+        }
         size="small"
         style={{ maxWidth: "200px" }}
         value={value}
