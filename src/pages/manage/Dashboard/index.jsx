@@ -29,7 +29,7 @@ import {
   Close,
   CopyAll,
   Description,
-  SentimentDissatisfied,
+  FileUpload,
 } from "@mui/icons-material";
 import { getDirFromSession } from "~/utils/common";
 
@@ -96,6 +96,7 @@ function Dashboard() {
   const [title, setTitle] = useState(t("action_btn.delete"));
   const [isCreateSurveyOpen, setCreateSurveyOpen] = useState(false);
   const [isTemplateSliderOpen, setTemplateSliderOpen] = useState(false);
+  const [importSurvey, setImportSurvey] = useState(false);
 
   const handleButtonClick = () => {
     setCreateSurveyOpen(true);
@@ -103,6 +104,11 @@ function Dashboard() {
 
   const handleTemplateButtonClick = () => {
     setTemplateSliderOpen(true);
+  };
+
+  const handleImportSurveyClick = () => {
+    setImportSurvey(true);
+    setOpenCloneModal(true);
   };
 
   const handleCloseClick = () => {
@@ -246,6 +252,16 @@ function Dashboard() {
                 {t("copy_example_surveys")}
               </Button>
             )}
+            {shouldShowClickAdd() && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<FileUpload />}
+                onClick={handleImportSurveyClick}
+              >
+                {t("import_survey")}
+              </Button>
+            )}
           </Stack>
 
           {isCreateSurveyOpen && (
@@ -303,50 +319,54 @@ function Dashboard() {
             }}
           />
           <Box className={styles.surveyCardsContainer}>
-          {!fetchingSurveys ? (
-            <>
-              {surveys?.surveys?.length > 0 ? (
-                <Box
-                  sx={{
-                    mt: 3,
-                    columnGap: 2,
-                    display: "grid",
-                    rowGap: { xs: 4, md: 5 },
-                    gridTemplateColumns: {
-                      xs: "1fr",
-                      sm: "repeat(auto-fit, minmax(280px, 1fr))",
-                      md: "repeat(auto-fit, minmax(330px, 350px))",
-                    },
-                  }}
-                >
-                  {surveys?.surveys?.map((survey) => {
-                    return (
-                      <Survey
-                        key={survey.id}
-                        survey={survey}
-                        onStatusChange={handleSurveyStatusChange}
-                        onClone={() => onClone(survey)}
-                        onDelete={() => onDelete(survey)}
-                        onClose={() => onCloseSurvey(survey)}
-                        onUpdateTitle={handleUpdateSurveyName}
-                        onUpdateDescription={handleUpdateSurveyDescription}
-                        onUpdateImage={handleUpdateSurveyImage}
-                      />
-                    );
-                  })}
-                </Box>
-              ) : (
-                <div className={styles.noSurveys}>
-                  <Description sx={{ fontSize: 48, color: "#ccc" }} />
-                  <Typography variant="h6" color="textSecondary" sx={{ mt: 2 }}>
-                    {t("create_survey.empty_state_message")}
-                  </Typography>
-                </div>
-              )}
-            </>
-          ) : (
-            <LoadingDots />
-          )}
+            {!fetchingSurveys ? (
+              <>
+                {surveys?.surveys?.length > 0 ? (
+                  <Box
+                    sx={{
+                      mt: 3,
+                      columnGap: 2,
+                      display: "grid",
+                      rowGap: { xs: 4, md: 5 },
+                      gridTemplateColumns: {
+                        xs: "1fr",
+                        sm: "repeat(auto-fit, minmax(280px, 1fr))",
+                        md: "repeat(auto-fit, minmax(330px, 350px))",
+                      },
+                    }}
+                  >
+                    {surveys?.surveys?.map((survey) => {
+                      return (
+                        <Survey
+                          key={survey.id}
+                          survey={survey}
+                          onStatusChange={handleSurveyStatusChange}
+                          onClone={() => onClone(survey)}
+                          onDelete={() => onDelete(survey)}
+                          onClose={() => onCloseSurvey(survey)}
+                          onUpdateTitle={handleUpdateSurveyName}
+                          onUpdateDescription={handleUpdateSurveyDescription}
+                          onUpdateImage={handleUpdateSurveyImage}
+                        />
+                      );
+                    })}
+                  </Box>
+                ) : (
+                  <div className={styles.noSurveys}>
+                    <Description sx={{ fontSize: 48, color: "#ccc" }} />
+                    <Typography
+                      variant="h6"
+                      color="textSecondary"
+                      sx={{ mt: 2 }}
+                    >
+                      {t("create_survey.empty_state_message")}
+                    </Typography>
+                  </div>
+                )}
+              </>
+            ) : (
+              <LoadingDots />
+            )}
           </Box>
 
           {surveys && (
@@ -372,9 +392,11 @@ function Dashboard() {
         </Box>
       </Container>
       <SurveyClone
+        importSurvey={importSurvey}
         open={openCloneModal}
         onClose={(cloned) => {
           setOpenCloneModal(false);
+          setImportSurvey(false)
           if (cloned) {
             fetchSurveys();
           }

@@ -1,4 +1,4 @@
-import { Box, Modal, Typography, Button } from "@mui/material";
+import { Box, Modal, Typography, Button, IconButton } from "@mui/material";
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,18 +8,27 @@ import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
 import { RHFTextField } from "~/components/hook-form";
 import { useService } from "~/hooks/use-service";
+import { FileUpload, PhotoCamera } from "@mui/icons-material";
 
-export const SurveyClone = ({ open, onClose, survey }) => {
+export const SurveyClone = ({
+  open,
+  onClose,
+  survey,
+  importSurvey = false,
+}) => {
   const surveyService = useService("survey");
 
   const { t } = useTranslation("manage");
   const [newSurveyName, setNewSurveyName] = useState("");
+  const [fileToImport, setFileToImport] = useState(null);
   const [newSurveyNameError, setNewSurveyNameError] = useState("");
+  const [fileMissing, setFileMissing] = useState(false);
   const dispatch = useDispatch();
 
   const onSurveyNameChanged = (e) => {
     setNewSurveyName(e.target.value);
     setNewSurveyNameError("");
+    setFileMissing(false);
   };
 
   const validate = () => {
@@ -29,7 +38,21 @@ export const SurveyClone = ({ open, onClose, survey }) => {
       setNewSurveyNameError(t("survey_required"));
       return false;
     }
+
+    if (importSurvey && !fileToImport) {
+      setFileMissing(true);
+      return false;
+    }
     return true;
+  };
+
+  const handleFileUpload = (event) => {
+    const files = event.target.files;
+    if (files) {
+      let file = event.target.files[0];
+      setFileToImport(file);
+      setFileMissing("");
+    }
   };
 
   const cloneSurvey = () => {
@@ -37,12 +60,29 @@ export const SurveyClone = ({ open, onClose, survey }) => {
       return;
     }
     dispatch(setLoading(true));
-    const data = {
-      name: newSurveyName,
-    };
-    if (survey.example) {
+
+    if (importSurvey) {
       surveyService
-        .cloneGuestSurvey(survey.id, data)
+        .importSurvey(fileToImport, newSurveyName)
+        .then(() => {
+          onClose(true);
+          setNewSurveyName("");
+        })
+        .catch((processedError) => {
+          if (
+            processedError.name == PROCESSED_ERRORS.DUPLICATE_SURVEY_NAME.name
+          ) {
+            setNewSurveyNameError(t(`processed_errors.${processedError.name}`));
+          }
+        })
+        .finally(() => {
+          dispatch(setLoading(false));
+        });
+    } else if (survey.example) {
+      surveyService
+        .cloneGuestSurvey(survey.id, {
+          name: newSurveyName,
+        })
         .then(() => {
           onClose(true);
           setNewSurveyName("");
@@ -59,7 +99,9 @@ export const SurveyClone = ({ open, onClose, survey }) => {
         });
     } else {
       surveyService
-        .cloneSurvey(survey.id, data)
+        .cloneSurvey(survey.id, {
+          name: newSurveyName,
+        })
         .then(() => {
           onClose(true);
           setNewSurveyName("");
@@ -107,6 +149,36 @@ export const SurveyClone = ({ open, onClose, survey }) => {
             }}
             helperText={newSurveyNameError}
           />
+          {importSurvey && (
+            <div className={styles.upload}>
+              <Button variant="outlined" component="label">
+                Upload Zip Folder
+                <FileUpload />
+                <input
+                  hidden
+                  id="zip-upload"
+                  accept=".zip"
+                  multiple
+                  type="file"
+                  onChange={(event) => handleFileUpload(event)}
+                />
+              </Button>
+              {fileMissing && (
+                <Typography
+                  variant="caption"
+                  color="error"
+                  sx={{ margin: "4px" }}
+                >
+                  {t("file_required")}
+                </Typography>
+              )}
+              {fileToImport && (
+                <Typography sx={{ margin: "4px" }}>
+                  {fileToImport.name}
+                </Typography>
+              )}
+            </div>
+          )}
 
           <Box className={styles.action}>
             <Button

@@ -19,7 +19,7 @@ import { rtlLanguage } from "~/utils/common";
 import { useDrag, useDrop } from "react-dnd";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
-import { contentEditable, inDesign } from '~/routes';
+import { contentEditable, inDesign } from "~/routes";
 
 function ImageChoiceItemDesign({
   parentCode,
@@ -60,8 +60,8 @@ function ImageChoiceItemDesign({
     return type == "add"
       ? undefined
       : state.designState[qualifiedCode].content?.["label"]?.[
-      langInfo.mainLang
-      ];
+          langInfo.mainLang
+        ];
   });
 
   const onDelete = () => {
@@ -213,7 +213,7 @@ function ImageChoiceItemDesign({
       >
         <IconButton
           sx={{
-            color: theme.textStyles.text.color
+            color: theme.textStyles.text.color,
           }}
           className={styles.addAnswerIcon}
           onClick={() => {
@@ -248,7 +248,7 @@ function ImageChoiceItemDesign({
             <div className={styles.buttonContainers}>
               <IconButton
                 sx={{
-                  color: theme.textStyles.text.color
+                  color: theme.textStyles.text.color,
                 }}
                 className={styles.imageIconButton}
                 onClick={() => {
@@ -259,9 +259,12 @@ function ImageChoiceItemDesign({
               </IconButton>
               <IconButton
                 sx={{
-                  color: theme.textStyles.text.color
+                  color: theme.textStyles.text.color,
                 }}
-                component="label" className={styles.imageIconButton}>
+                component="label"
+                className={styles.imageIconButton}
+              >
+                <PhotoCamera />
                 <input
                   hidden
                   id={qualifiedCode}
@@ -270,14 +273,15 @@ function ImageChoiceItemDesign({
                   type="file"
                   onChange={handleImageChange}
                 />
-                <PhotoCamera />
               </IconButton>
 
               <IconButton
                 sx={{
-                  color: theme.textStyles.text.color
+                  color: theme.textStyles.text.color,
                 }}
-                ref={drag} className={styles.imageIconButton}>
+                ref={drag}
+                className={styles.imageIconButton}
+              >
                 <DragIndicatorIcon />
               </IconButton>
             </div>

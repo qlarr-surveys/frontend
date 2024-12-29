@@ -107,6 +107,25 @@ class SurveyService extends BaseService {
     );
     return response;
   }
+
+  async importSurvey(file, surveyName) {
+    const formData = new FormData();
+    formData.append("survey_name", surveyName);
+    formData.append("file", file);
+    const response = await this.handleRequest(() =>
+      authenticatedApi.post(
+        `/survey/import`,
+        formData,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
+    );
+    return response.data;
+  }
 }
 
 export default SurveyService;
