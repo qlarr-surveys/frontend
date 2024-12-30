@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 
 import useTypography from "./use-typography";
 import { Tooltip } from "@mui/material";
+import CustomTooltip from "../common/Tooltip/Tooltip";
 
 // ----------------------------------------------------------------------
 
@@ -52,7 +53,11 @@ const TextMaxLine = forwardRef(
       </Typography>
     );
 
-    return <Tooltip title={children}>{textElement}</Tooltip>;
+    return (
+      <CustomTooltip showIcon={false} title={children}>
+        {textElement}
+      </CustomTooltip>
+    );
   }
 );
 

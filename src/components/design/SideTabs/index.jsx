@@ -11,21 +11,14 @@ import TableRowsIcon from "@mui/icons-material/TableRows";
 import styles from "./TopBanner.module.css";
 import React from "react";
 import { Edit, Settings, Visibility } from "@mui/icons-material";
-import {
-  MANAGE_SURVEY_LANDING_PAGES,
-  routes,
-} from "~/routes";
+import { MANAGE_SURVEY_LANDING_PAGES, routes } from "~/routes";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { resetSetup } from "~/state/design/designState";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
-function SideTabs({
-  selectedPage,
-  onPageChange,
-  availablePages,
-  surveyId,
-}) {
+function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
   const tabAvailable = (tab) => availablePages.indexOf(tab) !== -1;
   const { t } = useTranslation("design");
   const dispatch = useDispatch();
@@ -120,7 +113,7 @@ export default React.memo(SideTabs);
 
 function SideTab({ tooltip, style, link, onClick, icon }) {
   return (
-    <Tooltip title={tooltip} placement="right">
+    <CustomTooltip showIcon={false} title={tooltip} placement="right">
       <Link to={link} onClick={() => onClick()}>
         <ListItem disablePadding style={style}>
           <ListItemButton>
@@ -128,6 +121,6 @@ function SideTab({ tooltip, style, link, onClick, icon }) {
           </ListItemButton>
         </ListItem>
       </Link>
-    </Tooltip>
+    </CustomTooltip>
   );
 }
