@@ -13,6 +13,7 @@ import { setup } from "~/state/design/designState";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import { useTheme } from "@emotion/react";
 import DeleteModal from "~/components/common/DeleteModal";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function ActionToolbar({
   code,
@@ -136,54 +137,60 @@ function ActionToolbar({
       }}
     >
       {hasRelevance && (
-        <Tooltip title="Has show/Hide Condition">
+        <CustomTooltip title="Has show/Hide Condition" showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandRelevance()}
           >
             <VisibilityIcon style={{ color: textColor }} />
           </IconButton>
-        </Tooltip>
+        </CustomTooltip>
       )}
       {hasValidation && (
-        <Tooltip title="Has Validation">
+        <CustomTooltip title="Has Validation" showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandValidation()}
           >
             <VerifiedIcon style={{ color: textColor }} />
           </IconButton>
-        </Tooltip>
+        </CustomTooltip>
       )}
       {isRandomized && (
-        <Tooltip title="Is part of a valid Random Group (within parent)">
+        <CustomTooltip
+          title="Is part of a valid Random Group (within parent)"
+          showIcon={false}
+        >
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandParentRandom()}
           >
             <ShuffleIcon style={{ color: textColor }} />
           </IconButton>
-        </Tooltip>
+        </CustomTooltip>
       )}
       {isPrioritised && (
-        <Tooltip title="Is part of a valid Priority Group (within parent)">
+        <CustomTooltip
+          title="Is part of a valid Priority Group (within parent)"
+          showIcon={false}
+        >
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandParentRandom()}
           >
             <LowPriorityIcon style={{ color: textColor }} />
           </IconButton>
-        </Tooltip>
+        </CustomTooltip>
       )}
       {hasSkip && (
-        <Tooltip title="Has active Skip Logic">
+        <CustomTooltip title="Has active Skip Logic" showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandSkipLogic()}
           >
             <MoveDownIcon style={{ color: textColor }} />
           </IconButton>
-        </Tooltip>
+        </CustomTooltip>
       )}
 
       <IconButton onClick={() => setSetup()}>
@@ -195,19 +202,16 @@ function ActionToolbar({
         </IconButton>
       )}
       {!disableDelete && (
-        <IconButton
-          onClick={() => setOpen(true)}
-          disabled={disableDelete}
-        >
-          <SurveyIcon
-            name="delete"
-            size=".75em"
-            color={textColor}
-          />
+        <IconButton onClick={() => setOpen(true)} disabled={disableDelete}>
+          <SurveyIcon name="delete" size=".75em" color={textColor} />
         </IconButton>
       )}
-      <DeleteModal open={open} description={t("delete_question")} handleClose={handleClose} handleDelete={onDelete} />
-
+      <DeleteModal
+        open={open}
+        description={t("delete_question")}
+        handleClose={handleClose}
+        handleDelete={onDelete}
+      />
     </div>
   );
 }

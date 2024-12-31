@@ -3,6 +3,7 @@ import { useState } from "react";
 import styles from "./Survey.module.css";
 import { truncateWithEllipsis } from "~/utils/design/utils";
 import { Edit, Check } from "@mui/icons-material";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -61,15 +62,17 @@ export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
         </>
       ) : (
         <>
-          <Tooltip
-            title={title.length > 20 ? title : ""}
-            sx={{ fontSize: "1.2rem" }}
-            arrow
-          >
+          {title.length > 20 ? (
+            <CustomTooltip title={title} showIcon={false}>
+              <Typography variant="h4" sx={{ px: 3 }} noWrap>
+                {truncateWithEllipsis(title, 18)}
+              </Typography>
+            </CustomTooltip>
+          ) : (
             <Typography variant="h4" sx={{ px: 3 }} noWrap>
               {truncateWithEllipsis(title, 18)}
             </Typography>
-          </Tooltip>
+          )}
           {isEditable && (
             <IconButton
               className={styles.nameIcon}

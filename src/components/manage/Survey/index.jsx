@@ -36,6 +36,7 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 import { EditableSurveyTitle } from "./EditableSurveyTitle";
 import { EditableSurveyDescription } from "./EditableSurveyDescription";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 export const STATUS = {
   DRAFT: "draft",
@@ -279,12 +280,16 @@ export const Survey = ({
                   {!example &&
                     survey.status !== "closed" &&
                     survey.latestVersion.published === false && (
-                      <Tooltip title="Has unpublished changes">
+                      <CustomTooltip
+                        title="Has unpublished changes"
+                        showIcon={false}
+                      >
                         <WarningIcon sx={{ color: "text.secondary" }} />
-                      </Tooltip>
+                      </CustomTooltip>
                     )}
 
-                  <Tooltip
+                  <CustomTooltip
+                    showIcon={false}
                     title={`Complete Responses: ${survey.completeResponseCount}`}
                   >
                     <Badge
@@ -297,9 +302,10 @@ export const Survey = ({
                     >
                       <TableRowsIcon sx={{ color: "text.secondary" }} />
                     </Badge>
-                  </Tooltip>
+                  </CustomTooltip>
 
-                  <Tooltip
+                  <CustomTooltip
+                    showIcon={false}
                     title={
                       survey.surveyQuota > 0
                         ? `Quota: ${survey.surveyQuota}`
@@ -318,7 +324,7 @@ export const Survey = ({
                     >
                       <FormatQuoteIcon sx={{ color: "text.secondary" }} />
                     </Badge>
-                  </Tooltip>
+                  </CustomTooltip>
                 </Box>
               </>
             )}
@@ -390,7 +396,10 @@ export const Survey = ({
             )}
           </IconButton>
           {isSurveyAdmin() && !example && survey.status === "active" && (
-            <Tooltip title={t("edit_survey.close_title")}>
+            <CustomTooltip
+              showIcon={false}
+              title={t("edit_survey.close_title")}
+            >
               <IconButton
                 className={styles.iconButton}
                 aria-label="stop"
@@ -399,10 +408,13 @@ export const Survey = ({
               >
                 <Stop color="primary" />
               </IconButton>
-            </Tooltip>
+            </CustomTooltip>
           )}
           {isSurveyAdmin() && (
-            <Tooltip title={t("edit_survey.clone_survey")}>
+            <CustomTooltip
+              showIcon={false}
+              title={t("edit_survey.clone_survey")}
+            >
               <IconButton
                 className={styles.iconButton}
                 aria-label="clone"
@@ -411,11 +423,11 @@ export const Survey = ({
               >
                 <FileCopyIcon color="primary" />
               </IconButton>
-            </Tooltip>
+            </CustomTooltip>
           )}
 
           {!example && survey.status !== STATUS.ACTIVE && (
-            <Tooltip title={t("action_btn.delete")}>
+            <CustomTooltip showIcon={false} title={t("action_btn.delete")}>
               <IconButton
                 className={styles.iconButton}
                 aria-label="delete"
@@ -424,7 +436,7 @@ export const Survey = ({
               >
                 <DeleteIcon color="primary" />
               </IconButton>
-            </Tooltip>
+            </CustomTooltip>
           )}
         </Stack>
       </Card>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import styles from "./Survey.module.css";
 import { truncateWithEllipsis } from "~/utils/design/utils";
 import { Edit, Check } from "@mui/icons-material";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 export const EditableSurveyDescription = ({
   survey,
@@ -62,11 +63,25 @@ export const EditableSurveyDescription = ({
         </>
       ) : (
         <>
-          <Tooltip
-            title={description?.length > charLimit ? description : ""}
-            sx={{ fontSize: "1.2rem" }}
-            arrow
-          >
+         
+          {description?.length > charLimit ? (
+            <CustomTooltip title={description} showIcon={false}>
+              <Typography
+                variant="caption"
+                sx={{
+                  px: 3,
+                  color: description ? "inherit" : "gray",
+                  flexGrow: 1,
+                }}
+                className={`${
+                  isExample ? styles.exampleTruncatedText : styles.truncatedText
+                }`}
+              >
+                {truncateWithEllipsis(description, charLimit) ||
+                  "Click to add a description..."}
+              </Typography>
+            </CustomTooltip>
+          ) : (
             <Typography
               variant="caption"
               sx={{
@@ -81,7 +96,8 @@ export const EditableSurveyDescription = ({
               {truncateWithEllipsis(description, charLimit) ||
                 "Click to add a description..."}
             </Typography>
-          </Tooltip>
+          )}
+
           {isEditable && (
             <IconButton
               className={`${styles.descriptionIcon}`}
