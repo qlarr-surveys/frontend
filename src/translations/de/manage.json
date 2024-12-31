@@ -28,6 +28,7 @@
     "empty_state_message": "Keine Umfragen verfügbar. Erstellen Sie eine neue Umfrage oder kopieren Sie ein Beispiel, um loszulegen!"
   },
   "edit_survey": {
+    "export": "Umfrage exportieren",
     "close_title": "Umfrage schließen",
     "can_lock_survey": "Erlauben Sie Vermessern, die Vermessung zu sperren",
     "clone_survey": "Klon-Umfrage",

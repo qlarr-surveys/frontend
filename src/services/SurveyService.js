@@ -113,18 +113,36 @@ class SurveyService extends BaseService {
     formData.append("survey_name", surveyName);
     formData.append("file", file);
     const response = await this.handleRequest(() =>
-      authenticatedApi.post(
-        `/survey/import`,
-        formData,
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      )
+      authenticatedApi.post(`/survey/import`, formData, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      })
     );
     return response.data;
+  }
+
+  async exportSurvey(surveyId) {
+    const response = await this.handleRequest(() =>
+      authenticatedApi.get(`/survey/${surveyId}/export`, { responseType: 'blob' })
+    );
+    const contentDisposition = response.headers.get("Content-Disposition");
+    const filename = contentDisposition
+      ? contentDisposition.match(/filename="(.+)"/)?.[1] || `${surveyId}.zip`
+      : `${surveyId}.zip`;
+
+    console.log(response)
+    // Convert the response to a Blob
+    const blob = await response.data;
+
+    // Trigger the file download
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }
 

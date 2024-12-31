@@ -9,6 +9,7 @@ import styles from "./EditSurvey.module.css";
 import { useTranslation } from "react-i18next";
 import LaunchPage from "../Launch/launch";
 import SurveyQuota from "~/components/manage/SurveyQuota";
+import ExportSurvey from '~/components/manage/ExportSurvey';
 
 function EditSurvey({ onPublish }) {
   const { t } = useTranslation("manage");
@@ -18,6 +19,11 @@ function EditSurvey({ onPublish }) {
       id: "quotas",
       title: t("edit_survey.quotas"),
       component: <SurveyQuota />,
+    },
+    {
+      id: "export",
+      title: t("edit_survey.export"),
+      component: <ExportSurvey />,
     },
   ];
 
