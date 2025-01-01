@@ -46,7 +46,7 @@ function IconMcq(props) {
             key={option.code}
             component={option}
             columns={props.component.columns || 3}
-            iconSize={props.component.iconSize || 150}
+            iconSize={props.component.iconSize || "150"}
             spacing={props.component.spacing || 8}
             theme={theme}
             hideText={hideText}
