@@ -110,18 +110,18 @@ function ContentPanel({ designMode }, ref) {
           // Calculate the exact index of the newly added group
           const groupBaseIndex = lastAddedComponent.index * 2; // Assuming each group has a drop area before and after
           virtuosoRef.current.scrollToIndex({
-            index: groupBaseIndex + 1, // Adjust for the drop area after the group
+            index: groupBaseIndex + 1,
             behavior: "smooth",
-            align: "center",
+            align: "start",
           });
         } else if (lastAddedComponent.type === "question") {
           // Calculate the exact index for the newly added question
           const groupBaseIndex = lastAddedComponent.groupIndex * 2; // Groups and their drop areas
-          const questionOffset = lastAddedComponent.questionIndex + 1; // Offset within the group
+          console.log("groupBaseIndex: " +  groupBaseIndex)
           virtuosoRef.current.scrollToIndex({
-            index: groupBaseIndex + questionOffset, // Drop area + question offset
+            index: groupBaseIndex + 2, // Drop area + question offset
             behavior: "smooth",
-            align: "center",
+            align: "end",
           });
         }
       };
