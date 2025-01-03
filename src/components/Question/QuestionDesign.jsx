@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 
 import styles from "./QuestionDesign.module.css";
@@ -33,6 +33,7 @@ function QuestionDesign({
   designMode,
   onMainLang,
   parentIndex,
+  lastAddedComponent,
 }) {
   console.debug(code + ": " + index);
   const [hovered, setHovered] = useState(false);
@@ -256,6 +257,40 @@ function QuestionDesign({
   const contrastColor = getContrastColor(theme.palette.background.paper);
   const textColor = theme.textStyles.question.color;
 
+  
+  useEffect(() => {
+    const element = containerRef.current;
+
+    if (
+      lastAddedComponent?.type === "question" &&
+      lastAddedComponent.groupIndex === parentIndex &&
+      lastAddedComponent.questionIndex === index &&
+      element
+    ) {
+      // Delay the addition of the highlight class to ensure the DOM is ready
+      const timeoutId = setTimeout(() => {
+        element.classList.add(styles.highlight);
+
+        const handleAnimationEnd = () => {
+          element.classList.remove(styles.highlight);
+        };
+
+        element.addEventListener("animationend", handleAnimationEnd);
+
+        return () => {
+          element.removeEventListener("animationend", handleAnimationEnd);
+        };
+      }, 50);
+      // Delay of 50ms to allow DOM rendering
+
+      return () => clearTimeout(timeoutId); // Cleanup timeout on unmount or re-render
+    }
+  }, [lastAddedComponent, parentIndex, index]);
+
+  const isLastAdded =
+    lastAddedComponent?.type === "question" &&
+    lastAddedComponent.groupIndex === parentIndex &&
+    lastAddedComponent.questionIndex === index;
   return (
     <div
       ref={containerRef}

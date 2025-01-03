@@ -3,10 +3,7 @@ import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import { buildResourceUrl } from "~/networking/common";
-import {
-  Box,
-  CardMedia,
-} from "@mui/material";
+import { Box, CardMedia } from "@mui/material";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
@@ -23,7 +20,6 @@ function ContentPanel({ designMode }, ref) {
   const groups = useSelector((state) => {
     return state.designState["Survey"]?.children || [];
   });
-
 
   const headerImage = useSelector((state) => {
     return state.designState["Survey"]?.resources?.headerImage;
@@ -72,12 +68,15 @@ function ContentPanel({ designMode }, ref) {
     return list;
   }, [groups, t, headerImage]);
 
-
-
   const virtuosoRef = useRef(null);
   const virtuosoWrapperRef = useRef(null);
   const { isNearBottom, isNearTop } =
     useDragNearViewportEdge(virtuosoWrapperRef);
+
+  const lastAddedComponent = useSelector(
+    (state) => state.designState.lastAddedComponent
+  );
+  const skipScroll = useSelector((state) => state.designState.skipScroll);
 
   useEffect(() => {
     let animationFrameId;
@@ -103,6 +102,35 @@ function ContentPanel({ designMode }, ref) {
     };
   }, [isNearTop, isNearBottom]);
 
+  useEffect(() => {
+    console.log("ss", skipScroll);
+    if (lastAddedComponent && virtuosoRef.current && !skipScroll) {
+      const performScroll = () => {
+        if (lastAddedComponent.type === "group") {
+          // Calculate the exact index of the newly added group
+          const groupBaseIndex = lastAddedComponent.index * 2; // Assuming each group has a drop area before and after
+          virtuosoRef.current.scrollToIndex({
+            index: groupBaseIndex + 1,
+            behavior: "smooth",
+            align: "start",
+          });
+        } else if (lastAddedComponent.type === "question") {
+          // Calculate the exact index for the newly added question
+          const groupBaseIndex = lastAddedComponent.groupIndex * 2; // Groups and their drop areas
+          console.log("groupBaseIndex: " +  groupBaseIndex)
+          virtuosoRef.current.scrollToIndex({
+            index: groupBaseIndex + 2, // Drop area + question offset
+            behavior: "smooth",
+            align: "end",
+          });
+        }
+      };
+
+      const timeoutId = setTimeout(performScroll, 100); // Ensure DOM is updated before scrolling
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [lastAddedComponent]);
 
   return (
     <Box
@@ -151,6 +179,7 @@ function ContentPanel({ designMode }, ref) {
                     designMode={designMode}
                     code={item.group.code}
                     index={item.index}
+                    lastAddedComponent={lastAddedComponent}
                   />
                 );
               case ELEMENTS.FOOTER:
@@ -159,7 +188,6 @@ function ContentPanel({ designMode }, ref) {
           }}
         />
       </Box>
-
     </Box>
   );
 }
@@ -172,5 +200,3 @@ const ELEMENTS = {
   DROP_AREA: "DROP_AREA",
   FOOTER: "FOOTER",
 };
-
-
