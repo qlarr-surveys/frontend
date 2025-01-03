@@ -15,7 +15,12 @@ import {
   reorder,
   buildReferenceInstruction,
 } from "./stateUtils";
-import { languageSetup, reorderSetup, setupOptions, themeSetup } from "~/constants/design";
+import {
+  languageSetup,
+  reorderSetup,
+  setupOptions,
+  themeSetup,
+} from "~/constants/design";
 import {
   createQuestion,
   questionDesignError,
@@ -37,6 +42,7 @@ export const designState = createSlice({
           state[key] = newState[key];
         }
       });
+      state.lastAddedComponent = null;
     },
     setup(state, action) {
       const payload = action.payload;
@@ -48,7 +54,7 @@ export const designState = createSlice({
         payload.expanded ||
         payload.highlighted
       ) {
-        console.log(payload)
+        console.log(payload);
         state.setup = action.payload;
       }
     },
@@ -450,6 +456,8 @@ export const designState = createSlice({
       state.isUpdating = action.payload;
     },
     onDrag: (state, action) => {
+      state.skipScroll = true;
+
       const payload = action.payload;
       switch (payload.type) {
         case "reorder_questions":
@@ -492,20 +500,16 @@ export const designState = createSlice({
 
     addComponent: (state, action) => {
       const { type, questionType } = action.payload;
+      const survey = state.Survey;
+      state.skipScroll = false;
+
       if (type === "group") {
-        const survey = state.Survey;
         const lastGroupIndex = Math.max(0, survey.children.length - 1);
         newGroup(state, { toIndex: lastGroupIndex });
-
-        state.lastAddedComponent = {
-          type: "group",
-          index: lastGroupIndex,
-        };
       } else if (type === "question") {
         if (state.Survey.children.length == 1) {
           newGroup(state, { toIndex: 0 });
         }
-        const survey = state.Survey;
         const lastGroupIndex = Math.max(0, survey.children.length - 2);
         const destinationGroupCode = survey.children[lastGroupIndex].code;
         const destinationGroup = state[destinationGroupCode];
@@ -515,11 +519,6 @@ export const designState = createSlice({
           questionType,
           toIndex,
         });
-        state.lastAddedComponent = {
-          type: "question",
-          groupIndex: lastGroupIndex,
-          questionIndex: toIndex,
-        };
       }
     },
   },
@@ -755,6 +754,15 @@ const newQuestion = (state, payload) => {
     0,
     questionObject.question
   );
+
+  const groupIndex = survey.children.findIndex(
+    (group) => group.code === payload.destination
+  );
+  state.lastAddedComponent = {
+    type: "question",
+    groupIndex: groupIndex,
+    questionIndex: destinationQuestionIndex,
+  };
   cleanupRandomRules(destinationGroup);
 };
 
@@ -770,6 +778,14 @@ const newGroup = (state, payload) => {
     survey.children.splice(payload.toIndex, 0, group.newGroup);
   }
   state[group.newGroup.code] = group.state;
+
+  const lastGroupIndex = survey.children.findIndex(
+    (child) => child.code === group.newGroup.code
+  );
+  state.lastAddedComponent = {
+    type: "group",
+    index: lastGroupIndex,
+  };
   cleanupRandomRules(survey);
 };
 

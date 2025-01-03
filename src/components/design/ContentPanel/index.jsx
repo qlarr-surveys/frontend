@@ -3,10 +3,7 @@ import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import { buildResourceUrl } from "~/networking/common";
-import {
-  Box,
-  CardMedia,
-} from "@mui/material";
+import { Box, CardMedia } from "@mui/material";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
@@ -23,7 +20,6 @@ function ContentPanel({ designMode }, ref) {
   const groups = useSelector((state) => {
     return state.designState["Survey"]?.children || [];
   });
-
 
   const headerImage = useSelector((state) => {
     return state.designState["Survey"]?.resources?.headerImage;
@@ -72,8 +68,6 @@ function ContentPanel({ designMode }, ref) {
     return list;
   }, [groups, t, headerImage]);
 
-
-
   const virtuosoRef = useRef(null);
   const virtuosoWrapperRef = useRef(null);
   const { isNearBottom, isNearTop } =
@@ -82,6 +76,7 @@ function ContentPanel({ designMode }, ref) {
   const lastAddedComponent = useSelector(
     (state) => state.designState.lastAddedComponent
   );
+  const skipScroll = useSelector((state) => state.designState.skipScroll);
 
   useEffect(() => {
     let animationFrameId;
@@ -108,7 +103,8 @@ function ContentPanel({ designMode }, ref) {
   }, [isNearTop, isNearBottom]);
 
   useEffect(() => {
-    if (lastAddedComponent && virtuosoRef.current) {
+    console.log("ss", skipScroll);
+    if (lastAddedComponent && virtuosoRef.current && !skipScroll) {
       const performScroll = () => {
         if (lastAddedComponent.type === "group") {
           // Calculate the exact index of the newly added group
