@@ -79,6 +79,10 @@ function ContentPanel({ designMode }, ref) {
   const { isNearBottom, isNearTop } =
     useDragNearViewportEdge(virtuosoWrapperRef);
 
+  const lastAddedComponent = useSelector(
+    (state) => state.designState.lastAddedComponent
+  );
+
   useEffect(() => {
     let animationFrameId;
     const performScroll = () => {
@@ -103,6 +107,34 @@ function ContentPanel({ designMode }, ref) {
     };
   }, [isNearTop, isNearBottom]);
 
+  useEffect(() => {
+    if (lastAddedComponent && virtuosoRef.current) {
+      const performScroll = () => {
+        if (lastAddedComponent.type === "group") {
+          // Calculate the exact index of the newly added group
+          const groupBaseIndex = lastAddedComponent.index * 2; // Assuming each group has a drop area before and after
+          virtuosoRef.current.scrollToIndex({
+            index: groupBaseIndex + 1, // Adjust for the drop area after the group
+            behavior: "smooth",
+            align: "center",
+          });
+        } else if (lastAddedComponent.type === "question") {
+          // Calculate the exact index for the newly added question
+          const groupBaseIndex = lastAddedComponent.groupIndex * 2; // Groups and their drop areas
+          const questionOffset = lastAddedComponent.questionIndex + 1; // Offset within the group
+          virtuosoRef.current.scrollToIndex({
+            index: groupBaseIndex + questionOffset, // Drop area + question offset
+            behavior: "smooth",
+            align: "center",
+          });
+        }
+      };
+
+      const timeoutId = setTimeout(performScroll, 100); // Ensure DOM is updated before scrolling
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [lastAddedComponent]);
 
   return (
     <Box
@@ -151,6 +183,7 @@ function ContentPanel({ designMode }, ref) {
                     designMode={designMode}
                     code={item.group.code}
                     index={item.index}
+                    lastAddedComponent={lastAddedComponent}
                   />
                 );
               case ELEMENTS.FOOTER:
@@ -159,7 +192,6 @@ function ContentPanel({ designMode }, ref) {
           }}
         />
       </Box>
-
     </Box>
   );
 }
@@ -172,5 +204,3 @@ const ELEMENTS = {
   DROP_AREA: "DROP_AREA",
   FOOTER: "FOOTER",
 };
-
-

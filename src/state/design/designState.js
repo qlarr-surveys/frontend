@@ -496,6 +496,11 @@ export const designState = createSlice({
         const survey = state.Survey;
         const lastGroupIndex = Math.max(0, survey.children.length - 1);
         newGroup(state, { toIndex: lastGroupIndex });
+
+        state.lastAddedComponent = {
+          type: "group",
+          index: lastGroupIndex,
+        };
       } else if (type === "question") {
         if (state.Survey.children.length == 1) {
           newGroup(state, { toIndex: 0 });
@@ -510,6 +515,11 @@ export const designState = createSlice({
           questionType,
           toIndex,
         });
+        state.lastAddedComponent = {
+          type: "question",
+          groupIndex: lastGroupIndex,
+          questionIndex: toIndex,
+        };
       }
     },
   },
