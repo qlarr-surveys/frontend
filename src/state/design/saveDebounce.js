@@ -1,11 +1,7 @@
 import { SetData } from "~/networking/design";
-import {
-  designStateReceived,
-  setSaving,
-  setUpdating,
-} from "./designState";
-import { onError } from '../edit/editState';
-import { onApiError } from '~/utils/errorsProcessor';
+import { designStateReceived, setSaving, setUpdating } from "./designState";
+import { onError } from "../edit/editState";
+import { onApiError } from "~/utils/errorsProcessor";
 
 let saveTimer;
 let buffer = [];
@@ -33,13 +29,10 @@ const saveDebounce = (store) => {
 };
 
 export const dataSaver = (store) => (next) => (action) => {
-  if(!action || !action.type){
-    return
+  if (!action || !action.type) {
+    return;
   }
-  if (
-    MUTATING.includes(action.type) &&
-    !action.type.startsWith("editState/")
-  ) {
+  if (MUTATING.includes(action.type) && !action.type.startsWith("editState/")) {
     if (!store.getState().designState.isUpdating) {
       store.dispatch(setSaving(true));
       saveDebounce(store);
@@ -87,7 +80,7 @@ const MUTATING = [
   "designState/editSkipToEnd",
   "designState/changeRelevance",
   "designState/addComponent",
-
+  "designState/onDrag",
 ];
 
 const setState = (store, state) => {
