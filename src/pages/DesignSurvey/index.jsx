@@ -16,8 +16,6 @@ import { defualtTheme } from "~/constants/theme";
 import { I18nextProvider, useTranslation } from "react-i18next";
 import {
   cacheRtl,
-  getDirFromSession,
-  isSessionRtl,
   rtlLanguage,
 } from "~/utils/common";
 import { CacheProvider } from "@emotion/react";
@@ -38,7 +36,6 @@ import { Cancel, Palette } from "@mui/icons-material";
 import ReorderIcon from "@mui/icons-material/Reorder";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { DESIGN_SURVEY_MODE } from "~/routes";
-import RightPanel from "~/components/design/RightPanel";
 import { buildResourceUrl } from "~/networking/common";
 
 function DesignSurvey() {
@@ -63,9 +60,6 @@ function DesignSurvey() {
   };
 
   const lang = langInfo?.lang;
-
-  const isRtl = isSessionRtl();
-  console.log(isRtl);
 
   const theme = useSelector((state) => {
     return state.designState["Survey"]?.theme;
@@ -123,8 +117,8 @@ function DesignSurvey() {
       sx={backgroundStyle}
     >
       <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
+        <LeftPanel t={t} />
         <CacheProvider value={cacheRtlMemo}>
-          <LeftPanel t={t} />
           <ThemeProvider theme={surveyTheme}>
             <I18nextProvider i18n={childI18n}>
               <ContentPanel
@@ -134,14 +128,14 @@ function DesignSurvey() {
               />
             </I18nextProvider>
           </ThemeProvider>
-          <DesignChip onCancel={toDesign} designMode={designMode} isRtl={isRtl} />
-          <DesignOptions
-            designMode={designMode}
-            isRtl={isRtl}
-            optionsOpen={optionsOpen}
-            setOptionsOpen={setOptionsOpen}
-          />
         </CacheProvider>
+        <DesignChip onCancel={toDesign} designMode={designMode} />
+        <DesignOptions
+        t={t}
+          designMode={designMode}
+          optionsOpen={optionsOpen}
+          setOptionsOpen={setOptionsOpen}
+        />
       </DndProvider>
     </Box>
   );
@@ -149,7 +143,7 @@ function DesignSurvey() {
 
 export default React.memo(DesignSurvey);
 
-function DesignOptions({ setOptionsOpen, optionsOpen, designMode, isRtl }) {
+function DesignOptions({ setOptionsOpen, optionsOpen, designMode, t }) {
   const dispatch = useDispatch();
   const actions = [
     {
@@ -162,7 +156,7 @@ function DesignOptions({ setOptionsOpen, optionsOpen, designMode, isRtl }) {
     },
     {
       icon: <Palette />,
-      name: "Theme",
+      name: t("theme"),
       onClick: () => {
         setOptionsOpen(false);
         dispatch(setDesignModeToTheme());
@@ -170,7 +164,7 @@ function DesignOptions({ setOptionsOpen, optionsOpen, designMode, isRtl }) {
     },
     {
       icon: <ReorderIcon />,
-      name: "Reorder",
+      name: t("reorder_setup"),
       onClick: () => {
         setOptionsOpen(false);
         dispatch(setDesignModeToReorder());
@@ -186,18 +180,13 @@ function DesignOptions({ setOptionsOpen, optionsOpen, designMode, isRtl }) {
           dir="rtl"
           onClick={() => setOptionsOpen(!optionsOpen)}
           ariaLabel="SpeedDial basic example"
-          sx={
-            isRtl
-              ? { position: "absolute", bottom: 16, left: 16 }
-              : { position: "absolute", bottom: 16, right: 16 }
-          }
+          sx={{ position: "absolute", bottom: 16, right: 16 }}
           icon={<MoreHorizIcon />}
         >
           {actions.map((action) => (
             <SpeedDialAction
               onClick={action.onClick}
               key={action.name}
-              dir='rtl'
               icon={action.icon}
               tooltipOpen
               tooltipTitle={action.name}
@@ -209,7 +198,7 @@ function DesignOptions({ setOptionsOpen, optionsOpen, designMode, isRtl }) {
   );
 }
 
-function DesignChip({ designMode, onCancel, isRtl }) {
+function DesignChip({ designMode, onCancel }) {
   return (
     designMode != DESIGN_SURVEY_MODE.DESIGN && (
       <Chip
@@ -219,11 +208,7 @@ function DesignChip({ designMode, onCancel, isRtl }) {
           fontSize: "24px",
           padding: "8px",
         }}
-        style={
-          isRtl
-            ? { position: "absolute", bottom: 16, left: 16 }
-            : { position: "absolute", bottom: 16, right: 16 }
-        }
+        style={{ position: "absolute", bottom: 16, right: 16 }}
         label="Back to Design"
         icon={<Cancel />}
         color="primary"
