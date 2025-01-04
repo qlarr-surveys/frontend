@@ -274,7 +274,7 @@ const operators = {
       isForDisplay,
       fieldDef
     ) => {
-      const opStr = isForDisplay ? "does not containends with" : opDef.label;
+      const opStr = isForDisplay ? "does not contain" : opDef.label;
       return `${wrapField(field)} ${wrapOperator(opStr)} ${wrapValue(
         value,
         valueTypes

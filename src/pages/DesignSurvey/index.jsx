@@ -3,8 +3,10 @@ import {
   Backdrop,
   Box,
   Chip,
+  Icon,
   SpeedDial,
   SpeedDialAction,
+  SvgIcon,
   ThemeProvider,
   createTheme,
 } from "@mui/material";
@@ -14,10 +16,7 @@ import ContentPanel from "~/components/design/ContentPanel";
 
 import { defualtTheme } from "~/constants/theme";
 import { I18nextProvider, useTranslation } from "react-i18next";
-import {
-  cacheRtl,
-  rtlLanguage,
-} from "~/utils/common";
+import { cacheRtl, isSessionRtl, rtlLanguage } from "~/utils/common";
 import { CacheProvider } from "@emotion/react";
 import { useDispatch, useSelector } from "react-redux";
 import LeftPanel from "~/components/design/LeftPanel";
@@ -37,6 +36,7 @@ import ReorderIcon from "@mui/icons-material/Reorder";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { buildResourceUrl } from "~/networking/common";
+import SurveyIcon from '~/components/common/SurveyIcons/SurveyIcon';
 
 function DesignSurvey() {
   const { t, i18n } = useTranslation(["design", "run"]);
@@ -129,9 +129,9 @@ function DesignSurvey() {
             </I18nextProvider>
           </ThemeProvider>
         </CacheProvider>
-        <DesignChip onCancel={toDesign} designMode={designMode} />
+        <DesignChip onCancel={toDesign} designMode={designMode} t={t} />
         <DesignOptions
-        t={t}
+          t={t}
           designMode={designMode}
           optionsOpen={optionsOpen}
           setOptionsOpen={setOptionsOpen}
@@ -148,7 +148,7 @@ function DesignOptions({ setOptionsOpen, optionsOpen, designMode, t }) {
   const actions = [
     {
       icon: <TranslateIcon />,
-      name: "Language",
+      name: t("translation"),
       onClick: () => {
         setOptionsOpen(false);
         dispatch(setDesignModeToLang());
@@ -163,8 +163,8 @@ function DesignOptions({ setOptionsOpen, optionsOpen, designMode, t }) {
       },
     },
     {
-      icon: <ReorderIcon />,
-      name: t("reorder_setup"),
+      icon: <SurveyIcon name="sort" />,
+      name: t("reorder"),
       onClick: () => {
         setOptionsOpen(false);
         dispatch(setDesignModeToReorder());
@@ -177,10 +177,9 @@ function DesignOptions({ setOptionsOpen, optionsOpen, designMode, t }) {
         <Backdrop style={{ zIndex: 1 }} open={optionsOpen} />
         <SpeedDial
           open={optionsOpen}
-          dir="rtl"
           onClick={() => setOptionsOpen(!optionsOpen)}
           ariaLabel="SpeedDial basic example"
-          sx={{ position: "absolute", bottom: 16, right: 16 }}
+          sx={{ position: "absolute", bottom: "16px", right: "16px" }}
           icon={<MoreHorizIcon />}
         >
           {actions.map((action) => (
@@ -198,7 +197,8 @@ function DesignOptions({ setOptionsOpen, optionsOpen, designMode, t }) {
   );
 }
 
-function DesignChip({ designMode, onCancel }) {
+function DesignChip({ designMode, onCancel, t }) {
+  const isRtl = isSessionRtl();
   return (
     designMode != DESIGN_SURVEY_MODE.DESIGN && (
       <Chip
@@ -208,8 +208,12 @@ function DesignChip({ designMode, onCancel }) {
           fontSize: "24px",
           padding: "8px",
         }}
-        style={{ position: "absolute", bottom: 16, right: 16 }}
-        label="Back to Design"
+        style={
+          isRtl
+            ? { position: "absolute", bottom: "16px", left: "16px" }
+            : { position: "absolute", bottom: "16px", right: "16px" }
+        }
+        label={t("back_to_design")}
         icon={<Cancel />}
         color="primary"
         onClick={onCancel}

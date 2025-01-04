@@ -107,9 +107,10 @@ export const jsonToJs = (json, nested, getComponentType) => {
         )}.value?.indexOf(${capture(value[1])}) > -1`
       );
     case "not_contains":
+      console.log("we are here!!!")
       return wrapIfNested(
         nested,
-        `${capture(value[0])}.value && !${capture(
+        `!${capture(value[0])}.value || ${capture(
           value[0]
         )}.value?.indexOf(${capture(value[1])}) == -1`
       );

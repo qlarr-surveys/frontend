@@ -491,7 +491,9 @@ function SCQArrayHeaderDesign({
         <IconSelector
           currentIcon=""
           onIconSelected={(icon) => {
-            uploadAsResource(icon);
+            if(icon){
+              uploadAsResource(icon);
+            }
             setIconSelectorOpen(false);
           }}
         />
