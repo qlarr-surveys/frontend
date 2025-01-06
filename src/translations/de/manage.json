@@ -25,7 +25,8 @@
   "confirm_password_required": "Sie müssen das Passwort wiederholen",
   "create_survey": {
     "title": "Umfrage erstellen",
-    "empty_state_message": "Keine Umfragen verfügbar. Erstellen Sie eine neue Umfrage oder kopieren Sie ein Beispiel, um loszulegen!"
+    "empty_state_message": "Keine Umfragen verfügbar.",
+    "empty_state_cta_copy": "oder kopieren Sie ein Beispiel, um loszulegen!"
   },
   "edit_survey": {
     "export": "Umfrage exportieren",

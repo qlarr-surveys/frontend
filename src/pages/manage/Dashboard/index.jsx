@@ -321,7 +321,7 @@ function Dashboard() {
           <Box className={styles.surveyCardsContainer}>
             {!fetchingSurveys ? (
               <>
-                {surveys?.surveys?.length > 0 ? (
+                {surveys?.surveys?.length == 0 ? (
                   <Box
                     sx={{
                       mt: 3,
@@ -360,6 +360,18 @@ function Dashboard() {
                       sx={{ mt: 2 }}
                     >
                       {t("create_survey.empty_state_message")}
+                      {shouldShowClickAdd() && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          sx={{ mx: 1 }}
+                          startIcon={<Add />}
+                          onClick={handleButtonClick}
+                        >
+                          {t("create_new_survey")}
+                        </Button>
+                      )}
+                      {t("create_survey.empty_state_cta_copy")}
                     </Typography>
                   </div>
                 )}
@@ -396,7 +408,7 @@ function Dashboard() {
         open={openCloneModal}
         onClose={(cloned) => {
           setOpenCloneModal(false);
-          setImportSurvey(false)
+          setImportSurvey(false);
           if (cloned) {
             fetchSurveys();
           }
