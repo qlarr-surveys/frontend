@@ -67,7 +67,7 @@ function CreateSurvey({ onSurveyCreated }) {
       .createSurvey(model)
       .then(() => {
         if (onSurveyCreated) {
-          onSurveyCreated();
+          onSurveyCreated(model);
           reset();
         }
       })

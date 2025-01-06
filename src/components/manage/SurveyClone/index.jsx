@@ -15,6 +15,7 @@ export const SurveyClone = ({
   onClose,
   survey,
   importSurvey = false,
+  onSurveyCloned,
 }) => {
   const surveyService = useService("survey");
 
@@ -61,16 +62,23 @@ export const SurveyClone = ({
     }
     dispatch(setLoading(true));
 
+    const handleSuccess = (surveyName) => {
+      onClose(true);
+      setNewSurveyName("");
+      if (onSurveyCloned) {
+        onSurveyCloned(surveyName);
+      }
+    };
+
     if (importSurvey) {
       surveyService
         .importSurvey(fileToImport, newSurveyName)
         .then(() => {
-          onClose(true);
-          setNewSurveyName("");
+          handleSuccess(newSurveyName);
         })
         .catch((processedError) => {
           if (
-            processedError.name == PROCESSED_ERRORS.DUPLICATE_SURVEY_NAME.name
+            processedError.name === PROCESSED_ERRORS.DUPLICATE_SURVEY_NAME.name
           ) {
             setNewSurveyNameError(t(`processed_errors.${processedError.name}`));
           }
@@ -80,16 +88,13 @@ export const SurveyClone = ({
         });
     } else if (survey.example) {
       surveyService
-        .cloneGuestSurvey(survey.id, {
-          name: newSurveyName,
-        })
+        .cloneGuestSurvey(survey.id, { name: newSurveyName })
         .then(() => {
-          onClose(true);
-          setNewSurveyName("");
+          handleSuccess(newSurveyName);
         })
         .catch((processedError) => {
           if (
-            processedError.name == PROCESSED_ERRORS.DUPLICATE_SURVEY_NAME.name
+            processedError.name === PROCESSED_ERRORS.DUPLICATE_SURVEY_NAME.name
           ) {
             setNewSurveyNameError(t(`processed_errors.${processedError.name}`));
           }
@@ -99,16 +104,13 @@ export const SurveyClone = ({
         });
     } else {
       surveyService
-        .cloneSurvey(survey.id, {
-          name: newSurveyName,
-        })
+        .cloneSurvey(survey.id, { name: newSurveyName })
         .then(() => {
-          onClose(true);
-          setNewSurveyName("");
+          handleSuccess(newSurveyName);
         })
         .catch((processedError) => {
           if (
-            processedError.name == PROCESSED_ERRORS.DUPLICATE_SURVEY_NAME.name
+            processedError.name === PROCESSED_ERRORS.DUPLICATE_SURVEY_NAME.name
           ) {
             setNewSurveyNameError(t(`processed_errors.${processedError.name}`));
           }

@@ -36,15 +36,15 @@ import { getDirFromSession } from "~/utils/common";
 function Dashboard() {
   const surveyService = useService("survey");
   const [surveys, setSurveys] = useState(null);
-
   const [fetchingSurveys, setFetchingSurveys] = useState(true);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
   const [status, setStatus] = useState("all");
   const [sortBy, setSortBy] = useState("last_modified_desc");
-
   const [openCloneModal, setOpenCloneModal] = useState(false);
   const [cloningSurvey, setCloningSurvey] = useState();
+  const [recentlyUpdatedSurveyName, setRecentlyUpdatedSurveyName] =
+    useState(null);
 
   const dispatch = useDispatch();
 
@@ -282,7 +282,13 @@ function Dashboard() {
                 >
                   <Close color="#000" />
                 </IconButton>
-                <CreateSurvey onSurveyCreated={fetchSurveys} />
+                <CreateSurvey
+                  onSurveyCreated={(newSurvey) => {
+                    fetchSurveys();
+                    setRecentlyUpdatedSurveyName(newSurvey.name);
+                    setTimeout(() => setRecentlyUpdatedSurveyName(null), 3000);
+                  }}
+                />
               </div>
             </Fade>
           )}
@@ -342,6 +348,7 @@ function Dashboard() {
                         <Survey
                           key={survey.id}
                           survey={survey}
+                          highlight={survey.name === recentlyUpdatedSurveyName}
                           onStatusChange={handleSurveyStatusChange}
                           onClone={() => onClone(survey)}
                           onDelete={() => onDelete(survey)}
@@ -398,10 +405,14 @@ function Dashboard() {
         open={openCloneModal}
         onClose={(cloned) => {
           setOpenCloneModal(false);
-          setImportSurvey(false)
+          setImportSurvey(false);
           if (cloned) {
             fetchSurveys();
           }
+        }}
+        onSurveyCloned={(name) => {
+          setRecentlyUpdatedSurveyName(name);
+          setTimeout(() => setRecentlyUpdatedSurveyName(null), 3000);
         }}
         survey={cloningSurvey}
       />
