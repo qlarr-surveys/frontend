@@ -84,17 +84,20 @@ function IconMcqChoice({
           display: "flex",
           justifyContent: "center",
           width: "100%",
+          height: "100%",
         }}
       >
         <DynamicSvg
-        onIconClick={() =>
-          dispatch(
-            valueChange({
-              componentCode: component.qualifiedCode,
-              value: !checked,
-            })
-          )}
-          imageHeightPx="100%"
+          onIconClick={() =>
+            dispatch(
+              valueChange({
+                componentCode: component.qualifiedCode,
+                value: !checked,
+              })
+            )
+          }
+          // imageHeightPx="100%"
+          imageHeight={"100%"}
           maxHeight={iconSize + "px"}
           iconColor={
             checked ? theme.palette.primary.main : theme.textStyles.text.color

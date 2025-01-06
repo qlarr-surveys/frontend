@@ -22,7 +22,7 @@ function DynamicSvg({
     }
   }, [svgUrl]);
 
-  return (
+  return svgUrl && svgContent ? (
     <div
       style={{
         opacity: opacity,
@@ -36,6 +36,24 @@ function DynamicSvg({
       onClick={onIconClick}
       className={styles.svgContainer}
       dangerouslySetInnerHTML={{ __html: svgContent ? svgContent : "" }}
+    />
+  ) : (
+    <div
+      style={{
+        opacity: opacity,
+        color: iconColor,
+        maxHeight: maxHeight,
+        maxWidth: maxHeight,
+        height: imageHeight,
+        width: imageHeight,
+        borderRadius: "8px",
+        backgroundImage: `url('/placeholder-image.jpg')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+      onClick={onIconClick}
+      className={styles.svgContainer}
     />
   );
 }

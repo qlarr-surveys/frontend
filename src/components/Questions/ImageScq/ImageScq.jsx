@@ -41,7 +41,7 @@ function ImageScq(props) {
       {props.component.answers.map((option) => {
         const backgroundImage = option.resources?.image
           ? `url('${buildResourceUrl(option.resources?.image)}')`
-          : "0";
+          : `url('/placeholder-image.jpg')`;
         return (
           <Box
             key={option.code}

@@ -72,7 +72,7 @@ function ImageChoiceItemDesign({
 
   const backgroundImage = answer?.resources?.image
     ? `url('${buildResourceUrl(answer.resources.image)}')`
-    : "0";
+    : `url('/placeholder-image.jpg')`;
 
   function handleImageChange(e) {
     e.preventDefault();
