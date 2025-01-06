@@ -61,6 +61,8 @@ function Dashboard() {
         if (data) {
           setFetchingSurveys(false);
           setSurveys(data);
+          setCreateSurveyOpen(false);
+          setTemplateSliderOpen(false);
         }
       })
       .catch((e) => processApirror(e));
