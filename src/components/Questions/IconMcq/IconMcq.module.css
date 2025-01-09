@@ -25,5 +25,4 @@
 .iconFlexContainer {
   display: flex;
   flex-wrap: wrap;
-  min-height: 150px;
 }

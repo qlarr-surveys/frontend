@@ -29,7 +29,7 @@ import IconSelector from "~/components/design/IconSelector";
 import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
-import { DESIGN_SURVEY_MODE } from '~/routes';
+import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function SCQIconArrayDesign(props) {
   const theme = useTheme();
@@ -39,7 +39,8 @@ function SCQIconArrayDesign(props) {
     return state.designState.langInfo;
   });
 
-  const inDesgin = props.designMode == DESIGN_SURVEY_MODE .DESIGN
+  const inDesgin = props.designMode == DESIGN_SURVEY_MODE.DESIGN;
+
 
   const children = useSelector((state) => {
     return state.designState[props.code].children;
@@ -129,7 +130,7 @@ function SCQIconArrayDesign(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      {props.inDesgin && (
+      {inDesgin && (
         <div className={styles.addRow}>
           <Button
             sx={{
@@ -470,28 +471,22 @@ function SCQArrayHeaderDesign({
           </div>
         )}
 
-        {icon ? (
-          <DynamicSvg
-            onIconClick={() => setIconSelectorOpen(true)}
-            imageHeight="64px"
-            svgUrl={icon ? buildResourceUrl(icon) : undefined}
-          />
-        ) : (
-          <>
-            <br />
-            <div onClick={() => setIconSelectorOpen(true)}>
-              <AddBoxIcon sx={{ width: "64px", height: "64px" }} />
-              <br />
-              <span>Click to add icon</span>
-            </div>
-          </>
+        <DynamicSvg
+          onIconClick={() => setIconSelectorOpen(true)}
+          imageHeight="64px"
+          svgUrl={icon ? buildResourceUrl(icon) : undefined}
+        />
+        {!icon && (
+          <span onClick={() => setIconSelectorOpen(true)}>
+            Click to add icon
+          </span>
         )}
       </TableCell>
       {iconSelectoOpen && (
         <IconSelector
           currentIcon=""
           onIconSelected={(icon) => {
-            if(icon){
+            if (icon) {
               uploadAsResource(icon);
             }
             setIconSelectorOpen(false);

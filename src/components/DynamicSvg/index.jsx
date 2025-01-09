@@ -9,22 +9,21 @@ function DynamicSvg({
   onIconClick,
   opacity = 1,
   isSelected = false,
-  theme
+  theme,
 }) {
   const [svgContent, setSvgContent] = useState("");
 
   useEffect(() => {
     const fetchSvg = async () => {
-      const response = await fetch(svgUrl);
+      const response = await fetch(svgUrl || "/placeholder-image.svg");
       const svgText = await response.text();
       setSvgContent(svgText);
     };
-    if (svgUrl) {
       fetchSvg();
-    }
+
   }, [svgUrl]);
 
-  return svgUrl && svgContent ? (
+  return (
     <div
       style={{
         opacity: opacity,
@@ -33,30 +32,15 @@ function DynamicSvg({
         maxWidth: maxHeight,
         height: imageHeight,
         width: imageHeight,
+        margin: "auto",
         borderRadius: "8px",
-        border: isSelected ? `4px solid ${theme.palette.primary.main}` : "4px solid transparent",
+        border: isSelected
+          ? `4px solid ${theme.palette.primary.main}`
+          : "4px solid transparent",
       }}
       onClick={onIconClick}
       className={styles.svgContainer}
       dangerouslySetInnerHTML={{ __html: svgContent ? svgContent : "" }}
-    />
-  ) : (
-    <div
-      style={{
-        opacity: opacity,
-        color: iconColor,
-        maxHeight: maxHeight,
-        maxWidth: maxHeight,
-        height: imageHeight,
-        width: imageHeight,
-        borderRadius: "8px",
-        backgroundImage: `url('/placeholder-image.jpg')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-      onClick={onIconClick}
-      className={styles.svgContainer}
     />
   );
 }
