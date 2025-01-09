@@ -87,23 +87,22 @@ function IconMcqChoice({
         }}
       >
         <DynamicSvg
-        onIconClick={() =>
-          dispatch(
-            valueChange({
-              componentCode: component.qualifiedCode,
-              value: !checked,
-            })
+          onIconClick={() =>
+            dispatch(
+              valueChange({
+                componentCode: component.qualifiedCode,
+                value: !checked,
+              })
           )}
-          imageHeightPx="100%"
+          imageHeight="100%"
           maxHeight={iconSize + "px"}
-          iconColor={
-            checked ? theme.palette.primary.main : theme.textStyles.text.color
-          }
           svgUrl={
             component?.resources?.icon
               ? buildResourceUrl(component?.resources?.icon)
               : undefined
           }
+          isSelected={checked}
+          theme={theme}
         />
       </div>
 

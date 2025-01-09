@@ -8,6 +8,8 @@ function DynamicSvg({
   iconColor,
   onIconClick,
   opacity = 1,
+  isSelected = false,
+  theme
 }) {
   const [svgContent, setSvgContent] = useState("");
 
@@ -32,6 +34,7 @@ function DynamicSvg({
         height: imageHeight,
         width: imageHeight,
         borderRadius: "8px",
+        border: isSelected ? `4px solid ${theme.palette.primary.main}` : "4px solid transparent",
       }}
       onClick={onIconClick}
       className={styles.svgContainer}
