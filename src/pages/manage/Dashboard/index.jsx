@@ -227,7 +227,7 @@ function Dashboard() {
 
   return (
     <Box className={styles.mainContainer}>
-      <Container>
+      <Container sx={{ marginBottom: "48px" }}>
         <Box className={styles.content}>
           <Stack
             className={styles.newSurveysButton}
@@ -314,18 +314,22 @@ function Dashboard() {
             </Fade>
           )}
 
-          <HeaderContent
-            filter={status}
-            onFilterSelected={(el) => {
-              setPage(1);
-              setStatus(el.target.value);
-            }}
-            sort={sortBy}
-            onSortSelected={(el) => {
-              setPage(1);
-              setSortBy(el.target.value);
-            }}
-          />
+          {surveys?.surveys?.length > 0 ? (
+            <HeaderContent
+              filter={status}
+              onFilterSelected={(el) => {
+                setPage(1);
+                setStatus(el.target.value);
+              }}
+              sort={sortBy}
+              onSortSelected={(el) => {
+                setPage(1);
+                setSortBy(el.target.value);
+              }}
+            />
+          ) : (
+            <></>
+          )}
           <Box className={styles.surveyCardsContainer}>
             {!fetchingSurveys ? (
               <>
@@ -369,6 +373,30 @@ function Dashboard() {
                       sx={{ mt: 2 }}
                     >
                       {t("create_survey.empty_state_message")}
+                      {!isTemplateSliderOpen && !isCreateSurveyOpen && (
+                        <>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{ mx: 1 }}
+                            startIcon={<Add />}
+                            onClick={handleButtonClick}
+                          >
+                            {t("create_new_survey")}
+                          </Button>
+                          {t("create_survey.or")}
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{ mx: 1 }}
+                            startIcon={<CopyAll />}
+                            onClick={handleTemplateButtonClick}
+                          >
+                            {t("copy_example_surveys")}
+                            {t("create_survey.empty_state_cta_copy")}
+                          </Button>
+                        </>
+                      )}
                     </Typography>
                   </div>
                 )}
@@ -378,7 +406,7 @@ function Dashboard() {
             )}
           </Box>
 
-          {surveys && (
+          {surveys?.surveys?.length > 0 ? (
             <TablePagination
               rowsPerPageOptions={[5, 10, 20, 50]}
               component="div"
@@ -397,6 +425,8 @@ function Dashboard() {
                 setPage(1);
               }}
             />
+          ) : (
+            <></>
           )}
         </Box>
       </Container>
