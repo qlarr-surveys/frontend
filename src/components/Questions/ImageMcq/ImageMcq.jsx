@@ -74,7 +74,6 @@ function ImageMcqItem(props) {
         style={{
           paddingTop: 100 / props.aspectRatio + "%",
           backgroundImage: backgroundImage,
-          backgroundColor: theme.palette.background.default,
           borderRadius: "4px",
           border: state.checked
             ? `4px solid ${theme.palette.primary.main}`

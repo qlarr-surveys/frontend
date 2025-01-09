@@ -59,7 +59,6 @@ function ImageScq(props) {
                 paddingTop: `${100 / props.component.imageAspectRatio}%`,
                 borderRadius: "4px",
                 backgroundImage: backgroundImage,
-                backgroundColor: theme.palette.background.default,
                 border:
                   state.value === option.code
                     ? `4px solid ${theme.palette.primary.main}`

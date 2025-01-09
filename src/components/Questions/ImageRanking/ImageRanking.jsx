@@ -127,7 +127,6 @@ function ImageRankingItem(props) {
         style={{
           paddingTop: 100 / props.aspectRatio + "%",
           backgroundImage: backgroundImage,
-          backgroundColor: theme.palette.background.default,
           borderRadius: "4px",
           boxShadow: 2,
           height: props.imageHeight + "px",

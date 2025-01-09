@@ -36,7 +36,6 @@ function ImageMcqItem(props) {
         style={{
           backgroundImage: backgroundImage,
           borderRadius: "4px",
-          backgroundColor: theme.palette.background.default,
           margin: props.spacing + "px",
           height: props.imageHeight + "px",
           border: state.checked

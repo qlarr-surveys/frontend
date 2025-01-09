@@ -238,7 +238,6 @@ function ImageChoiceItemDesign({
           className={styles.imageContainer}
           style={{
             paddingTop: 100 / imageAspectRatio + "%",
-            backgroundColor: theme.palette.background.default,
             backgroundImage: backgroundImage,
           }}
           ref={ref}
