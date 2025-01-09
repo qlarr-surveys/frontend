@@ -232,7 +232,7 @@ function QuestionDesign({
         default:
           nextAnswerIndex = nextId(answers);
           code = "A" + nextAnswerIndex;
-          label = "Option" + nextAnswerIndex;
+          label = "Option " + nextAnswerIndex;
           qualifiedCode = questionCode + code;
           dispatch(
             addNewAnswer({
@@ -257,7 +257,7 @@ function QuestionDesign({
   const contrastColor = getContrastColor(theme.palette.background.paper);
   const textColor = theme.textStyles.question.color;
 
-  
+
   useEffect(() => {
     const element = containerRef.current;
 
