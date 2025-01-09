@@ -62,8 +62,8 @@ function ImageScq(props) {
                 backgroundColor: theme.palette.background.default,
                 border:
                   state.value === option.code
-                    ? `2px solid ${theme.palette.primary.main}`
-                    : "2px solid transparent",
+                    ? `4px solid ${theme.palette.primary.main}`
+                    : "4px solid transparent",
               }}
             >
               <div className={styles.selection}>
@@ -75,7 +75,9 @@ function ImageScq(props) {
                   value={option.code}
                   className={styles.radioCheck}
                   name={props.component.qualifiedCode}
+                  size="large"
                   sx={{
+                    m:'5px',
                     color: theme.textStyles.text.color,
                   }}
                 />

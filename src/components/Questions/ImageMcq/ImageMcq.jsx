@@ -77,9 +77,8 @@ function ImageMcqItem(props) {
           backgroundColor: theme.palette.background.default,
           borderRadius: "4px",
           border: state.checked
-            ? `2px solid ${theme.palette.primary.main}`
-            : "2px solid transparent",
-
+            ? `4px solid ${theme.palette.primary.main}`
+            : "4px solid transparent",
         }}
       >
         <div className={styles.selection}>
@@ -87,6 +86,10 @@ function ImageMcqItem(props) {
             onChange={(event) =>
               handleChange(props.option.qualifiedCode, !state.checked)
             }
+            size="large"
+            sx={{
+              m: "5px",
+            }}
             className={styles.radioCheck}
             checked={state.checked}
           />

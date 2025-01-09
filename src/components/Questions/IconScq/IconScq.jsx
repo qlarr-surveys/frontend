@@ -65,16 +65,13 @@ function IconScq(props) {
                 // imageHeightPx={props.component.iconSize || 150}
                 imageHeight={"100%"}
                 maxHeight={(props.component.iconSize || 150) + "px"}
-                iconColor={
-                  isSelected
-                    ? theme.palette.primary.main
-                    : theme.textStyles.text.color
-                }
                 svgUrl={
                   option?.resources?.icon
                     ? buildResourceUrl(option?.resources?.icon)
                     : undefined
                 }
+                isSelected={isSelected}
+                theme={theme}
               />
             </div>
 
