@@ -27,9 +27,6 @@ function IconScq(props) {
 
   const hideText = props.component?.hideText || false;
 
-  const lang = useSelector((state) => {
-    return state.runState.values["Survey"].lang;
-  });
 
   return (
     <Box
@@ -55,26 +52,22 @@ function IconScq(props) {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                width: "100%",
+                width: "100%"
               }}
             >
               <DynamicSvg
                 onIconClick={() =>
                   handleChange(props.component.qualifiedCode, option.code)
                 }
-                // imageHeightPx={props.component.iconSize || 150}
                 imageHeight={"100%"}
                 maxHeight={(props.component.iconSize || 150) + "px"}
-                iconColor={
-                  isSelected
-                    ? theme.palette.primary.main
-                    : theme.textStyles.text.color
-                }
                 svgUrl={
                   option?.resources?.icon
                     ? buildResourceUrl(option?.resources?.icon)
                     : undefined
                 }
+                isSelected={isSelected}
+                theme={theme}
               />
             </div>
 

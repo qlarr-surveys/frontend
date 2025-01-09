@@ -72,7 +72,7 @@ function ImageChoiceItemDesign({
 
   const backgroundImage = answer?.resources?.image
     ? `url('${buildResourceUrl(answer.resources.image)}')`
-    : "0";
+    : `url('/placeholder-image.jpg')`;
 
   function handleImageChange(e) {
     e.preventDefault();
@@ -238,7 +238,6 @@ function ImageChoiceItemDesign({
           className={styles.imageContainer}
           style={{
             paddingTop: 100 / imageAspectRatio + "%",
-            backgroundColor: theme.palette.background.default,
             backgroundImage: backgroundImage,
           }}
           ref={ref}

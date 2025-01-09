@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { valueChange } from "~/state/runState";
 import Validation from "~/components/run/Validation";
-import styles from "./SCQArrayDesign.module.css";
 import DynamicSvg from '~/components/DynamicSvg';
 import { buildResourceUrl } from '~/networking/common';
 
@@ -92,8 +91,9 @@ function SCQArrayRow(props) {
               <DynamicSvg
                 onIconClick={() => handleChange(option.code)}
                 imageHeight={"64px"}
-                iconColor={value == option.code ? theme.palette.primary.main : theme.textStyles.text.color
-                }
+                isSelected={value == option.code}
+                theme={theme}
+
                 svgUrl={
                   option?.resources?.icon
                     ? buildResourceUrl(option?.resources?.icon)

@@ -41,7 +41,7 @@ function ImageScq(props) {
       {props.component.answers.map((option) => {
         const backgroundImage = option.resources?.image
           ? `url('${buildResourceUrl(option.resources?.image)}')`
-          : "0";
+          : `url('/placeholder-image.jpg')`;
         return (
           <Box
             key={option.code}
@@ -59,11 +59,10 @@ function ImageScq(props) {
                 paddingTop: `${100 / props.component.imageAspectRatio}%`,
                 borderRadius: "4px",
                 backgroundImage: backgroundImage,
-                backgroundColor: theme.palette.background.default,
                 border:
                   state.value === option.code
-                    ? `2px solid ${theme.palette.primary.main}`
-                    : "2px solid transparent",
+                    ? `4px solid ${theme.palette.primary.main}`
+                    : "4px solid transparent",
               }}
             >
               <div className={styles.selection}>
@@ -75,7 +74,9 @@ function ImageScq(props) {
                   value={option.code}
                   className={styles.radioCheck}
                   name={props.component.qualifiedCode}
+                  size="large"
                   sx={{
+                    m:'5px',
                     color: theme.textStyles.text.color,
                   }}
                 />

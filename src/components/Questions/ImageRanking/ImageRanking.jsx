@@ -107,7 +107,7 @@ function ImageRankingItem(props) {
 
   const backgroundImage = props.option.resources?.image
     ? `url('${buildResourceUrl(props.option.resources.image)}')`
-    : "0";
+    : `url('/placeholder-image.jpg')`;
 
   return (
     <Box
@@ -127,7 +127,6 @@ function ImageRankingItem(props) {
         style={{
           paddingTop: 100 / props.aspectRatio + "%",
           backgroundImage: backgroundImage,
-          backgroundColor: theme.palette.background.default,
           borderRadius: "4px",
           boxShadow: 2,
           height: props.imageHeight + "px",

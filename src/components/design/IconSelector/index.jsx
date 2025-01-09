@@ -16,6 +16,98 @@ function IconSelector({ currentIcon, onIconSelected }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [cancelToken, setCancelToken] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
+
+  const defaultIcons = [
+    "mdi:alphabet-a",
+    "mdi:alphabet-b",
+    "mdi:alphabet-c",
+    "mdi:numeric-1-circle",
+    "mdi:numeric-2-circle",
+    "mdi:numeric-3-circle",
+    "mdi:thumb-up",
+    "mdi:thumb-down",
+    "mdi:star",
+    "mdi:heart",
+    "mdi:check-circle",
+    "mdi:alert-circle",
+    "mdi:smiley",
+    "mdi:smiley-outline",
+    "jam:smiley",
+    "guidance:smiley",
+    "ph:smiley",
+    "ph:smiley-bold",
+    "ph:smiley-duotone",
+    "ph:smiley-fill",
+    "ph:smiley-light",
+    "ph:smiley-thin",
+    "octicon:smiley-16",
+    "octicon:smiley-24",
+    "f7:smiley",
+    "f7:smiley-fill",
+    "pajamas:smiley",
+    "codicon:smiley",
+    "dashicons:smiley",
+    "fontisto:smiley",
+    "el:smiley",
+    "jam:smiley-f",
+    "vaadin:smiley-o",
+    "mdi:smiley-cry",
+    "mdi:smiley-cry-outline",
+    "mdi:smiley-sad",
+    "mdi:smiley-sad-outline",
+    "ph:smiley-meh",
+    "ph:smiley-meh-bold",
+    "ph:smiley-meh-duotone",
+    "ph:smiley-meh-fill",
+    "ph:smiley-meh-light",
+    "ph:smiley-meh-thin",
+    "ph:smiley-sad",
+    "ph:smiley-sad-bold",
+    "ph:smiley-sad-duotone",
+    "ph:smiley-sad-fill",
+    "ph:smiley-sad-light",
+    "ph:smiley-sad-thin",
+    "gis:map-smiley",
+    "el:smiley-alt",
+    "mdi:smiley-cool",
+    "mdi:smiley-cool-outline",
+    "mdi:smiley-dead",
+    "mdi:smiley-dead-outline",
+    "mdi:smiley-kiss",
+    "mdi:smiley-kiss-outline",
+    "mdi:smiley-poop",
+    "mdi:smiley-wink",
+    "mdi:smiley-wink-outline",
+    "ph:lego-smiley",
+    "ph:lego-smiley-bold",
+    "ph:lego-smiley-duotone",
+    "ph:lego-smiley-fill",
+    "ph:lego-smiley-light",
+    "ph:lego-smiley-thin",
+    "ph:scan-smiley",
+    "ph:scan-smiley-bold",
+    "ph:scan-smiley-duotone",
+    "ph:scan-smiley-fill",
+    "ph:scan-smiley-light",
+    "ph:scan-smiley-thin",
+    "ph:smiley-wink",
+    "ph:smiley-wink-bold",
+    "ph:smiley-wink-duotone",
+    "ph:smiley-wink-fill",
+    "ph:smiley-wink-light",
+    "ph:smiley-wink-thin",
+    "garden:smiley-fill-12",
+    "garden:smiley-fill-16",
+    "streamline:smiley-cool",
+    "streamline:smiley-cool-solid",
+    "streamline:smiley-cute",
+    "streamline:smiley-cute-solid",
+    "streamline:smiley-kiss",
+    "streamline:smiley-kiss-solid",
+    "streamline:smiley-mask",
+    "streamline:smiley-mask-solid",
+  ];
+
   useEffect(() => {
     if (cancelToken) {
       cancelToken.cancel("Operation canceled by the user.");
@@ -40,6 +132,8 @@ function IconSelector({ currentIcon, onIconSelected }) {
     setSearchTerm(event.target.value);
   };
 
+  const iconsToDisplay = searchTerm ? searchResults : defaultIcons;
+
   return (
     <Dialog
       fullScreen={true}
@@ -50,7 +144,7 @@ function IconSelector({ currentIcon, onIconSelected }) {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title-logic-builder">
-        {t("select Icon")}
+        {t("Select Icon")}
       </DialogTitle>
       <DialogContent>
         <div>
@@ -62,7 +156,7 @@ function IconSelector({ currentIcon, onIconSelected }) {
           />
 
           <div className="search-results">
-            {searchResults.map((icon, index) => {
+            {iconsToDisplay.map((icon, index) => {
               const parts = icon.split(":");
               return (
                 <SVGDisplay
