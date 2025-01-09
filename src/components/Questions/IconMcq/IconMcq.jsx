@@ -94,7 +94,7 @@ function IconMcqChoice({
                 value: !checked,
               })
           )}
-          imageHeightPx="100%"
+          imageHeight="100%"
           maxHeight={iconSize + "px"}
           svgUrl={
             component?.resources?.icon
