@@ -26,7 +26,8 @@
   "create_survey": {
     "title": "Umfrage erstellen",
     "empty_state_message": "Keine Umfragen verfügbar.",
-    "empty_state_cta_copy": "oder kopieren Sie ein Beispiel, um loszulegen!"
+    "or":"oder",
+    "empty_state_cta_copy": "um loszulegen!"
   },
   "edit_survey": {
     "export": "Umfrage exportieren",

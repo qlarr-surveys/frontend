@@ -329,7 +329,7 @@ function Dashboard() {
           <Box className={styles.surveyCardsContainer}>
             {!fetchingSurveys ? (
               <>
-                {surveys?.surveys?.length == 0 ? (
+                {surveys?.surveys?.length > 0 ? (
                   <Box
                     sx={{
                       mt: 3,
@@ -378,6 +378,18 @@ function Dashboard() {
                           onClick={handleButtonClick}
                         >
                           {t("create_new_survey")}
+                        </Button>
+                      )}
+                      {t("create_survey.or")}
+                      {shouldShowClickAdd() && !isTemplateSliderOpen && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          sx={{ mx: 1 }}
+                          startIcon={<CopyAll />}
+                          onClick={handleTemplateButtonClick}
+                        >
+                          {t("copy_example_surveys")}
                         </Button>
                       )}
                       {t("create_survey.empty_state_cta_copy")}
