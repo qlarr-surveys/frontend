@@ -2,6 +2,7 @@ import { getparam } from "~/networking/run";
 import styles from "./PreviewSurvey.module.css";
 import {
   Link,
+  useNavigate,
   useParams,
   useSearchParams,
 } from "react-router-dom";
@@ -15,6 +16,8 @@ import { BG_COLOR } from "~/constants/theme";
 import { PREVIEW_MODE, routes } from "~/routes";
 
 function PreviewSurvey({ guest = false }) {
+  const navigate = useNavigate();
+
   const [searchParams] = useSearchParams();
   const [previewMode, setPreviewMode] = useState(
     searchParams.get("mode") || "online"
@@ -44,7 +47,7 @@ function PreviewSurvey({ guest = false }) {
   const withEmbeddedParam = (surveyId, previewMode, lang) => {
     console.log(lang)
     return (guest
-      ? routes.iframePreviewGuestSurvey
+        ? routes.iframePreviewGuestSurvey
       : routes.iframePreviewSurvey).replace(":surveyId",surveyId) + "?mode=" + previewMode + (lang ? "&lang=" + lang : "");
   };
 
@@ -60,7 +63,7 @@ function PreviewSurvey({ guest = false }) {
         onClose={(cloned) => {
           setOpenCloneModal(false);
           if (cloned) {
-            fetchSurveys();
+            navigate(-1);
           }
         }}
         survey={surveyModel}

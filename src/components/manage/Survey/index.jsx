@@ -91,6 +91,7 @@ const bgHeader = (status) => {
 export const Survey = ({
   survey,
   example = false,
+  highlight,
   onClone,
   onDelete,
   onClose,
@@ -199,6 +200,7 @@ export const Survey = ({
             boxShadow: (theme) => theme.customShadows.z24,
           },
         }}
+        className={`${highlight ? styles.highlight : ""}`}
       >
         <Stack sx={{ pb: 0 }}>
           <Stack spacing={0.5} sx={{ mb: 1 }}>
