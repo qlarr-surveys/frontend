@@ -15,6 +15,7 @@
         "survey_not_active": "This survey is not active",
         "survey_scheduled": "This survey is scheduled to start in the future"
     },
+    "preview":"You're in preview mode",
     "upload": "Upload",
     "uploading": "Uploading",
     "validation_between": "Must be between {{lower_limit}} and {{upper_limit}}",

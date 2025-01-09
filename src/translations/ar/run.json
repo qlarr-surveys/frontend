@@ -16,6 +16,7 @@
         "survey_scheduled": "من المقرر أن يبدأ هذا الاستطلاع في المستقبل"
     },
     "upload": "تحميل",
+    "preview":"أنت في وضع المعاينة",
     "uploading": "جاري التحميل",
     "validation_between": "يجب أن يكون بين {{lower_limit}} و {{upper_limit}}",
     "validation_contains": "يجب أن يحتوي على  \"{{contains}}\"",

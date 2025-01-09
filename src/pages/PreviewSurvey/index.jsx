@@ -8,16 +8,19 @@ import {
 } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
-import { Box, IconButton, Tab, Tabs } from "@mui/material";
+import { Box, Chip, IconButton, Tab, Tabs } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import { isSurveyAdmin } from "~/constants/roles";
 import { SurveyClone } from "~/components/manage/SurveyClone";
 import { BG_COLOR } from "~/constants/theme";
 import { PREVIEW_MODE, routes } from "~/routes";
+import { Close } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 function PreviewSurvey({ guest = false }) {
   const navigate = useNavigate();
 
+  const { t } = useTranslation("run");
   const [searchParams] = useSearchParams();
   const [previewMode, setPreviewMode] = useState(
     searchParams.get("mode") || "online"
@@ -58,6 +61,18 @@ function PreviewSurvey({ guest = false }) {
 
   return (
     <>
+      <Box
+        mb={2}
+        sx={{ position: "absolute", left: "8px", top: "8px", zIndex: "1" }}
+      >
+        <Chip
+          label={t("preview")}
+          color="primary"
+          onDelete={() => navigate(-1)}
+          deleteIcon={<Close />}
+          style={{ marginLeft: "auto", marginRight: "auto" }} // Centered
+        />
+      </Box>
       <SurveyClone
         open={openCloneModal}
         onClose={(cloned) => {
@@ -68,6 +83,7 @@ function PreviewSurvey({ guest = false }) {
         }}
         survey={surveyModel}
       />
+
       <Box
         display="flex"
         position="relative"
@@ -98,7 +114,6 @@ function PreviewSurvey({ guest = false }) {
             label={<SurveyIcon name="phone" />}
           />
           <Tab
-            
             component={Link}
             to={`${(guest ? routes.guestPreview : routes.preview).replace(
               ":surveyId",
