@@ -52,7 +52,7 @@ function IconScq(props) {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                width: "100%",
+                width: "100%"
               }}
             >
               <DynamicSvg

@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { valueChange } from "~/state/runState";
 import Validation from "~/components/run/Validation";
-import styles from "./SCQArrayDesign.module.css";
 import DynamicSvg from '~/components/DynamicSvg';
 import { buildResourceUrl } from '~/networking/common';
 

@@ -9,19 +9,18 @@ function DynamicSvg({
   onIconClick,
   opacity = 1,
   isSelected = false,
-  theme
+  theme,
 }) {
   const [svgContent, setSvgContent] = useState("");
 
   useEffect(() => {
     const fetchSvg = async () => {
-      const response = await fetch(svgUrl);
+      const response = await fetch(svgUrl || "/placeholder-image.svg");
       const svgText = await response.text();
       setSvgContent(svgText);
     };
-    if (svgUrl) {
       fetchSvg();
-    }
+
   }, [svgUrl]);
 
   return (
@@ -33,8 +32,11 @@ function DynamicSvg({
         maxWidth: maxHeight,
         height: imageHeight,
         width: imageHeight,
+        margin: "auto",
         borderRadius: "8px",
-        border: isSelected ? `4px solid ${theme.palette.primary.main}` : "4px solid transparent",
+        border: isSelected
+          ? `4px solid ${theme.palette.primary.main}`
+          : "4px solid transparent",
       }}
       onClick={onIconClick}
       className={styles.svgContainer}
