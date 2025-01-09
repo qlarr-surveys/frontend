@@ -16,6 +16,23 @@ function IconSelector({ currentIcon, onIconSelected }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [cancelToken, setCancelToken] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
+
+
+  const defaultIcons = [
+    "mdi:alphabet-a",
+    "mdi:alphabet-b",
+    "mdi:alphabet-c",
+    "mdi:numeric-1-circle",
+    "mdi:numeric-2-circle",
+    "mdi:numeric-3-circle",
+    "mdi:thumb-up",
+    "mdi:thumb-down",
+    "mdi:star",
+    "mdi:heart",
+    "mdi:check-circle",
+    "mdi:alert-circle",
+  ];
+
   useEffect(() => {
     if (cancelToken) {
       cancelToken.cancel("Operation canceled by the user.");
@@ -40,6 +57,10 @@ function IconSelector({ currentIcon, onIconSelected }) {
     setSearchTerm(event.target.value);
   };
 
+
+  const iconsToDisplay = searchTerm ? searchResults : defaultIcons;
+
+
   return (
     <Dialog
       fullScreen={true}
@@ -50,7 +71,7 @@ function IconSelector({ currentIcon, onIconSelected }) {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title-logic-builder">
-        {t("select Icon")}
+        {t("Select Icon")}
       </DialogTitle>
       <DialogContent>
         <div>
@@ -62,7 +83,7 @@ function IconSelector({ currentIcon, onIconSelected }) {
           />
 
           <div className="search-results">
-            {searchResults.map((icon, index) => {
+            {iconsToDisplay.map((icon, index) => {
               const parts = icon.split(":");
               return (
                 <SVGDisplay
