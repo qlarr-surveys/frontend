@@ -63,6 +63,7 @@ function PreviewSurvey({ guest = false }) {
     <>
       <Box
         mb={2}
+        onClick={() => navigate(-1)}
         sx={{ position: "absolute", left: "8px", top: "8px", zIndex: "1" }}
       >
         <Chip
