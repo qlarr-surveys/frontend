@@ -25,7 +25,9 @@
   "confirm_password_required": "You must repeat password",
   "create_survey": {
     "title": "Create Survey",
-    "empty_state_message": "No surveys available. Create a new survey or copy an example to get started!"
+    "empty_state_message": "No surveys available.",
+    "or":"or",
+    "empty_state_cta_copy": "to get started!"
   },
   "edit_survey": {
     "export": "Export Survey",

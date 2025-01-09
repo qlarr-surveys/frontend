@@ -25,7 +25,9 @@
   "confirm_password_required": "يجب عليك تكرار كلمة المرور",
   "create_survey": {
     "title": "إنشاء الاستبيان",
-    "empty_state_message": "لا توجد استبيانات متاحة. قم بإنشاء استبيان جديد أو نسخ مثال للبدء!"
+    "empty_state_message": "لا توجد استبيانات متاحة.",
+    "or": "أو",
+    "empty_state_cta_copy": "للبدء!"
   },
   "edit_survey": {
     "export": "تصدير الإستطلاع",
