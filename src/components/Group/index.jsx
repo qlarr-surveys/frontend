@@ -45,7 +45,7 @@ function Group(props) {
               />
             </div>
 
-            {props.group.content?.description && (
+            {props.group.showDescription && props.group.content?.description && (
               <Box className={styles.textDescription}>
                 <Content
                   elementCode={props.group.code}

@@ -19,6 +19,7 @@ import { rtlLanguage } from "~/utils/common";
 import { useDrag, useDrop } from "react-dnd";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
+import { contentEditable, inDesign } from "~/routes";
 
 function ImageChoiceItemDesign({
   parentCode,
@@ -27,6 +28,7 @@ function ImageChoiceItemDesign({
   type,
   columnNumber,
   imageAspectRatio,
+  designMode,
   hideText,
   t,
   addAnswer,
@@ -58,8 +60,8 @@ function ImageChoiceItemDesign({
     return type == "add"
       ? undefined
       : state.designState[qualifiedCode].content?.["label"]?.[
-      langInfo.mainLang
-      ];
+          langInfo.mainLang
+        ];
   });
 
   const onDelete = () => {
@@ -70,7 +72,7 @@ function ImageChoiceItemDesign({
 
   const backgroundImage = answer?.resources?.image
     ? `url('${buildResourceUrl(answer.resources.image)}')`
-    : "0";
+    : `url('/placeholder-image.jpg')`;
 
   function handleImageChange(e) {
     e.preventDefault();
@@ -84,7 +86,7 @@ function ImageChoiceItemDesign({
           changeResources({
             code: qualifiedCode,
             key: "image",
-            value: file.name,
+            value: response.name,
           })
         );
       })
@@ -211,7 +213,7 @@ function ImageChoiceItemDesign({
       >
         <IconButton
           sx={{
-            color: theme.textStyles.text.color
+            color: theme.textStyles.text.color,
           }}
           className={styles.addAnswerIcon}
           onClick={() => {
@@ -236,17 +238,16 @@ function ImageChoiceItemDesign({
           className={styles.imageContainer}
           style={{
             paddingTop: 100 / imageAspectRatio + "%",
-            backgroundColor: theme.palette.background.default,
             backgroundImage: backgroundImage,
           }}
           ref={ref}
           data-handler-id={handlerId}
         >
-          {onMainLang && (
+          {inDesign(designMode) && (
             <div className={styles.buttonContainers}>
               <IconButton
                 sx={{
-                  color: theme.textStyles.text.color
+                  color: theme.textStyles.text.color,
                 }}
                 className={styles.imageIconButton}
                 onClick={() => {
@@ -257,9 +258,12 @@ function ImageChoiceItemDesign({
               </IconButton>
               <IconButton
                 sx={{
-                  color: theme.textStyles.text.color
+                  color: theme.textStyles.text.color,
                 }}
-                component="label" className={styles.imageIconButton}>
+                component="label"
+                className={styles.imageIconButton}
+              >
+                <PhotoCamera />
                 <input
                   hidden
                   id={qualifiedCode}
@@ -268,14 +272,15 @@ function ImageChoiceItemDesign({
                   type="file"
                   onChange={handleImageChange}
                 />
-                <PhotoCamera />
               </IconButton>
 
               <IconButton
                 sx={{
-                  color: theme.textStyles.text.color
+                  color: theme.textStyles.text.color,
                 }}
-                ref={drag} className={styles.imageIconButton}>
+                ref={drag}
+                className={styles.imageIconButton}
+              >
                 <DragIndicatorIcon />
               </IconButton>
             </div>
@@ -292,6 +297,7 @@ function ImageChoiceItemDesign({
             dir={isRtl ? "rtl" : "ltr"}
             variant="standard"
             value={content || ""}
+            disabled={!contentEditable(designMode)}
             onChange={(e) =>
               dispatch(
                 changeContent({

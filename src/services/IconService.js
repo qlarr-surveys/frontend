@@ -5,7 +5,7 @@ class IconService {
     return new Promise((resolve, reject) => {
       axios
         .get(
-          `https://api.iconify.design/search?query=${searchTerm}&prefixes=mdi,fluent,ri&limit=100`,
+          `https://api.iconify.design/search?query=${searchTerm}&limit=250`,
           { cancelToken: cancelToken.token }
         )
         .then((data) => {
@@ -13,7 +13,7 @@ class IconService {
         })
         .catch((err) => {
           if (axios.isCancel(err)) {
-            console.log("Request canceled:", err.message);
+            console.debug("Request canceled:", err.message);
           } else {
             reject(err);
           }

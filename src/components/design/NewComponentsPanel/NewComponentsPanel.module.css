@@ -35,9 +35,9 @@
 
 .leftContent {
   background-color: white;
-  width: 15rem;
   padding-top: 16px;
   overflow-y: auto;
+  width: 100%;
   height: calc(100vh - 64px);
 }
 

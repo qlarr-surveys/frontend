@@ -1,8 +1,7 @@
 import authenticatedApi from "./authenticatedApi";
 import publicApi from "./publicApi";
 import BaseService from "./BaseService";
-import { CLOUD_URL } from '~/constants/networking';
-
+import { CLOUD_URL } from "~/constants/networking";
 
 class SurveyService extends BaseService {
   async getAllSurveys(page, perpage, status, sortBy) {
@@ -76,8 +75,8 @@ class SurveyService extends BaseService {
     const response = await this.handleRequest(() =>
       authenticatedApi.get(
         `/survey/${surveyId}/response/all?db_values=${dbValues}&page=${page}&per_page=${per_page}` +
-        `${shouldAddComplete ? `&complete=${complete}` : ""}` +
-        `${surveyor ? `&surveyor=${surveyor}` : ""}`
+          `${shouldAddComplete ? `&complete=${complete}` : ""}` +
+          `${surveyor ? `&surveyor=${surveyor}` : ""}`
       )
     );
     return response.data;
@@ -88,7 +87,7 @@ class SurveyService extends BaseService {
     const response = await this.handleRequest(() =>
       authenticatedApi.get(
         `/survey/${surveyId}/response/export?db_values=${dbValues}&timezone=${timezone}` +
-        `${shouldAddComplete ? `&complete=${complete}` : ""}`
+          `${shouldAddComplete ? `&complete=${complete}` : ""}`
       )
     );
     return response.data;
@@ -109,13 +108,41 @@ class SurveyService extends BaseService {
     return response;
   }
 
-  async responseAttach(surveyId, filename) {
+  async importSurvey(file, surveyName) {
+    const formData = new FormData();
+    formData.append("survey_name", surveyName);
+    formData.append("file", file);
     const response = await this.handleRequest(() =>
-      authenticatedApi.get(`/survey/${surveyId}/response/attach/${filename}`, {
-        responseType: "blob",
+      authenticatedApi.post(`/survey/import`, formData, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
       })
     );
     return response.data;
+  }
+
+  async exportSurvey(surveyId) {
+    const response = await this.handleRequest(() =>
+      authenticatedApi.get(`/survey/${surveyId}/export`, { responseType: 'blob' })
+    );
+    const contentDisposition = response.headers.get("Content-Disposition");
+    const filename = contentDisposition
+      ? contentDisposition.match(/filename="(.+)"/)?.[1] || `${surveyId}.zip`
+      : `${surveyId}.zip`;
+
+    console.log(response)
+    // Convert the response to a Blob
+    const blob = await response.data;
+
+    // Trigger the file download
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }
 

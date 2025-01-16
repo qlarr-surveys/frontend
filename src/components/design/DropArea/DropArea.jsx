@@ -84,11 +84,6 @@ export function QuestionDropArea({
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const collapsed = useSelector((state) => {
-    return (
-      state.designState["globalSetup"]?.reorder_setup === "collapse_questions"
-    );
-  });
 
   // This is a "hack" to make these components refresh when questions are being reordered.
   // So the first and the last Drag elements can refresh and resize accordingly
@@ -172,8 +167,8 @@ export function QuestionDropArea({
       <div
         ref={drop}
         style={{
-          marginTop: !isDragging && !isOver ? "-0.5rem" : "inherit",
-          marginBottom: !isDragging && !isOver ? "-0.5rem" : "inherit",
+          marginTop: !isDragging && !isOver ? "0rem" : "inherit",
+          marginBottom: !isDragging && !isOver ? "0rem" : "inherit",
         }}
         className={
           "question-drop-area" +

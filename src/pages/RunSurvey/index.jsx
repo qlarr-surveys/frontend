@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useMemo } from "react";
+import { shallowEqual, useDispatch } from "react-redux";
 import styles from "./RunSurvey.module.css";
 import { useTranslation } from "react-i18next";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -23,9 +23,11 @@ import { useService } from "~/hooks/use-service";
 import { buildResourceUrl } from "~/networking/common";
 import Image from "~/components/image/image";
 import CompactLayout from "~/layouts/compact";
-import SurveyIndex from "~/components/run/SurveyIndex";
 import { isEquivalent } from "~/utils/design/utils";
 import RunLoadingDots from "~/components/common/RunLoadingDots";
+
+import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
+import SurveyAppBar from "~/components/run/SurveyAppBar";
 
 function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
   const runService = useService("run");
@@ -33,6 +35,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
   const searchParams = new URLSearchParams(location.search);
   const lang = searchParams.get("lang");
   const [render, setRender] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(COLLAPSE);
   const [error, setError] = React.useState(false);
   const [inlineError, setInlineError] = React.useState(false);
 
@@ -43,6 +46,11 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
   const navResponseId = useSelector((state) => {
     return state.runState.data?.responseId;
   });
+
+  const canJump = useSelector(
+    (state) => state.runState.data?.survey?.allowJump,
+    shallowEqual
+  );
 
   const backgroundImage = useSelector((state) => {
     return state.runState.data?.survey?.resources?.backgroundImage;
@@ -145,20 +153,29 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
 
   const navigate = useNavigate();
 
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setExpanded(open ? EXPAND : COLLAPSE);
+  };
+
   const backgroundStyle = backgroundImage
     ? {
-      backgroundImage: `url(${buildResourceUrl(backgroundImage)})`,
-      backgroundSize: "cover",
-      backgroundRepeat: "no-repeat",
-      // backgroundSize: "100% 100%",
-      backgroundPosition: "center",
-    }
+        backgroundImage: `url(${buildResourceUrl(backgroundImage)})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        // backgroundSize: "100% 100%",
+        backgroundPosition: "center",
+      }
     : {};
 
   return (
     <>
       <CacheProvider value={cacheRtlMemo}>
-
         <ThemeProvider theme={theme}>
           {error && (
             <ErrorLayout
@@ -179,9 +196,14 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
                 ...backgroundStyle,
               }}
             >
-              <SurveyIndex />
               <RunLoadingDots />
+              <SurveyAppBar toggleDrawer={toggleDrawer} />
               <SurveyMemo key="Survey" />
+              <SurveyDrawer
+                expanded={expanded}
+                toggleDrawer={toggleDrawer}
+                t={t}
+              />
             </div>
           )}
         </ThemeProvider>
@@ -217,7 +239,6 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
           </CompactLayout>
         </Box>
       )}
-
     </>
   );
 }

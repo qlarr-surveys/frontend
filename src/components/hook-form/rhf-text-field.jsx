@@ -41,7 +41,7 @@ export default function RHFTextField({ name, helperText, type, ...other }) {
 }
 
 RHFTextField.propTypes = {
-  helperText: PropTypes.object,
+  helperText: PropTypes.string,
   name: PropTypes.string,
   type: PropTypes.string,
 };

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 
 import styles from "./QuestionDesign.module.css";
@@ -20,6 +20,8 @@ import { useDrag, useDrop } from "react-dnd";
 import ActionToolbar from "~/components/design/ActionToolbar";
 import QuestionDesignBody from "./QuestionDesignBody";
 import { getContrastColor, questionIconByType } from "../Questions/utils";
+import { hasMajorSetup } from "~/constants/design";
+import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function QuestionDesign({
   code,
@@ -28,10 +30,12 @@ function QuestionDesign({
   parentCode,
   index,
   t,
+  designMode,
   onMainLang,
   parentIndex,
+  lastAddedComponent,
 }) {
-  console.log(code + ": " + index);
+  console.debug(code + ": " + index);
   const [hovered, setHovered] = useState(false);
 
   const containerRef = useRef();
@@ -53,6 +57,10 @@ function QuestionDesign({
       state.designState["globalSetup"]?.reorder_setup === "collapse_questions"
     );
   });
+
+  const noMajorSetup = useSelector(
+    (state) => !hasMajorSetup(state.designState.setup)
+  );
 
   const onDelete = useCallback(() => dispatch(deleteQuestion(code)), []);
   const onClone = useCallback(() => dispatch(cloneQuestion(code)), []);
@@ -224,7 +232,7 @@ function QuestionDesign({
         default:
           nextAnswerIndex = nextId(answers);
           code = "A" + nextAnswerIndex;
-          label = "Option" + nextAnswerIndex;
+          label = "Option " + nextAnswerIndex;
           qualifiedCode = questionCode + code;
           dispatch(
             addNewAnswer({
@@ -249,6 +257,40 @@ function QuestionDesign({
   const contrastColor = getContrastColor(theme.palette.background.paper);
   const textColor = theme.textStyles.question.color;
 
+
+  useEffect(() => {
+    const element = containerRef.current;
+
+    if (
+      lastAddedComponent?.type === "question" &&
+      lastAddedComponent.groupIndex === parentIndex &&
+      lastAddedComponent.questionIndex === index &&
+      element
+    ) {
+      // Delay the addition of the highlight class to ensure the DOM is ready
+      const timeoutId = setTimeout(() => {
+        element.classList.add(styles.highlight);
+
+        const handleAnimationEnd = () => {
+          element.classList.remove(styles.highlight);
+        };
+
+        element.addEventListener("animationend", handleAnimationEnd);
+
+        return () => {
+          element.removeEventListener("animationend", handleAnimationEnd);
+        };
+      }, 50);
+      // Delay of 50ms to allow DOM rendering
+
+      return () => clearTimeout(timeoutId); // Cleanup timeout on unmount or re-render
+    }
+  }, [lastAddedComponent, parentIndex, index]);
+
+  const isLastAdded =
+    lastAddedComponent?.type === "question" &&
+    lastAddedComponent.groupIndex === parentIndex &&
+    lastAddedComponent.questionIndex === index;
   return (
     <div
       ref={containerRef}
@@ -262,8 +304,6 @@ function QuestionDesign({
         isInSetup
           ? {
               border: `0.5px solid ${textColor}`,
-              paddingTop: "2rem",
-              paddingBottom: "2rem",
               backgroundColor: contrastColor,
               color: textColor,
             }
@@ -276,12 +316,12 @@ function QuestionDesign({
       data-code={code}
     >
       <Box className={styles.contentContainer}>
-        {collapsed && onMainLang && (
+        {collapsed && (
           <div className={styles.moveBox} ref={drag}>
             <ViewCompactIcon style={{ color: textColor }} />
           </div>
         )}
-        {!collapsed && (isInSetup || hovered) && onMainLang && (
+        {designMode == DESIGN_SURVEY_MODE.DESIGN && (isInSetup || hovered) && (
           <div className={styles.actionToolbarVisible}>
             <ActionToolbar
               t={t}
@@ -311,6 +351,7 @@ function QuestionDesign({
         >
           <ContentEditor
             code={code}
+            editable={designMode == DESIGN_SURVEY_MODE.DESIGN || designMode == DESIGN_SURVEY_MODE.LANGUAGES}
             extended={false}
             placeholder={t("content_editor_placeholder_title")}
             contentKey="label"
@@ -322,6 +363,7 @@ function QuestionDesign({
         <Box className={styles.textDescriptionContent}>
           <ContentEditor
             code={code}
+            editable={designMode == DESIGN_SURVEY_MODE.DESIGN || designMode == DESIGN_SURVEY_MODE.LANGUAGES}
             extended={true}
             placeholder={t("content_editor_placeholder_description")}
             contentKey="description"
@@ -335,6 +377,7 @@ function QuestionDesign({
           type={type}
           t={t}
           addAnswer={addAnswer}
+          designMode={designMode}
           onMainLang={onMainLang}
           addNewAnswer={addAnswer}
         />

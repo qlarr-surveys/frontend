@@ -5,6 +5,7 @@ import ChoiceItemDesign from "~/components/Questions/Choice/ChoiceItemDesign";
 
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
+import { inDesign } from "~/routes";
 
 function ChoiceQuestion(props) {
   const theme = useTheme();
@@ -29,6 +30,7 @@ function ChoiceQuestion(props) {
           children.length > 0 &&
           children.map((item, index) => (
             <ChoiceItemDesign
+              designMode={props.designMode}
               code={item.code}
               t={props.t}
               label={item.code}
@@ -40,7 +42,7 @@ function ChoiceQuestion(props) {
             />
           ))}
       </div>
-      {props.onMainLang && (
+      {inDesign(props.designMode) && (
         <div className={styles.answerAdd}>
           <Button
             size="small"

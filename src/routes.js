@@ -1,22 +1,40 @@
 export const MANAGE_SURVEY_LANDING_PAGES = {
   DESIGN: "design-survey",
-  LAUNCH: "launch",
   PREVIEW: "preview",
   RESPONSES: "responses",
   SETTINGS: "edit-survey",
   RESPONSE: "response",
 };
 
+export const DESIGN_SURVEY_MODE = {
+  DESIGN: "design",
+  THEME: "theme",
+  LANGUAGES: "languages",
+  REORDER: "reorder",
+};
+
+export const inDesign = (mode) => {
+  return DESIGN_SURVEY_MODE.DESIGN == mode;
+};
+
+export const contentEditable = (mode) => {
+  return DESIGN_SURVEY_MODE.DESIGN == mode || DESIGN_SURVEY_MODE.LANGUAGES == mode;
+};
+
+export const PREVIEW_MODE = {
+  ONLINE: "online",
+  ONLINE_PHONE: "online-phone",
+  OFFLINE: "offline",
+};
 
 export const routes = {
   designSurvey: `/${MANAGE_SURVEY_LANDING_PAGES.DESIGN}/:surveyId`,
   editSurvey: `/${MANAGE_SURVEY_LANDING_PAGES.SETTINGS}/:surveyId`,
   responses: `/${MANAGE_SURVEY_LANDING_PAGES.RESPONSES}/:surveyId`,
-  launch: `/${MANAGE_SURVEY_LANDING_PAGES.LAUNCH}/:surveyId/`,
   runSurvey: "/run-survey/:surveyId",
   resumeSurvey: "/resume-survey/:surveyId/:responseId",
-  previewSurvey: "/preview-survey/:surveyId",
-  previewGuestSurvey: "/preview-guest-survey/:surveyId",
+  iframePreviewSurvey: "/preview-survey/:surveyId",
+  iframePreviewGuestSurvey: "/preview-guest-survey/:surveyId",
   guestPreview: "/guest/preview/:surveyId",
   preview: "/preview/:surveyId",
   login: "/login",

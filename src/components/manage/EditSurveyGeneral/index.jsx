@@ -13,6 +13,7 @@ import { RHFSelect } from "~/components/hook-form";
 import { SURVEY_MODE } from "~/constants/survey";
 import { useEffect } from "react";
 import { HelpOutline } from "@mui/icons-material";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 const surveyMode_options = [
   { value: SURVEY_MODE.WEB, label: `mode.${SURVEY_MODE.WEB}` },
@@ -36,11 +37,9 @@ function EditSurveyGeneral() {
 
   const isDisabled = !isSurveyAdmin() || survey?.status == SURVEY_STATUS.CLOSED;
 
-
   const getUserTimezone = () => {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
   };
-
 
   const onSurveyActiveFromChanged = (value) => {
     setSurveyDateError("");
@@ -77,10 +76,7 @@ function EditSurveyGeneral() {
   };
 
   return (
-
-    <div
-      className={styles.generalContainer}
-    >
+    <div className={styles.generalContainer}>
       <RHFSelect
         value={surveyMode}
         onChange={onSurveyModeChanged}
@@ -92,15 +88,25 @@ function EditSurveyGeneral() {
           </option>
         ))}
       </RHFSelect>
-      <Typography ml={1} variant="caption" color="error" display="flex" alignItems="center">
-        {t("timezone_info")}        <Tooltip
-          title={`${t("timezone_tooltip")} (${getUserTimezone()}).`}
-          arrow
+      <Typography
+        ml={1}
+        variant="caption"
+        color="error"
+        display="flex"
+        alignItems="center"
+      >
+        {t("timezone_info")}{" "}
+        <CustomTooltip
+          title={
+            <>
+              {t("timezone_tooltip")} ({getUserTimezone()}).
+            </>
+          }
         >
           <IconButton size="small" aria-label="help" style={{ marginLeft: 4 }}>
             <HelpOutline fontSize="small" />
           </IconButton>
-        </Tooltip>
+        </CustomTooltip>
       </Typography>
       <Box className={styles.blockItem}>
         <SurveyActiveFromTo

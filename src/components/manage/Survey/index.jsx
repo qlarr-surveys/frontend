@@ -5,11 +5,11 @@ import {
   Stack,
   Divider,
   Tooltip,
-  TextField,
   Snackbar,
   Alert,
   Box,
   CardMedia,
+  Badge,
 } from "@mui/material";
 import { Stop } from "@mui/icons-material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -22,7 +22,6 @@ import { fDate } from "~/utils/format-time";
 import TableRowsIcon from "@mui/icons-material/TableRows";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 import WarningIcon from "@mui/icons-material/Warning";
-import ShieldIcon from "@mui/icons-material/Shield";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { isSurveyAdmin } from "~/constants/roles";
@@ -33,10 +32,12 @@ import { useService } from "~/hooks/use-service";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { buildResourceUrl } from "~/networking/common";
 import ImageIcon from "@mui/icons-material/Image";
-import EditIcon from "@mui/icons-material/Edit";
-import { truncateWithEllipsis } from "~/utils/design/utils";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@emotion/react";
+import { EditableSurveyTitle } from "./EditableSurveyTitle";
+import { EditableSurveyDescription } from "./EditableSurveyDescription";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+
 export const STATUS = {
   DRAFT: "draft",
   CLOSED: "closed",
@@ -87,146 +88,10 @@ const bgHeader = (status) => {
   }
 };
 
-const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState(survey.name);
-
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
-
-  const handleBlur = () => {
-    if (title.trim() === "") {
-      setTitle(survey.name);
-    } else if (title !== survey.name) {
-      onSave(title, () => setTitle(survey.name));
-    }
-    setIsEditing(false);
-  };
-
-  const handleEditClick = (event) => {
-    event.stopPropagation();
-    setIsEditing(true);
-  };
-
-  return (
-    <Box className={styles.titleContainer}>
-      {isEditing ? (
-        <TextField
-          sx={{ px: 3, flexGrow: 1 }}
-          value={title}
-          onChange={handleTitleChange}
-          onBlur={handleBlur}
-          autoFocus
-          variant="standard"
-          fullWidth
-          InputProps={{
-            style: { color: "white" },
-          }}
-        />
-      ) : (
-        <>
-          <Tooltip
-            title={title.length > 20 ? title : ""}
-            sx={{
-              fontSize: "1.2rem",
-            }}
-            arrow
-          >
-            <Typography variant="h4" sx={{ px: 3 }} noWrap>
-              {truncateWithEllipsis(title, 18)}
-            </Typography>
-          </Tooltip>
-          {isEditable && (
-            <IconButton
-              className={styles.nameIcon}
-              onClick={handleEditClick}
-              sx={{ ml: 1 }}
-            >
-              <EditIcon sx={{ color: "white" }} />
-            </IconButton>
-          )}
-        </>
-      )}
-    </Box>
-  );
-};
-
-const EditableSurveyDescription = ({ survey, onSave, isEditable = true, isExample }) => {
-  const [isDescriptionEditing, setIsDescriptionEditing] = useState(false);
-  const [description, setDescription] = useState(survey.description);
-
-  const charLimit = isExample ? 450 : 125
-
-  const handleDescriptionChange = (event) => {
-    setDescription(event.target.value);
-  };
-
-  const handleDescriptionBlur = () => {
-    if (description !== survey.description) {
-      onSave(description, () => setDescription(survey.description));
-    }
-    setIsDescriptionEditing(false);
-  };
-
-  const handleEditClick = (event) => {
-    event.stopPropagation();
-    setIsDescriptionEditing(true);
-  };
-
-  return (
-    <Box className={styles.descriptionContainer}>
-      {isDescriptionEditing ? (
-        <TextField
-          sx={{ px: 3 }}
-          value={description}
-          onChange={handleDescriptionChange}
-          onBlur={handleDescriptionBlur}
-          autoFocus
-          variant="standard"
-          fullWidth
-          multiline
-          rows={3}
-        />
-      ) : (
-        <>
-          <Tooltip
-            title={description?.length > charLimit ? description : ""}
-            sx={{
-              fontSize: "1.2rem",
-            }}
-            arrow
-          >
-            <Typography
-              variant="caption"
-              sx={{
-                px: 3,
-                color: description ? "inherit" : "gray",
-                flexGrow: 1,
-              }}
-              className={`${isExample ? styles.exampleTruncatedText : styles.truncatedText}`}
-            >
-              {truncateWithEllipsis(description, charLimit) ||
-                "Click to add a description..."}
-            </Typography>
-          </Tooltip>
-          {isEditable && (
-            <IconButton
-              className={`${styles.descriptionIcon}`}
-              onClick={handleEditClick}
-              sx={{ ml: 1 }}
-            >
-              <EditIcon sx={{ color: "gray" }} />
-            </IconButton>
-          )}
-        </>
-      )}
-    </Box>
-  );
-};
 export const Survey = ({
   survey,
   example = false,
+  highlight,
   onClone,
   onDelete,
   onClose,
@@ -286,25 +151,27 @@ export const Survey = ({
 
   const handleImageUpload = (event) => {
     const image = event.target.files[0];
-    const fileName = image.name;
     const reader = new FileReader();
 
     reader.onload = () => {
-      const uploadResourcePromise = designService.uploadResource(
-        image,
-        survey.id
-      );
-      const updateSurveyPromise = surveyService.putSurvey(
-        { image: fileName },
-        survey.id
-      );
-
-      Promise.all([uploadResourcePromise, updateSurveyPromise])
-        .then(([uploadResponse, updateResponse]) => {
-          onUpdateImage(survey.id, fileName);
+      designService
+        .uploadResource(image, survey.id)
+        .then((response) => {
+          surveyService
+            .putSurvey({ image: response.name }, survey.id)
+            .then((result) => {
+              onUpdateImage(survey.id, response.name);
+            })
+            .catch((err) => {
+              setError(t(`processed_errors.${err.name}`));
+              setOpenSnackbar(true);
+            })
+            .finally(() => {
+              dispatch(setLoading(false));
+            });
         })
         .catch((err) => {
-          setError(t(`processed_errors.${processedError.name}`));
+          setError(t(`processed_errors.${err.name}`));
           setOpenSnackbar(true);
         })
         .finally(() => {
@@ -333,6 +200,7 @@ export const Survey = ({
             boxShadow: (theme) => theme.customShadows.z24,
           },
         }}
+        className={`${highlight ? styles.highlight : ""}`}
       >
         <Stack sx={{ pb: 0 }}>
           <Stack spacing={0.5} sx={{ mb: 1 }}>
@@ -410,55 +278,75 @@ export const Survey = ({
                     {t(`status.${surveyStatus}`)}
                   </Typography>
                 </Stack>
-                <Box sx={{ px: 3, display: "flex", gap: 2 }}>
-                  {!example && (
-                    <>
-                      <Tooltip
-                        title={survey.publicWithinOrg ? "Public" : "Private"}
-                      >
-                        <ShieldIcon sx={{ color: "text.secondary" }} />
-                      </Tooltip>
-                    </>
-                  )}
+                <Box sx={{ px: 3, display: "flex", gap: 2, my: 0.5 }}>
                   {!example &&
                     survey.status !== "closed" &&
                     survey.latestVersion.published === false && (
-                      <Tooltip title="Has unpublished changes">
+                      <CustomTooltip
+                        title="Has unpublished changes"
+                        showIcon={false}
+                      >
                         <WarningIcon sx={{ color: "text.secondary" }} />
-                      </Tooltip>
+                      </CustomTooltip>
                     )}
 
-                  <Tooltip
+                  <CustomTooltip
+                    showIcon={false}
                     title={`Complete Responses: ${survey.completeResponseCount}`}
                   >
-                    <TableRowsIcon sx={{ color: "text.secondary" }} />
-                  </Tooltip>
-                  <Tooltip
+                    <Badge
+                      badgeContent={survey.completeResponseCount}
+                      color="primary"
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                    >
+                      <TableRowsIcon sx={{ color: "text.secondary" }} />
+                    </Badge>
+                  </CustomTooltip>
+
+                  <CustomTooltip
+                    showIcon={false}
                     title={
                       survey.surveyQuota > 0
                         ? `Quota: ${survey.surveyQuota}`
                         : "No Quota"
                     }
                   >
-                    <FormatQuoteIcon sx={{ color: "text.secondary" }} />
-                  </Tooltip>
+                    <Badge
+                      badgeContent={
+                        survey.surveyQuota > 0 ? survey.surveyQuota : 0
+                      }
+                      color="primary"
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                    >
+                      <FormatQuoteIcon sx={{ color: "text.secondary" }} />
+                    </Badge>
+                  </CustomTooltip>
                 </Box>
               </>
             )}
           </Stack>
 
           <Typography variant="caption" sx={{ px: 3, color: "text.disabled" }}>
-            <strong>Created</strong>: {fDate(survey.creationDate)}
+            <strong>{t("edit_survey.metadata.created")}</strong>:{" "}
+            {fDate(survey.creationDate)}
           </Typography>
           <Typography variant="caption" sx={{ px: 3, color: "text.disabled" }}>
-            <strong>Last Modified</strong>: {fDate(survey.lastModified)}
+            <strong>{t("edit_survey.metadata.last_modified")}</strong>:{" "}
+            {fDate(survey.lastModified)}
           </Typography>
           {!example && survey.startDate && (
             <Typography
               variant="caption"
               sx={{ px: 3, color: "text.disabled" }}
             >
-              <strong>Start Date</strong>: {fDate(survey.startDate)}
+              <strong>{t("edit_survey.metadata.start_date")}</strong>:{" "}
+              {fDate(survey.startDate)}
             </Typography>
           )}
 
@@ -467,7 +355,8 @@ export const Survey = ({
               variant="caption"
               sx={{ px: 3, color: "text.disabled" }}
             >
-              <strong>End Date</strong>: {fDate(survey.endDate)}
+              <strong>{t("edit_survey.metadata.end_date")}</strong>:{" "}
+              {fDate(survey.endDate)}
             </Typography>
           )}
         </Stack>
@@ -489,7 +378,7 @@ export const Survey = ({
             sx={{
               backgroundColor: theme.palette.primary.main,
               "&:hover": {
-                backgroundColor: theme.palette.primary.main, // Retain the same background color on hover
+                backgroundColor: theme.palette.primary.main,
               },
             }}
             aria-label="redirect"
@@ -509,7 +398,10 @@ export const Survey = ({
             )}
           </IconButton>
           {isSurveyAdmin() && !example && survey.status === "active" && (
-            <Tooltip title={t("edit_survey.close_title")}>
+            <CustomTooltip
+              showIcon={false}
+              title={t("edit_survey.close_title")}
+            >
               <IconButton
                 className={styles.iconButton}
                 aria-label="stop"
@@ -518,10 +410,13 @@ export const Survey = ({
               >
                 <Stop color="primary" />
               </IconButton>
-            </Tooltip>
+            </CustomTooltip>
           )}
           {isSurveyAdmin() && (
-            <Tooltip title={t("edit_survey.clone_survey")}>
+            <CustomTooltip
+              showIcon={false}
+              title={t("edit_survey.clone_survey")}
+            >
               <IconButton
                 className={styles.iconButton}
                 aria-label="clone"
@@ -530,11 +425,11 @@ export const Survey = ({
               >
                 <FileCopyIcon color="primary" />
               </IconButton>
-            </Tooltip>
+            </CustomTooltip>
           )}
 
           {!example && survey.status !== STATUS.ACTIVE && (
-            <Tooltip title={t("action_btn.delete")}>
+            <CustomTooltip showIcon={false} title={t("action_btn.delete")}>
               <IconButton
                 className={styles.iconButton}
                 aria-label="delete"
@@ -543,7 +438,7 @@ export const Survey = ({
               >
                 <DeleteIcon color="primary" />
               </IconButton>
-            </Tooltip>
+            </CustomTooltip>
           )}
         </Stack>
       </Card>

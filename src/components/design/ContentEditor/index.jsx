@@ -8,17 +8,12 @@ import { useDispatch } from "react-redux";
 import { changeContent, setup } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { isNotEmptyHtml } from "~/utils/design/utils";
-import { setupOptions } from "~/constants/design";
 
-function ContentEditor({ placeholder, extended, contentKey, code }) {
+function ContentEditor({ placeholder, extended, contentKey, code, editable }) {
   const dispatch = useDispatch();
 
   const content = useSelector((state) => {
     return state.designState[code].content?.[contentKey];
-  });
-
-  const noCollapse = useSelector((state) => {
-    return state.designState["globalSetup"]?.reorder_setup === "collapse_none";
   });
 
   const langInfo = useSelector((state) => {
@@ -35,11 +30,6 @@ function ContentEditor({ placeholder, extended, contentKey, code }) {
   const mainLang = langInfo.mainLang;
   const onMainLang = langInfo.onMainLang;
 
-  const setSetup = () => {
-    if (onMainLang) {
-      dispatch(setup({ code, rules: setupOptions(type) }));
-    }
-  };
 
   const value = content?.[lang] || "";
 
@@ -65,7 +55,6 @@ function ContentEditor({ placeholder, extended, contentKey, code }) {
   const onContainerClicked = (event) => {
     event.preventDefault();
     setActive(true);
-    setSetup();
   };
 
   const isRtl = rtlLanguage.includes(lang);
@@ -74,7 +63,7 @@ function ContentEditor({ placeholder, extended, contentKey, code }) {
     <Box
       className={styles.fullWidth}
       onClick={(e) => {
-        if (noCollapse) {
+        if (editable) {
           onContainerClicked(e);
         }
       }}

@@ -5,6 +5,8 @@ import { valueChange } from "~/state/runState";
 import { useTheme } from "@emotion/react";
 import { Box, Grid } from "@mui/material";
 import { rtlLanguage } from "~/utils/common";
+import DynamicSvg from "~/components/DynamicSvg";
+import { buildResourceUrl } from "~/networking/common";
 
 function IconMcq(props) {
   const theme = useTheme();
@@ -43,10 +45,10 @@ function IconMcq(props) {
           <IconMcqChoice
             key={option.code}
             component={option}
-            columns={props.component.columns || 64}
+            columns={props.component.columns || 3}
+            iconSize={props.component.iconSize || "150"}
             spacing={props.component.spacing || 8}
             theme={theme}
-            iconSize={props.component.iconSize || 64}
             hideText={hideText}
           />
         );
@@ -55,7 +57,15 @@ function IconMcq(props) {
   );
 }
 
-function IconMcqChoice({ key, component, iconSize, columns, spacing, hideText, theme }) {
+function IconMcqChoice({
+  key,
+  component,
+  iconSize,
+  columns,
+  spacing,
+  hideText,
+  theme,
+}) {
   const dispatch = useDispatch();
   const checked = useSelector(
     (state) => state.runState.values[component.qualifiedCode].value || false
@@ -76,27 +86,23 @@ function IconMcqChoice({ key, component, iconSize, columns, spacing, hideText, t
           width: "100%",
         }}
       >
-        <Box
-          onClick={() =>
+        <DynamicSvg
+          onIconClick={() =>
             dispatch(
               valueChange({
                 componentCode: component.qualifiedCode,
                 value: !checked,
               })
-            )
+          )}
+          imageHeight="100%"
+          maxHeight={iconSize + "px"}
+          svgUrl={
+            component?.resources?.icon
+              ? buildResourceUrl(component?.resources?.icon)
+              : undefined
           }
-          style={{
-            height: iconSize + "px",
-            width: iconSize + "px",
-            borderRadius: "8px",
-            color: checked
-              ? theme.palette.primary.main
-              : theme.textStyles.text.color,
-          }}
-          className={styles.svgContainer}
-          dangerouslySetInnerHTML={{
-            __html: component.icon ? component.icon : "",
-          }}
+          isSelected={checked}
+          theme={theme}
         />
       </div>
 

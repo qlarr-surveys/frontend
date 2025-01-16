@@ -3,6 +3,8 @@ import styles from "./NewComponentsPanel.module.css";
 import NewComponentsItem from "~/components/design/NewComponentsItem";
 import { QUESTION_TYPES } from "~/components/Questions/utils";
 import { FormatListBulleted, StopCircle } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { addComponent } from "~/state/design/designState";
 
 const groups = [
   {
@@ -19,6 +21,12 @@ const groups = [
 ];
 
 function NewComponentsPanel({ t }) {
+  const dispatch = useDispatch();
+
+  const handleAddComponent = (type, questionType) => {
+    dispatch(addComponent({ type, questionType }));
+  };
+
   return (
     <div className={styles.leftContent}>
       {groups.map((item, index) => (
@@ -36,7 +44,11 @@ function NewComponentsPanel({ t }) {
 
               return (
                 <div className={"Draggable"} key={question.type}>
-                  <NewComponentsItem t={t} item={dragItem} />
+                  <NewComponentsItem
+                    t={t}
+                    item={dragItem}
+                    onClick={() => handleAddComponent("group", question.type)}
+                  />
                 </div>
               );
             })}
@@ -59,7 +71,13 @@ function NewComponentsPanel({ t }) {
             return (
               <div key={`draggable-${index}`}>
                 <div className={"Draggable"}>
-                  <NewComponentsItem t={t} item={dragItem} />
+                  <NewComponentsItem
+                    t={t}
+                    item={dragItem}
+                    onClick={() =>
+                      handleAddComponent("question", question.type)
+                    }
+                  />
                 </div>
               </div>
             );

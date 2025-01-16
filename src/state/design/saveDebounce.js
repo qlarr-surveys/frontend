@@ -1,11 +1,7 @@
 import { SetData } from "~/networking/design";
-import {
-  designStateReceived,
-  setSaving,
-  setUpdating,
-} from "./designState";
-import { onError } from '../edit/editState';
-import { onApiError } from '~/utils/errorsProcessor';
+import { designStateReceived, setSaving, setUpdating } from "./designState";
+import { onError } from "../edit/editState";
+import { onApiError } from "~/utils/errorsProcessor";
 
 let saveTimer;
 let buffer = [];
@@ -33,13 +29,10 @@ const saveDebounce = (store) => {
 };
 
 export const dataSaver = (store) => (next) => (action) => {
-  if(!action || !action.type){
-    return
+  if (!action || !action.type) {
+    return;
   }
-  if (
-    !NONE_MUTATING.includes(action.type) &&
-    !action.type.startsWith("editState/")
-  ) {
+  if (MUTATING.includes(action.type) && !action.type.startsWith("editState/")) {
     if (!store.getState().designState.isUpdating) {
       store.dispatch(setSaving(true));
       saveDebounce(store);
@@ -56,13 +49,38 @@ const NONE_MUTATING = [
   "designState/setupToggleExpand",
   "designState/collapseAllGroups",
   "designState/resetSetup",
-  "designState/onResetLang",
   "designState/onAddComponentsVisibilityChange",
   "designState/setSaving",
   "designState/changeLang",
   "designState/setup",
   "designState/designStateReceived",
   "designState/newVersionReceived",
+];
+
+const MUTATING = [
+  "templateState/onBaseLangChanged",
+  "designState/onAdditionalLangAdded",
+  "designState/onAdditionalLangRemoved",
+  "designState/changeAttribute",
+  "designState/changeTimeFormats",
+  "designState/changeContent",
+  "designState/changeResources",
+  "designState/deleteQuestion",
+  "designState/cloneQuestion",
+  "designState/deleteGroup",
+  "designState/addNewAnswer",
+  "designState/removeAnswer",
+  "designState/changeValidationValue",
+  "designState/updateRandom",
+  "designState/updatePriority",
+  "designState/updateRandomByType",
+  "designState/updatePriorityByType",
+  "designState/removeSkipDestination",
+  "designState/editSkipDestination",
+  "designState/editSkipToEnd",
+  "designState/changeRelevance",
+  "designState/addComponent",
+  "designState/onDrag",
 ];
 
 const setState = (store, state) => {

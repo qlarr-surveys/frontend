@@ -6,8 +6,8 @@ import { useSelector } from "react-redux";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import PhotoCamera from "@mui/icons-material/Photo";
 import {
-  changeAttribute,
   changeContent,
+  changeResources,
   onDrag,
   removeAnswer,
 } from "~/state/design/designState";
@@ -17,6 +17,10 @@ import { useRef, useState } from "react";
 import IconSelector from "~/components/design/IconSelector";
 import { rtlLanguage } from "~/utils/common";
 import { useDrag, useDrop } from "react-dnd";
+import { useService } from "~/hooks/use-service";
+import { buildResourceUrl } from "~/networking/common";
+import DynamicSvg from "~/components/DynamicSvg";
+import { contentEditable, inDesign } from "~/routes";
 
 function IconChoiceItemDesign({
   parentCode,
@@ -24,11 +28,13 @@ function IconChoiceItemDesign({
   qualifiedCode,
   type,
   columnNumber,
+  designMode,
   imageHeight,
   hideText,
   t,
   addAnswer,
 }) {
+  const designService = useService("design");
   const dispatch = useDispatch();
   const ref = useRef(null);
   const theme = useTheme();
@@ -43,6 +49,8 @@ function IconChoiceItemDesign({
   });
   const onMainLang = langInfo.lang === langInfo.mainLang;
   const lang = langInfo.lang;
+
+  const svgIconName = answer?.resources?.icon;
 
   const content = type == "add" ? undefined : answer.content?.["label"]?.[lang];
 
@@ -65,6 +73,29 @@ function IconChoiceItemDesign({
   const getColByIndex = (index) => {
     return index % columnNumber;
   };
+
+  const uploadAsResource = (svgContent) => {
+    const svgBlob = new Blob([svgContent], { type: "image/svg+xml" });
+
+    // Create a File object to simulate a file upload
+    const svgFile = new File([svgBlob], "file.svg", { type: "image/svg+xml" });
+
+    designService
+      .uploadResource(svgFile)
+      .then((response) => {
+        dispatch(
+          changeResources({
+            code: qualifiedCode,
+            key: "icon",
+            value: response.name,
+          })
+        );
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  };
+
   const colIndex = getColByIndex(index);
   const rowIndex = getRowByIndex(index);
 
@@ -175,7 +206,7 @@ function IconChoiceItemDesign({
       >
         <IconButton
           sx={{
-            color: theme.textStyles.text.color
+            color: theme.textStyles.text.color,
           }}
           className={styles.addAnswerIcon}
           onClick={() => {
@@ -197,7 +228,7 @@ function IconChoiceItemDesign({
         key={qualifiedCode}
       >
         <div ref={ref} data-handler-id={handlerId}>
-          {onMainLang && (
+          {inDesign(designMode) && (
             <div className={styles.buttonContainers}>
               <IconButton
                 sx={{ color: theme.textStyles.text.color }}
@@ -210,7 +241,6 @@ function IconChoiceItemDesign({
               </IconButton>
               <IconButton
                 sx={{ color: theme.textStyles.text.color }}
-
                 component="label"
                 className={styles.imageIconButton}
                 onClick={() => setIconSelectorOpen(true)}
@@ -219,8 +249,9 @@ function IconChoiceItemDesign({
               </IconButton>
               <IconButton
                 sx={{ color: theme.textStyles.text.color }}
-
-                ref={drag} className={styles.imageIconButton}>
+                ref={drag}
+                className={styles.imageIconButton}
+              >
                 <DragIndicatorIcon />
               </IconButton>
             </div>
@@ -232,20 +263,17 @@ function IconChoiceItemDesign({
               justifyContent: "center",
             }}
           >
-            <div
-              style={{
-                height: imageHeight + "px",
-                width: imageHeight + "px",
-                borderRadius: "8px",
-              }}
-              className={styles.svgContainer}
-              dangerouslySetInnerHTML={{ __html: icon ? icon : "" }}
+            <DynamicSvg
+              theme={theme}
+              imageHeight={imageHeight + "px"}
+              svgUrl={svgIconName ? buildResourceUrl(svgIconName) : undefined}
             />
           </div>
           {!hideText && (
             <TextField
               dir={isRtl ? "rtl" : "ltr"}
               variant="standard"
+              disabled={!contentEditable(designMode)}
               value={content || ""}
               onChange={(e) =>
                 dispatch(
@@ -278,9 +306,10 @@ function IconChoiceItemDesign({
         <IconSelector
           currentIcon=""
           onIconSelected={(icon) => {
-            dispatch(
-              changeAttribute({ code: qualifiedCode, key: "icon", value: icon })
-            );
+            if (icon) {
+              uploadAsResource(icon);
+            }
+
             setIconSelectorOpen(false);
           }}
         />

@@ -24,9 +24,13 @@
   "base_language_required": "Basissprache ist erforderlich",
   "confirm_password_required": "Sie müssen das Passwort wiederholen",
   "create_survey": {
-    "title": "Umfrage erstellen"
+    "title": "Umfrage erstellen",
+    "empty_state_message": "Keine Umfragen verfügbar.",
+    "or":"oder",
+    "empty_state_cta_copy": "um loszulegen!"
   },
   "edit_survey": {
+    "export": "Umfrage exportieren",
     "close_title": "Umfrage schließen",
     "can_lock_survey": "Erlauben Sie Vermessern, die Vermessung zu sperren",
     "clone_survey": "Klon-Umfrage",
@@ -49,7 +53,13 @@
     "survey_users": "Benutzer befragen",
     "surveyor": "Landvermesserin",
     "title": "Umfrage bearbeiten",
-    "to": "zu"
+    "to": "zu",
+    "metadata": {
+      "created": "Erstellt",
+      "last_modified": "Zuletzt geändert",
+      "start_date": "Startdatum",
+      "end_date": "Enddatum"
+    }
   },
   "edit_user": {
     "title": "Benutzer bearbeiten"
@@ -133,6 +143,10 @@
   },
   "my_surveys": "Ihre Umfragen",
   "new_survey": "Neue Umfrage",
+  "example_surveys": "Beispielumfragen",
+  "create_new_survey": "Neue Umfrage erstellen",
+  "copy_example_surveys": "Beispielumfragen kopieren",
+  "import_survey": "Umfrage importieren",
   "password_required": "Passwort ist erforderlich",
   "processed_errors": {
     "backend_down": "Backend ist nicht erreichbar... Bitte versuchen Sie es später erneut",
@@ -165,7 +179,9 @@
     "hint": "Wenn Sie Ihre E-Mail-Adresse oder Ihr Passwort ändern, werden Sie abgemeldet",
     "password_required": "Aktuelles Passwort ist erforderlich, um Ihre E-Mail oder Ihr Passwort bearbeiten zu können",
     "save": "Speichern",
-    "title": "Profil"
+    "title": "Profil",
+    "manage_users": "Benutzer verwalten",
+    "logout": "Abmelden"
   },
   "registered": "eingetragen",
   "reset_password": {
@@ -213,6 +229,7 @@
   "super_admins": "super admins",
   "survey_mode": "Der Umfragemodus ist erforderlich",
   "survey_required": "Name der Umfrage ist erforderlich",
+  "file_required": "Bitte wählen Sie eine ZIP-Datei, um eine Umfrage zu importieren",
   "survey_too_long": "Umfrage Name darf nicht länger als 50 Zeichen sein",
   "save_changes": "Änderung speichern",
   "surveyor_auditor": "vermessungsprüfer",

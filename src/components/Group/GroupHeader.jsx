@@ -8,9 +8,11 @@ import { useSelector } from "react-redux";
 import ActionToolbar from "../design/ActionToolbar";
 import { useDispatch } from "react-redux";
 import { deleteGroup } from "~/state/design/designState";
+import { hasMajorSetup } from "~/constants/design";
+import { DESIGN_SURVEY_MODE } from '~/routes';
 
-function GroupHeader({ t, code, collapsed, children }) {
-  console.log("Group Header: " + code);
+function GroupHeader({ t, code, children, designMode }) {
+  console.debug("Group Header: " + code);
 
   const dispatch = useDispatch();
   const langInfo = useSelector((state) => {
@@ -25,23 +27,15 @@ function GroupHeader({ t, code, collapsed, children }) {
 
   const theme = useTheme();
 
-  const noCollapse = useSelector((state) => {
-    return state.designState["globalSetup"]?.reorder_setup === "collapse_none";
-  });
+  const inDesgin = designMode == DESIGN_SURVEY_MODE.DESIGN
 
   const onDelete = useCallback(() => dispatch(deleteGroup(code)), [code]);
 
-
   return (
     <Box className={styles.headerContent}>
-      <Box
-        className={styles.groupHeader}
-        data-code={code}
-      >
-        <Box
-          className={styles.contentContainer}
-        >
-          {noCollapse && onMainLang && (
+      <Box className={styles.groupHeader} data-code={code}>
+        <Box className={styles.contentContainer}>
+          {inDesgin && onMainLang && (
             <div className={styles.actionToolbarVisible}>
               <ActionToolbar
                 code={code}
@@ -62,6 +56,7 @@ function GroupHeader({ t, code, collapsed, children }) {
           }}
         >
           <ContentEditor
+            editable={designMode == DESIGN_SURVEY_MODE.DESIGN || designMode == DESIGN_SURVEY_MODE.LANGUAGES}
             code={code}
             extended={false}
             contentKey="label"
@@ -71,6 +66,7 @@ function GroupHeader({ t, code, collapsed, children }) {
         {group.showDescription && (
           <Box className={styles.textDescription}>
             <ContentEditor
+              editable={designMode == DESIGN_SURVEY_MODE.DESIGN || designMode == DESIGN_SURVEY_MODE.LANGUAGES}
               code={code}
               extended={true}
               contentKey="description"

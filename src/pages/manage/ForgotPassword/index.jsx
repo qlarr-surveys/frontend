@@ -27,7 +27,6 @@ export default function ForgotPasswordView() {
   const { t } = useTranslation("manage");
   const [isSuccess, setSuccess] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const ForgotPasswordSchema = Yup.object().shape({
     email: Yup.string()
       .required(t("email_required"))

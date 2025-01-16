@@ -9,7 +9,8 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { valueChange } from "~/state/runState";
 import Validation from "~/components/run/Validation";
-import styles from "./SCQArrayDesign.module.css";
+import DynamicSvg from '~/components/DynamicSvg';
+import { buildResourceUrl } from '~/networking/common';
 
 function SCQIconArray(props) {
   let columns = props.component.answers.filter(
@@ -87,17 +88,17 @@ function SCQArrayRow(props) {
                 padding: "8px",
               }}
             >
-              <div
-                onClick={() => handleChange(option.code)}
-                style={{
-                  opacity: value == option.code ? 1 : 0.2,
-                  height: "64px",
-                  width: "px",
-                  borderRadius: "8px",
-                  color: value == option.code ? theme.palette.primary.main : theme.textStyles.text.color
-                }}
-                className={styles.svgContainer}
-                dangerouslySetInnerHTML={{ __html: option.icon || "" }}
+              <DynamicSvg
+                onIconClick={() => handleChange(option.code)}
+                imageHeight={"64px"}
+                isSelected={value == option.code}
+                theme={theme}
+
+                svgUrl={
+                  option?.resources?.icon
+                    ? buildResourceUrl(option?.resources?.icon)
+                    : undefined
+                }
               />
             </TableCell>
           );

@@ -1,10 +1,50 @@
-### Install and run locally
+# Qlarr Frontend
+A React frontend built for Qlarr [Survey Engnine](https://github.com/qlarr-surveys/survey-engine), a UI-agnostic tool that lets you create and run customizable, scientific & offline-first surveys as code on all platforms.
 
-`npm install --force`
-`npm start`
-navigate to "main.localhost:3000" it is important to use main.localhost and not localhost directly so cookies could work!!!!
+As mentioned, Qlarr Survey engine is a UI agnostic tool, meaning it doesn't render UI. Instead, this project aims to
+1. WYSIWYG editor to create and edit surveys, in Qlarr [Survey Engnine](https://github.com/qlarr-surveys/survey-engine) DSL
+2. Render surveys that are executed by Qlarr Survey Engnine (used both in Web and [Android](https://github.com/qlarr-surveys/android) Apps)
+3. GUI for Survey management and administrive functionalities exposed by our open source backend, like login, adding using, cloning surveys....etc.
 
-### Docker
+## Contributing
+Wanis
 
-docker build -t my-cra-app .
-docker run -p 3000:3000 my-cra-app
+
+## Support
+Wanis
+
+## Run Locally
+
+1. **Prerequisites**:
+   - Ensure you have [Node.js](https://nodejs.org/) (version 16 or later) and [npm](https://www.npmjs.com/) installed.
+
+2. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/qlarr-surveys/frontend
+   cd frontend
+   ```
+
+3. **Install Dependencies**:
+   Run the following command to install all necessary dependencies:
+   ```bash
+   npm install
+   ```
+
+4. **Set Up Development Environment**:
+   - Edit a `.env` file in the root directory to configure environment variables as needed (e.g., API endpoints, environment settings).
+   
+5. **Run the Development Server**:
+   Start the development server with:
+   ```bash
+   npm run start
+   ```
+   This will start the application on `http://localhost:3000`.
+
+6. **Build for Production** (optional):
+   To create a production build locally:
+   ```bash
+   npm run build
+   ```
+   
+## Production Build using Docker
+

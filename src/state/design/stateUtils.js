@@ -26,7 +26,7 @@ export const validationEquation = (
     case "validation_one_response_per_col":
       instructionText = `QlarrScripts.hasDuplicates([${component.children
         .filter((el) => el.type == "row")
-        .map((el) => el.qualifiedCode + ".value")}].filter(Boolean))`;
+        .map((el) => el.qualifiedCode + ".value")}].filter(x=>x))`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_char_length":
       instructionText =
@@ -62,7 +62,7 @@ export const validationEquation = (
       }
       instructionText =
         `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& !RegExp("${validation.pattern}").test(${qualifiedCode}.value)`;
+        `&& !(new RegExp("${validation.pattern}").test(${qualifiedCode}.value))`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_pattern_email":
       instructionText =
@@ -129,37 +129,37 @@ export const validationEquation = (
       instructionText =
         `[${component.children.map(
           (answer) => answer.qualifiedCode + ".value"
-        )}].filter(Boolean).length ` + `< ${validation.min_count || 0}`;
+        )}].filter(x=>x).length ` + `< ${validation.min_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_option_count":
       instructionText =
         `[${component.children.map(
           (answer) => answer.qualifiedCode + ".value"
-        )}].filter(Boolean).length ` + `> ${validation.max_count || 0}`;
+        )}].filter(x=>x).length ` + `> ${validation.max_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_option_count":
       instructionText =
         `[${component.children.map(
           (answer) => answer.qualifiedCode + ".value"
-        )}].filter(Boolean).length ` + `!== ${validation.count || 0}`;
+        )}].filter(x=>x).length ` + `!== ${validation.count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_ranking_count":
       instructionText =
         `[${component.children.map(
           (answer) => answer.qualifiedCode + ".value"
-        )}].filter(Boolean).length ` + `< ${validation.min_count || 0}`;
+        )}].filter(x=>x).length ` + `< ${validation.min_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_ranking_count":
       instructionText =
         `[${component.children.map(
           (answer) => answer.qualifiedCode + ".value"
-        )}].filter(Boolean).length ` + `> ${validation.max_count || 0}`;
+        )}].filter(x=>x).length ` + `> ${validation.max_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_ranking_count":
       instructionText =
         `[${component.children.map(
           (answer) => answer.qualifiedCode + ".value"
-        )}].filter(Boolean).length ` + `!== ${validation.count || 0}`;
+        )}].filter(x=>x).length ` + `!== ${validation.count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     default:
       break;
@@ -188,7 +188,7 @@ const requiredText = (qualifiedCode, component) => {
     return (
       `[${rows.map(
         (answer) => answer.qualifiedCode + ".value"
-      )}].filter(Boolean).length ` +
+      )}].filter(x=>x).length ` +
       ` < ` +
       rows.length
     );
@@ -400,7 +400,7 @@ export const conditionalRelevanceEquation = (logic, rule, state) => {
   } else if (rule == "hide_if") {
     return {
       code,
-      text: `!${text}`,
+      text: `!(${text})`,
       isActive: true,
       returnType: { name: "Boolean" },
     };

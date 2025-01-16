@@ -1,53 +1,33 @@
-import { Box } from "@mui/material";
-
-import { useSelector } from "react-redux";
+import { Box, Collapse, Slide } from "@mui/material";
 import React, { useEffect } from "react";
-import SetupPanel from "../setup/SetupPanel";
+import { useSelector } from "react-redux";
 import { useTheme } from "@emotion/react";
-import styles from "./RightPanel.module.css";
-import { resetSetup } from '~/state/design/designState';
-import { useDispatch } from 'react-redux';
+import SetupPanel from "../setup/SetupPanel";
 
 function RightPanel({ t }) {
-  const theme = useTheme();
-  const dispatch = useDispatch();
-
-
   const setup = useSelector((state) => {
     return state.designState?.setup || {};
   });
 
+  const theme = useTheme();
+
   const hasSetup = Object.keys(setup).length > 0;
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      console.log("I am listenting")
-      if (event.ctrlKey && event.key === 'd') {
-        document.removeEventListener('keydown', handleKeyDown);
-        dispatch(resetSetup());
-      }
-    };
-
-    // Attach the event listener
-    if(hasSetup){
-      document.addEventListener('keydown', handleKeyDown);
-    }
-    
-  },[hasSetup]);
-
   return (
-    <Box
-      className={`${styles.box} ${hasSetup ? styles.boxHasSetup : ""}`}
-      style={{
-        transition: theme.transitions.create("all", {
-          easing: theme.transitions.easing.sharp,
-          duration: 300,
-        }),
+    <Collapse
+      in={hasSetup}
+      // sx={{ flex: "0 0 auto" }}
+      sx={{ flex: "0 0 auto" }}
+      orientation="horizontal"
+      timeout={200}
+      easing={{
+        enter: "linear", // Easing for the "entering" animation
+        exit: "linear", // Easing for the "exiting" animation
       }}
-      timeout={300}
+      unmountOnExit
     >
-      {hasSetup && <SetupPanel t={t} />}
-    </Box>
+      <SetupPanel t={t} />
+    </Collapse>
   );
 }
 

@@ -3,23 +3,19 @@ import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import { buildResourceUrl } from "~/networking/common";
-import ReorderIcon from "@mui/icons-material/Reorder";
-import { Box, Button, CardMedia } from "@mui/material";
+import { Box, CardMedia } from "@mui/material";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
 import { GroupDropArea } from "~/components/design/DropArea/DropArea";
 import { Virtuoso } from "react-virtuoso";
-import { GTranslate, Palette } from "@mui/icons-material";
-import { languageSetup, reorderSetup, themeSetup } from "~/constants/design";
-import { useDispatch } from "react-redux";
-import { setup } from "~/state/design/designState";
 import useDragNearViewportEdge from "~/utils/useDragEdgeDetection";
+import { DESIGN_SURVEY_MODE } from "~/routes";
 
-function ContentPanel({ onMainLang }, ref) {
+function ContentPanel({ designMode }, ref) {
   const { t } = useTranslation(["design", "run"]);
   const theme = useTheme();
-  const dispatch = useDispatch();
+  const inDesgin = designMode == DESIGN_SURVEY_MODE.DESIGN;
 
   const groups = useSelector((state) => {
     return state.designState["Survey"]?.children || [];
@@ -32,13 +28,6 @@ function ContentPanel({ onMainLang }, ref) {
   const backgroundImage = useSelector(
     (state) => state.designState["Survey"]?.resources?.backgroundImage
   );
-
-  const anyCollapse = useSelector((state) => {
-    return (
-      state.designState["globalSetup"]?.reorder_setup === "collapse_groups" ||
-      state.designState["globalSetup"]?.reorder_setup === "collapse_questions"
-    );
-  });
 
   const groupsEmpty = !groups.length;
 
@@ -79,20 +68,15 @@ function ContentPanel({ onMainLang }, ref) {
     return list;
   }, [groups, t, headerImage]);
 
-  const showTheme = () => {
-    dispatch(setup(themeSetup));
-  };
-  const showTranslation = () => {
-    dispatch(setup(languageSetup));
-  };
-  const reOrder = () => {
-    dispatch(setup(reorderSetup));
-  };
-
   const virtuosoRef = useRef(null);
   const virtuosoWrapperRef = useRef(null);
   const { isNearBottom, isNearTop } =
     useDragNearViewportEdge(virtuosoWrapperRef);
+
+  const lastAddedComponent = useSelector(
+    (state) => state.designState.lastAddedComponent
+  );
+  const skipScroll = useSelector((state) => state.designState.skipScroll);
 
   useEffect(() => {
     let animationFrameId;
@@ -118,62 +102,51 @@ function ContentPanel({ onMainLang }, ref) {
     };
   }, [isNearTop, isNearBottom]);
 
-  const backgroundStyle = backgroundImage
-    ? {
-        backgroundImage: `url(${buildResourceUrl(backgroundImage)})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        // backgroundSize: "100% 100%",
-        backgroundPosition: "center",
-      }
-    : {};
+  useEffect(() => {
+    console.log("ss", skipScroll);
+    if (lastAddedComponent && virtuosoRef.current && !skipScroll) {
+      const performScroll = () => {
+        if (lastAddedComponent.type === "group") {
+          // Calculate the exact index of the newly added group
+          const groupBaseIndex = lastAddedComponent.index * 2; // Assuming each group has a drop area before and after
+          virtuosoRef.current.scrollToIndex({
+            index: groupBaseIndex + 1,
+            behavior: "smooth",
+            align: "start",
+          });
+        } else if (lastAddedComponent.type === "question") {
+          // Calculate the exact index for the newly added question
+          const groupBaseIndex = lastAddedComponent.groupIndex * 2; // Groups and their drop areas
+          console.log("groupBaseIndex: " +  groupBaseIndex)
+          virtuosoRef.current.scrollToIndex({
+            index: groupBaseIndex + 2, // Drop area + question offset
+            behavior: "smooth",
+            align: "end",
+          });
+        }
+      };
+
+      const timeoutId = setTimeout(performScroll, 100); // Ensure DOM is updated before scrolling
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [lastAddedComponent]);
 
   return (
     <Box
       ref={ref}
       className={`content-panel ${styles.contentPanel}`}
-      sx={{ backgroundColor: "background.default", color: "text.primary" }}
       style={{
+        backgroundColor: theme.palette.background.default,
         fontFamily: theme.textStyles.text.font,
         color: theme.textStyles.text.color,
         fontSize: theme.textStyles.text.size,
       }}
     >
-      {onMainLang && !anyCollapse && (
-        <Box className={styles.buttonContainer}>
-          <Button
-            onClick={showTranslation}
-            color="primary"
-            variant="contained"
-            className={styles.button}
-          >
-            <GTranslate />
-          </Button>
-
-          <Button
-            color="primary"
-            onClick={showTheme}
-            variant="contained"
-            className={styles.button}
-          >
-            <Palette />
-          </Button>
-
-          <Button
-            color="primary"
-            onClick={reOrder}
-            variant="contained"
-            className={styles.button}
-          >
-            <ReorderIcon />
-          </Button>
-        </Box>
-      )}
       <Box ref={virtuosoWrapperRef} width="100%" height="100%">
         <Virtuoso
           ref={virtuosoRef}
           data={items}
-          style={backgroundStyle}
           className={styles.virtuosoStyle}
           itemContent={(index, item) => {
             switch (item.name) {
@@ -186,7 +159,7 @@ function ContentPanel({ onMainLang }, ref) {
                       image={buildResourceUrl(headerImage)}
                       height="140"
                     />
-                    {onMainLang && <ErrorDisplay code="Survey" />}
+                    {inDesgin && <ErrorDisplay code="Survey" />}
                   </Box>
                 );
 
@@ -203,8 +176,10 @@ function ContentPanel({ onMainLang }, ref) {
                 return (
                   <GroupDesign
                     t={t}
+                    designMode={designMode}
                     code={item.group.code}
                     index={item.index}
+                    lastAddedComponent={lastAddedComponent}
                   />
                 );
               case ELEMENTS.FOOTER:

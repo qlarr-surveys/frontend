@@ -24,9 +24,13 @@
   "base_language_required": "اللغة الأساسية مطلوبة",
   "confirm_password_required": "يجب عليك تكرار كلمة المرور",
   "create_survey": {
-    "title": "إنشاء الاستبيان"
+    "title": "إنشاء الاستبيان",
+    "empty_state_message": "لا توجد استبيانات متاحة.",
+    "or": "أو",
+    "empty_state_cta_copy": "للبدء!"
   },
   "edit_survey": {
+    "export": "تصدير الإستطلاع",
     "close_title": "إغلاق الاستطلاع",
     "can_lock_survey": "السماح للمساحين لقفل المسح",
     "clone_survey": "مسح استنساخ",
@@ -49,7 +53,13 @@
     "survey_users": "مسح المستخدمين",
     "surveyor": "مساح",
     "title": "تحرير الاستطلاع",
-    "to": "ل"
+    "to": "ل",
+    "metadata": {
+      "created": "تم الإنشاء",
+      "last_modified": "آخر تعديل",
+      "start_date": "تاريخ البدء",
+      "end_date": "تاريخ الانتهاء"
+    }
   },
   "edit_user": {
     "title": "تحرير العضو"
@@ -126,7 +136,6 @@
     "title": "تسجيل الدخول",
     "login": "تسجيل الدخول"
   },
-  "manage_users": "Manage Users",
   "mode": {
     "mixed": "عبر الإنترنت والجوال",
     "offline": "متحرك",
@@ -134,6 +143,10 @@
   },
   "my_surveys": "استبياناتك",
   "new_survey": "استبيان جديد",
+  "example_surveys": "نماذج إستطلاع",
+  "create_new_survey": "إنشاء استطلاع جديد",
+  "copy_example_surveys": "نسخ نماذج إستطلاع",
+  "import_survey": "تحميل استطلاع",
   "password_required": "كلمة المرور مطلوبة",
   "processed_errors": {
     "backend_down": "الخلفية لا يمكن الوصول إليها ... يرجى المحاولة مرة أخرى لاحقًا",
@@ -166,7 +179,9 @@
     "hint": "عندما تقوم بتغيير بريدك الإلكتروني أو كلمة المرور الخاصة بك , سيتم تسجيل خروجك",
     "password_required": "كلمة المرور الحالية مطلوبة لتتمكن من تعديل بريدك الإلكتروني أو كلمة المرور",
     "save": "يحفظ",
-    "title": "حساب تعريفي"
+    "title": "حساب تعريفي",
+    "manage_users": "إدارة المستخدمين",
+    "logout": "تسجيل الخروج"
   },
   "registered": "مسجلة",
   "reset_password": {
@@ -214,6 +229,7 @@
   "super_admins": "المشرفون المتميزون",
   "survey_mode": "وضع الاستطلاع مطلوب",
   "survey_required": "اسم الاستطلاع مطلوب",
+  "file_required": "يرجى اختيار ملف ZIP لتحميل استطلاع",
   "survey_too_long": "لا يمكن أن يكون اسم الاستطلاع أطول من 50 حرفًا",
   "surveyor_auditor": "مدقق مساح",
   "save_changes": "حفظ التغيير",

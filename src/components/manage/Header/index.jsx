@@ -17,16 +17,18 @@ import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
 import { isSuperAdmin } from "~/constants/roles";
 import { useSelector } from "react-redux";
-import { getDirFromSession } from "~/utils/common";
+import { isSessionRtl } from "~/utils/common";
 import { useService } from "~/hooks/use-service";
+import { useTranslation } from "react-i18next";
 
 export const Header = () => {
   const authService = useService("auth");
+  const { t } = useTranslation("manage");
 
   const nav = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const isRtl = getDirFromSession();
+  const isRtl = isSessionRtl();
 
   const logout = () => {
     setAnchorEl(null);
@@ -64,7 +66,7 @@ export const Header = () => {
 
   return (
     <Box className={styles.header}>
-      <Box className={styles.imageContainer}>
+      <Box className={isRtl ? styles.imageContainerRtl : styles.imageContainer}>
         <Logo />
       </Box>
 
@@ -74,11 +76,7 @@ export const Header = () => {
         </Typography>
       )}
       <Box
-        style={{
-          left: isRtl == "rtl" && "3.5rem",
-          right: isRtl == "ltr" && "3.5rem",
-        }}
-        className={styles.userInfo}
+        className={isRtl ? styles.userInfoRtl : styles.userInfo}
       >
         <LanguageSelector />
         {TokenService.isAuthenticated() && (
@@ -157,7 +155,7 @@ export const Header = () => {
                 }}
                 sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                Profile
+                {t("profile.title")}
                 <Person sx={{ color: "#16205b", width: 25, height: 25 }} />
               </MenuItem>
               <MenuItem
@@ -168,7 +166,7 @@ export const Header = () => {
                 }}
                 sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                Manage Users
+                {t("profile.manage_users")}
                 <GroupsIcon sx={{ color: "#16205b", width: 25, height: 25 }} />
               </MenuItem>
               <MenuItem
@@ -178,7 +176,7 @@ export const Header = () => {
                 }}
                 sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                Logout
+                {t("profile.logout")}
                 <LogoutOutlined
                   sx={{ color: "#16205b", width: 25, height: 25 }}
                 />

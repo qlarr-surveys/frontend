@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Box, Container, TablePagination } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Fade,
+  IconButton,
+  Stack,
+  TablePagination,
+  Typography,
+} from "@mui/material";
 import TokenService from "~/services/TokenService";
 import styles from "./Dashboard.module.css";
 import { HeaderContent } from "~/components/manage/HeaderContent";
 import { ROLES } from "~/constants/roles";
 import { setLoading } from "~/state/edit/editState";
 import { useDispatch } from "react-redux";
-import TemplateSlider from "~/components/manage/TemplateSlider/TemplateSlider";
+import ExampleSurveys from "~/components/manage/ExampleSurveys/ExampleSurveys";
 import CreateSurvey from "~/components/manage/CreateSurvey/CreateSurvey";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { useTranslation } from "react-i18next";
@@ -15,19 +24,27 @@ import { SurveyClone } from "~/components/manage/SurveyClone";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import DeleteModal from "~/components/common/DeleteModal";
+import {
+  Add,
+  Close,
+  CopyAll,
+  Description,
+  FileUpload,
+} from "@mui/icons-material";
+import { getDirFromSession } from "~/utils/common";
 
 function Dashboard() {
   const surveyService = useService("survey");
   const [surveys, setSurveys] = useState(null);
-  const [guestSurveys, setGuestSurveys] = useState([]);
   const [fetchingSurveys, setFetchingSurveys] = useState(true);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
   const [status, setStatus] = useState("all");
   const [sortBy, setSortBy] = useState("last_modified_desc");
-
   const [openCloneModal, setOpenCloneModal] = useState(false);
   const [cloningSurvey, setCloningSurvey] = useState();
+  const [recentlyUpdatedSurveyName, setRecentlyUpdatedSurveyName] =
+    useState(null);
 
   const dispatch = useDispatch();
 
@@ -44,6 +61,8 @@ function Dashboard() {
         if (data) {
           setFetchingSurveys(false);
           setSurveys(data);
+          setCreateSurveyOpen(false);
+          setTemplateSliderOpen(false);
         }
       })
       .catch((e) => processApirror(e));
@@ -51,21 +70,6 @@ function Dashboard() {
   useEffect(() => {
     fetchSurveys();
   }, [page, perPage, sortBy, status]);
-
-  useEffect(() => {
-    surveyService
-      .getGuestsSurveys()
-      .then((data) => {
-        if (data) {
-          const updatedData = data.map((survey) => ({
-            ...survey,
-            example: true,
-          }));
-          setGuestSurveys(updatedData);
-        }
-      })
-      .catch((e) => processApirror(e));
-  }, []);
 
   const handleSurveyStatusChange = (id, newStatus) => {
     setSurveys((prevState) => ({
@@ -87,18 +91,42 @@ function Dashboard() {
     return false;
   };
 
-
   const [description, setDescription] = useState("");
   const [actionType, setActionType] = useState("");
   const [selectedSurvey, setSelectedSurvey] = useState(null);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState(t("action_btn.delete"));
+  const [isCreateSurveyOpen, setCreateSurveyOpen] = useState(false);
+  const [isTemplateSliderOpen, setTemplateSliderOpen] = useState(false);
+  const [importSurvey, setImportSurvey] = useState(false);
 
+  const handleButtonClick = () => {
+    setCreateSurveyOpen(true);
+  };
+
+  const handleTemplateButtonClick = () => {
+    setTemplateSliderOpen(true);
+  };
+
+  const handleImportSurveyClick = () => {
+    setImportSurvey(true);
+    setOpenCloneModal(true);
+  };
+
+  const handleCloseClick = () => {
+    setCreateSurveyOpen(false);
+  };
+
+  const handleTemplateCloseClick = () => {
+    setTemplateSliderOpen(false);
+  };
   const onDelete = (survey) => {
     setActionType("delete");
     setTitle(t("action_btn.delete"));
     setSelectedSurvey(survey);
-    setDescription(t("edit_survey.delete_survey", { survey_name: survey.name }));
+    setDescription(
+      t("edit_survey.delete_survey", { survey_name: survey.name })
+    );
     setOpen(true);
   };
 
@@ -110,7 +138,6 @@ function Dashboard() {
     setOpen(true);
   };
 
-
   const handleAction = () => {
     if (actionType === "delete") {
       deleteSurvey(selectedSurvey.id);
@@ -120,8 +147,6 @@ function Dashboard() {
       setOpen(false);
     }
   };
-
-
 
   const onClone = (survey) => {
     setCloningSurvey(survey);
@@ -175,7 +200,9 @@ function Dashboard() {
   const handleUpdateSurveyDescription = (surveyId, newDescription) => {
     setSurveys((prevSurveys) => {
       const updatedSurveys = prevSurveys.surveys.map((survey) =>
-        survey.id === surveyId ? { ...survey, description: newDescription } : survey
+        survey.id === surveyId
+          ? { ...survey, description: newDescription }
+          : survey
       );
       return {
         ...prevSurveys,
@@ -194,63 +221,192 @@ function Dashboard() {
         surveys: updatedSurveys,
       };
     });
-  }
+  };
 
+  const isRtl = getDirFromSession();
 
   return (
     <Box className={styles.mainContainer}>
-      <Container>
+      <Container sx={{ marginBottom: "48px" }}>
         <Box className={styles.content}>
-          {shouldShowClickAdd() && (
-            <CreateSurvey onSurveyCreated={fetchSurveys} />
-          )}
-          <HeaderContent
-            filter={status}
-            onFilterSelected={(el) => {
-              setPage(1);
-              setStatus(el.target.value);
-            }}
-            sort={sortBy}
-            onSortSelected={(el) => {
-              setPage(1);
-              setSortBy(el.target.value);
-            }}
-          />
-          {!fetchingSurveys ? (
-            <Box
-              sx={{
-                mt: 3,
-                columnGap: 4,
-                display: "grid",
-                rowGap: { xs: 4, md: 5 },
-                gridTemplateColumns: {
-                  xs: "repeat(1, 1fr)",
-                  sm: "repeat(2, 1fr)",
-                  md: "repeat(3, 1fr)",
-                },
-              }}
-            >
-              {surveys?.surveys?.map((survey) => {
-                return (
-                  <Survey
-                    key={survey.id}
-                    survey={survey}
-                    onStatusChange={handleSurveyStatusChange}
-                    onClone={() => onClone(survey)}
-                    onDelete={() => onDelete(survey)}
-                    onClose={() => onCloseSurvey(survey)}
-                    onUpdateTitle={handleUpdateSurveyName}
-                    onUpdateDescription={handleUpdateSurveyDescription}
-                    onUpdateImage={handleUpdateSurveyImage}
+          <Stack
+            className={styles.newSurveysButton}
+            direction="row"
+            spacing={2}
+          >
+            {shouldShowClickAdd() && !isCreateSurveyOpen && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<Add />}
+                onClick={handleButtonClick}
+              >
+                {t("create_new_survey")}
+              </Button>
+            )}
+            {shouldShowClickAdd() && !isTemplateSliderOpen && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<CopyAll />}
+                onClick={handleTemplateButtonClick}
+              >
+                {t("copy_example_surveys")}
+              </Button>
+            )}
+            {shouldShowClickAdd() && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<FileUpload />}
+                onClick={handleImportSurveyClick}
+              >
+                {t("import_survey")}
+              </Button>
+            )}
+          </Stack>
 
-                  />
-                );
-              })}
-            </Box>
-          ) : (
-            <LoadingDots />
+          {isCreateSurveyOpen && (
+            <Fade in={isCreateSurveyOpen} timeout={300}>
+              <div style={{ position: "relative" }}>
+                <IconButton
+                  onClick={handleCloseClick}
+                  aria-label="close"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    ...(isRtl === "ltr" ? { right: 0 } : { left: 0 }),
+                    color: "black",
+                    zIndex: 1,
+                  }}
+                >
+                  <Close color="#000" />
+                </IconButton>
+                <CreateSurvey
+                  onSurveyCreated={(newSurvey) => {
+                    fetchSurveys();
+                    setRecentlyUpdatedSurveyName(newSurvey.name);
+                    setTimeout(() => setRecentlyUpdatedSurveyName(null), 3000);
+                  }}
+                />
+              </div>
+            </Fade>
           )}
-          {surveys && (
+
+          {isTemplateSliderOpen && (
+            <Fade in={isTemplateSliderOpen} timeout={300}>
+              <div style={{ position: "relative" }}>
+                <IconButton
+                  onClick={handleTemplateCloseClick}
+                  aria-label="close"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    ...(isRtl === "ltr" ? { right: 0 } : { left: 0 }),
+                    color: "black",
+                    zIndex: 1,
+                  }}
+                >
+                  <Close color="#000" />
+                </IconButton>
+                <ExampleSurveys onClone={(survey) => onClone(survey)} />
+              </div>
+            </Fade>
+          )}
+
+          {surveys?.surveys?.length > 0 ? (
+            <HeaderContent
+              filter={status}
+              onFilterSelected={(el) => {
+                setPage(1);
+                setStatus(el.target.value);
+              }}
+              sort={sortBy}
+              onSortSelected={(el) => {
+                setPage(1);
+                setSortBy(el.target.value);
+              }}
+            />
+          ) : (
+            <></>
+          )}
+          <Box className={styles.surveyCardsContainer}>
+            {!fetchingSurveys ? (
+              <>
+                {surveys?.surveys?.length > 0 ? (
+                  <Box
+                    sx={{
+                      mt: 3,
+                      columnGap: 2,
+                      display: "grid",
+                      rowGap: { xs: 4, md: 5 },
+                      gridTemplateColumns: {
+                        xs: "1fr",
+                        sm: "repeat(auto-fit, minmax(280px, 1fr))",
+                        md: "repeat(auto-fit, minmax(330px, 350px))",
+                      },
+                    }}
+                  >
+                    {surveys?.surveys?.map((survey) => {
+                      return (
+                        <Survey
+                          key={survey.id}
+                          survey={survey}
+                          highlight={survey.name === recentlyUpdatedSurveyName}
+                          onStatusChange={handleSurveyStatusChange}
+                          onClone={() => onClone(survey)}
+                          onDelete={() => onDelete(survey)}
+                          onClose={() => onCloseSurvey(survey)}
+                          onUpdateTitle={handleUpdateSurveyName}
+                          onUpdateDescription={handleUpdateSurveyDescription}
+                          onUpdateImage={handleUpdateSurveyImage}
+                        />
+                      );
+                    })}
+                  </Box>
+                ) : (
+                  <div className={styles.noSurveys}>
+                    <Description sx={{ fontSize: 48, color: "#ccc" }} />
+                    <Typography
+                      variant="h6"
+                      color="textSecondary"
+                      sx={{ mt: 2 }}
+                    >
+                      {t("create_survey.empty_state_message")}
+                      {!isTemplateSliderOpen && !isCreateSurveyOpen && (
+                        <>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{ mx: 1 }}
+                            startIcon={<Add />}
+                            onClick={handleButtonClick}
+                          >
+                            {t("create_new_survey")}
+                          </Button>
+                          {t("create_survey.or")}
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{ mx: 1 }}
+                            startIcon={<CopyAll />}
+                            onClick={handleTemplateButtonClick}
+                          >
+                            {t("copy_example_surveys")}
+                            {t("create_survey.empty_state_cta_copy")}
+                          </Button>
+                        </>
+                      )}
+                    </Typography>
+                  </div>
+                )}
+              </>
+            ) : (
+              <LoadingDots />
+            )}
+          </Box>
+
+          {surveys?.surveys?.length > 0 ? (
             <TablePagination
               rowsPerPageOptions={[5, 10, 20, 50]}
               component="div"
@@ -269,22 +425,24 @@ function Dashboard() {
                 setPage(1);
               }}
             />
+          ) : (
+            <></>
           )}
         </Box>
-        {shouldShowClickAdd() && (
-          <TemplateSlider
-            surveys={guestSurveys}
-            onClone={(survey) => onClone(survey)}
-          />
-        )}
       </Container>
       <SurveyClone
+        importSurvey={importSurvey}
         open={openCloneModal}
         onClose={(cloned) => {
           setOpenCloneModal(false);
+          setImportSurvey(false);
           if (cloned) {
             fetchSurveys();
           }
+        }}
+        onSurveyCloned={(name) => {
+          setRecentlyUpdatedSurveyName(name);
+          setTimeout(() => setRecentlyUpdatedSurveyName(null), 3000);
         }}
         survey={cloningSurvey}
       />

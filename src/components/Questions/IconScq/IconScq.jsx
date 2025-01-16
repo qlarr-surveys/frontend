@@ -4,6 +4,8 @@ import styles from "./IconScq.module.css";
 import { valueChange } from "~/state/runState";
 import { useTheme } from "@emotion/react";
 import { Box, Grid } from "@mui/material";
+import DynamicSvg from '~/components/DynamicSvg';
+import { buildResourceUrl } from '~/networking/common';
 
 function IconScq(props) {
   const theme = useTheme();
@@ -25,9 +27,6 @@ function IconScq(props) {
 
   const hideText = props.component?.hideText || false;
 
-  const lang = useSelector((state) => {
-    return state.runState.values["Survey"].lang;
-  });
 
   return (
     <Box
@@ -42,7 +41,9 @@ function IconScq(props) {
           <Box
             key={option.code}
             sx={{
-              flex: `0 1 calc(${100 / props.component.columns}% - ${props.component.spacing || 8}px)`,
+              flex: `0 1 calc(${100 / props.component.columns}% - ${
+                props.component.spacing || 8
+              }px)`,
               textAlign: "center",
               cursor: "pointer",
             }}
@@ -51,25 +52,22 @@ function IconScq(props) {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                width: "100%",
+                width: "100%"
               }}
             >
-              <Box
-                onClick={() =>
+              <DynamicSvg
+                onIconClick={() =>
                   handleChange(props.component.qualifiedCode, option.code)
                 }
-                style={{
-                  height: (props.component.iconSize || 64) + "px",
-                  width: (props.component.iconSize || 64) + "px",
-                  borderRadius: "8px",
-                  color: isSelected
-                    ? theme.palette.primary.main
-                    : theme.textStyles.text.color,
-                }}
-                className={styles.svgContainer}
-                dangerouslySetInnerHTML={{
-                  __html: option.icon ? option.icon : "",
-                }}
+                imageHeight={"100%"}
+                maxHeight={(props.component.iconSize || 150) + "px"}
+                svgUrl={
+                  option?.resources?.icon
+                    ? buildResourceUrl(option?.resources?.icon)
+                    : undefined
+                }
+                isSelected={isSelected}
+                theme={theme}
               />
             </div>
 

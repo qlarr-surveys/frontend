@@ -17,13 +17,17 @@ export const ResponseDelete = ({ open, onClose, onDelete }) => {
       aria-describedby="modal-modal-description"
     >
       <Box className={styles.wrapper}>
-        <Typography variant="h5" fontWeight={600}>{t("responses.title_delete_response")}</Typography>
-        <Box className={styles.separator}></Box> 
+        <Typography variant="h5" fontWeight={600}>
+          {t("responses.title_delete_response")}
+        </Typography>
+        <Box className={styles.separator}></Box>
         <Box className={styles.action}>
-          <Button 
-          variant="contained"
-          onClick={onDelete}>{t("action_btn.delete")}</Button>
-          <Button onClick={onClose}>{t("action_btn.cancel")}</Button>
+          <Button onClick={onClose} color="primary" variant="contained">
+            {t("action_btn.cancel")}
+          </Button>
+          <Button variant="secondary" onClick={onDelete}>
+            {t("action_btn.delete")}
+          </Button>
         </Box>
       </Box>
     </Modal>

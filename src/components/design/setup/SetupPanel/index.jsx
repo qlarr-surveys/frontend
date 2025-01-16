@@ -99,6 +99,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           label={t("text_field_size")}
           rule={rule}
           lowerBound={1}
+          t={t}
           upperBound={500}
           defaultValue={20}
           code={code}
@@ -110,6 +111,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
         <FieldSize
           label={t("textarea_lines")}
           lowerBound={1}
+          t={t}
           upperBound={500}
           code={code}
           defaultValue={20}
@@ -310,12 +312,10 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
       );
     case "reorder_setup":
       const reorderLabels = [
-        t("collapse_none"),
         t("collapse_groups"),
         t("collapse_questions"),
       ];
       const reorderValues = [
-        "collapse_none",
         "collapse_groups",
         "collapse_questions",
       ];
@@ -331,7 +331,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
         />
       );
     case "iconSize":
-      const iconSizes = ["48", "64", "72", "96"];
+      const iconSizes = ["50", "100", "150", "200"];
       return (
         <SelectValue
           values={iconSizes}
@@ -360,6 +360,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           label={t("image_height")}
           lowerBound={50}
           upperBound={500}
+          t={t}
           code={code}
           defaultValue={250}
           rule={rule}
@@ -374,6 +375,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           lowerBound={2}
           upperBound={32}
           code={code}
+          t={t}
           defaultValue={8}
           rule={rule}
           key={code + rule}
@@ -394,7 +396,7 @@ const SetupSection = React.memo(
       <Accordion
         expanded={expanded}
         className={styles.accordionStyle}
-        TransitionProps={{ unmountOnExit: true }}
+        slotProps={{ transition: { unmountOnExit: true } }}
       >
         <AccordionSummary
           onClick={() => toggleExpand(rule.key)}

@@ -25,6 +25,10 @@ export const getDirFromSession = () => {
   return rtlLanguage.includes(lang) ? "rtl" : "ltr";
 };
 
+export const isSessionRtl = () =>{
+  return getDirFromSession() == "rtl" ;
+}
+
 export const cacheRtl = (lang) =>
   createCache({
     key: rtlLanguage.includes(lang) ? "muirtl" : "muiltr",

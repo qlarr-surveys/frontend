@@ -11,11 +11,14 @@ import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
 import { onDrag } from "~/state/design/designState";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
-function GroupDesign({ t, code, index }) {
+import { DESIGN_SURVEY_MODE } from "~/routes";
+function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
   const dispatch = useDispatch();
   const group = useSelector((state) => {
     return state.designState[code];
   });
+
+  const inDesign = designMode == DESIGN_SURVEY_MODE.DESIGN;
 
   const collapsed = useSelector((state) => {
     return (
@@ -30,7 +33,6 @@ function GroupDesign({ t, code, index }) {
   const isInSetup = useSelector((state) => {
     return state.designState.setup?.code == code;
   });
-
 
   const theme = useTheme();
 
@@ -122,7 +124,6 @@ function GroupDesign({ t, code, index }) {
 
   drop(preview(containerRef));
 
-
   const contrastColor = getContrastColor(theme.palette.background.paper);
   const textColor = theme.textStyles.question.color;
 
@@ -130,37 +131,40 @@ function GroupDesign({ t, code, index }) {
     return null;
   }
 
+  const isLastAdded =
+    lastAddedComponent?.type === "group" && lastAddedComponent.index === index;
   return (
     <Box
       sx={
         isInSetup
           ? {
-            border: `0.5px solid ${textColor}`,
-            color: textColor,
-            paddingTop: "2rem",
-            paddingBottom: "2rem",
-            backgroundColor: contrastColor,
-          }
+              border: `0.5px solid ${textColor}`,
+              color: textColor,
+              backgroundColor: contrastColor,
+            }
           : {
-            backgroundColor: "background.paper",
-          }
+              backgroundColor: "background.paper",
+            }
       }
-      className={styles.topLevel}
+      className={`${styles.topLevel} ${isLastAdded ? styles.highlight : ""}`}
       ref={containerRef}
       style={getStyles(isDragging)}
     >
-      {collapsed == true &&
-        onMainLang &&
-        type !== "welcome" &&
-        type !== "end" ? (
+      {collapsed == true && type !== "welcome" && type !== "end" ? (
         <div className={styles.moveBox} ref={drag}>
           <ViewCompactIcon style={{ color: textColor }} />
         </div>
       ) : (
         <br />
       )}
-      <GroupHeader t={t} code={code} index={index} collapsed={collapsed} children={children} />
-      {(collapsed !== true || !onMainLang) && (
+      <GroupHeader
+        t={t}
+        code={code}
+        index={index}
+        designMode={designMode}
+        children={children}
+      />
+      {collapsed !== true && (
         <>
           {children && children.length > 0 && (
             <QuestionDropArea
@@ -183,7 +187,9 @@ function GroupDesign({ t, code, index }) {
                   isLast={children.length == childIndex + 1}
                   type={quest.type}
                   code={quest.code}
-                  onMainLang={onMainLang}
+                  designMode={designMode}
+                  onMainLang={inDesign}
+                  lastAddedComponent={lastAddedComponent}
                 />
                 <QuestionDropArea
                   isLast={children.length == childIndex + 1}
@@ -196,7 +202,7 @@ function GroupDesign({ t, code, index }) {
               </React.Fragment>
             );
           })}
-          {(!children || !children.length) && onMainLang && (
+          {(!children || !children.length) && inDesign && (
             <QuestionDropArea
               t={t}
               index={0}

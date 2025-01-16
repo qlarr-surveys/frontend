@@ -9,9 +9,12 @@ import styles from "./EditSurvey.module.css";
 import { useTranslation } from "react-i18next";
 import LaunchPage from "../Launch/launch";
 import SurveyQuota from "~/components/manage/SurveyQuota";
+import ExportSurvey from '~/components/manage/ExportSurvey';
+import { useSelector } from 'react-redux';
 
 function EditSurvey({ onPublish }) {
   const { t } = useTranslation("manage");
+  const survey = useSelector((state) => state.editState.survey);
 
   const sections = [
     {
@@ -19,9 +22,14 @@ function EditSurvey({ onPublish }) {
       title: t("edit_survey.quotas"),
       component: <SurveyQuota />,
     },
+    {
+      id: "export",
+      title: t("edit_survey.export"),
+      component: <ExportSurvey />,
+    },
   ];
 
-  return (
+  return survey && (
     <Box className={styles.mainContainer}>
       <Accordion className={styles.accordionContainer} defaultExpanded={true}>
         <AccordionSummary

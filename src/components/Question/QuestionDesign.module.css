@@ -70,3 +70,32 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.highlight {
+  animation: fadeHighlight 3s ease-in-out;
+  background-color: rgba(
+    245,
+    245,
+    220,
+    0.7
+  ); /* Beige with partial transparency */
+}
+
+@keyframes fadeHighlight {
+  0% {
+    background-color: rgba(
+      245,
+      245,
+      220,
+      0.7
+    ); /* Start with semi-transparent beige */
+  }
+  100% {
+    background-color: rgba(
+      245,
+      245,
+      220,
+      0.2
+    ); /* Fade to even more transparent beige */
+  }
+}

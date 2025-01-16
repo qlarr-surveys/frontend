@@ -16,17 +16,19 @@ import React, { useRef, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
-  changeAttribute,
   changeContent,
+  changeResources,
   onDrag,
   removeAnswer,
 } from "~/state/design/designState";
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 import IconSelector from "~/components/design/IconSelector";
-import { getContrastColor } from "../utils";
+import DynamicSvg from "~/components/DynamicSvg";
+import { buildResourceUrl } from "~/networking/common";
+import { useService } from "~/hooks/use-service";
+import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function SCQIconArrayDesign(props) {
   const theme = useTheme();
@@ -35,7 +37,8 @@ function SCQIconArrayDesign(props) {
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
   });
-  const onMainLang = langInfo.lang === langInfo.mainLang;
+
+  const inDesgin = props.designMode == DESIGN_SURVEY_MODE.DESIGN;
 
   const children = useSelector((state) => {
     return state.designState[props.code].children;
@@ -45,12 +48,12 @@ function SCQIconArrayDesign(props) {
   const columns = children?.filter((el) => el.type == "column") || [];
 
   const icons = useSelector((state) =>
-    columns.map((col) => state.designState[col.qualifiedCode].icon)
+    columns.map((col) => state.designState[col.qualifiedCode].resources?.icon)
   );
 
   return (
     <>
-      {props.onMainLang && (
+      {inDesgin && (
         <div className={styles.addColumn}>
           <Button
             sx={{
@@ -72,11 +75,10 @@ function SCQIconArrayDesign(props) {
         <Table>
           <TableHead>
             <TableRow>
-              {onMainLang && (
+              {inDesgin && (
                 <TableCell
                   sx={{
                     padding: "0",
-
                   }}
                   key="move"
                 ></TableCell>
@@ -90,13 +92,13 @@ function SCQIconArrayDesign(props) {
                     t={props.t}
                     key={item.qualifiedCode}
                     item={item}
+                    inDesgin={inDesgin}
                     icons={icons}
-                    styles={styles}
                     index={index}
                   />
                 );
               })}
-              {onMainLang && (
+              {inDesgin && (
                 <TableCell
                   sx={{
                     padding: "0",
@@ -115,6 +117,7 @@ function SCQIconArrayDesign(props) {
                   t={props.t}
                   key={item.qualifiedCode}
                   item={item}
+                  inDesgin={inDesgin}
                   columns={columns}
                   icons={icons}
                   index={index}
@@ -124,7 +127,7 @@ function SCQIconArrayDesign(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      {props.onMainLang && (
+      {inDesgin && (
         <div className={styles.addRow}>
           <Button
             sx={{
@@ -150,6 +153,7 @@ function SCQArrayRowDesign({
   index,
   columns,
   icons,
+  inDesgin,
   t,
   langInfo,
   parentQualifiedCode,
@@ -235,14 +239,13 @@ function SCQArrayRowDesign({
       key={item.code}
       data-handler-id={handlerId}
     >
-      {onMainLang && (
+      {inDesgin && (
         <TableCell
           ref={drag}
           key="move"
           sx={{
             padding: "0",
-            color: theme.textStyles.text.color
-
+            color: theme.textStyles.text.color,
           }}
         >
           <DragIndicatorIcon />
@@ -294,31 +297,24 @@ function SCQArrayRowDesign({
               padding: "4px",
             }}
           >
-            {icons[index] && (
-              <div
-                style={{
-                  opacity: 0.2,
-                  height: "64px",
-                  width: "px",
-                  borderRadius: "8px",
-                  color: theme.textStyles.text.color
-                }}
-                className={styles.svgContainer}
-                dangerouslySetInnerHTML={{
-                  __html: icons[index],
-                }}
-              />
-            )}
+            <DynamicSvg
+              opacity={0.2}
+              iconColor={theme.textStyles.text.color}
+              theme={theme}
+              onIconClick={() => {}}
+              imageHeight="64px"
+              svgUrl={icons[index] ? buildResourceUrl(icons[index]) : undefined}
+            />
           </TableCell>
         );
       })}
-      {onMainLang && (
+      {inDesgin && (
         <TableCell
           onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
           key="remove"
           sx={{
             padding: "0",
-            color: theme.textStyles.text.color
+            color: theme.textStyles.text.color,
           }}
         >
           <CloseIcon />
@@ -332,18 +328,17 @@ function SCQArrayHeaderDesign({
   item,
   index,
   icons,
+  inDesgin,
   t,
   langInfo,
   parentQualifiedCode,
-  styles,
 }) {
+  const designService = useService("design");
   const icon = icons[index];
   const [iconSelectoOpen, setIconSelectorOpen] = useState(false);
   const dispatch = useDispatch();
   const theme = useTheme();
   const ref = useRef();
-
-  const onMainLang = langInfo.lang === langInfo.mainLang;
 
   const isRtl = rtlLanguage.includes(langInfo.lang);
   const isLtr = !isRtl;
@@ -408,6 +403,28 @@ function SCQArrayHeaderDesign({
     },
   });
 
+  const uploadAsResource = (svgContent) => {
+    const svgBlob = new Blob([svgContent], { type: "image/svg+xml" });
+
+    // Create a File object to simulate a file upload
+    const svgFile = new File([svgBlob], "file.svg", { type: "image/svg+xml" });
+
+    designService
+      .uploadResource(svgFile)
+      .then((response) => {
+        dispatch(
+          changeResources({
+            code: item.qualifiedCode,
+            key: "icon",
+            value: response.name,
+          })
+        );
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  };
+
   drop(preview(ref));
   return (
     <>
@@ -424,7 +441,7 @@ function SCQArrayHeaderDesign({
         }}
         key={item.qualifiedCode}
       >
-        {onMainLang && (
+        {inDesgin && (
           <div style={{ display: "inline-flex" }}>
             <div
               ref={drag}
@@ -433,13 +450,12 @@ function SCQArrayHeaderDesign({
                 padding: "0",
               }}
             >
-              < DragIndicatorIcon />
+              <DragIndicatorIcon />
             </div>
             <div
               sx={{
                 padding: "0",
-                color: theme.textStyles.text.color
-
+                color: theme.textStyles.text.color,
               }}
               onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
             >
@@ -447,41 +463,26 @@ function SCQArrayHeaderDesign({
             </div>
           </div>
         )}
-        
 
-        {icon ? (
-          <div
-            onClick={() => setIconSelectorOpen(true)}
-            style={{
-              height: "64px",
-              width: "px",
-              borderRadius: "8px",
-            }}
-            className={styles.svgContainer}
-            dangerouslySetInnerHTML={{ __html: icon }}
-          />
-        ) : (
-          <>
-            <br />
-            <div onClick={() => setIconSelectorOpen(true)}>
-              <AddBoxIcon sx={{ width: "64px", height: "64px" }} />
-              <br />
-              <span>Click to add icon</span>
-            </div>
-          </>
+        <DynamicSvg
+          onIconClick={() => setIconSelectorOpen(true)}
+          theme={theme}
+          imageHeight="64px"
+          svgUrl={icon ? buildResourceUrl(icon) : undefined}
+        />
+        {!icon && (
+          <span onClick={() => setIconSelectorOpen(true)}>
+            Click to add icon
+          </span>
         )}
       </TableCell>
       {iconSelectoOpen && (
         <IconSelector
           currentIcon=""
           onIconSelected={(icon) => {
-            dispatch(
-              changeAttribute({
-                code: item.qualifiedCode,
-                key: "icon",
-                value: icon,
-              })
-            );
+            if (icon) {
+              uploadAsResource(icon);
+            }
             setIconSelectorOpen(false);
           }}
         />

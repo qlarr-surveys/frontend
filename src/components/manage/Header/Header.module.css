@@ -2,39 +2,39 @@
   position: relative;
   display: flex;
   align-items: center;
-  padding: 0rem 3.5rem;
   height: 4rem;
-}
-@media (max-width: 768px) {
-  .header {
-    justify-content: space-between;
-    padding: 0rem 0.5rem;
-  }
-  .imageContainer.imageContainer {
-    position: relative;
-  }
-  .userInfo.userInfo {
-    right: auto;
-    position: relative;
-  }
-  .textCenter.textCenter {
-    display: none;
-  }
+  justify-content: space-between;
 }
 
 .textCenter {
-  display: flex;
-  justify-content: center;
+  text-align: center;
   width: 100%;
+  padding-left: 7rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .userInfo {
-  position: absolute;
   display: flex;
   align-items: center;
   gap: 20px;
+  margin-right: 3.5rem;
+}
+
+.userInfoRtl {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: 3.5rem;
 }
 
 .imageContainer {
-  position: absolute;
+  flex-shrink: 0;
+  margin-left: 3.5rem;
+}
+
+.imageContainerRtl {
+  flex-shrink: 0;
+  margin-right: 3.5rem;
 }

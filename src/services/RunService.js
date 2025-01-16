@@ -1,6 +1,6 @@
 import publicApi from "./publicApi";
 import authenticatedApi from "./authenticatedApi";
-import { BACKEND_BASE_URL, CLOUD_URL } from "~/constants/networking";
+import { CLOUD_URL } from "~/constants/networking";
 import BaseService from "./BaseService";
 
 class RunService extends BaseService {

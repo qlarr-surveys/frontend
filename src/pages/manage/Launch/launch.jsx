@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { newVersionReceived, setSaving } from "~/state/design/designState";
 import { useTranslation } from "react-i18next";
 import { useService } from "~/hooks/use-service";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 function LaunchPage({ onPublish }) {
   const { t } = useTranslation("manage");
   const designService = useService("design");
@@ -60,7 +61,8 @@ function LaunchPage({ onPublish }) {
           </Typography>
 
           <>
-            <Tooltip
+            <CustomTooltip
+              showIcon={false}
               title={
                 !hasFatalErrors
                   ? `${t("launch.publish_tooltip")}`
@@ -88,7 +90,7 @@ function LaunchPage({ onPublish }) {
                   {t("launch.publish")}
                 </Button>
               </span>
-            </Tooltip>
+            </CustomTooltip>
           </>
         </Box>
       )}

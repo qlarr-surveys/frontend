@@ -68,70 +68,47 @@ export const {
 
 export default runState.reducer;
 
-function onDependencyChanged(
-  values,
-  componentName,
-  variableName,
-  newValue,
-  source
-) {
-  if (typeof values[componentName] === "undefined") {
-    return;
-  }
-
-  if (values[componentName][variableName] === newValue) {
-    console.log(
-      "same value - " + componentName + "." + variableName + ": " + newValue
-    );
-  } else {
-    console.log(
-      componentName +
-        "." +
-        variableName +
-        ": " +
-        JSON.stringify(newValue) +
-        " due to " +
-        source
-    );
-    values[componentName][variableName] = newValue;
-    getDependents(componentName, variableName).forEach((dependent) => {
-      onDependencyChanged(
-        values,
-        dependent[0],
-        dependent[1],
-        window.qlarrRuntime[dependent[0]][dependent[1]](values),
-        componentName + "." + variableName
-      );
-    });
-  }
-}
-
-function getDependents(componentName, variableName) {
-  if (
-    typeof qlarrDependents[componentName] !== "undefined" &&
-    typeof qlarrDependents[componentName][variableName] !== "undefined"
-  ) {
-    return qlarrDependents[componentName][variableName];
-  } else {
-    return [];
-  }
-}
 
 function setValueInState(state, payload) {
   let componentCode = payload.componentCode;
+  logTimes(state, componentCode);
   let value = payload.value;
   let element = state.values[componentCode];
   if (typeof element !== "undefined" && element["value"] !== value) {
     let time = Date.now();
-    onDependencyChanged(
+    window.qlarrStateMachine(
       state.values,
+      qlarrDependents,
+      window.qlarrRuntime,
       componentCode,
       "value",
       value,
       "VALUE CHANGE"
-    );
-    console.log("NEW STATE in: " + (Date.now() - time) + " millis");
-    console.log(current(state))
+  )
+    console.debug("NEW STATE in: " + (Date.now() - time) + " millis");
+  }
+}
+
+function logTimes(state, code) {
+  if (!state.saveTimings) {
+    return;
+  }
+  if (!state.timings) {
+    state.timings = [];
+  }
+  let element = {
+    code,
+    time: new Date().toISOString().split(".")[0].replace("T", " "),
+    name: "ValueTiming",
+  };
+
+  if (
+    state.timings.length > 0 &&
+    state.timings[state.timings.length - 1].code === code
+  ) {
+    state.timings[state.timings.length - 1] = element;
+  } else {
+    state.timings.push(element);
   }
 }
 

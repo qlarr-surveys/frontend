@@ -425,7 +425,7 @@ export const createQuestion = (type, qId, lang) => {
       break;
     case "icon_scq":
       state.columns = 3;
-      state.iconSize = 64;
+      state.iconSize = "150";
       state.spacing = 8;
       state.instructionList = [
         {
@@ -772,7 +772,7 @@ export const createQuestion = (type, qId, lang) => {
     case "icon_mcq":
       state.columns = 3;
       state.columns = 3;
-      state.iconSize = 64;
+      state.iconSize = "150";
       state.spacing = 8;
       returnObj[`Q${qId}A1`] = {
         instructionList: [

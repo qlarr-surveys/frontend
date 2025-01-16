@@ -4,7 +4,7 @@
 
 .imageContainer {
   position: relative;
-  background-size: contain;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
@@ -12,7 +12,8 @@
 
 .selection {
   position: absolute;
-  top: 0;
+  top: 4px;
+  left: 4px;
   border-radius: 0 !important;
   background-color: #ffffffcc !important;
 }

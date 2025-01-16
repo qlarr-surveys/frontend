@@ -27,7 +27,7 @@ function ImageMcq(props) {
           <ImageMcqItem
             option={option}
             aspectRatio={props.component.imageAspectRatio}
-            columns={props.component.columns || 64}
+            columns={props.component.columns || 3}
             spacing={props.component.spacing || 8}
             hideText={props.component.hideText}
             parentCode={props.component.qualifiedCode}
@@ -58,7 +58,7 @@ function ImageMcqItem(props) {
   };
   const backgroundImage = props.option.resources?.image
     ? `url('${buildResourceUrl(props.option.resources?.image)}')`
-    : "0";
+    : `url('/placeholder-image.jpg')`;
 
   return (
     <Box
@@ -74,12 +74,10 @@ function ImageMcqItem(props) {
         style={{
           paddingTop: 100 / props.aspectRatio + "%",
           backgroundImage: backgroundImage,
-          backgroundColor: theme.palette.background.default,
           borderRadius: "4px",
           border: state.checked
-            ? `2px solid ${theme.palette.primary.main}`
-            : "2px solid transparent",
-
+            ? `4px solid ${theme.palette.primary.main}`
+            : "4px solid transparent",
         }}
       >
         <div className={styles.selection}>
@@ -87,6 +85,10 @@ function ImageMcqItem(props) {
             onChange={(event) =>
               handleChange(props.option.qualifiedCode, !state.checked)
             }
+            size="large"
+            sx={{
+              m: "5px",
+            }}
             className={styles.radioCheck}
             checked={state.checked}
           />

@@ -26,7 +26,7 @@ function ImageMcqItem(props) {
   };
   const backgroundImage = props.option.resources?.image
     ? `url('${buildResourceUrl(props.option.resources.image)}')`
-    : "0";
+    : `url('/placeholder-image.jpg')`;
 
   return (
     <Grid key={props.option.code} item xs={12 / props.columns}>
@@ -36,7 +36,6 @@ function ImageMcqItem(props) {
         style={{
           backgroundImage: backgroundImage,
           borderRadius: "4px",
-          backgroundColor: theme.palette.background.default,
           margin: props.spacing + "px",
           height: props.imageHeight + "px",
           border: state.checked

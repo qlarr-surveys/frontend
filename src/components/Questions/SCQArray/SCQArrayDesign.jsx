@@ -25,6 +25,7 @@ import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
 import { getContrastColor } from "../utils";
+import { inDesign } from '~/routes';
 
 function SCQArray(props) {
   const theme = useTheme();
@@ -56,7 +57,7 @@ function SCQArray(props) {
 
   return (
     <>
-      {props.onMainLang && (
+      {inDesign(props.designMode) && (
         <div className={styles.addColumn}>
           <Button
             sx={{
@@ -78,7 +79,7 @@ function SCQArray(props) {
         <Table>
           <TableHead>
             <TableRow>
-              {onMainLang && (
+              {inDesign(props.designMode)  && (
                 <TableCell
                   sx={{
                     padding: "0",
@@ -92,6 +93,7 @@ function SCQArray(props) {
                   <SCQArrayHeaderDesign
                     parentQualifiedCode={props.qualifiedCode}
                     langInfo={langInfo}
+                    designMode={props.designMode}
                     t={props.t}
                     key={item.qualifiedCode}
                     item={item}
@@ -99,7 +101,7 @@ function SCQArray(props) {
                   />
                 );
               })}
-              {onMainLang && (
+              {inDesign(props.designMode) && (
                 <TableCell
                   sx={{
                     padding: "0",
@@ -116,6 +118,7 @@ function SCQArray(props) {
                   parentQualifiedCode={props.qualifiedCode}
                   langInfo={langInfo}
                   t={props.t}
+                  designMode={props.designMode}
                   key={item.qualifiedCode}
                   item={item}
                   colCount={columns.length}
@@ -151,6 +154,7 @@ function SCQArrayRowDesign({
   item,
   index,
   colCount,
+  designMode,
   t,
   langInfo,
   parentQualifiedCode,
@@ -236,7 +240,7 @@ function SCQArrayRowDesign({
       key={item.code}
       data-handler-id={handlerId}
     >
-      {onMainLang && (
+      {inDesign(designMode) && (
         <TableCell
           ref={drag}
           key="move"
@@ -260,7 +264,6 @@ function SCQArrayRowDesign({
           variant="standard"
           value={content || ""}
           onChange={(e) => {
-            console.log(e.target.value);
             dispatch(
               changeContent({
                 code: item.qualifiedCode,
@@ -306,7 +309,7 @@ function SCQArrayRowDesign({
           </TableCell>
         );
       })}
-      {onMainLang && (
+      {inDesign(designMode) && (
         <TableCell
           onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
           key="remove"
@@ -325,6 +328,7 @@ function SCQArrayRowDesign({
 function SCQArrayHeaderDesign({
   item,
   index,
+  designMode,
   t,
   langInfo,
   parentQualifiedCode,
@@ -424,7 +428,7 @@ function SCQArrayHeaderDesign({
       }}
       key={item.qualifiedCode}
     >
-      {onMainLang && (
+      {inDesign(designMode) && (
         <div style={{ display: "inline-flex" }}>
           <div
             ref={drag}
@@ -451,7 +455,6 @@ function SCQArrayHeaderDesign({
         variant="standard"
         value={content || ""}
         onChange={(e) => {
-          console.log(e.target.value);
           dispatch(
             changeContent({
               code: item.qualifiedCode,

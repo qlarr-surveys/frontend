@@ -6,6 +6,7 @@
   margin: auto;
   max-width: 800px;
   min-width: 300px;
+  position: relative;
 }
 
 .cardImage {
@@ -17,10 +18,9 @@
   border-radius: 8px;
 }
 
-.mainContainer {
-  margin: auto;
-  height: 100vh;
-  overflow: auto;
+.groupContianer {
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .stepperContent {
@@ -32,11 +32,6 @@
   height: 700px;
   overflow: auto;
   margin-top: 3rem;
-  /* max-width: 800px;
-  min-width: 350px;
-  margin: auto;
-  overflow: auto;
-  display: flex; */
 }
 
 .menuButton.menuButton {

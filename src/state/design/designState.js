@@ -15,11 +15,17 @@ import {
   reorder,
   buildReferenceInstruction,
 } from "./stateUtils";
-import { setupOptions } from "~/constants/design";
+import {
+  languageSetup,
+  reorderSetup,
+  setupOptions,
+  themeSetup,
+} from "~/constants/design";
 import {
   createQuestion,
   questionDesignError,
 } from "~/components/Questions/utils";
+import { DESIGN_SURVEY_MODE } from "~/routes";
 
 const reservedKeys = ["setup", "reorder_refresh_code"];
 
@@ -36,6 +42,7 @@ export const designState = createSlice({
           state[key] = newState[key];
         }
       });
+      state.lastAddedComponent = null;
     },
     setup(state, action) {
       const payload = action.payload;
@@ -47,6 +54,7 @@ export const designState = createSlice({
         payload.expanded ||
         payload.highlighted
       ) {
+        console.log(payload);
         state.setup = action.payload;
       }
     },
@@ -91,12 +99,31 @@ export const designState = createSlice({
       if (!state.globalSetup) {
         state.globalSetup = {};
       }
-      state.globalSetup.reorder_setup = "collapse_none";
+      state.globalSetup.reorder_setup = undefined;
       delete state["setup"];
+      state.designMode = DESIGN_SURVEY_MODE.DESIGN;
+    },
+    setDesignModeToLang(state) {
+      designState.caseReducers.resetSetup(state);
+      designState.caseReducers.setup(state, { payload: languageSetup });
+      state.designMode = DESIGN_SURVEY_MODE.LANGUAGES;
+    },
+    setDesignModeToTheme(state) {
+      designState.caseReducers.resetSetup(state);
+      designState.caseReducers.setup(state, { payload: themeSetup });
+      state.designMode = DESIGN_SURVEY_MODE.THEME;
+    },
+    setDesignModeToReorder(state) {
+      designState.caseReducers.resetSetup(state);
+      designState.caseReducers.setup(state, { payload: reorderSetup });
+      if (!state.globalSetup) {
+        state.globalSetup = {};
+      }
+      state.globalSetup.reorder_setup = "collapse_questions";
+      state.designMode = DESIGN_SURVEY_MODE.REORDER;
     },
     changeAttribute: (state, action) => {
       let payload = action.payload;
-      console.log(payload);
       if (
         action.payload.key == "content" ||
         action.payload.key == "instructionList" ||
@@ -421,10 +448,7 @@ export const designState = createSlice({
       state.langInfo.onMainLang =
         state.langInfo.lang == state.langInfo.mainLang;
     },
-    onResetLang: (state) => {
-      state.langInfo.lang = state.langInfo.mainLang;
-      state.langInfo.onMainLang = true;
-    },
+
     setSaving: (state, action) => {
       state.isSaving = action.payload;
     },
@@ -432,6 +456,8 @@ export const designState = createSlice({
       state.isUpdating = action.payload;
     },
     onDrag: (state, action) => {
+      state.skipScroll = true;
+
       const payload = action.payload;
       switch (payload.type) {
         case "reorder_questions":
@@ -471,6 +497,30 @@ export const designState = createSlice({
         (group) => (state[group.code].collapsed = true)
       );
     },
+
+    addComponent: (state, action) => {
+      const { type, questionType } = action.payload;
+      const survey = state.Survey;
+      state.skipScroll = false;
+
+      if (type === "group") {
+        const lastGroupIndex = Math.max(0, survey.children.length - 1);
+        newGroup(state, { toIndex: lastGroupIndex });
+      } else if (type === "question") {
+        if (state.Survey.children.length == 1) {
+          newGroup(state, { toIndex: 0 });
+        }
+        const lastGroupIndex = Math.max(0, survey.children.length - 2);
+        const destinationGroupCode = survey.children[lastGroupIndex].code;
+        const destinationGroup = state[destinationGroupCode];
+        const toIndex = destinationGroup.children?.length || 0;
+        newQuestion(state, {
+          destination: destinationGroupCode,
+          questionType,
+          toIndex,
+        });
+      }
+    },
   },
 });
 
@@ -481,7 +531,6 @@ export const {
   onAdditionalLangAdded,
   onAdditionalLangRemoved,
   changeLang,
-  onResetLang,
   onAddComponentsVisibilityChange,
   changeAttribute,
   resetCollapse,
@@ -492,7 +541,9 @@ export const {
   cloneQuestion,
   deleteGroup,
   addNewAnswer,
-  resetSetupRightPanel,
+  setDesignModeToLang,
+  setDesignModeToReorder,
+  setDesignModeToTheme,
   removeAnswer,
   setup,
   setupToggleExpand,
@@ -507,6 +558,7 @@ export const {
   editSkipToEnd,
   changeRelevance,
   onDrag,
+  addComponent,
   collapseAllGroups,
   setSaving,
   setUpdating,
@@ -695,16 +747,23 @@ const newQuestion = (state, payload) => {
       state[key] = questionObject[key];
     });
   const newCode = `Q${questionId}`;
+
   addMaskedValuesInstructions(newCode, questionObject[newCode], state);
   destinationGroup.children.splice(
     destinationQuestionIndex,
     0,
     questionObject.question
   );
+
+  const groupIndex = survey.children.findIndex(
+    (group) => group.code === payload.destination
+  );
+  state.lastAddedComponent = {
+    type: "question",
+    groupIndex: groupIndex,
+    questionIndex: destinationQuestionIndex,
+  };
   cleanupRandomRules(destinationGroup);
-  designState.caseReducers.setup(state, {
-    payload: { code: newCode, rules: setupOptions(payload.questionType) },
-  });
 };
 
 const newGroup = (state, payload) => {
@@ -719,12 +778,14 @@ const newGroup = (state, payload) => {
     survey.children.splice(payload.toIndex, 0, group.newGroup);
   }
   state[group.newGroup.code] = group.state;
-  designState.caseReducers.setup(state, {
-    payload: {
-      code: group.newGroup.code,
-      rules: setupOptions(group.newGroup.type),
-    },
-  });
+
+  const lastGroupIndex = survey.children.findIndex(
+    (child) => child.code === group.newGroup.code
+  );
+  state.lastAddedComponent = {
+    type: "group",
+    index: lastGroupIndex,
+  };
   cleanupRandomRules(survey);
 };
 

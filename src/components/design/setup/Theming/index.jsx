@@ -22,41 +22,17 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useRef } from "react";
 
 const listFont = [
-  "Alegreya",
-  "Amatic SC",
-  "Arial",
-  "Bree Serif",
-  "Calibri",
-  "Cambria",
-  "Caveat",
-  "Comfortaa",
-  "Comic Sans MS",
-  "Courier New",
-  "EB Garamond",
-  "Georgia",
-  "Google Sans",
-  "Impact",
-  "Lexend",
-  "Lobster",
-  "Lora",
   "Merriweather",
-  "Montserrat",
-  "Nunito",
-  "Oswald",
-  "Pacifico",
-  "Permanent Marker",
-  "Pinyon Script",
-  "Playfair Display",
-  "Proxima Nova",
   "Roboto",
-  "Roboto Mono",
-  "Roboto Serif",
-  "Spectral",
+  "Open Sans",
+  "Lato",
+  "Poppins",
+  "Raleway",
+  "Rubik",
   "Times New Roman",
-  "Trebuchet MS",
-  "Ultra",
-  "Varela Round",
-  "Verdana",
+  "Arial",
+  "Courier New",
+  "Georgia",
 ];
 
 function Theming({ t }) {
@@ -116,8 +92,6 @@ function Theming({ t }) {
 
         const newVal = `rgba(${r}, ${g}, ${b}, ${a})`;
 
-        console.log("New bgColor:", newVal);
-
         dispatch(
           changeAttribute({
             code: "Survey",
@@ -155,7 +129,7 @@ function Theming({ t }) {
           changeResources({
             code: "Survey",
             key: "headerImage",
-            value: file.name,
+            value: response.name,
           })
         );
       })
@@ -184,7 +158,7 @@ function Theming({ t }) {
           changeResources({
             code: "Survey",
             key: "backgroundImage",
-            value: file.name,
+            value: response.name,
           })
         );
         dispatch(

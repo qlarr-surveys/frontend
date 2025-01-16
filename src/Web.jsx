@@ -33,9 +33,7 @@ const CreateSurvey = lazy(() => import("./pages/manage/CreateSurvey"));
 
 const RunSurvey = lazy(() => import("./pages/RunSurvey"));
 
-
 function Web() {
-
   return (
     <Routes>
       <Route
@@ -59,7 +57,7 @@ function Web() {
         }
       />
       <Route
-        path={routes.previewSurvey}
+        path={routes.iframePreviewSurvey}
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <Provider store={runStore}>
@@ -69,7 +67,7 @@ function Web() {
         }
       />
       <Route
-        path={routes.previewGuestSurvey}
+        path={routes.iframePreviewGuestSurvey}
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <Provider store={runStore}>
@@ -94,10 +92,8 @@ function Web() {
         path={routes.preview}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.PREVIEW}
-              />
+            <ManagePageWrapper showHeader={false}>
+              <PrivatePreviewSurvey />
             </ManagePageWrapper>
           </Suspense>
         }
@@ -145,19 +141,6 @@ function Web() {
             <ManagePageWrapper>
               <PrivateDesignSurvey
                 landingPage={MANAGE_SURVEY_LANDING_PAGES.LANGUAGE}
-              />
-            </ManagePageWrapper>
-          </Suspense>
-        }
-      />
-
-      <Route
-        path={routes.launch}
-        element={
-          <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.LAUNCH}
               />
             </ManagePageWrapper>
           </Suspense>
@@ -274,7 +257,6 @@ function Web() {
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <ManagePageWrapper>
-              {/* <ResetPassword /> */}
               <ResetPasswordView confirmNewUser={true} />
             </ManagePageWrapper>
           </Suspense>
@@ -291,6 +273,18 @@ const PrivateDesignSurvey = ({ landingPage }) => {
   const location = useLocation();
   return TokenService.isAuthenticated() ? (
     <ManageSurvey landingPage={landingPage} />
+  ) : (
+    <Navigate to="/login" replace state={{ from: location }} />
+  );
+};
+
+const PrivatePreviewSurvey = () => {
+  const params = useParams();
+  sessionStorage.setItem("surveyId", params.surveyId);
+  sessionStorage.setItem("isGuest", "0");
+  const location = useLocation();
+  return TokenService.isAuthenticated() ? (
+    <PreviewSurvey />
   ) : (
     <Navigate to="/login" replace state={{ from: location }} />
   );

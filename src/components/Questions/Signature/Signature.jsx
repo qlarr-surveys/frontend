@@ -66,7 +66,7 @@ function Signature(props) {
       props.component.qualifiedCode,
       preview,
       dataUrl,
-      `signature-${props.component.qualifiedCode}.png`
+      `signature.png`
     )
       .then((response) => {
         dispatch(

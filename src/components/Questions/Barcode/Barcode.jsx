@@ -43,7 +43,7 @@ function Barcode(props) {
         );
       };
     } else {
-      console.log("no android device!!");
+      console.debug("no android device!!");
     }
   };
 
