@@ -28,11 +28,10 @@ export default function AuthIllustrationLayout({ children }) {
         >
           {mdUp && (
             <Grid xs={12} md={7}>
-              <Image
-                visibleByDefault
-                disabledEffect
+              <img
+                style={{ width: "100%" }}
                 alt="login"
-                src="/illustration_login.svg"
+                src="/illustration_login.jpg"
               />
             </Grid>
           )}

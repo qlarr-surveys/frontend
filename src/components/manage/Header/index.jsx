@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Menu, MenuItem, Typography } from "@mui/material";
+import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import {
   KeyboardArrowDown,
   KeyboardArrowUp,
@@ -10,7 +10,6 @@ import {
 import GroupsIcon from "@mui/icons-material/Groups";
 import TokenService from "~/services/TokenService";
 import styles from "./Header.module.css";
-import { Logo } from "../Logo";
 import { LanguageSelector } from "../LanguageSelector";
 import { MANAGE_SURVEY_LANDING_PAGES, routes } from "~/routes";
 import { useDispatch } from "react-redux";
@@ -66,8 +65,17 @@ export const Header = () => {
 
   return (
     <Box className={styles.header}>
-      <Box className={isRtl ? styles.imageContainerRtl : styles.imageContainer}>
-        <Logo />
+      <Box
+        onClick={() => nav("/")}
+        className={isRtl ? styles.imageContainerRtl : styles.imageContainer}
+      >
+        {showSurveyTitle && (
+          <>
+            <img src={isRtl ? "/arrow-back-rtl.png" : "/arrow-back.png"} style={{ height: "40px" }} />
+            <span style={{ width: "12px" }} />
+          </>
+        )}
+        <img src="/qlarr.png" style={{ height: "40px" }} />
       </Box>
 
       {showSurveyTitle && (
@@ -75,9 +83,7 @@ export const Header = () => {
           {surveyName}
         </Typography>
       )}
-      <Box
-        className={isRtl ? styles.userInfoRtl : styles.userInfo}
-      >
+      <Box className={isRtl ? styles.userInfoRtl : styles.userInfo}>
         <LanguageSelector />
         {TokenService.isAuthenticated() && (
           <>

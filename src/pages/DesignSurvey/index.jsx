@@ -13,6 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import styles from "./DesignSurvey.module.css";
 import ContentPanel from "~/components/design/ContentPanel";
 
+import ExtensionIcon from '@mui/icons-material/Extension';
 import { defualtTheme } from "~/constants/theme";
 import { I18nextProvider, useTranslation } from "react-i18next";
 import { cacheRtl, isSessionRtl, rtlLanguage } from "~/utils/common";
@@ -31,7 +32,6 @@ import {
 } from "~/state/design/designState";
 import TranslateIcon from "@mui/icons-material/Translate";
 import { Cancel, Palette } from "@mui/icons-material";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { buildResourceUrl } from "~/networking/common";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
@@ -178,7 +178,7 @@ function DesignOptions({ setOptionsOpen, optionsOpen, designMode, t }) {
           ariaLabel="SpeedDial basic example"
           sx={{ position: "absolute", bottom: "16px", right: "16px" }}
           icon={
-            <SpeedDialIcon icon={<MoreHorizIcon />} openIcon={<CloseIcon />} />
+            <SpeedDialIcon icon={<ExtensionIcon />} openIcon={<CloseIcon />} />
           }
         >
           {actions.map((action) => (

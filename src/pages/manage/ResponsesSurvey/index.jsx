@@ -35,7 +35,7 @@ import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
-function ResponsesSurvey({ viewEvents }) {
+function ResponsesSurvey() {
   const surveyService = useService("survey");
 
   const { t } = useTranslation("manage");
