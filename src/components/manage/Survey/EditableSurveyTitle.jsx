@@ -62,17 +62,19 @@ export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
         </>
       ) : (
         <>
-          {title.length > 20 ? (
-            <CustomTooltip title={title} showIcon={false}>
-              <Typography variant="h4" sx={{ px: 3 }} noWrap>
-                {truncateWithEllipsis(title, 18)}
-              </Typography>
-            </CustomTooltip>
-          ) : (
-            <Typography variant="h4" sx={{ px: 3 }} noWrap>
-              {truncateWithEllipsis(title, 18)}
-            </Typography>
-          )}
+          <Typography
+            variant="h5"
+            sx={{
+              px: 3,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: "2",
+              WebkitBoxOrient: "vertical",
+            }}
+          >
+            {title}
+          </Typography>
           {isEditable && (
             <IconButton
               className={styles.nameIcon}
