@@ -38,7 +38,7 @@ import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 
 function DesignSurvey() {
   const { t, i18n } = useTranslation(["design", "run"]);
-  const childI18n = i18n.cloneInstance();
+  const childI18n = useMemo(() => i18n.cloneInstance(), []);
   const contentRef = useRef(null);
 
   const [optionsOpen, setOptionsOpen] = React.useState(false);
