@@ -92,7 +92,9 @@ export default React.memo(NewComponentsPanel);
 
 export const createGroup = (groupType, gId) => {
   let code = `G${gId}`;
-  let state = { groupType, content: { label: {}, description: {} } };
+  let state = { groupType, content: { label: {
+    en: `Page ${gId}`
+  }, description: {} } };
   let newGroup = {
     code,
     qualifiedCode: code,

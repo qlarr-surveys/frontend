@@ -103,7 +103,6 @@ function ContentPanel({ designMode }, ref) {
   }, [isNearTop, isNearBottom]);
 
   useEffect(() => {
-    console.log("ss", skipScroll);
     if (lastAddedComponent && virtuosoRef.current && !skipScroll) {
       const performScroll = () => {
         if (lastAddedComponent.type === "group") {

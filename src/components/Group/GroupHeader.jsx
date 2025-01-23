@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import ActionToolbar from "../design/ActionToolbar";
 import { useDispatch } from "react-redux";
 import { deleteGroup } from "~/state/design/designState";
-import { hasMajorSetup } from "~/constants/design";
 import { DESIGN_SURVEY_MODE } from '~/routes';
 
 function GroupHeader({ t, code, children, designMode }) {

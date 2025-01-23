@@ -1,9 +1,7 @@
 import { Box, IconButton, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import styles from "./Survey.module.css";
-import { truncateWithEllipsis } from "~/utils/design/utils";
 import { Edit, Check } from "@mui/icons-material";
-import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
   const [isEditing, setIsEditing] = useState(false);
