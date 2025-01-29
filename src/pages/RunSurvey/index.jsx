@@ -196,7 +196,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
                 ...backgroundStyle,
               }}
             >
-              <RunLoadingDots />
+              
               <SurveyAppBar toggleDrawer={toggleDrawer} />
               <SurveyMemo key="Survey" />
               <SurveyDrawer
@@ -206,6 +206,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
               />
             </div>
           )}
+          <RunLoadingDots />
         </ThemeProvider>
       </CacheProvider>
       {inlineError && (

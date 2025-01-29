@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@emotion/react";
-import LoadingDots from "../LoadingDots";
 import { useSelector } from 'react-redux';
 import styles from "./LoadingDots.module.css";
 import { Box } from "@mui/material";
