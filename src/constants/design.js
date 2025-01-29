@@ -67,6 +67,7 @@ export const setupOptions = (type) => {
       return [
         { title: "show_hide", key: "relevance", rules: ["relevance"] },
         { title: "setup", key: "setup", rules: ["showDescription"] },
+        { title: "display", key: "display", rules: ["imageWidth"] },
       ];
     case "video_display":
       return [

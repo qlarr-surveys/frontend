@@ -27,7 +27,9 @@ function ImageDisplayDesign({ code, t, onMainLang }) {
       .uploadResource(file)
       .then((response) => {
         setUploading(false);
-        dispatch(changeResources({ code, key: "imageUrl", value: response.name }));
+        dispatch(
+          changeResources({ code, key: "imageUrl", value: response.name })
+        );
       })
       .catch((err) => {
         console.error(err);
@@ -35,11 +37,14 @@ function ImageDisplayDesign({ code, t, onMainLang }) {
   };
 
   return (
-    <>
+    <div className={styles.imageContainer}>
       {!isUploading && state.resources?.imageUrl && (
         <img
           style={{
-            width: "100%",
+            maxWidth: "100%",
+            width: state.imageWidth?.endsWith("%")
+              ? state.imageWidth
+              : undefined,
           }}
           src={buildResourceUrl(state.resources.imageUrl)}
         />
@@ -67,7 +72,7 @@ function ImageDisplayDesign({ code, t, onMainLang }) {
       ) : (
         <></>
       )}
-    </>
+    </div>
   );
 }
 

@@ -6,10 +6,12 @@ function ImageDisplay(props) {
     : "";
   return (
     props.component.resources?.imageUrl && (
-      <div style={{ textAlign: "center" }}>
+      <div style={{ textAlign: "center", padding: "1em" }}>
         <img
           style={{
-            width:"100%",
+            width: props.component.imageWidth?.endsWith("%")
+              ? props.component.imageWidth
+              : undefined,
             maxWidth:"100%"
           }}
           src={imageUrl}

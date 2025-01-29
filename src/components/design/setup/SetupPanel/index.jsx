@@ -282,6 +282,34 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           code={code}
         />
       );
+    case "imageWidth":
+      const imageWidthValues = [
+        "unspecified",
+        "60%",
+        "70%",
+        "80%",
+        "90%",
+        "100%",
+      ];
+      const imageWidthLabels = [
+        t("unspecified"),
+        "60%",
+        "70%",
+        "80%",
+        "90%",
+        "100%",
+      ];
+      return (
+        <SelectValue
+          values={imageWidthValues}
+          labels={imageWidthLabels}
+          key={code + rule}
+          defaultValue="unspecified"
+          label={t("date_format")}
+          rule={rule}
+          code={code}
+        />
+      );
     case "decimal_separator":
       const decimalValues = ["", ",", "."];
       const labels = [t("no_decimals_allowed"), ",", "."];
@@ -311,14 +339,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
         />
       );
     case "reorder_setup":
-      const reorderLabels = [
-        t("collapse_groups"),
-        t("collapse_questions"),
-      ];
-      const reorderValues = [
-        "collapse_groups",
-        "collapse_questions",
-      ];
+      const reorderLabels = [t("collapse_groups"), t("collapse_questions")];
+      const reorderValues = ["collapse_groups", "collapse_questions"];
       return (
         <SelectValue
           values={reorderValues}

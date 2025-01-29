@@ -12,6 +12,6 @@
 }
 
 .imageContainer {
-  background-position: center;
-  background-repeat: no-repeat;
+  padding: 1em;
+  text-align: center;
 }
