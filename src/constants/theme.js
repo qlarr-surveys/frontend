@@ -46,17 +46,17 @@ export const defualtTheme = (theme) => {
 export const defaultSurveyTheme = {
   textStyles: {
     group: {
-      font: "Google Sans",
+      font: "Rubik",
       size: 26,
       color: TEXT_COLOR,
     },
     question: {
-      font: "Google Sans",
+      font: "Rubik",
       size: 18,
       color: TEXT_COLOR,
     },
     text: {
-      font: "Google Sans",
+      font: "Rubik",
       size: 14,
       color: TEXT_COLOR,
     },
