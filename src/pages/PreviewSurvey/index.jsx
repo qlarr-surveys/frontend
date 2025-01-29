@@ -1,7 +1,6 @@
 import { getparam } from "~/networking/run";
 import styles from "./PreviewSurvey.module.css";
 import {
-  Link,
   useNavigate,
   useParams,
   useSearchParams,
@@ -35,20 +34,7 @@ function PreviewSurvey({ guest = false }) {
     example: true,
   };
 
-  useEffect(() => {
-    const handlePopState = () => {
-      const searchParams = new URLSearchParams(window.location.search);
-      const mode = searchParams.get("mode") || "online";
-      setPreviewMode(mode);
-    };
-    window.addEventListener("popstate", handlePopState);
-    return () => {
-      window.removeEventListener("popstate", handlePopState);
-    };
-  }, []);
-
   const withEmbeddedParam = (surveyId, previewMode, lang) => {
-    console.log(lang)
     return (guest
         ? routes.iframePreviewGuestSurvey
       : routes.iframePreviewSurvey).replace(":surveyId",surveyId) + "?mode=" + previewMode + (lang ? "&lang=" + lang : "");
@@ -97,29 +83,14 @@ function PreviewSurvey({ guest = false }) {
           aria-label="Preview mode tabs"
         >
           <Tab
-            component={Link}
-            to={`${(guest ? routes.guestPreview : routes.preview).replace(
-              ":surveyId",
-              surveyId
-            )}?mode=${PREVIEW_MODE.ONLINE}`}
             value={PREVIEW_MODE.ONLINE}
             label={<SurveyIcon name="pc" />}
           />
           <Tab
-            component={Link}
-            to={`${(guest ? routes.guestPreview : routes.preview).replace(
-              ":surveyId",
-              surveyId
-            )}?mode=${PREVIEW_MODE.ONLINE_PHONE}`}
             value={PREVIEW_MODE.ONLINE_PHONE}
             label={<SurveyIcon name="phone" />}
           />
           <Tab
-            component={Link}
-            to={`${(guest ? routes.guestPreview : routes.preview).replace(
-              ":surveyId",
-              surveyId
-            )}?mode=${PREVIEW_MODE.OFFLINE}`}
             value={PREVIEW_MODE.OFFLINE}
             label={<SurveyIcon name="offline" />}
           />
