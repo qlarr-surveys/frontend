@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { Select, MenuItem } from "@mui/material";
-import CookiesService from "~/services/CookiesService";
 import { setDocumentLang } from "~/utils/common";
 import { KeyboardArrowDown } from "@mui/icons-material";
 
@@ -8,7 +7,7 @@ export const LanguageSelector = () => {
   const { i18n } = useTranslation();
 
   const handleChange = (event) => {
-    CookiesService.setValue(event.target.value, "lang");
+    localStorage.setItem("lang", event.target.value);
     i18n.changeLanguage(event.target.value);
     setDocumentLang(event.target.value);
   };

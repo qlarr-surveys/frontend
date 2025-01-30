@@ -10,21 +10,9 @@ class CookiesService {
     });
   }
 
-  setValue(value, key) {
-    Cookies.set(key, value, {
-      domain: FRONT_END_DOMAIN,
-      SameSite: "Strict",
-      expires: expiry(),
-    });
-  }
-
   getObject(key) {
     const value = Cookies.get(key);
     return value && JSON.parse(value);
-  }
-
-  getValue(key) {
-    return Cookies.get(key);
   }
 
   removeByKey(key) {

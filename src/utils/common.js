@@ -1,12 +1,11 @@
 import createCache from "@emotion/cache";
-import CookiesService from "~/services/CookiesService";
 import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
 
 export const rtlLanguage = ["ar"];
 
 export const setLangFromSession = (i18n) => {
-  const lang = CookiesService.getValue("lang");
+  const lang = localStorage.getItem("lang");
   if (!lang) {
     return;
   }
@@ -21,7 +20,7 @@ export const setDocumentLang = (lang) => {
 };
 
 export const getDirFromSession = () => {
-  const lang = CookiesService.getValue("lang");
+  const lang = localStorage.getItem("lang");
   return rtlLanguage.includes(lang) ? "rtl" : "ltr";
 };
 

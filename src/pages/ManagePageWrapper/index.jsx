@@ -1,4 +1,4 @@
-import CookiesService from "~/services/CookiesService";
+
 import React, { useEffect, useMemo, useState } from "react";
 import { cacheRtl, setLangFromSession } from "~/utils/common";
 import { CacheProvider } from "@emotion/react";
@@ -12,7 +12,7 @@ import ThemeProvider from "~/theme";
 import UnsupportedView from "../UnsupportedView";
 
 export const ManagePageWrapper = ({ showHeader=true, children }) => {
-  const lang = CookiesService.getValue("lang");
+  const lang = localStorage.getItem("lang");
 
   const { i18n } = useTranslation("manage");
 

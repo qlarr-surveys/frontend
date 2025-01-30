@@ -14,14 +14,13 @@ import RTL from "./options/right-to-left";
 import { customShadows } from "./custom-shadows";
 import { componentsOverrides } from "./overrides";
 import { createPresets } from "./options/presets";
-import CookiesService from "~/services/CookiesService";
 import { rtlLanguage } from "~/utils/common";
 
 // ----------------------------------------------------------------------
 
 export default function ThemeProvider({ children }) {
   const themeMode = "light";
-  const lang = CookiesService.getValue("lang");
+  const lang = localStorage.getItem("lang");
 
   const presets = createPresets("default");
   const direction = useMemo(
