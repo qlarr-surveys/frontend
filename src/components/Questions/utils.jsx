@@ -275,9 +275,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: "",
         },
       ];
@@ -295,9 +293,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "Double",
-          },
+          returnType: "double",
           text: "",
         },
       ];
@@ -314,9 +310,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: "",
         },
       ];
@@ -332,9 +326,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: "",
         },
       ];
@@ -350,17 +342,13 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: "",
         },
         {
           code: "mode",
           isActive: false,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: "offline",
         },
       ];
@@ -376,9 +364,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: "",
         },
       ];
@@ -431,9 +417,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: "",
         },
       ];
@@ -486,9 +470,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: "",
         },
       ];
@@ -539,9 +521,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Boolean",
-            },
+            returnType: "boolean",
             text: "",
           },
         ],
@@ -556,9 +536,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Boolean",
-            },
+            returnType: "boolean",
             text: "",
           },
         ],
@@ -573,9 +551,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Boolean",
-            },
+            returnType: "boolean",
             text: "",
           },
         ],
@@ -614,9 +590,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Int",
-            },
+            returnType: "int",
             text: "",
           },
         ],
@@ -631,9 +605,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Int",
-            },
+            returnType: "int",
             text: "",
           },
         ],
@@ -648,9 +620,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Int",
-            },
+            returnType: "int",
             text: "",
           },
         ],
@@ -686,9 +656,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Int",
-            },
+            returnType: "int",
             text: "",
           },
         ],
@@ -703,9 +671,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Int",
-            },
+            returnType: "int",
             text: "",
           },
         ],
@@ -720,9 +686,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Int",
-            },
+            returnType: "int",
             text: "",
           },
         ],
@@ -757,9 +721,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "Int",
-          },
+          returnType: "Int",
           text: "",
         },
       ];
@@ -779,9 +741,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Boolean",
-            },
+            returnType: "boolean",
             text: "",
           },
         ],
@@ -796,9 +756,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Boolean",
-            },
+            returnType: "boolean",
             text: "",
           },
         ],
@@ -813,9 +771,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Boolean",
-            },
+            returnType: "boolean",
             text: "",
           },
         ],
@@ -854,9 +810,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Boolean",
-            },
+            returnType: "boolean",
             text: "",
           },
         ],
@@ -871,9 +825,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Boolean",
-            },
+            returnType: "boolean",
             text: "",
           },
         ],
@@ -888,9 +840,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "Boolean",
-            },
+            returnType: "boolean",
             text: "",
           },
         ],
@@ -936,9 +886,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "String",
-            },
+            returnType: "string",
             text: "",
           },
         ],
@@ -954,9 +902,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "String",
-            },
+            returnType: "string",
             text: "",
           },
         ],
@@ -972,9 +918,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "String",
-            },
+            returnType: "string",
             text: "",
           },
         ],
@@ -1038,9 +982,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "String",
-            },
+            returnType: "string",
             text: "",
           },
         ],
@@ -1056,9 +998,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "String",
-            },
+            returnType: "string",
             text: "",
           },
         ],
@@ -1074,9 +1014,7 @@ export const createQuestion = (type, qId, lang) => {
           {
             code: "value",
             isActive: false,
-            returnType: {
-              name: "String",
-            },
+            returnType: "string",
             text: "",
           },
         ],
@@ -1129,9 +1067,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "File",
-          },
+          returnType: "file",
           text: "",
         },
       ];
@@ -1146,9 +1082,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "File",
-          },
+          returnType: "file",
           text: "",
         },
       ];
@@ -1164,17 +1098,13 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "File",
-          },
+          returnType: "file",
           text: "",
         },
         {
           code: "mode",
           isActive: false,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: "offline",
         },
       ];
@@ -1190,17 +1120,13 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "File",
-          },
+          returnType: "file",
           text: "",
         },
         {
           code: "mode",
           isActive: false,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: "offline",
         },
       ];
@@ -1219,9 +1145,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "Date",
-          },
+          returnType: "date",
           text: "",
         },
       ];
@@ -1240,9 +1164,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "Date",
-          },
+          returnType: "date",
           text: "",
         },
       ];
@@ -1258,9 +1180,7 @@ export const createQuestion = (type, qId, lang) => {
         {
           code: "value",
           isActive: false,
-          returnType: {
-            name: "Date",
-          },
+          returnType: "date",
           text: "",
         },
       ];

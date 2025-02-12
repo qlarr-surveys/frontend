@@ -148,16 +148,14 @@ function QuestionDesign({
       const valueInstruction = {
         code: "value",
         isActive: false,
-        returnType: {
-          name:
-            questionType == "ranking" ||
-            questionType == "nps" ||
-            questionType == "image_ranking"
-              ? "Int"
-              : questionType == "scq_array" || questionType == "scq_icon_array"
-              ? "String"
-              : "Boolean",
-        },
+        returnType:
+          questionType == "ranking" ||
+          questionType == "nps" ||
+          questionType == "image_ranking"
+            ? "Int"
+            : questionType == "scq_array" || questionType == "scq_icon_array"
+            ? "String"
+            : "Boolean",
         text: "",
       };
 
@@ -194,17 +192,13 @@ function QuestionDesign({
             {
               code: "value",
               isActive: false,
-              returnType: {
-                name: "String",
-              },
+              returnType: "string",
               text: "",
             },
             {
               code: "conditional_relevance",
               isActive: true,
-              returnType: {
-                name: "Boolean",
-              },
+              returnType: "boolean",
               text:
                 questionType === "scq"
                   ? `${questionCode}.value === 'Aother'`
@@ -256,7 +250,6 @@ function QuestionDesign({
 
   const contrastColor = getContrastColor(theme.palette.background.paper);
   const textColor = theme.textStyles.question.color;
-
 
   useEffect(() => {
     const element = containerRef.current;
@@ -351,7 +344,10 @@ function QuestionDesign({
         >
           <ContentEditor
             code={code}
-            editable={designMode == DESIGN_SURVEY_MODE.DESIGN || designMode == DESIGN_SURVEY_MODE.LANGUAGES}
+            editable={
+              designMode == DESIGN_SURVEY_MODE.DESIGN ||
+              designMode == DESIGN_SURVEY_MODE.LANGUAGES
+            }
             extended={false}
             placeholder={t("content_editor_placeholder_title")}
             contentKey="label"
@@ -363,7 +359,10 @@ function QuestionDesign({
         <Box className={styles.textDescriptionContent}>
           <ContentEditor
             code={code}
-            editable={designMode == DESIGN_SURVEY_MODE.DESIGN || designMode == DESIGN_SURVEY_MODE.LANGUAGES}
+            editable={
+              designMode == DESIGN_SURVEY_MODE.DESIGN ||
+              designMode == DESIGN_SURVEY_MODE.LANGUAGES
+            }
             extended={true}
             placeholder={t("content_editor_placeholder_description")}
             contentKey="description"

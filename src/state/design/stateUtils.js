@@ -171,7 +171,7 @@ const booleanActiveInstruction = (key, instructionText) => {
     code: key,
     text: instructionText,
     isActive: true,
-    returnType: { name: "Boolean" },
+    returnType: "boolean" ,
   };
 };
 
@@ -391,18 +391,18 @@ export const conditionalRelevanceEquation = (logic, rule, state) => {
       code,
       text: "false",
       isActive: false,
-      returnType: { name: "Boolean" },
+      returnType: "boolean",
     };
   }
   const text = jsonToJs(logic, false, (code) => state[code].type);
   if (rule == "show_if") {
-    return { code, text, isActive: true, returnType: { name: "Boolean" } };
+    return { code, text, isActive: true, returnType: "boolean" };
   } else if (rule == "hide_if") {
     return {
       code,
       text: `!(${text})`,
       isActive: true,
-      returnType: { name: "Boolean" },
+      returnType: "boolean",
     };
   } else {
     throw "WTF";

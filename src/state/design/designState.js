@@ -982,7 +982,7 @@ const addRelevanceInstructions = (state, code, relevance) => {
   changeInstruction(state[code], instruction);
 };
 
-export const addMaskedValuesInstructions = (
+const addMaskedValuesInstructions = (
   qualifiedCode,
   component,
   state
@@ -1012,9 +1012,7 @@ export const addMaskedValuesInstructions = (
         changeInstruction(component, {
           code: "masked_value",
           isActive: true,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: `QlarrScripts.formatSqlDate(${qualifiedCode}.value, "${component.dateFormat}")`,
         });
       } else {
@@ -1025,9 +1023,7 @@ export const addMaskedValuesInstructions = (
       changeInstruction(component, {
         code: "masked_value",
         isActive: true,
-        returnType: {
-          name: "String",
-        },
+        returnType: "string",
         text: `QlarrScripts.formatTime(${qualifiedCode}.value, ${
           component.fullDayFormat || false
         })`,
@@ -1038,9 +1034,7 @@ export const addMaskedValuesInstructions = (
         changeInstruction(component, {
           code: "masked_value",
           isActive: true,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: `${qualifiedCode}.value ? ${qualifiedCode}.value.toString().replace(".",",") : ${qualifiedCode}.value == undefined? "" : ${qualifiedCode}.value`,
         });
       } else {
@@ -1053,9 +1047,7 @@ export const addMaskedValuesInstructions = (
         changeInstruction(component, {
           code: "masked_value",
           isActive: true,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: `QlarrScripts.formatSqlDate(${qualifiedCode}.value, "${
             component.dateFormat
           }") + " " + QlarrScripts.formatTime(${qualifiedCode}.value, ${
@@ -1083,9 +1075,7 @@ export const addMaskedValuesInstructions = (
         const instruction = {
           code: "masked_value",
           isActive: true,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: `${qualifiedCode}.value ? QlarrScripts.safeAccess(${objText},${qualifiedCode}.value) : ''`,
         };
         changeInstruction(component, instruction);
@@ -1115,9 +1105,7 @@ export const addMaskedValuesInstructions = (
         const instruction = {
           code: "masked_value",
           isActive: true,
-          returnType: {
-            name: "String",
-          },
+          returnType: "string",
           text: `QlarrScripts.listStrings(${text}.filter(function(elem){return QlarrScripts.safeAccess(elem,"value")}).map(function(elem){return QlarrScripts.safeAccess(elem,"label")}), Survey.lang)`,
         };
         changeInstruction(component, instruction);
@@ -1147,9 +1135,7 @@ export const addMaskedValuesInstructions = (
             const instruction = {
               code: "masked_value",
               isActive: true,
-              returnType: {
-                name: "String",
-              },
+              returnType: "string",
               text: `${el.qualifiedCode}.value ? QlarrScripts.safeAccess(${objText},${el.qualifiedCode}.value) : ''`,
             };
             changeInstruction(state[el.qualifiedCode], instruction);
