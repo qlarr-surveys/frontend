@@ -7,13 +7,11 @@ import { FORM_ID } from "~/constants/run";
 import Group from "~/components/Group";
 import Navigation from "~/components/run/Navigation";
 import styles from "./Survey.module.css";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { isTouchDevice } from "~/utils/isTouchDevice";
-import { langChange } from "~/state/runState";
 function Survey() {
   const theme = useTheme();
-  const dispatch = useDispatch();
 
   const navigationIndex = useSelector((state) => {
     return state.runState.data?.navigationIndex;
@@ -26,21 +24,6 @@ function Survey() {
     return state.runState.data?.lang;
   }, shallowEqual);
 
-  const surveyState = useSelector((state) => state.runState.data, shallowEqual);
-
-  const { lang: surveyLang, additionalLang } = surveyState || {};
-  const languageOptions = [
-    { code: surveyLang.code, name: surveyLang.name },
-    ...(additionalLang || []),
-  ];
-
-  const handleLanguageChange = (selectedLanguage) => {
-    dispatch(
-      langChange({
-        lang: selectedLanguage,
-      })
-    );
-  };
 
   return (
     <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>

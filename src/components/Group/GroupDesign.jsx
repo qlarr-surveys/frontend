@@ -104,8 +104,6 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
     },
   });
 
-  const onMainLang = langInfo.onMainLang;
-
   const type = group?.groupType.toLowerCase();
 
   const children = group?.children;
