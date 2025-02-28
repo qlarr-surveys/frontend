@@ -5,7 +5,7 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import { Box, Chip, IconButton, Tab, Tabs } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";

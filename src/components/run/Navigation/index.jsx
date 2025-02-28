@@ -32,9 +32,10 @@ function Navigation(props) {
       setTimeout(() => {
         const invalidQuestion = document.querySelector(".invalidQuestion");
         if (invalidQuestion) {
-          invalidQuestion.scrollIntoView({
+          const scrollContainer = getClosestScrollableParent(invalidQuestion)
+          scrollContainer.scrollTo({
+            top: invalidQuestion.offsetTop - scrollContainer.offsetTop,
             behavior: "smooth",
-            block: "center",
           });
         }
       }, 500);
@@ -75,3 +76,25 @@ function Navigation(props) {
 }
 
 export default Navigation;
+
+
+
+
+function getClosestScrollableParent(element) {
+  if (!element) return null;
+  
+  let parent = element.parentElement;
+  while (parent) {
+    const style = window.getComputedStyle(parent);
+    const overflowY = style.overflowY;
+    const isScrollable = (overflowY === "auto" || overflowY === "scroll") && parent.scrollHeight > parent.clientHeight;
+    
+    if (isScrollable) {
+      return parent;
+    }
+    
+    parent = parent.parentElement;
+  }
+
+  return document.documentElement; // Default to <html> if no scrollable parent is found
+}
