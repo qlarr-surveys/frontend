@@ -306,7 +306,7 @@ function QuestionDesign({
               designMode == DESIGN_SURVEY_MODE.DESIGN ||
               designMode == DESIGN_SURVEY_MODE.LANGUAGES
             }
-            extended={false}
+            extended={type=="text_display"}
             placeholder={t("content_editor_placeholder_title")}
             contentKey="label"
           />

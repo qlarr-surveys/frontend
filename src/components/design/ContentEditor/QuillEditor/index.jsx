@@ -9,7 +9,6 @@ import { buildReferences } from "~/components/Questions/buildReferences";
 Quill.register("modules/mentions", QuillMention);
 Quill.register("modules/clipboard", SurveyFormClipboard, true);
 
-
 function DraftEditor({ value, onBlurListener, extended, isRtl, lang, code }) {
   console.debug("DraftEditor for: " + code);
 
@@ -74,6 +73,7 @@ function DraftEditor({ value, onBlurListener, extended, isRtl, lang, code }) {
       toolbar: {
         container: extended
           ? [
+              [{ size: ["small", false, "large", "huge"] }],
               ["bold", "italic", "underline", "strike", "link"],
               [
                 { list: "ordered" },
@@ -85,14 +85,15 @@ function DraftEditor({ value, onBlurListener, extended, isRtl, lang, code }) {
               ["clean"],
             ]
           : [
+              [{ size: ["small", false, "large", "huge"] }],
               ["bold", "italic", "underline", "strike", "link"],
               [{ color: [] }, { background: [] }],
               ["clean"],
             ],
-            clipboard: {
-              // Add the clipboard module with paste and matchVisual options
-              matchVisual: false, // Disable matching visual formatting during paste
-            },
+        clipboard: {
+          // Add the clipboard module with paste and matchVisual options
+          matchVisual: false, // Disable matching visual formatting during paste
+        },
         // handlers: {
         //   // handlers object will be merged with default handlers object
         //   link: function (value) {
@@ -109,6 +110,7 @@ function DraftEditor({ value, onBlurListener, extended, isRtl, lang, code }) {
   }, []);
 
   const formats = [
+    "size",
     "bold",
     "italic",
     "underline",
@@ -140,9 +142,9 @@ function DraftEditor({ value, onBlurListener, extended, isRtl, lang, code }) {
   };
 
   const onContainerClick = (e) => {
-    if (e.target.tagName === 'A' && e.target.className == "ql-preview") {
+    if (e.target.tagName === "A" && e.target.className == "ql-preview") {
       e.preventDefault();
-      window.open(e.target.href, '_blank');
+      window.open(e.target.href, "_blank");
     }
   };
 
