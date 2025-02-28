@@ -291,6 +291,11 @@ export const createQuestion = (type, qId, lang) => {
     case "email":
       state.maxChars = 30;
       state.showHint = true;
+      state.validation = {
+        validation_pattern_email: {
+          isActive: true,
+        },
+      };
       state.content = {
         label: {
           en: "Email Question"

@@ -715,6 +715,7 @@ const newQuestion = (state, payload) => {
   state[newCode].children?.forEach((element) => {
     addAnswerInstructions(state, state[element.qualifiedCode], newCode);
   });
+  cleanupValidation(state, newCode);
   addMaskedValuesInstructions(newCode, questionObject[newCode], state);
   destinationGroup.children.splice(
     destinationQuestionIndex,
