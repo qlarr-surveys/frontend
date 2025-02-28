@@ -145,20 +145,6 @@ function QuestionDesign({
       let qualifiedCode = "";
       let label = "";
 
-      const valueInstruction = {
-        code: "value",
-        isActive: false,
-        returnType:
-          questionType == "ranking" ||
-          questionType == "nps" ||
-          questionType == "image_ranking"
-            ? "Int"
-            : questionType == "scq_array" || questionType == "scq_icon_array"
-            ? "String"
-            : "Boolean",
-        text: "",
-      };
-
       switch (type) {
         case "column":
           nextAnswerIndex = nextId(
@@ -179,7 +165,6 @@ function QuestionDesign({
           dispatch(
             addNewAnswer({
               label,
-              instructionList: [valueInstruction],
               answer: { code, qualifiedCode, type },
             })
           );
@@ -188,33 +173,14 @@ function QuestionDesign({
           code = "Aother";
           label = "Other";
           qualifiedCode = questionCode + code;
-          const instructionListForText = [
-            {
-              code: "value",
-              isActive: false,
-              returnType: "string",
-              text: "",
-            },
-            {
-              code: "conditional_relevance",
-              isActive: true,
-              returnType: "boolean",
-              text:
-                questionType === "scq"
-                  ? `${questionCode}.value === 'Aother'`
-                  : `${questionCode}Aother.value === true`,
-            },
-          ];
           dispatch(
             addNewAnswer({
               label,
               answer: { code, qualifiedCode, type },
-              instructionList: questionType == "mcq" ? [valueInstruction] : [],
             })
           );
           dispatch(
             addNewAnswer({
-              instructionList: instructionListForText,
               answer: {
                 code: "Atext",
                 qualifiedCode: qualifiedCode + "Atext",
@@ -232,14 +198,6 @@ function QuestionDesign({
             addNewAnswer({
               label,
               answer: { code, qualifiedCode },
-              instructionList:
-                questionType == "mcq" ||
-                questionType == "image_mcq" ||
-                questionType == "icon_mcq" ||
-                questionType == "ranking" ||
-                questionType == "image_ranking"
-                  ? [valueInstruction]
-                  : [],
             })
           );
           break;

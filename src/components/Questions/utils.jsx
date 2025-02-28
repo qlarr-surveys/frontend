@@ -271,14 +271,6 @@ export const createQuestion = (type, qId, lang) => {
   returnObj.question = newQuestion;
   switch (type) {
     case "text":
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
       state.maxChars = 30;
       state.showHint = true;
       state.content = {
@@ -289,14 +281,6 @@ export const createQuestion = (type, qId, lang) => {
       break;
     case "number":
       state.maxChars = 30;
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "double",
-          text: "",
-        },
-      ];
       state.showHint = true;
       state.content = {
         label: {
@@ -306,14 +290,6 @@ export const createQuestion = (type, qId, lang) => {
       break;
     case "email":
       state.maxChars = 30;
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
       state.showHint = true;
       state.content = {
         label: {
@@ -322,14 +298,6 @@ export const createQuestion = (type, qId, lang) => {
       }
       break;
     case "paragraph":
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
       state.showHint = true;
       state.content = {
         label: {
@@ -338,20 +306,6 @@ export const createQuestion = (type, qId, lang) => {
       }
       break;
     case "barcode":
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-        {
-          code: "mode",
-          isActive: false,
-          returnType: "string",
-          text: "offline",
-        },
-      ];
       state.showHint = true;
       state.content = {
         label: {
@@ -360,14 +314,6 @@ export const createQuestion = (type, qId, lang) => {
       }
       break;
     case "scq":
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
       returnObj[`Q${qId}A1`] = {
         content: {
           label: {
@@ -413,14 +359,6 @@ export const createQuestion = (type, qId, lang) => {
       state.columns = 3;
       state.iconSize = "150";
       state.spacing = 8;
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
       returnObj[`Q${qId}A1`] = {
         content: {
           label: {
@@ -466,14 +404,6 @@ export const createQuestion = (type, qId, lang) => {
       state.columns = 3;
       state.imageAspectRatio = 1;
       state.spacing = 8;
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
       returnObj[`Q${qId}A1`] = {
         content: {
           label: {
@@ -517,14 +447,6 @@ export const createQuestion = (type, qId, lang) => {
       break;
     case "mcq":
       returnObj[`Q${qId}A1`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "boolean",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 1"
@@ -532,14 +454,6 @@ export const createQuestion = (type, qId, lang) => {
         }
       };
       returnObj[`Q${qId}A2`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "boolean",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 2"
@@ -547,14 +461,6 @@ export const createQuestion = (type, qId, lang) => {
         }
       };
       returnObj[`Q${qId}A3`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "boolean",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 3"
@@ -586,14 +492,6 @@ export const createQuestion = (type, qId, lang) => {
       state.imageAspectRatio = 1;
       state.spacing = 8;
       returnObj[`Q${qId}A1`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "int",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 1"
@@ -601,14 +499,6 @@ export const createQuestion = (type, qId, lang) => {
         }
       };
       returnObj[`Q${qId}A2`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "int",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 2"
@@ -616,14 +506,6 @@ export const createQuestion = (type, qId, lang) => {
         }
       };
       returnObj[`Q${qId}A3`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "int",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 3"
@@ -652,14 +534,6 @@ export const createQuestion = (type, qId, lang) => {
       break;
     case "ranking":
       returnObj[`Q${qId}A1`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "int",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 1"
@@ -667,14 +541,6 @@ export const createQuestion = (type, qId, lang) => {
         }
       };
       returnObj[`Q${qId}A2`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "int",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 2"
@@ -682,14 +548,6 @@ export const createQuestion = (type, qId, lang) => {
         }
       };
       returnObj[`Q${qId}A3`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "int",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 3"
@@ -717,14 +575,6 @@ export const createQuestion = (type, qId, lang) => {
       }
       break;
     case "nps":
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "Int",
-          text: "",
-        },
-      ];
       state.content = {
         label: {
           en: "NPS Question"
@@ -737,14 +587,6 @@ export const createQuestion = (type, qId, lang) => {
       state.iconSize = "150";
       state.spacing = 8;
       returnObj[`Q${qId}A1`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "boolean",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 1"
@@ -752,14 +594,6 @@ export const createQuestion = (type, qId, lang) => {
         }
       };
       returnObj[`Q${qId}A2`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "boolean",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 2"
@@ -767,14 +601,6 @@ export const createQuestion = (type, qId, lang) => {
         }
       };
       returnObj[`Q${qId}A3`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "boolean",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 3"
@@ -806,14 +632,6 @@ export const createQuestion = (type, qId, lang) => {
       state.imageAspectRatio = 1;
       state.spacing = 8;
       returnObj[`Q${qId}A1`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "boolean",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 1"
@@ -821,14 +639,6 @@ export const createQuestion = (type, qId, lang) => {
         }
       };
       returnObj[`Q${qId}A2`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "boolean",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 2"
@@ -836,14 +646,6 @@ export const createQuestion = (type, qId, lang) => {
         }
       };
       returnObj[`Q${qId}A3`] = {
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "boolean",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 3"
@@ -882,14 +684,6 @@ export const createQuestion = (type, qId, lang) => {
       };
       returnObj[`Q${qId}A1`] = {
         type: "row",
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "string",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 1"
@@ -898,14 +692,6 @@ export const createQuestion = (type, qId, lang) => {
       };
       returnObj[`Q${qId}A2`] = {
         type: "row",
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "string",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 2"
@@ -914,14 +700,6 @@ export const createQuestion = (type, qId, lang) => {
       };
       returnObj[`Q${qId}A3`] = {
         type: "row",
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "string",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 3"
@@ -978,14 +756,6 @@ export const createQuestion = (type, qId, lang) => {
       };
       returnObj[`Q${qId}A1`] = {
         type: "row",
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "string",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 1"
@@ -994,14 +764,6 @@ export const createQuestion = (type, qId, lang) => {
       };
       returnObj[`Q${qId}A2`] = {
         type: "row",
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "string",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 2"
@@ -1010,14 +772,6 @@ export const createQuestion = (type, qId, lang) => {
       };
       returnObj[`Q${qId}A3`] = {
         type: "row",
-        instructionList: [
-          {
-            code: "value",
-            isActive: false,
-            returnType: "string",
-            text: "",
-          },
-        ],
         content: {
           label: {
             en: "Option 3"
@@ -1063,14 +817,6 @@ export const createQuestion = (type, qId, lang) => {
       }
       break;
     case "file_upload":
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "file",
-          text: "",
-        },
-      ];
       state.content = {
         label: {
           en: "File Upload Question"
@@ -1078,14 +824,6 @@ export const createQuestion = (type, qId, lang) => {
       }
       break;
     case "signature":
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "file",
-          text: "",
-        },
-      ];
       state.content = {
         label: {
           en: "Signature Question"
@@ -1094,20 +832,6 @@ export const createQuestion = (type, qId, lang) => {
       break;
     case "photo_capture":
       state.showHint = true;
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "file",
-          text: "",
-        },
-        {
-          code: "mode",
-          isActive: false,
-          returnType: "string",
-          text: "offline",
-        },
-      ];
       state.content = {
         label: {
           en: "Capture Photo Question"
@@ -1116,20 +840,6 @@ export const createQuestion = (type, qId, lang) => {
       break;
     case "video_capture":
       state.showHint = true;
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "file",
-          text: "",
-        },
-        {
-          code: "mode",
-          isActive: false,
-          returnType: "string",
-          text: "offline",
-        },
-      ];
       state.content = {
         label: {
           en: "Capture Video Question"
@@ -1141,14 +851,6 @@ export const createQuestion = (type, qId, lang) => {
       state.dateFormat = "YYYY/MM/DD";
       state.maxDate = "";
       state.minDate = "";
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "date",
-          text: "",
-        },
-      ];
       state.content = {
         label: {
           en: "Date Question"
@@ -1160,14 +862,6 @@ export const createQuestion = (type, qId, lang) => {
       state.fullDayFormat = false;
       state.maxDate = "";
       state.minDate = "";
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "date",
-          text: "",
-        },
-      ];
       state.content = {
         label: {
           en: "Date and Time Question"
@@ -1176,14 +870,6 @@ export const createQuestion = (type, qId, lang) => {
       break;
     case "time":
       state.fullDayFormat = false;
-      state.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "date",
-          text: "",
-        },
-      ];
       state.content = {
         label: {
           en: "Time Question"

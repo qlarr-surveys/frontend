@@ -8,8 +8,6 @@ import {
   buildValidationDefaultData,
   cleanupValidationData,
   conditionalRelevanceEquation,
-  scqSkipEquations,
-  validationEquation,
   nextGroupId,
   nextQuestionId,
   reorder,
@@ -26,6 +24,15 @@ import {
   questionDesignError,
 } from "~/components/Questions/utils";
 import { DESIGN_SURVEY_MODE } from "~/routes";
+import {
+  addAnswerInstructions,
+  addMaskedValuesInstructions,
+  addQuestionInstructions,
+  addSkipInstructions,
+  addValidationEquation,
+  changeInstruction,
+  removeInstruction,
+} from "./addInstructions";
 
 const reservedKeys = ["setup", "reorder_refresh_code"];
 
@@ -227,10 +234,11 @@ export const designState = createSlice({
       const payload = action.payload;
       const answer = payload.answer;
       const label = payload.label;
-      const instructionList = payload.instructionList;
       const qualifiedCode = answer.qualifiedCode;
       state[qualifiedCode] = {};
-      if (!insertAnswer(state, answer)) {
+      const codes = splitQuestionCodes(qualifiedCode);
+      const parentCode = codes.slice(0, codes.length - 1).join("");
+      if (!insertAnswer(state, answer, parentCode)) {
         return;
       }
       if (label) {
@@ -239,9 +247,7 @@ export const designState = createSlice({
       if (answer.type) {
         state[qualifiedCode].type = answer.type;
       }
-      instructionList?.forEach((instruction) =>
-        changeInstruction(state[qualifiedCode], instruction)
-      );
+      addAnswerInstructions(state, state[qualifiedCode], parentCode);
     },
     deleteGroup: (state, action) => {
       const groupCode = action.payload;
@@ -386,7 +392,7 @@ export const designState = createSlice({
     removeSkipDestination: (state, action) => {
       const payload = action.payload;
       delete state[payload.code].skip_logic[payload.answerCode];
-      addSkipInstructions(state, payload.code, state[payload.code].skip_logic);
+      addSkipInstructions(state, payload.code);
     },
     editSkipDestination: (state, action) => {
       const payload = action.payload;
@@ -403,17 +409,13 @@ export const designState = createSlice({
         state[payload.code].skip_logic[payload.answerCode] = {
           skipTo: payload.skipTo,
         };
-        addSkipInstructions(
-          state,
-          payload.code,
-          state[payload.code].skip_logic
-        );
+        addSkipInstructions(state, payload.code);
       }
     },
     editSkipToEnd: (state, action) => {
       const payload = action.payload;
       state[payload.code].skip_logic[payload.answerCode].toEnd = payload.toEnd;
-      addSkipInstructions(state, payload.code, state[payload.code].skip_logic);
+      addSkipInstructions(state, payload.code);
     },
     onBaseLangChanged: (state, action) => {
       state.langInfo.mainLang = action.payload.code;
@@ -566,33 +568,6 @@ export const {
 
 export default designState.reducer;
 
-const changeInstruction = (componentState, instruction) => {
-  if (typeof componentState.instructionList === "undefined") {
-    componentState.instructionList = [];
-  }
-  if (instruction.remove) {
-    removeInstruction(componentState, instruction.code);
-  } else {
-    editInstruction(componentState, instruction);
-  }
-};
-
-// there is always an assumption that instructionList exists!!!
-const removeInstruction = (componentState, code) => {
-  if (componentState.instructionList.length) {
-    const index = componentState.instructionList.findIndex(
-      (el) => el.code === code
-    );
-    if (index < 0) {
-      return;
-    } else if (componentState.instructionList.length == 1) {
-      componentState.instructionList = [];
-    } else {
-      componentState.instructionList.splice(index, 1);
-    }
-  }
-};
-
 const cleanupRandomRules = (componentState) => {
   if (componentState["randomize_questions"]) {
     updateRandomByRule(componentState, "randomize_questions");
@@ -668,18 +643,6 @@ const updateRandomByRule = (componentState, randomRule) => {
   }
 };
 
-// there is always an assumption that instructionList exists!!!
-const editInstruction = (componentState, instruction) => {
-  const index = componentState.instructionList.findIndex(
-    (el) => el.code === instruction.code
-  );
-  if (index < 0) {
-    componentState.instructionList.push(instruction);
-  } else {
-    componentState.instructionList[index] = instruction;
-  }
-};
-
 const reparentQuestion = (state, survey, payload) => {
   let index = buildIndex(state, survey.children);
   const sourceGroup = state[payload.source];
@@ -741,13 +704,17 @@ const newQuestion = (state, payload) => {
   if (!destinationGroup.children) {
     destinationGroup.children = [];
   }
+
   Object.keys(questionObject)
     .filter((key) => key != "question")
     .forEach((key) => {
       state[key] = questionObject[key];
     });
   const newCode = `Q${questionId}`;
-
+  addQuestionInstructions(state[newCode]);
+  state[newCode].children?.forEach((element) => {
+    addAnswerInstructions(state, state[element.qualifiedCode], newCode);
+  });
   addMaskedValuesInstructions(newCode, questionObject[newCode], state);
   destinationGroup.children.splice(
     destinationQuestionIndex,
@@ -860,9 +827,7 @@ const reorderAnswersByType = (state, payload) => {
   component.children = reorder(component.children, fromIndex, toIndex);
 };
 
-const insertAnswer = (state, answer) => {
-  const codes = splitQuestionCodes(answer.qualifiedCode);
-  const parentCode = codes.slice(0, codes.length - 1).join("");
+const insertAnswer = (state, answer, parentCode) => {
   const component = state[parentCode];
   if (component) {
     if (!component.children) {
@@ -901,17 +866,6 @@ export const buildIndex = (state, groups) => {
 
 const splitQuestionCodes = (code) => {
   return code.split(/(A[a-z_0-9]+|Q[a-z_0-9]+)/).filter(Boolean);
-};
-
-const addValidationEquation = (state, qualifiedCode, rule) => {
-  const component = state[qualifiedCode];
-  const validationInstruction = validationEquation(
-    qualifiedCode,
-    component,
-    rule,
-    component["validation"][rule]
-  );
-  changeInstruction(component, validationInstruction);
 };
 
 const processValidation = (state, code, rule, modifyEquation) => {
@@ -958,21 +912,6 @@ const cleanupValidation = (state, code) => {
   ruleKeys.forEach((key) => processValidation(state, code, key, true));
 };
 
-const addSkipInstructions = (state, code, skipLogic) => {
-  const component = state[code];
-  if (
-    component.type != "scq" &&
-    component.type != "image_scq" &&
-    component.type != "icon_scq"
-  ) {
-    return;
-  }
-  const instructions = scqSkipEquations(code, component, skipLogic);
-  instructions.forEach((instruction) => {
-    changeInstruction(state[code], instruction);
-  });
-};
-
 const addRelevanceInstructions = (state, code, relevance) => {
   const instruction = conditionalRelevanceEquation(
     relevance.logic,
@@ -980,181 +919,6 @@ const addRelevanceInstructions = (state, code, relevance) => {
     state
   );
   changeInstruction(state[code], instruction);
-};
-
-const addMaskedValuesInstructions = (
-  qualifiedCode,
-  component,
-  state
-) => {
-  if (
-    !component.type ||
-    ![
-      "mcq",
-      "image_mcq",
-      "icon_mcq",
-      "scq",
-      "icon_scq",
-      "number",
-      "image_scq",
-      "scq_icon_array",
-      "scq_array",
-      "date",
-      "date_time",
-      "time",
-    ].includes(component.type)
-  ) {
-    return;
-  }
-  switch (component.type) {
-    case "date":
-      if (component.dateFormat) {
-        changeInstruction(component, {
-          code: "masked_value",
-          isActive: true,
-          returnType: "string",
-          text: `QlarrScripts.formatSqlDate(${qualifiedCode}.value, "${component.dateFormat}")`,
-        });
-      } else {
-        changeInstruction(component, { code: "masked_value", remove: true });
-      }
-      break;
-    case "time":
-      changeInstruction(component, {
-        code: "masked_value",
-        isActive: true,
-        returnType: "string",
-        text: `QlarrScripts.formatTime(${qualifiedCode}.value, ${
-          component.fullDayFormat || false
-        })`,
-      });
-      break;
-    case "number":
-      if (component.decimal_separator == ",") {
-        changeInstruction(component, {
-          code: "masked_value",
-          isActive: true,
-          returnType: "string",
-          text: `${qualifiedCode}.value ? ${qualifiedCode}.value.toString().replace(".",",") : ${qualifiedCode}.value == undefined? "" : ${qualifiedCode}.value`,
-        });
-      } else {
-        changeInstruction(component, { code: "masked_value", remove: true });
-      }
-
-      break;
-    case "date_time":
-      if (component.dateFormat) {
-        changeInstruction(component, {
-          code: "masked_value",
-          isActive: true,
-          returnType: "string",
-          text: `QlarrScripts.formatSqlDate(${qualifiedCode}.value, "${
-            component.dateFormat
-          }") + " " + QlarrScripts.formatTime(${qualifiedCode}.value, ${
-            component.fullDayFormat || false
-          })`,
-        });
-      } else {
-        changeInstruction(component, { code: "masked_value", remove: true });
-      }
-      break;
-    case "image_scq":
-    case "icon_scq":
-    case "scq":
-      if (component.children && component.children.length) {
-        let objText =
-          "{" +
-          component.children
-            .map((el) =>
-              el.type == "other"
-                ? `"${el.code}": ${el.qualifiedCode}Atext.value`
-                : `"${el.code}": ${el.qualifiedCode}.label`
-            )
-            .join(",") +
-          "}";
-        const instruction = {
-          code: "masked_value",
-          isActive: true,
-          returnType: "string",
-          text: `${qualifiedCode}.value ? QlarrScripts.safeAccess(${objText},${qualifiedCode}.value) : ''`,
-        };
-        changeInstruction(component, instruction);
-      } else {
-        changeInstruction(component, { code: "masked_value", remove: true });
-      }
-      break;
-    case "image_mcq":
-    case "icon_mcq":
-    case "mcq":
-      if (component.children && component.children.length) {
-        let text =
-          "[" +
-          component.children
-            .map((answer) => {
-              return (
-                `{ "value":${answer.qualifiedCode}.value,` +
-                ` "label":${
-                  answer.type == "other"
-                    ? answer.qualifiedCode + "Atext.value"
-                    : answer.qualifiedCode + ".label"
-                } }`
-              );
-            })
-            .join(", ") +
-          "]";
-        const instruction = {
-          code: "masked_value",
-          isActive: true,
-          returnType: "string",
-          text: `QlarrScripts.listStrings(${text}.filter(function(elem){return QlarrScripts.safeAccess(elem,"value")}).map(function(elem){return QlarrScripts.safeAccess(elem,"label")}), Survey.lang)`,
-        };
-        changeInstruction(component, instruction);
-      } else {
-        changeInstruction(component, { code: "masked_value", remove: true });
-      }
-      break;
-    case "scq_icon_array":
-    case "scq_array":
-      if (
-        component.children &&
-        component.children.length &&
-        component.children.filter((el) => el.type == "column").length &&
-        component.children.filter((el) => el.type === "row").length
-      ) {
-        let objText =
-          "{" +
-          component.children
-            .filter((el) => el.type == "column")
-            .map((el) => `"${el.code}": ${el.qualifiedCode}.label`)
-            .join(",") +
-          "}";
-
-        component.children
-          .filter((el) => el.type === "row")
-          .forEach((el) => {
-            const instruction = {
-              code: "masked_value",
-              isActive: true,
-              returnType: "string",
-              text: `${el.qualifiedCode}.value ? QlarrScripts.safeAccess(${objText},${el.qualifiedCode}.value) : ''`,
-            };
-            changeInstruction(state[el.qualifiedCode], instruction);
-          });
-      } else if (
-        component.children &&
-        component.children.filter((el) => el.type === "row").length
-      ) {
-        component.children
-          .filter((el) => el.type === "row")
-          .forEach((el) => {
-            changeInstruction(state[el.qualifiedCode], {
-              code: "masked_value",
-              remove: true,
-            });
-          });
-      }
-  }
-  return component;
 };
 
 const creatNewState = (
