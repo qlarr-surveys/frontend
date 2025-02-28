@@ -37,6 +37,11 @@ export const themeSetup = {
         "skipInvalid",
       ],
     },
+    {
+      title: "order_priority",
+      key: "random",
+      rules: ["randomize_groups", "prioritize_groups"],
+    }
   ],
 };
 export const languageSetup = {
