@@ -285,6 +285,9 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "imageWidth":
       const imageWidthValues = [
         "unspecified",
+        "30%",
+        "40%",
+        "50%",
         "60%",
         "70%",
         "80%",
@@ -293,6 +296,9 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
       ];
       const imageWidthLabels = [
         t("unspecified"),
+        "30%",
+        "40%",
+        "50%",
         "60%",
         "70%",
         "80%",
@@ -305,7 +311,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           labels={imageWidthLabels}
           key={code + rule}
           defaultValue="unspecified"
-          label={t("date_format")}
+          label={t("image_width")}
           rule={rule}
           code={code}
         />

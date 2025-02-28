@@ -260,6 +260,7 @@ function IconChoiceItemDesign({
             style={{
               width: "100%",
               display: "flex",
+              aspectRatio : "1",
               justifyContent: "center",
             }}
           >
