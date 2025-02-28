@@ -946,7 +946,7 @@ const creatNewState = (
     );
   }
   newState.instructionList?.forEach((eq) => {
-    eq.text = eq.text.replaceAll(oldQuestionCode, newQuestionCode);
+    eq.text = eq.text?.replaceAll(oldQuestionCode, newQuestionCode);
   });
   state[newStateCode] = newState;
   state[newStateCode]?.children?.forEach((child) => {
