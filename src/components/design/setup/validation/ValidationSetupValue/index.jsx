@@ -4,7 +4,8 @@ import { useDispatch } from "react-redux";
 import { changeValidationValue } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import FileType from "../../FileType";
-import React from 'react';
+import React, { useState } from "react";
+import { Trans } from 'react-i18next';
 
 function ValidationSetupValue({ code, validation, rule, t }) {
   const childCount = useSelector((state) => {
@@ -72,22 +73,13 @@ function ValidationSetupValue({ code, validation, rule, t }) {
               typeof bounds !== "undefined" &&
               (validation[i] < bounds[0] || validation[i] > bounds[1]);
             return (
-              <TextField
+              <ValidationInput
                 key={i}
-                error={isInError}
-                value={validation[i]}
-                variant="outlined"
-                size="small"
-                type={typeof validation[i] === "number" ? "number" : "text"}
-                onChange={(event) =>
-                  onValuesUpdate(
-                    i,
-                    typeof validation[i] === "number"
-                      ? parseInt(event.target.value)
-                      : event.target.value
-                  )
-                }
-                style={{ maxWidth: "150px", marginLeft: "8px" }}
+                t={t}
+                initialValue={validation[i]}
+                bounds={bounds}
+                validationType={typeof validation[i]}
+                onValuesUpdate={(value) => onValuesUpdate(i, value)}
               />
             );
           })
@@ -96,6 +88,54 @@ function ValidationSetupValue({ code, validation, rule, t }) {
     </div>
   );
 }
+
+const ValidationInput = ({
+  t,
+  initialValue,
+  validationType,
+  onValuesUpdate,
+  bounds,
+}) => {
+  const [value, setValue] = useState(initialValue);
+  const isInError = value != initialValue;
+  const onValueChange = (event) => {
+    const newValue =
+      validationType === "number"
+        ? parseInt(event.target.value) || ""
+        : event.target.value;
+    setValue(newValue);
+    if (
+      typeof bounds !== "undefined" &&
+      (newValue < bounds[0] || newValue > bounds[1])
+    ) {
+      setValue(newValue);
+    } else {
+      onValuesUpdate(newValue);
+    }
+  };
+  return (
+    <TextField
+      error={isInError}
+      value={value}
+      variant="outlined"
+      helperText={
+        isInError ? (
+          <Trans
+            t={t}
+            values={{
+              setup_value: initialValue,
+            }}
+            i18nKey="value_beyond_bounds_no_label"
+          />
+        ) : null
+      }
+      size="small"
+      type={validationType === "number" ? "number" : "text"}
+      onChange={onValueChange}
+      style={{ maxWidth: "150px", marginLeft: "8px" }}
+    />
+  );
+};
 
 const validationAttributes = (validation) => {
   return Object.keys(validation).filter(

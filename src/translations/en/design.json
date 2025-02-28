@@ -110,6 +110,7 @@
   "font": "Font",
   "groups_order": "Groups Order",
   "value_beyond_bounds": "invalid value for {{label}}, must be between {{lower_bound}} and {{upper_bound}}, actual value is: {{setup_value}} ",
+  "value_beyond_bounds_no_label": "invalid value! actual value is: {{setup_value}} ",
   "groups_priority": "Groups Priority",
   "hide_always": "Hide Always",
   "hide_if": "Hide If",

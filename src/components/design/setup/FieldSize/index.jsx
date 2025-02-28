@@ -23,19 +23,33 @@ function FieldSize({
   const [value, setValue] = useState(stateValue);
 
   const onValueChange = (event) => {
-    setValue(event.target.value);
-    if (value >= lowerBound && value <= upperBound) {
+    const newValue = event.target.value
+    setValue(newValue);
+    if (newValue >= lowerBound && newValue <= upperBound) {
       dispatch(
         changeAttribute({
           code,
           key: rule,
-          value: Math.max(lowerBound, Math.min(upperBound, event.target.value)),
+          value: Math.max(lowerBound, Math.min(upperBound, newValue)),
         })
       );
     }
   };
 
   const isError = value != stateValue;
+
+  const lostFocus = (event) => {
+    if (isError) {
+      setValue(stateValue);
+      dispatch(
+        changeAttribute({
+          code,
+          key: rule,
+          value: stateValue,
+        })
+      );
+    }
+  };
 
   return (
     <>
@@ -62,6 +76,7 @@ function FieldSize({
         size="small"
         style={{ maxWidth: "200px" }}
         value={value}
+        onBlur={lostFocus}
         onChange={(event) => onValueChange(event)}
       />
     </>

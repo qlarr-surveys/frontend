@@ -112,6 +112,7 @@
   "font": "الخط",
   "groups_order": "ترتيب المجموعات",
   "value_beyond_bounds": "قيمة غير صالحة لـ {{label}}، يجب أن تكون بين {{lower_bound}} و {{upper_bound}}، القيمة الحالية: {{setup_value}}",
+  "value_beyond_bounds_no_label": "قيمة غير صالحة! القيمة الحالية: {{setup_value}}",
   "groups_priority": "أولوية المجموعات",
   "hide_always": "الإخفاء دائمًا",
   "hide_if": "إخفاء إذا",
