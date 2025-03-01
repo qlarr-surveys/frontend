@@ -557,7 +557,7 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
         `&& ![${mimes
           .map((el) => '"' + el + '"')
-          .join(",")}].includes(${qualifiedCode}.value.type)`;
+          .join(",")}].includes(QlarrScripts.safeAccess(${qualifiedCode}.value,"type"))`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_file_size":
       instructionText =
