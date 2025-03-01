@@ -347,6 +347,7 @@ export const setupOptions = (type) => {
     case "mcq":
       return [
         { title: "show_hide", key: "relevance", rules: ["relevance"] },
+        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
           title: "order_priority",
           key: "random",
@@ -365,6 +366,7 @@ export const setupOptions = (type) => {
     case "ranking":
       return [
         { title: "show_hide", key: "relevance", rules: ["relevance"] },
+        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
           title: "order_priority",
           key: "random",
@@ -455,6 +457,7 @@ export const setupOptions = (type) => {
     case "scq_icon_array":
       return [
         { title: "show_hide", key: "relevance", rules: ["relevance"] },
+        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
           title: "order_priority",
           key: "random",
@@ -474,6 +477,7 @@ export const setupOptions = (type) => {
     case "scq_array":
       return [
         { title: "show_hide", key: "relevance", rules: ["relevance"] },
+        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
           title: "order_priority",
           key: "random",
