@@ -423,7 +423,7 @@ export const addAnswerInstructions = (state, answer, parentCode) => {
       questionType == "ranking" ||
       questionType == "nps" ||
       questionType == "image_ranking"
-        ? "Int"
+        ? "int"
         : questionType == "scq_array" || questionType == "scq_icon_array"
         ? "string"
         : "boolean",
