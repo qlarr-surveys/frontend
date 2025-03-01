@@ -28,6 +28,7 @@ function DynamicSvg({
         maxHeight: maxHeight,
         maxWidth: maxHeight,
         height: imageHeight,
+        aspectRatio: "1",
         padding: "2px",
         width: imageHeight,
         margin: "auto",

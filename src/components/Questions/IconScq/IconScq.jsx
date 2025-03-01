@@ -52,7 +52,6 @@ function IconScq(props) {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                aspectRatio : "1",
                 width: "100%"
               }}
             >
