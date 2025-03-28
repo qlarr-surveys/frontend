@@ -13,7 +13,7 @@ function ContentEditor({ placeholder, extended, contentKey, code, editable }) {
   const dispatch = useDispatch();
 
   const content = useSelector((state) => {
-    return state.designState[code].content?.[contentKey];
+    return state.designState[code].content
   });
 
   const langInfo = useSelector((state) => {
@@ -31,12 +31,12 @@ function ContentEditor({ placeholder, extended, contentKey, code, editable }) {
   const onMainLang = langInfo.onMainLang;
 
 
-  const value = content?.[lang] || "";
+  const value = content?.[lang]?.[contentKey] || "";
 
   const finalPlaceholder = onMainLang
     ? placeholder
-    : isNotEmptyHtml(content?.[mainLang])
-    ? content?.[mainLang]
+    : isNotEmptyHtml(content?.[mainLang]?.[contentKey])
+    ? content?.[mainLang]?.[contentKey]
     : placeholder;
   const [isActive, setActive] = useState(false);
 

@@ -116,7 +116,6 @@ function ContentPanel({ designMode }, ref) {
         } else if (lastAddedComponent.type === "question") {
           // Calculate the exact index for the newly added question
           const groupBaseIndex = lastAddedComponent.groupIndex * 2; // Groups and their drop areas
-          console.log("groupBaseIndex: " +  groupBaseIndex)
           virtuosoRef.current.scrollToIndex({
             index: groupBaseIndex + 2, // Drop area + question offset
             behavior: "smooth",

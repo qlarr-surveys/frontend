@@ -69,8 +69,8 @@ const buildField = (code, component, state, mainLang) => {
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
-            "is_void",
-            "is_not_void",
+            "is_empty",
+            "is_not_empty",
             "equal",
             "not_equal",
             "like",
@@ -91,8 +91,8 @@ const buildField = (code, component, state, mainLang) => {
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
-            "is_void",
-            "is_not_void",
+            "is_empty",
+            "is_not_empty",
             "like",
             "not_like",
             "starts_with",
@@ -111,8 +111,8 @@ const buildField = (code, component, state, mainLang) => {
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
-            "is_void",
-            "is_not_void",
+            "is_empty",
+            "is_not_empty",
             "equal",
             "not_equal",
             "less",
@@ -125,21 +125,6 @@ const buildField = (code, component, state, mainLang) => {
         },
       };
     case "file_upload":
-      return {
-        [code]: {
-          label: label,
-          type: "text",
-          valueSources: ["value"],
-          operators: [
-            "is_relevant",
-            "is_not_relevant",
-            "is_valid",
-            "is_not_valid",
-            "is_file_void",
-            "is_file_not_void",
-          ],
-        },
-      };
     case "signature":
     case "photo_capture":
     case "video_capture":
@@ -153,8 +138,8 @@ const buildField = (code, component, state, mainLang) => {
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
-            "is_file_void",
-            "is_file_not_void",
+            "is_empty",
+            "is_not_empty",
           ],
         },
       };
@@ -169,8 +154,8 @@ const buildField = (code, component, state, mainLang) => {
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
-            "is_void",
-            "is_not_void",
+            "is_empty",
+            "is_not_empty",
             "greater_or_equal",
             "less_or_equal",
             "between",
@@ -188,8 +173,8 @@ const buildField = (code, component, state, mainLang) => {
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
-            "is_void",
-            "is_not_void",
+            "is_empty",
+            "is_not_empty",
             "greater_or_equal",
             "less_or_equal",
             "between",
@@ -207,8 +192,8 @@ const buildField = (code, component, state, mainLang) => {
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
-            "is_void",
-            "is_not_void",
+            "is_empty",
+            "is_not_empty",
             "greater_or_equal",
             "less_or_equal",
             "between",
@@ -241,8 +226,8 @@ const buildField = (code, component, state, mainLang) => {
           "is_not_relevant",
           "is_valid",
           "is_not_valid",
-          "is_void",
-          "is_not_void",
+          "is_empty",
+          "is_not_empty",
           "select_any_in",
           "select_not_any_in",
         ],
@@ -265,8 +250,8 @@ const buildField = (code, component, state, mainLang) => {
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
-            "is_void",
-            "is_not_void",
+            "is_empty",
+            "is_not_empty",
             "equal",
             "not_equal",
             "like",
@@ -324,8 +309,8 @@ const buildField = (code, component, state, mainLang) => {
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
-            "is_void",
-            "is_not_void",
+            "is_empty",
+            "is_not_empty",
             "equal",
             "not_equal",
             "like",
@@ -349,27 +334,20 @@ const buildField = (code, component, state, mainLang) => {
       npsReturnList[code] = {
         label: label,
         fieldSettings: {
-          min: 0,
-          max: 10,
+          listValues: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
         },
-        type: "number",
+        type: "select",
         valueSources: ["value"],
         operators: [
-          "is_void",
-          "is_not_void",
-          "equal",
-          "not_equal",
-          "less",
-          "less_or_equal",
-          "greater",
-          "greater_or_equal",
-          "between",
-          "not_between",
+          "is_empty",
+          "is_not_empty",
+          "select_any_in",
+          "select_not_any_in",
         ],
       };
       return npsReturnList;
-      case "scq_icon_array":
-      case "scq_array":
+    case "scq_icon_array":
+    case "scq_array":
       let scqArrayReturnList = {};
       let scqArrayListValues = {};
       component.children
@@ -430,8 +408,8 @@ const buildField = (code, component, state, mainLang) => {
           },
           valueSources: ["value"],
           operators: [
-            "is_void",
-            "is_not_void",
+            "is_empty",
+            "is_not_empty",
             "equal",
             "not_equal",
             "less",

@@ -24,7 +24,7 @@ function TextQuestionDesign({ code }) {
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
-        label={state.showHint && (state.content?.hint?.[lang] || "")}
+        label={state.showHint && (state.content?.[lang]?.hint || "")}
         value={""}
         InputProps={{
           sx: {

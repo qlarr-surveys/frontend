@@ -6,11 +6,11 @@ import { styled, useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import ValidationItem from "~/components/run/ValidationItem";
 import { valueChange } from "~/state/runState";
-import { fileTypesToMimesArray } from "~/constants/validation";
 import { setDirty } from "~/state/templateState";
 import { useTranslation } from "react-i18next";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
+import { fileTypesToMimesArray } from '~/state/design/addInstructions';
 
 const Input = styled("input")({
   display: "none",

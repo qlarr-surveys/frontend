@@ -163,10 +163,7 @@ export const nextId = (elements) => {
   return 1;
 };
 
-export const instructionByCode = (component, code) =>
-  component.instructionList
-    ? component.instructionList.find((el) => el.code === code)
-    : undefined;
+
 
 export const stripTags = (string) => {
   return string

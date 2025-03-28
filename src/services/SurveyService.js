@@ -132,7 +132,6 @@ class SurveyService extends BaseService {
       ? contentDisposition.match(/filename="(.+)"/)?.[1] || `${surveyId}.zip`
       : `${surveyId}.zip`;
 
-    console.log(response)
     // Convert the response to a Blob
     const blob = await response.data;
 

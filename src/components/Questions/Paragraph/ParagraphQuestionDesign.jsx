@@ -21,7 +21,7 @@ function ParagraphQuestionDesign({ code, t }) {
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
-        placeholder={state.showHint && (state.content?.hint?.[lang] || "")}
+        placeholder={state.showHint && (state.content?.[lang]?.hint || "")}
         minRows={state.minRows || 2}
         value={""}
       />

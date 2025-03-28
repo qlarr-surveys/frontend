@@ -25,7 +25,7 @@ import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
 import { getContrastColor } from "../utils";
-import { inDesign } from '~/routes';
+import { inDesign } from "~/routes";
 
 function SCQArray(props) {
   const theme = useTheme();
@@ -43,7 +43,6 @@ function SCQArray(props) {
   const isInSetup = useSelector((state) => {
     return state.designState.setup?.code == props.code;
   });
-
 
   const rows = React.useMemo(
     () => children?.filter((el) => el.type == "row") || [],
@@ -79,7 +78,7 @@ function SCQArray(props) {
         <Table>
           <TableHead>
             <TableRow>
-              {inDesign(props.designMode)  && (
+              {inDesign(props.designMode) && (
                 <TableCell
                   sx={{
                     padding: "0",
@@ -166,14 +165,14 @@ function SCQArrayRowDesign({
   const onMainLang = langInfo.lang === langInfo.mainLang;
 
   const content = useSelector((state) => {
-    return state.designState[item.qualifiedCode].content?.["label"]?.[
-      langInfo.lang
+    return state.designState[item.qualifiedCode].content?.[langInfo.lang]?.[
+      "label"
     ];
   });
 
   const mainContent = useSelector((state) => {
-    return state.designState[item.qualifiedCode].content?.["label"]?.[
-      langInfo.mainLang
+    return state.designState[item.qualifiedCode].content?.[langInfo.mainLang]?.[
+      "label"
     ];
   });
   const itemType = `col-${parentQualifiedCode}`;
@@ -246,7 +245,7 @@ function SCQArrayRowDesign({
           key="move"
           sx={{
             padding: "0",
-            color: theme.textStyles.text.color
+            color: theme.textStyles.text.color,
           }}
         >
           <DragIndicatorIcon />
@@ -296,16 +295,16 @@ function SCQArrayRowDesign({
             align="center"
             sx={{
               padding: "4px",
-
             }}
           >
             <Radio
               sx={{
-                '&.Mui-disabled': {
+                "&.Mui-disabled": {
                   color: theme.textStyles.text.color,
                 },
               }}
-              disabled={true} />
+              disabled={true}
+            />
           </TableCell>
         );
       })}
@@ -343,15 +342,15 @@ function SCQArrayHeaderDesign({
   const isLtr = !isRtl;
 
   const content = useSelector((state) => {
-    return state.designState[item.qualifiedCode].content?.["label"]?.[
+    return state.designState[item.qualifiedCode].content?.[
       langInfo.lang
-    ];
+    ]?.["label"];
   });
 
   const mainContent = useSelector((state) => {
-    return state.designState[item.qualifiedCode].content?.["label"]?.[
+    return state.designState[item.qualifiedCode].content?.[
       langInfo.mainLang
-    ];
+    ]?.["label"];
   });
   const itemType = `row-${parentQualifiedCode}`;
 
@@ -434,7 +433,6 @@ function SCQArrayHeaderDesign({
             ref={drag}
             key="move"
             sx={{
-
               padding: "0",
             }}
           >

@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import styles from "./CustomPriority.module.css";
 import { Button } from "@mui/material";
 import LowPriorityIcon from "@mui/icons-material/LowPriority";
 
-import { instructionByCode } from "~/utils/design/utils";
 import RandomError from "../RandomError";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { updatePriority, updatePriorityByType } from "~/state/design/designState";
 import PriorityItemDisplay from "../PriorityItemDisplay";
 import PriorityItemSetup from "../PriorityItemSetup";
+import { instructionByCode } from '~/state/design/addInstructions';
 
 export default function CustomPriority({ t, type, code, hideErrors }) {
   const dispatch = useDispatch();
@@ -44,7 +43,7 @@ export default function CustomPriority({ t, type, code, hideErrors }) {
           return {
             code: child.code,
             label:
-              state.designState[child.qualifiedCode].content?.label?.[lang],
+              state.designState[child.qualifiedCode].content?.[lang]?.label,
           };
         }) || []
     );

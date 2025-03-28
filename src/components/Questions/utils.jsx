@@ -83,7 +83,7 @@ function hexToRgb(hex) {
 }
 
 function rgbToHex(r, g, b) {
-  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
 
 function blendColors(color1, color2, opacity) {
@@ -93,12 +93,12 @@ function blendColors(color1, color2, opacity) {
   return [r, g, b];
 }
 
-
 export const getContrastColor = (hexColor, opacity = 0.2) => {
   const rgbColor = hexToRgb(hexColor);
 
   // Calculate luminance
-  const luminance = (0.299 * rgbColor[0] + 0.587 * rgbColor[1] + 0.114 * rgbColor[2]) / 255;
+  const luminance =
+    (0.299 * rgbColor[0] + 0.587 * rgbColor[1] + 0.114 * rgbColor[2]) / 255;
 
   // Determine contrast color (black or white)
   const contrastRgb = luminance > 0.5 ? [0, 0, 0] : [255, 255, 255];
@@ -274,19 +274,19 @@ export const createQuestion = (type, qId, lang) => {
       state.maxChars = 30;
       state.showHint = true;
       state.content = {
-        label: {
-          en: "Short Text Question"
-        }
-      }
+        en: {
+          label: "Short Text Question",
+        },
+      };
       break;
     case "number":
       state.maxChars = 30;
       state.showHint = true;
       state.content = {
-        label: {
-          en: "Number Question"
-        }
-      }
+        en: {
+          label: "Number Question",
+        },
+      };
       break;
     case "email":
       state.maxChars = 30;
@@ -297,48 +297,48 @@ export const createQuestion = (type, qId, lang) => {
         },
       };
       state.content = {
-        label: {
-          en: "Email Question"
-        }
-      }
+        en: {
+          label: "Email Question",
+        },
+      };
       break;
     case "paragraph":
       state.showHint = true;
       state.content = {
-        label: {
-          en: "Long Text Question"
-        }
-      }
+        en: {
+          label: "Long Text Question",
+        },
+      };
       break;
     case "barcode":
       state.showHint = true;
       state.content = {
-        label: {
-          en: "Barcode Question"
-        }
-      }
+        en: {
+          label: "Barcode Question",
+        },
+      };
       break;
     case "scq":
       returnObj[`Q${qId}A1`] = {
         content: {
-          label: {
-            en: "Option 1"
-          }
-        }
+          en: {
+            label: "Option 1",
+          },
+        },
       };
       returnObj[`Q${qId}A2`] = {
         content: {
-          label: {
-            en: "Option 2"
-          }
-        }
+          en: {
+            label: "Option 2",
+          },
+        },
       };
       returnObj[`Q${qId}A3`] = {
         content: {
-          label: {
-            en: "Option 3"
-          }
-        }
+          en: {
+            label: "Option 3",
+          },
+        },
       };
       state.children = [
         {
@@ -355,10 +355,10 @@ export const createQuestion = (type, qId, lang) => {
         },
       ];
       state.content = {
-        label: {
-          en: "Single Choice Question"
-        }
-      }
+        en: {
+          label: "Single Choice Question",
+        },
+      };
       break;
     case "icon_scq":
       state.columns = 3;
@@ -366,24 +366,24 @@ export const createQuestion = (type, qId, lang) => {
       state.spacing = 8;
       returnObj[`Q${qId}A1`] = {
         content: {
-          label: {
-            en: "Option 1"
-          }
-        }
+          en: {
+            label: "Option 1",
+          },
+        },
       };
       returnObj[`Q${qId}A2`] = {
         content: {
-          label: {
-            en: "Option 2"
-          }
-        }
+          en: {
+            label: "Option 2",
+          },
+        },
       };
       returnObj[`Q${qId}A3`] = {
         content: {
-          label: {
-            en: "Option 3"
-          }
-        }
+          en: {
+            label: "Option 3",
+          },
+        },
       };
       state.children = [
         {
@@ -400,10 +400,10 @@ export const createQuestion = (type, qId, lang) => {
         },
       ];
       state.content = {
-        label: {
-          en: "Single Icon Choice Question"
-        }
-      }
+        en: {
+          label: "Single Icon Choice Question",
+        },
+      };
       break;
     case "image_scq":
       state.columns = 3;
@@ -411,24 +411,24 @@ export const createQuestion = (type, qId, lang) => {
       state.spacing = 8;
       returnObj[`Q${qId}A1`] = {
         content: {
-          label: {
-            en: "Option 1"
-          }
-        }
+          en: {
+            label: "Option 1",
+          },
+        },
       };
       returnObj[`Q${qId}A2`] = {
         content: {
-          label: {
-            en: "Option 2"
-          }
-        }
+          en: {
+            label: "Option 2",
+          },
+        },
       };
       returnObj[`Q${qId}A3`] = {
         content: {
-          label: {
-            en: "Option 3"
-          }
-        }
+          en: {
+            label: "Option 3",
+          },
+        },
       };
       state.children = [
         {
@@ -445,32 +445,32 @@ export const createQuestion = (type, qId, lang) => {
         },
       ];
       state.content = {
-        label: {
-          en: "Single Image Choice Question"
-        }
-      }
+        en: {
+          label: "Single Image Choice Question",
+        },
+      };
       break;
     case "mcq":
       returnObj[`Q${qId}A1`] = {
         content: {
-          label: {
-            en: "Option 1"
-          }
-        }
+          en: {
+            label: "Option 1",
+          },
+        },
       };
       returnObj[`Q${qId}A2`] = {
         content: {
-          label: {
-            en: "Option 2"
-          }
-        }
+          en: {
+            label: "Option 2",
+          },
+        },
       };
       returnObj[`Q${qId}A3`] = {
         content: {
-          label: {
-            en: "Option 3"
-          }
-        }
+          en: {
+            label: "Option 3",
+          },
+        },
       };
       state.children = [
         {
@@ -487,10 +487,10 @@ export const createQuestion = (type, qId, lang) => {
         },
       ];
       state.content = {
-        label: {
-          en: "Multiple Choice Question"
-        }
-      }
+        en: {
+          label: "Multiple Choice Question",
+        },
+      };
       break;
     case "image_ranking":
       state.columns = 3;
@@ -498,24 +498,24 @@ export const createQuestion = (type, qId, lang) => {
       state.spacing = 8;
       returnObj[`Q${qId}A1`] = {
         content: {
-          label: {
-            en: "Option 1"
-          }
-        }
+          en: {
+            label: "Option 1",
+          },
+        },
       };
       returnObj[`Q${qId}A2`] = {
         content: {
-          label: {
-            en: "Option 2"
-          }
-        }
+          en: {
+            label: "Option 2",
+          },
+        },
       };
       returnObj[`Q${qId}A3`] = {
         content: {
-          label: {
-            en: "Option 3"
-          }
-        }
+          en: {
+            label: "Option 3",
+          },
+        },
       };
       state.children = [
         {
@@ -532,32 +532,32 @@ export const createQuestion = (type, qId, lang) => {
         },
       ];
       state.content = {
-        label: {
-          en: "Image Ranking Question"
-        }
-      }
+        en: {
+          label: "Image Ranking Question",
+        },
+      };
       break;
     case "ranking":
       returnObj[`Q${qId}A1`] = {
         content: {
-          label: {
-            en: "Option 1"
-          }
-        }
+          en: {
+            label: "Option 1",
+          },
+        },
       };
       returnObj[`Q${qId}A2`] = {
         content: {
-          label: {
-            en: "Option 2"
-          }
-        }
+          en: {
+            label: "Option 2",
+          },
+        },
       };
       returnObj[`Q${qId}A3`] = {
         content: {
-          label: {
-            en: "Option 3"
-          }
-        }
+          en: {
+            label: "Option 3",
+          },
+        },
       };
       state.children = [
         {
@@ -574,17 +574,17 @@ export const createQuestion = (type, qId, lang) => {
         },
       ];
       state.content = {
-        label: {
-          en: "Ranking Question"
-        }
-      }
+        en: {
+          label: "Ranking Question",
+        },
+      };
       break;
     case "nps":
       state.content = {
-        label: {
-          en: "NPS Question"
-        }
-      }
+        en: {
+          label: "NPS Question",
+        },
+      };
       break;
     case "icon_mcq":
       state.columns = 3;
@@ -593,24 +593,24 @@ export const createQuestion = (type, qId, lang) => {
       state.spacing = 8;
       returnObj[`Q${qId}A1`] = {
         content: {
-          label: {
-            en: "Option 1"
-          }
-        }
+          en: {
+            label: "Option 1",
+          },
+        },
       };
       returnObj[`Q${qId}A2`] = {
         content: {
-          label: {
-            en: "Option 2"
-          }
-        }
+          en: {
+            label: "Option 2",
+          },
+        },
       };
       returnObj[`Q${qId}A3`] = {
         content: {
-          label: {
-            en: "Option 3"
-          }
-        }
+          en: {
+            label: "Option 3",
+          },
+        },
       };
       state.children = [
         {
@@ -627,10 +627,10 @@ export const createQuestion = (type, qId, lang) => {
         },
       ];
       state.content = {
-        label: {
-          en: "Multiple Icon Choice Question"
-        }
-      }
+        en: {
+          label: "Multiple Icon Choice Question",
+        },
+      };
       break;
     case "image_mcq":
       state.columns = 3;
@@ -638,24 +638,24 @@ export const createQuestion = (type, qId, lang) => {
       state.spacing = 8;
       returnObj[`Q${qId}A1`] = {
         content: {
-          label: {
-            en: "Option 1"
-          }
-        }
+          en: {
+            label: "Option 1",
+          },
+        },
       };
       returnObj[`Q${qId}A2`] = {
         content: {
-          label: {
-            en: "Option 2"
-          }
-        }
+          en: {
+            label: "Option 2",
+          },
+        },
       };
       returnObj[`Q${qId}A3`] = {
         content: {
-          label: {
-            en: "Option 3"
-          }
-        }
+          en: {
+            label: "Option 3",
+          },
+        },
       };
       state.children = [
         {
@@ -672,10 +672,10 @@ export const createQuestion = (type, qId, lang) => {
         },
       ];
       state.content = {
-        label: {
-          en: "Multiple Image Choice Question"
-        }
-      }
+        en: {
+          label: "Multiple Image Choice Question",
+        },
+      };
       break;
     case "scq_icon_array":
       returnObj[`Q${qId}Ac1`] = {
@@ -690,26 +690,26 @@ export const createQuestion = (type, qId, lang) => {
       returnObj[`Q${qId}A1`] = {
         type: "row",
         content: {
-          label: {
-            en: "Option 1"
-          }
-        }
+          en: {
+            label: "Row 1",
+          },
+        },
       };
       returnObj[`Q${qId}A2`] = {
         type: "row",
         content: {
-          label: {
-            en: "Option 2"
-          }
-        }
+          en: {
+            label: "Row 2",
+          },
+        },
       };
       returnObj[`Q${qId}A3`] = {
         type: "row",
         content: {
-          label: {
-            en: "Option 3"
-          }
-        }
+          en: {
+            label: "Row 3",
+          },
+        },
       };
       state.children = [
         {
@@ -744,44 +744,59 @@ export const createQuestion = (type, qId, lang) => {
         },
       ];
       state.content = {
-        label: {
-          en: "Single Choice Icon Array Question"
-        }
-      }
+        en: {
+          label: "Single Choice Icon Array Question",
+        },
+      };
       break;
     case "scq_array":
       returnObj[`Q${qId}Ac1`] = {
         type: "column",
+        content: {
+          en: {
+            label: "Col 1",
+          },
+        },
       };
       returnObj[`Q${qId}Ac2`] = {
         type: "column",
+        content: {
+          en: {
+            label: "Col 2",
+          },
+        },
       };
       returnObj[`Q${qId}Ac3`] = {
         type: "column",
+        content: {
+          en: {
+            label: "Col 3",
+          },
+        },
       };
       returnObj[`Q${qId}A1`] = {
         type: "row",
         content: {
-          label: {
-            en: "Option 1"
-          }
-        }
+          en: {
+            label: "Row 1",
+          },
+        },
       };
       returnObj[`Q${qId}A2`] = {
         type: "row",
         content: {
-          label: {
-            en: "Option 2"
-          }
-        }
+          en: {
+            label: "Row 2",
+          },
+        },
       };
       returnObj[`Q${qId}A3`] = {
         type: "row",
         content: {
-          label: {
-            en: "Option 3"
-          }
-        }
+          en: {
+            label: "Row 3",
+          },
+        },
       };
       state.children = [
         {
@@ -816,40 +831,40 @@ export const createQuestion = (type, qId, lang) => {
         },
       ];
       state.content = {
-        label: {
-          en: "Single Choice Array Question"
-        }
-      }
+        en: {
+          label: "Single Choice Array Question",
+        },
+      };
       break;
     case "file_upload":
       state.content = {
-        label: {
-          en: "File Upload Question"
-        }
-      }
+        en: {
+          label: "File Upload Question",
+        },
+      };
       break;
     case "signature":
       state.content = {
-        label: {
-          en: "Signature Question"
-        }
-      }
+        en: {
+          label: "Signature Question",
+        },
+      };
       break;
     case "photo_capture":
       state.showHint = true;
       state.content = {
-        label: {
-          en: "Capture Photo Question"
-        }
-      }
+        en: {
+          label: "Capture Photo Question",
+        },
+      };
       break;
     case "video_capture":
       state.showHint = true;
       state.content = {
-        label: {
-          en: "Capture Video Question"
-        }
-      }
+        en: {
+          label: "Capture Video Question",
+        },
+      };
       break;
     case "date":
       state.type = "date";
@@ -857,10 +872,10 @@ export const createQuestion = (type, qId, lang) => {
       state.maxDate = "";
       state.minDate = "";
       state.content = {
-        label: {
-          en: "Date Question"
-        }
-      }
+        en: {
+          label: "Date Question",
+        },
+      };
       break;
     case "date_time":
       state.dateFormat = "YYYY/MM/DD";
@@ -868,39 +883,39 @@ export const createQuestion = (type, qId, lang) => {
       state.maxDate = "";
       state.minDate = "";
       state.content = {
-        label: {
-          en: "Date and Time Question"
-        }
-      }
+        en: {
+          label: "Date and Time Question",
+        },
+      };
       break;
     case "time":
       state.fullDayFormat = false;
       state.content = {
-        label: {
-          en: "Time Question"
-        }
-      }
+        en: {
+          label: "Time Question",
+        },
+      };
       break;
     case "text_display":
       state.content = {
-        label: {
-          en: "Text Display Question"
-        }
-      }
+        en: {
+          label: "Text Display Question",
+        },
+      };
       break;
     case "video_display":
       state.content = {
-        label: {
-          en: "Video Display Question"
-        }
-      }
+        en: {
+          label: "Video Display Question",
+        },
+      };
       break;
     case "image_display":
       state.content = {
-        label: {
-          en: "Image Display Question"
-        }
-      }
+        en: {
+          label: "Image Display Question",
+        },
+      };
       break;
     default:
       break;

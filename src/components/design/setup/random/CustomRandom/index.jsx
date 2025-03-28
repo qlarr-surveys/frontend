@@ -5,11 +5,11 @@ import ShuffleIcon from "@mui/icons-material/Shuffle";
 
 import RandomItemSetup from "../RandomItemSetup";
 import RandomItemDisplay from "../RandomItemDisplay";
-import { instructionByCode } from "~/utils/design/utils";
 import RandomError from "../RandomError";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { updateRandom, updateRandomByType } from "~/state/design/designState";
+import { instructionByCode } from '~/state/design/addInstructions';
 
 export default function CustomRandom({ t, type, code, hideErrors }) {
   const dispatch = useDispatch();
@@ -44,7 +44,7 @@ export default function CustomRandom({ t, type, code, hideErrors }) {
           return {
             code: child.code,
             label:
-              state.designState[child.qualifiedCode].content?.label?.[lang],
+              state.designState[child.qualifiedCode].content?.[lang]?.label,
           };
         }) || []
     );

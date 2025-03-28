@@ -1,5 +1,3 @@
-import { fileTypesToMimesArray } from "~/constants/validation";
-
 export const addSkipInstructions = (state, code) => {
   const component = state[code];
   if (
@@ -413,8 +411,13 @@ export const addQuestionInstructions = (question) => {
   }
 };
 
-export const addAnswerInstructions = (state, answer, parentCode) => {
-  const questionType = state[parentCode].type;
+export const addAnswerInstructions = (
+  state,
+  answer,
+  parentCode,
+  questionCode
+) => {
+  const questionType = state[questionCode].type;
   const type = answer.type;
   const valueInstruction = {
     code: "value",
@@ -448,27 +451,25 @@ export const addAnswerInstructions = (state, answer, parentCode) => {
         returnType: "string",
         text: "",
       });
-
       changeInstruction(answer, {
         code: "conditional_relevance",
         isActive: true,
         returnType: "boolean",
         text:
           questionType === "scq"
-            ? `${parentCode}.value === 'Aother'`
-            : `${parentCode}Aother.value === true`,
+            ? `${questionCode}.value === 'Aother'`
+            : `${parentCode}.value === true`,
       });
       return;
     default:
       if (questionType !== "scq") {
-        console.log("change instruction");
         changeInstruction(answer, valueInstruction);
       }
       return;
   }
 };
 
-export const addValidationEquation = (state, qualifiedCode, rule) => {
+const addValidationEquation = (state, qualifiedCode, rule) => {
   const component = state[qualifiedCode];
   const validationInstruction = validationEquation(
     qualifiedCode,
@@ -557,12 +558,14 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
         `&& ![${mimes
           .map((el) => '"' + el + '"')
-          .join(",")}].includes(QlarrScripts.safeAccess(${qualifiedCode}.value,"type"))`;
+          .join(
+            ","
+          )}].includes(QlarrScripts.safeAccess(${qualifiedCode}.value,"type"))`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_file_size":
       instructionText =
         `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& ${qualifiedCode}.value.size / 1024 > ${validation.max_size}`;
+        `&& QlarrScripts.safeAccess(${qualifiedCode}.value,"size")/ 1024 > ${validation.max_size}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_pattern":
       if (!isValidRegex(validation.pattern)) {
@@ -634,35 +637,20 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         `&& ${qualifiedCode}.value == ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_option_count":
-      instructionText =
-        `[${component.children.map(
-          (answer) => answer.qualifiedCode + ".value"
-        )}].filter(x=>x).length ` + `< ${validation.min_count || 0}`;
-      return booleanActiveInstruction(key, instructionText);
-    case "validation_max_option_count":
-      instructionText =
-        `[${component.children.map(
-          (answer) => answer.qualifiedCode + ".value"
-        )}].filter(x=>x).length ` + `> ${validation.max_count || 0}`;
-      return booleanActiveInstruction(key, instructionText);
-    case "validation_option_count":
-      instructionText =
-        `[${component.children.map(
-          (answer) => answer.qualifiedCode + ".value"
-        )}].filter(x=>x).length ` + `!== ${validation.count || 0}`;
-      return booleanActiveInstruction(key, instructionText);
     case "validation_min_ranking_count":
       instructionText =
         `[${component.children.map(
           (answer) => answer.qualifiedCode + ".value"
         )}].filter(x=>x).length ` + `< ${validation.min_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
+    case "validation_max_option_count":
     case "validation_max_ranking_count":
       instructionText =
         `[${component.children.map(
           (answer) => answer.qualifiedCode + ".value"
         )}].filter(x=>x).length ` + `> ${validation.max_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
+    case "validation_option_count":
     case "validation_ranking_count":
       instructionText =
         `[${component.children.map(
@@ -718,4 +706,551 @@ const isValidRegex = (regex) => {
     return false;
   }
   return true;
+};
+
+export const updateRandomByRule = (componentState, randomRule) => {
+  if (
+    ["randomize_questions", "randomize_groups", "randomize_options"].indexOf(
+      randomRule
+    ) > -1 &&
+    componentState[randomRule] !== "custom"
+  ) {
+    const childCodes = componentState.children
+      ?.filter(
+        (it) =>
+          it.groupType?.toLowerCase() != "end" &&
+          it.type?.toLowerCase() != "other" &&
+          it.groupType?.toLowerCase() != "welcome"
+      )
+      ?.map((it) => it.code);
+    if (childCodes.length == 0 || !componentState[randomRule]) {
+      componentState[randomRule] = false;
+      removeInstruction(componentState, "random_group");
+      return;
+    }
+    const instruction = {
+      code: "random_group",
+      groups: [{ codes: childCodes, randomOption: componentState[randomRule] }],
+    };
+    changeInstruction(componentState, instruction);
+  } else if (
+    ["randomize_rows"].indexOf(randomRule) > -1 &&
+    componentState[randomRule] !== "custom"
+  ) {
+    const childCodes = componentState.children
+      ?.filter((child) => child.type == "row")
+      ?.map((it) => it.code);
+    if (childCodes.length == 0 || !componentState[randomRule]) {
+      componentState[randomRule] = false;
+      removeInstruction(componentState, "random_group");
+      return;
+    }
+    const randomInstruction = instructionByCode(componentState, "random_group");
+    const groups = randomInstruction?.groups || [];
+    const groupsWithRowAnswers = groups.filter((group) => {
+      return !group.codes.some((item) => childCodes.includes(item));
+    });
+    groupsWithRowAnswers.push({
+      codes: childCodes,
+      randomOption: componentState[randomRule],
+    });
+
+    const instruction = {
+      code: "random_group",
+      groups: groupsWithRowAnswers,
+    };
+    changeInstruction(componentState, instruction);
+  } else if (
+    ["randomize_columns"].indexOf(randomRule) > -1 &&
+    componentState[randomRule] !== "custom"
+  ) {
+    const childCodes = componentState.children
+      ?.filter((child) => child.type == "column")
+      ?.map((it) => it.code);
+    if (childCodes.length == 0 || !componentState[randomRule]) {
+      componentState[randomRule] = false;
+      removeInstruction(componentState, "random_group");
+      return;
+    }
+    const randomInstruction = instructionByCode(componentState, "random_group");
+    const groups = randomInstruction?.groups || [];
+    const groupsWithRowAnswers = groups.filter((group) => {
+      return !group.codes.some((item) => childCodes.includes(item));
+    });
+    groupsWithRowAnswers.push({
+      codes: childCodes,
+      randomOption: componentState[randomRule],
+    });
+
+    const instruction = {
+      code: "random_group",
+      groups: groupsWithRowAnswers,
+    };
+    changeInstruction(componentState, instruction);
+  }
+};
+
+export const conditionalRelevanceEquation = (logic, rule, state) => {
+  const code = "conditional_relevance";
+  if (rule == "show_always") {
+    return { code, remove: true };
+  } else if (rule == "hide_always") {
+    return {
+      code,
+      text: "false",
+      isActive: false,
+      returnType: "boolean",
+    };
+  }
+  const text = jsonToJs(logic, false, (code) => state[code].type);
+  if (rule == "show_if") {
+    return { code, text, isActive: true, returnType: "boolean" };
+  } else if (rule == "hide_if") {
+    return {
+      code,
+      text: `!(${text})`,
+      isActive: true,
+      returnType: "boolean",
+    };
+  } else {
+    throw "WTF";
+  }
+};
+
+const jsonToJs = (json, nested, getComponentType) => {
+  if (typeof json !== "object") {
+    return "";
+  }
+  const key = Object.keys(json)[0];
+  const value = json[key];
+  switch (key) {
+    case "and":
+      return wrapIfNested(
+        nested,
+        value.map((el) => jsonToJs(el, true, getComponentType)).join(" && ")
+      );
+    case "or":
+      return wrapIfNested(
+        nested,
+        value.map((el) => jsonToJs(el, true, getComponentType)).join(" || ")
+      );
+    case "!":
+      return (
+        "!" +
+        wrapIfNested(
+          nested,
+          jsonToJs(value, true, getComponentType) + (nested ? ")" : "")
+        )
+      );
+    case "is_relevant":
+      return `${capture(value)}.relevance`;
+    case "is_not_relevant":
+      return `!${capture(value)}.relevance`;
+    case "is_online":
+      return `Survey.mode=="online"`;
+    case "is_offline":
+      return `Survey.mode=="offline"`;
+    case "is_valid":
+      return `${capture(value)}.validity`;
+    case "is_not_valid":
+      return `!${capture(value)}.validity`;
+    case "is_empty":
+      const qCode1 = capture(value);
+      if (
+        ["file_upload", "signature", "photo_capture", "video_capture"].indexOf(
+          getComponentType(qCode1)
+        ) > -1
+      ) {
+        return wrapIfNested(
+          nested,
+          `QlarrScripts.isNotVoid(${qCode1}.value) && ${qCode1}.value.size && ${qCode1}.value.stored_filename`
+        );
+      } else {
+        return `QlarrScripts.isVoid(${capture(value)}.value)`;
+      }
+    case "is_not_empty":
+      const qCode = capture(value);
+      if (
+        ["file_upload", "signature", "photo_capture", "video_capture"].indexOf(
+          getComponentType(qCode)
+        ) > -1
+      ) {
+        return wrapIfNested(
+          nested,
+          `QlarrScripts.isVoid(${qCode}.value) || !${qCode}.value.size || !${qCode}.value.stored_filename`
+        );
+      } else {
+        return `QlarrScripts.isNotVoid(${capture(value)}.value)`;
+      }
+    case "==":
+    case "!=":
+    case "<":
+    case "<=":
+    case ">":
+    case ">=":
+    case "between":
+    case "not_between":
+      let type = getComponentType(capture(value[0]));
+      let leftOperand =
+        type == "date" || type == "date_time" || type == "time"
+          ? `QlarrScripts.sqlDateTimeToDate(${capture(value[0])}.value)`
+          : `${capture(value[0])}.value`;
+      if (["==", "!=", "<", "<=", ">", ">="].includes(key)) {
+        return `${leftOperand}${key}${capture(value[1], type)}`;
+      } else if (key == "between") {
+        return wrapIfNested(
+          nested,
+          `(${leftOperand}>=${capture(
+            value[1],
+            type
+          )} && ${leftOperand}<=${capture(value[2], type)})`
+        );
+      } else if (key == "not_between") {
+        return wrapIfNested(
+          nested,
+          `(${leftOperand}<${capture(
+            value[1],
+            type
+          )} || ${leftOperand}>${capture(value[2], type)})`
+        );
+      } else {
+        throw "WTF";
+      }
+    case "startsWith":
+      return wrapIfNested(
+        nested,
+        `${capture(value[0])}.value?.startsWith(${capture(value[1])})`
+      );
+    case "endsWith":
+      return wrapIfNested(
+        nested,
+        `${capture(value[0])}.value?.endsWith(${capture(value[1])})`
+      );
+    case "contains":
+      return wrapIfNested(
+        nested,
+        `${capture(value[0])}.value?.indexOf(${capture(value[1])}) > -1`
+      );
+    case "not_contains":
+      return wrapIfNested(
+        nested,
+        `!${capture(value[0])}.value || ${capture(
+          value[0]
+        )}.value?.indexOf(${capture(value[1])}) == -1`
+      );
+    case "in":
+      const code = capture(value[0]);
+      if (code == "survey_lang") {
+        return `[${value[1].map(
+          (el) => '"' + el + '"'
+        )}].indexOf(Survey.lang) !== -1`;
+      } else if (getComponentType(code) == "nps") {
+        return `[${value[1].map((el) => +el)}].indexOf(${code}.value) !== -1`;
+      } else if (
+        ["mcq", "image_mcq", "icon_mcq"].indexOf(getComponentType(code)) > -1
+      ) {
+        return `[${value[1].map(
+          (el) => code + el + ".value"
+        )}].filter(x=>x).length > 0`;
+      } else {
+        return `[${value[1].map(
+          (el) => '"' + el + '"'
+        )}].indexOf(${code}.value) !== -1`;
+      }
+    case "not_in":
+      const code1 = capture(value[0]);
+      if (code1 == "survey_lang") {
+        return `[${value[1].map(
+          (el) => '"' + el + '"'
+        )}].indexOf(Survey.lang) == -1`;
+      } else if (getComponentType(code1) == "nps") {
+        return `[${value[1].map((el) => +el)}].indexOf(${code1}.value) == -1`;
+      } else if (
+        ["mcq", "image_mcq", "icon_mcq"].indexOf(getComponentType(code1)) > -1
+      ) {
+        return `[${value[1].map(
+          (el) => questionCode1 + el + ".value"
+        )}].filter(x=>x).length == 0`;
+      } else {
+        return `[${value[1].map(
+          (el) => '"' + el + '"'
+        )}].indexOf(${code1}.value) == -1`;
+      }
+
+    default:
+      return "";
+  }
+};
+
+const wrapIfNested = (nested, text) => {
+  return (nested ? "(" : "") + text + (nested ? ")" : "");
+};
+
+const capture = (value, type) => {
+  if (type == "time") {
+    return `QlarrScripts.sqlDateTimeToDate(\"1970-01-01 ${integerToTime(
+      value
+    )}\")`;
+  } else if (
+    typeof value === "object" &&
+    Object.prototype.toString.call(value) === "[object Date]"
+  ) {
+    return type == "date_time"
+      ? `QlarrScripts.sqlDateTimeToDate(\"${toSqlDateTime(value)}\")`
+      : `QlarrScripts.sqlDateTimeToDate(\"${toSqlDateTimeIgnoreTime(value)}\")`;
+  }
+  if (typeof value === "object") {
+    return value[Object.keys(value)[0]];
+  } else if (typeof value === "string") {
+    return '"' + value + '"';
+  } else {
+    return value;
+  }
+};
+
+const integerToTime = (time) => {
+  let hours = Math.floor(time / 3600);
+  let hoursString = hours >= 10 && hours <= 23 ? "" + hours : "0" + hours;
+  let minutes = (time % 3600) / 60;
+  let minutesString =
+    minutes >= 10 && minutes <= 59 ? "" + minutes : "0" + minutes;
+  return hoursString + ":" + minutesString + ":00";
+};
+
+const toSqlDateTime = (date) => {
+  return (
+    date.getFullYear() +
+    "-" +
+    ("00" + (date.getMonth() + 1)).slice(-2) +
+    "-" +
+    ("00" + date.getDate()).slice(-2) +
+    " " +
+    ("00" + date.getHours()).slice(-2) +
+    ":" +
+    ("00" + date.getMinutes()).slice(-2) +
+    ":" +
+    ("00" + date.getSeconds()).slice(-2)
+  );
+};
+
+const toSqlDateTimeIgnoreTime = (date) => {
+  return (
+    date.getFullYear() +
+    "-" +
+    ("00" + (date.getMonth() + 1)).slice(-2) +
+    "-" +
+    ("00" + date.getDate()).slice(-2) +
+    " 00:00:00"
+  );
+};
+
+export const instructionByCode = (component, code) =>
+  component.instructionList
+    ? component.instructionList.find((el) => el.code === code)
+    : undefined;
+
+export const fileTypesToMimesArray = (fileTypes) => {
+  let accepted = [];
+  fileTypes?.forEach((el) => {
+    accepted = accepted.concat(acceptedFileTypes(el));
+  });
+  return accepted;
+};
+
+const acceptedFileTypes = (fileType) => {
+  switch (fileType) {
+    case "presentation":
+      return [
+        "application/mspowerpoint",
+        "application/vnd.google-apps.presentation",
+        "application/vnd.ms-powerpoint",
+        "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
+        "application/vnd.ms-powerpoint.presentation.macroenabled.12",
+        "application/vnd.ms-powerpoint.slideshow.macroEnabled.12",
+        "application/vnd.ms-powerpoint.slideshow.macroenabled.12",
+        "application/vnd.ms-powerpoint.template.macroEnabled.12",
+        "application/vnd.ms-powerpoint.template.macroenabled.12",
+        "application/vnd.oasis.opendocument.presentation",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+        "application/vnd.openxmlformats-officedocument.presentationml.template",
+      ];
+
+    case "document":
+      return [
+        "application/vnd.google-apps.document",
+        "application/vnd.ms-word",
+        "application/vnd.ms-word.document.macroEnabled.12",
+        "application/vnd.ms-word.document.macroenabled.12",
+        "application/vnd.ms-word.template.macroEnabled.12",
+        "application/vnd.ms-word.template.macroenabled.12",
+        "application/vnd.oasis.opendocument.text",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+        "text/plain",
+        "application/msword",
+      ];
+
+    case "spreadsheet":
+      return [
+        "application/msexcel",
+        "application/vnd.google-apps.spreadsheet",
+        "application/vnd.ms-excel",
+        "application/vnd.ms-excel.sheet.macroEnabled.12",
+        "application/vnd.ms-excel.sheet.macroenabled.12",
+        "application/vnd.ms-excel.template.macroEnabled.12",
+        "application/vnd.ms-excel.template.macroenabled.12",
+        "application/vnd.oasis.opendocument.spreadsheet",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
+        "text/csv",
+      ];
+
+    case "pdf":
+      return ["application/pdf"];
+
+    case "image":
+      return [
+        "image/bmp",
+        "image/gif",
+        "image/heic",
+        "image/heif",
+        "image/jpeg",
+        "image/png",
+        "image/tiff",
+        "image/vnd.microsoft.icon",
+        "image/webp",
+        "image/x-ms-bmp",
+      ];
+
+    case "video":
+      return [
+        "application/vnd.google-apps.video",
+        "video/3gpp",
+        "video/3gpp2",
+        "video/avi",
+        "video/flv",
+        "video/mp2t",
+        "video/mp4",
+        "video/mp4v-es",
+        "video/mpeg",
+        "video/ogg",
+        "video/quicktime",
+        "video/vnd.mts",
+        "video/webm",
+        "video/x-flv",
+        "video/x-m4v",
+        "video/x-matroska",
+        "video/x-ms-asf",
+        "video/x-ms-wm",
+        "video/x-ms-wmv",
+        "video/x-ms-wvx",
+        "video/x-msvideo",
+        "video/x-quicktime",
+      ];
+
+    case "audio":
+      return [
+        "application/vnd.google-apps.audio",
+        "audio/mpeg",
+        "audio/mp3",
+        "audio/mp4",
+        "audio/midi",
+        "audio/x-mid",
+        "audio/x-midi",
+        "audio/wav",
+        "audio/x-wav",
+        "audio/vnd.wav",
+        "audio/flac",
+        "audio/ogg",
+        "audio/vorbis",
+      ];
+  }
+};
+
+export const processValidation = (state, code, rule, modifyEquation = true) => {
+  const component = state[code];
+  if (component.designErrors && component.designErrors.length) {
+    component.validation[rule].isActive = false;
+    removeInstruction(component, rule);
+    return;
+  }
+  component.validation[rule] = cleanupValidationData(
+    component,
+    rule,
+    component.validation[rule]
+  );
+  // we have this special situation that the SCQ array validation is copied to its children
+  // This is specifically important when an SCQ array is implemented at SCQ in smaller screens
+  if (
+    (component.type == "scq_array" || component.type == "scq_icon_array") &&
+    rule == "validation_required"
+  ) {
+    component.children
+      .filter((child) => child.type == "row")
+      .forEach((row) => {
+        const child = state[row.qualifiedCode];
+        if (!child.validation) {
+          child.validation = {};
+        }
+        child.validation[rule] = component.validation[rule];
+        addValidationEquation(state, row.qualifiedCode, rule);
+      });
+    return;
+  }
+  if (modifyEquation) {
+    addValidationEquation(state, code, rule);
+  }
+};
+
+const cleanupValidationData = (component, key, validation) => {
+  switch (key) {
+    case "validation_required":
+    case "validation_one_response_per_col":
+    case "validation_pattern_email":
+    case "validation_contains":
+    case "validation_not_contains":
+    case "validation_pattern":
+    case "validation_max_word_count":
+    case "validation_min_word_count":
+    case "validation_between":
+    case "validation_not_between":
+    case "validation_lt":
+    case "validation_lte":
+    case "validation_gt":
+    case "validation_gte":
+    case "validation_equals":
+    case "validation_not_equal":
+      return validation;
+    case "validation_min_char_length":
+      return {
+        ...validation,
+        min_length: Math.min(component.maxChars || 30, validation.min_length),
+      };
+    case "validation_max_char_length":
+      return {
+        ...validation,
+        max_length: Math.min(component.maxChars || 30, validation.max_length),
+      };
+    case "validation_min_ranking_count":
+    case "validation_min_option_count":
+      return {
+        ...validation,
+        min_count: Math.min(component.children.length, validation.min_count),
+      };
+    case "validation_max_ranking_count":
+    case "validation_max_option_count":
+      return {
+        ...validation,
+        max_count: Math.min(component.children.length, validation.max_count),
+      };
+    case "validation_ranking_count":
+    case "validation_option_count":
+      return {
+        ...validation,
+        count: Math.min(component.children.length, validation.count),
+      };
+    default:
+      return validation;
+  }
 };

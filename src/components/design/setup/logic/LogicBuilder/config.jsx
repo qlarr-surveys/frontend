@@ -283,7 +283,7 @@ const operators = {
   },
   select_any_in: {
     ...InitialConfig.operators.select_any_in,
-    label: "Any In",
+    label: "is any of",
     jsonLogic: "in",
     formatOp: (
       field,
@@ -304,7 +304,7 @@ const operators = {
   },
   select_not_any_in: {
     ...InitialConfig.operators.select_not_any_in,
-    label: "None In",
+    label: "Is none of",
     jsonLogic: "not_in",
     formatOp: (
       field,
@@ -325,8 +325,8 @@ const operators = {
   },
   multiselect_equals: {
     ...InitialConfig.operators.multiselect_equals,
-    label: "Any In",
-    jsonLogic: "any_in",
+    label: "Has Any Selected",
+    jsonLogic: "in",
     formatOp: (
       field,
       op,
@@ -346,8 +346,8 @@ const operators = {
   },
   multiselect_not_equals: {
     ...InitialConfig.operators.multiselect_not_equals,
-    label: "None In",
-    jsonLogic: "none_in",
+    label: "Has None Selected",
+    jsonLogic: "not_in",
     formatOp: (
       field,
       op,
@@ -367,7 +367,7 @@ const operators = {
   },
   is_relevant: {
     label: "Is Displayed",
-    jsonLogic: "relevance",
+    jsonLogic: "is_relevant",
     cardinality: 0,
     formatOp: (
       field,
@@ -384,7 +384,7 @@ const operators = {
   },
   is_not_relevant: {
     label: "Is Hidden",
-    jsonLogic: "not_relevance",
+    jsonLogic: "is_not_relevant",
     cardinality: 0,
     formatOp: (
       field,
@@ -401,7 +401,7 @@ const operators = {
   },
   is_valid: {
     label: "Is Valid",
-    jsonLogic: "validity",
+    jsonLogic: "is_valid",
     cardinality: 0,
     formatOp: (
       field,
@@ -418,7 +418,7 @@ const operators = {
   },
   is_not_valid: {
     label: "Is Not Valid",
-    jsonLogic: "not_validity",
+    jsonLogic: "is_not_valid",
     cardinality: 0,
     formatOp: (
       field,
@@ -433,10 +433,10 @@ const operators = {
       return `${wrapField(field)} ${wrapValue("is not valid")}`;
     },
   },
-  is_void: {
+  "is_empty": {
     cardinality: 0,
     label: "Is Empty",
-    jsonLogic: "is_void",
+    jsonLogic: "is_empty",
     formatOp: (
       field,
       op,
@@ -484,44 +484,10 @@ const operators = {
       return `${wrapField(field)} ${wrapValue("is Offline")}`;
     },
   },
-  is_not_void: {
+  "is_not_empty": {
     cardinality: 0,
     label: "Is not Empty",
-    jsonLogic: "is_not_void",
-    formatOp: (
-      field,
-      op,
-      values,
-      valueSrc,
-      valueType,
-      opDef,
-      operatorOptions,
-      isForDisplay
-    ) => {
-      return `${wrapField(field)} ${wrapValue("is not empty")}`;
-    },
-  },
-  is_file_void: {
-    cardinality: 0,
-    label: "Is Empty",
-    jsonLogic: "is_file_void",
-    formatOp: (
-      field,
-      op,
-      values,
-      valueSrc,
-      valueType,
-      opDef,
-      operatorOptions,
-      isForDisplay
-    ) => {
-      return `${wrapField(field)} ${wrapValue("is empty")}`;
-    },
-  },
-  is_file_not_void: {
-    cardinality: 0,
-    label: "Is not Empty",
-    jsonLogic: "is_file_not_void",
+    jsonLogic: "is_not_empty",
     formatOp: (
       field,
       op,

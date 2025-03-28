@@ -1,13 +1,11 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { isEquivalent } from "~/utils/design/utils";
 import { createGroup } from "~/components/design/NewComponentsPanel";
 
-import { instructionByCode, lastIndexInArray } from "~/utils/design/utils";
+import {  lastIndexInArray } from "~/utils/design/utils";
 import cloneDeep from "lodash.clonedeep";
 import {
   buildValidationDefaultData,
-  cleanupValidationData,
-  conditionalRelevanceEquation,
   nextGroupId,
   nextQuestionId,
   reorder,
@@ -29,9 +27,12 @@ import {
   addMaskedValuesInstructions,
   addQuestionInstructions,
   addSkipInstructions,
-  addValidationEquation,
   changeInstruction,
+  conditionalRelevanceEquation,
+  instructionByCode,
+  processValidation,
   removeInstruction,
+  updateRandomByRule,
 } from "./addInstructions";
 
 const reservedKeys = ["setup", "reorder_refresh_code"];
@@ -61,7 +62,6 @@ export const designState = createSlice({
         payload.expanded ||
         payload.highlighted
       ) {
-        console.log(payload);
         state.setup = action.payload;
       }
     },
@@ -238,16 +238,17 @@ export const designState = createSlice({
       state[qualifiedCode] = {};
       const codes = splitQuestionCodes(qualifiedCode);
       const parentCode = codes.slice(0, codes.length - 1).join("");
+      const questionCode = codes[0];
       if (!insertAnswer(state, answer, parentCode)) {
         return;
       }
       if (label) {
-        state[qualifiedCode].content = { label: { [lang]: label } };
+        state[qualifiedCode].content = { [lang]: { label: label } };
       }
       if (answer.type) {
         state[qualifiedCode].type = answer.type;
       }
-      addAnswerInstructions(state, state[qualifiedCode], parentCode);
+      addAnswerInstructions(state, state[qualifiedCode], parentCode, questionCode);
     },
     deleteGroup: (state, action) => {
       const groupCode = action.payload;
@@ -302,9 +303,9 @@ export const designState = createSlice({
       let payload = action.payload;
       if (!state[payload.code].content) {
         state[payload.code].content = {};
-        state[payload.code].content[payload.key] = {};
-      } else if (!state[payload.code].content[payload.key]) {
-        state[payload.code].content[payload.key] = {};
+        state[payload.code].content[payload.lang] = {};
+      } else if (!state[payload.code].content[payload.lang]) {
+        state[payload.code].content[payload.lang] = {};
       }
       const referenceInstruction = buildReferenceInstruction(
         payload.value,
@@ -312,7 +313,7 @@ export const designState = createSlice({
         payload.lang
       );
       changeInstruction(state[payload.code], referenceInstruction);
-      state[payload.code].content[payload.key][payload.lang] = payload.value;
+      state[payload.code].content[payload.lang][payload.key] = payload.value;
     },
     changeResources: (state, action) => {
       let payload = action.payload;
@@ -582,66 +583,7 @@ const cleanupRandomRules = (componentState) => {
   }
 };
 
-const updateRandomByRule = (componentState, randomRule) => {
-  if (
-    ["randomize_questions", "randomize_groups", "randomize_options"].indexOf(
-      randomRule
-    ) > -1 &&
-    componentState[randomRule] !== "custom"
-  ) {
-    const childCodes = componentState.children
-      ?.filter(
-        (it) =>
-          it.groupType?.toLowerCase() != "end" &&
-          it.groupType?.toLowerCase() != "welcome"
-      )
-      ?.map((it) => it.code);
-    if (childCodes.length == 0 || !componentState[randomRule]) {
-      componentState[randomRule] = false;
-      removeInstruction(componentState, "random_group");
-      return;
-    }
-    const instruction = {
-      code: "random_group",
-      groups: [{ codes: childCodes, randomOption: componentState[randomRule] }],
-    };
-    changeInstruction(componentState, instruction);
-  } else if (
-    ["randomize_rows"].indexOf(randomRule) > -1 &&
-    componentState[randomRule] !== "custom"
-  ) {
-    const childCodes = componentState.children
-      ?.filter((child) => child.type == "row")
-      ?.map((it) => it.code);
-    if (childCodes.length == 0 || !componentState[randomRule]) {
-      componentState[randomRule] = false;
-      removeInstruction(componentState, "random_group");
-      return;
-    }
-    const instruction = {
-      code: "random_group",
-      groups: [{ codes: childCodes, randomOption: componentState[randomRule] }],
-    };
-    changeInstruction(componentState, instruction);
-  } else if (
-    ["randomize_columns"].indexOf(randomRule) > -1 &&
-    componentState[randomRule] !== "custom"
-  ) {
-    const childCodes = componentState.children
-      ?.filter((child) => child.type == "column")
-      ?.map((it) => it.code);
-    if (childCodes.length == 0 || !componentState[randomRule]) {
-      componentState[randomRule] = false;
-      removeInstruction(componentState, "random_group");
-      return;
-    }
-    const instruction = {
-      code: "random_group",
-      groups: [{ codes: childCodes, randomOption: componentState[randomRule] }],
-    };
-    changeInstruction(componentState, instruction);
-  }
-};
+
 
 const reparentQuestion = (state, survey, payload) => {
   let index = buildIndex(state, survey.children);
@@ -713,7 +655,7 @@ const newQuestion = (state, payload) => {
   const newCode = `Q${questionId}`;
   addQuestionInstructions(state[newCode]);
   state[newCode].children?.forEach((element) => {
-    addAnswerInstructions(state, state[element.qualifiedCode], newCode);
+    addAnswerInstructions(state, state[element.qualifiedCode], newCode, newCode);
   });
   cleanupValidation(state, newCode);
   addMaskedValuesInstructions(newCode, questionObject[newCode], state);
@@ -869,40 +811,7 @@ const splitQuestionCodes = (code) => {
   return code.split(/(A[a-z_0-9]+|Q[a-z_0-9]+)/).filter(Boolean);
 };
 
-const processValidation = (state, code, rule, modifyEquation) => {
-  const component = state[code];
-  if (component.designErrors && component.designErrors.length) {
-    component.validation[rule].isActive = false;
-    removeInstruction(component, rule);
-    return;
-  }
-  component.validation[rule] = cleanupValidationData(
-    component,
-    rule,
-    component.validation[rule]
-  );
-  // we have this special situation that the SCQ array validation is copied to its children
-  // This is specifically important when an SCQ array is implemented at SCQ in smaller screens
-  if (
-    (component.type == "scq_array" || component.type == "scq_icon_array") &&
-    rule == "validation_required"
-  ) {
-    component.children
-      .filter((child) => child.type == "row")
-      .forEach((row) => {
-        const child = state[row.qualifiedCode];
-        if (!child.validation) {
-          child.validation = {};
-        }
-        child.validation[rule] = component.validation[rule];
-        addValidationEquation(state, row.qualifiedCode, rule);
-      });
-    return;
-  }
-  if (modifyEquation) {
-    addValidationEquation(state, code, rule);
-  }
-};
+
 
 const cleanupValidation = (state, code) => {
   const component = state[code];

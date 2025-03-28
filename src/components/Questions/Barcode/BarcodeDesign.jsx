@@ -26,7 +26,7 @@ function BarcodeDesign({ code }) {
         }}
       />
       <br />
-      {state.showHint && <span>{state.content?.hint?.[lang] || ""}</span>}
+      {state.showHint && <span>{state.content?.[lang]?.hint || ""}</span>}
     </Box>
   );
 }

@@ -42,7 +42,7 @@ function SkipLogic({ code, t }) {
       return {
         code: child.code,
         label:
-          state.designState[child.qualifiedCode].content?.label?.[lang] ||
+          state.designState[child.qualifiedCode].content?.[lang]?.label ||
           child.code,
       };
     });

@@ -44,13 +44,13 @@ function ChoiceItemDesign(props) {
   });
 
   const content = useSelector((state) => {
-    return state.designState[props.qualifiedCode].content?.["label"]?.[lang];
+    return state.designState[props.qualifiedCode].content?.[lang]?.["label"];
   });
 
   const mainContent = useSelector((state) => {
-    return state.designState[props.qualifiedCode].content?.["label"]?.[
+    return state.designState[props.qualifiedCode].content?.[
       langInfo.mainLang
-    ];
+    ]?.["label"];
   });
 
   const getStyles = (isDragging) => {

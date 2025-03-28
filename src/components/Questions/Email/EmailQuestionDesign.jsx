@@ -24,7 +24,7 @@ function EmailQuestionDesign({ code }) {
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
-        label={state.showHint && (state.content?.hint?.[lang] || "")}
+        label={state.showHint && (state.content?.[lang]?.hint || "")}
         InputProps={{
           sx: {
             fontFamily: theme.textStyles.text.font,

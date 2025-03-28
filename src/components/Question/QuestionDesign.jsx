@@ -150,7 +150,7 @@ function QuestionDesign({
           nextAnswerIndex = nextId(
             answers.filter((el) => el.type === "column")
           );
-          label = "Col" + nextAnswerIndex;
+          label = "Col " + nextAnswerIndex;
           code = "Ac" + nextAnswerIndex;
           qualifiedCode = questionCode + code;
           dispatch(
@@ -160,7 +160,7 @@ function QuestionDesign({
         case "row":
           nextAnswerIndex = nextId(answers.filter((el) => el.type === "row"));
           code = "A" + nextAnswerIndex;
-          label = "Row" + nextAnswerIndex;
+          label = "Row " + nextAnswerIndex;
           qualifiedCode = questionCode + code;
           dispatch(
             addNewAnswer({

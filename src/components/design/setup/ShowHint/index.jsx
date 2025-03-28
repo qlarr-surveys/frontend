@@ -41,9 +41,11 @@ export function ContentEditor({ code, objectName, title }) {
     return state.designState.langInfo.languagesList;
   });
 
-  const hintObj = useSelector((state) => {
-    return state.designState[code].content?.[objectName];
+  const content = useSelector((state) => {
+    return state.designState[code].content;
   });
+  console.log(content)
+  console.log(objectName)
 
   return (
     <>
@@ -55,7 +57,7 @@ export function ContentEditor({ code, objectName, title }) {
               label={lang.name}
               variant="standard"
               type="text"
-              value={hintObj?.[lang.code] || ""}
+              value={content?.[lang.code]?.[objectName] || ""}
               onChange={(event) =>
                 setContentValue(lang.code, event.target.value)
               }

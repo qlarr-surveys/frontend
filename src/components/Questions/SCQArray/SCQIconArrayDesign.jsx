@@ -165,14 +165,14 @@ function SCQArrayRowDesign({
   const onMainLang = langInfo.lang === langInfo.mainLang;
 
   const content = useSelector((state) => {
-    return state.designState[item.qualifiedCode].content?.["label"]?.[
-      langInfo.lang
+    return state.designState[item.qualifiedCode].content?.[langInfo.lang]?.[
+      "label"
     ];
   });
 
   const mainContent = useSelector((state) => {
-    return state.designState[item.qualifiedCode].content?.["label"]?.[
-      langInfo.mainLang
+    return state.designState[item.qualifiedCode].content?.[langInfo.mainLang]?.[
+      "label"
     ];
   });
   const itemType = `col-${parentQualifiedCode}`;

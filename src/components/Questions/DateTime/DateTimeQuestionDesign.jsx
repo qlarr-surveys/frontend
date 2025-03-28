@@ -24,8 +24,8 @@ function DateTimeQuestionDesign({ code }) {
           state.validation?.validation_required?.isActive ? true : false
         }
         label={
-          state.showHint && state.content?.hint
-            ? state.content.hint[lang]
+          state.showHint && state.content?.[lang]
+            ? state.content[lang].hint
             : "" || ""
         }
         value={""}

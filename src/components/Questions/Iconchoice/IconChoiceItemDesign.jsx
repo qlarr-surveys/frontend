@@ -52,14 +52,14 @@ function IconChoiceItemDesign({
 
   const svgIconName = answer?.resources?.icon;
 
-  const content = type == "add" ? undefined : answer.content?.["label"]?.[lang];
+  const content = type == "add" ? undefined : answer.content?.[lang]?.["label"];
 
   const icon = type == "add" ? undefined : answer.icon;
 
   const isRtl = rtlLanguage.includes(lang);
 
   const mainContent =
-    type == "add" ? undefined : answer.content?.["label"]?.[langInfo.mainLang];
+    type == "add" ? undefined : answer.content?.[langInfo.mainLang]?.["label"];
 
   const onDelete = () => {
     if (window.confirm(`Are you sure?`)) {

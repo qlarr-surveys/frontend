@@ -13,7 +13,7 @@ function Validation(props) {
     [selectValidation],
     (selectedState) => {
       var obj = {};
-      Object.keys(props.component.validation).forEach((key) => {
+      Object.keys(props.component.validation || {}).forEach((key) => {
         var value = selectedState[key];
         if (value) {
           obj[key] = value;

@@ -53,14 +53,14 @@ function ImageChoiceItemDesign({
   const content = useSelector((state) => {
     return type == "add"
       ? undefined
-      : state.designState[qualifiedCode].content?.["label"]?.[lang];
+      : state.designState[qualifiedCode].content?.[lang]?.["label"];
   });
 
   const mainContent = useSelector((state) => {
     return type == "add"
       ? undefined
-      : state.designState[qualifiedCode].content?.["label"]?.[
-          langInfo.mainLang
+      : state.designState[qualifiedCode].content?.[langInfo.mainLang]?.[
+          "label"
         ];
   });
 

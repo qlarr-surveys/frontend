@@ -1,59 +1,4 @@
 
-import { jsonToJs } from "~/utils/design/logicUtils";
-
-
-export const cleanupValidationData = (component, key, validation) => {
-  switch (key) {
-    case "validation_required":
-    case "validation_one_response_per_col":
-    case "validation_pattern_email":
-    case "validation_contains":
-    case "validation_not_contains":
-    case "validation_pattern":
-    case "validation_max_word_count":
-    case "validation_min_word_count":
-    case "validation_between":
-    case "validation_not_between":
-    case "validation_lt":
-    case "validation_lte":
-    case "validation_gt":
-    case "validation_gte":
-    case "validation_equals":
-    case "validation_not_equal":
-      return validation;
-    case "validation_min_char_length":
-      return {
-        ...validation,
-        min_length: Math.min(component.maxChars || 30, validation.min_length),
-      };
-    case "validation_max_char_length":
-      return {
-        ...validation,
-        max_length: Math.min(component.maxChars || 30, validation.max_length),
-      };
-    case "validation_min_ranking_count":
-    case "validation_min_option_count":
-      return {
-        ...validation,
-        min_count: Math.min(component.children.length, validation.min_count),
-      };
-    case "validation_max_ranking_count":
-    case "validation_max_option_count":
-      return {
-        ...validation,
-        max_count: Math.min(component.children.length, validation.max_count),
-      };
-    case "validation_ranking_count":
-    case "validation_option_count":
-      return {
-        ...validation,
-        count: Math.min(component.children.length, validation.count),
-      };
-    default:
-      return validation;
-  }
-};
-
 export const buildValidationDefaultData = (rule) => {
   switch (rule) {
     case "validation_required":
@@ -150,33 +95,6 @@ export const buildValidationDefaultData = (rule) => {
   }
 };
 
-
-export const conditionalRelevanceEquation = (logic, rule, state) => {
-  const code = "conditional_relevance";
-  if (rule == "show_always") {
-    return { code, remove: true };
-  } else if (rule == "hide_always") {
-    return {
-      code,
-      text: "false",
-      isActive: false,
-      returnType: "boolean",
-    };
-  }
-  const text = jsonToJs(logic, false, (code) => state[code].type);
-  if (rule == "show_if") {
-    return { code, text, isActive: true, returnType: "boolean" };
-  } else if (rule == "hide_if") {
-    return {
-      code,
-      text: `!(${text})`,
-      isActive: true,
-      returnType: "boolean",
-    };
-  } else {
-    throw "WTF";
-  }
-};
 
 export const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
