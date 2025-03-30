@@ -39,7 +39,7 @@ export const buildFields = (
 
 const buildField = (code, component, state, mainLang) => {
   const label =
-    code + ". " + stripTags(component.content?.label?.[mainLang] || "");
+    code + ". " + stripTags(component.content?.[mainLang]?.label || "");
   if (isGroup(code)) {
     return {
       [code]: {
@@ -207,7 +207,7 @@ const buildField = (code, component, state, mainLang) => {
       let scqListValues = {};
       component.children?.forEach((element) => {
         const label = stripTags(
-          state[element.qualifiedCode].content?.label?.[mainLang] || ""
+          state[element.qualifiedCode].content?.[mainLang]?.label || ""
         );
         scqListValues[element.code] = label
           ? element.code + " - " + label
@@ -241,7 +241,7 @@ const buildField = (code, component, state, mainLang) => {
       ) {
         scqReturnList[code + "AotherAtext"] = {
           label: `${label} [${
-            state[scqOther.qualifiedCode].content?.label?.[mainLang] || ""
+            state[scqOther.qualifiedCode].content?.[mainLang]?.label || ""
           }]`,
           type: "text",
           valueSources: ["value"],
@@ -269,7 +269,7 @@ const buildField = (code, component, state, mainLang) => {
       let mcqListValues = {};
       component.children?.forEach((element) => {
         const label = stripTags(
-          state[element.qualifiedCode].content?.label?.[mainLang] || ""
+          state[element.qualifiedCode].content?.[mainLang]?.label || ""
         );
         mcqListValues[element.code] = label
           ? element.code + " - " + label
@@ -300,7 +300,7 @@ const buildField = (code, component, state, mainLang) => {
       ) {
         mcqReturnList[code + "AotherAtext"] = {
           label: `${label} [${
-            state[mcqOther.qualifiedCode].content?.label?.[mainLang] || ""
+            state[mcqOther.qualifiedCode].content?.[mainLang]?.label || ""
           }]`,
           type: "text",
           valueSources: ["value"],
@@ -325,7 +325,7 @@ const buildField = (code, component, state, mainLang) => {
       let npsReturnList = {};
       component.children?.forEach((element) => {
         const label = stripTags(
-          state[element.qualifiedCode].content?.label?.[mainLang] || ""
+          state[element.qualifiedCode].content?.[mainLang]?.label || ""
         );
         mcqListValues[element.code] = label
           ? element.code + " - " + label
@@ -354,7 +354,7 @@ const buildField = (code, component, state, mainLang) => {
         ?.filter((el) => el.type == "column")
         .forEach((element) => {
           const label = stripTags(
-            state[element.qualifiedCode].content?.label?.[mainLang] || ""
+            state[element.qualifiedCode].content?.[mainLang]?.label || ""
           );
           scqArrayListValues[element.code] = label
             ? element.code + " - " + label
@@ -381,7 +381,7 @@ const buildField = (code, component, state, mainLang) => {
               label +
               " - " +
               stripTags(
-                state[element.qualifiedCode].content?.label?.[mainLang] || ""
+                state[element.qualifiedCode].content?.[mainLang]?.label || ""
               ),
             type: "select",
             valueSources: ["value"],
@@ -399,7 +399,7 @@ const buildField = (code, component, state, mainLang) => {
             label +
             " - " +
             stripTags(
-              state[element.qualifiedCode].content?.label?.[mainLang] || ""
+              state[element.qualifiedCode].content?.[mainLang]?.label || ""
             ),
           type: "number",
           fieldSettings: {

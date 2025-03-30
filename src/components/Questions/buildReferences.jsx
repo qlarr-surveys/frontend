@@ -16,7 +16,7 @@ export const buildReferences = (componentIndices, code, state, mainLang) => {
 };
 
 const buildReference = (code, component, state, mainLang) => {
-  const label = code + ". " + stripTags(component.content?.label?.[mainLang]);
+  const label = code + ". " + stripTags(component.content?.[mainLang]?.label);
   let instruction = "";
   let type = component.type;
   switch (component.type) {
@@ -32,7 +32,7 @@ const buildReference = (code, component, state, mainLang) => {
               code +
               ". " +
               stripTags(
-                state[element.qualifiedCode].content?.label?.[mainLang]
+                state[element.qualifiedCode].content?.[mainLang]?.label
               ),
             id: code + element.code,
             type: "SCQ Array Row",
