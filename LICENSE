@@ -659,3 +659,58 @@ specific requirements.
 if any, to sign a "copyright disclaimer" for the program, if necessary.
 For more information on this, and how to apply and follow the GNU AGPL, see
 <https://www.gnu.org/licenses/>.
+
+This project includes third-party software components. The following licenses apply to the included components:
+
+1. @emotion/cache, @emotion/react, @emotion/styled - MIT License
+2. @hookform/resolvers - MIT License
+3. @iconify/react - MIT License
+4. @mui/icons-material, @mui/lab, @mui/material, @mui/x-date-pickers - MIT License
+5. @react-awesome-query-builder/mui - MIT License
+6. @reduxjs/toolkit - MIT License
+7. @testing-library/jest-dom, @testing-library/react, @testing-library/user-event - MIT License
+8. @vitejs/plugin-legacy, @vitejs/plugin-react - MIT License
+9. axios - MIT License
+10. dayjs - MIT License
+11. file-saver - MIT License
+12. i18next, react-i18next - MIT License
+13. js-cookie - MIT License
+14. lodash.clonedeep, lodash.merge - MIT License
+15. mui-one-time-password-input - MIT License
+16. quill-mention - MIT License
+17. react, react-dom - MIT License
+18. react-color - MIT License
+19. react-dnd, react-dnd-html5-backend, react-dnd-touch-backend - MIT License
+20. react-hook-form - MIT License
+21. react-intersection-observer - MIT License
+22. react-lazy-load-image-component - MIT License
+23. react-lottie - MIT License
+24. react-player - MIT License
+25. react-qr-code - MIT License
+26. react-quill - BSD 3-Clause License
+27. react-redux - MIT License
+28. react-router-dom - MIT License
+29. react-share - MIT License
+30. react-signature-canvas - MIT License
+31. react-virtuoso - MIT License
+32. redux - MIT License
+33. simplebar-react - MIT License
+34. stylis, stylis-plugin-rtl - MIT License
+35. yup - MIT License
+
+For full license texts of these libraries, please visit their respective GitHub repositories or npm pages.
+
+The following is the full BSD 3-Clause License text for react-quill:
+
+Copyright (c) 2016, Jason Quense
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+3. Neither the name of react-quill nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
