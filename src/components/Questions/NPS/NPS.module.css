@@ -4,6 +4,7 @@
   table-layout: fixed;
   margin-bottom: 16px;
   justify-content: space-between;
+  overflow: auto;
 }
 
 .choice {

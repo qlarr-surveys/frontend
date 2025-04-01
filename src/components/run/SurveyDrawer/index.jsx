@@ -21,7 +21,7 @@ function SurveyDrawer({ expanded, toggleDrawer, t }) {
       onClose={toggleDrawer(false)}
       sx={{
         "& .MuiDrawer-paper": {
-          width: "400px",
+          width: "350px",
           maxWidth: "90%",
           "@media (max-width: 600px)": {
             width: "300px",
