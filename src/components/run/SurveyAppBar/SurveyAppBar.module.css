@@ -1,0 +1,9 @@
+.toolbar.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

@@ -1,14 +1,10 @@
-import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
+import { AppBar, IconButton, Toolbar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import Content from "../Content";
 import ChangeLang from "../ChangeLang";
 import { shallowEqual, useSelector } from "react-redux";
+import styles from "./SurveyAppBar.module.css";
 
 function SurveyAppBar({ toggleDrawer }) {
-  const label = useSelector((state) => {
-    return state.runState.data?.survey?.content?.label;
-  }, shallowEqual);
-
   const lang = useSelector((state) => {
     return state.runState.data?.lang;
   }, shallowEqual);
@@ -18,25 +14,19 @@ function SurveyAppBar({ toggleDrawer }) {
   }, shallowEqual);
 
   return (
-    <Toolbar
-      style={{
-        minHeight: "56px",
-        fontSize: "32px",
-        lineHeight: "1.334",
-        fontWeight: "400",
-      }}
-    >
+    <Toolbar className={styles.toolbar}>
       <IconButton
-      color="primary"
+        color="primary"
         size="large"
         edge="start"
         aria-label="menu"
-        sx={{ mr: 2 }}
+        sx={{
+          backgroundColor: "white",
+        }}
         onClick={toggleDrawer(true)}
       >
         <MenuIcon />
       </IconButton>
-      <div style={{ width: "100%" }}></div>
       <ChangeLang lang={lang} additionalLang={additionalLang} />
     </Toolbar>
   );
