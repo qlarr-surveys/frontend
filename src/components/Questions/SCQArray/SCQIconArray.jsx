@@ -9,10 +9,13 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { valueChange } from "~/state/runState";
 import Validation from "~/components/run/Validation";
-import DynamicSvg from '~/components/DynamicSvg';
-import { buildResourceUrl } from '~/networking/common';
+import DynamicSvg from "~/components/DynamicSvg";
+import { buildResourceUrl } from "~/networking/common";
+import { TableHead } from "@mui/material";
 
 function SCQIconArray(props) {
+  const theme = useTheme();
+
   let columns = props.component.answers.filter(
     (answer) => answer.type == "column"
   );
@@ -21,6 +24,26 @@ function SCQIconArray(props) {
   return (
     <TableContainer>
       <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell key="content"></TableCell>
+            {columns.map((option) => {
+              return (
+                <TableCell
+                  sx={{
+                    fontFamily: theme.textStyles.text.font,
+                    color: theme.textStyles.text.color,
+                    fontSize: theme.textStyles.text.size,
+                    textAlign: "center",
+                  }}
+                  key={option.qualifiedCode}
+                >
+                  {option.content?.label}
+                </TableCell>
+              );
+            })}
+          </TableRow>
+        </TableHead>
         <TableBody>
           {rows.map((answer) => {
             return (
@@ -42,12 +65,18 @@ function SCQIconArray(props) {
 function SCQArrayRow(props) {
   const theme = useTheme();
 
-  const isDirty =  useSelector((state) => state.templateState[props.answer.qualifiedCode]?.isDirty)
-  const show_errors =  useSelector((state) => state.runState.values.Survey.show_errors)
-  const state = useSelector((state) => state.runState.values[props.answer.qualifiedCode])
-  const validity = React.useMemo(()=>state?.validity,[state])
-  const value = React.useMemo(()=>state?.value,[state])
-  const relevance = React.useMemo(()=>state?.relevance,[state])
+  const isDirty = useSelector(
+    (state) => state.templateState[props.answer.qualifiedCode]?.isDirty
+  );
+  const show_errors = useSelector(
+    (state) => state.runState.values.Survey.show_errors
+  );
+  const state = useSelector(
+    (state) => state.runState.values[props.answer.qualifiedCode]
+  );
+  const validity = React.useMemo(() => state?.validity, [state]);
+  const value = React.useMemo(() => state?.value, [state]);
+  const relevance = React.useMemo(() => state?.relevance, [state]);
 
   const dispatch = useDispatch();
 
@@ -60,8 +89,7 @@ function SCQArrayRow(props) {
     );
   };
 
-  const invalid =
-    (show_errors || isDirty) && validity === false;
+  const invalid = (show_errors || isDirty) && validity === false;
 
   return typeof relevance === "undefined" || relevance ? (
     <React.Fragment>
@@ -93,7 +121,6 @@ function SCQArrayRow(props) {
                 imageHeight={"64px"}
                 isSelected={value == option.code}
                 theme={theme}
-
                 svgUrl={
                   option?.resources?.icon
                     ? buildResourceUrl(option?.resources?.icon)
