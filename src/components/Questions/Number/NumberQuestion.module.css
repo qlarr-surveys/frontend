@@ -3,9 +3,6 @@
   width: 50%;
 }
 
-.questionItem:last-child {
-  margin-bottom: 0;
-}
 
 @media screen and (max-width: 767px) {
   .questionItem {
