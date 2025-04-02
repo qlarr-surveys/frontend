@@ -3,6 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChangeLang from "../ChangeLang";
 import { shallowEqual, useSelector } from "react-redux";
 import styles from "./SurveyAppBar.module.css";
+import { useTheme } from '@emotion/react';
 
 function SurveyAppBar({ toggleDrawer }) {
   const lang = useSelector((state) => {
@@ -13,15 +14,22 @@ function SurveyAppBar({ toggleDrawer }) {
     return state.runState.data?.additionalLang;
   }, shallowEqual);
 
+  const theme = useTheme();
+
   return (
-    <Toolbar className={styles.toolbar}>
+    <Toolbar
+      sx={{
+        backgroundColor: theme.palette.background.default,
+      }}
+      className={styles.toolbar}
+    >
       <IconButton
         color="primary"
         size="large"
         edge="start"
         aria-label="menu"
         sx={{
-          backgroundColor: "white",
+          backgroundColor: theme.palette.background.paper,
         }}
         onClick={toggleDrawer(true)}
       >
