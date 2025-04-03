@@ -93,6 +93,10 @@ function SCQArrayRow(props) {
             fontSize: theme.textStyles.text.size,
             borderBottom: invalid ? "0" : "",
             padding: "8px",
+            position: "sticky",
+            left: 0,
+            zIndex: 1,
+            minWidth: "60px",
           }}
         >
           {props.answer.content?.label}
@@ -115,7 +119,6 @@ function SCQArrayRow(props) {
                 value={option.code}
                 sx={{
                   color: theme.textStyles.text.color,
-
                 }}
               />
             </TableCell>
