@@ -3,10 +3,20 @@ import { changeAttribute } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import styles from "./SelectValue.module.css";
+import { useTranslation } from "react-i18next";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
-function SelectValue({ label, rule, defaultValue, code, values, labels }) {
+function SelectValue({
+  label,
+  rule,
+  defaultValue,
+  code,
+  values,
+  labels,
+  showTooltip = false,
+}) {
   const dispatch = useDispatch();
-
+  const { t } = useTranslation("design");
   const value = useSelector((state) => {
     return state.designState[code]?.[rule] || defaultValue;
   });
@@ -17,7 +27,11 @@ function SelectValue({ label, rule, defaultValue, code, values, labels }) {
 
   return (
     <div className={styles.selectDate}>
-      <h4>{label}</h4>
+      <div className={styles.label}>
+        {showTooltip && <CustomTooltip title={t(`tooltips.${label}`)} />}
+        
+        <h4>{t(label)}</h4>
+      </div>
       <FormControl variant="standard" fullWidth>
         <Select
           id="select-value"

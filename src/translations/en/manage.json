@@ -53,6 +53,11 @@
     "survey_users": "Survey Users",
     "surveyor": "Surveyor",
     "title": "Edit Survey",
+    "draft_mode": "Survey is still in Draft mode",
+    "scheduled_mode": "Survey is scheduled for later",
+    "expired_mode": "Survey end date has expired",
+    "closed_mode": "Survey has been closed",
+    "active_mode": "Survey is active",
     "to": "to",
     "metadata": {
       "created": "Created",
@@ -120,7 +125,11 @@
     "surveyor_admin": "Surveyor admin",
     "to": "To",
     "total_responses_limit": "Total Responses Limit: ",
-    "sort_by": "Sort By"
+    "sort_by": "Sort By",
+    "unpublished_changes": "Has Unpublished Changes",
+    "responses": "Complete Responses : {{count}}",
+    "quota": "Quota: {{count}}",
+    "no_quota": "No Quota"
   },
   "language": {
     "ar": "Arabic",

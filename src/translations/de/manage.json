@@ -26,7 +26,7 @@
   "create_survey": {
     "title": "Umfrage erstellen",
     "empty_state_message": "Keine Umfragen verfügbar.",
-    "or":"oder",
+    "or": "oder",
     "empty_state_cta_copy": "um loszulegen!"
   },
   "edit_survey": {
@@ -53,6 +53,11 @@
     "survey_users": "Benutzer befragen",
     "surveyor": "Landvermesserin",
     "title": "Umfrage bearbeiten",
+    "draft_mode": "Umfrage befindet sich noch im Entwurfsmodus",
+    "scheduled_mode": "Umfrage ist für später geplant",
+    "expired_mode": "Das Enddatum der Umfrage ist abgelaufen",
+    "closed_mode": "Umfrage wurde geschlossen",
+    "active_mode": "Umfrage ist aktiv",
     "to": "zu",
     "metadata": {
       "created": "Erstellt",
@@ -120,7 +125,11 @@
     "surveyor_admin": "Surveyor-Administrator",
     "to": "Zu",
     "total_responses_limit": "Beantwortungslimit insgesamt: ",
-    "sort_by": "Sortieren nach"
+    "sort_by": "Sortieren nach",
+    "unpublished_changes": "Nicht veröffentlichte Änderungen vorhanden",
+    "responses": "Vollständige Antworten: {{count}}",
+    "quota": "Quote: {{count}}",
+    "no_quota": "Keine Quote"
   },
   "language": {
     "ar": "Arabisch",

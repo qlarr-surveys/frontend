@@ -9,3 +9,9 @@
 .inputValue {
   max-width: 80%;
 }
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}

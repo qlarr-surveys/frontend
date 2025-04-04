@@ -96,7 +96,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "maxChars":
       return (
         <FieldSize
-          label={t("text_field_size")}
+          label={"text_field_size"}
           rule={rule}
           lowerBound={1}
           t={t}
@@ -122,7 +122,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
       return (
         <ToggleValue
           key={code + rule}
-          label={t("hide_text")}
+          t={t}
+          label={"hide_text"}
           rule={rule}
           code={code}
         />
@@ -131,7 +132,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
       return (
         <ToggleValue
           key={code + rule}
-          label={t("show_description")}
+          t={t}
+          label={"show_description"}
           rule={rule}
           code={code}
         />
@@ -139,8 +141,9 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "showWordCount":
       return (
         <ToggleValue
+          t={t}
           key={code + rule}
-          label={t("show_word_count")}
+          label={"show_word_count"}
           rule={rule}
           code={code}
         />
@@ -150,8 +153,9 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "allowPrevious":
       return (
         <ToggleValue
+          t={t}
           key={code + rule}
-          label={t("allow_previous")}
+          label={"allow_previous"}
           rule={rule}
           code={code}
         />
@@ -159,8 +163,9 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "allowIncomplete":
       return (
         <ToggleValue
+          t={t}
           key={code + rule}
-          label={t("allow_incomplete")}
+          label={"allow_incomplete"}
           rule={rule}
           code={code}
         />
@@ -168,8 +173,9 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "allowJump":
       return (
         <ToggleValue
+          t={t}
           key={code + rule}
-          label={t("allow_jump")}
+          label={"allow_jump"}
           rule={rule}
           code={code}
         />
@@ -177,8 +183,9 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "skipInvalid":
       return (
         <ToggleValue
+          t={t}
           key={code + rule}
-          label={t("skip_invalid")}
+          label={"skip_invalid"}
           rule={rule}
           code={code}
         />
@@ -188,47 +195,52 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "lower_bound_hint":
       return (
         <ContentEditor
-          title={t("lower_bound_hint")}
+          title={"lower_bound_hint"}
           objectName="lower_bound_hint"
           key={code + rule}
           code={code}
+          t={t}
         />
       );
     case "higher_bound_hint":
       return (
         <ContentEditor
-          title={t("upper_bound_hint")}
+          title={"upper_bound_hint"}
           objectName="higher_bound_hint"
           key={code + rule}
           code={code}
+          t={t}
         />
       );
 
     case "loop":
       return (
         <ToggleValue
+          t={t}
           key={code + rule}
           rule={rule}
           code={code}
-          label={t("loop_video")}
+          label={"loop_video"}
         />
       );
     case "audio_only":
       return (
-        <ToggleValue
+        <ToggleValuev
+          t={t}
           key={code + rule}
           rule={rule}
           code={code}
-          label={t("audio_only")}
+          label={"audio_only"}
         />
       );
     case "fullDayFormat":
       return (
         <ToggleValue
+          t={t}
           key={code + rule}
           rule={rule}
           code={code}
-          label={t("fullday_format")}
+          label={"fullday_format"}
         />
       );
     case "randomize_questions":
@@ -250,17 +262,19 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           lowerBound={1}
           code={code}
           key={code + rule}
-          label={t("max_date")}
+          label={"max_date"}
           rule={rule}
+          t={t}
         />
       );
     case "minDate":
       return (
         <SelectDate
           key={code + rule}
-          label={t("min_date")}
+          label={"min_date"}
           rule={rule}
           code={code}
+          t={t}
         />
       );
     case "dateFormat":
@@ -277,9 +291,10 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           values={listDateFormat}
           key={code + rule}
           defaultValue="DD.MM.YYYY"
-          label={t("date_format")}
+          label={"date_format"}
           rule={rule}
           code={code}
+          showTooltip
         />
       );
     case "imageWidth":
@@ -325,9 +340,10 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           labels={labels}
           key={code + rule}
           defaultValue=""
-          label={t("decimal_separator")}
+          label={"decimal_separator"}
           rule={rule}
           code={code}
+          showTooltip
         />
       );
     case "imageAspectRatio":
@@ -353,9 +369,10 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           key={code + rule}
           labels={reorderLabels}
           defaultValue="collapse_none"
-          label={t("order_mode")}
+          label={"order_mode"}
           rule={rule}
           code={code}
+          showTooltip
         />
       );
     case "iconSize":

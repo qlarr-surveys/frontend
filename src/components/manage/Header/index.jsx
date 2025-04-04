@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import { isSessionRtl } from "~/utils/common";
 import { useService } from "~/hooks/use-service";
 import { useTranslation } from "react-i18next";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 export const Header = () => {
   const authService = useService("auth");
@@ -67,13 +68,16 @@ export const Header = () => {
     <Box className={styles.header}>
       <Box
         onClick={() => nav("/")}
+        gap="12px"
         className={isRtl ? styles.imageContainerRtl : styles.imageContainer}
       >
         {showSurveyTitle && (
-          <>
-            <img src={isRtl ? "/arrow-back-rtl.png" : "/arrow-back.png"} style={{ height: "40px" }} />
-            <span style={{ width: "12px" }} />
-          </>
+          <CustomTooltip showIcon={false} title={t(`goBack`)}>
+            <img
+              src={isRtl ? "/arrow-back-rtl.png" : "/arrow-back.png"}
+              style={{ height: "40px" }}
+            />
+          </CustomTooltip>
         )}
         <img src="/qlarr.png" style={{ height: "40px" }} />
       </Box>

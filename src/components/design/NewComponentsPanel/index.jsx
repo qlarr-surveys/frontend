@@ -5,6 +5,7 @@ import { QUESTION_TYPES } from "~/components/Questions/utils";
 import { FormatListBulleted, StopCircle } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { addComponent } from "~/state/design/designState";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 const groups = [
   {
@@ -43,13 +44,15 @@ function NewComponentsPanel({ t }) {
               };
 
               return (
-                <div className={"Draggable"} key={question.type}>
-                  <NewComponentsItem
-                    t={t}
-                    item={dragItem}
-                    onClick={() => handleAddComponent("group", question.type)}
-                  />
-                </div>
+                <CustomTooltip showIcon={false} title={t(`tooltips.page`)}>
+                  <div className={"Draggable"} key={question.type}>
+                    <NewComponentsItem
+                      t={t}
+                      item={dragItem}
+                      onClick={() => handleAddComponent("group", question.type)}
+                    />
+                  </div>
+                </CustomTooltip>
               );
             })}
           </div>
@@ -69,17 +72,22 @@ function NewComponentsPanel({ t }) {
             };
 
             return (
-              <div key={`draggable-${index}`}>
-                <div className={"Draggable"}>
-                  <NewComponentsItem
-                    t={t}
-                    item={dragItem}
-                    onClick={() =>
-                      handleAddComponent("question", question.type)
-                    }
-                  />
+              <CustomTooltip
+                showIcon={false}
+                title={t(`tooltips.${question.type}`)}
+              >
+                <div key={`draggable-${index}`}>
+                  <div className={"Draggable"}>
+                    <NewComponentsItem
+                      t={t}
+                      item={dragItem}
+                      onClick={() =>
+                        handleAddComponent("question", question.type)
+                      }
+                    />
+                  </div>
                 </div>
-              </div>
+              </CustomTooltip>
             );
           })}
         </div>
@@ -92,9 +100,15 @@ export default React.memo(NewComponentsPanel);
 
 export const createGroup = (groupType, gId) => {
   let code = `G${gId}`;
-  let state = { groupType, content: { en: {
-    label: `Page ${gId}`
-  }, description: {} } };
+  let state = {
+    groupType,
+    content: {
+      en: {
+        label: `Page ${gId}`,
+      },
+      description: {},
+    },
+  };
   let newGroup = {
     code,
     qualifiedCode: code,

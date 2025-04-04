@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeAttribute, changeContent } from "~/state/design/designState";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function ShowHint({ code, t }) {
   const dispatch = useDispatch();
@@ -20,18 +21,21 @@ function ShowHint({ code, t }) {
   return (
     <>
       <div className={styles.showHint}>
-        <h4>{t("show_question_hint")}</h4>
+        <div className={styles.label}>
+          <CustomTooltip title={t("tooltips.show_question_hint")} />
+          <h4>{t("show_question_hint")}</h4>
+        </div>
         <Switch
           checked={showHint}
           onChange={(event) => setCheckedHint(event.target.checked)}
         />
       </div>
-      {showHint && <ContentEditor code={code} objectName="hint" />}
+      {showHint && <ContentEditor code={code} objectName="hint" t={t} />}
     </>
   );
 }
 
-export function ContentEditor({ code, objectName, title }) {
+export function ContentEditor({ code, objectName, title, t }) {
   const dispatch = useDispatch();
   const setContentValue = (lang, value) => {
     dispatch(changeContent({ code, key: objectName, lang, value }));
@@ -44,12 +48,17 @@ export function ContentEditor({ code, objectName, title }) {
   const content = useSelector((state) => {
     return state.designState[code].content;
   });
-  console.log(content)
-  console.log(objectName)
+  console.log(content);
+  console.log(objectName);
 
   return (
     <>
-      {title && <h4>{title}</h4>}
+      <div className={styles.label}>
+        {objectName !== "hint" && (
+          <CustomTooltip title={t(`tooltips.${title}`)} />
+        )}
+        {title && <h4>{t(title)}</h4>}
+      </div>
       {languagesList.map((lang) => {
         return (
           <div className={styles.inputValue} key={lang.code}>
