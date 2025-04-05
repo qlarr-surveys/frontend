@@ -256,10 +256,7 @@ function SCQArrayRowDesign({
           fontFamily: theme.textStyles.text.font,
           color: theme.textStyles.text.color,
           fontSize: theme.textStyles.text.size,
-          padding: "4px",
-          position: "sticky",
-          left: 0,
-          zIndex: 1,
+          padding: "2px",
           minWidth: "60px",
         }}
       >
@@ -298,7 +295,7 @@ function SCQArrayRowDesign({
             scope="row"
             align="center"
             sx={{
-              padding: "4px",
+              padding: "2px",
             }}
           >
             <DynamicSvg
@@ -455,7 +452,7 @@ function SCQArrayHeaderDesign({
           fontFamily: theme.textStyles.text.font,
           color: theme.textStyles.text.color,
           fontSize: theme.textStyles.text.size,
-          padding: "4px",
+          padding: "2px",
         }}
         key={item.qualifiedCode}
       >

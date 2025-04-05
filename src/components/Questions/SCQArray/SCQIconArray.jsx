@@ -100,10 +100,7 @@ function SCQArrayRow(props) {
             color: theme.textStyles.text.color,
             fontSize: theme.textStyles.text.size,
             borderBottom: invalid ? "0" : "",
-            padding: "8px",
-            position: "sticky",
-            left: 0,
-            zIndex: 1,
+            padding: "2px",
             minWidth: "60px",
 
           }}
@@ -118,7 +115,7 @@ function SCQArrayRow(props) {
               scope="row"
               sx={{
                 borderBottom: invalid ? "0" : "",
-                padding: "8px",
+                padding: "2px",
               }}
             >
               <DynamicSvg
@@ -139,7 +136,7 @@ function SCQArrayRow(props) {
       {invalid ? (
         <TableRow>
           <TableCell
-            sx={{ padding: "8px" }}
+            sx={{ padding: "2px" }}
             colSpan={props.choices ? props.choices.length + 1 : 1}
           >
             <Validation component={props.answer} />
