@@ -17,9 +17,6 @@ function ContentPanel({ designMode }, ref) {
     return state.designState["Survey"]?.children || [];
   });
 
-  const headerImage = useSelector((state) => {
-    return state.designState["Survey"]?.resources?.headerImage;
-  });
 
   const groupsEmpty = !groups.length;
 
@@ -39,10 +36,6 @@ function ContentPanel({ designMode }, ref) {
   const items = useMemo(() => {
     const list = [];
 
-    if (headerImage) {
-      list.push({ name: ELEMENTS.IMAGE });
-    }
-
     if (!welcomeGroupExists) {
       list.push({ name: ELEMENTS.DROP_AREA, index: 0 });
     }
@@ -58,7 +51,7 @@ function ContentPanel({ designMode }, ref) {
     }
     list.push({ name: ELEMENTS.FOOTER });
     return list;
-  }, [groups, t, headerImage]);
+  }, [groups, t]);
 
   const virtuosoRef = useRef(null);
   const virtuosoWrapperRef = useRef(null);
@@ -172,7 +165,6 @@ function ContentPanel({ designMode }, ref) {
 export default React.forwardRef(ContentPanel);
 
 const ELEMENTS = {
-  IMAGE: "IMAGE",
   GROUP: "GROUP",
   DROP_AREA: "DROP_AREA",
   FOOTER: "FOOTER",

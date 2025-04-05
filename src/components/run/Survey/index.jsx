@@ -36,13 +36,6 @@ function Survey() {
         }}
       >
         <div className={styles.surveyGroups}>
-          {survey.resources?.headerImage ? (
-            <CardMedia
-              className={styles.cardImage}
-              component="img"
-              image={buildResourceUrl(survey.resources.headerImage)}
-            />
-          ) : null}
           {survey && survey.groups
             ? survey.groups
                 .filter((group) => group.inCurrentNavigation)
