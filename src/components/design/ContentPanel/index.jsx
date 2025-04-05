@@ -2,20 +2,16 @@ import React, { useEffect, useMemo, useRef } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
-import { buildResourceUrl } from "~/networking/common";
-import { Box, CardMedia } from "@mui/material";
-import ErrorDisplay from "~/components/design/ErrorDisplay";
+import { Box } from "@mui/material";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
 import { GroupDropArea } from "~/components/design/DropArea/DropArea";
 import { Virtuoso } from "react-virtuoso";
 import useDragNearViewportEdge from "~/utils/useDragEdgeDetection";
-import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function ContentPanel({ designMode }, ref) {
   const { t } = useTranslation(["design", "run"]);
   const theme = useTheme();
-  const inDesgin = designMode == DESIGN_SURVEY_MODE.DESIGN;
 
   const groups = useSelector((state) => {
     return state.designState["Survey"]?.children || [];
@@ -24,10 +20,6 @@ function ContentPanel({ designMode }, ref) {
   const headerImage = useSelector((state) => {
     return state.designState["Survey"]?.resources?.headerImage;
   });
-
-  const backgroundImage = useSelector(
-    (state) => state.designState["Survey"]?.resources?.backgroundImage
-  );
 
   const groupsEmpty = !groups.length;
 
@@ -148,19 +140,6 @@ function ContentPanel({ designMode }, ref) {
           className={styles.virtuosoStyle}
           itemContent={(index, item) => {
             switch (item.name) {
-              case ELEMENTS.IMAGE:
-                return (
-                  <Box className={styles.cardMediaContent}>
-                    <CardMedia
-                      className={styles.cardImage}
-                      component="img"
-                      image={buildResourceUrl(headerImage)}
-                      height="140"
-                    />
-                    {inDesgin && <ErrorDisplay code="Survey" />}
-                  </Box>
-                );
-
               case ELEMENTS.DROP_AREA:
                 return (
                   <GroupDropArea

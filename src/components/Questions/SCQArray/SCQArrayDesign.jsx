@@ -257,6 +257,7 @@ function SCQArrayRowDesign({
           color: theme.textStyles.text.color,
           fontSize: theme.textStyles.text.size,
           padding: "4px",
+          minWidth: "60px",
         }}
       >
         <TextField

@@ -4,6 +4,7 @@
   table-layout: fixed;
   margin-bottom: 16px;
   justify-content: space-between;
+  overflow: auto;
 }
 
 .choice {
@@ -20,4 +21,10 @@
   margin-top: 16px;
   display: flex;
   justify-content: space-between;
+}
+
+@media (max-width: 600px) {
+  .choice {
+    padding: 4px;
+  }
 }
