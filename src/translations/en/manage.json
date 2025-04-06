@@ -26,7 +26,7 @@
   "create_survey": {
     "title": "Create Survey",
     "empty_state_message": "No surveys available.",
-    "or":"or",
+    "or": "or",
     "empty_state_cta_copy": "to get started!"
   },
   "edit_survey": {
@@ -278,5 +278,12 @@
     "email_changed": "Your email has been updated successfully!"
   },
   "mobile_view": "Mobile view is currently not supported",
-  "mobile_view_working": "We're working hard to enable this feature!"
+  "mobile_view_working": "We're working hard to enable this feature!",
+  "tooltips": {
+    "quotas": "Enable quotas and set limits for the number of responses",
+    "export": "Export the survey data",
+    "launch": "You can adjust the survey settings and publish your survey",
+    "raw_values": "Show raw values instead of labels",
+    "export_responses": "Export the survey responses"
+  }
 }

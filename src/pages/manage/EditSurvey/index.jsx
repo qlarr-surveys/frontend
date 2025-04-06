@@ -9,8 +9,9 @@ import styles from "./EditSurvey.module.css";
 import { useTranslation } from "react-i18next";
 import LaunchPage from "../Launch/launch";
 import SurveyQuota from "~/components/manage/SurveyQuota";
-import ExportSurvey from '~/components/manage/ExportSurvey';
-import { useSelector } from 'react-redux';
+import ExportSurvey from "~/components/manage/ExportSurvey";
+import { useSelector } from "react-redux";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function EditSurvey({ onPublish }) {
   const { t } = useTranslation("manage");
@@ -29,46 +30,54 @@ function EditSurvey({ onPublish }) {
     },
   ];
 
-  return survey && (
-    <Box className={styles.mainContainer}>
-      <Accordion className={styles.accordionContainer} defaultExpanded={true}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography fontWeight="600" color="#1a2052" variant="h5">
-            {t("edit_survey.launch")}
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails className={styles.accordionDetails}>
-          <LaunchPage onPublish={onPublish} />
-        </AccordionDetails>
-      </Accordion>
-
-      {sections.map((section) => {
-        return (
-          <Accordion
-            className={styles.accordionContainer}
-            key={section.id}
-            defaultExpanded={true}
+  return (
+    survey && (
+      <Box className={styles.mainContainer}>
+        <Accordion className={styles.accordionContainer} defaultExpanded={true}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
           >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
+            <Box display="flex" alignItems="center" gap=".5rem">
+              <CustomTooltip title={t(`tooltips.launch`)} />
               <Typography fontWeight="600" color="#1a2052" variant="h5">
-                {section.title}
+                {t("edit_survey.launch")}
               </Typography>
-            </AccordionSummary>
-            <AccordionDetails className={styles.accordionDetails}>
-              {section.component}
-            </AccordionDetails>
-          </Accordion>
-        );
-      })}
-    </Box>
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails className={styles.accordionDetails}>
+            <LaunchPage onPublish={onPublish} />
+          </AccordionDetails>
+        </Accordion>
+
+        {sections.map((section) => {
+          return (
+            <Accordion
+              className={styles.accordionContainer}
+              key={section.id}
+              defaultExpanded={true}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Box display="flex" alignItems="center" gap=".5rem">
+                  <CustomTooltip title={t(`tooltips.${section.id}`)} />
+                  <Typography fontWeight="600" color="#1a2052" variant="h5">
+                    {section.title}
+                  </Typography>
+                </Box>
+              </AccordionSummary>
+              <AccordionDetails className={styles.accordionDetails}>
+                {section.component}
+              </AccordionDetails>
+            </Accordion>
+          );
+        })}
+      </Box>
+    )
   );
 }
 
