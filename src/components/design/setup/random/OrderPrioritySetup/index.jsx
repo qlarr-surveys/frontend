@@ -6,6 +6,7 @@ import { changeAttribute } from "~/state/design/designState";
 import CustomPriority from "../CustomPriority";
 import styles from "./OrderPrioritySetup.module.css";
 import CustomRandom from "../CustomRandom";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 export default function OrderPrioritySetup({ t, rule, code }) {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ export default function OrderPrioritySetup({ t, rule, code }) {
 
   switch (rule) {
     case "randomize_questions":
-      title = t("questions_order");
+      title = "questions_order";
       labels = [
         t("as_is"),
         t("random_order"),
@@ -30,12 +31,12 @@ export default function OrderPrioritySetup({ t, rule, code }) {
       values = ["NONE", "RANDOM", "FLIP", "custom"];
       break;
     case "prioritize_questions":
-      title = t("questions_priority");
+      title = "questions_priority";
       labels = [t("no_priority"), t("prioritise_questions")];
       values = ["NONE", "prioritize"];
       break;
     case "randomize_groups":
-      title = t("groups_order");
+      title = "groups_order";
       labels = [
         t("as_is"),
         t("random_order"),
@@ -45,12 +46,12 @@ export default function OrderPrioritySetup({ t, rule, code }) {
       values = ["NONE", "RANDOM", "FLIP", "custom"];
       break;
     case "prioritize_groups":
-      title = t("groups_priority");
+      title = "groups_priority";
       labels = [t("no_priority"), t("prioritise_groups")];
       values = ["NONE", "prioritize"];
       break;
     case "randomize_options":
-      title = t("options_order");
+      title = "options_order";
       labels = [
         t("as_is"),
         t("random_order"),
@@ -61,12 +62,12 @@ export default function OrderPrioritySetup({ t, rule, code }) {
       values = ["NONE", "RANDOM", "FLIP", "ALPHA", "custom"];
       break;
     case "prioritize_options":
-      title = t("options_priority");
+      title = "options_priority";
       labels = [t("no_priority"), t("prioritise_options")];
       values = ["NONE", "prioritize"];
       break;
     case "randomize_rows":
-      title = t("rows_order");
+      title = "rows_order";
       labels = [
         t("as_is"),
         t("random_order"),
@@ -77,12 +78,12 @@ export default function OrderPrioritySetup({ t, rule, code }) {
       values = ["NONE", "RANDOM", "FLIP", "ALPHA", "custom"];
       break;
     case "prioritize_rows":
-      title = t("rows_priority");
+      title = "rows_priority";
       labels = [t("no_priority"), t("prioritise_rows")];
       values = ["NONE", "prioritize"];
       break;
     case "randomize_columns":
-      title = t("columns_order");
+      title = "columns_order";
       labels = [
         t("as_is"),
         t("random_order"),
@@ -93,7 +94,7 @@ export default function OrderPrioritySetup({ t, rule, code }) {
       values = ["NONE", "RANDOM", "FLIP", "ALPHA", "custom"];
       break;
     case "prioritize_columns":
-      title = t("columns_priority");
+      title = "columns_priority";
       labels = [t("no_priority"), t("prioritise_columns")];
       values = ["NONE", "prioritize"];
       break;
@@ -106,25 +107,33 @@ export default function OrderPrioritySetup({ t, rule, code }) {
 
   return (
     <>
-      <h4>{title}</h4>
-      <FormControl className={styles.selectValue} variant="standard" fullWidth>
-        <Select
-          id="select-value"
-          value={value}
-          label="Select Value"
-          onChange={(e) => {
-            onChange(e.target.value);
-          }}
+      <h4>{t(`${title}`)}</h4>
+      <div className={styles.label}>
+        <CustomTooltip title={t(`tooltips.${title}`)} />
+        <FormControl
+          className={styles.selectValue}
+          variant="standard"
+          fullWidth
         >
-          {labels.map((element, index) => {
-            return (
-              <MenuItem key={element} value={values[index]}>
-                {element}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
+          <Select
+            id="select-value"
+            value={value}
+            label="Select Value"
+            onChange={(e) => {
+              onChange(e.target.value);
+            }}
+          >
+            {labels.map((element, index) => {
+              return (
+                <MenuItem key={element} value={values[index]}>
+                  {element}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      </div>
+
       {value == "custom" &&
         [
           "randomize_questions",

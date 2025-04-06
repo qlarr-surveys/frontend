@@ -16,7 +16,6 @@ function ToggleValue({ label, code, rule, t }) {
   const onChange = (value) => {
     dispatch(changeAttribute({ code, key: rule, value }));
   };
-
   const swithLabel = { inputProps: { "aria-label": "Switch demo" } };
 
   return (

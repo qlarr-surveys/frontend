@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { buildFields } from "../LogicBuilder/buildFields";
 import styles from "./Relevance.module.css";
 import { Trans } from "react-i18next";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function Relevance({ code, t }) {
   const dispatch = useDispatch();
@@ -103,27 +104,39 @@ function Relevance({ code, t }) {
 
   return (
     <div className={`${hasErrors ? styles.relevanceError : ""}`}>
-      <FormControl variant="standard" fullWidth>
-        <Select
-          id="show-hide-select"
-          value={rule}
-          label="Age"
-          onChange={(e) => onRuleChange(e.target.value)}
-        >
-          <MenuItem disabled={hasErrors} key="show_always" value="show_always">
-            {t("show_always")}
-          </MenuItem>
-          <MenuItem disabled={!logicDisabled} key="show_if" value="show_if">
-            {t("show_if")}
-          </MenuItem>
-          <MenuItem disabled={!logicDisabled} key="hide_if" value="hide_if">
-            {t("hide_if")}
-          </MenuItem>
-          <MenuItem disabled={hasErrors} key="hide_always" value="hide_always">
-            {t("hide_always")}
-          </MenuItem>
-        </Select>
-      </FormControl>
+      <div className={styles.label}>
+        <CustomTooltip title={t(`tooltips.revelance`)} />
+        <FormControl variant="standard" fullWidth>
+          <Select
+            id="show-hide-select"
+            value={rule}
+            label="Age"
+            onChange={(e) => onRuleChange(e.target.value)}
+          >
+            <MenuItem
+              disabled={hasErrors}
+              key="show_always"
+              value="show_always"
+            >
+              {t("show_always")}
+            </MenuItem>
+            <MenuItem disabled={!logicDisabled} key="show_if" value="show_if">
+              {t("show_if")}
+            </MenuItem>
+            <MenuItem disabled={!logicDisabled} key="hide_if" value="hide_if">
+              {t("hide_if")}
+            </MenuItem>
+            <MenuItem
+              disabled={hasErrors}
+              key="hide_always"
+              value="hide_always"
+            >
+              {t("hide_always")}
+            </MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+
       {!hasErrors && shouldHaveLogic && (
         <LogicBuilder
           title={

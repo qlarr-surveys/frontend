@@ -6,15 +6,7 @@ import styles from "./SelectValue.module.css";
 import { useTranslation } from "react-i18next";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
-function SelectValue({
-  label,
-  rule,
-  defaultValue,
-  code,
-  values,
-  labels,
-  showTooltip = false,
-}) {
+function SelectValue({ label, rule, defaultValue, code, values, labels }) {
   const dispatch = useDispatch();
   const { t } = useTranslation("design");
   const value = useSelector((state) => {
@@ -28,8 +20,8 @@ function SelectValue({
   return (
     <div className={styles.selectDate}>
       <div className={styles.label}>
-        {showTooltip && <CustomTooltip title={t(`tooltips.${label}`)} />}
-        
+        <CustomTooltip title={t(`tooltips.${label}`)} />
+
         <h4>{t(label)}</h4>
       </div>
       <FormControl variant="standard" fullWidth>

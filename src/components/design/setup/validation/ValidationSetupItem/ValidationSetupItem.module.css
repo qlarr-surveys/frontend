@@ -26,3 +26,9 @@
   margin: 0;
   margin-right: 30px;
 }
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

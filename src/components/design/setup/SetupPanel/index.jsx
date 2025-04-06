@@ -291,10 +291,9 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           values={listDateFormat}
           key={code + rule}
           defaultValue="DD.MM.YYYY"
-          label={"date_format"}
+          label="date_format"
           rule={rule}
           code={code}
-          showTooltip
         />
       );
     case "imageWidth":
@@ -326,7 +325,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           labels={imageWidthLabels}
           key={code + rule}
           defaultValue="unspecified"
-          label={t("image_width")}
+          label="image_width"
           rule={rule}
           code={code}
         />
@@ -340,10 +339,9 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           labels={labels}
           key={code + rule}
           defaultValue=""
-          label={"decimal_separator"}
+          label="decimal_separator"
           rule={rule}
           code={code}
-          showTooltip
         />
       );
     case "imageAspectRatio":
@@ -355,7 +353,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           labels={aspectLabels}
           key={code + rule}
           defaultValue="1:1"
-          label={t("image_aspect_ratio")}
+          label="image_aspect_ratio"
           rule={rule}
           code={code}
         />
@@ -372,7 +370,6 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           label={"order_mode"}
           rule={rule}
           code={code}
-          showTooltip
         />
       );
     case "iconSize":
@@ -382,7 +379,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           values={iconSizes}
           key={code + rule}
           defaultValue="1:1"
-          label={t("image_icon_size")}
+          label="image_icon_size"
           rule={rule}
           code={code}
         />
@@ -394,7 +391,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           values={columnsOptions}
           key={code + rule}
           defaultValue="2"
-          label={t("columns_number")}
+          label="columns_number"
           rule={rule}
           code={code}
         />
@@ -416,7 +413,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "spacing":
       return (
         <FieldSize
-          label={t("spacing")}
+          label="spacing"
           lowerBound={2}
           upperBound={32}
           code={code}

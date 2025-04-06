@@ -44,15 +44,13 @@ function NewComponentsPanel({ t }) {
               };
 
               return (
-                <CustomTooltip showIcon={false} title={t(`tooltips.page`)}>
-                  <div className={"Draggable"} key={question.type}>
-                    <NewComponentsItem
-                      t={t}
-                      item={dragItem}
-                      onClick={() => handleAddComponent("group", question.type)}
-                    />
-                  </div>
-                </CustomTooltip>
+                <div className={"Draggable"} key={question.type}>
+                  <NewComponentsItem
+                    t={t}
+                    item={dragItem}
+                    onClick={() => handleAddComponent("group", question.type)}
+                  />
+                </div>
               );
             })}
           </div>
@@ -72,22 +70,17 @@ function NewComponentsPanel({ t }) {
             };
 
             return (
-              <CustomTooltip
-                showIcon={false}
-                title={t(`tooltips.${question.type}`)}
-              >
-                <div key={`draggable-${index}`}>
-                  <div className={"Draggable"}>
-                    <NewComponentsItem
-                      t={t}
-                      item={dragItem}
-                      onClick={() =>
-                        handleAddComponent("question", question.type)
-                      }
-                    />
-                  </div>
+              <div key={`draggable-${index}`}>
+                <div className={"Draggable"}>
+                  <NewComponentsItem
+                    t={t}
+                    item={dragItem}
+                    onClick={() =>
+                      handleAddComponent("question", question.type)
+                    }
+                  />
                 </div>
-              </CustomTooltip>
+              </div>
             );
           })}
         </div>

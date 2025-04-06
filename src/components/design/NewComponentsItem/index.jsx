@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./NewComponentsItem.module.css";
 import { useDrag } from "react-dnd";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function NewComponentsItem({ t, item, onClick }) {
   const [isDragging, drag] = useDrag({
@@ -25,6 +26,7 @@ function NewComponentsItem({ t, item, onClick }) {
       }
       onClick={onClick}
     >
+      <CustomTooltip  title={t(`tooltips.${item.itemType}`)} />
       {item.icon}
       {t("component_" + item.itemType + "_title")}
     </div>
