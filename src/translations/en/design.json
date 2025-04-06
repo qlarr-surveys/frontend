@@ -333,6 +333,8 @@
     "questions_order": "Set the order of the questions",
     "questions_priority": "Set the priority of the questions",
     "groups_order": "Set the order of the groups",
-    "groups_priority": "Set the priority of the groups"
+    "groups_priority": "Set the priority of the groups",
+    "title": "Provide a title for your survey to help users identify it",
+    "description": "Provide a description for your survey to help users understand it"
   }
 }

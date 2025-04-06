@@ -53,9 +53,7 @@ const CustomTooltip = ({
           sx={{
             borderRadius: "50%",
             transition: "background-color 0.3s ease, color 0.3s ease",
-            backgroundColor: tooltipOpen
-              ? theme.palette.primary.main
-              : "transparent",
+            backgroundColor: tooltipOpen ? theme.palette.primary.main : "#fff",
             color: tooltipOpen ? "#fff" : "#1a2052",
             outline: "none",
             "&:hover": {
