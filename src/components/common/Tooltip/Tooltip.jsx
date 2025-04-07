@@ -13,13 +13,19 @@ const CustomTooltip = ({
 }) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const triggerRef = useRef(null);
+  const tooltipRef = useRef(null);
   const theme = useTheme();
 
   useEffect(() => {
     if (!showIcon) return;
 
     const handleClickOutside = (event) => {
-      if (triggerRef.current && !triggerRef.current.contains(event.target)) {
+      const clickedOutsideTrigger =
+        triggerRef.current && !triggerRef.current.contains(event.target);
+      const clickedOutsideTooltip =
+        tooltipRef.current && !tooltipRef.current.contains(event.target);
+
+      if (clickedOutsideTrigger && clickedOutsideTooltip) {
         setTooltipOpen(false);
       }
     };
@@ -31,7 +37,7 @@ const CustomTooltip = ({
   }, [showIcon]);
 
   const tooltipContent = (
-    <div>
+    <div ref={tooltipRef}>
       {title && <strong>{title}</strong>}
       {body && <p>{body}</p>}
       {url && (
