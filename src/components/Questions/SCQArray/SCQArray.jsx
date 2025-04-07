@@ -31,6 +31,7 @@ function SCQArray(props) {
                   sx={{
                     fontFamily: theme.textStyles.text.font,
                     color: theme.textStyles.text.color,
+                    padding: "2px",
                     fontSize: theme.textStyles.text.size,
                   }}
                   key={option.qualifiedCode}
@@ -92,7 +93,8 @@ function SCQArrayRow(props) {
             color: theme.textStyles.text.color,
             fontSize: theme.textStyles.text.size,
             borderBottom: invalid ? "0" : "",
-            padding: "8px",
+            padding: "2px",
+            minWidth: "60px",
           }}
         >
           {props.answer.content?.label}
@@ -105,7 +107,7 @@ function SCQArrayRow(props) {
               scope="row"
               sx={{
                 borderBottom: invalid ? "0" : "",
-                padding: "8px",
+                padding: "2px",
               }}
             >
               <Radio
@@ -115,7 +117,6 @@ function SCQArrayRow(props) {
                 value={option.code}
                 sx={{
                   color: theme.textStyles.text.color,
-
                 }}
               />
             </TableCell>

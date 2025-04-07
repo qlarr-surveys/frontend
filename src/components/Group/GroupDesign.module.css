@@ -74,7 +74,6 @@
   max-width: 800px;;
   max-width: min(800px, calc(100% - 32px));
   min-width: 320px;
-  gap: 1rem;
   padding: .5rem 0.5rem 2rem .5rem;
   margin: auto;
   position: relative;

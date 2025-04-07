@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import TableRowsIcon from "@mui/icons-material/TableRows";
-import styles from "./TopBanner.module.css";
+import styles from "./SideTabs.module.css";
 import React from "react";
 import { Edit, Settings, Visibility } from "@mui/icons-material";
 import { MANAGE_SURVEY_LANDING_PAGES, routes } from "~/routes";

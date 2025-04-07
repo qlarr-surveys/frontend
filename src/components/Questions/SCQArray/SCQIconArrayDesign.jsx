@@ -256,7 +256,8 @@ function SCQArrayRowDesign({
           fontFamily: theme.textStyles.text.font,
           color: theme.textStyles.text.color,
           fontSize: theme.textStyles.text.size,
-          padding: "4px",
+          padding: "2px",
+          minWidth: "60px",
         }}
       >
         <TextField
@@ -294,7 +295,7 @@ function SCQArrayRowDesign({
             scope="row"
             align="center"
             sx={{
-              padding: "4px",
+              padding: "2px",
             }}
           >
             <DynamicSvg
@@ -339,6 +340,20 @@ function SCQArrayHeaderDesign({
   const dispatch = useDispatch();
   const theme = useTheme();
   const ref = useRef();
+
+  const onMainLang = langInfo.lang === langInfo.mainLang;
+
+  const content = useSelector((state) => {
+    return state.designState[item.qualifiedCode].content?.[langInfo.lang]?.[
+      "label"
+    ];
+  });
+
+  const mainContent = useSelector((state) => {
+    return state.designState[item.qualifiedCode].content?.[langInfo.mainLang]?.[
+      "label"
+    ];
+  });
 
   const isRtl = rtlLanguage.includes(langInfo.lang);
   const isLtr = !isRtl;
@@ -437,7 +452,7 @@ function SCQArrayHeaderDesign({
           fontFamily: theme.textStyles.text.font,
           color: theme.textStyles.text.color,
           fontSize: theme.textStyles.text.size,
-          padding: "4px",
+          padding: "2px",
         }}
         key={item.qualifiedCode}
       >
@@ -470,11 +485,39 @@ function SCQArrayHeaderDesign({
           imageHeight="64px"
           svgUrl={icon ? buildResourceUrl(icon) : undefined}
         />
-        {!icon && (
+        {/* {!icon && (
           <span onClick={() => setIconSelectorOpen(true)}>
             Click to add icon
           </span>
-        )}
+        )} */}
+        <TextField
+          variant="standard"
+          value={content || ""}
+          onChange={(e) => {
+            dispatch(
+              changeContent({
+                code: item.qualifiedCode,
+                key: "label",
+                lang: langInfo.lang,
+                value: e.target.value,
+              })
+            );
+          }}
+          placeholder={
+            onMainLang
+              ? t("content_editor_placeholder_option")
+              : mainContent || t("content_editor_placeholder_option")
+          }
+          inputProps={{ style: { textAlign: "center" } }}
+          InputProps={{
+            disableUnderline: true,
+            sx: {
+              fontFamily: theme.textStyles.text.font,
+              color: theme.textStyles.text.color,
+              fontSize: theme.textStyles.text.size,
+            },
+          }}
+        />
       </TableCell>
       {iconSelectoOpen && (
         <IconSelector

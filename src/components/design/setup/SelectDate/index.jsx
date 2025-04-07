@@ -15,7 +15,7 @@ function SelectDate({ label, rule, code, t }) {
   return (
     <div className={styles.selectDate}>
       <div className={styles.label}>
-        <CustomTooltip title={t(`tooltips.${label}`)} />
+        <CustomTooltip body={t(`tooltips.${label}`)} />
         <h4>{t(label)}</h4>
       </div>
       <TextField

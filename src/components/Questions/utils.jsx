@@ -680,12 +680,27 @@ export const createQuestion = (type, qId, lang) => {
     case "scq_icon_array":
       returnObj[`Q${qId}Ac1`] = {
         type: "column",
+        content: {
+          en: {
+            label: "Col 1",
+          },
+        },
       };
       returnObj[`Q${qId}Ac2`] = {
         type: "column",
+        content: {
+          en: {
+            label: "Col 2",
+          },
+        },
       };
       returnObj[`Q${qId}Ac3`] = {
         type: "column",
+        content: {
+          en: {
+            label: "Col 3",
+          },
+        },
       };
       returnObj[`Q${qId}A1`] = {
         type: "row",

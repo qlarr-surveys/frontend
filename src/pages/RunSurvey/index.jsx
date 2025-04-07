@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { shallowEqual, useDispatch } from "react-redux";
 import styles from "./RunSurvey.module.css";
 import { useTranslation } from "react-i18next";
@@ -28,6 +28,7 @@ import RunLoadingDots from "~/components/common/RunLoadingDots";
 
 import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
 import SurveyAppBar from "~/components/run/SurveyAppBar";
+import { FORM_ID } from "~/constants/run";
 
 function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
   const runService = useService("run");
@@ -38,6 +39,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
   const [expanded, setExpanded] = React.useState(COLLAPSE);
   const [error, setError] = React.useState(false);
   const [inlineError, setInlineError] = React.useState(false);
+  const containerRef = useRef(null);
 
   const surveyTheme = useSelector((state) => {
     return state.runState.data?.survey?.theme;
@@ -117,12 +119,18 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
         sessionStorage.setItem("responseId", response.responseId);
         i18n.changeLanguage(response.lang.code);
         dispatch(setFetching(false));
-        // document?.getElementById(FORM_ID)?.scrollTo(0, 0)
       })
       .catch((err) => {
+        console.log(err);
         handleError(err);
       });
   };
+
+  useEffect(() => {
+    if (!navigation && containerRef.current) {
+      containerRef.current.scrollTo({ top: 0 });
+    }
+  }, [navigation, containerRef.current]);
 
   useEffect(() => {
     document.body.style.overflow = "visible";
@@ -188,6 +196,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
           {render && (
             <div
               className={styles.mainContainer}
+              ref={containerRef}
               style={{
                 backgroundColor: theme.palette.background.default,
                 fontFamily: theme.textStyles.text.font,
@@ -196,7 +205,6 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
                 ...backgroundStyle,
               }}
             >
-              
               <SurveyAppBar toggleDrawer={toggleDrawer} />
               <SurveyMemo key="Survey" />
               <SurveyDrawer

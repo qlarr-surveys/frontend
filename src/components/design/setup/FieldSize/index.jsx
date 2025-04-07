@@ -56,7 +56,7 @@ function FieldSize({
   return (
     <>
       <div className={styles.label}>
-        <CustomTooltip title={t(`tooltips.${label}`)} />
+        <CustomTooltip body={t(`tooltips.${label}`)} />
         <h4>{t(label)}:</h4>
       </div>
       <TextField

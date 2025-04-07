@@ -105,7 +105,7 @@ function Relevance({ code, t }) {
   return (
     <div className={`${hasErrors ? styles.relevanceError : ""}`}>
       <div className={styles.label}>
-        <CustomTooltip title={t(`tooltips.revelance`)} />
+        <CustomTooltip body={t(`tooltips.revelance`)} />
         <FormControl variant="standard" fullWidth>
           <Select
             id="show-hide-select"

@@ -22,7 +22,7 @@ function ShowHint({ code, t }) {
     <>
       <div className={styles.showHint}>
         <div className={styles.label}>
-          <CustomTooltip title={t("tooltips.show_question_hint")} />
+          <CustomTooltip body={t("tooltips.show_question_hint")} />
           <h4>{t("show_question_hint")}</h4>
         </div>
         <Switch
@@ -55,7 +55,7 @@ export function ContentEditor({ code, objectName, title, t }) {
     <>
       <div className={styles.label}>
         {objectName !== "hint" && (
-          <CustomTooltip title={t(`tooltips.${title}`)} />
+          <CustomTooltip body={t(`tooltips.${title}`)} />
         )}
         {title && <h4>{t(title)}</h4>}
       </div>

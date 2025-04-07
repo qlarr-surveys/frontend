@@ -109,7 +109,10 @@ function SurveyIndex(props) {
                           <span className={styles.questionIcon}>
                             {questionIconByType(question.type)}
                           </span>
-                          {stripTags(truncateWithEllipsis(question.content?.label,32))}
+
+                          <span className={styles.truncatedTwoLines}>
+                            {stripTags(question.content?.label)}
+                          </span>
                           {!validity_map[question.code] && (
                             <span className={styles.redAsterix}>*</span>
                           )}

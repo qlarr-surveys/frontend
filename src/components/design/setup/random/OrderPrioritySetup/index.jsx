@@ -107,32 +107,27 @@ export default function OrderPrioritySetup({ t, rule, code }) {
 
   return (
     <>
-      <h4>{t(`${title}`)}</h4>
       <div className={styles.label}>
-        <CustomTooltip title={t(`tooltips.${title}`)} />
-        <FormControl
-          className={styles.selectValue}
-          variant="standard"
-          fullWidth
-        >
-          <Select
-            id="select-value"
-            value={value}
-            label="Select Value"
-            onChange={(e) => {
-              onChange(e.target.value);
-            }}
-          >
-            {labels.map((element, index) => {
-              return (
-                <MenuItem key={element} value={values[index]}>
-                  {element}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+        <CustomTooltip body={t(`tooltips.${title}`)} /> <h4>{t(`${title}`)}</h4>
       </div>
+      <FormControl className={styles.selectValue} variant="standard" fullWidth>
+        <Select
+          id="select-value"
+          value={value}
+          label="Select Value"
+          onChange={(e) => {
+            onChange(e.target.value);
+          }}
+        >
+          {labels.map((element, index) => {
+            return (
+              <MenuItem key={element} value={values[index]}>
+                {element}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
 
       {value == "custom" &&
         [

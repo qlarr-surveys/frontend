@@ -35,7 +35,7 @@ function ValidationSetupItem({ rule, t, code }) {
     <div>
       <div className={styles.title}>
         <div className={styles.label}>
-          <CustomTooltip title={t(`tooltips.${rule}`)} />
+          <CustomTooltip body={t(`tooltips.${rule}`)} />
           <h4>{t(rule + "_title")}</h4>
         </div>
         <Switch
