@@ -67,11 +67,11 @@ export const EditableSurveyDescription = ({
         <>
           <Box gap={1} pl={1} display="flex" alignItems="center">
 
-            <CustomTooltip title={t(`tooltips.description`)} />
+            <CustomTooltip body={t(`tooltips.description`)} />
           </Box>
 
           {description?.length > charLimit ? (
-            <CustomTooltip title={description}
+            <CustomTooltip body={description}
             
             showIcon={false}>
               <Typography

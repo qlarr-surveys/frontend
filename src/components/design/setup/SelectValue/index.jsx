@@ -20,7 +20,7 @@ function SelectValue({ label, rule, defaultValue, code, values, labels }) {
   return (
     <div className={styles.selectDate}>
       <div className={styles.label}>
-        <CustomTooltip title={t(`tooltips.${label}`)} />
+        <CustomTooltip body={t(`tooltips.${label}`)} />
 
         <h4>{t(label)}</h4>
       </div>

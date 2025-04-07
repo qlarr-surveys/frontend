@@ -40,7 +40,7 @@ function EditSurvey({ onPublish }) {
             id="panel1a-header"
           >
             <Box display="flex" alignItems="center" gap=".5rem">
-              <CustomTooltip title={t(`tooltips.launch`)} />
+              <CustomTooltip body={t(`tooltips.launch`)} />
               <Typography fontWeight="600" color="#1a2052" variant="h5">
                 {t("edit_survey.launch")}
               </Typography>
@@ -64,7 +64,7 @@ function EditSurvey({ onPublish }) {
                 id="panel1a-header"
               >
                 <Box display="flex" alignItems="center" gap=".5rem">
-                  <CustomTooltip title={t(`tooltips.${section.id}`)} />
+                  <CustomTooltip body={t(`tooltips.${section.id}`)} />
                   <Typography fontWeight="600" color="#1a2052" variant="h5">
                     {section.title}
                   </Typography>

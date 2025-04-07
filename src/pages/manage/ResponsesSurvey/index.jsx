@@ -158,7 +158,7 @@ function ResponsesSurvey() {
       >
         <Box width="100%" className={styles.cardContent}>
           <Box display="flex" alignItems="center" gap={1}>
-            <CustomTooltip title={t("tooltips.raw_values")} />
+            <CustomTooltip body={t("tooltips.raw_values")} />
             <Typography variant="h5" color="primary" fontWeight={600}>
               {t("responses.raw_values")}
             </Typography>
@@ -172,7 +172,7 @@ function ResponsesSurvey() {
         </Box>
         <Box width="100%" className={styles.cardContent}>
           <Box display="flex" alignItems="center" gap={1}>
-            <CustomTooltip title={t("tooltips.export_responses")} />
+            <CustomTooltip body={t("tooltips.export_responses")} />
             <Typography variant="h5" color="primary" fontWeight={600}>
               {t("responses.export")}
             </Typography>

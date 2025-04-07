@@ -63,7 +63,7 @@ export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
       ) : (
         <>
           <Box gap={1} pl={1} display="flex" alignItems="center">
-            <CustomTooltip title={t(`tooltips.title`)} />
+            <CustomTooltip body={t(`tooltips.title`)} />
           </Box>
 
           <Typography
