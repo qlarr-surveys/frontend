@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeAttribute } from "~/state/design/designState";
 import { Trans } from "react-i18next";
+import styles from "./FieldSize.module.css";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function FieldSize({
   label,
@@ -23,7 +25,7 @@ function FieldSize({
   const [value, setValue] = useState(stateValue);
 
   const onValueChange = (event) => {
-    const newValue = event.target.value
+    const newValue = event.target.value;
     setValue(newValue);
     if (newValue >= lowerBound && newValue <= upperBound) {
       dispatch(
@@ -53,9 +55,12 @@ function FieldSize({
 
   return (
     <>
-      <h4>{label}:</h4>
+      <div className={styles.label}>
+        <CustomTooltip body={t(`tooltips.${label}`)} />
+        <h4>{t(label)}:</h4>
+      </div>
       <TextField
-        label={label}
+        label={t(label)}
         error={isError}
         variant="outlined"
         type="number"

@@ -7,6 +7,7 @@ import ValidationSetupValue from "~/components/design/setup/validation/Validatio
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeValidationValue } from "~/state/design/designState";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function ValidationSetupItem({ rule, t, code }) {
   console.debug("ValidationSetupItem: " + code);
@@ -33,7 +34,10 @@ function ValidationSetupItem({ rule, t, code }) {
   return (
     <div>
       <div className={styles.title}>
-        <h4>{t(rule + "_title")}</h4>
+        <div className={styles.label}>
+          <CustomTooltip body={t(`tooltips.${rule}`)} />
+          <h4>{t(rule + "_title")}</h4>
+        </div>
         <Switch
           {...label}
           checked={isActive}

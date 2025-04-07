@@ -4,6 +4,7 @@ import styles from "./Survey.module.css";
 import { truncateWithEllipsis } from "~/utils/design/utils";
 import { Edit, Check } from "@mui/icons-material";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { useTranslation } from "react-i18next";
 
 export const EditableSurveyDescription = ({
   survey,
@@ -13,6 +14,7 @@ export const EditableSurveyDescription = ({
 }) => {
   const [isDescriptionEditing, setIsDescriptionEditing] = useState(false);
   const [description, setDescription] = useState(survey.description);
+  const { t } = useTranslation("design");
 
   const charLimit = isExample ? 450 : 125;
 
@@ -63,13 +65,20 @@ export const EditableSurveyDescription = ({
         </>
       ) : (
         <>
-         
+          <Box gap={1} pl={1} display="flex" alignItems="center">
+
+            <CustomTooltip body={t(`tooltips.description`)} />
+          </Box>
+
           {description?.length > charLimit ? (
-            <CustomTooltip title={description} showIcon={false}>
+            <CustomTooltip body={description}
+            
+            showIcon={false}>
               <Typography
                 variant="caption"
                 sx={{
-                  px: 3,
+                  pr: 3,
+                  pl: 1,
                   color: description ? "inherit" : "gray",
                   flexGrow: 1,
                 }}
@@ -85,7 +94,8 @@ export const EditableSurveyDescription = ({
             <Typography
               variant="caption"
               sx={{
-                px: 3,
+                pr: 3,
+                pl: 1,
                 color: description ? "inherit" : "gray",
                 flexGrow: 1,
               }}
@@ -97,7 +107,6 @@ export const EditableSurveyDescription = ({
                 "Click to add a description..."}
             </Typography>
           )}
-
           {isEditable && (
             <IconButton
               className={`${styles.descriptionIcon}`}

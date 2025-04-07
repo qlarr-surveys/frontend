@@ -87,9 +87,6 @@
   width: 6rem;
 }
 
-
-
-
 @media only screen and (max-width: 1024px) {
   .cardContent {
     flex-direction: column;
@@ -121,8 +118,6 @@
   }
 }
 
-
-
 .logo {
   display: flex;
   justify-content: center;
@@ -134,7 +129,6 @@
   display: block;
   object-fit: contain;
 }
-
 
 .logoImageWrapper {
   position: relative;
@@ -151,7 +145,6 @@
   transition: opacity 0.3s ease;
 }
 
-
 .cameraIconWrapper {
   position: absolute;
   top: 8px;
@@ -159,7 +152,6 @@
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 1;
-
 }
 
 .logoImageWrapper:hover .cameraIconWrapper {
@@ -169,9 +161,7 @@
 .cameraIcon {
   color: white;
   pointer-events: none;
-
 }
-
 
 .logoImageWrapper {
   position: relative;
@@ -191,11 +181,6 @@
   bottom: 0;
   color: white;
 }
-
-
-
-
-
 
 .container {
   display: flex;
@@ -231,13 +216,11 @@
   word-wrap: break-word;
 }
 
-
 .titleContainer {
   display: flex;
   align-items: center;
   width: 100%;
   justify-content: space-between;
-  position: relative;
 }
 
 .surveyLink {
@@ -246,15 +229,13 @@
 }
 
 .nameIcon {
-  position: absolute !important;
-  right: 3px;
   opacity: 0;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .titleContainer:hover .nameIcon {
   opacity: 1;
 }
-
 
 .descriptionContainer {
   display: flex;
@@ -285,7 +266,6 @@
   opacity: 0;
   cursor: pointer;
 }
-
 
 .logoImageWrapper:hover .photoIcon {
   opacity: 1;

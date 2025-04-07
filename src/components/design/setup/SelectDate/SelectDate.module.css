@@ -8,3 +8,9 @@
 .selectDateField {
   max-width: 50%;
 }
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}

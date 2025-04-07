@@ -1,12 +1,14 @@
-import { Box, IconButton, TextField, Tooltip, Typography } from "@mui/material";
+import { Box, IconButton, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import styles from "./Survey.module.css";
 import { Edit, Check } from "@mui/icons-material";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { useTranslation } from "react-i18next";
 
 export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(survey.name);
-
+  const { t } = useTranslation("design");
   const handleTitleChange = (event) => {
     const newTitle = event.target.value;
     if (newTitle.length <= 50) {
@@ -60,15 +62,21 @@ export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
         </>
       ) : (
         <>
+          <Box gap={1} pl={1} display="flex" alignItems="center">
+            <CustomTooltip body={t(`tooltips.title`)} />
+          </Box>
+
           <Typography
             variant="h5"
             sx={{
-              px: 3,
+              pr: 3,
+              pl: 1,
               overflow: "hidden",
               textOverflow: "ellipsis",
               display: "-webkit-box",
               WebkitLineClamp: "2",
               WebkitBoxOrient: "vertical",
+              flexGrow: 1
             }}
           >
             {title}

@@ -5,6 +5,7 @@ import { QUESTION_TYPES } from "~/components/Questions/utils";
 import { FormatListBulleted, StopCircle } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { addComponent } from "~/state/design/designState";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 const groups = [
   {
@@ -92,9 +93,15 @@ export default React.memo(NewComponentsPanel);
 
 export const createGroup = (groupType, gId) => {
   let code = `G${gId}`;
-  let state = { groupType, content: { en: {
-    label: `Page ${gId}`
-  }, description: {} } };
+  let state = {
+    groupType,
+    content: {
+      en: {
+        label: `Page ${gId}`,
+      },
+      description: {},
+    },
+  };
   let newGroup = {
     code,
     qualifiedCode: code,

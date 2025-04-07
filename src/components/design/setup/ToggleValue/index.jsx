@@ -4,8 +4,9 @@ import styles from "./ToggleValue.module.css";
 import { useDispatch } from "react-redux";
 import { changeAttribute } from "~/state/design/designState";
 import { useSelector } from "react-redux";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
-function ToggleValue({ label, code, rule }) {
+function ToggleValue({ label, code, rule, t }) {
   const dispatch = useDispatch();
 
   const value = useSelector((state) => {
@@ -15,12 +16,14 @@ function ToggleValue({ label, code, rule }) {
   const onChange = (value) => {
     dispatch(changeAttribute({ code, key: rule, value }));
   };
-
   const swithLabel = { inputProps: { "aria-label": "Switch demo" } };
 
   return (
     <div className={styles.toggleValue}>
-      <h4>{label}</h4>
+      <div className={styles.label}>
+        <CustomTooltip body={t(`tooltips.${label}`)} />
+        <h4>{t(label)}</h4>
+      </div>
       <Switch
         {...swithLabel}
         checked={value}

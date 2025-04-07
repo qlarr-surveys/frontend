@@ -4,7 +4,6 @@ import {
   Card,
   Stack,
   Divider,
-  Tooltip,
   Snackbar,
   Alert,
   Box,
@@ -182,6 +181,7 @@ export const Survey = ({
     reader.readAsDataURL(image);
   };
 
+  console.log("ee ", `${t(`edit_survey.${surveyStatus}_mode`)}`);
   return (
     <>
       <SavingSurvey />
@@ -259,31 +259,37 @@ export const Survey = ({
 
             {!example && (
               <>
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  spacing={0.5}
-                  sx={{ px: 3, typography: "body2", color: "text.secondary" }}
+                <CustomTooltip
+                  showIcon={false}
+                  title={t(`edit_survey.${surveyStatus}_mode`)}
                 >
-                  <span
-                    style={{
-                      backgroundColor: bgHeader(surveyStatus),
-                    }}
-                    className={styles.badge}
-                  ></span>{" "}
-                  <Typography
-                    variant="subtitle2"
-                    className={styles.textTransform}
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={0.5}
+                    sx={{ px: 3, typography: "body2", color: "text.secondary" }}
                   >
-                    {t(`status.${surveyStatus}`)}
-                  </Typography>
-                </Stack>
+                    <span
+                      style={{
+                        backgroundColor: bgHeader(surveyStatus),
+                      }}
+                      className={styles.badge}
+                    ></span>{" "}
+                    <Typography
+                      variant="subtitle2"
+                      className={styles.textTransform}
+                    >
+                      {t(`status.${surveyStatus}`)}
+                    </Typography>
+                  </Stack>
+                </CustomTooltip>
+
                 <Box sx={{ px: 3, display: "flex", gap: 2, my: 0.5 }}>
                   {!example &&
                     survey.status !== "closed" &&
                     survey.latestVersion.published === false && (
                       <CustomTooltip
-                        title="Has unpublished changes"
+                        title={t("label.unpublished_changes")}
                         showIcon={false}
                       >
                         <WarningIcon sx={{ color: "text.secondary" }} />
@@ -292,7 +298,9 @@ export const Survey = ({
 
                   <CustomTooltip
                     showIcon={false}
-                    title={`Complete Responses: ${survey.completeResponseCount}`}
+                    title={t("label.responses", {
+                      count: survey.completeResponseCount,
+                    })}
                   >
                     <Badge
                       badgeContent={survey.completeResponseCount}
@@ -310,8 +318,8 @@ export const Survey = ({
                     showIcon={false}
                     title={
                       survey.surveyQuota > 0
-                        ? `Quota: ${survey.surveyQuota}`
-                        : "No Quota"
+                        ? t("label.quota", { count: survey.surveyQuota })
+                        : t("label.no_quota")
                     }
                   >
                     <Badge
@@ -373,30 +381,33 @@ export const Survey = ({
           }}
           className={styles.surveyActions}
         >
-          <IconButton
-            className={styles.iconButton}
-            sx={{
-              backgroundColor: theme.palette.primary.main,
-              "&:hover": {
+          <CustomTooltip showIcon={false} title={t("edit_survey.title")}>
+            <IconButton
+              className={styles.iconButton}
+              sx={{
                 backgroundColor: theme.palette.primary.main,
-              },
-            }}
-            aria-label="redirect"
-            size="large"
-            onClick={(e) => {
-              e.stopPropagation();
-              const targetUrl = survey.example
-                ? `/guest/preview/${survey.id}`
-                : `/design-survey/${survey.id}`;
-              navigate(targetUrl);
-            }}
-          >
-            {!example ? (
-              <ArticleIcon sx={{ color: "#fff" }} />
-            ) : (
-              <VisibilityIcon sx={{ color: "#fff" }} />
-            )}
-          </IconButton>
+                "&:hover": {
+                  backgroundColor: theme.palette.primary.main,
+                },
+              }}
+              aria-label="redirect"
+              size="large"
+              onClick={(e) => {
+                e.stopPropagation();
+                const targetUrl = survey.example
+                  ? `/guest/preview/${survey.id}`
+                  : `/design-survey/${survey.id}`;
+                navigate(targetUrl);
+              }}
+            >
+              {!example ? (
+                <ArticleIcon sx={{ color: "#fff" }} />
+              ) : (
+                <VisibilityIcon sx={{ color: "#fff" }} />
+              )}
+            </IconButton>
+          </CustomTooltip>
+
           {isSurveyAdmin() && !example && survey.status === "active" && (
             <CustomTooltip
               showIcon={false}

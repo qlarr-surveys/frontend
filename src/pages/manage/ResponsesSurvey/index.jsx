@@ -157,9 +157,12 @@ function ResponsesSurvey() {
         gap={10}
       >
         <Box width="100%" className={styles.cardContent}>
-          <Typography variant="h5" color="primary" fontWeight={600}>
-            {t("responses.raw_values")}
-          </Typography>
+          <Box display="flex" alignItems="center" gap={1}>
+            <CustomTooltip body={t("tooltips.raw_values")} />
+            <Typography variant="h5" color="primary" fontWeight={600}>
+              {t("responses.raw_values")}
+            </Typography>
+          </Box>
           <RHFSwitch
             checked={dbResponses}
             onChange={(event) => {
@@ -168,9 +171,12 @@ function ResponsesSurvey() {
           />
         </Box>
         <Box width="100%" className={styles.cardContent}>
-          <Typography variant="h5" color="primary" fontWeight={600}>
-            {t("responses.export")}
-          </Typography>
+          <Box display="flex" alignItems="center" gap={1}>
+            <CustomTooltip body={t("tooltips.export_responses")} />
+            <Typography variant="h5" color="primary" fontWeight={600}>
+              {t("responses.export")}
+            </Typography>
+          </Box>
           <Button
             sx={{ minWidth: "50px" }}
             color="primary"
