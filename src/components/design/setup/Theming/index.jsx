@@ -119,35 +119,6 @@ function Theming({ t }) {
     }
   }
 
-  function handleBannerUpload(e) {
-    e.preventDefault();
-    let file = e.target.files[0];
-    designService
-      .uploadResource(file)
-      .then((response) => {
-        dispatch(
-          changeResources({
-            code: "Survey",
-            key: "headerImage",
-            value: response.name,
-          })
-        );
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }
-
-  const handleBannerReset = () => {
-    dispatch(
-      changeResources({
-        code: "Survey",
-        key: "headerImage",
-        value: null,
-      })
-    );
-  };
-
   function handleBackgroundUpload(e) {
     e.preventDefault();
     let file = e.target.files[0];
@@ -230,9 +201,6 @@ function Theming({ t }) {
 
   const backgroundImage = useSelector(
     (state) => state.designState["Survey"]?.resources?.backgroundImage
-  );
-  const bannerImage = useSelector(
-    (state) => state.designState["Survey"]?.resources?.headerImage
   );
   return (
     <div className={styles.theming}>
@@ -483,35 +451,6 @@ function Theming({ t }) {
               }}
             />
           </Box>
-        )}
-      </Stack>
-
-      <Stack
-        display="flex"
-        justifyContent="space-between"
-        width="100%"
-        flexDirection="row"
-      >
-        <Typography variant="subtitle2" alignSelf="center">
-          {t("upload_banner")}
-        </Typography>
-        <Button component="label" className={styles.chooseImage}>
-          <ImageIcon />
-          <input
-            hidden
-            accept="image/*"
-            type="file"
-            onChange={handleBannerUpload}
-          />
-        </Button>
-
-        {bannerImage && (
-          <IconButton
-            className={styles.resetButton}
-            onClick={handleBannerReset}
-          >
-            <Close />
-          </IconButton>
         )}
       </Stack>
       <Stack
