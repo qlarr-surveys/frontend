@@ -109,7 +109,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "minRows":
       return (
         <FieldSize
-          label={t("textarea_lines")}
+          label={"textarea_lines"}
           lowerBound={1}
           t={t}
           upperBound={500}

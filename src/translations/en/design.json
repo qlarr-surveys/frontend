@@ -335,6 +335,7 @@
     "groups_order": "Set the order of the groups",
     "groups_priority": "Set the priority of the groups",
     "title": "Provide a title for your survey to help users identify it",
-    "description": "Provide a description for your survey to help users understand it"
+    "description": "Provide a description for your survey to help users understand it",
+    "textarea_lines": "Set the number of lines for the text area"
   }
 }

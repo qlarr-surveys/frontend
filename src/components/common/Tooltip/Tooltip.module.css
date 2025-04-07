@@ -1,0 +1,13 @@
+.tooltipContainer {
+  display: flex;
+  align-items: center;
+}
+
+.iconButton {
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.iconButton:hover {
+  color: #fff;
+}

@@ -335,6 +335,7 @@
     "groups_order": "Reihenfolge der Gruppen festlegen",
     "groups_priority": "Priorität der Gruppen festlegen",
     "title": "Geben Sie Ihrer Umfrage einen Titel, damit Benutzer sie erkennen können",
-    "description": "Geben Sie eine Beschreibung für Ihre Umfrage an, damit Benutzer sie besser verstehen"
+    "description": "Geben Sie eine Beschreibung für Ihre Umfrage an, damit Benutzer sie besser verstehen",
+    "textarea_lines": "Anzahl der Zeilen für das Textfeld festlegen"
   }
 }
