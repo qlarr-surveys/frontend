@@ -108,7 +108,7 @@ function ManageSurvey({ landingPage }) {
           surveyId={params.surveyId}
           onPageChange={changePage}
         />
-        <Suspense fallback={<LoadingDots />}>
+        <Suspense fallback={<LoadingDots fullHeight />}>
           <Box className={styles.wrapper}>
             {shouldShowResponses() ? (
               <ResponsesSurvey />

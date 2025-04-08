@@ -242,7 +242,7 @@ function ResponsesSurvey() {
       )}
       {fetching ? (
         <div className={styles.loadingWrapper}>
-          <LoadingDots />
+          <LoadingDots fullHeight />
         </div>
       ) : (
         <Paper sx={{ width: "100%", background: "transparent", mb: 2 }}>

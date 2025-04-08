@@ -402,7 +402,7 @@ function Dashboard() {
                 )}
               </>
             ) : (
-              <LoadingDots />
+              <LoadingDots fullHeight />
             )}
           </Box>
 

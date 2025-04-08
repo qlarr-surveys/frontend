@@ -9,13 +9,13 @@ function App() {
     case "android-debuggable":
     case "android":
       return (
-        <Suspense fallback={<LoadingDots />}>
+        <Suspense fallback={<LoadingDots fullHeight />}>
           <Android />
         </Suspense>
       );
     default:
       return (
-        <Suspense fallback={<LoadingDots />}>
+        <Suspense fallback={<LoadingDots fullHeight />}>
           <Web />
         </Suspense>
       );
