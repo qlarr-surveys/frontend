@@ -208,6 +208,7 @@ export const Survey = ({
               <Box className={styles.absoluteOverlay}>
                 <EditableSurveyTitle
                   survey={survey}
+                  isExample={example}
                   onSave={handleChangeTitle}
                   isEditable={isSurveyAdmin() && !example}
                 />

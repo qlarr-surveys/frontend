@@ -102,7 +102,7 @@ function Web() {
         path={routes.guestPreview}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
+            <ManagePageWrapper  showHeader={false}>
               <PreviewSurvey guest={true} />
             </ManagePageWrapper>
           </Suspense>

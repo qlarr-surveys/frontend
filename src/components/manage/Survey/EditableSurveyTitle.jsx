@@ -5,7 +5,7 @@ import { Edit, Check } from "@mui/icons-material";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { useTranslation } from "react-i18next";
 
-export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
+export const EditableSurveyTitle = ({ survey, onSave, isEditable = true, isExample }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(survey.name);
   const { t } = useTranslation("design");
@@ -62,9 +62,9 @@ export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
         </>
       ) : (
         <>
-          <Box gap={1} pl={1} display="flex" alignItems="center">
+          {!isExample && <Box gap={1} pl={1} display="flex" alignItems="center">
             <CustomTooltip body={t(`tooltips.title`)} />
-          </Box>
+          </Box>}
 
           <Typography
             variant="h5"

@@ -65,10 +65,10 @@ export const EditableSurveyDescription = ({
         </>
       ) : (
         <>
-          <Box gap={1} pl={1} display="flex" alignItems="center">
+          {isEditable && <Box gap={1} pl={1} display="flex" alignItems="center">
 
             <CustomTooltip body={t(`tooltips.description`)} />
-          </Box>
+          </Box>}
 
           {description?.length > charLimit ? (
             <CustomTooltip body={description}
@@ -87,7 +87,7 @@ export const EditableSurveyDescription = ({
                 }`}
               >
                 {truncateWithEllipsis(description, charLimit) ||
-                  "Click to add a description..."}
+                  (isExample ? "Click to add a description..." : "")}
               </Typography>
             </CustomTooltip>
           ) : (
@@ -104,7 +104,7 @@ export const EditableSurveyDescription = ({
               }`}
             >
               {truncateWithEllipsis(description, charLimit) ||
-                "Click to add a description..."}
+                (!isExample && isEditable ? "Click to add a description..." : "")}
             </Typography>
           )}
           {isEditable && (
