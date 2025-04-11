@@ -80,11 +80,34 @@
 }
 
 .iconButton {
-  border: 2px solid #d7d7d7 !important;
-  border-radius: 14px !important;
-  padding: 0.3rem 1rem !important;
-  height: fit-content;
-  width: 6rem;
+  border: 0.5px solid #e3dfdf !important;
+  border-radius: 8px !important;
+  padding: 0.5rem !important;
+  height: 32px !important;
+  width: 64px !important;
+  min-width: 32px !important;
+}
+
+.statusAndIcons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 0 1.5rem;
+}
+
+.statusBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 5rem;
+}
+
+.statusIcons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
 }
 
 @media only screen and (max-width: 1024px) {
@@ -105,6 +128,11 @@
 
   .surveyActions {
     width: 100%;
+  }
+
+  .statusAndIcons {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 

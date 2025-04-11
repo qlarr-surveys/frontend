@@ -21,12 +21,13 @@ function EditSurvey({ onPublish }) {
     {
       id: "quotas",
       title: t("edit_survey.quotas"),
-      component: <SurveyQuota />,
+      component: <SurveyQuota />
     },
     {
       id: "export",
       title: t("edit_survey.export"),
       component: <ExportSurvey />,
+      tooltip: t("tooltips.export")
     },
   ];
 
@@ -40,7 +41,6 @@ function EditSurvey({ onPublish }) {
             id="panel1a-header"
           >
             <Box display="flex" alignItems="center" gap=".5rem">
-              <CustomTooltip body={t(`tooltips.launch`)} />
               <Typography fontWeight="600" color="#1a2052" variant="h5">
                 {t("edit_survey.launch")}
               </Typography>
@@ -64,7 +64,9 @@ function EditSurvey({ onPublish }) {
                 id="panel1a-header"
               >
                 <Box display="flex" alignItems="center" gap=".5rem">
-                  <CustomTooltip body={t(`tooltips.${section.id}`)} />
+                  {section.tooltip && (
+                    <CustomTooltip body={section.tooltip} />
+                  )}
                   <Typography fontWeight="600" color="#1a2052" variant="h5">
                     {section.title}
                   </Typography>

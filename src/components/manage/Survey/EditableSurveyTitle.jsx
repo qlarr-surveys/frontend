@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 export const EditableSurveyTitle = ({ survey, onSave, isEditable = true, isExample }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(survey.name);
-  const { t } = useTranslation("design");
+  const { t } = useTranslation("manage");
   const handleTitleChange = (event) => {
     const newTitle = event.target.value;
     if (newTitle.length <= 50) {
@@ -63,7 +63,7 @@ export const EditableSurveyTitle = ({ survey, onSave, isEditable = true, isExamp
       ) : (
         <>
           {!isExample && <Box gap={1} pl={1} display="flex" alignItems="center">
-            <CustomTooltip body={t(`tooltips.title`)} />
+            <CustomTooltip body={t(`tooltips.survey_title`)} />
           </Box>}
 
           <Typography

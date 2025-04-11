@@ -19,7 +19,6 @@ import { useTranslation } from "react-i18next";
 import SavingSurvey from "~/components/design/SavingSurvey";
 import { fDate } from "~/utils/format-time";
 import TableRowsIcon from "@mui/icons-material/TableRows";
-import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 import WarningIcon from "@mui/icons-material/Warning";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -36,6 +35,7 @@ import { useTheme } from "@emotion/react";
 import { EditableSurveyTitle } from "./EditableSurveyTitle";
 import { EditableSurveyDescription } from "./EditableSurveyDescription";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import NumbersIcon from "@mui/icons-material/Numbers";
 
 export const STATUS = {
   DRAFT: "draft",
@@ -181,7 +181,6 @@ export const Survey = ({
     reader.readAsDataURL(image);
   };
 
-  console.log("ee ", `${t(`edit_survey.${surveyStatus}_mode`)}`);
   return (
     <>
       <SavingSurvey />
@@ -260,94 +259,88 @@ export const Survey = ({
 
             {!example && (
               <>
-                <CustomTooltip
-                  showIcon={false}
-                  title={t(`edit_survey.${surveyStatus}_mode`)}
-                >
-                  <Stack
-                    direction="row"
-                    alignItems="center"
-                    spacing={0.5}
-                    sx={{ px: 3, typography: "body2", color: "text.secondary" }}
+                <div className={styles.statusAndIcons}>
+                  <CustomTooltip
+                    showIcon={false}
+                    title={t(`edit_survey.${surveyStatus}_mode`)}
                   >
-                    <span
-                      style={{
-                        backgroundColor: bgHeader(surveyStatus),
-                      }}
-                      className={styles.badge}
-                    ></span>{" "}
-                    <Typography
-                      variant="subtitle2"
-                      className={styles.textTransform}
-                    >
-                      {t(`status.${surveyStatus}`)}
-                    </Typography>
-                  </Stack>
-                </CustomTooltip>
-
-                <Box sx={{ px: 3, display: "flex", gap: 2, my: 0.5 }}>
-                  {!example &&
-                    survey.status !== "closed" &&
-                    survey.latestVersion.published === false && (
-                      <CustomTooltip
-                        title={t("label.unpublished_changes")}
-                        showIcon={false}
+                    <div className={styles.statusBadge}>
+                      <span
+                        style={{
+                          backgroundColor: bgHeader(surveyStatus),
+                        }}
+                        className={styles.badge}
+                      ></span>{" "}
+                      <Typography
+                        variant="subtitle2"
+                        className={styles.textTransform}
                       >
-                        <WarningIcon sx={{ color: "text.secondary" }} />
-                      </CustomTooltip>
-                    )}
-
-                  <CustomTooltip
-                    showIcon={false}
-                    title={t("label.responses", {
-                      count: survey.completeResponseCount,
-                    })}
-                  >
-                    <Badge
-                      badgeContent={survey.completeResponseCount}
-                      color="primary"
-                      anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                    >
-                      <TableRowsIcon sx={{ color: "text.secondary" }} />
-                    </Badge>
+                        {t(`status.${surveyStatus}`)}
+                      </Typography>
+                    </div>
                   </CustomTooltip>
 
-                  <CustomTooltip
-                    showIcon={false}
-                    title={
-                      survey.surveyQuota > 0
-                        ? t("label.quota", { count: survey.surveyQuota })
-                        : t("label.no_quota")
-                    }
-                  >
-                    <Badge
-                      badgeContent={
-                        survey.surveyQuota > 0 ? survey.surveyQuota : 0
+                  <div className={styles.statusIcons}>
+                    {!example &&
+                      survey.status !== "closed" &&
+                      survey.latestVersion.published === false && (
+                        <CustomTooltip
+                          title={t("label.unpublished_changes")}
+                          showIcon={false}
+                        >
+                          <WarningIcon sx={{ color: "text.secondary" }} />
+                        </CustomTooltip>
+                      )}
+
+                    <CustomTooltip
+                      showIcon={false}
+                      title={t("label.responses", {
+                        count: survey.completeResponseCount,
+                      })}
+                    >
+                      <Badge
+                        badgeContent={survey.completeResponseCount}
+                        color="primary"
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                      >
+                        <TableRowsIcon sx={{ color: "text.secondary" }} />
+                      </Badge>
+                    </CustomTooltip>
+
+                    <CustomTooltip
+                      showIcon={false}
+                      title={
+                        survey.surveyQuota > 0
+                          ? t("label.quota", { count: survey.surveyQuota })
+                          : t("label.no_quota")
                       }
-                      color="primary"
-                      anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
                     >
-                      <FormatQuoteIcon sx={{ color: "text.secondary" }} />
-                    </Badge>
-                  </CustomTooltip>
-                </Box>
+                      <Badge
+                        badgeContent={
+                          survey.surveyQuota > 0 ? survey.surveyQuota : 0
+                        }
+                        color="primary"
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                      >
+                        <NumbersIcon sx={{ color: "text.secondary" }} />
+                      </Badge>
+                    </CustomTooltip>
+                  </div>
+                </div>
               </>
             )}
           </Stack>
 
           <Typography variant="caption" sx={{ px: 3, color: "text.disabled" }}>
-            <strong>{t("edit_survey.metadata.created")}</strong>:{" "}
-            {fDate(survey.creationDate)}
-          </Typography>
-          <Typography variant="caption" sx={{ px: 3, color: "text.disabled" }}>
-            <strong>{t("edit_survey.metadata.last_modified")}</strong>:{" "}
-            {fDate(survey.lastModified)}
+            <strong>{t("edit_survey.metadata.created")}</strong>: {fDate(survey.creationDate)}
+            <span style={{ margin: "0 0.5rem" }}>•</span>
+            <strong>{t("edit_survey.metadata.last_modified")}</strong>: {fDate(survey.lastModified)}
           </Typography>
           {!example && survey.startDate && (
             <Typography

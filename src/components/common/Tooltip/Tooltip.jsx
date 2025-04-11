@@ -3,6 +3,7 @@ import { Tooltip, Button } from "@mui/material";
 import HelpOutline from "@mui/icons-material/HelpOutline";
 import { useTheme } from "@emotion/react";
 import styles from "./Tooltip.module.css";
+
 const CustomTooltip = ({
   title,
   body,
@@ -31,8 +32,8 @@ const CustomTooltip = ({
 
   const tooltipContent = (
     <div>
-      {title && <strong>{title}</strong>}
-      {body && <p>{body}</p>}
+      {title && <span dangerouslySetInnerHTML={{ __html: `<strong>${title}</strong>` }} />}
+      {body && <p dangerouslySetInnerHTML={{ __html: body }} />}
       {url && (
         <Button
           variant="text"
@@ -71,10 +72,7 @@ const CustomTooltip = ({
             sx={{
               fontSize: "16px",
               transition: "background-color 0.3s ease, color 0.3s ease",
-
-              backgroundColor: tooltipOpen
-                ? theme.palette.primary.main
-                : "#fff",
+              backgroundColor: tooltipOpen ? theme.palette.primary.main : "#fff",
               color: tooltipOpen ? "#fff" : "#1a2052",
               "&:hover": {
                 backgroundColor: theme.palette.primary.main,

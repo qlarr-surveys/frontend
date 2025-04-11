@@ -32,6 +32,7 @@ import {
   FileUpload,
 } from "@mui/icons-material";
 import { getDirFromSession } from "~/utils/common";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function Dashboard() {
   const surveyService = useService("survey");
@@ -102,10 +103,12 @@ function Dashboard() {
 
   const handleButtonClick = () => {
     setCreateSurveyOpen(true);
+    setTemplateSliderOpen(false);
   };
 
   const handleTemplateButtonClick = () => {
     setTemplateSliderOpen(true);
+    setCreateSurveyOpen(false);
   };
 
   const handleImportSurveyClick = () => {
@@ -235,34 +238,40 @@ function Dashboard() {
             spacing={2}
           >
             {shouldShowClickAdd() && !isCreateSurveyOpen && (
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<Add />}
-                onClick={handleButtonClick}
-              >
-                {t("create_new_survey")}
-              </Button>
+              <CustomTooltip title={t("tooltips.create_new_survey")} showIcon={false}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<Add />}
+                  onClick={handleButtonClick}
+                >
+                  {t("create_new_survey")}
+                </Button>
+              </CustomTooltip>
             )}
             {shouldShowClickAdd() && !isTemplateSliderOpen && (
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<CopyAll />}
-                onClick={handleTemplateButtonClick}
-              >
-                {t("copy_example_surveys")}
-              </Button>
+              <CustomTooltip title={t("tooltips.copy_example_surveys")} showIcon={false}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<CopyAll />}
+                  onClick={handleTemplateButtonClick}
+                >
+                  {t("copy_example_surveys")}
+                </Button>
+              </CustomTooltip>
             )}
             {shouldShowClickAdd() && (
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<FileUpload />}
-                onClick={handleImportSurveyClick}
-              >
-                {t("import_survey")}
-              </Button>
+              <CustomTooltip title={t("tooltips.import_survey")} showIcon={false}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<FileUpload />}
+                  onClick={handleImportSurveyClick}
+                >
+                  {t("import_survey")}
+                </Button>
+              </CustomTooltip>
             )}
           </Stack>
 

@@ -14,7 +14,7 @@ export const EditableSurveyDescription = ({
 }) => {
   const [isDescriptionEditing, setIsDescriptionEditing] = useState(false);
   const [description, setDescription] = useState(survey.description);
-  const { t } = useTranslation("design");
+  const { t } = useTranslation("manage");
 
   const charLimit = isExample ? 450 : 125;
 
@@ -66,8 +66,7 @@ export const EditableSurveyDescription = ({
       ) : (
         <>
           {isEditable && <Box gap={1} pl={1} display="flex" alignItems="center">
-
-            <CustomTooltip body={t(`tooltips.description`)} />
+            <CustomTooltip body={t(`tooltips.survey_description`)} />
           </Box>}
 
           {description?.length > charLimit ? (

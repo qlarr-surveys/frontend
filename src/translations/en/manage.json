@@ -119,8 +119,10 @@
     "super_admin": "Super Admin",
     "survey_active": "Survey Active",
     "survey_admin": "Survey Admin",
+    "survey_dates": "Survey Dates",
     "survey_mode": "Survey Mode",
     "survey_name": "Survey Name",
+    "survey_url": "Survey URL",
     "surveyor": "Surveyor",
     "surveyor_admin": "Surveyor admin",
     "to": "To",
@@ -139,7 +141,7 @@
   "last_modified": "Last Modified:",
   "lastname_required": "Last Name is Required",
   "login": {
-    "dont_have_acc": "Don’t have an account?",
+    "dont_have_acc": "Don't have an account?",
     "forgot_password": "Forgot password?",
     "submit": "Submit",
     "login": "Login",
@@ -257,8 +259,11 @@
     "invitation_sent": "Invitation Sent"
   },
   "launch": {
-    "publish_text": "Don’t forget to publish your survey to apply the changes you’ve made.",
+    "publish_text": "Don't forget to publish your survey to apply the changes you've made.",
+    "draft_text": "This survey is only available for preview",
+    "unpublished_text": "Publish the survey to reflect the most recent changes",
     "publish": "Publish",
+    "activate": "Activate",
     "email_link": "Email Link",
     "copy_link": "Copy Link",
     "qr_code": "QR Code",
@@ -280,10 +285,18 @@
   "mobile_view": "Mobile view is currently not supported",
   "mobile_view_working": "We're working hard to enable this feature!",
   "tooltips": {
-    "quotas": "Enable quotas and set limits for the number of responses",
+    "quotas": "Enable quotas and set limits for the number of responses. This limit applies to both online and offline survey responses, depending on how frequently offline responses are synced.",
     "export": "Export the survey data",
     "launch": "You can adjust the survey settings and publish your survey",
     "raw_values": "Show raw values instead of labels",
-    "export_responses": "Export the survey responses"
+    "export_responses": "Export the survey responses",
+    "survey_url": "Share this link to access the survey",
+    "survey_dates": "Set start and end dates for your survey:<ul><li>If no start date is set, the survey will be available immediately</li><li>If a future start date is set, the survey will become available on that date</li><li>If no end date is set, the survey will be available indefinitely</li><li>If a future end date is set, the survey will automatically close on that date</li></ul>",
+    "survey_mode": "Select whether your survey will be available online, offline, or both:<ul><li>Online surveys are accessible via web browsers</li><li>Offline surveys can be conducted without internet access</li></ul>",
+    "create_new_survey": "Create a new survey from scratch with a blank template",
+    "copy_example_surveys": "Start with a pre-built survey template that you can customize",
+    "import_survey": "Import an existing survey (that was exported earlier) from a ZIP file",
+    "survey_title": "Internal title used by your team to identify the survey. This title is not shown to respondents.",
+    "survey_description": "Internal description used by your team to provide context about the survey. This description is not shown to respondents."
   }
 }

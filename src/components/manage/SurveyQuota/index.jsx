@@ -13,6 +13,7 @@ import { isSurveyAdmin } from "~/constants/roles";
 import { SURVEY_STATUS } from "~/constants/survey";
 import styles from "./SurveyQuota.module.css";
 import { RHFSwitch } from "~/components/hook-form";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function SurveyQuota() {
   const dispatch = useDispatch();
@@ -35,7 +36,6 @@ function SurveyQuota() {
     }
   };
 
-
   const onChangeCheckbox = (e) => {
     if (!e.target.checked) {
       setLimit("");
@@ -49,8 +49,6 @@ function SurveyQuota() {
     setChecked(e.target.checked);
   };
 
-
-
   const isDisabled =
     !isSurveyAdmin() || survey?.status == SURVEY_STATUS.CLOSED;
 
@@ -58,9 +56,12 @@ function SurveyQuota() {
     <Box className={styles.mainContainer}>
         <Box className={styles.boxContainer}>
           <Box className={styles.flexContainer}>
-            <Typography color="#1a2052" fontWeight="500">
-              {t("label.apply_quota")}
-            </Typography>
+            <Box display="flex" alignItems="center" gap=".5rem">
+              <CustomTooltip body={t("tooltips.quotas")} />
+              <Typography color="#1a2052" fontWeight="500">
+                {t("label.apply_quota")}
+              </Typography>
+            </Box>
             <TextField
               variant="standard"
               type="number"
