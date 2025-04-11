@@ -225,7 +225,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
       );
     case "audio_only":
       return (
-        <ToggleValuev
+        <ToggleValue
           t={t}
           key={code + rule}
           rule={rule}
