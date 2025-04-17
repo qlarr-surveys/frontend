@@ -104,14 +104,16 @@ export const reorder = (list, startIndex, endIndex) => {
 };
 
 export const nextGroupId = (groups) => {
+  console.log(groups)
   if (groups && groups.length) {
-    return (
-      groups
-        .map((group) => parseInt(group.code.replace("G", "")))
+      const codes = groups.map((group) => parseInt(group.code.replace("G", "")))
+        .filter((code) =>typeof code === 'number' && !Number.isNaN(code))
         .sort(function (a, b) {
           return a - b;
-        })[groups.length - 1] + 1
-    );
+        })
+        if([codes.length > 0]){
+          return codes[codes.length - 1] + 1
+        }
   }
   return 1;
 };
@@ -123,7 +125,10 @@ export const nextQuestionId = (state, groups) => {
       let groupObj = state[group.code];
       if (groupObj.children) {
         groupObj.children.forEach((question) => {
-          questions.push(parseInt(question.code.replace("Q", "")));
+          const code = parseInt(question.code.replace("Q", ""));
+          if (typeof code === 'number' && !Number.isNaN(code)) {
+            questions.push(parseInt(code));
+          }
         });
       }
     });
