@@ -123,6 +123,13 @@ class SurveyService extends BaseService {
     return response.data;
   }
 
+  async createSurveyWithAI(prompt) {
+    const response = await this.handleRequest(() =>
+      authenticatedApi.post(`/survey/generate_ai`, { prompt })
+    );
+    return response.data;
+  }
+
   async exportSurvey(surveyId) {
     const response = await this.handleRequest(() =>
       authenticatedApi.get(`/survey/${surveyId}/export`, { responseType: 'blob' })

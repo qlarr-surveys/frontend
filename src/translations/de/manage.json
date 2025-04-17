@@ -29,6 +29,11 @@
     "or": "oder",
     "empty_state_cta_copy": "um loszulegen!"
   },
+  "create_survey_with_ai": "Umfrage mit KI erstellen",
+  "ai_prompt": "Beschreiben Sie Ihre Umfrage",
+  "ai_prompt_required": "Bitte beschreiben Sie Ihre Umfrage (mindestens 10 Zeichen)",
+  "ai_prompt_placeholder": "z.B. Erstellen Sie eine Kundenzufriedenheitsumfrage für ein Restaurant mit Fragen zur Essensqualität, dem Service und dem Ambiente",
+  "ai_prompt_helper": "Beschreiben Sie so detailliert wie möglich, welche Art von Umfrage Sie erstellen möchten",
   "edit_survey": {
     "export": "Umfrage exportieren",
     "close_title": "Umfrage schließen",
@@ -289,6 +294,7 @@
     "export_responses": "Exportieren Sie die Umfrageantworten",
     "survey_url": "Teilen Sie diesen Link, um auf die Umfrage zuzugreifen",
     "survey_dates": "Legen Sie Start- und Enddaten für Ihre Umfrage fest:<ul><li>Wenn keine Daten festgelegt sind, ist die Umfrage unbegrenzt verfügbar</li><li>Die Umfrage ist nur zwischen den angegebenen Daten zugänglich, wenn diese festgelegt sind</li></ul>",
-    "survey_mode": "Wählen Sie den Modus für Ihre Umfrage:<ul><li>Online-Umfragen sind über Webbrowser zugänglich</li><li>Offline-Umfragen können ohne Internetverbindung durchgeführt werden</li></ul>"
+    "survey_mode": "Wählen Sie den Modus für Ihre Umfrage:<ul><li>Online-Umfragen sind über Webbrowser zugänglich</li><li>Offline-Umfragen können ohne Internetverbindung durchgeführt werden</li></ul>",
+    "create_survey_with_ai": "Erstellen Sie automatisch eine neue Umfrage mit KI-Unterstützung"
   }
 }

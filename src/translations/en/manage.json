@@ -29,6 +29,11 @@
     "or": "or",
     "empty_state_cta_copy": "to get started!"
   },
+  "create_survey_with_ai": "Create survey with AI",
+  "ai_prompt": "Describe your survey",
+  "ai_prompt_required": "Please describe your survey (minimum 10 characters)",
+  "ai_prompt_placeholder": "e.g., Create a customer satisfaction survey for a restaurant with questions about food quality, service, and ambiance",
+  "ai_prompt_helper": "Describe what kind of survey you want to create in as much detail as possible",
   "edit_survey": {
     "export": "Export Survey",
     "close_title": "Close Survey",
@@ -296,6 +301,7 @@
     "create_new_survey": "Create a new survey from scratch with a blank template",
     "copy_example_surveys": "Start with a pre-built survey template that you can customize",
     "import_survey": "Import an existing survey (that was exported earlier) from a ZIP file",
+    "create_survey_with_ai": "Create a new survey automatically using AI assistance",
     "survey_title": "Internal title used by your team to identify the survey. This title is not shown to respondents.",
     "survey_description": "Internal description used by your team to provide context about the survey. This description is not shown to respondents."
   }
