@@ -18,6 +18,7 @@ import App from "./App";
 
 import "./index.css";
 import "./styles/global-styles.css";
+import "./styles/safe-area.css";
 
 i18next.init({
   interpolation: { escapeValue: false }, // React already does escaping

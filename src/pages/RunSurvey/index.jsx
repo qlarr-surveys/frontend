@@ -191,7 +191,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
             />
           )}
           {render && (
-            <div
+            <div 
               className={styles.mainContainer}
               style={{
                 backgroundColor: theme.palette.background.default,
