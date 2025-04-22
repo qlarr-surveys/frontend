@@ -21,10 +21,10 @@ function SCQArray(props) {
 
   return (
     <TableContainer>
-      <Table>
+      <Table sx={{ width: "100%", tableLayout: "fixed" }}>
         <TableHead>
           <TableRow>
-            <TableCell key="content"></TableCell>
+            <TableCell key="content" sx={{ width: "33%" }}></TableCell>
             {columns.map((option) => {
               return (
                 <TableCell
@@ -94,7 +94,7 @@ function SCQArrayRow(props) {
             fontSize: theme.textStyles.text.size,
             borderBottom: invalid ? "0" : "",
             padding: "2px",
-            minWidth: "60px",
+            wordWrap: "break-word",
           }}
         >
           {props.answer.content?.label}

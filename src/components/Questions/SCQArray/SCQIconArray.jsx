@@ -23,10 +23,10 @@ function SCQIconArray(props) {
 
   return (
     <TableContainer>
-      <Table>
+      <Table sx={{ width: "100%", tableLayout: "fixed" }}>
         <TableHead>
           <TableRow>
-            <TableCell key="content"></TableCell>
+            <TableCell key="content" sx={{ width: "33%" }}></TableCell>
             {columns.map((option) => {
               return (
                 <TableCell
