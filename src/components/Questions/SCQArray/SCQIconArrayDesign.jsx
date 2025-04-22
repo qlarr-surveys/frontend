@@ -1,6 +1,7 @@
 import styles from "./SCQArrayDesign.module.css";
 
 import {
+  Box,
   Button,
   Table,
   TableBody,
@@ -72,18 +73,16 @@ function SCQIconArrayDesign(props) {
       )}
 
       <TableContainer>
-        <Table>
+        <Table sx={{ width: "100%", tableLayout: "fixed" }}>
           <TableHead>
             <TableRow>
-              {inDesgin && (
-                <TableCell
-                  sx={{
-                    padding: "0",
-                  }}
-                  key="move"
-                ></TableCell>
-              )}
-              <TableCell key="content"></TableCell>
+              <TableCell
+                sx={{
+                  width: "33%",
+                  padding: "0",
+                }}
+                key="move"
+              ></TableCell>
               {columns.map((item, index) => {
                 return (
                   <SCQArrayHeaderDesign
@@ -239,18 +238,6 @@ function SCQArrayRowDesign({
       key={item.code}
       data-handler-id={handlerId}
     >
-      {inDesgin && (
-        <TableCell
-          ref={drag}
-          key="move"
-          sx={{
-            padding: "0",
-            color: theme.textStyles.text.color,
-          }}
-        >
-          <DragIndicatorIcon />
-        </TableCell>
-      )}
       <TableCell
         sx={{
           fontFamily: theme.textStyles.text.font,
@@ -260,33 +247,41 @@ function SCQArrayRowDesign({
           minWidth: "60px",
         }}
       >
-        <TextField
-          variant="standard"
-          value={content || ""}
-          onChange={(e) => {
-            dispatch(
-              changeContent({
-                code: item.qualifiedCode,
-                key: "label",
-                lang: langInfo.lang,
-                value: e.target.value,
-              })
-            );
-          }}
-          placeholder={
-            onMainLang
-              ? t("content_editor_placeholder_option")
-              : mainContent || t("content_editor_placeholder_option")
-          }
-          InputProps={{
-            disableUnderline: true,
-            sx: {
-              fontFamily: theme.textStyles.text.font,
-              color: theme.textStyles.text.color,
-              fontSize: theme.textStyles.text.size,
-            },
-          }}
-        />
+        <Box display="flex" alignItems="center">
+          {inDesgin && (
+            <div ref={drag}>
+              <DragIndicatorIcon />
+            </div>
+          )}
+          <TextField
+            variant="standard"
+            value={content || ""}
+            onChange={(e) => {
+              dispatch(
+                changeContent({
+                  code: item.qualifiedCode,
+                  key: "label",
+                  lang: langInfo.lang,
+                  value: e.target.value,
+                })
+              );
+            }}
+            placeholder={
+              onMainLang
+                ? t("content_editor_placeholder_option")
+                : mainContent || t("content_editor_placeholder_option")
+            }
+            InputProps={{
+              disableUnderline: true,
+              sx: {
+                fontFamily: theme.textStyles.text.font,
+                color: theme.textStyles.text.color,
+                fontSize: theme.textStyles.text.size,
+              },
+            }}
+            multiline
+          />
+        </Box>
       </TableCell>
       {columns.map((option, index) => {
         return (
@@ -508,6 +503,7 @@ function SCQArrayHeaderDesign({
               ? t("content_editor_placeholder_option")
               : mainContent || t("content_editor_placeholder_option")
           }
+          multiline
           inputProps={{ style: { textAlign: "center" } }}
           InputProps={{
             disableUnderline: true,

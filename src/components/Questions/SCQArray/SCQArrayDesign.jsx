@@ -1,6 +1,7 @@
 import styles from "./SCQArrayDesign.module.css";
 
 import {
+  Box,
   Button,
   Radio,
   Table,
@@ -24,7 +25,6 @@ import {
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
-import { getContrastColor } from "../utils";
 import { inDesign } from "~/routes";
 
 function SCQArray(props) {
@@ -75,18 +75,16 @@ function SCQArray(props) {
       )}
 
       <TableContainer>
-        <Table>
+        <Table sx={{ width: "100%", tableLayout: "fixed" }}>
           <TableHead>
             <TableRow>
-              {inDesign(props.designMode) && (
-                <TableCell
-                  sx={{
-                    padding: "0",
-                  }}
-                  key="move"
-                ></TableCell>
-              )}
-              <TableCell key="content"></TableCell>
+              <TableCell
+                sx={{
+                  width: "33%",
+                  padding: "0",
+                }}
+                key="move"
+              ></TableCell>
               {columns.map((item, index) => {
                 return (
                   <SCQArrayHeaderDesign
@@ -239,18 +237,6 @@ function SCQArrayRowDesign({
       key={item.code}
       data-handler-id={handlerId}
     >
-      {inDesign(designMode) && (
-        <TableCell
-          ref={drag}
-          key="move"
-          sx={{
-            padding: "0",
-            color: theme.textStyles.text.color,
-          }}
-        >
-          <DragIndicatorIcon />
-        </TableCell>
-      )}
       <TableCell
         sx={{
           fontFamily: theme.textStyles.text.font,
@@ -260,34 +246,43 @@ function SCQArrayRowDesign({
           minWidth: "60px",
         }}
       >
-        <TextField
-          variant="standard"
-          value={content || ""}
-          onChange={(e) => {
-            dispatch(
-              changeContent({
-                code: item.qualifiedCode,
-                key: "label",
-                lang: langInfo.lang,
-                value: e.target.value,
-              })
-            );
-          }}
-          placeholder={
-            onMainLang
-              ? t("content_editor_placeholder_option")
-              : mainContent || t("content_editor_placeholder_option")
-          }
-          InputProps={{
-            disableUnderline: true,
-            sx: {
-              fontFamily: theme.textStyles.text.font,
-              color: theme.textStyles.text.color,
-              fontSize: theme.textStyles.text.size,
-            },
-          }}
-        />
+        <Box display="flex" alignItems="center">
+          {inDesign(designMode) && (
+            <div ref={drag}>
+              <DragIndicatorIcon />
+            </div>
+          )}
+          <TextField
+            variant="standard"
+            value={content || ""}
+            onChange={(e) => {
+              dispatch(
+                changeContent({
+                  code: item.qualifiedCode,
+                  key: "label",
+                  lang: langInfo.lang,
+                  value: e.target.value,
+                })
+              );
+            }}
+            placeholder={
+              onMainLang
+                ? t("content_editor_placeholder_option")
+                : mainContent || t("content_editor_placeholder_option")
+            }
+            multiline
+            InputProps={{
+              disableUnderline: true,
+              sx: {
+                fontFamily: theme.textStyles.text.font,
+                color: theme.textStyles.text.color,
+                fontSize: theme.textStyles.text.size,
+              },
+            }}
+          />
+        </Box>
       </TableCell>
+
       {[...Array(colCount)].map((_option, index) => {
         return (
           <TableCell
@@ -453,6 +448,7 @@ function SCQArrayHeaderDesign({
       <TextField
         variant="standard"
         value={content || ""}
+        multiline
         onChange={(e) => {
           dispatch(
             changeContent({
