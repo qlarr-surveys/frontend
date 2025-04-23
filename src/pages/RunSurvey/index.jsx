@@ -194,7 +194,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
             />
           )}
           {render && (
-            <div
+            <div 
               className={styles.mainContainer}
               ref={containerRef}
               style={{
