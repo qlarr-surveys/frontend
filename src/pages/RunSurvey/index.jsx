@@ -28,9 +28,8 @@ import RunLoadingDots from "~/components/common/RunLoadingDots";
 
 import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
 import SurveyAppBar from "~/components/run/SurveyAppBar";
-import { FORM_ID } from "~/constants/run";
 
-function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
+function RunSurvey({ preview, guest, mode, resume = false, responseId, navigationMode }) {
   const runService = useService("run");
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -97,7 +96,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId }) {
   };
 
   const startNav = () => {
-    startNavigation(runService, lang, preview, guest, mode)
+    startNavigation(runService, lang, preview, guest, mode, navigationMode)
       .then((response) => {
         setRender(true);
         dispatch(stateReceived({ response, preview }));

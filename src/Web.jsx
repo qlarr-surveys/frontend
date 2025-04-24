@@ -234,7 +234,6 @@ function Web() {
           <Suspense fallback={<LoadingIndicator />}>
             <ManagePageWrapper>
               <AuthIllustrationLayout>
-                {/* <ForgotPassword /> */}
                 <ForgotPasswordView />
               </AuthIllustrationLayout>
             </ManagePageWrapper>
@@ -246,7 +245,6 @@ function Web() {
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <ManagePageWrapper>
-              {/* <ResetPassword /> */}
               <ResetPasswordView />
             </ManagePageWrapper>
           </Suspense>
@@ -335,7 +333,8 @@ const PreviewSurveyWrapper = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const mode = searchParams.get("mode") || "online";
-  return <RunSurvey preview={true} mode={mode} />;
+  const navigationMode = searchParams.get("navigation_mode");
+  return <RunSurvey preview={true} mode={mode} navigationMode={navigationMode} />;
 };
 
 const PreviewGuestSurveyWrapper = () => {
@@ -345,7 +344,8 @@ const PreviewGuestSurveyWrapper = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const mode = searchParams.get("mode") || "online";
-  return <RunSurvey preview={true} guest={true} mode={mode} />;
+  const navigationMode = searchParams.get("navigation_mode");
+  return <RunSurvey preview={true} guest={true} mode={mode} navigationMode={navigationMode} />;
 };
 
 export default Web;

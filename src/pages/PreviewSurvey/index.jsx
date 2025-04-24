@@ -1,10 +1,6 @@
 import { getparam } from "~/networking/run";
 import styles from "./PreviewSurvey.module.css";
-import {
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import React, { useState } from "react";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import { Box, Chip, IconButton, Tab, Tabs } from "@mui/material";
@@ -24,9 +20,9 @@ function PreviewSurvey({ guest = false }) {
   const [previewMode, setPreviewMode] = useState(
     searchParams.get("mode") || "online"
   );
-  const [lang, setLang] = useState(
-    searchParams.get("lang")
-  );
+
+  const navigationMode = searchParams.get("navigation_mode");
+  const [lang, setLang] = useState(searchParams.get("lang"));
   const surveyId = getparam(useParams(), "surveyId");
 
   const surveyModel = {
@@ -35,9 +31,16 @@ function PreviewSurvey({ guest = false }) {
   };
 
   const withEmbeddedParam = (surveyId, previewMode, lang) => {
-    return (guest
+    return (
+      (guest
         ? routes.iframePreviewGuestSurvey
-      : routes.iframePreviewSurvey).replace(":surveyId",surveyId) + "?mode=" + previewMode + (lang ? "&lang=" + lang : "");
+        : routes.iframePreviewSurvey
+      ).replace(":surveyId", surveyId) +
+      "?mode=" +
+      previewMode +
+      (lang ? "&lang=" + lang : "")+
+      (navigationMode ? "&navigation_mode=" + navigationMode : "")
+    );
   };
 
   const handleChange = (event, newValue) => {
@@ -82,10 +85,7 @@ function PreviewSurvey({ guest = false }) {
           onChange={handleChange}
           aria-label="Preview mode tabs"
         >
-          <Tab
-            value={PREVIEW_MODE.ONLINE}
-            label={<SurveyIcon name="pc" />}
-          />
+          <Tab value={PREVIEW_MODE.ONLINE} label={<SurveyIcon name="pc" />} />
           <Tab
             value={PREVIEW_MODE.ONLINE_PHONE}
             label={<SurveyIcon name="phone" />}

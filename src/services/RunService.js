@@ -4,27 +4,39 @@ import { CLOUD_URL } from "~/constants/networking";
 import BaseService from "./BaseService";
 
 class RunService extends BaseService {
-
-  async start(lang, preview = false, guest = false, mode = "online") {
+  async start(
+    lang,
+    preview = false,
+    guest = false,
+    mode = "online",
+    navigationMode
+  ) {
     const surveyId = sessionStorage.getItem("surveyId");
     if (guest) {
       const response = await this.handleRequest(() =>
-        publicApi.post(`${CLOUD_URL}/survey/${surveyId}/run/start?mode=${mode}`, {
-          lang,
-        })
+        publicApi.post(
+          `${CLOUD_URL}/survey/${surveyId}/run/start?mode=${mode}`,
+          {
+            lang,
+            navigationMode,
+          }
+        )
       );
       return response.data;
     } else if (preview) {
       const response = await this.handleRequest(() =>
         authenticatedApi.post(
           `/survey/${surveyId}/preview/start?mode=${mode}`,
-          { lang }
+          { lang, navigationMode }
         )
       );
       return response.data;
     } else {
       const response = await this.handleRequest(() =>
-        publicApi.post(`/survey/${surveyId}/run/start`, { lang })
+        publicApi.post(`/survey/${surveyId}/run/start`, {
+          lang,
+          navigationMode,
+        })
       );
       return response.data;
     }
