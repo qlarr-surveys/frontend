@@ -20,11 +20,29 @@ function SCQArray(props) {
   let rows = props.component.answers.filter((answer) => answer.type == "row");
 
   return (
-    <TableContainer>
-      <Table sx={{ width: "100%", tableLayout: "fixed" }}>
+    <TableContainer
+      sx={{
+        overflowX: "auto",
+        maxWidth: "100%",
+      }}
+    >
+      <Table
+        sx={{
+          tableLayout: "fixed",
+          minWidth: `${columns.length * 120}px`,
+          "@media (max-width:600px)": {
+            minWidth: `${columns.length * 80}px`,
+          },
+        }}
+      >
         <TableHead>
           <TableRow>
-            <TableCell key="content" sx={{ width: "33%" }}></TableCell>
+            <TableCell
+              key="content"
+              sx={{
+                width: "25%",
+              }}
+            ></TableCell>
             {columns.map((option) => {
               return (
                 <TableCell

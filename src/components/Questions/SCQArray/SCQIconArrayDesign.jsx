@@ -72,14 +72,21 @@ function SCQIconArrayDesign(props) {
         </div>
       )}
 
-      <TableContainer>
-        <Table sx={{ width: "100%", tableLayout: "fixed" }}>
+      <TableContainer
+        sx={{
+          overflowX: "auto",
+          maxWidth: "100%",
+        }}
+      >
+        <Table
+          sx={{ tableLayout: "fixed", minWidth: `${columns.length * 120}px` }}
+        >
           <TableHead>
             <TableRow>
               <TableCell
                 sx={{
-                  width: "33%",
-                  padding: "0",
+                  width: "25%",
+                  padding: "0px",
                 }}
                 key="move"
               ></TableCell>
@@ -100,6 +107,8 @@ function SCQIconArrayDesign(props) {
               {inDesgin && (
                 <TableCell
                   sx={{
+                    width: "30px",
+
                     padding: "0",
                   }}
                   key="remove"
@@ -244,7 +253,6 @@ function SCQArrayRowDesign({
           color: theme.textStyles.text.color,
           fontSize: theme.textStyles.text.size,
           padding: "2px",
-          minWidth: "60px",
         }}
       >
         <Box display="flex" alignItems="center">
@@ -309,6 +317,7 @@ function SCQArrayRowDesign({
           onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
           key="remove"
           sx={{
+            width: "30px",
             padding: "0",
             color: theme.textStyles.text.color,
           }}
