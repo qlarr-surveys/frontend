@@ -21,6 +21,7 @@ import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { useTranslation } from "react-i18next";
 
 import { SurveyClone } from "~/components/manage/SurveyClone";
+import CreateAISurvey from "~/components/manage/CreateAISurvey";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import DeleteModal from "~/components/common/DeleteModal";
@@ -31,6 +32,7 @@ import {
   Description,
   FileUpload,
 } from "@mui/icons-material";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { getDirFromSession } from "~/utils/common";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
@@ -105,6 +107,7 @@ function Dashboard() {
   const [isCreateSurveyOpen, setCreateSurveyOpen] = useState(false);
   const [isTemplateSliderOpen, setTemplateSliderOpen] = useState(false);
   const [importSurvey, setImportSurvey] = useState(false);
+  const [isCreateAIOpen, setCreateAIOpen] = useState(false);
 
   const handleButtonClick = () => {
     setCreateSurveyOpen(true);
@@ -119,6 +122,10 @@ function Dashboard() {
   const handleImportSurveyClick = () => {
     setImportSurvey(true);
     setOpenCloneModal(true);
+  };
+
+  const handleCreateWithAI = () => {
+    setCreateAIOpen(true);
   };
 
   const handleCloseClick = () => {
@@ -287,6 +294,18 @@ function Dashboard() {
                 </Button>
               </CustomTooltip>
             )}
+            {shouldShowClickAdd() && (
+              <CustomTooltip title={t("tooltips.create_survey_with_ai")} showIcon={false}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AutoAwesomeIcon />}
+                  onClick={handleCreateWithAI}
+                >
+                  {t("create_survey_with_ai")}
+                </Button>
+              </CustomTooltip>
+            )}
           </Stack>
 
           {isCreateSurveyOpen && (
@@ -337,6 +356,22 @@ function Dashboard() {
                 </Suspense>
               </div>
             </Fade>
+          )}
+
+          {isCreateAIOpen && (
+            <CreateAISurvey
+              open={isCreateAIOpen}
+              onClose={(created) => {
+                setCreateAIOpen(false);
+                if (created) {
+                  fetchSurveys();
+                }
+              }}
+              onSurveyCreated={(newSurvey) => {
+                setRecentlyUpdatedSurveyName(newSurvey);
+                setTimeout(() => setRecentlyUpdatedSurveyName(null), 3000);
+              }}
+            />
           )}
 
           {surveys?.surveys?.length > 0 ? (
