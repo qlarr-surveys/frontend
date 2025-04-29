@@ -22,7 +22,7 @@ function App() {
           defaultNS: "run",
           interpolation: { escapeValue: false },
           backend: {
-            loadPath: "/locales/{{lng}}.json",
+            loadPath: "/locales/{{lng}}-{{ns}}.json",
           },
           detection: {
             order: ["localStorage", "navigator"],
@@ -46,16 +46,7 @@ function App() {
           defaultNS: "design",
           interpolation: { escapeValue: false },
           backend: {
-            loadPath: (lngs, namespaces) => {
-              // Get the first namespace from the array (i18next may request multiple)
-              const ns = namespaces[0];
-              
-              if (ns === "run") {
-                return "/locales/{{lng}}.json";
-              } else {
-                return "/src/translations/{{lng}}/{{ns}}.json";
-              }
-            },
+            loadPath: "/locales/{{lng}}-{{ns}}.json",
           },
           detection: {
             order: ["localStorage", "navigator"],
