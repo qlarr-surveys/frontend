@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -15,11 +15,11 @@ import { HeaderContent } from "~/components/manage/HeaderContent";
 import { ROLES } from "~/constants/roles";
 import { setLoading } from "~/state/edit/editState";
 import { useDispatch } from "react-redux";
-import ExampleSurveys from "~/components/manage/ExampleSurveys/ExampleSurveys";
+
 import CreateSurvey from "~/components/manage/CreateSurvey/CreateSurvey";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { useTranslation } from "react-i18next";
-import { Survey } from "~/components/manage/Survey";
+
 import { SurveyClone } from "~/components/manage/SurveyClone";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
@@ -33,6 +33,11 @@ import {
 } from "@mui/icons-material";
 import { getDirFromSession } from "~/utils/common";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+
+const Survey = lazy(() => import("~/components/manage/Survey"));
+const ExampleSurveys = lazy(() =>
+  import("~/components/manage/ExampleSurveys/ExampleSurveys")
+);
 
 function Dashboard() {
   const surveyService = useService("survey");
@@ -238,7 +243,10 @@ function Dashboard() {
             spacing={2}
           >
             {shouldShowClickAdd() && !isCreateSurveyOpen && (
-              <CustomTooltip title={t("tooltips.create_new_survey")} showIcon={false}>
+              <CustomTooltip
+                title={t("tooltips.create_new_survey")}
+                showIcon={false}
+              >
                 <Button
                   variant="contained"
                   color="primary"
@@ -250,7 +258,10 @@ function Dashboard() {
               </CustomTooltip>
             )}
             {shouldShowClickAdd() && !isTemplateSliderOpen && (
-              <CustomTooltip title={t("tooltips.copy_example_surveys")} showIcon={false}>
+              <CustomTooltip
+                title={t("tooltips.copy_example_surveys")}
+                showIcon={false}
+              >
                 <Button
                   variant="contained"
                   color="primary"
@@ -262,7 +273,10 @@ function Dashboard() {
               </CustomTooltip>
             )}
             {shouldShowClickAdd() && (
-              <CustomTooltip title={t("tooltips.import_survey")} showIcon={false}>
+              <CustomTooltip
+                title={t("tooltips.import_survey")}
+                showIcon={false}
+              >
                 <Button
                   variant="contained"
                   color="primary"
@@ -318,7 +332,9 @@ function Dashboard() {
                 >
                   <Close color="#000" />
                 </IconButton>
+                <Suspense fallback={<LoadingDots />}>
                 <ExampleSurveys onClone={(survey) => onClone(survey)} />
+                </Suspense>
               </div>
             </Fade>
           )}
@@ -358,18 +374,22 @@ function Dashboard() {
                   >
                     {surveys?.surveys?.map((survey) => {
                       return (
-                        <Survey
-                          key={survey.id}
-                          survey={survey}
-                          highlight={survey.name === recentlyUpdatedSurveyName}
-                          onStatusChange={handleSurveyStatusChange}
-                          onClone={() => onClone(survey)}
-                          onDelete={() => onDelete(survey)}
-                          onClose={() => onCloseSurvey(survey)}
-                          onUpdateTitle={handleUpdateSurveyName}
-                          onUpdateDescription={handleUpdateSurveyDescription}
-                          onUpdateImage={handleUpdateSurveyImage}
-                        />
+                        <Suspense fallback={<LoadingDots />}>
+                          <Survey
+                            key={survey.id}
+                            survey={survey}
+                            highlight={
+                              survey.name === recentlyUpdatedSurveyName
+                            }
+                            onStatusChange={handleSurveyStatusChange}
+                            onClone={() => onClone(survey)}
+                            onDelete={() => onDelete(survey)}
+                            onClose={() => onCloseSurvey(survey)}
+                            onUpdateTitle={handleUpdateSurveyName}
+                            onUpdateDescription={handleUpdateSurveyDescription}
+                            onUpdateImage={handleUpdateSurveyImage}
+                          />
+                        </Suspense>
                       );
                     })}
                   </Box>

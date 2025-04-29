@@ -1,11 +1,11 @@
 import { Box, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { lazy, useEffect, useState } from "react";
 import styles from "./ExampleSurveys.module.css";
-import { Survey } from "../Survey";
 import { useTranslation } from "react-i18next";
 import { processApiError } from "~/utils/errorsProcessor";
 import { useService } from '~/hooks/use-service';
 import LoadingDots from '~/components/common/LoadingDots';
+const Survey = lazy(() => import("~/components/manage/Survey"));
 
 const ExampleSurveys = ({ onClone }) => {
   const { t } = useTranslation("manage");
@@ -60,12 +60,14 @@ const ExampleSurveys = ({ onClone }) => {
         >
           {exampleSurveys?.map((survey) => {
             return (
+              <Suspense fallback={<LoadingDots />}>
               <Survey
                 key={survey.id}
                 survey={survey}
                 onClone={() => onClone(survey)}
                 example={true}
               />
+              </Suspense>
             );
           })}
         </Box>

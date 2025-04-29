@@ -11,7 +11,7 @@ import { StatefulLoadingIndicator } from "~/components/common/LoadingIndicator";
 import ThemeProvider from "~/theme";
 import UnsupportedView from "../UnsupportedView";
 
-export const ManagePageWrapper = ({ showHeader=true, children }) => {
+const ManagePageWrapper = ({ showHeader=true, children }) => {
   const lang = localStorage.getItem("lang");
 
   const { i18n } = useTranslation("manage");
@@ -65,3 +65,5 @@ export const ManagePageWrapper = ({ showHeader=true, children }) => {
     </CacheProvider>
   );
 };
+
+export default ManagePageWrapper;

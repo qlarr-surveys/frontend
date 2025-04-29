@@ -15,10 +15,13 @@ import { useParams } from "react-router-dom";
 import {  MANAGE_SURVEY_LANDING_PAGES } from "~/routes";
 import { Box } from "@mui/material";
 import styles from "./ManageSurvey.module.css";
-import ManageTranslations from "../manage/ManageTranslations";
+
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import SideTabs from "~/components/design/SideTabs";
+
+
+const ManageTranslations = React.lazy(() => import("../manage/ManageTranslations"));
 const ResponsesSurvey = React.lazy(() => import("../manage/ResponsesSurvey"));
 const EditSurvey = React.lazy(() => import("../manage/EditSurvey"));
 const DesignSurvey = React.lazy(() => import("../DesignSurvey"));
@@ -126,6 +129,7 @@ function ManageSurvey({ landingPage }) {
       </Box>
       {designAvailable &&
         selectedPage == MANAGE_SURVEY_LANDING_PAGES.LANGUAGE && (
+          <Suspense fallback={<LoadingDots fullHeight />}>
           <ManageTranslations
             onManageTranslationsClose={() => {
               setSelectedTab(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
@@ -133,6 +137,7 @@ function ManageSurvey({ landingPage }) {
             permissionsLoadingpermissionsLoading
             onStartTranslation={() => {}}
           />
+          </Suspense>
         )}
     </>
   );

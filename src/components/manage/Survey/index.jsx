@@ -87,7 +87,7 @@ const bgHeader = (status) => {
   }
 };
 
-export const Survey = ({
+const Survey = ({
   survey,
   example = false,
   highlight,
@@ -450,3 +450,5 @@ export const Survey = ({
     </>
   );
 };
+
+export default Survey;
