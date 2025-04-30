@@ -228,6 +228,7 @@
   line-clamp: 3;
   white-space: normal;
   word-wrap: break-word;
+  word-break: break-word;
 }
 
 .exampleTruncatedText {
@@ -242,6 +243,7 @@
   line-clamp: 10;
   white-space: normal;
   word-wrap: break-word;
+  word-break: break-word;
 }
 
 .titleContainer {
