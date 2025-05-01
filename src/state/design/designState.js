@@ -50,6 +50,7 @@ export const designState = createSlice({
           state[key] = newState[key];
         }
       });
+      state["latest"] = structuredClone(newState);
       state.lastAddedComponent = null;
     },
     setup(state, action) {

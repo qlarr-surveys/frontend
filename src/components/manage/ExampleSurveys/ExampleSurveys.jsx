@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import React, { lazy, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import styles from "./ExampleSurveys.module.css";
 import { useTranslation } from "react-i18next";
 import { processApiError } from "~/utils/errorsProcessor";
