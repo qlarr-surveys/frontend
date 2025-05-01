@@ -26,10 +26,13 @@ import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
 import { inDesign } from "~/routes";
+import { useResponsive } from '~/hooks/use-responsive';
+import { columnMinWidth } from '~/utils/design/utils';
 
 function SCQArray(props) {
   const theme = useTheme();
   const t = props.t;
+  const width = columnMinWidth()
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
@@ -81,14 +84,14 @@ function SCQArray(props) {
         }}
       >
         <Table
-          sx={{ tableLayout: "fixed", minWidth: `${columns.length * 120}px` }}
+          sx={{ tableLayout: "fixed", minWidth: `${columns.length * width + 20}px` }}
         >
           <TableHead>
             <TableRow>
               <TableCell
                 sx={{
-                  width: "25%",
-                  padding: "0px",
+                  width: width + "px",
+                  padding: "2px",
                 }}
                 key="move"
               ></TableCell>
@@ -98,6 +101,7 @@ function SCQArray(props) {
                     parentQualifiedCode={props.qualifiedCode}
                     langInfo={langInfo}
                     designMode={props.designMode}
+                    width={width}
                     t={props.t}
                     key={item.qualifiedCode}
                     item={item}
@@ -108,7 +112,7 @@ function SCQArray(props) {
               {inDesign(props.designMode) && (
                 <TableCell
                   sx={{
-                    width: "30px",
+                    width: "20px",
                     padding: "0",
                   }}
                   key="remove"
@@ -120,6 +124,7 @@ function SCQArray(props) {
             {rows.map((item, index) => {
               return (
                 <SCQArrayRowDesign
+                  width={width}
                   parentQualifiedCode={props.qualifiedCode}
                   langInfo={langInfo}
                   t={props.t}
@@ -163,6 +168,7 @@ function SCQArrayRowDesign({
   t,
   langInfo,
   parentQualifiedCode,
+  width,
 }) {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -250,7 +256,8 @@ function SCQArrayRowDesign({
           fontFamily: theme.textStyles.text.font,
           color: theme.textStyles.text.color,
           fontSize: theme.textStyles.text.size,
-          padding: "4px",
+          padding: "2px",
+          width: width + "px",
         }}
       >
         <Box display="flex" alignItems="center">
@@ -297,7 +304,7 @@ function SCQArrayRowDesign({
             scope="row"
             align="center"
             sx={{
-              padding: "4px",
+              padding: "0px"
             }}
           >
             <Radio
@@ -335,6 +342,7 @@ function SCQArrayHeaderDesign({
   t,
   langInfo,
   parentQualifiedCode,
+  width,
 }) {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -427,7 +435,8 @@ function SCQArrayHeaderDesign({
         fontFamily: theme.textStyles.text.font,
         color: theme.textStyles.text.color,
         fontSize: theme.textStyles.text.size,
-        padding: "4px",
+        padding: "2px",
+        width: width + "px",
       }}
       key={item.qualifiedCode}
     >

@@ -30,10 +30,12 @@ import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
 import { DESIGN_SURVEY_MODE } from "~/routes";
+import { columnMinWidth } from '~/utils/design/utils';
 
 function SCQIconArrayDesign(props) {
   const theme = useTheme();
   const t = props.t;
+  const width = columnMinWidth()
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
@@ -85,7 +87,7 @@ function SCQIconArrayDesign(props) {
             <TableRow>
               <TableCell
                 sx={{
-                  width: "25%",
+                  width: width,
                   padding: "0px",
                 }}
                 key="move"
@@ -126,6 +128,7 @@ function SCQIconArrayDesign(props) {
                   key={item.qualifiedCode}
                   item={item}
                   inDesgin={inDesgin}
+                  width={width}
                   columns={columns}
                   icons={icons}
                   index={index}
@@ -161,6 +164,7 @@ function SCQArrayRowDesign({
   index,
   columns,
   icons,
+  width,
   inDesgin,
   t,
   langInfo,
@@ -253,6 +257,7 @@ function SCQArrayRowDesign({
           color: theme.textStyles.text.color,
           fontSize: theme.textStyles.text.size,
           padding: "2px",
+          width: width,
         }}
       >
         <Box display="flex" alignItems="center">

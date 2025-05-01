@@ -12,9 +12,11 @@ import Validation from "~/components/run/Validation";
 import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 import { TableHead } from "@mui/material";
+import { columnMinWidth } from '~/utils/design/utils';
 
 function SCQIconArray(props) {
   const theme = useTheme();
+  const width = columnMinWidth()
 
   let columns = props.component.answers.filter(
     (answer) => answer.type == "column"
@@ -29,14 +31,14 @@ function SCQIconArray(props) {
       }}
     >
       <Table
-        sx={{ tableLayout: "fixed", minWidth: `${columns.length * 120}px` }}
+        sx={{ tableLayout: "fixed", minWidth: `${columns.length * width}px` }}
       >
         <TableHead>
           <TableRow>
             <TableCell
               key="content"
               sx={{
-                width: "25%",
+                width: width,
                 padding: "0px",
               }}
             ></TableCell>
@@ -48,6 +50,7 @@ function SCQIconArray(props) {
                     color: theme.textStyles.text.color,
                     fontSize: theme.textStyles.text.size,
                     textAlign: "center",
+                    width: width,
                   }}
                   key={option.qualifiedCode}
                 >
@@ -65,6 +68,7 @@ function SCQIconArray(props) {
                   key={answer.qualifiedCode}
                   answer={answer}
                   choices={columns}
+                  width={width}
                 />
               </React.Fragment>
             );
@@ -127,6 +131,7 @@ function SCQArrayRow(props) {
               sx={{
                 borderBottom: invalid ? "0" : "",
                 padding: "2px",
+                width: props.width,
               }}
             >
               <DynamicSvg

@@ -153,14 +153,12 @@ function ChoiceItemDesign(props) {
             />
           </div>
         )}
-        {props.label === "Aother" ? (
-          <b>{props.label}</b>
-        ) : props.type === "checkbox" ? (
+        {props.type === "checkbox" ? (
           <Checkbox sx={{ p: 0 }} disabled />
         ) : props.type === "radio" ? (
           <Radio sx={{ p: 0 }} disabled />
-        ) : null}
-
+        ) : null}{" "}
+        {props.label === "Aother" ? <b>Other</b> : ""}
         <TextField
           variant="standard"
           disabled={!contentEditable(props.designMode)}
