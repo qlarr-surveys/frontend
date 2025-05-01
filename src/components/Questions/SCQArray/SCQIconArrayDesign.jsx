@@ -1,6 +1,7 @@
 import styles from "./SCQArrayDesign.module.css";
 
 import {
+  Box,
   Button,
   Table,
   TableBody,
@@ -29,10 +30,12 @@ import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
 import { DESIGN_SURVEY_MODE } from "~/routes";
+import { columnMinWidth } from '~/utils/design/utils';
 
 function SCQIconArrayDesign(props) {
   const theme = useTheme();
   const t = props.t;
+  const width = columnMinWidth()
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
@@ -71,19 +74,24 @@ function SCQIconArrayDesign(props) {
         </div>
       )}
 
-      <TableContainer>
-        <Table>
+      <TableContainer
+        sx={{
+          overflowX: "auto",
+          maxWidth: "100%",
+        }}
+      >
+        <Table
+          sx={{ tableLayout: "fixed", minWidth: `${columns.length * 120}px` }}
+        >
           <TableHead>
             <TableRow>
-              {inDesgin && (
-                <TableCell
-                  sx={{
-                    padding: "0",
-                  }}
-                  key="move"
-                ></TableCell>
-              )}
-              <TableCell key="content"></TableCell>
+              <TableCell
+                sx={{
+                  width: width,
+                  padding: "0px",
+                }}
+                key="move"
+              ></TableCell>
               {columns.map((item, index) => {
                 return (
                   <SCQArrayHeaderDesign
@@ -101,6 +109,8 @@ function SCQIconArrayDesign(props) {
               {inDesgin && (
                 <TableCell
                   sx={{
+                    width: "30px",
+
                     padding: "0",
                   }}
                   key="remove"
@@ -118,6 +128,7 @@ function SCQIconArrayDesign(props) {
                   key={item.qualifiedCode}
                   item={item}
                   inDesgin={inDesgin}
+                  width={width}
                   columns={columns}
                   icons={icons}
                   index={index}
@@ -153,6 +164,7 @@ function SCQArrayRowDesign({
   index,
   columns,
   icons,
+  width,
   inDesgin,
   t,
   langInfo,
@@ -239,54 +251,50 @@ function SCQArrayRowDesign({
       key={item.code}
       data-handler-id={handlerId}
     >
-      {inDesgin && (
-        <TableCell
-          ref={drag}
-          key="move"
-          sx={{
-            padding: "0",
-            color: theme.textStyles.text.color,
-          }}
-        >
-          <DragIndicatorIcon />
-        </TableCell>
-      )}
       <TableCell
         sx={{
           fontFamily: theme.textStyles.text.font,
           color: theme.textStyles.text.color,
           fontSize: theme.textStyles.text.size,
           padding: "2px",
-          minWidth: "60px",
+          width: width,
         }}
       >
-        <TextField
-          variant="standard"
-          value={content || ""}
-          onChange={(e) => {
-            dispatch(
-              changeContent({
-                code: item.qualifiedCode,
-                key: "label",
-                lang: langInfo.lang,
-                value: e.target.value,
-              })
-            );
-          }}
-          placeholder={
-            onMainLang
-              ? t("content_editor_placeholder_option")
-              : mainContent || t("content_editor_placeholder_option")
-          }
-          InputProps={{
-            disableUnderline: true,
-            sx: {
-              fontFamily: theme.textStyles.text.font,
-              color: theme.textStyles.text.color,
-              fontSize: theme.textStyles.text.size,
-            },
-          }}
-        />
+        <Box display="flex" alignItems="center">
+          {inDesgin && (
+            <div ref={drag}>
+              <DragIndicatorIcon />
+            </div>
+          )}
+          <TextField
+            variant="standard"
+            value={content || ""}
+            onChange={(e) => {
+              dispatch(
+                changeContent({
+                  code: item.qualifiedCode,
+                  key: "label",
+                  lang: langInfo.lang,
+                  value: e.target.value,
+                })
+              );
+            }}
+            placeholder={
+              onMainLang
+                ? t("content_editor_placeholder_option")
+                : mainContent || t("content_editor_placeholder_option")
+            }
+            InputProps={{
+              disableUnderline: true,
+              sx: {
+                fontFamily: theme.textStyles.text.font,
+                color: theme.textStyles.text.color,
+                fontSize: theme.textStyles.text.size,
+              },
+            }}
+            multiline
+          />
+        </Box>
       </TableCell>
       {columns.map((option, index) => {
         return (
@@ -314,6 +322,7 @@ function SCQArrayRowDesign({
           onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
           key="remove"
           sx={{
+            width: "30px",
             padding: "0",
             color: theme.textStyles.text.color,
           }}
@@ -508,6 +517,7 @@ function SCQArrayHeaderDesign({
               ? t("content_editor_placeholder_option")
               : mainContent || t("content_editor_placeholder_option")
           }
+          multiline
           inputProps={{ style: { textAlign: "center" } }}
           InputProps={{
             disableUnderline: true,
