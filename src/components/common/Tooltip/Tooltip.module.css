@@ -11,3 +11,8 @@
 .iconButton:hover {
   color: #fff;
 }
+
+.textPreLine{
+  white-space: pre-line;
+  word-break: break-word;
+}
