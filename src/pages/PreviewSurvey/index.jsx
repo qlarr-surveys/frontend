@@ -1,13 +1,9 @@
 import { getparam } from "~/networking/run";
 import styles from "./PreviewSurvey.module.css";
-import {
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import React, { useState } from "react";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
-import { Box, Chip, IconButton, Tab, Tabs } from "@mui/material";
+import { Box, Chip, FormControl, IconButton, InputLabel, MenuItem, Select, Tab, Tabs } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import { isSurveyAdmin } from "~/constants/roles";
 import { SurveyClone } from "~/components/manage/SurveyClone";
@@ -24,9 +20,12 @@ function PreviewSurvey({ guest = false }) {
   const [previewMode, setPreviewMode] = useState(
     searchParams.get("mode") || "online"
   );
-  const [lang, setLang] = useState(
-    searchParams.get("lang")
-  );
+
+  const { t: tDesign } = useTranslation("design");
+
+
+  const [navigationMode, setNavigationMode] = useState(searchParams.get("navigation_mode") || "GROUP_BY_GROUP");
+  const [lang, setLang] = useState(searchParams.get("lang"));
   const surveyId = getparam(useParams(), "surveyId");
 
   const surveyModel = {
@@ -35,16 +34,27 @@ function PreviewSurvey({ guest = false }) {
   };
 
   const withEmbeddedParam = (surveyId, previewMode, lang) => {
-    return (guest
+    return (
+      (guest
         ? routes.iframePreviewGuestSurvey
-      : routes.iframePreviewSurvey).replace(":surveyId",surveyId) + "?mode=" + previewMode + (lang ? "&lang=" + lang : "");
+        : routes.iframePreviewSurvey
+      ).replace(":surveyId", surveyId) +
+      "?mode=" +
+      previewMode +
+      (lang ? "&lang=" + lang : "")+
+      (navigationMode ? "&navigation_mode=" + navigationMode : "")
+    );
   };
 
   const handleChange = (event, newValue) => {
     setPreviewMode(newValue);
   };
-  const [openCloneModal, setOpenCloneModal] = useState(false);
 
+  const handleNavigationModeChange = (event) => {
+    setNavigationMode(event.target.value);
+  };
+
+  const [openCloneModal, setOpenCloneModal] = useState(false);
   return (
     <>
       <Box
@@ -55,9 +65,9 @@ function PreviewSurvey({ guest = false }) {
         <Chip
           label={t("preview")}
           color="primary"
-          onDelete={() => navigate(-1)}
+          onDelete={() => navigate(`/design-survey/${surveyId}`)}
           deleteIcon={<Close />}
-          style={{ marginLeft: "auto", marginRight: "auto" }} // Centered
+          style={{ marginLeft: "auto", marginRight: "auto" }} 
         />
       </Box>
       <SurveyClone
@@ -76,16 +86,14 @@ function PreviewSurvey({ guest = false }) {
         position="relative"
         width="100%"
         justifyContent="center"
+        alignItems="center"
       >
         <Tabs
           value={previewMode}
           onChange={handleChange}
           aria-label="Preview mode tabs"
         >
-          <Tab
-            value={PREVIEW_MODE.ONLINE}
-            label={<SurveyIcon name="pc" />}
-          />
+          <Tab value={PREVIEW_MODE.ONLINE} label={<SurveyIcon name="pc" />} />
           <Tab
             value={PREVIEW_MODE.ONLINE_PHONE}
             label={<SurveyIcon name="phone" />}
@@ -95,6 +103,31 @@ function PreviewSurvey({ guest = false }) {
             label={<SurveyIcon name="offline" />}
           />
         </Tabs>
+
+        <Box position="absolute" right="16px" top="0px">
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="navigation-mode-select-label">
+              {tDesign("navigation_mode")}
+            </InputLabel>
+            <Select
+              labelId="navigation-mode-select-label"
+              id="navigation-mode-select"
+              size="small"
+              value={navigationMode}
+              onChange={handleNavigationModeChange}
+              label="Navigation Mode"
+            >
+              <MenuItem value="ALL_IN_ONE">{tDesign("all_in_one")}</MenuItem>
+              <MenuItem value="GROUP_BY_GROUP">
+                {tDesign("group_by_group")}
+              </MenuItem>
+              <MenuItem value="QUESTION_BY_QUESTION">
+                {tDesign("question_by_question")}
+              </MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
         {guest && isSurveyAdmin() && (
           <IconButton
             className={styles.iconButton}

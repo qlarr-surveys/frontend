@@ -8,7 +8,7 @@ export const getparam = (params, key) => {
   }
 };
 
-export const startNavigation = (runService, lang, preview, guest, mode) => {
+export const startNavigation = (runService, lang, preview, guest, mode, navigationMode) => {
   if (window["Android"]) {
     return new Promise((resolve, reject) => {
       window["Android"].start();
@@ -17,7 +17,7 @@ export const startNavigation = (runService, lang, preview, guest, mode) => {
       };
     });
   } else {
-    return runService.start(lang, preview, guest, mode);
+    return runService.start(lang, preview, guest, mode, navigationMode);
   }
 };
 
