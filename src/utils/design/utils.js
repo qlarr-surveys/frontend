@@ -1,3 +1,5 @@
+import { useResponsive } from '~/hooks/use-responsive';
+
 export const isEquivalent = (a, b) => {
   if (typeof a === "function" || typeof b === "function") {
     return false;
@@ -199,3 +201,10 @@ export const lastIndexInArray = (array, func) => {
 };
 
 export const isNotEmptyHtml = (value) => value && /[^<br><p><\/p>\s]/gm.test(value)
+
+
+export const columnMinWidth = ()=>{
+  const isDesktop = useResponsive("up", "lg");
+  const isTablet = useResponsive("between", "md", "lg");
+  return isDesktop ? "120" : isTablet ? "120" : "90";
+}

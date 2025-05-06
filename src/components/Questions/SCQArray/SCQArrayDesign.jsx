@@ -1,6 +1,7 @@
 import styles from "./SCQArrayDesign.module.css";
 
 import {
+  Box,
   Button,
   Radio,
   Table,
@@ -24,12 +25,14 @@ import {
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
-import { getContrastColor } from "../utils";
 import { inDesign } from "~/routes";
+import { useResponsive } from '~/hooks/use-responsive';
+import { columnMinWidth } from '~/utils/design/utils';
 
 function SCQArray(props) {
   const theme = useTheme();
   const t = props.t;
+  const width = columnMinWidth()
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
@@ -74,25 +77,31 @@ function SCQArray(props) {
         </div>
       )}
 
-      <TableContainer>
-        <Table>
+      <TableContainer
+        sx={{
+          overflowX: "auto",
+          maxWidth: "100%",
+        }}
+      >
+        <Table
+          sx={{ tableLayout: "fixed", minWidth: `${columns.length * width + 20}px` }}
+        >
           <TableHead>
             <TableRow>
-              {inDesign(props.designMode) && (
-                <TableCell
-                  sx={{
-                    padding: "0",
-                  }}
-                  key="move"
-                ></TableCell>
-              )}
-              <TableCell key="content"></TableCell>
+              <TableCell
+                sx={{
+                  width: width + "px",
+                  padding: "2px",
+                }}
+                key="move"
+              ></TableCell>
               {columns.map((item, index) => {
                 return (
                   <SCQArrayHeaderDesign
                     parentQualifiedCode={props.qualifiedCode}
                     langInfo={langInfo}
                     designMode={props.designMode}
+                    width={width}
                     t={props.t}
                     key={item.qualifiedCode}
                     item={item}
@@ -103,6 +112,7 @@ function SCQArray(props) {
               {inDesign(props.designMode) && (
                 <TableCell
                   sx={{
+                    width: "20px",
                     padding: "0",
                   }}
                   key="remove"
@@ -114,6 +124,7 @@ function SCQArray(props) {
             {rows.map((item, index) => {
               return (
                 <SCQArrayRowDesign
+                  width={width}
                   parentQualifiedCode={props.qualifiedCode}
                   langInfo={langInfo}
                   t={props.t}
@@ -157,6 +168,7 @@ function SCQArrayRowDesign({
   t,
   langInfo,
   parentQualifiedCode,
+  width,
 }) {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -239,55 +251,52 @@ function SCQArrayRowDesign({
       key={item.code}
       data-handler-id={handlerId}
     >
-      {inDesign(designMode) && (
-        <TableCell
-          ref={drag}
-          key="move"
-          sx={{
-            padding: "0",
-            color: theme.textStyles.text.color,
-          }}
-        >
-          <DragIndicatorIcon />
-        </TableCell>
-      )}
       <TableCell
         sx={{
           fontFamily: theme.textStyles.text.font,
           color: theme.textStyles.text.color,
           fontSize: theme.textStyles.text.size,
-          padding: "4px",
-          minWidth: "60px",
+          padding: "2px",
+          width: width + "px",
         }}
       >
-        <TextField
-          variant="standard"
-          value={content || ""}
-          onChange={(e) => {
-            dispatch(
-              changeContent({
-                code: item.qualifiedCode,
-                key: "label",
-                lang: langInfo.lang,
-                value: e.target.value,
-              })
-            );
-          }}
-          placeholder={
-            onMainLang
-              ? t("content_editor_placeholder_option")
-              : mainContent || t("content_editor_placeholder_option")
-          }
-          InputProps={{
-            disableUnderline: true,
-            sx: {
-              fontFamily: theme.textStyles.text.font,
-              color: theme.textStyles.text.color,
-              fontSize: theme.textStyles.text.size,
-            },
-          }}
-        />
+        <Box display="flex" alignItems="center">
+          {inDesign(designMode) && (
+            <div ref={drag}>
+              <DragIndicatorIcon />
+            </div>
+          )}
+          <TextField
+            variant="standard"
+            value={content || ""}
+            onChange={(e) => {
+              dispatch(
+                changeContent({
+                  code: item.qualifiedCode,
+                  key: "label",
+                  lang: langInfo.lang,
+                  value: e.target.value,
+                })
+              );
+            }}
+            placeholder={
+              onMainLang
+                ? t("content_editor_placeholder_option")
+                : mainContent || t("content_editor_placeholder_option")
+            }
+            multiline
+            InputProps={{
+              disableUnderline: true,
+              sx: {
+                fontFamily: theme.textStyles.text.font,
+                color: theme.textStyles.text.color,
+                fontSize: theme.textStyles.text.size,
+              },
+            }}
+          />
+        </Box>
       </TableCell>
+
       {[...Array(colCount)].map((_option, index) => {
         return (
           <TableCell
@@ -295,7 +304,7 @@ function SCQArrayRowDesign({
             scope="row"
             align="center"
             sx={{
-              padding: "4px",
+              padding: "0px"
             }}
           >
             <Radio
@@ -314,6 +323,7 @@ function SCQArrayRowDesign({
           onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
           key="remove"
           sx={{
+            width: "30px",
             padding: "0",
             color: theme.textStyles.text.color,
           }}
@@ -332,6 +342,7 @@ function SCQArrayHeaderDesign({
   t,
   langInfo,
   parentQualifiedCode,
+  width,
 }) {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -424,7 +435,8 @@ function SCQArrayHeaderDesign({
         fontFamily: theme.textStyles.text.font,
         color: theme.textStyles.text.color,
         fontSize: theme.textStyles.text.size,
-        padding: "4px",
+        padding: "2px",
+        width: width + "px",
       }}
       key={item.qualifiedCode}
     >
@@ -453,6 +465,7 @@ function SCQArrayHeaderDesign({
       <TextField
         variant="standard"
         value={content || ""}
+        multiline
         onChange={(e) => {
           dispatch(
             changeContent({

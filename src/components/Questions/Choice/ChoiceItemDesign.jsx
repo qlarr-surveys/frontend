@@ -2,7 +2,7 @@ import styles from "./ChoiceItemDesign.module.css";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import CloseIcon from "@mui/icons-material/Close";
 import BuildIcon from "@mui/icons-material/Build";
-import { Box, TextField } from "@mui/material";
+import { Box, Checkbox, Radio, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -16,7 +16,6 @@ import { setupOptions } from "~/constants/design";
 import { rtlLanguage } from "~/utils/common";
 import { useDrag, useDrop } from "react-dnd";
 import { useRef } from "react";
-import { getContrastColor } from "../utils";
 import { contentEditable, inDesign } from "~/routes";
 
 function ChoiceItemDesign(props) {
@@ -138,8 +137,6 @@ function ChoiceItemDesign(props) {
   });
 
   drop(preview(ref));
-
-  const constrastColor = getContrastColor(theme.palette.background.paper);
   return (
     <div ref={ref} style={getStyles(isDragging)} data-handler-id={handlerId}>
       <Box
@@ -156,7 +153,12 @@ function ChoiceItemDesign(props) {
             />
           </div>
         )}
-        {props.label ? <b>{props.label}</b> : ""}
+        {props.type === "checkbox" ? (
+          <Checkbox sx={{ p: 0 }} disabled />
+        ) : props.type === "radio" ? (
+          <Radio sx={{ p: 0 }} disabled />
+        ) : null}{" "}
+        {props.label === "Aother" ? <b>Other</b> : ""}
         <TextField
           variant="standard"
           disabled={!contentEditable(props.designMode)}
@@ -187,6 +189,9 @@ function ChoiceItemDesign(props) {
           }
           InputProps={{
             sx: {
+              "&:before": {
+                borderBottom: "0px",
+              },
               fontFamily: theme.textStyles.text.font,
               color: theme.textStyles.text.color,
               fontSize: theme.textStyles.text.size,

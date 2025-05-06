@@ -12,9 +12,11 @@ import Validation from "~/components/run/Validation";
 import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 import { TableHead } from "@mui/material";
+import { columnMinWidth } from '~/utils/design/utils';
 
 function SCQIconArray(props) {
   const theme = useTheme();
+  const width = columnMinWidth()
 
   let columns = props.component.answers.filter(
     (answer) => answer.type == "column"
@@ -22,11 +24,24 @@ function SCQIconArray(props) {
   let rows = props.component.answers.filter((answer) => answer.type == "row");
 
   return (
-    <TableContainer>
-      <Table>
+    <TableContainer
+      sx={{
+        overflowX: "auto",
+        maxWidth: "100%",
+      }}
+    >
+      <Table
+        sx={{ tableLayout: "fixed", minWidth: `${columns.length * width}px` }}
+      >
         <TableHead>
           <TableRow>
-            <TableCell key="content"></TableCell>
+            <TableCell
+              key="content"
+              sx={{
+                width: width,
+                padding: "0px",
+              }}
+            ></TableCell>
             {columns.map((option) => {
               return (
                 <TableCell
@@ -35,6 +50,7 @@ function SCQIconArray(props) {
                     color: theme.textStyles.text.color,
                     fontSize: theme.textStyles.text.size,
                     textAlign: "center",
+                    width: width,
                   }}
                   key={option.qualifiedCode}
                 >
@@ -52,6 +68,7 @@ function SCQIconArray(props) {
                   key={answer.qualifiedCode}
                   answer={answer}
                   choices={columns}
+                  width={width}
                 />
               </React.Fragment>
             );
@@ -101,8 +118,6 @@ function SCQArrayRow(props) {
             fontSize: theme.textStyles.text.size,
             borderBottom: invalid ? "0" : "",
             padding: "2px",
-            minWidth: "60px",
-
           }}
         >
           {props.answer.content?.label}
@@ -116,6 +131,7 @@ function SCQArrayRow(props) {
               sx={{
                 borderBottom: invalid ? "0" : "",
                 padding: "2px",
+                width: props.width,
               }}
             >
               <DynamicSvg

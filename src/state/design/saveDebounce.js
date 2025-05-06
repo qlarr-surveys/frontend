@@ -2,10 +2,11 @@ import { SetData } from "~/networking/design";
 import { designStateReceived, setSaving, setUpdating } from "./designState";
 import { onError } from "../edit/editState";
 import { onApiError } from "~/utils/errorsProcessor";
+import { isEquivalent } from "~/utils/design/utils";
 
 let saveTimer;
 let buffer = [];
-let debounceTime = 3000;
+let debounceTime = 500;
 
 const saveDebounce = (store) => {
   if (saveTimer) {
@@ -15,15 +16,17 @@ const saveDebounce = (store) => {
   saveTimer = setTimeout(() => {
     store.dispatch(setUpdating(true));
     const state = store.getState();
+    const diff = getDiff(state.designState, state.designState.latest);
     SetData(
-      state.designState,
+      diff,
       (state) => {
         setState(store, state);
       },
       (error) => {
         setError(store, error);
       },
-      false
+      state.designState.versionDto.version,
+      state.designState.versionDto.subVersion
     );
   }, debounceTime);
 };
@@ -42,20 +45,6 @@ export const dataSaver = (store) => (next) => (action) => {
   }
   return next(action);
 };
-
-const NONE_MUTATING = [
-  "templateState/setFetching",
-  "designState/setUpdating",
-  "designState/setupToggleExpand",
-  "designState/collapseAllGroups",
-  "designState/resetSetup",
-  "designState/onAddComponentsVisibilityChange",
-  "designState/setSaving",
-  "designState/changeLang",
-  "designState/setup",
-  "designState/designStateReceived",
-  "designState/newVersionReceived",
-];
 
 const MUTATING = [
   "templateState/onBaseLangChanged",
@@ -108,3 +97,34 @@ const setError = (store, error) => {
     },
   });
 };
+
+const reservedKeys = [
+  "skipScroll",
+  "reorder_refresh_code",
+  "setup",
+  "latest",
+  "lastAddedComponent",
+  "isUpdating",
+  "isSaving",
+  "state",
+  "addComponentsVisibility",
+  "designMode",
+  "globalSetup",
+];
+function getDiff(currentState, latestState) {
+  const changes = {};
+
+  // Get all keys from both objects and filter out reserved keys
+  const allKeys = new Set([
+    ...Object.keys(currentState).filter((key) => !reservedKeys.includes(key)),
+    ...Object.keys(latestState).filter((key) => !reservedKeys.includes(key)),
+  ]);
+
+  for (const key of allKeys) {
+    if (!isEquivalent(currentState[key], latestState[key])) {
+      changes[key] = currentState[key];
+    }
+  }
+
+  return changes;
+}

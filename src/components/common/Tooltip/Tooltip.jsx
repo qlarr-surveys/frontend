@@ -88,11 +88,7 @@ const CustomTooltip = ({
     );
   }
 
-  return (
-    <Tooltip {...commonTooltipProps}>
-      <span>{children}</span>
-    </Tooltip>
-  );
+  return <Tooltip {...commonTooltipProps}>{children}</Tooltip>;
 };
 
 export default CustomTooltip;

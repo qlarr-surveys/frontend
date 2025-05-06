@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { Radio } from "@mui/material";
 import { valueChange } from "~/state/runState";
 import Validation from "~/components/run/Validation";
+import { columnMinWidth } from '~/utils/design/utils';
 
 function SCQArray(props) {
   const theme = useTheme();
@@ -19,12 +20,30 @@ function SCQArray(props) {
   );
   let rows = props.component.answers.filter((answer) => answer.type == "row");
 
+  const width = columnMinWidth()
+
   return (
-    <TableContainer>
-      <Table>
+    <TableContainer
+      sx={{
+        overflowX: "auto",
+        maxWidth: "100%",
+      }}
+    >
+      <Table
+        sx={{
+          tableLayout: "fixed",
+          minWidth: `${columns.length * width}px`,
+        }}
+      >
         <TableHead>
           <TableRow>
-            <TableCell key="content"></TableCell>
+            <TableCell
+              key="content"
+              sx={{
+                padding: "2px",
+                minWidth: width + "px",
+              }}
+            ></TableCell>
             {columns.map((option) => {
               return (
                 <TableCell
@@ -94,7 +113,7 @@ function SCQArrayRow(props) {
             fontSize: theme.textStyles.text.size,
             borderBottom: invalid ? "0" : "",
             padding: "2px",
-            minWidth: "60px",
+            wordWrap: "break-word",
           }}
         >
           {props.answer.content?.label}

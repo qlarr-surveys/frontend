@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { Suspense, useEffect, useMemo, useRef } from "react";
 import {
   Backdrop,
   Box,
@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./DesignSurvey.module.css";
-import ContentPanel from "~/components/design/ContentPanel";
+
 
 import ExtensionIcon from '@mui/icons-material/Extension';
 import { defualtTheme } from "~/constants/theme";
@@ -19,7 +19,7 @@ import { I18nextProvider, useTranslation } from "react-i18next";
 import { cacheRtl, isSessionRtl, rtlLanguage } from "~/utils/common";
 import { CacheProvider } from "@emotion/react";
 import { useDispatch, useSelector } from "react-redux";
-import LeftPanel from "~/components/design/LeftPanel";
+
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { isTouchDevice } from "~/utils/isTouchDevice";
@@ -35,6 +35,12 @@ import { Cancel, Palette } from "@mui/icons-material";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { buildResourceUrl } from "~/networking/common";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
+import LoadingDots from '~/components/common/LoadingDots';
+
+
+
+const ContentPanel = React.lazy(() => import("~/components/design/ContentPanel"));
+const LeftPanel = React.lazy(() => import("~/components/design/LeftPanel"));
 
 function DesignSurvey() {
   const { t, i18n } = useTranslation(["design", "run"]);
@@ -114,15 +120,19 @@ function DesignSurvey() {
       sx={backgroundStyle}
     >
       <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
+      <Suspense fallback={<LoadingDots fullHeight />}>
         <LeftPanel t={t} />
+        </Suspense>
         <CacheProvider value={cacheRtlMemo}>
           <ThemeProvider theme={surveyTheme}>
             <I18nextProvider i18n={childI18n}>
+            <Suspense fallback={<LoadingDots fullHeight />}>
               <ContentPanel
                 designMode={designMode}
                 ref={contentRef}
                 className={styles.contentPanel}
-              />
+                />
+              </Suspense>
             </I18nextProvider>
           </ThemeProvider>
         </CacheProvider>

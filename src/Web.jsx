@@ -17,11 +17,11 @@ import { getparam } from "./networking/run";
 
 import LoadingIndicator from "./components/common/LoadingIndicator";
 import { ROLES } from "./constants/roles";
-import { ManagePageWrapper } from "./pages/ManagePageWrapper";
-import ManageSurvey from "./pages/ManageSurvey";
-import AuthIllustrationLayout from "./layouts/authlayout";
-import PreviewSurvey from "./pages/PreviewSurvey";
 
+const AuthIllustrationLayout = lazy(() => import("./layouts/authlayout"));
+const ManagePageWrapper = lazy(() => import("./pages/ManagePageWrapper"));
+const PreviewSurvey = lazy(() => import("./pages/PreviewSurvey"));
+const ManageSurvey = lazy(() => import("./pages/ManageSurvey"));
 const Page404 = lazy(() => import("./pages/Page404"));
 const ForgotPasswordView = lazy(() => import("./pages/manage/ForgotPassword"));
 const ResetPasswordView = lazy(() => import("./pages/manage/ResetPassword"));
@@ -30,7 +30,6 @@ const LoginView = lazy(() => import("./pages/manage/Login"));
 const ManageUsers = lazy(() => import("./pages/manage/ManageUsers"));
 const ProfileView = lazy(() => import("./pages/manage/Profile"));
 const CreateSurvey = lazy(() => import("./pages/manage/CreateSurvey"));
-
 const RunSurvey = lazy(() => import("./pages/RunSurvey"));
 
 function Web() {

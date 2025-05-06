@@ -13,11 +13,11 @@ export async function GetData(designService, setState, setError, langInfo) {
   }
 }
 
-export async function SetData(state, setState, setError) {
+export async function SetData(state, setState, setError, version, subVersion) {
   try {
     const params = new URLSearchParams([
-      ["version", state.versionDto.version],
-      ["sub_version", state.versionDto.subVersion],
+      ["version", version],
+      ["sub_version", subVersion],
     ]);
     const response = await importedService.setSurveyDesign(state, params);
     processResponse(response, setState, state.langInfo);
