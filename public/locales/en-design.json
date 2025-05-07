@@ -280,6 +280,7 @@
     "file_upload": "Upload files like documents or images",
     "signature": "Collect a digital signature",
     "show_description": "Show description to the user",
+    "show_description_page": "Show description to the user",
     "show_word_count": "Show word count to the user",
     "show_question_hint": "Show question hint to the user",
     "text_field_size": "Set the number of characters allowed in the text field",

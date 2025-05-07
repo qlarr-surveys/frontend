@@ -280,6 +280,7 @@
     "file_upload": "Dateien wie Dokumente oder Bilder hochladen",
     "signature": "Digitale Unterschrift erfassen",
     "show_description": "Beschreibung dem Benutzer anzeigen",
+    "show_description_page": "Beschreibung dem Benutzer anzeigen",
     "show_word_count": "Wortanzahl anzeigen",
     "show_question_hint": "Fragehinweis anzeigen",
     "text_field_size": "Anzahl der Zeichen im Textfeld festlegen",

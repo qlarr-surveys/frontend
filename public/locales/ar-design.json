@@ -284,6 +284,7 @@
     "file_upload": "قم برفع ملفات مثل المستندات أو الصور",
     "signature": "اجمع توقيعاً رقمياً",
     "show_description": "اعرض الوصف للمستخدم",
+    "show_description_page": "اعرض الوصف للمستخدم",
     "show_word_count": "اعرض عدد الكلمات",
     "show_question_hint": "اعرض تلميح السؤال",
     "text_field_size": "حدد عدد الأحرف المسموح بها في حقل النص",
