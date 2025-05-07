@@ -32,8 +32,8 @@ const CustomTooltip = ({
 
   const tooltipContent = (
     <div>
-      {title && <span dangerouslySetInnerHTML={{ __html: `<strong>${title}</strong>` }} />}
-      {body && <p dangerouslySetInnerHTML={{ __html: body }} />}
+      {title && <span  dangerouslySetInnerHTML={{ __html: `<strong>${title}</strong>` }} />}
+      {body && <p className={styles.textPreLine} dangerouslySetInnerHTML={{ __html: body }} />}
       {url && (
         <Button
           variant="text"
