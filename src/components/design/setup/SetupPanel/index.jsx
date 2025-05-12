@@ -133,7 +133,9 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
         <ToggleValue
           key={code + rule}
           t={t}
-          label={"show_description"}
+          label={
+            code.startsWith("G") ? "show_description_page" : "show_description"
+          }
           rule={rule}
           code={code}
         />
