@@ -32,7 +32,7 @@ import {
   Description,
   FileUpload,
 } from "@mui/icons-material";
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { getDirFromSession } from "~/utils/common";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
@@ -40,15 +40,26 @@ const Survey = lazy(() => import("~/components/manage/Survey"));
 const ExampleSurveys = lazy(() =>
   import("~/components/manage/ExampleSurveys/ExampleSurveys")
 );
+const DASHBOARD_FILTERS_KEY = "dashboard_filters";
 
 function Dashboard() {
   const surveyService = useService("survey");
   const [surveys, setSurveys] = useState(null);
   const [fetchingSurveys, setFetchingSurveys] = useState(true);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
-  const [status, setStatus] = useState("all");
-  const [sortBy, setSortBy] = useState("last_modified_desc");
+  
+  const hasInitialSurveys =
+    sessionStorage.getItem("has_initial_surveys") === "true";
+  
+  const savedFilters = JSON.parse(
+    sessionStorage.getItem(DASHBOARD_FILTERS_KEY) || "{}"
+  );
+  const [page, setPage] = useState(savedFilters.page || 1);
+  const [perPage, setPerPage] = useState(savedFilters.perPage || 6);
+  const [status, setStatus] = useState(savedFilters.status || "all");
+  const [sortBy, setSortBy] = useState(
+    savedFilters.sortBy || "last_modified_desc"
+  );
+
   const [openCloneModal, setOpenCloneModal] = useState(false);
   const [cloningSurvey, setCloningSurvey] = useState();
   const [recentlyUpdatedSurveyName, setRecentlyUpdatedSurveyName] =
@@ -67,6 +78,9 @@ function Dashboard() {
       .getAllSurveys(page, perPage, status, sortBy)
       .then((data) => {
         if (data) {
+          if (status === "all" && data.surveys.length > 0) {
+            sessionStorage.setItem("has_initial_surveys", "true");
+          }
           setFetchingSurveys(false);
           setSurveys(data);
           setCreateSurveyOpen(false);
@@ -75,7 +89,13 @@ function Dashboard() {
       })
       .catch((e) => processApirror(e));
   };
+
   useEffect(() => {
+    sessionStorage.setItem(
+      DASHBOARD_FILTERS_KEY,
+      JSON.stringify({ page, perPage, status, sortBy })
+    );
+
     fetchSurveys();
   }, [page, perPage, sortBy, status]);
 
@@ -295,7 +315,10 @@ function Dashboard() {
               </CustomTooltip>
             )}
             {shouldShowClickAdd() && (
-              <CustomTooltip title={t("tooltips.create_survey_with_ai")} showIcon={false}>
+              <CustomTooltip
+                title={t("tooltips.create_survey_with_ai")}
+                showIcon={false}
+              >
                 <Button
                   variant="contained"
                   color="primary"
@@ -352,7 +375,7 @@ function Dashboard() {
                   <Close color="#000" />
                 </IconButton>
                 <Suspense fallback={<LoadingDots />}>
-                <ExampleSurveys onClone={(survey) => onClone(survey)} />
+                  <ExampleSurveys onClone={(survey) => onClone(survey)} />
                 </Suspense>
               </div>
             </Fade>
@@ -374,7 +397,7 @@ function Dashboard() {
             />
           )}
 
-          {surveys?.surveys?.length > 0 ? (
+          {hasInitialSurveys ? (
             <HeaderContent
               filter={status}
               onFilterSelected={(el) => {
@@ -472,7 +495,7 @@ function Dashboard() {
 
           {surveys?.surveys?.length > 0 ? (
             <TablePagination
-              rowsPerPageOptions={[5, 10, 20, 50]}
+              rowsPerPageOptions={[6, 12, 18, 24]}
               component="div"
               labelDisplayedRows={({ from, to, count, page }) => {
                 return t("responses.label_displayed_rows", { from, to, count });
