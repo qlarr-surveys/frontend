@@ -8,6 +8,7 @@ import App from "./App";
 
 import "./index.css";
 import "./styles/global-styles.css";
+import "./styles/safe-area.css";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
