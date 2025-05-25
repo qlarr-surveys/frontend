@@ -2,14 +2,16 @@ import React, { useCallback, useState } from "react";
 import styles from "./ContentEditor.module.css";
 import "./ContentEditor.css";
 import { Box } from "@mui/material";
-import DraftEditor from "./QuillEditor";
+import TiptapEditor from "./TiptapEditor";
+import TemplateRenderer from "./TemplateRenderer";
 import { rtlLanguage } from "~/utils/common";
 import { useDispatch } from "react-redux";
 import { changeContent, setup } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { isNotEmptyHtml } from "~/utils/design/utils";
+import templateService from "~/services/TemplateService";
 
-function ContentEditor({ placeholder, extended, contentKey, code, editable }) {
+function ContentEditor({ placeholder, extended, contentKey, code, editable, useSampleData = null }) {
   const dispatch = useDispatch();
 
   const content = useSelector((state) => {
@@ -29,6 +31,11 @@ function ContentEditor({ placeholder, extended, contentKey, code, editable }) {
   const lang = langInfo.lang;
   const mainLang = langInfo.mainLang;
   const onMainLang = langInfo.onMainLang;
+
+  // Determine if we should use sample data based on context
+  // If useSampleData is explicitly set, use that
+  // Otherwise, use sample data only when in editable (design) mode
+  const shouldUseSampleData = useSampleData !== null ? useSampleData : editable;
 
 
   const value = content?.[lang]?.[contentKey] || "";
@@ -69,7 +76,7 @@ function ContentEditor({ placeholder, extended, contentKey, code, editable }) {
       }}
     >
       {isActive ? (
-        <DraftEditor
+        <TiptapEditor
           lang={lang}
           isRtl={isRtl}
           code={code}
@@ -78,14 +85,20 @@ function ContentEditor({ placeholder, extended, contentKey, code, editable }) {
           value={value}
         />
       ) : isNotEmptyHtml(value) ? (
-        <div
-          className={`${isRtl ? "rtl" : "ltr"} ql-editor ${styles.noPadding}`}
-          dangerouslySetInnerHTML={{ __html: value }}
+        <TemplateRenderer
+          content={value}
+          className={`${isRtl ? "rtl" : "ltr"} tiptap-display ${styles.noPadding}`}
+          useSampleData={shouldUseSampleData}
+          currentQuestionCode={code}
+          lang={lang}
         />
       ) : (
-        <div
-          className={`${isRtl ? "rtl" : "ltr"} ql-editor ${styles.placeholder}`}
-          dangerouslySetInnerHTML={{ __html: finalPlaceholder }}
+        <TemplateRenderer
+          content={finalPlaceholder}
+          className={`${isRtl ? "rtl" : "ltr"} tiptap-display ${styles.placeholder}`}
+          useSampleData={shouldUseSampleData}
+          currentQuestionCode={code}
+          lang={lang}
         />
       )}
     </Box>

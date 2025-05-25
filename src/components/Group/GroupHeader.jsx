@@ -60,6 +60,7 @@ function GroupHeader({ t, code, children, designMode }) {
             extended={false}
             contentKey="label"
             placeholder={t("content_editor_placeholder_title")}
+            useSampleData={false}
           />
         </div>
         {group.showDescription && (
@@ -70,6 +71,7 @@ function GroupHeader({ t, code, children, designMode }) {
               extended={true}
               contentKey="description"
               placeholder={t("content_editor_placeholder_description")}
+              useSampleData={false}
             />
           </Box>
         )}
