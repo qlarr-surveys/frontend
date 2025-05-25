@@ -1,3 +1,4 @@
+/* Legacy Quill styles - to be removed */
 .ql-editor {
   padding: 0 !important;
 }
@@ -17,9 +18,93 @@
   flex-direction: column-reverse;
 }
 
+/* Tiptap display styles */
+.tiptap-display {
+  padding: 0 !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+}
+
+.tiptap-display p {
+  margin: 0;
+  padding: 0;
+}
+
+.tiptap-display p + p {
+  margin-top: 0.75em;
+}
+
+.tiptap-display ul, .tiptap-display ol {
+  padding-left: 1rem;
+  margin: 0.75em 0;
+}
+
+.tiptap-display li {
+  margin-bottom: 0.25em;
+}
+
+.tiptap-display strong {
+  font-weight: bold;
+}
+
+.tiptap-display em {
+  font-style: italic;
+}
+
+.tiptap-display u {
+  text-decoration: underline;
+}
+
+.tiptap-display s {
+  text-decoration: line-through;
+}
+
+.tiptap-display a {
+  color: #1976d2;
+  text-decoration: underline;
+}
+
+.tiptap-display mark {
+  background-color: #fef08a;
+  padding: 0;
+}
+
+.tiptap-display [style*="font-size"] {
+  /* Allow inline font-size styles */
+}
+
+/* Nunjucks template styling */
+.nunjucks-template {
+  background-color: #f0f9ff;
+  border: 1px solid #3b82f6;
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 0.9em;
+  color: #1e40af;
+}
+
+.nunjucks-error {
+  background-color: #fef2f2;
+  border: 1px solid #ef4444;
+  color: #dc2626;
+}
+
+/* RTL styles */
 .rtl .ql-editor {
   direction: rtl !important;
   text-align: right !important;
+}
+
+.rtl .tiptap-display {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.rtl .tiptap-display ul, 
+.rtl .tiptap-display ol {
+  padding-right: 1rem;
+  padding-left: 0;
 }
 
 .rtl {

@@ -15,6 +15,8 @@ function Group(props) {
     return {
       showGroup:
         typeof groupState?.relevance === "undefined" || groupState.relevance,
+      runState: state.runState,
+      designState: state.runState.data?.survey, // In runtime, survey structure is here
     };
   }, shallowEqual);
 
@@ -42,15 +44,20 @@ function Group(props) {
                 name="label"
                 lang={props.lang}
                 content={props.group.content?.label}
+                runState={state.runState}
+                designState={state.designState}
               />
             </div>
 
             {props.group.showDescription && props.group.content?.description && (
               <Box className={styles.textDescription}>
+
                 <Content
                   elementCode={props.group.code}
                   name="description"
                   lang={props.lang}
+                  runState={state.runState}
+                  designState={state.designState}
                   content={props.group.content?.description}
                 />
               </Box>

@@ -1,77 +1,61 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import "react-quill/dist/quill.core.css";
 import "./content.css";
 import { rtlLanguage } from "~/utils/common";
+import templateService from "~/services/TemplateService";
+import { buildTemplateContext } from "~/utils/templateContext";
 
 function Content(props) {
-  const isComplex =
-    props.content && props.content.search(/data-instruction/) >= 0;
-  const state = useSelector((state) => {
-    if (
-      !props.content ||
-      !isComplex ||
-      !state.runState.values[props.elementCode] ||
-      !props.name ||
-      !props.lang
-    ) {
-      return undefined;
-    } else {
-      return state.runState.values[props.elementCode][
-        `reference_${props.name}_${props.lang}`
-      ];
-    }
-  });
+  // Get full state for template context building
+  const runState = useSelector((state) => state.runState);
+  // In runtime mode, design data is stored in runState.data.survey
+  const designState = useSelector((state) => state.designState || state.runState.data?.survey);
 
+  // Check if content has Nunjucks template format
+  const hasNunjucksFormat = props.content && templateService.hasTemplateContent(props.content);
+
+  // Get language info
   const lang = useSelector((state) => {
-    return state.runState.values["Survey"].lang;
+    return state.runState.values?.["Survey"]?.lang || props.lang || "en";
   });
-
   const isRtl = rtlLanguage.includes(lang);
+
 
   if (!props.content) {
     return "";
-  } else if (!isComplex) {
-    return (
-      <div
-        className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
-        dangerouslySetInnerHTML={{ __html: props.content }}
-      />
-    );
-  } else {
-    return (
-      <div
-        className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
-        dangerouslySetInnerHTML={{
-          __html: replaceMentions(props.content, state),
-        }}
-      />
-    );
   }
+
+  // Handle Nunjucks templates
+  if (hasNunjucksFormat) {
+    try {
+      // Use props if provided, otherwise fall back to useSelector values
+      const finalRunState = props.runState || runState;
+      const finalDesignState = props.designState || designState;
+      // Build template context
+      const context = buildTemplateContext(finalRunState, finalDesignState, props.elementCode, lang);
+      // Render with Nunjucks
+      const processedContent = templateService.render(props.content, context);
+      
+      return (
+        <div
+          className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
+          dangerouslySetInnerHTML={{ __html: processedContent }}
+        />
+      );
+    } catch (error) {
+      console.warn('Template rendering error in Content component:', error);
+      // Fall back to original content if template rendering fails
+    }
+  }
+
+  // Simple content without templates
+  return (
+    <div
+      className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
+      dangerouslySetInnerHTML={{ __html: props.content }}
+    />
+  );
 }
 
 export default React.memo(Content);
 
-function replaceMentions(html, referenceValue) {
-  let doc = document.createElement("div");
-  doc.innerHTML = html;
-  doc.querySelectorAll("span[data-instruction]").forEach(function (el) {
-    let attribute = el.getAttribute("data-instruction");
-    if (attribute && referenceValue) {
-      let attrArray = attribute.split(".");
-      if (
-        attrArray &&
-        attrArray.length == 2 &&
-        referenceValue[attrArray[0]] &&
-        referenceValue[attrArray[0]][attrArray[1]]
-      ) {
-        el.replaceWith(referenceValue[attrArray[0]][attrArray[1]]);
-      } else {
-        el.replaceWith("");
-      }
-    } else {
-      el.replaceWith("");
-    }
-  });
-  return doc.innerHTML;
-}
