@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 
 import CreateSurvey from "~/components/manage/CreateSurvey/CreateSurvey";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
+import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { useTranslation } from "react-i18next";
 
 import { SurveyClone } from "~/components/manage/SurveyClone";
@@ -46,10 +47,7 @@ function Dashboard() {
   const surveyService = useService("survey");
   const [surveys, setSurveys] = useState(null);
   const [fetchingSurveys, setFetchingSurveys] = useState(true);
-  
-  const hasInitialSurveys =
-    sessionStorage.getItem("has_initial_surveys") === "true";
-  
+
   const savedFilters = JSON.parse(
     sessionStorage.getItem(DASHBOARD_FILTERS_KEY) || "{}"
   );
@@ -74,13 +72,11 @@ function Dashboard() {
   };
 
   const fetchSurveys = () => {
+    setFetchingSurveys(true);
     surveyService
       .getAllSurveys(page, perPage, status, sortBy)
       .then((data) => {
         if (data) {
-          if (status === "all" && data.surveys.length > 0) {
-            sessionStorage.setItem("has_initial_surveys", "true");
-          }
           setFetchingSurveys(false);
           setSurveys(data);
           setCreateSurveyOpen(false);
@@ -397,7 +393,7 @@ function Dashboard() {
             />
           )}
 
-          {hasInitialSurveys ? (
+          {(surveys?.surveys?.length > 0 || status != "all") && (
             <HeaderContent
               filter={status}
               onFilterSelected={(el) => {
@@ -410,9 +406,8 @@ function Dashboard() {
                 setSortBy(el.target.value);
               }}
             />
-          ) : (
-            <></>
           )}
+
           <Box className={styles.surveyCardsContainer}>
             {!fetchingSurveys ? (
               <>
@@ -460,30 +455,47 @@ function Dashboard() {
                       sx={{ mt: 2 }}
                     >
                       {t("create_survey.empty_state_message")}
-                      {!isTemplateSliderOpen && !isCreateSurveyOpen && (
+                      {status !== "all" && (
                         <>
                           <Button
                             variant="contained"
                             color="primary"
                             sx={{ mx: 1 }}
-                            startIcon={<Add />}
-                            onClick={handleButtonClick}
-                          >
-                            {t("create_new_survey")}
-                          </Button>
-                          {t("create_survey.or")}
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            sx={{ mx: 1 }}
-                            startIcon={<CopyAll />}
-                            onClick={handleTemplateButtonClick}
-                          >
-                            {t("copy_example_surveys")}
-                            {t("create_survey.empty_state_cta_copy")}
+                            startIcon={<FilterAltOffIcon />}
+                            onClick={() => {
+                              setPage(1);
+                              setStatus("all")
+                            }}>
+                            {t("reset_filter")}
                           </Button>
                         </>
                       )}
+                      {status == "all" &&
+                        !isTemplateSliderOpen &&
+                        !isCreateSurveyOpen && (
+                          <>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              sx={{ mx: 1 }}
+                              startIcon={<Add />}
+                              onClick={handleButtonClick}
+                            >
+                              {t("create_new_survey")}
+                            </Button>
+                            {t("create_survey.or")}
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              sx={{ mx: 1 }}
+                              startIcon={<CopyAll />}
+                              onClick={handleTemplateButtonClick}
+                            >
+                              {t("copy_example_surveys")}
+                              {t("create_survey.empty_state_cta_copy")}
+                            </Button>
+                          </>
+                        )}
                     </Typography>
                   </div>
                 )}

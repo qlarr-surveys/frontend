@@ -160,6 +160,7 @@
   "my_surveys": "Your Surveys",
   "new_survey": "New Survey",
   "example_surveys": "Example Surveys",
+  "reset_filter":"Reset Survey Filter",
   "create_new_survey": "Create New Surey",
   "copy_example_surveys": "Copy Example Surveys",
   "import_survey": "Import a survey",
