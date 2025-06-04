@@ -309,6 +309,7 @@ function QuestionDesign({
             extended={type=="text_display"}
             placeholder={t("content_editor_placeholder_title")}
             contentKey="label"
+            useSampleData={false}
           />
         </div>
       </Box>
@@ -324,6 +325,7 @@ function QuestionDesign({
             extended={true}
             placeholder={t("content_editor_placeholder_description")}
             contentKey="description"
+            useSampleData={false}
           />
         </Box>
       )}
