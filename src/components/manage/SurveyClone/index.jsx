@@ -86,22 +86,6 @@ export const SurveyClone = ({
         .finally(() => {
           dispatch(setLoading(false));
         });
-    } else if (survey.example) {
-      surveyService
-        .cloneGuestSurvey(survey.id, { name: newSurveyName })
-        .then(() => {
-          handleSuccess(newSurveyName);
-        })
-        .catch((processedError) => {
-          if (
-            processedError.name === PROCESSED_ERRORS.DUPLICATE_SURVEY_NAME.name
-          ) {
-            setNewSurveyNameError(t(`processed_errors.${processedError.name}`));
-          }
-        })
-        .finally(() => {
-          dispatch(setLoading(false));
-        });
     } else {
       surveyService
         .cloneSurvey(survey.id, { name: newSurveyName })

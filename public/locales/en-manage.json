@@ -159,10 +159,8 @@
   },
   "my_surveys": "Your Surveys",
   "new_survey": "New Survey",
-  "example_surveys": "Example Surveys",
   "reset_filter":"Reset Survey Filter",
   "create_new_survey": "Create New Surey",
-  "copy_example_surveys": "Copy Example Surveys",
   "import_survey": "Import a survey",
   "password_required": "Password is Required",
   "processed_errors": {
@@ -300,7 +298,6 @@
     "survey_dates": "Set start and end dates for your survey:<ul><li>If no start date is set, the survey will be available immediately</li><li>If a future start date is set, the survey will become available on that date</li><li>If no end date is set, the survey will be available indefinitely</li><li>If a future end date is set, the survey will automatically close on that date</li></ul>",
     "survey_mode": "Select whether your survey will be available online, offline, or both:<ul><li>Online surveys are accessible via web browsers</li><li>Offline surveys can be conducted without internet access</li></ul>",
     "create_new_survey": "Create a new survey from scratch with a blank template",
-    "copy_example_surveys": "Start with a pre-built survey template that you can customize",
     "import_survey": "Import an existing survey (that was exported earlier) from a ZIP file",
     "create_survey_with_ai": "Create a new survey automatically using AI assistance",
     "survey_title": "Internal title used by your team to identify the survey. This title is not shown to respondents.",

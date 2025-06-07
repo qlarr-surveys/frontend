@@ -8,7 +8,6 @@ import RunSurvey from './pages/RunSurvey';
 function Android() {
   const surveyId = getparam(useParams(), "surveyId");
   sessionStorage.setItem("surveyId", surveyId);
-  sessionStorage.setItem("isGuest", false);
   return (
     <Provider store={runStore}>
       <RunSurvey />

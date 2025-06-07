@@ -159,10 +159,8 @@
   },
   "my_surveys": "Ihre Umfragen",
   "new_survey": "Neue Umfrage",
-  "example_surveys": "Beispielumfragen",
   "reset_filter":"Umfrage-Filter zurücksetzen",
   "create_new_survey": "Neue Umfrage erstellen",
-  "copy_example_surveys": "Beispielumfragen kopieren",
   "import_survey": "Umfrage importieren",
   "password_required": "Passwort ist erforderlich",
   "processed_errors": {

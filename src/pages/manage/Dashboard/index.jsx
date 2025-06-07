@@ -38,9 +38,6 @@ import { getDirFromSession } from "~/utils/common";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 const Survey = lazy(() => import("~/components/manage/Survey"));
-const ExampleSurveys = lazy(() =>
-  import("~/components/manage/ExampleSurveys/ExampleSurveys")
-);
 const DASHBOARD_FILTERS_KEY = "dashboard_filters";
 
 function Dashboard() {
@@ -80,7 +77,6 @@ function Dashboard() {
           setFetchingSurveys(false);
           setSurveys(data);
           setCreateSurveyOpen(false);
-          setTemplateSliderOpen(false);
         }
       })
       .catch((e) => processApirror(e));
@@ -121,36 +117,23 @@ function Dashboard() {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState(t("action_btn.delete"));
   const [isCreateSurveyOpen, setCreateSurveyOpen] = useState(false);
-  const [isTemplateSliderOpen, setTemplateSliderOpen] = useState(false);
   const [importSurvey, setImportSurvey] = useState(false);
-  const [isCreateAIOpen, setCreateAIOpen] = useState(false);
 
   const handleButtonClick = () => {
     setCreateSurveyOpen(true);
-    setTemplateSliderOpen(false);
   };
 
-  const handleTemplateButtonClick = () => {
-    setTemplateSliderOpen(true);
-    setCreateSurveyOpen(false);
-  };
 
   const handleImportSurveyClick = () => {
     setImportSurvey(true);
     setOpenCloneModal(true);
   };
 
-  const handleCreateWithAI = () => {
-    setCreateAIOpen(true);
-  };
-
   const handleCloseClick = () => {
     setCreateSurveyOpen(false);
   };
 
-  const handleTemplateCloseClick = () => {
-    setTemplateSliderOpen(false);
-  };
+
   const onDelete = (survey) => {
     setActionType("delete");
     setTitle(t("action_btn.delete"));
@@ -280,21 +263,6 @@ function Dashboard() {
                 </Button>
               </CustomTooltip>
             )}
-            {shouldShowClickAdd() && !isTemplateSliderOpen && (
-              <CustomTooltip
-                title={t("tooltips.copy_example_surveys")}
-                showIcon={false}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<CopyAll />}
-                  onClick={handleTemplateButtonClick}
-                >
-                  {t("copy_example_surveys")}
-                </Button>
-              </CustomTooltip>
-            )}
             {shouldShowClickAdd() && (
               <CustomTooltip
                 title={t("tooltips.import_survey")}
@@ -307,21 +275,6 @@ function Dashboard() {
                   onClick={handleImportSurveyClick}
                 >
                   {t("import_survey")}
-                </Button>
-              </CustomTooltip>
-            )}
-            {shouldShowClickAdd() && (
-              <CustomTooltip
-                title={t("tooltips.create_survey_with_ai")}
-                showIcon={false}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<AutoAwesomeIcon />}
-                  onClick={handleCreateWithAI}
-                >
-                  {t("create_survey_with_ai")}
                 </Button>
               </CustomTooltip>
             )}
@@ -352,45 +305,6 @@ function Dashboard() {
                 />
               </div>
             </Fade>
-          )}
-
-          {isTemplateSliderOpen && (
-            <Fade in={isTemplateSliderOpen} timeout={300}>
-              <div style={{ position: "relative" }}>
-                <IconButton
-                  onClick={handleTemplateCloseClick}
-                  aria-label="close"
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    ...(isRtl === "ltr" ? { right: 0 } : { left: 0 }),
-                    color: "black",
-                    zIndex: 1,
-                  }}
-                >
-                  <Close color="#000" />
-                </IconButton>
-                <Suspense fallback={<LoadingDots />}>
-                  <ExampleSurveys onClone={(survey) => onClone(survey)} />
-                </Suspense>
-              </div>
-            </Fade>
-          )}
-
-          {isCreateAIOpen && (
-            <CreateAISurvey
-              open={isCreateAIOpen}
-              onClose={(created) => {
-                setCreateAIOpen(false);
-                if (created) {
-                  fetchSurveys();
-                }
-              }}
-              onSurveyCreated={(newSurvey) => {
-                setRecentlyUpdatedSurveyName(newSurvey);
-                setTimeout(() => setRecentlyUpdatedSurveyName(null), 3000);
-              }}
-            />
           )}
 
           {(surveys?.surveys?.length > 0 || status != "all") && (
@@ -471,7 +385,6 @@ function Dashboard() {
                         </>
                       )}
                       {status == "all" &&
-                        !isTemplateSliderOpen &&
                         !isCreateSurveyOpen && (
                           <>
                             <Button
@@ -482,17 +395,6 @@ function Dashboard() {
                               onClick={handleButtonClick}
                             >
                               {t("create_new_survey")}
-                            </Button>
-                            {t("create_survey.or")}
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              sx={{ mx: 1 }}
-                              startIcon={<CopyAll />}
-                              onClick={handleTemplateButtonClick}
-                            >
-                              {t("copy_example_surveys")}
-                              {t("create_survey.empty_state_cta_copy")}
                             </Button>
                           </>
                         )}

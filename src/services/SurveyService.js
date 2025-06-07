@@ -1,7 +1,5 @@
 import authenticatedApi from "./authenticatedApi";
-import publicApi from "./publicApi";
 import BaseService from "./BaseService";
-import { CLOUD_URL } from "~/constants/networking";
 
 class SurveyService extends BaseService {
   async getAllSurveys(page, perpage, status, sortBy) {
@@ -9,13 +7,6 @@ class SurveyService extends BaseService {
       authenticatedApi.get(
         `/survey/all?page=${page}&per_page=${perpage}&status=${status}&sort_by=${sortBy}`
       )
-    );
-    return response.data;
-  }
-
-  async getGuestsSurveys() {
-    const response = await this.handleRequest(() =>
-      publicApi.get(`${CLOUD_URL}/guest/survey/all`)
     );
     return response.data;
   }
@@ -52,13 +43,6 @@ class SurveyService extends BaseService {
   async cloneSurvey(surveyId, data) {
     const response = await this.handleRequest(() =>
       authenticatedApi.post(`/survey/${surveyId}/clone`, data)
-    );
-    return response.data;
-  }
-
-  async cloneGuestSurvey(surveyId, data) {
-    const response = await this.handleRequest(() =>
-      authenticatedApi.post(`/survey/${surveyId}/clone_guest`, data)
     );
     return response.data;
   }

@@ -34,8 +34,6 @@ export const routes = {
   runSurvey: "/run-survey/:surveyId",
   resumeSurvey: "/resume-survey/:surveyId/:responseId",
   iframePreviewSurvey: "/preview-survey/:surveyId",
-  iframePreviewGuestSurvey: "/preview-guest-survey/:surveyId",
-  guestPreview: "/guest/preview/:surveyId",
   preview: "/preview/:surveyId",
   login: "/login",
   confirmNewUser: "/confirm-new-user/:token",

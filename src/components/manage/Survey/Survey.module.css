@@ -231,20 +231,6 @@
   word-break: break-word;
 }
 
-.exampleTruncatedText {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: inline-block;
-  line-height: 1.5em;
-  max-height: 15em;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 10;
-  line-clamp: 10;
-  white-space: normal;
-  word-wrap: break-word;
-  word-break: break-word;
-}
 
 .titleContainer {
   display: flex;

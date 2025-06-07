@@ -1,29 +1,16 @@
 import publicApi from "./publicApi";
 import authenticatedApi from "./authenticatedApi";
-import { CLOUD_URL } from "~/constants/networking";
 import BaseService from "./BaseService";
 
 class RunService extends BaseService {
   async start(
     lang,
     preview = false,
-    guest = false,
     mode = "online",
     navigationMode
   ) {
     const surveyId = sessionStorage.getItem("surveyId");
-    if (guest) {
-      const response = await this.handleRequest(() =>
-        publicApi.post(
-          `${CLOUD_URL}/survey/${surveyId}/run/start?mode=${mode}`,
-          {
-            lang,
-            navigationMode,
-          }
-        )
-      );
-      return response.data;
-    } else if (preview) {
+    if (preview) {
       const response = await this.handleRequest(() =>
         authenticatedApi.post(
           `/survey/${surveyId}/preview/start?mode=${mode}`,
@@ -42,15 +29,8 @@ class RunService extends BaseService {
     }
   }
 
-  async navigate(payload, preview = false, guest = false, mode = "online") {
+  async navigate(payload, preview = false, mode = "online") {
     const surveyId = sessionStorage.getItem("surveyId");
-    if (guest) {
-      const response = await publicApi.post(
-        `${CLOUD_URL}/survey/${surveyId}/run/navigate?mode=${mode}`,
-        payload
-      );
-      return response.data;
-    }
     if (preview) {
       const response = await authenticatedApi.post(
         `/survey/${surveyId}/preview/navigate?mode=${mode}`,
@@ -65,14 +45,9 @@ class RunService extends BaseService {
       return response_1.data;
     }
   }
-  async runtimeJs(preview, guest = false) {
+  async runtimeJs(preview) {
     const surveyId = sessionStorage.getItem("surveyId");
-    if (guest) {
-      const response = await this.handleRequest(() =>
-        publicApi.get(`${CLOUD_URL}/survey/${surveyId}/run/runtime.js`)
-      );
-      return response.data;
-    } else if (preview) {
+    if (preview) {
       const response = await this.handleRequest(() =>
         authenticatedApi.get(`/survey/${surveyId}/preview/runtime.js`)
       );

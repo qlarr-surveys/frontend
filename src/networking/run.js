@@ -8,7 +8,7 @@ export const getparam = (params, key) => {
   }
 };
 
-export const startNavigation = (runService, lang, preview, guest, mode, navigationMode) => {
+export const startNavigation = (runService, lang, preview, mode, navigationMode) => {
   if (window["Android"]) {
     return new Promise((resolve, reject) => {
       window["Android"].start();
@@ -17,7 +17,7 @@ export const startNavigation = (runService, lang, preview, guest, mode, navigati
       };
     });
   } else {
-    return runService.start(lang, preview, guest, mode, navigationMode);
+    return runService.start(lang, preview, mode, navigationMode);
   }
 };
 
@@ -26,7 +26,6 @@ export const continueNavigation = (
   payload,
   responseId,
   preview,
-  guest,
   mode
 ) => {
   const finalObj = {
@@ -41,7 +40,7 @@ export const continueNavigation = (
       };
     });
   } else {
-    return runService.navigate(finalObj, preview, guest, mode);
+    return runService.navigate(finalObj, preview, mode);
   }
 };
 
@@ -97,10 +96,10 @@ export const downloadFileAsBase64 = (url) => {
     );
 };
 
-export const loadScript = (runService, preview, guest) =>
+export const loadScript = (runService, preview) =>
   new Promise((resolve, reject) => {
     runService
-      .runtimeJs(preview, guest)
+      .runtimeJs(preview)
       .then((data) => {
         const script = document.createElement("script");
         script.innerHTML = data;

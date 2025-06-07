@@ -1,26 +1,15 @@
 import {
   BACKEND_BASE_URL,
-  CLOUD_URL,
   FRONT_END_HOST,
   PROTOCOL,
 } from "~/constants/networking";
 
-export const buildResourceUrl = (fileName, surveyId = null, example = null) => {
-
+export const buildResourceUrl = (fileName, surveyId = null) => {
   if (!surveyId) {
     surveyId = sessionStorage.getItem("surveyId");
   }
-  if (example == null) {
-    example = sessionStorage.getItem("isGuest") == 1;
-  }
-  if(example){
-    return `${CLOUD_URL}/survey/${surveyId}/resource/${fileName}`;
-  } else {
-    return `${BACKEND_BASE_URL}/survey/${surveyId}/resource/${fileName}`;
-  }
-
+  return `${BACKEND_BASE_URL}/survey/${surveyId}/resource/${fileName}`;
 };
-
 
 export const sharingUrl = (surveyId, preview, lang) => {
   let segment = "run-survey";

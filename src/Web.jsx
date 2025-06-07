@@ -66,16 +66,6 @@ function Web() {
         }
       />
       <Route
-        path={routes.iframePreviewGuestSurvey}
-        element={
-          <Suspense fallback={<LoadingIndicator />}>
-            <Provider store={runStore}>
-              <PreviewGuestSurveyWrapper />
-            </Provider>
-          </Suspense>
-        }
-      />
-      <Route
         path={routes.designSurvey}
         element={
           <Suspense fallback={<LoadingIndicator />}>
@@ -93,16 +83,6 @@ function Web() {
           <Suspense fallback={<LoadingIndicator />}>
             <ManagePageWrapper showHeader={false}>
               <PrivatePreviewSurvey />
-            </ManagePageWrapper>
-          </Suspense>
-        }
-      />
-      <Route
-        path={routes.guestPreview}
-        element={
-          <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper  showHeader={false}>
-              <PreviewSurvey guest={true} />
             </ManagePageWrapper>
           </Suspense>
         }
@@ -266,7 +246,6 @@ function Web() {
 const PrivateDesignSurvey = ({ landingPage }) => {
   const params = useParams();
   sessionStorage.setItem("surveyId", params.surveyId);
-  sessionStorage.setItem("isGuest", "0");
   const location = useLocation();
   return TokenService.isAuthenticated() ? (
     <ManageSurvey landingPage={landingPage} />
@@ -278,7 +257,6 @@ const PrivateDesignSurvey = ({ landingPage }) => {
 const PrivatePreviewSurvey = () => {
   const params = useParams();
   sessionStorage.setItem("surveyId", params.surveyId);
-  sessionStorage.setItem("isGuest", "0");
   const location = useLocation();
   return TokenService.isAuthenticated() ? (
     <PreviewSurvey />
@@ -321,30 +299,17 @@ const RunSurveyWrapper = ({ resume = false }) => {
   const surveyId = getparam(useParams(), "surveyId");
   const responseId = getparam(useParams(), "responseId");
   sessionStorage.setItem("surveyId", surveyId);
-  sessionStorage.setItem("isGuest", "0");
   return <RunSurvey responseId={responseId} resume={resume} />;
 };
 
 const PreviewSurveyWrapper = () => {
   const surveyId = getparam(useParams(), "surveyId");
   sessionStorage.setItem("surveyId", surveyId);
-  sessionStorage.setItem("isGuest", "0");
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const mode = searchParams.get("mode") || "online";
   const navigationMode = searchParams.get("navigation_mode");
   return <RunSurvey preview={true} mode={mode} navigationMode={navigationMode} />;
-};
-
-const PreviewGuestSurveyWrapper = () => {
-  const surveyId = getparam(useParams(), "surveyId");
-  sessionStorage.setItem("surveyId", surveyId);
-  sessionStorage.setItem("isGuest", "1");
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const mode = searchParams.get("mode") || "online";
-  const navigationMode = searchParams.get("navigation_mode");
-  return <RunSurvey preview={true} guest={true} mode={mode} navigationMode={navigationMode} />;
 };
 
 export default Web;

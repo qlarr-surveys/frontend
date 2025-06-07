@@ -8,7 +8,6 @@ WORKDIR /app
 ARG VITE_FRONT_END_HOST
 ARG VITE_PROTOCOL
 ARG VITE_BE_URL
-ARG VITE_CLOUD_URL
 
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
@@ -20,7 +19,7 @@ RUN npm install
 COPY . .
 
 # Build the app for production, passing the environment variables
-RUN VITE_FRONT_END_HOST=$VITE_FRONT_END_HOST VITE_PROTOCOL=$VITE_PROTOCOL VITE_BE_URL=$VITE_BE_URL VITE_CLOUD_URL=$VITE_CLOUD_URL npm run build
+RUN VITE_FRONT_END_HOST=$VITE_FRONT_END_HOST VITE_PROTOCOL=$VITE_PROTOCOL VITE_BE_URL=$VITE_BE_URL npm run build
 
 # Stage 2: Serve the React app with Nginx
 FROM nginx:alpine
