@@ -14,7 +14,6 @@
   margin-top: 16px;
 }
 
-
 .upload {
   margin-top: 16px;
   gap: 8px;
@@ -26,4 +25,47 @@
 
 .errorText {
   color: #eb5757 !important;
+}
+
+.loadingContainer {
+  min-width: 400px;
+  min-height:230px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.spinIcon {
+  margin-bottom: 8px;
+  animation: spin 2s linear infinite;
+}
+
+.progressBarContainer {
+  width: 80%;
+  margin-top: 8px;
+}
+
+.progressBarBackground {
+  height: 8px;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  transition: width 0.3s ease-in-out;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
