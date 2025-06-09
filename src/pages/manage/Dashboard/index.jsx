@@ -21,19 +21,11 @@ import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { useTranslation } from "react-i18next";
 
-import { SurveyClone } from "~/components/manage/SurveyClone";
-import CreateAISurvey from "~/components/manage/CreateAISurvey";
+import { ImportSurvey } from "~/components/manage/ImportSurvey";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import DeleteModal from "~/components/common/DeleteModal";
-import {
-  Add,
-  Close,
-  CopyAll,
-  Description,
-  FileUpload,
-} from "@mui/icons-material";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import { Add, Close, Description, FileUpload } from "@mui/icons-material";
 import { getDirFromSession } from "~/utils/common";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
@@ -55,8 +47,7 @@ function Dashboard() {
     savedFilters.sortBy || "last_modified_desc"
   );
 
-  const [openCloneModal, setOpenCloneModal] = useState(false);
-  const [cloningSurvey, setCloningSurvey] = useState();
+  const [openImportModal, setOpenImportModal] = useState(false);
   const [recentlyUpdatedSurveyName, setRecentlyUpdatedSurveyName] =
     useState(null);
 
@@ -123,16 +114,13 @@ function Dashboard() {
     setCreateSurveyOpen(true);
   };
 
-
   const handleImportSurveyClick = () => {
-    setImportSurvey(true);
-    setOpenCloneModal(true);
+    setOpenImportModal(true);
   };
 
   const handleCloseClick = () => {
     setCreateSurveyOpen(false);
   };
-
 
   const onDelete = (survey) => {
     setActionType("delete");
@@ -163,8 +151,19 @@ function Dashboard() {
   };
 
   const onClone = (survey) => {
-    setCloningSurvey(survey);
-    setOpenCloneModal(true);
+    dispatch(setLoading(true));
+    surveyService
+      .cloneSurvey(survey.id)
+      .then((result) => {
+        if (result) {
+          setRecentlyUpdatedSurveyName(result.name);
+          fetchSurveys();
+        }
+      })
+      .catch((processedError) => {})
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
   };
 
   const deleteSurvey = (id) => {
@@ -378,26 +377,26 @@ function Dashboard() {
                             startIcon={<FilterAltOffIcon />}
                             onClick={() => {
                               setPage(1);
-                              setStatus("all")
-                            }}>
+                              setStatus("all");
+                            }}
+                          >
                             {t("reset_filter")}
                           </Button>
                         </>
                       )}
-                      {status == "all" &&
-                        !isCreateSurveyOpen && (
-                          <>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              sx={{ mx: 1 }}
-                              startIcon={<Add />}
-                              onClick={handleButtonClick}
-                            >
-                              {t("create_new_survey")}
-                            </Button>
-                          </>
-                        )}
+                      {status == "all" && !isCreateSurveyOpen && (
+                        <>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{ mx: 1 }}
+                            startIcon={<Add />}
+                            onClick={handleButtonClick}
+                          >
+                            {t("create_new_survey")}
+                          </Button>
+                        </>
+                      )}
                     </Typography>
                   </div>
                 )}
@@ -431,21 +430,15 @@ function Dashboard() {
           )}
         </Box>
       </Container>
-      <SurveyClone
-        importSurvey={importSurvey}
-        open={openCloneModal}
-        onClose={(cloned) => {
-          setOpenCloneModal(false);
-          setImportSurvey(false);
-          if (cloned) {
+      <ImportSurvey
+        open={openImportModal}
+        onResult={(result) => {
+          setOpenImportModal(false);
+          if (result) {
+            setRecentlyUpdatedSurveyName(result);
             fetchSurveys();
           }
         }}
-        onSurveyCloned={(name) => {
-          setRecentlyUpdatedSurveyName(name);
-          setTimeout(() => setRecentlyUpdatedSurveyName(null), 3000);
-        }}
-        survey={cloningSurvey}
       />
       <DeleteModal
         open={open}

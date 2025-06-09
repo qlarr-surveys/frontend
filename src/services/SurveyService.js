@@ -40,9 +40,9 @@ class SurveyService extends BaseService {
     return response.data;
   }
 
-  async cloneSurvey(surveyId, data) {
+  async cloneSurvey(surveyId) {
     const response = await this.handleRequest(() =>
-      authenticatedApi.post(`/survey/${surveyId}/clone`, data)
+      authenticatedApi.post(`/survey/${surveyId}/clone`, {})
     );
     return response.data;
   }
@@ -92,9 +92,8 @@ class SurveyService extends BaseService {
     return response;
   }
 
-  async importSurvey(file, surveyName, onProgress) {
+  async importSurvey(file, onProgress) {
     const formData = new FormData();
-    formData.append("survey_name", surveyName);
     formData.append("file", file);
 
     const response = await this.handleRequest(() =>
