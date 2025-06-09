@@ -17,6 +17,7 @@ export const PROCESSED_ERRORS = {
   DESIGN_OUT_OF_SYNC: { name: "design_out_of_sync", handleGlobally: false },
   WRONG_CREDENTIALS: { name: "wrong_credentials", handleGlobally: false },
   WRONG_PIN: { name: "code_invalid", handleGlobally: false },
+  DESIGN_NOT_AVAILABLE_EXCEPTION: { name: "invalid_file_for_survey_export", handleGlobally: false },
   DUPLICATE_EMAIL: { name: "duplicate_email", handleGlobally: false },
   DUPLICATE_SURVEY_NAME: {
     name: "duplicate_survey_name",
@@ -79,6 +80,8 @@ export const processError = (e) => {
         return PROCESSED_ERRORS.WRONG_CREDENTIALS;
       case "DuplicateEmailException":
         return PROCESSED_ERRORS.DUPLICATE_EMAIL;
+      case "DesignNotAvailableException":
+        return PROCESSED_ERRORS.DESIGN_NOT_AVAILABLE_EXCEPTION;
       case "ComponentDeleted":
       case "ComponentDeletedException":
         return PROCESSED_ERRORS.COMPONENT_DELETED;

@@ -162,8 +162,10 @@
   "reset_filter":"إعادة تعيين فلتر الاستطلاع",
   "create_new_survey": "إنشاء استطلاع جديد",
   "import_survey": "تحميل استطلاع",
+  "upload_zip_folder": "تحميل مجلد مضغوط",
   "password_required": "كلمة المرور مطلوبة",
   "processed_errors": {
+    "invalid_file_for_survey_export": "هذا الملف المضغوط لا يحتوي على استطلاع Qlarr صالح. يرجى التحقق من أنك قمت بتصدير الاستطلاع بشكل صحيح.",
     "backend_down": "الخلفية لا يمكن الوصول إليها ... يرجى المحاولة مرة أخرى لاحقًا",
     "duplicate_email": "عنوان البريد الإلكتروني مسجل بالفعل.",
     "duplicate_survey_name": "تكرار اسم الاستطلاع",

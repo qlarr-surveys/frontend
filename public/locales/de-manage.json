@@ -162,8 +162,10 @@
   "reset_filter":"Umfrage-Filter zurücksetzen",
   "create_new_survey": "Neue Umfrage erstellen",
   "import_survey": "Umfrage importieren",
+  "upload_zip_folder": "ZIP-Ordner hochladen",
   "password_required": "Passwort ist erforderlich",
   "processed_errors": {
+    "invalid_file_for_survey_export": "Diese ZIP-Datei enthält keine gültige Qlarr-Umfrage. Bitte überprüfen Sie, ob Sie die Umfrage korrekt exportiert haben.",
     "backend_down": "Backend ist nicht erreichbar... Bitte versuchen Sie es später erneut",
     "duplicate_email": "E-Mail-Adresse ist bereits registriert.",
     "duplicate_survey_name": "Doppelter Umfragename",
