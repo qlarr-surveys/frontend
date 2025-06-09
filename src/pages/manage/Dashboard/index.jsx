@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 
 import CreateSurvey from "~/components/manage/CreateSurvey/CreateSurvey";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
+import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { useTranslation } from "react-i18next";
 
 import { SurveyClone } from "~/components/manage/SurveyClone";
@@ -32,23 +33,28 @@ import {
   Description,
   FileUpload,
 } from "@mui/icons-material";
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { getDirFromSession } from "~/utils/common";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 const Survey = lazy(() => import("~/components/manage/Survey"));
-const ExampleSurveys = lazy(() =>
-  import("~/components/manage/ExampleSurveys/ExampleSurveys")
-);
+const DASHBOARD_FILTERS_KEY = "dashboard_filters";
 
 function Dashboard() {
   const surveyService = useService("survey");
   const [surveys, setSurveys] = useState(null);
   const [fetchingSurveys, setFetchingSurveys] = useState(true);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
-  const [status, setStatus] = useState("all");
-  const [sortBy, setSortBy] = useState("last_modified_desc");
+
+  const savedFilters = JSON.parse(
+    sessionStorage.getItem(DASHBOARD_FILTERS_KEY) || "{}"
+  );
+  const [page, setPage] = useState(savedFilters.page || 1);
+  const [perPage, setPerPage] = useState(savedFilters.perPage || 6);
+  const [status, setStatus] = useState(savedFilters.status || "all");
+  const [sortBy, setSortBy] = useState(
+    savedFilters.sortBy || "last_modified_desc"
+  );
+
   const [openCloneModal, setOpenCloneModal] = useState(false);
   const [cloningSurvey, setCloningSurvey] = useState();
   const [recentlyUpdatedSurveyName, setRecentlyUpdatedSurveyName] =
@@ -63,6 +69,7 @@ function Dashboard() {
   };
 
   const fetchSurveys = () => {
+    setFetchingSurveys(true);
     surveyService
       .getAllSurveys(page, perPage, status, sortBy)
       .then((data) => {
@@ -70,12 +77,17 @@ function Dashboard() {
           setFetchingSurveys(false);
           setSurveys(data);
           setCreateSurveyOpen(false);
-          setTemplateSliderOpen(false);
         }
       })
       .catch((e) => processApirror(e));
   };
+
   useEffect(() => {
+    sessionStorage.setItem(
+      DASHBOARD_FILTERS_KEY,
+      JSON.stringify({ page, perPage, status, sortBy })
+    );
+
     fetchSurveys();
   }, [page, perPage, sortBy, status]);
 
@@ -105,36 +117,23 @@ function Dashboard() {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState(t("action_btn.delete"));
   const [isCreateSurveyOpen, setCreateSurveyOpen] = useState(false);
-  const [isTemplateSliderOpen, setTemplateSliderOpen] = useState(false);
   const [importSurvey, setImportSurvey] = useState(false);
-  const [isCreateAIOpen, setCreateAIOpen] = useState(false);
 
   const handleButtonClick = () => {
     setCreateSurveyOpen(true);
-    setTemplateSliderOpen(false);
   };
 
-  const handleTemplateButtonClick = () => {
-    setTemplateSliderOpen(true);
-    setCreateSurveyOpen(false);
-  };
 
   const handleImportSurveyClick = () => {
     setImportSurvey(true);
     setOpenCloneModal(true);
   };
 
-  const handleCreateWithAI = () => {
-    setCreateAIOpen(true);
-  };
-
   const handleCloseClick = () => {
     setCreateSurveyOpen(false);
   };
 
-  const handleTemplateCloseClick = () => {
-    setTemplateSliderOpen(false);
-  };
+
   const onDelete = (survey) => {
     setActionType("delete");
     setTitle(t("action_btn.delete"));
@@ -264,21 +263,6 @@ function Dashboard() {
                 </Button>
               </CustomTooltip>
             )}
-            {shouldShowClickAdd() && !isTemplateSliderOpen && (
-              <CustomTooltip
-                title={t("tooltips.copy_example_surveys")}
-                showIcon={false}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<CopyAll />}
-                  onClick={handleTemplateButtonClick}
-                >
-                  {t("copy_example_surveys")}
-                </Button>
-              </CustomTooltip>
-            )}
             {shouldShowClickAdd() && (
               <CustomTooltip
                 title={t("tooltips.import_survey")}
@@ -291,18 +275,6 @@ function Dashboard() {
                   onClick={handleImportSurveyClick}
                 >
                   {t("import_survey")}
-                </Button>
-              </CustomTooltip>
-            )}
-            {shouldShowClickAdd() && (
-              <CustomTooltip title={t("tooltips.create_survey_with_ai")} showIcon={false}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<AutoAwesomeIcon />}
-                  onClick={handleCreateWithAI}
-                >
-                  {t("create_survey_with_ai")}
                 </Button>
               </CustomTooltip>
             )}
@@ -335,46 +307,7 @@ function Dashboard() {
             </Fade>
           )}
 
-          {isTemplateSliderOpen && (
-            <Fade in={isTemplateSliderOpen} timeout={300}>
-              <div style={{ position: "relative" }}>
-                <IconButton
-                  onClick={handleTemplateCloseClick}
-                  aria-label="close"
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    ...(isRtl === "ltr" ? { right: 0 } : { left: 0 }),
-                    color: "black",
-                    zIndex: 1,
-                  }}
-                >
-                  <Close color="#000" />
-                </IconButton>
-                <Suspense fallback={<LoadingDots />}>
-                <ExampleSurveys onClone={(survey) => onClone(survey)} />
-                </Suspense>
-              </div>
-            </Fade>
-          )}
-
-          {isCreateAIOpen && (
-            <CreateAISurvey
-              open={isCreateAIOpen}
-              onClose={(created) => {
-                setCreateAIOpen(false);
-                if (created) {
-                  fetchSurveys();
-                }
-              }}
-              onSurveyCreated={(newSurvey) => {
-                setRecentlyUpdatedSurveyName(newSurvey);
-                setTimeout(() => setRecentlyUpdatedSurveyName(null), 3000);
-              }}
-            />
-          )}
-
-          {surveys?.surveys?.length > 0 ? (
+          {(surveys?.surveys?.length > 0 || status != "all") && (
             <HeaderContent
               filter={status}
               onFilterSelected={(el) => {
@@ -387,9 +320,8 @@ function Dashboard() {
                 setSortBy(el.target.value);
               }}
             />
-          ) : (
-            <></>
           )}
+
           <Box className={styles.surveyCardsContainer}>
             {!fetchingSurveys ? (
               <>
@@ -437,30 +369,35 @@ function Dashboard() {
                       sx={{ mt: 2 }}
                     >
                       {t("create_survey.empty_state_message")}
-                      {!isTemplateSliderOpen && !isCreateSurveyOpen && (
+                      {status !== "all" && (
                         <>
                           <Button
                             variant="contained"
                             color="primary"
                             sx={{ mx: 1 }}
-                            startIcon={<Add />}
-                            onClick={handleButtonClick}
-                          >
-                            {t("create_new_survey")}
-                          </Button>
-                          {t("create_survey.or")}
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            sx={{ mx: 1 }}
-                            startIcon={<CopyAll />}
-                            onClick={handleTemplateButtonClick}
-                          >
-                            {t("copy_example_surveys")}
-                            {t("create_survey.empty_state_cta_copy")}
+                            startIcon={<FilterAltOffIcon />}
+                            onClick={() => {
+                              setPage(1);
+                              setStatus("all")
+                            }}>
+                            {t("reset_filter")}
                           </Button>
                         </>
                       )}
+                      {status == "all" &&
+                        !isCreateSurveyOpen && (
+                          <>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              sx={{ mx: 1 }}
+                              startIcon={<Add />}
+                              onClick={handleButtonClick}
+                            >
+                              {t("create_new_survey")}
+                            </Button>
+                          </>
+                        )}
                     </Typography>
                   </div>
                 )}
@@ -472,7 +409,7 @@ function Dashboard() {
 
           {surveys?.surveys?.length > 0 ? (
             <TablePagination
-              rowsPerPageOptions={[5, 10, 20, 50]}
+              rowsPerPageOptions={[6, 12, 18, 24]}
               component="div"
               labelDisplayedRows={({ from, to, count, page }) => {
                 return t("responses.label_displayed_rows", { from, to, count });

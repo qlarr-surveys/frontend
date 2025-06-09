@@ -12,8 +12,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import styles from "./DesignSurvey.module.css";
 
-
-import ExtensionIcon from '@mui/icons-material/Extension';
+import ExtensionIcon from "@mui/icons-material/Extension";
 import { defualtTheme } from "~/constants/theme";
 import { I18nextProvider, useTranslation } from "react-i18next";
 import { cacheRtl, isSessionRtl, rtlLanguage } from "~/utils/common";
@@ -35,11 +34,11 @@ import { Cancel, Palette } from "@mui/icons-material";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { buildResourceUrl } from "~/networking/common";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
-import LoadingDots from '~/components/common/LoadingDots';
+import LoadingDots from "~/components/common/LoadingDots";
 
-
-
-const ContentPanel = React.lazy(() => import("~/components/design/ContentPanel"));
+const ContentPanel = React.lazy(() =>
+  import("~/components/design/ContentPanel")
+);
 const LeftPanel = React.lazy(() => import("~/components/design/LeftPanel"));
 
 function DesignSurvey() {
@@ -120,17 +119,17 @@ function DesignSurvey() {
       sx={backgroundStyle}
     >
       <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
-      <Suspense fallback={<LoadingDots fullHeight />}>
-        <LeftPanel t={t} />
+        <Suspense fallback={<LoadingDots fullHeight />}>
+          <LeftPanel t={t} />
         </Suspense>
         <CacheProvider value={cacheRtlMemo}>
           <ThemeProvider theme={surveyTheme}>
             <I18nextProvider i18n={childI18n}>
-            <Suspense fallback={<LoadingDots fullHeight />}>
-              <ContentPanel
-                designMode={designMode}
-                ref={contentRef}
-                className={styles.contentPanel}
+              <Suspense fallback={<LoadingDots fullHeight />}>
+                <ContentPanel
+                  designMode={designMode}
+                  ref={contentRef}
+                  className={styles.contentPanel}
                 />
               </Suspense>
             </I18nextProvider>
@@ -184,8 +183,8 @@ function DesignOptions({ setOptionsOpen, optionsOpen, designMode, t }) {
         <Backdrop style={{ zIndex: 1 }} open={optionsOpen} />
         <SpeedDial
           open={optionsOpen}
+          ariaLabel="SpeedDial"
           onClick={() => setOptionsOpen(!optionsOpen)}
-          ariaLabel="SpeedDial basic example"
           sx={{ position: "absolute", bottom: "16px", right: "16px" }}
           icon={
             <SpeedDialIcon icon={<ExtensionIcon />} openIcon={<CloseIcon />} />

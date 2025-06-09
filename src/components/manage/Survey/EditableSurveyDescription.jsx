@@ -10,13 +10,12 @@ export const EditableSurveyDescription = ({
   survey,
   onSave,
   isEditable = true,
-  isExample,
 }) => {
   const [isDescriptionEditing, setIsDescriptionEditing] = useState(false);
   const [description, setDescription] = useState(survey.description);
   const { t } = useTranslation("manage");
 
-  const charLimit = isExample ? 450 : 125;
+  const charLimit = 125;
 
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
@@ -81,12 +80,9 @@ export const EditableSurveyDescription = ({
                   color: description ? "inherit" : "gray",
                   flexGrow: 1,
                 }}
-                className={`${
-                  isExample ? styles.exampleTruncatedText : styles.truncatedText
-                }`}
+                className={styles.truncatedText}
               >
-                {truncateWithEllipsis(description, charLimit) ||
-                  (isExample ? "Click to add a description..." : "")}
+                {truncateWithEllipsis(description, charLimit)}
               </Typography>
             </CustomTooltip>
           ) : (
@@ -98,12 +94,10 @@ export const EditableSurveyDescription = ({
                 color: description ? "inherit" : "gray",
                 flexGrow: 1,
               }}
-              className={`${
-                isExample ? styles.exampleTruncatedText : styles.truncatedText
-              }`}
+              className={styles.truncatedText}
             >
               {truncateWithEllipsis(description, charLimit) ||
-                (!isExample && isEditable ? "Click to add a description..." : "")}
+                ( isEditable ? "Click to add a description..." : "")}
             </Typography>
           )}
           {isEditable && (

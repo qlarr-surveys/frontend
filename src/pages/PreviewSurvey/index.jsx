@@ -3,16 +3,13 @@ import styles from "./PreviewSurvey.module.css";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import React, { useState } from "react";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
-import { Box, Chip, FormControl, IconButton, InputLabel, MenuItem, Select, Tab, Tabs } from "@mui/material";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import { isSurveyAdmin } from "~/constants/roles";
-import { SurveyClone } from "~/components/manage/SurveyClone";
+import { Box, Chip, FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from "@mui/material";
 import { BG_COLOR } from "~/constants/theme";
 import { PREVIEW_MODE, routes } from "~/routes";
 import { Close } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
-function PreviewSurvey({ guest = false }) {
+function PreviewSurvey() {
   const navigate = useNavigate();
 
   const { t } = useTranslation("run");
@@ -25,20 +22,13 @@ function PreviewSurvey({ guest = false }) {
 
 
   const [navigationMode, setNavigationMode] = useState(searchParams.get("navigation_mode") || "GROUP_BY_GROUP");
-  const [lang, setLang] = useState(searchParams.get("lang"));
+  const lang = useState(searchParams.get("lang"));
   const surveyId = getparam(useParams(), "surveyId");
 
-  const surveyModel = {
-    id: surveyId,
-    example: true,
-  };
 
   const withEmbeddedParam = (surveyId, previewMode, lang) => {
     return (
-      (guest
-        ? routes.iframePreviewGuestSurvey
-        : routes.iframePreviewSurvey
-      ).replace(":surveyId", surveyId) +
+      routes.iframePreviewSurvey.replace(":surveyId", surveyId) +
       "?mode=" +
       previewMode +
       (lang ? "&lang=" + lang : "")+
@@ -54,7 +44,6 @@ function PreviewSurvey({ guest = false }) {
     setNavigationMode(event.target.value);
   };
 
-  const [openCloneModal, setOpenCloneModal] = useState(false);
   return (
     <>
       <Box
@@ -70,16 +59,6 @@ function PreviewSurvey({ guest = false }) {
           style={{ marginLeft: "auto", marginRight: "auto" }} 
         />
       </Box>
-      <SurveyClone
-        open={openCloneModal}
-        onClose={(cloned) => {
-          setOpenCloneModal(false);
-          if (cloned) {
-            navigate(-1);
-          }
-        }}
-        survey={surveyModel}
-      />
 
       <Box
         display="flex"
@@ -127,17 +106,6 @@ function PreviewSurvey({ guest = false }) {
             </Select>
           </FormControl>
         </Box>
-
-        {guest && isSurveyAdmin() && (
-          <IconButton
-            className={styles.iconButton}
-            aria-label="stop"
-            size="large"
-            onClick={() => setOpenCloneModal(true)}
-          >
-            <FileCopyIcon color="primary" />
-          </IconButton>
-        )}
       </Box>
 
       <div

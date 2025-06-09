@@ -29,7 +29,7 @@ import RunLoadingDots from "~/components/common/RunLoadingDots";
 import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
 import SurveyAppBar from "~/components/run/SurveyAppBar";
 
-function RunSurvey({ preview, guest, mode, resume = false, responseId, navigationMode }) {
+function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }) {
   const runService = useService("run");
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -96,7 +96,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId, navigatio
   };
 
   const startNav = () => {
-    startNavigation(runService, lang, preview, guest, mode, navigationMode)
+    startNavigation(runService, lang, preview, mode, navigationMode)
       .then((response) => {
         setRender(true);
         dispatch(stateReceived({ response, preview }));
@@ -111,7 +111,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId, navigatio
 
   const continueNav = (payload, responseId) => {
     dispatch(setFetching(true));
-    continueNavigation(runService, payload, responseId, preview, guest, mode)
+    continueNavigation(runService, payload, responseId, preview, mode)
       .then((response) => {
         setRender(true);
         dispatch(stateReceived({ response, preview }));
@@ -134,7 +134,7 @@ function RunSurvey({ preview, guest, mode, resume = false, responseId, navigatio
   useEffect(() => {
     document.body.style.overflow = "visible";
     dispatch(setFetching(true));
-    loadScript(runService, preview, guest)
+    loadScript(runService, preview)
       .then(() => {
         if (resume) {
           continueNav({ navigationDirection: { name: "RESUME" } }, responseId);

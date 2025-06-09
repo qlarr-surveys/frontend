@@ -89,7 +89,6 @@ const bgHeader = (status) => {
 
 const Survey = ({
   survey,
-  example = false,
   highlight,
   onClone,
   onDelete,
@@ -207,9 +206,8 @@ const Survey = ({
               <Box className={styles.absoluteOverlay}>
                 <EditableSurveyTitle
                   survey={survey}
-                  isExample={example}
                   onSave={handleChangeTitle}
-                  isEditable={isSurveyAdmin() && !example}
+                  isEditable={isSurveyAdmin()}
                 />
               </Box>
 
@@ -219,14 +217,14 @@ const Survey = ({
                     component="img"
                     image={
                       survey.image
-                        ? buildResourceUrl(survey.image, survey.id, example)
+                        ? buildResourceUrl(survey.image, survey.id)
                         : "/qlarr.png"
                     }
                     height="150"
                   />
                   <Box className={styles.imageOverlay} />
 
-                  {isSurveyAdmin() && !survey.example && (
+                  {isSurveyAdmin() && (
                     <Box
                       className={styles.photoIcon}
                       onClick={(e) => {
@@ -252,12 +250,11 @@ const Survey = ({
 
             <EditableSurveyDescription
               survey={survey}
-              isExample={example}
               onSave={handleChangeDescription}
-              isEditable={isSurveyAdmin() && !example}
+              isEditable={isSurveyAdmin()}
             />
 
-            {!example && (
+            {(
               <>
                 <div className={styles.statusAndIcons}>
                   <CustomTooltip
@@ -281,8 +278,7 @@ const Survey = ({
                   </CustomTooltip>
 
                   <div className={styles.statusIcons}>
-                    {!example &&
-                      survey.status !== "closed" &&
+                    {survey.status !== "closed" &&
                       survey.latestVersion.published === false && (
                         <CustomTooltip
                           title={t("label.unpublished_changes")}
@@ -342,7 +338,7 @@ const Survey = ({
             <span style={{ margin: "0 0.5rem" }}>•</span>
             <strong>{t("edit_survey.metadata.last_modified")}</strong>: {fDate(survey.lastModified)}
           </Typography>
-          {!example && survey.startDate && (
+          { survey.startDate && (
             <Typography
               variant="caption"
               sx={{ px: 3, color: "text.disabled" }}
@@ -352,7 +348,7 @@ const Survey = ({
             </Typography>
           )}
 
-          {!example && survey.endDate && (
+          {survey.endDate && (
             <Typography
               variant="caption"
               sx={{ px: 3, color: "text.disabled" }}
@@ -388,21 +384,14 @@ const Survey = ({
               size="large"
               onClick={(e) => {
                 e.stopPropagation();
-                const targetUrl = survey.example
-                  ? `/guest/preview/${survey.id}`
-                  : `/design-survey/${survey.id}`;
-                navigate(targetUrl);
+                navigate(`/design-survey/${survey.id}`);
               }}
             >
-              {!example ? (
-                <ArticleIcon sx={{ color: "#fff" }} />
-              ) : (
-                <VisibilityIcon sx={{ color: "#fff" }} />
-              )}
+              <ArticleIcon sx={{ color: "#fff" }} />
             </IconButton>
           </CustomTooltip>
 
-          {isSurveyAdmin() && !example && survey.status === "active" && (
+          {isSurveyAdmin() && survey.status === "active" && (
             <CustomTooltip
               showIcon={false}
               title={t("edit_survey.close_title")}
@@ -433,7 +422,7 @@ const Survey = ({
             </CustomTooltip>
           )}
 
-          {!example && survey.status !== STATUS.ACTIVE && (
+          {survey.status !== STATUS.ACTIVE && (
             <CustomTooltip showIcon={false} title={t("action_btn.delete")}>
               <IconButton
                 className={styles.iconButton}

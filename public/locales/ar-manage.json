@@ -159,9 +159,8 @@
   },
   "my_surveys": "استبياناتك",
   "new_survey": "استبيان جديد",
-  "example_surveys": "نماذج إستطلاع",
+  "reset_filter":"إعادة تعيين فلتر الاستطلاع",
   "create_new_survey": "إنشاء استطلاع جديد",
-  "copy_example_surveys": "نسخ نماذج إستطلاع",
   "import_survey": "تحميل استطلاع",
   "password_required": "كلمة المرور مطلوبة",
   "processed_errors": {
