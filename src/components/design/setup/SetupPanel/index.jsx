@@ -25,6 +25,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import Theming from "../Theming";
 import { ManageLanguages } from "~/pages/manage/ManageTranslations";
 import { useTheme } from "@emotion/react";
+import NumericValue from "../NumericValue";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -140,6 +141,13 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           code={code}
         />
       );
+
+    case "minHeaderMobile":
+    case "minHeaderDesktop":
+    case "minOptionMobile":
+    case "minOptionDesktop":
+      return <NumericValue t={t} code={code} rule={rule} />;
+
     case "showWordCount":
       return (
         <ToggleValue
@@ -436,6 +444,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
 
 const SetupSection = React.memo(
   ({ expanded, highlighted, code, rule, isSingleRule, t, toggleExpand }) => {
+    console.log("rule", rule);
+
     return (
       <Accordion
         expanded={expanded}
