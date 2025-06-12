@@ -1,8 +1,8 @@
 import React from "react";
-import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
 import { changeAttribute } from "~/state/design/designState";
-import { InputAdornment } from "@mui/material";
+import { MenuItem } from "@mui/material";
+import { RHFSelect } from "~/components/hook-form";
 
 const LABEL_MAP = {
   minHeaderMobile: "Min Header Column Width (Mobile)",
@@ -11,7 +11,9 @@ const LABEL_MAP = {
   minOptionDesktop: "Min Option Column Width (Desktop)",
 };
 
-function NumericValue({ code, rule, t, step = 1 }) {
+const WIDTH_OPTIONS = [60, 90, 120, 150, 180];
+
+function NumericValue({ code, rule, t }) {
   const dispatch = useDispatch();
 
   const value = useSelector((state) => {
@@ -19,26 +21,28 @@ function NumericValue({ code, rule, t, step = 1 }) {
     return typeof storedValue === "number" ? storedValue : "";
   });
 
-  const handleChange = (e) => {
-    const newValue = parseInt(e.target.value, 10);
+  const handleChange = (event) => {
+    const newValue = parseInt(event.target.value, 10);
     if (!isNaN(newValue)) {
       dispatch(changeAttribute({ code, key: rule, value: newValue }));
     }
   };
 
   return (
-    <TextField
+    <RHFSelect
       key={code + rule}
+      name={`${code}.${rule}`}
       label={t(LABEL_MAP[rule] || rule)}
-      type="number"
-      sx={{ mb: 1 }}
-      inputProps={{ step }}
       value={value}
-      InputProps={{
-        endAdornment: <InputAdornment position="end">px</InputAdornment>,
-      }}
       onChange={handleChange}
-    />
+      sx={{ mb: 1 }}
+    >
+      {WIDTH_OPTIONS.map((option) => (
+        <MenuItem key={option} value={option}>
+          {option}px
+        </MenuItem>
+      ))}
+    </RHFSelect>
   );
 }
 
