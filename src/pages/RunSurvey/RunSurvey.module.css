@@ -1,6 +1,6 @@
 .mainContainer {
   margin: auto;
-  min-height: 100vh;
+  height: 100%;
   overflow: auto;
   padding-top: var(--safe-area-inset-top);
   padding-right: var(--safe-area-inset-right);
