@@ -13,7 +13,7 @@ import styles from "./Header.module.css";
 import { LanguageSelector } from "../LanguageSelector";
 import { MANAGE_SURVEY_LANDING_PAGES, routes } from "~/routes";
 import { useDispatch } from "react-redux";
-import { setLoading } from "~/state/edit/editState";
+import { onEditErrorSeen, setLoading } from "~/state/edit/editState";
 import { isSuperAdmin } from "~/constants/roles";
 import { useSelector } from "react-redux";
 import { isSessionRtl } from "~/utils/common";
@@ -67,7 +67,10 @@ export const Header = () => {
   return (
     <Box className={styles.header}>
       <Box
-        onClick={() => nav("/")}
+        onClick={() => {
+          dispatch(onEditErrorSeen());
+          nav("/");
+        }}
         gap="12px"
         className={isRtl ? styles.imageContainerRtl : styles.imageContainer}
       >
