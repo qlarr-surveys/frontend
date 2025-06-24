@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { useResponsive } from '~/hooks/use-responsive';
 
 export const isEquivalent = (a, b) => {
@@ -170,9 +171,9 @@ export const nextId = (elements) => {
 export const stripTags = (string) => {
   return string
     ? string
-      .replace(/<[^>]*>?/gm, "")
-      .replace("\n", "")
-      .replace("&nbsp;", "")
+        .replace(/<[^>]*>?/gm, "")
+        .replace("\n", "")
+        .replace("&nbsp;", "")
     : string;
 };
 
@@ -200,11 +201,41 @@ export const lastIndexInArray = (array, func) => {
   return -1;
 };
 
-export const isNotEmptyHtml = (value) => value && /[^<br><p><\/p>\s]/gm.test(value)
+export const isNotEmptyHtml = (value) =>
+  value && /[^<br><p><\/p>\s]/gm.test(value);
+
+// export const columnMinWidth = () => {
+//   const isDesktop = useResponsive("up", "lg");
+//   const isTablet = useResponsive("between", "md", "lg");
+//   const isMobile = useResponsive("down", "sm");
+  
+//   return isDesktop ? "120" : isTablet ? "120" : "90";
+// };
 
 
-export const columnMinWidth = ()=>{
-  const isDesktop = useResponsive("up", "lg");
-  const isTablet = useResponsive("between", "md", "lg");
-  return isDesktop ? "120" : isTablet ? "120" : "90";
-}
+export const columnMinWidth = (code) => {
+  const isDesktop = useResponsive("up", "lg");       
+  const isTablet = useResponsive("between", "md", "lg"); 
+  const isMobile = useResponsive("down", "sm");       
+
+  const widthSetups = useSelector((state) => state.designState?.[code] || {});
+
+  const {
+    minHeaderDesktop = 120,
+    minHeaderMobile = 120,
+    minOptionDesktop = 100,
+    minOptionMobile = 90,
+  } = widthSetups;
+
+  if (isDesktop || isTablet) {
+    return {
+      header: `${minHeaderDesktop}`,
+      option: `${minOptionDesktop}`,
+    };
+  }
+
+  return {
+    header: `${minHeaderMobile}`,
+    option: `${minOptionMobile}`,
+  };
+};
