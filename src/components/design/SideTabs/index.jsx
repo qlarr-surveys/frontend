@@ -65,8 +65,9 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
             link={routes.preview.replace(":surveyId", surveyId)}
             icon={<Visibility sx={{ color: "#fff" }} />}
             onClick={() => {
-              onPageChange(MANAGE_SURVEY_LANDING_PAGES.PREVIEW);
+              window.open(routes.preview.replace(":surveyId", surveyId), '_blank');
             }}
+            isLink={false}
           />
         )}
         {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.SETTINGS) && (
@@ -111,16 +112,24 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
 
 export default React.memo(SideTabs);
 
-function SideTab({ tooltip, style, link, onClick, icon }) {
+function SideTab({ tooltip, style, link, onClick, icon, isLink = true }) {
   return (
     <CustomTooltip showIcon={false} title={tooltip} placement="right">
-      <Link to={link} onClick={() => onClick()}>
+      {isLink ? (
+        <Link to={link} onClick={() => onClick()}>
+          <ListItem disablePadding style={style}>
+            <ListItemButton>
+              <ListItemIcon>{icon}</ListItemIcon>
+            </ListItemButton>
+          </ListItem>
+        </Link>
+      ) : (
         <ListItem disablePadding style={style}>
-          <ListItemButton>
+          <ListItemButton onClick={() => onClick()}>
             <ListItemIcon>{icon}</ListItemIcon>
           </ListItemButton>
         </ListItem>
-      </Link>
+      )}
     </CustomTooltip>
   );
 }

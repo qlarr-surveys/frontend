@@ -9,10 +9,10 @@ import { useTheme } from "@mui/material/styles";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import { useSelector } from "react-redux";
 import {
-  addNewAnswer,
   cloneQuestion,
   deleteQuestion,
   onDrag,
+  setup,
 } from "~/state/design/designState";
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
@@ -20,7 +20,7 @@ import { useDrag, useDrop } from "react-dnd";
 import ActionToolbar from "~/components/design/ActionToolbar";
 import QuestionDesignBody from "./QuestionDesignBody";
 import { getContrastColor, questionIconByType } from "../Questions/utils";
-import { hasMajorSetup } from "~/constants/design";
+import { setupOptions } from "~/constants/design";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function QuestionDesign({
@@ -46,6 +46,10 @@ function QuestionDesign({
     return state.designState.setup?.code == code;
   });
 
+  const order = useSelector((state) => {
+    return  state.designState.index[code];
+  });
+
   const question = useSelector((state) => {
     return state.designState[code];
   });
@@ -57,10 +61,6 @@ function QuestionDesign({
       state.designState["globalSetup"]?.reorder_setup === "collapse_questions"
     );
   });
-
-  const noMajorSetup = useSelector(
-    (state) => !hasMajorSetup(state.designState.setup)
-  );
 
   const onDelete = useCallback(() => dispatch(deleteQuestion(code)), []);
   const onClone = useCallback(() => dispatch(cloneQuestion(code)), []);
@@ -137,74 +137,6 @@ function QuestionDesign({
 
   drop(preview(containerRef));
 
-  const addAnswer = React.useCallback(
-    (questionCode, questionType, type) => {
-      const answers = children || [];
-      let nextAnswerIndex = 1;
-      let code = "";
-      let qualifiedCode = "";
-      let label = "";
-
-      switch (type) {
-        case "column":
-          nextAnswerIndex = nextId(
-            answers.filter((el) => el.type === "column")
-          );
-          label = "Col " + nextAnswerIndex;
-          code = "Ac" + nextAnswerIndex;
-          qualifiedCode = questionCode + code;
-          dispatch(
-            addNewAnswer({ label, answer: { code, qualifiedCode, type } })
-          );
-          break;
-        case "row":
-          nextAnswerIndex = nextId(answers.filter((el) => el.type === "row"));
-          code = "A" + nextAnswerIndex;
-          label = "Row " + nextAnswerIndex;
-          qualifiedCode = questionCode + code;
-          dispatch(
-            addNewAnswer({
-              label,
-              answer: { code, qualifiedCode, type },
-            })
-          );
-          break;
-        case "other":
-          code = "Aother";
-          label = "Other";
-          qualifiedCode = questionCode + code;
-          dispatch(
-            addNewAnswer({
-              label,
-              answer: { code, qualifiedCode, type },
-            })
-          );
-          dispatch(
-            addNewAnswer({
-              answer: {
-                code: "Atext",
-                qualifiedCode: qualifiedCode + "Atext",
-                type: "other_text",
-              },
-            })
-          );
-          break;
-        default:
-          nextAnswerIndex = nextId(answers);
-          code = "A" + nextAnswerIndex;
-          label = "Option " + nextAnswerIndex;
-          qualifiedCode = questionCode + code;
-          dispatch(
-            addNewAnswer({
-              label,
-              answer: { code, qualifiedCode },
-            })
-          );
-          break;
-      }
-    },
-    [children]
-  );
 
   const contrastColor = getContrastColor(theme.palette.background.paper);
   const textColor = theme.textStyles.question.color;
@@ -244,6 +176,11 @@ function QuestionDesign({
     lastAddedComponent.questionIndex === index;
   return (
     <div
+      onClick={(event) => {
+        event.stopPropagation();
+        event.preventDefault();
+        dispatch(setup({ code, rules: setupOptions(type) }));
+      }}
       ref={containerRef}
       onMouseEnter={() => {
         setHovered(true);
@@ -288,25 +225,27 @@ function QuestionDesign({
         )}
       </Box>
 
-      <Box className={styles.titleContainer}>
+      <Box
+        className={styles.titleContainer}
+        style={{
+          fontFamily: theme.textStyles.question.font,
+          color: theme.textStyles.question.color,
+          fontSize: theme.textStyles.question.size,
+        }}
+      >
         <Box className={styles.iconBox}>
           {questionIconByType(`${type}`, undefined, textColor)}
+          <span style={{ width: "max-content" }}>{order}.</span>
         </Box>
-        <div
-          className={styles.titleQuestion}
-          style={{
-            fontFamily: theme.textStyles.question.font,
-            color: theme.textStyles.question.color,
-            fontSize: theme.textStyles.question.size,
-          }}
-        >
+
+        <div className={styles.titleQuestion}>
           <ContentEditor
             code={code}
             editable={
               designMode == DESIGN_SURVEY_MODE.DESIGN ||
               designMode == DESIGN_SURVEY_MODE.LANGUAGES
             }
-            extended={type=="text_display"}
+            extended={type == "text_display"}
             placeholder={t("content_editor_placeholder_title")}
             contentKey="label"
           />
@@ -333,10 +272,8 @@ function QuestionDesign({
           code={code}
           type={type}
           t={t}
-          addAnswer={addAnswer}
           designMode={designMode}
           onMainLang={onMainLang}
-          addNewAnswer={addAnswer}
         />
       </Collapse>
       <ErrorDisplay code={code} />

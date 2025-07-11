@@ -261,21 +261,16 @@ const Question = forwardRef((props, ref) => {
       {showHeader && (
         <>
           {showTitle && (
-            <Box
-              style={{
-                fontFamily: theme.textStyles.question.font,
-                color: theme.textStyles.text.color,
-                fontSize: theme.textStyles.question.size,
-              }}
-            >
-              <Content
-                className={`${styles.content} ${styles.question}`}
-                name="label"
-                lang={props.lang}
-                elementCode={props.component.qualifiedCode}
-                content={props.component.content?.label}
-              />
-            </Box>
+            <Content
+              className={`${styles.content} ${styles.question}`}
+              name="label"
+              lang={props.lang}
+              fontFamily={theme.textStyles.question.font}
+              color={theme.textStyles.text.color}
+              fontSize={theme.textStyles.question.size}
+              elementCode={props.component.qualifiedCode}
+              content={props.component.content?.label}
+            />
           )}
           {showDescription && (
             <Box className={styles.textDescription}>

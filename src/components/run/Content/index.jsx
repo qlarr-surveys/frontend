@@ -34,6 +34,11 @@ function Content(props) {
   } else if (!isComplex) {
     return (
       <div
+        style={{
+          fontFamily: props.fontFamily,
+          color: props.color,
+          fontSize: props.fontSize + "px",
+        }}
         className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
         dangerouslySetInnerHTML={{ __html: props.content }}
       />
@@ -41,6 +46,11 @@ function Content(props) {
   } else {
     return (
       <div
+        style={{
+          fontFamily: props.fontFamily,
+          color: props.color,
+          fontSize: props.fontSize + "px",
+        }}
         className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
         dangerouslySetInnerHTML={{
           __html: replaceMentions(props.content, state),

@@ -104,7 +104,6 @@ export const reorder = (list, startIndex, endIndex) => {
 };
 
 export const nextGroupId = (groups) => {
-  console.log(groups)
   if (groups && groups.length) {
       const codes = groups.map((group) => parseInt(group.code.replace("G", "")))
         .filter((code) =>typeof code === 'number' && !Number.isNaN(code))

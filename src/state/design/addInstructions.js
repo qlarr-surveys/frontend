@@ -628,12 +628,12 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
       return booleanActiveInstruction(key, instructionText);
     case "validation_equals":
       instructionText =
-        `QlarrScripts.isVoid(${qualifiedCode}.value) ` +
+        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
         `&& ${qualifiedCode}.value != ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_not_equal":
       instructionText =
-        `QlarrScripts.isVoid(${qualifiedCode}.value) ` +
+        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
         `&& ${qualifiedCode}.value == ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_option_count":

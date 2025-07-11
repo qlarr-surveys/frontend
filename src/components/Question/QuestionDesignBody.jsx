@@ -19,7 +19,7 @@ import ChoiceQuestion from "../Questions/Choice/ChoiceDesign";
 import ImageChoiceQuestion from "../Questions/Imagechoice/ImageChoiceDesign";
 import SCQIconArrayDesign from "../Questions/SCQArray/SCQIconArrayDesign";
 
-function QuestionDesignBody({ code, type, t, onMainLang, addAnswer, designMode }) {
+function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
   switch (type) {
     case "video_display":
       return (
@@ -58,7 +58,6 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer, designMode }
           t={t}
           designMode={designMode}
           onMainLang={onMainLang}
-          addNewAnswer={addAnswer}
           code={code}
           type="radio"
         />
@@ -72,7 +71,6 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer, designMode }
           t={t}
           onMainLang={onMainLang}
           designMode={designMode}
-          addNewAnswer={addAnswer}
           code={code}
         />
       );
@@ -85,7 +83,6 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer, designMode }
           t={t}
           onMainLang={onMainLang}
           designMode={designMode}
-          addNewAnswer={addAnswer}
           code={code}
         />
       );
@@ -96,7 +93,6 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer, designMode }
           key={code}
           type={type}
           designMode={designMode}
-          addNewAnswer={addAnswer}
           code={code}
           t={t}
         />
@@ -108,7 +104,6 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer, designMode }
           key={code}
           type={type}
           designMode={designMode}
-          addNewAnswer={addAnswer}
           code={code}
           t={t}
         />
@@ -120,7 +115,6 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer, designMode }
         <ChoiceQuestion
           key={code}
           designMode={designMode}
-          addNewAnswer={addAnswer}
           code={code}
           onMainLang={onMainLang}
           t={t}
@@ -133,7 +127,6 @@ function QuestionDesignBody({ code, type, t, onMainLang, addAnswer, designMode }
           key={code}
           designMode={designMode}
           onMainLang={onMainLang}
-          addNewAnswer={addAnswer}
           code={code}
           t={t}
           type="ranking"

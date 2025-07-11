@@ -510,8 +510,3 @@ export const setupOptions = (type) => {
       ];
   }
 };
-
-
-const majorSetup = [themeSetup, reorderSetup, languageSetup]
-
-export const hasMajorSetup = (setup) => setup?.code === "Survey" || setup?.code === "globalSetup"

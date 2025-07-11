@@ -283,7 +283,7 @@ const operators = {
   },
   select_any_in: {
     ...InitialConfig.operators.select_any_in,
-    label: "is any of",
+    label: "Has Any Selected",
     jsonLogic: "in",
     formatOp: (
       field,
@@ -304,7 +304,7 @@ const operators = {
   },
   select_not_any_in: {
     ...InitialConfig.operators.select_not_any_in,
-    label: "Is none of",
+    label: "Has None Selected",
     jsonLogic: "not_in",
     formatOp: (
       field,

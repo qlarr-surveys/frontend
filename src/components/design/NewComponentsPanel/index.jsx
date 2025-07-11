@@ -95,12 +95,6 @@ export const createGroup = (groupType, gId) => {
   let code = `G${gId}`;
   let state = {
     groupType,
-    content: {
-      en: {
-        label: `Page ${gId}`,
-      },
-      description: {},
-    },
   };
   let newGroup = {
     code,

@@ -1,13 +1,15 @@
 import React from "react";
 import styles from "./ImageChoiceDesign.module.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Box, Grid } from "@mui/material";
 import ImageChoiceItemDesign from "./ImageChoiceItemDesign";
 import IconChoiceItemDesign from "../Iconchoice/IconChoiceItemDesign";
-import { inDesign } from '~/routes';
+import { inDesign } from "~/routes";
+import { addNewAnswer } from "~/state/design/designState";
 
 function ImageChoiceQuestion(props) {
+  const dispatch = useDispatch();
   const state = useSelector((state) => {
     return state.designState[props.code];
   });
@@ -29,7 +31,6 @@ function ImageChoiceQuestion(props) {
   const spacing = state.spacing || 8;
   const imageHeight = state.iconSize ? +state.iconSize : 64;
 
-  
   const itemWidth = `calc(${100 / columnNumber}% - ${spacing}px)`;
 
   return (
@@ -61,12 +62,13 @@ function ImageChoiceQuestion(props) {
                   hideText={hideText}
                   imageHeight={imageHeight}
                   t={props.t}
-                  addAnswer={() => props.addNewAnswer(props.code, questionType)}
+                  addAnswer={() =>
+                    dispatch(addNewAnswer({ questionCode: props.code }))
+                  }
                   type={item.type}
                   qualifiedCode={item.qualifiedCode}
                 />
               </Box>
-
             ) : (
               <Box
                 key={item.code}
@@ -85,12 +87,15 @@ function ImageChoiceQuestion(props) {
                   designMode={props.designMode}
                   imageHeight={imageHeight}
                   t={props.t}
-                  addAnswer={() => props.addNewAnswer(props.code, questionType)}
+                  addAnswer={() =>
+                    dispatch(
+                      addNewAnswer({ questionCode: props.code })
+                    )
+                  }
                   type={item.type}
                   qualifiedCode={item.qualifiedCode}
                 />
               </Box>
-
             )
           )}
         </Box>

@@ -14,38 +14,37 @@ import {
   useTheme,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
+  addNewAnswer,
   changeContent,
   onDrag,
+  onNewLine,
   removeAnswer,
+  resetFocus,
 } from "~/state/design/designState";
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
 import { inDesign } from "~/routes";
-import { useResponsive } from '~/hooks/use-responsive';
 import { columnMinWidth } from '~/utils/design/utils';
 
 function SCQArray(props) {
   const theme = useTheme();
+  const dispatch = useDispatch()
   const t = props.t;
   const width = columnMinWidth()
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
   });
-  const onMainLang = langInfo.lang === langInfo.mainLang;
 
   const children = useSelector(
     (state) => state.designState[props.code].children
   );
 
-  const isInSetup = useSelector((state) => {
-    return state.designState.setup?.code == props.code;
-  });
 
   const rows = React.useMemo(
     () => children?.filter((el) => el.type == "row") || [],
@@ -68,9 +67,7 @@ function SCQArray(props) {
               color: theme.textStyles.question.color,
             }}
             size="small"
-            onClick={(e) =>
-              props.addNewAnswer(props.code, props.type, "column")
-            }
+            onClick={(e) => dispatch(addNewAnswer({questionCode:props.code, type:"column"}))}
           >
             {t("add_column")}
           </Button>
@@ -125,7 +122,7 @@ function SCQArray(props) {
               return (
                 <SCQArrayRowDesign
                   width={width}
-                  parentQualifiedCode={props.qualifiedCode}
+                  parentQualifiedCode={props.code}
                   langInfo={langInfo}
                   t={props.t}
                   designMode={props.designMode}
@@ -148,7 +145,7 @@ function SCQArray(props) {
               color: theme.textStyles.question.color,
             }}
             size="small"
-            onClick={(e) => props.addNewAnswer(props.code, props.type, "row")}
+            onClick={(e) => dispatch(addNewAnswer({questionCode:props.code, type:"row"}))}
           >
             {t("add_row")}
           </Button>
@@ -173,6 +170,7 @@ function SCQArrayRowDesign({
   const dispatch = useDispatch();
   const theme = useTheme();
   const ref = useRef();
+  const inputRef = useRef();
 
   const onMainLang = langInfo.lang === langInfo.mainLang;
 
@@ -180,6 +178,10 @@ function SCQArrayRowDesign({
     return state.designState[item.qualifiedCode].content?.[langInfo.lang]?.[
       "label"
     ];
+  });
+
+  const inFocus = useSelector((state) => {
+    return state.designState.focus == item.qualifiedCode;
   });
 
   const mainContent = useSelector((state) => {
@@ -200,6 +202,17 @@ function SCQArrayRowDesign({
     },
     [index]
   );
+
+  useEffect(() => {
+    if (inFocus) {
+      // Use setTimeout to ensure the DOM is ready
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, 10);
+    }
+  }, [inFocus, inputRef.current]);
 
   const [{ handlerId }, drop] = useDrop({
     accept: itemType,
@@ -267,17 +280,24 @@ function SCQArrayRowDesign({
             </div>
           )}
           <TextField
+            inputRef={inputRef}
             variant="standard"
             value={content || ""}
             onChange={(e) => {
-              dispatch(
-                changeContent({
-                  code: item.qualifiedCode,
-                  key: "label",
-                  lang: langInfo.lang,
-                  value: e.target.value,
-                })
-              );
+              const value = e.target.value
+              if(value.endsWith("\n") && value.length > 1) {
+                dispatch(onNewLine({questionCode: parentQualifiedCode, index, type: "row"}))
+              } else {
+                dispatch(
+                  changeContent({
+                    code: item.qualifiedCode,
+                    key: "label",
+                    lang: langInfo.lang,
+                    value: e.target.value,
+                  })
+                );
+              }
+              
             }}
             placeholder={
               onMainLang

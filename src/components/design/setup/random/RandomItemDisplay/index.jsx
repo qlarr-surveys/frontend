@@ -8,12 +8,12 @@ export const randomOptionToText = (randomOption, t) => {
   switch (randomOption) {
     case "ALPHA":
       return t("sort_by_label");
-    case "RANDOM":
-      return t("random_order");
     case "FLIP":
       return t("flip_order");
+    case "RANDOM":
+    default:
+      return t("random_order");
   }
-  throw "unidentified randomOption: " + randomOption;
 };
 
 export default function RandomItemDisplay(props) {

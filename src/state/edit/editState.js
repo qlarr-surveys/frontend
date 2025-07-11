@@ -3,7 +3,13 @@ import { isEquivalent } from "~/utils/design/utils";
 
 export const editState = createSlice({
   name: "editState",
-  initialState: { state: {} },
+  initialState: { 
+    state: {},
+    error: null,
+    isSaving: false,
+    isUpdating: false,
+    loading: false
+  },
   reducers: {
     setSaving: (state, action) => {
       state.isSaving = action.payload;
@@ -29,12 +35,14 @@ export const editState = createSlice({
       state.survey[payload.key] = payload.value;
     },
     onError: (state, action) => {
-      state.loading = false
+      state.loading = false;
       state.error = action.payload;
     },
     onEditErrorSeen: (state) => {
-      state.error.seen = true;
-    },
+      if (state.error) {
+        state.error.seen = true;
+      }
+    }
   },
 });
 
