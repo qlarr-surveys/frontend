@@ -262,13 +262,15 @@ function ImageChoiceItemDesign({
                 }}
                 component="label"
                 className={styles.imageIconButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
               >
                 <PhotoCamera />
                 <input
                   hidden
-                  id={qualifiedCode}
+                  id={`file-input-${qualifiedCode}`}
                   accept="image/*"
-                  multiple
                   type="file"
                   onChange={handleImageChange}
                 />

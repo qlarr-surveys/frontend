@@ -18,7 +18,7 @@ function ContentEditor({ placeholder, extended, contentKey, onNewLine,code,onMor
   });
 
   const focus = useSelector((state) => {
-    return state.designState["focus"] == code;
+    return contentKey == "label" && state.designState["focus"] == code;
   });
 
   const langInfo = useSelector((state) => {

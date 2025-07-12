@@ -18,6 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
   addNewAnswer,
+  addNewAnswers,
   changeContent,
   changeResources,
   onDrag,
@@ -33,6 +34,7 @@ import { buildResourceUrl } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
+import { sanitizePastedText } from '~/components/design/ContentEditor/QuillEditor';
 
 function SCQIconArrayDesign(props) {
   const theme = useTheme();
@@ -292,20 +294,38 @@ function SCQArrayRowDesign({
             inputRef={inputRef}
             value={content || ""}
             onChange={(e) => {
-              const value = e.target.value
-              if(value.endsWith("\n") && value.length > 1) {
-                dispatch(onNewLine({questionCode: parentQualifiedCode, index, type: "row"}))
+              const value = e.target.value;
+              if (value.endsWith("\n")) {
+                dispatch(
+                  onNewLine({
+                    questionCode: parentQualifiedCode,
+                    index,
+                    type: "row",
+                  })
+                );
               } else {
+                const sanitizedText = sanitizePastedText(e.target.value);
+                const text = sanitizedText[0];
+                const rest = sanitizedText.slice(1);
+                if (rest.length > 0) {
+                  dispatch(
+                    addNewAnswers({
+                      questionCode: parentQualifiedCode,
+                      index,
+                      type: "row",
+                      data: rest,
+                    })
+                  );
+                }
                 dispatch(
                   changeContent({
                     code: item.qualifiedCode,
                     key: "label",
                     lang: langInfo.lang,
-                    value: e.target.value,
+                    value: text,
                   })
                 );
               }
-              
             }}
             placeholder={
               onMainLang

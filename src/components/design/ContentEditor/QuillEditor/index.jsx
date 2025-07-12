@@ -186,7 +186,6 @@ function DraftEditor({
             if (rest.length > 0) {
               onMoreLines(rest);
             }
-          } else if (typeof onNewLine === "function") {
           } else {
             const delta = new Delta()
               .retain(range.index)
@@ -233,9 +232,8 @@ function DraftEditor({
   };
 
   const onChange = (value) => {
-    console.log(value);
     onFocus();
-    if(!extended && onNewLine && value.endsWith("<p><br></p>") && value!="<p><br></p>"&& value!="<p><br></p><p><br></p>") {
+    if(!extended && onNewLine && value.endsWith("<p><br></p>")) {
       onNewLine(value);
     } else {
       setState(oneLine(value, !extended));
@@ -272,7 +270,7 @@ function DraftEditor({
 
 export default React.memo(DraftEditor);
 
-function sanitizePastedText(text) {
+export function sanitizePastedText(text) {
   // Split text around newlines
   const lines = text.split(/\r?\n/);
 

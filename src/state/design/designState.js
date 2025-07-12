@@ -236,9 +236,10 @@ export const designState = createSlice({
     addNewAnswers: (state, action) => {
       const questionCode = action.payload.questionCode;
       const data = action.payload.data;
+      const type = action.payload.type;
       let index = action.payload.index;
       const question = state[questionCode];
-      const children = question.children || [];
+      const children = question.children?.filter((it) => state[it.qualifiedCode].type == type) || [];
       data.forEach((item, itemIndex) => {
         if (item) {
           const nextAnswer = children[index + 1];
@@ -262,8 +263,9 @@ export const designState = createSlice({
               payload: {
                 questionCode,
                 label: item,
+                type,
                 index,
-                focus: itemIndex == data.length - 1 ,
+                focus: itemIndex == data.length - 1,
               },
             });
           }
@@ -276,14 +278,21 @@ export const designState = createSlice({
       const questionCode = action.payload.questionCode;
       const index = action.payload.index;
       const type = action.payload.type;
-      designState.caseReducers.addNewAnswer(state, {
-        payload: {
-          questionCode,
-          type,
-          index,
-        },
-      });
-
+      const answers = state[questionCode].children || [];
+      const nextAnswerOfSameType = answers.filter(
+        (answer) => answer.type == type
+      )[index + 1];
+      if (nextAnswerOfSameType && nextAnswerOfSameType.qualifiedCode) {
+        state.focus = nextAnswerOfSameType.qualifiedCode;
+      } else {
+        designState.caseReducers.addNewAnswer(state, {
+          payload: {
+            questionCode,
+            type,
+            index,
+          },
+        });
+      }
     },
     addNewAnswer: (state, action) => {
       const questionCode = action.payload.questionCode;
@@ -328,7 +337,7 @@ export const designState = createSlice({
             qualifiedCode,
             type,
             label,
-            index,  
+            index,
             focus,
           });
           addAnswer(state, {
@@ -791,6 +800,13 @@ const newQuestion = (state, payload) => {
     questionIndex: destinationQuestionIndex,
   };
   cleanupRandomRules(destinationGroup);
+  state.focus = newCode;
+  designState.caseReducers.setup(state, {
+    payload: {
+      code: newCode,
+      rules: setupOptions(payload.questionType),
+    },
+  });
 };
 
 const newGroup = (state, payload) => {
@@ -814,6 +830,13 @@ const newGroup = (state, payload) => {
     index: lastGroupIndex,
   };
   cleanupRandomRules(survey);
+  state.focus = group.newGroup.code;
+  designState.caseReducers.setup(state, {
+    payload: {
+      code: group.newGroup.code,
+      rules: setupOptions(group.newGroup.type),
+    },
+  });
 };
 
 const specialGroup = (state, payload) => {
@@ -918,7 +941,13 @@ const insertAnswer = (state, answer, parentCode, index) => {
     }
     const insertIndex =
       typeof index == "number"
-        ? (typeof answer.type == "string" ? index + firstIndexInArray(component.children, (child) => child.type == answer.type) : index)
+        ? typeof answer.type == "string"
+          ? index +
+            firstIndexInArray(
+              component.children,
+              (child) => child.type == answer.type
+            )
+          : index
         : lastIndexInArray(
             component.children,
             (child) => child.type == answer.type || !child.type

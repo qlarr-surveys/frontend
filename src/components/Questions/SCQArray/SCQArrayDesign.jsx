@@ -14,28 +14,29 @@ import {
   useTheme,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
   addNewAnswer,
+  addNewAnswers,
   changeContent,
   onDrag,
   onNewLine,
   removeAnswer,
-  resetFocus,
 } from "~/state/design/designState";
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
 import { inDesign } from "~/routes";
-import { columnMinWidth } from '~/utils/design/utils';
+import { columnMinWidth } from "~/utils/design/utils";
+import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
 
 function SCQArray(props) {
   const theme = useTheme();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const t = props.t;
-  const width = columnMinWidth()
+  const width = columnMinWidth();
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
@@ -44,7 +45,6 @@ function SCQArray(props) {
   const children = useSelector(
     (state) => state.designState[props.code].children
   );
-
 
   const rows = React.useMemo(
     () => children?.filter((el) => el.type == "row") || [],
@@ -67,7 +67,11 @@ function SCQArray(props) {
               color: theme.textStyles.question.color,
             }}
             size="small"
-            onClick={(e) => dispatch(addNewAnswer({questionCode:props.code, type:"column"}))}
+            onClick={(e) =>
+              dispatch(
+                addNewAnswer({ questionCode: props.code, type: "column" })
+              )
+            }
           >
             {t("add_column")}
           </Button>
@@ -81,7 +85,10 @@ function SCQArray(props) {
         }}
       >
         <Table
-          sx={{ tableLayout: "fixed", minWidth: `${columns.length * width + 20}px` }}
+          sx={{
+            tableLayout: "fixed",
+            minWidth: `${columns.length * width + 20}px`,
+          }}
         >
           <TableHead>
             <TableRow>
@@ -145,7 +152,9 @@ function SCQArray(props) {
               color: theme.textStyles.question.color,
             }}
             size="small"
-            onClick={(e) => dispatch(addNewAnswer({questionCode:props.code, type:"row"}))}
+            onClick={(e) =>
+              dispatch(addNewAnswer({ questionCode: props.code, type: "row" }))
+            }
           >
             {t("add_row")}
           </Button>
@@ -284,20 +293,38 @@ function SCQArrayRowDesign({
             variant="standard"
             value={content || ""}
             onChange={(e) => {
-              const value = e.target.value
-              if(value.endsWith("\n") && value.length > 1) {
-                dispatch(onNewLine({questionCode: parentQualifiedCode, index, type: "row"}))
+              const value = e.target.value;
+              if (value.endsWith("\n")) {
+                dispatch(
+                  onNewLine({
+                    questionCode: parentQualifiedCode,
+                    index,
+                    type: "row",
+                  })
+                );
               } else {
+                const sanitizedText = sanitizePastedText(e.target.value);
+                const text = sanitizedText[0];
+                const rest = sanitizedText.slice(1);
+                if (rest.length > 0) {
+                  dispatch(
+                    addNewAnswers({
+                      questionCode: parentQualifiedCode,
+                      index,
+                      type: "row",
+                      data: rest,
+                    })
+                  );
+                }
                 dispatch(
                   changeContent({
                     code: item.qualifiedCode,
                     key: "label",
                     lang: langInfo.lang,
-                    value: e.target.value,
+                    value: text,
                   })
                 );
               }
-              
             }}
             placeholder={
               onMainLang
@@ -324,7 +351,7 @@ function SCQArrayRowDesign({
             scope="row"
             align="center"
             sx={{
-              padding: "0px"
+              padding: "0px",
             }}
           >
             <Radio
@@ -374,15 +401,15 @@ function SCQArrayHeaderDesign({
   const isLtr = !isRtl;
 
   const content = useSelector((state) => {
-    return state.designState[item.qualifiedCode].content?.[
-      langInfo.lang
-    ]?.["label"];
+    return state.designState[item.qualifiedCode].content?.[langInfo.lang]?.[
+      "label"
+    ];
   });
 
   const mainContent = useSelector((state) => {
-    return state.designState[item.qualifiedCode].content?.[
-      langInfo.mainLang
-    ]?.["label"];
+    return state.designState[item.qualifiedCode].content?.[langInfo.mainLang]?.[
+      "label"
+    ];
   });
   const itemType = `row-${parentQualifiedCode}`;
 
