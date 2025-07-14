@@ -13,6 +13,79 @@ export const addSkipInstructions = (state, code) => {
   });
 };
 
+export const refreshEnumforSingleChoice = (component, state) => {
+  if (
+    !component.type ||
+    !["scq", "icon_scq", "image_scq", "scq_icon_array", "scq_array"].includes(
+      component.type
+    )
+  ) {
+    return;
+  }
+  switch (component.type) {
+    case "image_scq":
+    case "icon_scq":
+    case "scq":
+      let valueInstruction = component.instructionList.find(
+        (it) => it.code == "value"
+      );
+      if (component.children && component.children.length) {
+        valueInstruction.returnType = {
+          type: "enum",
+          values: component.children.map((it) => it.code),
+        };
+        changeInstruction(component, valueInstruction);
+      } else {
+        valueInstruction.returnType = "string";
+        changeInstruction(component, valueInstruction);
+      }
+      break;
+    case "scq_icon_array":
+    case "scq_array":
+      if (
+        component.children &&
+        component.children.length &&
+        component.children.filter((el) => el.type == "column").length &&
+        component.children.filter((el) => el.type === "row").length
+      ) {
+        component.children
+          .filter((el) => el.type === "row")
+          .forEach((el) => {
+            const row = state[el.qualifiedCode];
+            const valueInstruction = row.instructionList.find(
+              (it) => it.code == "value"
+            );
+            if (valueInstruction) {
+              valueInstruction.returnType = {
+                type: "enum",
+                values: component.children
+                  .filter((el) => el.type == "column")
+                  .map((el) => el.code),
+              };
+              changeInstruction(row, valueInstruction);
+            }
+          });
+      } else if (
+        component.children &&
+        component.children.filter((el) => el.type === "row").length
+      ) {
+        component.children
+          .filter((el) => el.type === "row")
+          .forEach((el) => {
+            const row = state[el.qualifiedCode];
+            const valueInstruction = row.instructionList.find(
+              (it) => it.code == "value"
+            );
+            if (valueInstruction) {
+              valueInstruction.returnType = "string";
+              changeInstruction(row, valueInstruction);
+            }
+          });
+      }
+  }
+  return component;
+};
+
 export const addMaskedValuesInstructions = (
   qualifiedCode,
   component,
@@ -432,18 +505,17 @@ export const addAnswerInstructions = (
         : "boolean",
     text: "",
   };
-
   switch (type) {
     case "column":
-      return;
+      break;
     case "row":
       changeInstruction(answer, valueInstruction);
-      return;
+      break;
     case "other":
       if (questionType !== "scq") {
         changeInstruction(answer, valueInstruction);
       }
-      return;
+      break;
     case "other_text":
       changeInstruction(answer, {
         code: "value",
@@ -460,12 +532,12 @@ export const addAnswerInstructions = (
             ? `${questionCode}.value === 'Aother'`
             : `${parentCode}.value === true`,
       });
-      return;
+      break;
     default:
       if (questionType !== "scq") {
         changeInstruction(answer, valueInstruction);
       }
-      return;
+      break;
   }
 };
 

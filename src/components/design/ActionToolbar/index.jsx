@@ -47,7 +47,7 @@ function ActionToolbar({
     return (
       !isGroup &&
       state.designState[code]?.instructionList?.filter(
-        (el) => el.code.startsWith("validation_") && !el.errors
+        (el) => el.code.startsWith("validation_") && el.code != "validation_enum" && !el.errors
       )?.length > 0
     );
   });
