@@ -10,11 +10,18 @@
   height: calc(100vh - 64px);
 }
 
-.close {
-  text-align: right;
+.tabContainer :global(.MuiTabs-scrollButtons.Mui-disabled) {
+  opacity: 0.3;
 }
 
-.accordionStyle.accordionStyle {
-  box-shadow: none;
-  border-bottom: 1px solid #d7d7d7;
+.titleContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 10px;
+  margin-bottom: 10px;
+}
+
+.tabStyle {
+  margin: 0 !important;
 }

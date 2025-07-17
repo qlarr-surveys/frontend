@@ -2,7 +2,6 @@ import FieldSize from "~/components/design/setup/FieldSize";
 import ShowHint, { SetupTextInput } from "~/components/design/setup/ShowHint";
 import ValidationSetupItem from "~/components/design/setup/validation/ValidationSetupItem";
 import React, { useCallback } from "react";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ToggleValue from "../ToggleValue";
 import SelectValue from "../SelectValue";
 import SelectDate from "../SelectDate";
@@ -10,12 +9,7 @@ import Relevance from "../logic/Relevance";
 import SkipLogic from "../SkipLogic";
 import styles from "./SetupPanel.module.css";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  IconButton,
-} from "@mui/material";
+import { Box, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { resetSetup, setupToggleExpand } from "~/state/design/designState";
 import OrderPrioritySetup from "../random/OrderPrioritySetup";
@@ -41,11 +35,11 @@ function SetupPanel({ t }) {
     highlighted: setupInfo.highlighted,
     rules: setupInfo.rules,
     isSingleRule: setupInfo.rules?.length === 1,
+    ...setupInfo,
   }));
 
   const { code, expanded, highlighted, rules, isSingleRule } =
     useSelector(selectSetupData);
-
   return (
     <div
       className={styles.rightContent}
@@ -53,7 +47,11 @@ function SetupPanel({ t }) {
         left: theme.direction == "rtl" ? "0px" : "",
       }}
     >
-      <div className={styles.close}>
+      <div className={styles.titleContainer}>
+        <Typography variant="h6" component="h2">
+          {t("setup_for", { name: code })}
+        </Typography>
+
         <IconButton
           onClick={() => {
             dispatch(resetSetup());
@@ -63,18 +61,7 @@ function SetupPanel({ t }) {
         </IconButton>
       </div>
 
-      {rules?.map((rule) => (
-        <SetupSection
-          expanded={expanded?.includes(rule.key) || isSingleRule || false}
-          isSingleRule={isSingleRule}
-          code={code}
-          t={t}
-          toggleExpand={toggleExpand}
-          key={code + rule.title}
-          highlighted={rule.key == highlighted}
-          rule={rule}
-        />
-      ))}
+      <SetupSection rules={rules} code={code} t={t} highlighted={highlighted} />
     </div>
   );
 }
@@ -434,29 +421,43 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
   }
 });
 
-const SetupSection = React.memo(
-  ({ expanded, highlighted, code, rule, isSingleRule, t, toggleExpand }) => {
-    return (
-      <Accordion
-        expanded={expanded}
-        className={styles.accordionStyle}
-        slotProps={{ transition: { unmountOnExit: true } }}
+const SetupSection = React.memo(({ rules, code, t, highlighted }) => {
+  const [selectedTab, setSelectedTab] = React.useState(0);
+  const handleTabChange = (_, newValue) => setSelectedTab(newValue);
+
+  return (
+    <>
+      <Tabs
+        className={styles.tabContainer}
+        value={selectedTab}
+        onChange={handleTabChange}
+        variant="scrollable"
+        scrollButtons="auto"
       >
-        <AccordionSummary
-          onClick={() => toggleExpand(rule.key)}
-          className={styles.setupHeader}
-          expandIcon={isSingleRule ? null : <ExpandMoreIcon />}
-        >
-          <span className={styles.sectionTitle}>{t(rule.title)}</span>
-        </AccordionSummary>
-        <AccordionDetails
-          sx={{ backgroundColor: highlighted ? "#fff" : "background.paper" }}
-        >
-          {rule.rules.map((el) => (
-            <SetupComponent code={code} rule={el} t={t} key={el} />
-          ))}
-        </AccordionDetails>
-      </Accordion>
-    );
-  }
-);
+        {rules.map((rule) => (
+          <Tab
+            className={styles.tabStyle}
+            sx={{
+              px: 1.5,
+            }}
+            key={rule.key}
+            label={t(rule.title)}
+          />
+        ))}
+      </Tabs>
+      <Box
+        sx={{
+          backgroundColor:
+            rules[selectedTab]?.key === highlighted
+              ? "#fff"
+              : "background.paper",
+          p: 1,
+        }}
+      >
+        {rules[selectedTab]?.rules?.map((el) => (
+          <SetupComponent code={code} rule={el} t={t} key={el} />
+        ))}
+      </Box>
+    </>
+  );
+});

@@ -172,6 +172,7 @@
   "section_sections": "Abschnitte",
   "section_text_based": "Textbasiert",
   "setup": "Setup",
+  "setup_for": "Setup für {{name}}",
   "show_always": "Immer anzeigen",
   "show_description": "Fügen Sie eine Beschreibung unter dem Fragentitel hinzu, um den Nutzern Kontext oder Anweisungen zu geben.",
   "show_description_page": "Fügen Sie eine Beschreibung unter dem Seitentitel hinzu, um den Nutzern Kontext oder Anweisungen zu geben.",
