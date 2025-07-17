@@ -14,7 +14,7 @@
   opacity: 0.3;
 }
 
-.titleContainer{
+.titleContainer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -24,4 +24,8 @@
 
 .tabStyle {
   margin: 0 !important;
+}
+
+.setupContainer {
+  padding: 8px 16px 16px;
 }

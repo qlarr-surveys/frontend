@@ -455,7 +455,9 @@ const SetupSection = React.memo(({ rules, code, t, highlighted }) => {
         }}
       >
         {rules[selectedTab]?.rules?.map((el) => (
-          <SetupComponent code={code} rule={el} t={t} key={el} />
+          <div className={styles.setupContainer} key={el}>
+            <SetupComponent code={code} rule={el} t={t} key={el} />
+          </div>
         ))}
       </Box>
     </>
