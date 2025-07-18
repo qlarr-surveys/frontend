@@ -25,7 +25,6 @@ import { createSelector } from "@reduxjs/toolkit";
 import Theming from "../Theming";
 import { ManageLanguages } from "~/pages/manage/ManageTranslations";
 import { useTheme } from "@emotion/react";
-import NumericValue from "../NumericValue";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -141,13 +140,6 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           code={code}
         />
       );
-
-    case "minHeaderMobile":
-    case "minHeaderDesktop":
-    case "minRowLabelMobile":
-    case "minRowLabelDesktop":
-      return <NumericValue t={t} code={code} rule={rule} />;
-
     case "showWordCount":
       return (
         <ToggleValue
@@ -285,6 +277,41 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           rule={rule}
           code={code}
           t={t}
+        />
+      );
+
+    case "minHeaderMobile":
+    case "minHeaderDesktop":
+    case "minRowLabelMobile":
+    case "minRowLabelDesktop":
+      let label = "min_header_mobile";
+      switch (rule) {
+        case "minHeaderMobile":
+          label = "min_header_mobile";
+          break;
+        case "minHeaderDesktop":
+          label = "min_header_desktop";
+          break;
+        case "minRowLabelMobile":
+          label = "min_row_label_mobile";
+          break;
+        case "minRowLabelDesktop":
+          label = "min_row_label_desktop";
+          break;
+      }
+      const widthOptions = [60, 90, 120, 150, 180];
+      const widthOptionLabels = ["60px", "90px", "120px", "150px", "180px"];
+      return (
+        <SelectValue
+          values={widthOptions}
+          labels={widthOptionLabels}
+          key={code + rule}
+          defaultValue={
+            rule == "minHeaderMobile" || rule == "minRowLabelMobile" ? 60 : 90
+          }
+          label={label}
+          rule={rule}
+          code={code}
         />
       );
     case "dateFormat":

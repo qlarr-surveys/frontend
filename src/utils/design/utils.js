@@ -210,10 +210,10 @@ export const columnMinWidth = (code, runComponent) => {
 
   const designStateWidths = useSelector((state) => state?.designState?.[code]);
   const widthSetups = {
-    minHeaderDesktop: 120,
-    minHeaderMobile: 120,
-    minRowLabelDesktop: 100,
-    minRowLabelMobile: 90,
+    minHeaderDesktop: 90,
+    minHeaderMobile: 60,
+    minRowLabelDesktop: 90,
+    minRowLabelMobile: 60,
     ...(runComponent || {}),
     ...(designStateWidths || {}),
   };
