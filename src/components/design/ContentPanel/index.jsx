@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Box } from "@mui/material";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
 import { GroupDropArea } from "~/components/design/DropArea/DropArea";
 import { Virtuoso } from "react-virtuoso";
 import useDragNearViewportEdge from "~/utils/useDragEdgeDetection";
+import { resetSetup } from '~/state/design/designState';
 
 function ContentPanel({ designMode }, ref) {
   const { t } = useTranslation(["design", "run"]);
@@ -16,7 +17,6 @@ function ContentPanel({ designMode }, ref) {
   const groups = useSelector((state) => {
     return state.designState["Survey"]?.children || [];
   });
-
 
   const groupsEmpty = !groups.length;
 
@@ -62,6 +62,7 @@ function ContentPanel({ designMode }, ref) {
     (state) => state.designState.lastAddedComponent
   );
   const skipScroll = useSelector((state) => state.designState.skipScroll);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     let animationFrameId;
@@ -119,6 +120,9 @@ function ContentPanel({ designMode }, ref) {
     <Box
       ref={ref}
       className={`content-panel ${styles.contentPanel}`}
+      onClick={(event) => {
+        dispatch(resetSetup());
+      }}
       style={{
         backgroundColor: theme.palette.background.default,
         fontFamily: theme.textStyles.text.font,

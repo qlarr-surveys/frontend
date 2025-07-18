@@ -30,20 +30,15 @@ function Group(props) {
           }}
         >
           <div className={styles.groupHeader}>
-            <div
-              style={{
-                fontFamily: theme.textStyles.group.font,
-                color: theme.textStyles.group.color,
-                fontSize: theme.textStyles.group.size,
-              }}
-            >
               <Content
                 elementCode={props.group.code}
                 name="label"
                 lang={props.lang}
+                fontFamily={theme.textStyles.group.font}
+                color={theme.textStyles.group.color}
+                fontSize={theme.textStyles.group.size}
                 content={props.group.content?.label}
               />
-            </div>
 
             {props.group.showDescription && props.group.content?.description && (
               <Box className={styles.textDescription}>

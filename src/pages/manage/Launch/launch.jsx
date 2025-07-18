@@ -31,7 +31,6 @@ function LaunchPage({ onPublish }) {
   const versionDto = useSelector((state) => {
     return state.designState.versionDto;
   });
-  console.log(versionDto);
   const published = versionDto?.published;
   const survey = useSelector((state) => state.editState.survey);
   const [surveyMode, setSurveyMode] = useState("");

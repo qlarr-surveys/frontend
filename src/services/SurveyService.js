@@ -40,9 +40,9 @@ class SurveyService extends BaseService {
     return response.data;
   }
 
-  async cloneSurvey(surveyId, data) {
+  async cloneSurvey(surveyId) {
     const response = await this.handleRequest(() =>
-      authenticatedApi.post(`/survey/${surveyId}/clone`, data)
+      authenticatedApi.post(`/survey/${surveyId}/clone`, {})
     );
     return response.data;
   }
@@ -92,18 +92,25 @@ class SurveyService extends BaseService {
     return response;
   }
 
-  async importSurvey(file, surveyName) {
+  async importSurvey(file, onProgress) {
     const formData = new FormData();
-    formData.append("survey_name", surveyName);
     formData.append("file", file);
+
     const response = await this.handleRequest(() =>
       authenticatedApi.post(`/survey/import`, formData, {
+        onUploadProgress: (progressEvent) => {
+          const progress = (progressEvent.loaded / progressEvent.total) * 100;
+          if (onProgress) {
+            onProgress(Math.round(progress));
+          }
+        },
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",
         },
       })
     );
+
     return response.data;
   }
 
@@ -116,7 +123,9 @@ class SurveyService extends BaseService {
 
   async exportSurvey(surveyId) {
     const response = await this.handleRequest(() =>
-      authenticatedApi.get(`/survey/${surveyId}/export`, { responseType: 'blob' })
+      authenticatedApi.get(`/survey/${surveyId}/export`, {
+        responseType: "blob",
+      })
     );
     const contentDisposition = response.headers.get("Content-Disposition");
     const filename = contentDisposition

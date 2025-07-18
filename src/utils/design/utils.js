@@ -201,8 +201,19 @@ export const lastIndexInArray = (array, func) => {
   return -1;
 };
 
-export const isNotEmptyHtml = (value) =>
-  value && /[^<br><p><\/p>\s]/gm.test(value);
+export const firstIndexInArray = (array, func) => {
+  if (!array) {
+    return -1;
+  }
+  for (let index = 0; index < array.length; index++) {
+    if (func(array[index])) {
+      return index;
+    }
+  }
+  return -1;
+};
+
+export const isNotEmptyHtml = (value) => value && /[^<br><p><\/p>\s]/gm.test(value)
 
 export const columnMinWidth = (code, runComponent) => {
   const isDesktop = useResponsive("up", "lg");

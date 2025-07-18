@@ -1,5 +1,5 @@
 import FieldSize from "~/components/design/setup/FieldSize";
-import ShowHint, { ContentEditor } from "~/components/design/setup/ShowHint";
+import ShowHint, { SetupTextInput } from "~/components/design/setup/ShowHint";
 import ValidationSetupItem from "~/components/design/setup/validation/ValidationSetupItem";
 import React, { useCallback } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -196,7 +196,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
       return <ShowHint t={t} key={code + rule} code={code} />;
     case "lower_bound_hint":
       return (
-        <ContentEditor
+        <SetupTextInput
           title={"lower_bound_hint"}
           objectName="lower_bound_hint"
           key={code + rule}
@@ -206,7 +206,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
       );
     case "higher_bound_hint":
       return (
-        <ContentEditor
+        <SetupTextInput
           title={"upper_bound_hint"}
           objectName="higher_bound_hint"
           key={code + rule}

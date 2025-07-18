@@ -4,12 +4,14 @@ import { Button } from "@mui/material";
 import ChoiceItemDesign from "~/components/Questions/Choice/ChoiceItemDesign";
 
 import { useTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { inDesign } from "~/routes";
+import { addNewAnswer, addNewAnswers, onNewLine } from "~/state/design/designState";
 
 function ChoiceQuestion(props) {
   const theme = useTheme();
   const t = props.t;
+  const dispatch = useDispatch();
 
   const children = useSelector((state) => {
     return state.designState[props.code].children;
@@ -33,6 +35,18 @@ function ChoiceQuestion(props) {
               designMode={props.designMode}
               code={item.code}
               t={props.t}
+              onMoreLines={(data) => {
+                dispatch(
+                  addNewAnswers({
+                    questionCode: props.code,
+                    index,
+                    data,
+                  })
+                );
+              }}
+              onNewLine={() => {
+                dispatch(onNewLine({questionCode: props.code, index}))
+              }}
               label={item.code}
               key={item.code}
               qualifiedCode={item.qualifiedCode}
@@ -51,7 +65,7 @@ function ChoiceQuestion(props) {
               fontSize: theme.textStyles.text.size,
               color: theme.textStyles.question.color,
             }}
-            onClick={() => props.addNewAnswer(props.code, questionType)}
+            onClick={() => dispatch(addNewAnswer({ questionCode: props.code }))}
           >
             {t("add_option")}
           </Button>
@@ -73,7 +87,9 @@ function ChoiceQuestion(props) {
                 size="small"
                 className={styles.answerIcon}
                 onClick={() =>
-                  props.addNewAnswer(props.code, questionType, "other")
+                  dispatch(
+                    addNewAnswer({ questionCode: props.code, type: "other" })
+                  )
                 }
               >
                 {t("add_other")}

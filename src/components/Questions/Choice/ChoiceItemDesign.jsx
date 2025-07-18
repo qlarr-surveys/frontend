@@ -2,38 +2,29 @@ import styles from "./ChoiceItemDesign.module.css";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import CloseIcon from "@mui/icons-material/Close";
 import BuildIcon from "@mui/icons-material/Build";
-import { Box, Checkbox, Radio, TextField } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Checkbox, Radio } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
-  changeContent,
   onDrag,
   removeAnswer,
   setup,
 } from "~/state/design/designState";
 import { setupOptions } from "~/constants/design";
-import { rtlLanguage } from "~/utils/common";
 import { useDrag, useDrop } from "react-dnd";
 import { useRef } from "react";
 import { contentEditable, inDesign } from "~/routes";
+import ContentEditor from "~/components/design/ContentEditor";
 
 function ChoiceItemDesign(props) {
   const dispatch = useDispatch();
-  const theme = useTheme();
   const ref = useRef(null);
 
-  const langInfo = useSelector((state) => {
-    return state.designState.langInfo;
-  });
 
   const answer = useSelector((state) => {
     return state.designState[props.qualifiedCode];
   });
-  const onMainLang = langInfo.lang === langInfo.mainLang;
-  const lang = langInfo.lang;
 
-  const isRtl = rtlLanguage.includes(lang);
 
   const isInSetup = useSelector((state) => {
     return (
@@ -42,15 +33,6 @@ function ChoiceItemDesign(props) {
     );
   });
 
-  const content = useSelector((state) => {
-    return state.designState[props.qualifiedCode].content?.[lang]?.["label"];
-  });
-
-  const mainContent = useSelector((state) => {
-    return state.designState[props.qualifiedCode].content?.[
-      langInfo.mainLang
-    ]?.["label"];
-  });
 
   const getStyles = (isDragging) => {
     const styles = {
@@ -154,50 +136,22 @@ function ChoiceItemDesign(props) {
           </div>
         )}
         {props.type === "checkbox" ? (
-          <Checkbox sx={{ p: 0 }} disabled />
+          <Checkbox  disabled />
         ) : props.type === "radio" ? (
-          <Radio sx={{ p: 0 }} disabled />
+          <Radio  disabled />
         ) : null}{" "}
         {props.label === "Aother" ? <b>Other</b> : ""}
-        <TextField
-          variant="standard"
-          disabled={!contentEditable(props.designMode)}
-          className={
-            answer.type === "other" && isRtl
-              ? styles.answerControlOtherRtl
-              : answer.type === "other"
-              ? styles.answerControlOther
-              : isRtl
-              ? styles.answerControlRtl
-              : styles.answerControl
-          }
-          value={content || ""}
-          onChange={(e) =>
-            dispatch(
-              changeContent({
-                code: props.qualifiedCode,
-                key: "label",
-                lang: lang,
-                value: e.target.value,
-              })
-            )
-          }
-          placeholder={
-            onMainLang
-              ? props.t("content_editor_placeholder_option")
-              : mainContent || props.t("content_editor_placeholder_option")
-          }
-          InputProps={{
-            sx: {
-              "&:before": {
-                borderBottom: "0px",
-              },
-              fontFamily: theme.textStyles.text.font,
-              color: theme.textStyles.text.color,
-              fontSize: theme.textStyles.text.size,
-            },
-          }}
-        />
+        <ContentEditor
+            code={props.qualifiedCode}
+            editorTheme="bubble"
+            onNewLine={props.onNewLine}
+            onMoreLines={props.onMoreLines}
+            editable={contentEditable(props.designMode)}
+            extended={false}
+            placeholder={ props.t("content_editor_placeholder_option")}
+            contentKey="label"
+          />
+          <span style={{ margin: "8px" }} />
         {answer.type === "other" && (
           <BuildIcon
             key="setup"

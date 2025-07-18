@@ -30,12 +30,12 @@ function ShowHint({ code, t }) {
           onChange={(event) => setCheckedHint(event.target.checked)}
         />
       </div>
-      {showHint && <ContentEditor code={code} objectName="hint" t={t} />}
+      {showHint && <SetupTextInput code={code} objectName="hint" t={t} />}
     </>
   );
 }
 
-export function ContentEditor({ code, objectName, title, t }) {
+export function SetupTextInput({ code, objectName, title, t }) {
   const dispatch = useDispatch();
   const setContentValue = (lang, value) => {
     dispatch(changeContent({ code, key: objectName, lang, value }));
@@ -48,8 +48,6 @@ export function ContentEditor({ code, objectName, title, t }) {
   const content = useSelector((state) => {
     return state.designState[code].content;
   });
-  console.log(content);
-  console.log(objectName);
 
   return (
     <>

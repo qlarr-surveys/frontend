@@ -160,10 +160,12 @@
   "my_surveys": "Your Surveys",
   "new_survey": "New Survey",
   "reset_filter":"Reset Survey Filter",
-  "create_new_survey": "Create New Surey",
+  "create_new_survey": "Create New Suvrey",
   "import_survey": "Import a survey",
+  "upload_zip_folder": "Upload Zip Folder",
   "password_required": "Password is Required",
   "processed_errors": {
+    "invalid_file_for_survey_export": "This ZIP file doesn't contain a valid Qlarr Survey. Please check that you exported the survey correctly.",
     "backend_down": "Backend is Unreachable... Please Try again later",
     "duplicate_email": "Email address is already registered.",
     "duplicate_survey_name": "Duplicate Survey Name",

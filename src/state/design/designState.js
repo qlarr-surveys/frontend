@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { isEquivalent } from "~/utils/design/utils";
+import { firstIndexInArray, isEquivalent, nextId } from "~/utils/design/utils";
 import { createGroup } from "~/components/design/NewComponentsPanel";
 
-import {  lastIndexInArray } from "~/utils/design/utils";
+import { lastIndexInArray } from "~/utils/design/utils";
 import cloneDeep from "lodash.clonedeep";
 import {
   buildValidationDefaultData,
@@ -25,6 +25,7 @@ import { DESIGN_SURVEY_MODE } from "~/routes";
 import {
   addAnswerInstructions,
   addMaskedValuesInstructions,
+  refreshEnumforSingleChoice,
   addQuestionInstructions,
   addSkipInstructions,
   changeInstruction,
@@ -52,6 +53,7 @@ export const designState = createSlice({
       });
       state["latest"] = structuredClone(newState);
       state.lastAddedComponent = null;
+      state.index = buildCodeIndex(state);
     },
     setup(state, action) {
       const payload = action.payload;
@@ -212,6 +214,7 @@ export const designState = createSlice({
         payload: { code: newQuestionId, rules: setupOptions(newQuestion.type) },
       });
       cleanupRandomRules(group);
+      state.index = buildCodeIndex(state);
     },
     removeAnswer: (state, action) => {
       const answerQualifiedCode = action.payload;
@@ -225,32 +228,142 @@ export const designState = createSlice({
       if (state.setup?.code?.includes(answerQualifiedCode)) {
         designState.caseReducers.resetSetup(state);
       }
+      state.index = buildCodeIndex(state);
       question.designErrors = questionDesignError(question);
       cleanupValidation(state, codes[0]);
+      refreshEnumforSingleChoice(question, state);
       addMaskedValuesInstructions(codes[0], question, state);
       cleanupRandomRules(question);
     },
-    addNewAnswer: (state, action) => {
-      const lang = state.langInfo.mainLang;
-      const payload = action.payload;
-      const answer = payload.answer;
-      const label = payload.label;
-      const qualifiedCode = answer.qualifiedCode;
-      state[qualifiedCode] = {};
-      const codes = splitQuestionCodes(qualifiedCode);
-      const parentCode = codes.slice(0, codes.length - 1).join("");
-      const questionCode = codes[0];
-      if (!insertAnswer(state, answer, parentCode)) {
-        return;
-      }
-      if (label) {
-        state[qualifiedCode].content = { [lang]: { label: label } };
-      }
-      if (answer.type) {
-        state[qualifiedCode].type = answer.type;
-      }
-      addAnswerInstructions(state, state[qualifiedCode], parentCode, questionCode);
+    addNewAnswers: (state, action) => {
+      const questionCode = action.payload.questionCode;
+      const data = action.payload.data;
+      const type = action.payload.type;
+      let index = action.payload.index;
+      const question = state[questionCode];
+      const children = question.children?.filter((it) => state[it.qualifiedCode].type == type) || [];
+      data.forEach((item, itemIndex) => {
+        if (item) {
+          const nextAnswer = children[index + 1];
+          if (
+            nextAnswer &&
+            nextAnswer.qualifiedCode &&
+            state[nextAnswer.qualifiedCode] &&
+            (!state[nextAnswer.qualifiedCode].content ||
+              !state[nextAnswer.qualifiedCode].content[state.langInfo.lang])
+          ) {
+            designState.caseReducers.changeContent(state, {
+              payload: {
+                code: nextAnswer.qualifiedCode,
+                key: "label",
+                value: item,
+                lang: state.langInfo.lang,
+              },
+            });
+          } else {
+            designState.caseReducers.addNewAnswer(state, {
+              payload: {
+                questionCode,
+                label: item,
+                type,
+                index,
+                focus: itemIndex == data.length - 1,
+              },
+            });
+          }
+
+          index++;
+        }
+      });
     },
+    onNewLine: (state, action) => {
+      const questionCode = action.payload.questionCode;
+      const index = action.payload.index;
+      const type = action.payload.type;
+      const answers = state[questionCode].children || [];
+      const nextAnswerOfSameType = answers.filter(
+        (answer) => answer.type == type
+      )[index + 1];
+      if (nextAnswerOfSameType && nextAnswerOfSameType.qualifiedCode) {
+        state.focus = nextAnswerOfSameType.qualifiedCode;
+      } else {
+        designState.caseReducers.addNewAnswer(state, {
+          payload: {
+            questionCode,
+            type,
+            index,
+          },
+        });
+      }
+    },
+    addNewAnswer: (state, action) => {
+      const questionCode = action.payload.questionCode;
+      const type = action.payload.type;
+      const index = action.payload.index;
+      const focus = action.payload.focus || true;
+      let label = action.payload.label;
+      const answers = state[questionCode].children || [];
+      let nextAnswerIndex = 1;
+      let code = "";
+      let qualifiedCode = "";
+      switch (type) {
+        case "column":
+          nextAnswerIndex = nextId(
+            answers.filter((el) => el.type === "column")
+          );
+
+          code = "Ac" + nextAnswerIndex;
+          qualifiedCode = questionCode + code;
+          addAnswer(state, { code, qualifiedCode, type, label, index });
+          break;
+        case "row":
+          nextAnswerIndex = nextId(answers.filter((el) => el.type === "row"));
+          code = "A" + nextAnswerIndex;
+          qualifiedCode = questionCode + code;
+
+          addAnswer(state, {
+            code,
+            qualifiedCode,
+            type,
+            label,
+            index,
+            focus,
+          });
+          break;
+        case "other":
+          code = "Aother";
+          label = "Other";
+          qualifiedCode = questionCode + code;
+          addAnswer(state, {
+            code,
+            qualifiedCode,
+            type,
+            label,
+            index,
+            focus,
+          });
+          addAnswer(state, {
+            code: "Atext",
+            qualifiedCode: qualifiedCode + "Atext",
+            type: "other_text",
+            index,
+          });
+          break;
+        default:
+          nextAnswerIndex = nextId(answers);
+          code = "A" + nextAnswerIndex;
+          qualifiedCode = questionCode + code;
+          addAnswer(state, {
+            code,
+            qualifiedCode,
+            label,
+            index,
+            focus,
+          });
+          break;
+      }
+    },
+
     deleteGroup: (state, action) => {
       const groupCode = action.payload;
       if (state.setup?.code == groupCode) {
@@ -452,7 +565,9 @@ export const designState = createSlice({
       state.langInfo.onMainLang =
         state.langInfo.lang == state.langInfo.mainLang;
     },
-
+    resetFocus: (state, action) => {
+      state.focus = null;
+    },
     setSaving: (state, action) => {
       state.isSaving = action.payload;
     },
@@ -466,12 +581,15 @@ export const designState = createSlice({
       switch (payload.type) {
         case "reorder_questions":
           reorderQuestions(state, state.Survey, payload);
+          state.index = buildCodeIndex(state);
           break;
         case "reparent_question":
           reparentQuestion(state, state.Survey, payload);
+          state.index = buildCodeIndex(state);
           break;
         case "reorder_groups":
           reorderGroups(state.Survey, payload);
+          state.index = buildCodeIndex(state);
           break;
         case "reorder_answers":
           reorderAnswers(state, payload);
@@ -481,10 +599,12 @@ export const designState = createSlice({
           break;
         case "new_question":
           newQuestion(state, payload);
+          state.index = buildCodeIndex(state);
           break;
         case "new_group":
           if (payload.groupType == "group") {
             newGroup(state, payload);
+            state.index = buildCodeIndex(state);
           } else if (
             payload.groupType == "end" ||
             payload.groupType == "welcome"
@@ -524,6 +644,7 @@ export const designState = createSlice({
           toIndex,
         });
       }
+      state.index = buildCodeIndex(state);
     },
   },
 });
@@ -544,7 +665,10 @@ export const {
   deleteQuestion,
   cloneQuestion,
   deleteGroup,
+  onNewLine,
+  resetFocus,
   addNewAnswer,
+  addNewAnswers,
   setDesignModeToLang,
   setDesignModeToReorder,
   setDesignModeToTheme,
@@ -584,10 +708,8 @@ const cleanupRandomRules = (componentState) => {
   }
 };
 
-
-
 const reparentQuestion = (state, survey, payload) => {
-  let index = buildIndex(state, survey.children);
+  let index = buildIndex(state);
   const sourceGroup = state[payload.source];
   const destinationGroup = state[payload.destination];
   const sourceQuestionIndex = sourceGroup.children.findIndex(
@@ -656,9 +778,15 @@ const newQuestion = (state, payload) => {
   const newCode = `Q${questionId}`;
   addQuestionInstructions(state[newCode]);
   state[newCode].children?.forEach((element) => {
-    addAnswerInstructions(state, state[element.qualifiedCode], newCode, newCode);
+    addAnswerInstructions(
+      state,
+      state[element.qualifiedCode],
+      newCode,
+      newCode
+    );
   });
   cleanupValidation(state, newCode);
+  refreshEnumforSingleChoice(questionObject[newCode], state);
   addMaskedValuesInstructions(newCode, questionObject[newCode], state);
   destinationGroup.children.splice(
     destinationQuestionIndex,
@@ -675,6 +803,13 @@ const newQuestion = (state, payload) => {
     questionIndex: destinationQuestionIndex,
   };
   cleanupRandomRules(destinationGroup);
+  state.focus = newCode;
+  designState.caseReducers.setup(state, {
+    payload: {
+      code: newCode,
+      rules: setupOptions(payload.questionType),
+    },
+  });
 };
 
 const newGroup = (state, payload) => {
@@ -698,6 +833,13 @@ const newGroup = (state, payload) => {
     index: lastGroupIndex,
   };
   cleanupRandomRules(survey);
+  state.focus = group.newGroup.code;
+  designState.caseReducers.setup(state, {
+    payload: {
+      code: group.newGroup.code,
+      rules: setupOptions(group.newGroup.type),
+    },
+  });
 };
 
 const specialGroup = (state, payload) => {
@@ -739,6 +881,30 @@ const specialGroup = (state, payload) => {
   }
 };
 
+const addAnswer = (state, answer) => {
+  const lang = state.langInfo.mainLang;
+  const label = answer.label;
+  const qualifiedCode = answer.qualifiedCode;
+  state[qualifiedCode] = {};
+  const codes = splitQuestionCodes(qualifiedCode);
+  const parentCode = codes.slice(0, codes.length - 1).join("");
+  const questionCode = codes[0];
+  if (!insertAnswer(state, answer, parentCode, answer.index)) {
+    return;
+  }
+  if (label) {
+    state[qualifiedCode].content = { [lang]: { label: label } };
+  }
+  if (answer.type) {
+    state[qualifiedCode].type = answer.type;
+  }
+  addAnswerInstructions(state, state[qualifiedCode], parentCode, questionCode);
+  refreshEnumforSingleChoice(state[questionCode], state);
+  if (answer.focus) {
+    state.focus = qualifiedCode;
+  }
+};
+
 const reorderGroups = (survey, payload) => {
   survey.children = reorder(
     survey.children,
@@ -771,16 +937,25 @@ const reorderAnswersByType = (state, payload) => {
   component.children = reorder(component.children, fromIndex, toIndex);
 };
 
-const insertAnswer = (state, answer, parentCode) => {
+const insertAnswer = (state, answer, parentCode, index) => {
   const component = state[parentCode];
   if (component) {
     if (!component.children) {
       component.children = [];
     }
-    const insertIndex = lastIndexInArray(
-      component.children,
-      (child) => child.type == answer.type || !child.type
-    );
+    const insertIndex =
+      typeof index == "number"
+        ? typeof answer.type == "string"
+          ? index +
+            firstIndexInArray(
+              component.children,
+              (child) => child.type == answer.type
+            )
+          : index
+        : lastIndexInArray(
+            component.children,
+            (child) => child.type == answer.type || !child.type
+          );
     component.children.splice(insertIndex + 1, 0, answer);
     component.designErrors = questionDesignError(component);
     cleanupValidation(state, parentCode);
@@ -791,10 +966,9 @@ const insertAnswer = (state, answer, parentCode) => {
     return false;
   }
 };
-
-export const buildIndex = (state, groups) => {
+const buildIndex = (state) => {
   let retrunRestult = [];
-  groups?.forEach((group) => {
+  state.Survey.children?.forEach((group) => {
     retrunRestult.push(group.code);
     let groupObj = state[group.code];
     if (groupObj.children && !groupObj.collapsed) {
@@ -808,11 +982,34 @@ export const buildIndex = (state, groups) => {
   return retrunRestult;
 };
 
+const buildCodeIndex = (state) => {
+  let retrunRestult = {};
+  let groupCount = 0;
+  let questionCount = 0;
+  state.Survey.children?.forEach((group) => {
+    groupCount++;
+    retrunRestult[group.code] = "G" + groupCount;
+    let groupObj = state[group.code];
+    if (groupObj.children) {
+      groupObj.children.forEach((question) => {
+        questionCount++;
+        retrunRestult[question.code] = "Q" + questionCount;
+        let questionObj = state[question.code];
+        if (questionObj.children) {
+          questionObj.children.forEach((answer) => {
+            retrunRestult[answer.qualifiedCode] =
+              "Q" + questionCount + answer.code;
+          });
+        }
+      });
+    }
+  });
+  return retrunRestult;
+};
+
 const splitQuestionCodes = (code) => {
   return code.split(/(A[a-z_0-9]+|Q[a-z_0-9]+)/).filter(Boolean);
 };
-
-
 
 const cleanupValidation = (state, code) => {
   const component = state[code];
@@ -830,6 +1027,33 @@ const addRelevanceInstructions = (state, code, relevance) => {
     state
   );
   changeInstruction(state[code], instruction);
+};
+
+export const mapCodeToUserFriendlyOrder = (code, index) => {
+  let newCode = cloneDeep(code);
+  // Pattern for G followed by alphanumeric characters
+  const gPattern = /G[a-zA-Z0-9]+/g;
+
+  // Pattern for Q followed by alphanumeric characters
+  const qPattern = /Q[a-zA-Z0-9]+/g;
+
+  // Find all G matches
+  const gMatches = code.match(gPattern);
+  if (gMatches) {
+    gMatches.forEach((match) => {
+      newCode = newCode.replace(match, index[match]);
+    });
+  }
+
+  // Find all Q matches
+  const qMatches = code.match(qPattern);
+  if (qMatches) {
+    qMatches.forEach((match) => {
+      newCode = newCode.replace(match, index[match]);
+    });
+  }
+  // Return counts for reference
+  return newCode;
 };
 
 const creatNewState = (

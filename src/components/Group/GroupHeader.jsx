@@ -47,7 +47,6 @@ function GroupHeader({ t, code, children, designMode }) {
           )}
         </Box>
         <div
-          className={styles.textHeader}
           style={{
             fontFamily: theme.textStyles.group.font,
             color: theme.textStyles.group.color,

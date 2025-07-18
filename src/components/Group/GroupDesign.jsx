@@ -9,9 +9,10 @@ import { useDrag, useDrop } from "react-dnd";
 import { getContrastColor } from "../Questions/utils";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
-import { onDrag } from "~/state/design/designState";
+import { onDrag, setup } from "~/state/design/designState";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 import { DESIGN_SURVEY_MODE } from "~/routes";
+import { setupOptions } from '~/constants/design';
 function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
   const dispatch = useDispatch();
   const group = useSelector((state) => {
@@ -26,9 +27,6 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
     );
   });
 
-  const langInfo = useSelector((state) => {
-    return state.designState.langInfo;
-  });
 
   const isInSetup = useSelector((state) => {
     return state.designState.setup?.code == code;
@@ -133,6 +131,11 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
     lastAddedComponent?.type === "group" && lastAddedComponent.index === index;
   return (
     <Box
+      onClick={(event) => {
+        event.stopPropagation();
+        event.preventDefault();
+        dispatch(setup({ code, rules: setupOptions(type) }));
+      }}
       sx={
         isInSetup
           ? {
@@ -200,7 +203,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
               </React.Fragment>
             );
           })}
-          {(!children || !children.length) && inDesign && (
+          {(!children || !children.length)  && (
             <QuestionDropArea
               t={t}
               index={0}

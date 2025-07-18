@@ -10,6 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
 import { Box } from "@mui/material";
 import { setDirty } from "~/state/templateState";
+import Content from '~/components/run/Content';
 
 function SCQ(props) {
   const state = useSelector((state) => {
@@ -68,15 +69,16 @@ function ScqChoice(props) {
           />
         }
         label={
-          <Box
-            sx={{
-              fontFamily: theme.textStyles.text.font,
-              color: theme.textStyles.text.color,
-              fontSize: theme.textStyles.text.size,
-            }}
-          >
-            {props.Choice.content?.label}
-          </Box>
+            <Content
+                elementCode={props.Choice.code}
+                fontFamily={theme.textStyles.text.font}
+                color={theme.textStyles.text.color}
+                fontSize={theme.textStyles.text.size}
+                name="label"
+                lang={props.lang}
+                content={props.Choice.content?.label}
+              />
+
         }
         value={props.Choice.code}
       />

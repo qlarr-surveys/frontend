@@ -14,12 +14,15 @@ import {
   useTheme,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
+  addNewAnswer,
+  addNewAnswers,
   changeContent,
   onDrag,
+  onNewLine,
   removeAnswer,
 } from "~/state/design/designState";
 import { useDispatch } from "react-redux";
@@ -27,10 +30,13 @@ import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
 import { inDesign } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
+import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
 
 function SCQArray(props) {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const t = props.t;
+  const width = columnMinWidth();
 
   const { header, rowLabel } = columnMinWidth(props.code);
   const langInfo = useSelector((state) => {
@@ -62,7 +68,9 @@ function SCQArray(props) {
             }}
             size="small"
             onClick={(e) =>
-              props.addNewAnswer(props.code, props.type, "column")
+              dispatch(
+                addNewAnswer({ questionCode: props.code, type: "column" })
+              )
             }
           >
             {t("add_column")}
@@ -142,7 +150,9 @@ function SCQArray(props) {
               color: theme.textStyles.question.color,
             }}
             size="small"
-            onClick={(e) => props.addNewAnswer(props.code, props.type, "row")}
+            onClick={(e) =>
+              dispatch(addNewAnswer({ questionCode: props.code, type: "row" }))
+            }
           >
             {t("add_row")}
           </Button>
@@ -166,6 +176,7 @@ function SCQArrayRowDesign({
   const dispatch = useDispatch();
   const theme = useTheme();
   const ref = useRef();
+  const inputRef = useRef();
 
   const onMainLang = langInfo.lang === langInfo.mainLang;
 
@@ -173,6 +184,10 @@ function SCQArrayRowDesign({
     return state.designState[item.qualifiedCode].content?.[langInfo.lang]?.[
       "label"
     ];
+  });
+
+  const inFocus = useSelector((state) => {
+    return state.designState.focus == item.qualifiedCode;
   });
 
   const mainContent = useSelector((state) => {
@@ -193,6 +208,17 @@ function SCQArrayRowDesign({
     },
     [index]
   );
+
+  useEffect(() => {
+    if (inFocus) {
+      // Use setTimeout to ensure the DOM is ready
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, 10);
+    }
+  }, [inFocus, inputRef.current]);
 
   const [{ handlerId }, drop] = useDrop({
     accept: itemType,
@@ -259,17 +285,42 @@ function SCQArrayRowDesign({
             </div>
           )}
           <TextField
+            inputRef={inputRef}
             variant="standard"
             value={content || ""}
             onChange={(e) => {
-              dispatch(
-                changeContent({
-                  code: item.qualifiedCode,
-                  key: "label",
-                  lang: langInfo.lang,
-                  value: e.target.value,
-                })
-              );
+              const value = e.target.value;
+              if (value.endsWith("\n")) {
+                dispatch(
+                  onNewLine({
+                    questionCode: parentQualifiedCode,
+                    index,
+                    type: "row",
+                  })
+                );
+              } else {
+                const sanitizedText = sanitizePastedText(e.target.value);
+                const text = sanitizedText[0];
+                const rest = sanitizedText.slice(1);
+                if (rest.length > 0) {
+                  dispatch(
+                    addNewAnswers({
+                      questionCode: parentQualifiedCode,
+                      index,
+                      type: "row",
+                      data: rest,
+                    })
+                  );
+                }
+                dispatch(
+                  changeContent({
+                    code: item.qualifiedCode,
+                    key: "label",
+                    lang: langInfo.lang,
+                    value: text,
+                  })
+                );
+              }
             }}
             placeholder={
               onMainLang

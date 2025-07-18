@@ -1,15 +1,75 @@
 import React, { useEffect, useMemo, useState } from "react";
+import "react-quill/dist/quill.bubble.css";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill, { Quill } from "react-quill";
+import Delta from "quill-delta";
 import QuillMention from "quill-mention";
 import "quill-mention/dist/quill.mention.css";
 import { manageStore } from "~/store";
 import { SurveyFormClipboard } from "./SurveyFormClipboard";
 import { buildReferences } from "~/components/Questions/buildReferences";
+
+// Define the module class before using it
+class MentionDisplayModule {
+  constructor(quill, options) {
+    this.quill = quill;
+    this.options = options || {};
+
+    // Update display after any change
+    quill.on("text-change", () => {
+      setTimeout(() => this.updateMentionDisplay(), 0);
+    });
+
+    // Initial update
+    setTimeout(() => this.updateMentionDisplay(), 0);
+  }
+
+  updateMentionDisplay() {
+    const mentions = this.quill.container.querySelectorAll(
+      '.mention span[contenteditable="false"]'
+    );
+
+    mentions.forEach((mention) => {
+      const parentMention = mention.closest(".mention");
+      const id = parentMention?.getAttribute("data-id");
+      const type = parentMention?.getAttribute("data-type");
+
+      // Don't modify if already processed
+      if (mention.getAttribute("data-display-processed")) return;
+
+      // Your replacement logic
+      const displayText = this.getDisplayText(id, mention.textContent);
+      if (displayText) {
+        mention.textContent = displayText;
+        mention.setAttribute("data-display-processed", "true");
+      }
+    });
+  }
+
+  getDisplayText(id, textContent) {
+    if (this.options.referenceInstruction[id]) {
+      return textContent.replaceAll(id, this.options.referenceInstruction[id]);
+    }
+    return textContent;
+  }
+}
+
 Quill.register("modules/mentions", QuillMention);
 Quill.register("modules/clipboard", SurveyFormClipboard, true);
+Quill.register("modules/mentionDisplay", MentionDisplayModule);
 
-function DraftEditor({ value, onBlurListener, extended, isRtl, lang, code }) {
+function DraftEditor({
+  value,
+  onBlurListener,
+  extended,
+  isRtl,
+  lang,
+  onNewLine,
+  onMoreLines,
+  code,
+  editorTheme = "snow",
+  referenceInstruction = [],
+}) {
   console.debug("DraftEditor for: " + code);
 
   const oneLine = (value, oneLine) => {
@@ -90,10 +150,7 @@ function DraftEditor({ value, onBlurListener, extended, isRtl, lang, code }) {
               [{ color: [] }, { background: [] }],
               ["clean"],
             ],
-        clipboard: {
-          // Add the clipboard module with paste and matchVisual options
-          matchVisual: false, // Disable matching visual formatting during paste
-        },
+
         // handlers: {
         //   // handlers object will be merged with default handlers object
         //   link: function (value) {
@@ -105,6 +162,44 @@ function DraftEditor({ value, onBlurListener, extended, isRtl, lang, code }) {
         //     }
         //   },
         // },
+      },
+      mentionDisplay: {
+        referenceInstruction: referenceInstruction,
+      },
+      clipboard: {
+        onPasteCallback: function (pasteData) {
+          const quill = this.quill;
+          const range = quill.getSelection();
+
+          if (typeof onMoreLines === "function") {
+            const sanitizedText = sanitizePastedText(pasteData);
+            const text = sanitizedText[0];
+            const delta = new Delta()
+              .retain(range.index)
+              .delete(range.length)
+              .insert(text);
+            const index = text.length + range.index;
+            const length = 0;
+            quill.setSelection(index, length, "silent");
+            quill.updateContents(delta, "silent");
+            const rest = sanitizedText.slice(1);
+            if (rest.length > 0) {
+              onMoreLines(rest);
+            }
+          } else {
+            const delta = new Delta()
+              .retain(range.index)
+              .delete(range.length)
+              .insert(pasteData);
+            const index = pasteData.length + range.index;
+            const length = 0;
+            quill.setSelection(index, length, "silent");
+            quill.updateContents(delta, "silent");
+          }
+          // Your custom logic here
+        },
+        // Add the clipboard module with paste and matchVisual options
+        matchVisual: false, // Disable matching visual formatting during paste
       },
     };
   }, []);
@@ -138,7 +233,11 @@ function DraftEditor({ value, onBlurListener, extended, isRtl, lang, code }) {
 
   const onChange = (value) => {
     onFocus();
-    setState(oneLine(value, !extended));
+    if(!extended && onNewLine && value.endsWith("<p><br></p>")) {
+      onNewLine(value);
+    } else {
+      setState(oneLine(value, !extended));
+    }
   };
 
   const onContainerClick = (e) => {
@@ -157,7 +256,7 @@ function DraftEditor({ value, onBlurListener, extended, isRtl, lang, code }) {
     >
       <ReactQuill
         className={isRtl ? "rtl" : "ltr"}
-        theme="snow"
+        theme={editorTheme}
         bounds={".quill-wrapper"}
         ref={editor}
         modules={modules}
@@ -170,3 +269,34 @@ function DraftEditor({ value, onBlurListener, extended, isRtl, lang, code }) {
 }
 
 export default React.memo(DraftEditor);
+
+export function sanitizePastedText(text) {
+  // Split text around newlines
+  const lines = text.split(/\r?\n/);
+
+  // Process each line to remove bullet points and dashes
+  const sanitizedLines = lines.map((line) => {
+    // Remove leading/trailing whitespace
+    let cleanLine = line.trim();
+
+    // Remove common bullet point patterns
+    cleanLine = cleanLine
+      // Remove bullet points: •, ◦, ▪, ▫, ‣
+      .replace(/^[•◦▪▫‣]\s*/, "")
+      // Remove dashes: -, –, —
+      .replace(/^[-–—]\s*/, "")
+      // Remove asterisks: *
+      .replace(/^\*\s*/, "")
+      // Remove plus signs: +
+      .replace(/^\+\s*/, "")
+      // Remove numbered lists: 1., 2), a), (1), etc.
+      .replace(/^(\d+|[a-zA-Z])[.)]\s*/, "")
+      .replace(/^\(\d+\)\s*/, "")
+      .replace(/^\([a-zA-Z]\)\s*/, "")
+      // Remove multiple spaces/tabs at the beginning
+      .replace(/^\s+/, "");
+
+    return cleanLine;
+  });
+  return sanitizedLines;
+}
