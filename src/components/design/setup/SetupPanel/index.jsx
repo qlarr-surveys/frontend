@@ -19,6 +19,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import Theming from "../Theming";
 import { ManageLanguages } from "~/pages/manage/ManageTranslations";
 import { useTheme } from "@emotion/react";
+import { questionIconByType } from "~/components/Questions/utils";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -40,6 +41,15 @@ function SetupPanel({ t }) {
 
   const { code, expanded, highlighted, rules, isSingleRule } =
     useSelector(selectSetupData);
+
+  const order = useSelector((state) => {
+    return state.designState.index[code];
+  });
+
+  const type = useSelector((state) => {
+    return state.designState[code].type;
+  });
+
   return (
     <div
       className={styles.rightContent}
@@ -48,9 +58,13 @@ function SetupPanel({ t }) {
       }}
     >
       <div className={styles.titleContainer}>
-        <Typography variant="h6" component="h2">
-          {t("setup_for", { name: code })}
-        </Typography>
+        <Box display="flex" alignItems="center" gap={1}>
+          {questionIconByType(`${type}`, undefined)}
+
+          <Typography variant="h6" component="h2">
+            {t("setup_for", { name: order })}
+          </Typography>
+        </Box>
 
         <IconButton
           onClick={() => {
@@ -431,27 +445,30 @@ const SetupSection = React.memo(({ rules, code, t, highlighted }) => {
         className={styles.tabContainer}
         value={selectedTab}
         onChange={handleTabChange}
-        variant="scrollable"
-        scrollButtons="auto"
+        variant="standard"
+        TabIndicatorProps={{ sx: { display: "none" } }}
+        sx={{
+          "& .MuiTabs-flexContainer": {
+            flexWrap: "wrap",
+          },
+        }}
       >
         {rules.map((rule) => (
           <Tab
             className={styles.tabStyle}
-            sx={{
-              px: 1.5,
-            }}
+            sx={{ px: 1.5 }}
             key={rule.key}
             label={t(rule.title)}
           />
         ))}
       </Tabs>
+
       <Box
         sx={{
           backgroundColor:
             rules[selectedTab]?.key === highlighted
               ? "#fff"
               : "background.paper",
-          p: 1,
         }}
       >
         {rules[selectedTab]?.rules?.map((el) => (
