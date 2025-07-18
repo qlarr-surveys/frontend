@@ -492,7 +492,17 @@ export const setupOptions = (type) => {
     case "scq_array":
       return [
         { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
+        {
+          title: "setup",
+          key: "setup",
+          rules: [
+            "showDescription",
+            "minHeaderMobile",
+            "minHeaderDesktop",
+            "minRowLabelMobile",
+            "minRowLabelDesktop",
+          ],
+        },
         {
           title: "order_priority",
           key: "random",
