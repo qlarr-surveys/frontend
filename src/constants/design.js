@@ -484,8 +484,8 @@ export const setupOptions = (type) => {
             "showDescription",
             "minHeaderMobile",
             "minHeaderDesktop",
-            "minOptionMobile",
-            "minOptionDesktop",
+            "minRowLabelMobile",
+            "minRowLabelDesktop",
           ],
         },
         {

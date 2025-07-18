@@ -7,8 +7,8 @@ import { RHFSelect } from "~/components/hook-form";
 const LABEL_MAP = {
   minHeaderMobile: "Min Header Column Width (Mobile)",
   minHeaderDesktop: "Min Header Column Width (Desktop)",
-  minOptionMobile: "Min Option Column Width (Mobile)",
-  minOptionDesktop: "Min Option Column Width (Desktop)",
+  minRowLabelMobile: "Min Row Label Column Width (Mobile)",
+  minRowLabelDesktop: "Min Row Label Column Width (Desktop)",
 };
 
 const WIDTH_OPTIONS = [60, 90, 120, 150, 180];

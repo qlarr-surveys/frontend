@@ -204,38 +204,35 @@ export const lastIndexInArray = (array, func) => {
 export const isNotEmptyHtml = (value) =>
   value && /[^<br><p><\/p>\s]/gm.test(value);
 
-// export const columnMinWidth = () => {
-//   const isDesktop = useResponsive("up", "lg");
-//   const isTablet = useResponsive("between", "md", "lg");
-//   const isMobile = useResponsive("down", "sm");
-  
-//   return isDesktop ? "120" : isTablet ? "120" : "90";
-// };
+export const columnMinWidth = (code, runComponent) => {
+  const isDesktop = useResponsive("up", "lg");
+  const isTablet = useResponsive("between", "md", "lg");
 
-
-export const columnMinWidth = (code) => {
-  const isDesktop = useResponsive("up", "lg");       
-  const isTablet = useResponsive("between", "md", "lg"); 
-  const isMobile = useResponsive("down", "sm");       
-
-  const widthSetups = useSelector((state) => state.designState?.[code] || {});
-
+  const designStateWidths = useSelector((state) => state?.designState?.[code]);
+  const widthSetups = {
+    minHeaderDesktop: 120,
+    minHeaderMobile: 120,
+    minRowLabelDesktop: 100,
+    minRowLabelMobile: 90,
+    ...(runComponent || {}),
+    ...(designStateWidths || {}),
+  };
   const {
-    minHeaderDesktop = 120,
-    minHeaderMobile = 120,
-    minOptionDesktop = 100,
-    minOptionMobile = 90,
+    minHeaderDesktop,
+    minHeaderMobile,
+    minRowLabelDesktop,
+    minRowLabelMobile,
   } = widthSetups;
 
   if (isDesktop || isTablet) {
     return {
       header: `${minHeaderDesktop}`,
-      option: `${minOptionDesktop}`,
+      rowLabel: `${minRowLabelDesktop}`,
     };
   }
 
   return {
     header: `${minHeaderMobile}`,
-    option: `${minOptionMobile}`,
+    rowLabel: `${minRowLabelMobile}`,
   };
 };

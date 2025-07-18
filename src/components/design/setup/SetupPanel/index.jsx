@@ -144,8 +144,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
 
     case "minHeaderMobile":
     case "minHeaderDesktop":
-    case "minOptionMobile":
-    case "minOptionDesktop":
+    case "minRowLabelMobile":
+    case "minRowLabelDesktop":
       return <NumericValue t={t} code={code} rule={rule} />;
 
     case "showWordCount":

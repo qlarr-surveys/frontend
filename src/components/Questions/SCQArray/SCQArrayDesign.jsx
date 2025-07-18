@@ -32,21 +32,14 @@ function SCQArray(props) {
   const theme = useTheme();
   const t = props.t;
 
-  const { header, option } = columnMinWidth(props.code);
-  const width = 120;
+  const { header, rowLabel } = columnMinWidth(props.code);
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
   });
-  const onMainLang = langInfo.lang === langInfo.mainLang;
 
   const children = useSelector(
     (state) => state.designState[props.code].children
   );
-
-  const isInSetup = useSelector((state) => {
-    return state.designState.setup?.code == props.code;
-  });
-
   const rows = React.useMemo(
     () => children?.filter((el) => el.type == "row") || [],
     [children]
@@ -86,7 +79,6 @@ function SCQArray(props) {
         <Table
           sx={{
             tableLayout: "fixed",
-            // minWidth: `${columns.length * header + 20}px`,
           }}
         >
           <TableHead>
@@ -94,8 +86,8 @@ function SCQArray(props) {
               <TableCell
                 sx={{
                   padding: "2px",
+                  width: rowLabel + "px",
                 }}
-                style={{ width: width + "px" }}
                 key="move"
               ></TableCell>
               {columns.map((item, index) => {
@@ -127,7 +119,6 @@ function SCQArray(props) {
             {rows.map((item, index) => {
               return (
                 <SCQArrayRowDesign
-                  width={option}
                   parentQualifiedCode={props.qualifiedCode}
                   langInfo={langInfo}
                   t={props.t}
@@ -171,7 +162,6 @@ function SCQArrayRowDesign({
   t,
   langInfo,
   parentQualifiedCode,
-  width,
 }) {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -261,7 +251,6 @@ function SCQArrayRowDesign({
           fontSize: theme.textStyles.text.size,
           padding: "2px",
         }}
-        style={{ width: width + "px" }}
       >
         <Box display="flex" alignItems="center">
           {inDesign(designMode) && (
