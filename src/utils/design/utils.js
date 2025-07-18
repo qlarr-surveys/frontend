@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { useResponsive } from '~/hooks/use-responsive';
 
 export const isEquivalent = (a, b) => {
@@ -170,9 +171,9 @@ export const nextId = (elements) => {
 export const stripTags = (string) => {
   return string
     ? string
-      .replace(/<[^>]*>?/gm, "")
-      .replace("\n", "")
-      .replace("&nbsp;", "")
+        .replace(/<[^>]*>?/gm, "")
+        .replace("\n", "")
+        .replace("&nbsp;", "")
     : string;
 };
 
@@ -214,9 +215,35 @@ export const firstIndexInArray = (array, func) => {
 
 export const isNotEmptyHtml = (value) => value && /[^<br><p><\/p>\s]/gm.test(value)
 
-
-export const columnMinWidth = ()=>{
+export const columnMinWidth = (code, runComponent) => {
   const isDesktop = useResponsive("up", "lg");
   const isTablet = useResponsive("between", "md", "lg");
-  return isDesktop ? "120" : isTablet ? "120" : "90";
-}
+
+  const designStateWidths = useSelector((state) => state?.designState?.[code]);
+  const widthSetups = {
+    minHeaderDesktop: 90,
+    minHeaderMobile: 60,
+    minRowLabelDesktop: 90,
+    minRowLabelMobile: 60,
+    ...(runComponent || {}),
+    ...(designStateWidths || {}),
+  };
+  const {
+    minHeaderDesktop,
+    minHeaderMobile,
+    minRowLabelDesktop,
+    minRowLabelMobile,
+  } = widthSetups;
+
+  if (isDesktop || isTablet) {
+    return {
+      header: `${minHeaderDesktop}`,
+      rowLabel: `${minRowLabelDesktop}`,
+    };
+  }
+
+  return {
+    header: `${minHeaderMobile}`,
+    rowLabel: `${minRowLabelMobile}`,
+  };
+};

@@ -279,6 +279,41 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           t={t}
         />
       );
+
+    case "minHeaderMobile":
+    case "minHeaderDesktop":
+    case "minRowLabelMobile":
+    case "minRowLabelDesktop":
+      let label = "min_header_mobile";
+      switch (rule) {
+        case "minHeaderMobile":
+          label = "min_header_mobile";
+          break;
+        case "minHeaderDesktop":
+          label = "min_header_desktop";
+          break;
+        case "minRowLabelMobile":
+          label = "min_row_label_mobile";
+          break;
+        case "minRowLabelDesktop":
+          label = "min_row_label_desktop";
+          break;
+      }
+      const widthOptions = [60, 90, 120, 150, 180];
+      const widthOptionLabels = ["60px", "90px", "120px", "150px", "180px"];
+      return (
+        <SelectValue
+          values={widthOptions}
+          labels={widthOptionLabels}
+          key={code + rule}
+          defaultValue={
+            rule == "minHeaderMobile" || rule == "minRowLabelMobile" ? 60 : 90
+          }
+          label={label}
+          rule={rule}
+          code={code}
+        />
+      );
     case "dateFormat":
       const listDateFormat = [
         "DD.MM.YYYY",
@@ -436,6 +471,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
 
 const SetupSection = React.memo(
   ({ expanded, highlighted, code, rule, isSingleRule, t, toggleExpand }) => {
+    console.log("rule", rule);
+
     return (
       <Accordion
         expanded={expanded}
