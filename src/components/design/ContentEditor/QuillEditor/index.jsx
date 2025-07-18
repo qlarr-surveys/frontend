@@ -170,31 +170,30 @@ function DraftEditor({
         onPasteCallback: function (pasteData) {
           const quill = this.quill;
           const range = quill.getSelection();
-
-          if (typeof onMoreLines === "function") {
-            const sanitizedText = sanitizePastedText(pasteData);
-            const text = sanitizedText[0];
+          const sanitizedText = sanitizePastedText(pasteData);
+          const text = sanitizedText[0];
+          const rest = sanitizedText.slice(1);
+          if (typeof onMoreLines === "function" && rest.length > 0) {
+            console.log("onMoreLines", text);
             const delta = new Delta()
               .retain(range.index)
               .delete(range.length)
               .insert(text);
-            const index = text.length + range.index;
-            const length = 0;
-            quill.setSelection(index, length, "silent");
             quill.updateContents(delta, "silent");
-            const rest = sanitizedText.slice(1);
+            
             if (rest.length > 0) {
               onMoreLines(rest);
             }
           } else {
+            console.log("pasteData", pasteData);
             const delta = new Delta()
               .retain(range.index)
               .delete(range.length)
               .insert(pasteData);
             const index = pasteData.length + range.index;
-            const length = 0;
-            quill.setSelection(index, length, "silent");
+            const length = pasteData.length;
             quill.updateContents(delta, "silent");
+            quill.setSelection(index, length, "silent");
           }
           // Your custom logic here
         },
@@ -232,8 +231,9 @@ function DraftEditor({
   };
 
   const onChange = (value) => {
+    console.log("onChange", value);
     onFocus();
-    if(!extended && onNewLine && value.endsWith("<p><br></p>")) {
+    if(!extended && onNewLine && value!="<p><br></p>" && value.endsWith("<p><br></p>")) {
       onNewLine(value);
     } else {
       setState(oneLine(value, !extended));
@@ -277,7 +277,7 @@ export function sanitizePastedText(text) {
   // Process each line to remove bullet points and dashes
   const sanitizedLines = lines.map((line) => {
     // Remove leading/trailing whitespace
-    let cleanLine = line.trim();
+    let cleanLine = line;
 
     // Remove common bullet point patterns
     cleanLine = cleanLine

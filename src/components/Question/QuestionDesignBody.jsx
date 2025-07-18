@@ -121,6 +121,17 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
           type="checkbox"
         />
       );
+    case "multiple_text":
+      return (
+        <ChoiceQuestion
+          key={code}
+          designMode={designMode}
+          code={code}
+          onMainLang={onMainLang}
+          t={t}
+          type="text"
+        />
+      );
     case "ranking":
       return (
         <ChoiceQuestion

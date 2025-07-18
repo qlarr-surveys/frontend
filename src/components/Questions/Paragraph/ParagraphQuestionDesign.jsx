@@ -1,8 +1,8 @@
 import React from "react";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
 
 import styles from "./ParagraphQuestionDesign.module.css";
 import { useSelector } from "react-redux";
+import { TextField } from '@mui/material';
 
 function ParagraphQuestionDesign({ code, t }) {
   const state = useSelector((state) => {
@@ -15,14 +15,15 @@ function ParagraphQuestionDesign({ code, t }) {
 
   return (
     <div className={styles.questionItem}>
-      <TextareaAutosize
+      <TextField
         disabled
+        multiline
         className={styles.paragraph}
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
         placeholder={state.showHint && (state.content?.[lang]?.hint || "")}
-        minRows={state.minRows || 2}
+        minRows={state.minRows || 15}
         value={""}
       />
       {state.showWordCount ? (

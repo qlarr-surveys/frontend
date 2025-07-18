@@ -100,6 +100,7 @@ const Question = forwardRef((props, ref) => {
       case "scq":
         return (
           <SCQ
+            lang={props.lang}
             key={props.component.qualifiedCode}
             component={props.component}
           />
@@ -149,6 +150,7 @@ const Question = forwardRef((props, ref) => {
       case "mcq":
         return (
           <MCQ
+            lang={props.lang}
             key={props.component.qualifiedCode}
             component={props.component}
           />
@@ -240,6 +242,7 @@ const Question = forwardRef((props, ref) => {
       case "ranking":
         return (
           <Ranking
+            lang={props.lang}
             key={props.component.qualifiedCode}
             component={props.component}
           />

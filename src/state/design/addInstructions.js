@@ -763,6 +763,17 @@ const requiredText = (qualifiedCode, component) => {
       ` < ` +
       rows.length
     );
+  } else if (
+    component.type == "multiple_text"
+  ) {
+    const rows = component.children
+    return (
+      `[${rows.map(
+        (answer) => answer.qualifiedCode + ".value"
+      )}].filter(x=>x).length ` +
+      ` < ` +
+      rows.length
+    );
   } else {
     return `QlarrScripts.isVoid(${qualifiedCode}.value)`;
   }

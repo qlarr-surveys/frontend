@@ -12,7 +12,7 @@
 
 .groupQuestion {
   position: relative;
-  padding: 1.5rem 1rem 1rem 1rem;
+  padding: 2rem 1rem 1rem 2rem;
 
   page-break-inside: avoid;
   transition: all 200ms cubic-bezier(0, 0, 0.2, 1);
@@ -26,6 +26,7 @@
 }
 
 .titleQuestion {
+  overflow: auto;
   width: 100%;
   display: flex;
   align-items: center;
@@ -63,7 +64,7 @@
 
 .contentContainer.contentContainer {
   position: absolute;
-  top: -5px;
+  top: 0px;
   right: 0px;
   width: 100%;
   display: flex;

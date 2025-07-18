@@ -5,9 +5,14 @@ import { shallowEqual, useSelector } from "react-redux";
 import styles from "./Ranking.module.css";
 import { useDrag, useDrop } from "react-dnd";
 import { orderChange, valueChange } from "~/state/runState";
+import Content from '~/components/run/Content';
+import { useTheme } from '@emotion/react';
 
 function Ranking(props) {
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const lang = props.lang;
+
   const state = useSelector((state) => {
     let valuesMap = {};
     props.component.answers.forEach((element) => {
@@ -173,6 +178,8 @@ function Ranking(props) {
     >
       <RankingContainer
         styles={styles}
+        lang={lang}
+        theme={theme}
         ordererLength={withOrder.length}
         unordererLength={withoutOrder.length}
         onHover={onHover}
@@ -184,6 +191,8 @@ function Ranking(props) {
       />
       <RankingContainer
         styles={styles}
+        lang={lang}
+        theme={theme}
         onHover={onHover}
         onItemTransfer={onItemTransfer}
         onDoubleClick={onDoubleClick}
@@ -200,6 +209,8 @@ function Ranking(props) {
 function RankingContainer({
   styles,
   itemType,
+  lang,
+  theme,
   options,
   onItemTransfer,
   onDoubleClick,
@@ -222,6 +233,8 @@ function RankingContainer({
               onItemTransfer={onItemTransfer}
             />
             <RankingOption
+              lang={lang}
+              theme={theme}
               index={index}
               key={option.code}
               onHover={onHover}
@@ -245,6 +258,8 @@ function RankingContainer({
 }
 
 function RankingOption({
+  lang,
+  theme,
   option,
   onDoubleClick,
   rankingItemStyle,
@@ -313,7 +328,15 @@ function RankingOption({
         className={rankingItemStyle}
         sx={{ backgroundColor: "background.paper" }}
       >
-        {option.content?.label}
+        <Content
+          elementCode={option.code}
+          fontFamily={theme.textStyles.text.font}
+          color={theme.textStyles.text.color}
+          fontSize={theme.textStyles.text.size}
+          name="label"
+          lang={lang}
+          content={option.content?.label}
+        />
       </Box>
     </div>
   );

@@ -3,6 +3,7 @@ import PagesIcon from "@mui/icons-material/Pages";
 import FlagIcon from "@mui/icons-material/Flag";
 import StartIcon from "@mui/icons-material/Start";
 import SurveyIcon from "../common/SurveyIcons/SurveyIcon";
+import { alpha, getContrastRatio } from '@mui/material';
 
 export const groupIconByType = (type, size = "medium") => {
   switch (type) {
@@ -18,6 +19,8 @@ export const groupIconByType = (type, size = "medium") => {
 export const questionIconByType = (type, size = "1.25em", color) => {
   switch (type) {
     case "text":
+      return <SurveyIcon name="shortText" size={size} color={color} />;
+    case "multiple_text":
       return <SurveyIcon name="shortText" size={size} color={color} />;
     case "paragraph":
       return <SurveyIcon name="longText" size={size} color={color} />;
@@ -111,6 +114,61 @@ export const getContrastColor = (hexColor, opacity = 0.2) => {
   return rgbToHex(...blendedRgb);
 };
 
+export const getMildBorderColor = (textColor, opacity = 0.2) => {
+  const rgbColor = hexToRgb(textColor);
+
+  // Create a gray color (neutral gray)
+  const grayRgb = [120, 120, 120];
+
+  // Blend the text color with gray to create a mild version
+  const mildRgb = blendColors(rgbColor, grayRgb, opacity);
+
+  // Convert back to hex
+  return rgbToHex(...mildRgb);
+};
+
+const extractRgbaValues = (colorString) => {
+  // Handle hex colors
+  if (colorString.startsWith("#")) {
+    const rgb = hexToRgb(colorString);
+    return { r: rgb[0], g: rgb[1], b: rgb[2], a: 1 };
+  }
+  
+  // Handle rgba colors: rgba(r, g, b, a)
+  const rgbaMatch = colorString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*(\d?\.?\d+)?\)/);
+  if (rgbaMatch) {
+    return {
+      r: parseInt(rgbaMatch[1]),
+      g: parseInt(rgbaMatch[2]),
+      b: parseInt(rgbaMatch[3]),
+      a: rgbaMatch[4] ? parseFloat(rgbaMatch[4]) : 1
+    };
+  }
+  
+  // Handle rgb colors: rgb(r, g, b)
+  const rgbMatch = colorString.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+  if (rgbMatch) {
+    return {
+      r: parseInt(rgbMatch[1]),
+      g: parseInt(rgbMatch[2]),
+      b: parseInt(rgbMatch[3]),
+      a: 1
+    };
+  }
+  
+  // Default fallback
+  return { r: 0, g: 0, b: 0, a: 1 };
+};
+
+
+export const colorToThemeMode = (color) => {
+  const whiteContrast = getContrastRatio(color, '#ffffff');
+  const blackContrast = getContrastRatio(color, '#000000');
+  
+  // If white text has better contrast, use dark theme
+  return whiteContrast > blackContrast ? "light" : "dark";
+};
+
 export const QUESTION_TYPES = [
   {
     name: "section_text_based",
@@ -131,6 +189,10 @@ export const QUESTION_TYPES = [
       {
         type: "email",
         icon: questionIconByType("email"),
+      },
+      {
+        type: "multiple_text",
+        icon: questionIconByType("multiple_text"),
       },
     ],
   },
@@ -297,12 +359,9 @@ export const createQuestion = (type, qId, lang) => {
 
       break;
     case "scq":
-      returnObj[`Q${qId}A1`] = {
-      };
-      returnObj[`Q${qId}A2`] = {
-      };
-      returnObj[`Q${qId}A3`] = {
-      };
+      returnObj[`Q${qId}A1`] = {};
+      returnObj[`Q${qId}A2`] = {};
+      returnObj[`Q${qId}A3`] = {};
       state.children = [
         {
           code: "A1",
@@ -323,12 +382,9 @@ export const createQuestion = (type, qId, lang) => {
       state.columns = 3;
       state.iconSize = "150";
       state.spacing = 8;
-      returnObj[`Q${qId}A1`] = {
-      };
-      returnObj[`Q${qId}A2`] = {
-      };
-      returnObj[`Q${qId}A3`] = {
-      };
+      returnObj[`Q${qId}A1`] = {};
+      returnObj[`Q${qId}A2`] = {};
+      returnObj[`Q${qId}A3`] = {};
       state.children = [
         {
           code: "A1",
@@ -349,12 +405,9 @@ export const createQuestion = (type, qId, lang) => {
       state.columns = 3;
       state.imageAspectRatio = 1;
       state.spacing = 8;
-      returnObj[`Q${qId}A1`] = {
-      };
-      returnObj[`Q${qId}A2`] = {
-      };
-      returnObj[`Q${qId}A3`] = {
-      };
+      returnObj[`Q${qId}A1`] = {};
+      returnObj[`Q${qId}A2`] = {};
+      returnObj[`Q${qId}A3`] = {};
       state.children = [
         {
           code: "A1",
@@ -371,13 +424,31 @@ export const createQuestion = (type, qId, lang) => {
       ];
 
       break;
+    case "multiple_text":
+      returnObj[`Q${qId}A1`] = {};
+      returnObj[`Q${qId}A2`] = {};
+      returnObj[`Q${qId}A3`] = {};
+      state.children = [
+        {
+          code: "A1",
+          qualifiedCode: `Q${qId}A1`,
+        },
+        {
+          code: "A2",
+          qualifiedCode: `Q${qId}A2`,
+        },
+        {
+          code: "A3",
+          qualifiedCode: `Q${qId}A3`,
+        },
+      ];
+
+      break;
+
     case "mcq":
-      returnObj[`Q${qId}A1`] = {
-      };
-      returnObj[`Q${qId}A2`] = {
-      };
-      returnObj[`Q${qId}A3`] = {
-      };
+      returnObj[`Q${qId}A1`] = {};
+      returnObj[`Q${qId}A2`] = {};
+      returnObj[`Q${qId}A3`] = {};
       state.children = [
         {
           code: "A1",
@@ -398,12 +469,9 @@ export const createQuestion = (type, qId, lang) => {
       state.columns = 3;
       state.imageAspectRatio = 1;
       state.spacing = 8;
-      returnObj[`Q${qId}A1`] = {
-      };
-      returnObj[`Q${qId}A2`] = {
-      };
-      returnObj[`Q${qId}A3`] = {
-      };
+      returnObj[`Q${qId}A1`] = {};
+      returnObj[`Q${qId}A2`] = {};
+      returnObj[`Q${qId}A3`] = {};
       state.children = [
         {
           code: "A1",
@@ -421,12 +489,9 @@ export const createQuestion = (type, qId, lang) => {
 
       break;
     case "ranking":
-      returnObj[`Q${qId}A1`] = {
-      };
-      returnObj[`Q${qId}A2`] = {
-      };
-      returnObj[`Q${qId}A3`] = {
-      };
+      returnObj[`Q${qId}A1`] = {};
+      returnObj[`Q${qId}A2`] = {};
+      returnObj[`Q${qId}A3`] = {};
       state.children = [
         {
           code: "A1",
@@ -444,19 +509,15 @@ export const createQuestion = (type, qId, lang) => {
 
       break;
     case "nps":
-
       break;
     case "icon_mcq":
       state.columns = 3;
       state.columns = 3;
       state.iconSize = "150";
       state.spacing = 8;
-      returnObj[`Q${qId}A1`] = {
-      };
-      returnObj[`Q${qId}A2`] = {
-      };
-      returnObj[`Q${qId}A3`] = {
-      };
+      returnObj[`Q${qId}A1`] = {};
+      returnObj[`Q${qId}A2`] = {};
+      returnObj[`Q${qId}A3`] = {};
       state.children = [
         {
           code: "A1",
@@ -477,13 +538,9 @@ export const createQuestion = (type, qId, lang) => {
       state.columns = 3;
       state.imageAspectRatio = 1;
       state.spacing = 8;
-      returnObj[`Q${qId}A1`] = {
-      };
-      returnObj[`Q${qId}A2`] = {
-      };
-      returnObj[`Q${qId}A3`] = {
-
-      };
+      returnObj[`Q${qId}A1`] = {};
+      returnObj[`Q${qId}A2`] = {};
+      returnObj[`Q${qId}A3`] = {};
       state.children = [
         {
           code: "A1",
@@ -607,10 +664,8 @@ export const createQuestion = (type, qId, lang) => {
 
       break;
     case "file_upload":
-
       break;
     case "signature":
-
       break;
     case "photo_capture":
       state.showHint = true;
@@ -639,13 +694,10 @@ export const createQuestion = (type, qId, lang) => {
 
       break;
     case "text_display":
-
       break;
     case "video_display":
-
       break;
     case "image_display":
-
       break;
     default:
       break;
@@ -692,6 +744,7 @@ export const questionDesignError = (question) => {
 
     case "icon_mcq":
     case "image_mcq":
+    case "multiple_text":
     case "mcq":
       if (!question.children || question.children.length < 1) {
         errors.push({

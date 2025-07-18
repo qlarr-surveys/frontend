@@ -1,3 +1,6 @@
+
+import { colorToThemeMode } from '~/components/Questions/utils';
+
 export const BG_COLOR = '#dfe2ef';
 export const TEXT_COLOR = '#091133';
 export const PRIMARY_COLOR = '#2d3cb1';
@@ -25,7 +28,7 @@ export const defualtTheme = (theme) => {
       },
     },
     palette: {
-      type: "light",
+      mode: colorToThemeMode(theme?.textColor || TEXT_COLOR),
       primary: {
         main: theme?.primaryColor || PRIMARY_COLOR,
       },
@@ -38,6 +41,9 @@ export const defualtTheme = (theme) => {
       background: {
         default: theme?.bgColor || BG_COLOR,
         paper: theme?.paperColor || PAPER_COLOR,
+      },
+      text: {
+        primary: theme?.textColor || TEXT_COLOR, // Main text color
       },
     },
   };

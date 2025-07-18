@@ -2,9 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 
 import styles from "./QuestionDesign.module.css";
-import { nextId } from "~/utils/design/utils";
 import ContentEditor from "~/components/design/ContentEditor";
-import { Box, Collapse } from "@mui/material";
+import { alpha, Box, Collapse } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import { useSelector } from "react-redux";
@@ -138,8 +137,9 @@ function QuestionDesign({
   drop(preview(containerRef));
 
 
-  const contrastColor = getContrastColor(theme.palette.background.paper);
+  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
   const textColor = theme.textStyles.question.color;
+  const primaryColor = theme.palette.primary.main;
 
   useEffect(() => {
     const element = containerRef.current;
@@ -191,7 +191,6 @@ function QuestionDesign({
       style={
         isInSetup
           ? {
-              border: `0.5px solid ${textColor}`,
               backgroundColor: contrastColor,
               color: textColor,
             }
@@ -206,7 +205,7 @@ function QuestionDesign({
       <Box className={styles.contentContainer}>
         {collapsed && (
           <div className={styles.moveBox} ref={drag}>
-            <ViewCompactIcon style={{ color: textColor }} />
+            <ViewCompactIcon style={{ color: primaryColor }} />
           </div>
         )}
         {designMode == DESIGN_SURVEY_MODE.DESIGN && (isInSetup || hovered) && (
@@ -234,8 +233,8 @@ function QuestionDesign({
         }}
       >
         <Box className={styles.iconBox}>
-          {questionIconByType(`${type}`, undefined, textColor)}
-          <span style={{ width: "max-content" }}>{order}.</span>
+          {questionIconByType(`${type}`, undefined, primaryColor)}
+          <span style={{ width: "max-content", color: primaryColor }}>{order}.</span>
         </Box>
 
         <div className={styles.titleQuestion}>

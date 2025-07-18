@@ -363,6 +363,21 @@ export const setupOptions = (type) => {
           ],
         },
       ];
+    case "multiple_text":
+        return [
+          { title: "show_hide", key: "relevance", rules: ["relevance"] },
+          { title: "setup", key: "setup", rules: ["showDescription"] },
+          {
+            title: "order_priority",
+            key: "random",
+            rules: ["randomize_options", "prioritize_options"],
+          },
+          {
+            title: "validation",
+            key: "validation",
+            rules: ["validation_required"],
+          },
+        ];
     case "ranking":
       return [
         { title: "show_hide", key: "relevance", rules: ["relevance"] },

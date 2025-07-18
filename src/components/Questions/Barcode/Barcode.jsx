@@ -67,6 +67,7 @@ function Barcode(props) {
         }
         disabled={true}
         value={state.value}
+        size="small"
         InputProps={{
           sx: {
             fontFamily: theme.textStyles.text.font,

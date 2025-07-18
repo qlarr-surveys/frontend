@@ -21,6 +21,7 @@ function SelectDate({ label, rule, code, t }) {
       <TextField
         className={styles.selectDateField}
         variant="standard"
+        size="small"
         value={value}
         type="date"
         onChange={(event) => {

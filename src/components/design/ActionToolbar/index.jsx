@@ -104,7 +104,7 @@ function ActionToolbar({
     }
   };
 
-  const textColor = theme.textStyles.question.color;
+  const textColor = theme.palette.primary.main;
   const hasSkip = useSelector((state) => {
     let skipInstructions = state.designState[code]?.instructionList?.filter(
       (el) => el.code.startsWith("skip_to")
