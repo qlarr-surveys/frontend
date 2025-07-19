@@ -500,7 +500,7 @@ export const addAnswerInstructions = (
       questionType == "nps" ||
       questionType == "image_ranking"
         ? "int"
-        : questionType == "scq_array" || questionType == "scq_icon_array"
+        : questionType == "scq_array" || questionType == "scq_icon_array" || questionType == "multiple_text"
         ? "string"
         : "boolean",
     text: "",

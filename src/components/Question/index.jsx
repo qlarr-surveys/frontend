@@ -6,6 +6,7 @@ import styles from "./Question.module.css";
 import { stripTags } from "~/utils/design/utils";
 import LoadingDots from "../common/LoadingDots";
 import Validation from "../run/Validation";
+import MultipleText from '../Questions/MultipleText/MultipleText';
 
 const DateTimeQuestion = React.lazy(() =>
   import("../Questions/DateTime/DateTimeQuestion")
@@ -100,6 +101,14 @@ const Question = forwardRef((props, ref) => {
       case "scq":
         return (
           <SCQ
+            lang={props.lang}
+            key={props.component.qualifiedCode}
+            component={props.component}
+          />
+        );
+      case "multiple_text":
+        return (
+          <MultipleText
             lang={props.lang}
             key={props.component.qualifiedCode}
             component={props.component}
