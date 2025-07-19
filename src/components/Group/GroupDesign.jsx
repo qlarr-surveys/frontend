@@ -4,9 +4,8 @@ import styles from "./GroupDesign.module.css";
 import { useSelector } from "react-redux";
 import { QuestionDropArea } from "../design/DropArea/DropArea";
 import GroupHeader from "./GroupHeader";
-import { Box } from "@mui/material";
+import { alpha, Box } from "@mui/material";
 import { useDrag, useDrop } from "react-dnd";
-import { getContrastColor } from "../Questions/utils";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
 import { onDrag, setup } from "~/state/design/designState";
@@ -120,7 +119,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
 
   drop(preview(containerRef));
 
-  const contrastColor = getContrastColor(theme.palette.background.paper);
+  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
   const textColor = theme.textStyles.question.color;
 
   if (!group) {
@@ -139,9 +138,8 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
       sx={
         isInSetup
           ? {
-              border: `0.5px solid ${textColor}`,
-              color: textColor,
-              backgroundColor: contrastColor,
+              border: `0.1px solid ${textColor}`,
+              backgroundColor: "background.paper",
             }
           : {
               backgroundColor: "background.paper",
@@ -151,12 +149,13 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
       ref={containerRef}
       style={getStyles(isDragging)}
     >
+      <div style={{ backgroundColor: isInSetup ? contrastColor : undefined }}>
       {collapsed == true && type !== "welcome" && type !== "end" ? (
         <div className={styles.moveBox} ref={drag}>
           <ViewCompactIcon style={{ color: textColor }} />
         </div>
       ) : (
-        <br />
+        <></>
       )}
       <GroupHeader
         t={t}
@@ -214,6 +213,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
           )}
         </>
       )}
+      </div>
     </Box>
   );
 }

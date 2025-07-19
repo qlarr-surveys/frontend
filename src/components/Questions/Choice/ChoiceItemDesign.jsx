@@ -190,7 +190,6 @@ function ChoiceItemDesign(props) {
             editorTheme="bubble"
             sx={{
               flex: 1,
-              overflow: "auto",
             }}
             onNewLine={props.onNewLine}
             onMoreLines={props.onMoreLines}

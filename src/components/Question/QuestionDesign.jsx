@@ -18,7 +18,6 @@ import { useDrag, useDrop } from "react-dnd";
 
 import ActionToolbar from "~/components/design/ActionToolbar";
 import QuestionDesignBody from "./QuestionDesignBody";
-import { getContrastColor, questionIconByType } from "../Questions/utils";
 import { setupOptions } from "~/constants/design";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 
@@ -46,7 +45,7 @@ function QuestionDesign({
   });
 
   const order = useSelector((state) => {
-    return  state.designState.index[code];
+    return state.designState.index[code];
   });
 
   const question = useSelector((state) => {
@@ -136,8 +135,8 @@ function QuestionDesign({
 
   drop(preview(containerRef));
 
-
   const contrastColor = alpha(theme.textStyles.question.color, 0.2);
+  const hoverColor = alpha(theme.textStyles.question.color, 0.05);
   const textColor = theme.textStyles.question.color;
   const primaryColor = theme.palette.primary.main;
 
@@ -194,6 +193,11 @@ function QuestionDesign({
               backgroundColor: contrastColor,
               color: textColor,
             }
+          : hovered
+          ? {
+              backgroundColor: hoverColor,
+              color: textColor,
+            }
           : {
               opacity: isDragging ? "0.2" : "1",
               border: isDragging ? "dotted 1px " + contrastColor : "0",
@@ -232,11 +236,9 @@ function QuestionDesign({
           fontSize: theme.textStyles.question.size,
         }}
       >
-        <Box className={styles.iconBox}>
-          {questionIconByType(`${type}`, undefined, primaryColor)}
-          <span style={{ width: "max-content", color: primaryColor }}>{order}.</span>
-        </Box>
-
+        <span style={{ width: "max-content", color: primaryColor }}>
+          {order}.
+        </span>
         <div className={styles.titleQuestion}>
           <ContentEditor
             code={code}
