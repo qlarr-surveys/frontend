@@ -1,13 +1,8 @@
-import React, { useRef } from "react";
+import React from "react";
 import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useTheme } from "@mui/material/styles";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Validation from "~/components/run/Validation";
-import Radio from "@mui/material/Radio";
 import { valueChange } from "~/state/runState";
-import FormControl from "@mui/material/FormControl";
-import RadioGroup from "@mui/material/RadioGroup";
 import { Box } from "@mui/material";
 import { setDirty } from "~/state/templateState";
 import Content from "~/components/run/Content";

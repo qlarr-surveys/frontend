@@ -3,7 +3,7 @@ import PagesIcon from "@mui/icons-material/Pages";
 import FlagIcon from "@mui/icons-material/Flag";
 import StartIcon from "@mui/icons-material/Start";
 import SurveyIcon from "../common/SurveyIcons/SurveyIcon";
-import { alpha, getContrastRatio } from '@mui/material';
+import { alpha, getContrastRatio } from "@mui/material";
 
 export const groupIconByType = (type, size = "medium") => {
   switch (type) {
@@ -31,6 +31,8 @@ export const questionIconByType = (type, size = "1.25em", color) => {
     case "email":
       return <SurveyIcon name="email" size={size} color={color} />;
     case "scq":
+      return <SurveyIcon name="singleChoice" size={size} color={color} />;
+    case "select":
       return <SurveyIcon name="singleChoice" size={size} color={color} />;
     case "icon_scq":
       return <SurveyIcon name="singleIconChoice" size={size} color={color} />;
@@ -133,18 +135,20 @@ const extractRgbaValues = (colorString) => {
     const rgb = hexToRgb(colorString);
     return { r: rgb[0], g: rgb[1], b: rgb[2], a: 1 };
   }
-  
+
   // Handle rgba colors: rgba(r, g, b, a)
-  const rgbaMatch = colorString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*(\d?\.?\d+)?\)/);
+  const rgbaMatch = colorString.match(
+    /rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*(\d?\.?\d+)?\)/
+  );
   if (rgbaMatch) {
     return {
       r: parseInt(rgbaMatch[1]),
       g: parseInt(rgbaMatch[2]),
       b: parseInt(rgbaMatch[3]),
-      a: rgbaMatch[4] ? parseFloat(rgbaMatch[4]) : 1
+      a: rgbaMatch[4] ? parseFloat(rgbaMatch[4]) : 1,
     };
   }
-  
+
   // Handle rgb colors: rgb(r, g, b)
   const rgbMatch = colorString.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
   if (rgbMatch) {
@@ -152,19 +156,18 @@ const extractRgbaValues = (colorString) => {
       r: parseInt(rgbMatch[1]),
       g: parseInt(rgbMatch[2]),
       b: parseInt(rgbMatch[3]),
-      a: 1
+      a: 1,
     };
   }
-  
+
   // Default fallback
   return { r: 0, g: 0, b: 0, a: 1 };
 };
 
-
 export const colorToThemeMode = (color) => {
-  const whiteContrast = getContrastRatio(color, '#ffffff');
-  const blackContrast = getContrastRatio(color, '#000000');
-  
+  const whiteContrast = getContrastRatio(color, "#ffffff");
+  const blackContrast = getContrastRatio(color, "#000000");
+
   // If white text has better contrast, use dark theme
   return whiteContrast > blackContrast ? "light" : "dark";
 };
@@ -203,6 +206,10 @@ export const QUESTION_TYPES = [
       {
         type: "scq",
         icon: questionIconByType("scq"),
+      },
+      {
+        type: "select",
+        icon: questionIconByType("select"),
       },
       {
         type: "icon_scq",
@@ -358,6 +365,7 @@ export const createQuestion = (type, qId, lang) => {
       state.showHint = true;
 
       break;
+    case "select":
     case "scq":
       returnObj[`Q${qId}A1`] = {};
       returnObj[`Q${qId}A2`] = {};
@@ -732,6 +740,7 @@ export const questionDesignError = (question) => {
     case "image_ranking":
     case "ranking":
     case "image_scq":
+    case "select":
     case "scq":
     case "icon_scq":
       if (!question.children || question.children.length < 2) {

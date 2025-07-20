@@ -178,7 +178,9 @@ function QuestionDesign({
       onClick={(event) => {
         event.stopPropagation();
         event.preventDefault();
-        dispatch(setup({ code, rules: setupOptions(type) }));
+        if (designMode == DESIGN_SURVEY_MODE.DESIGN) {
+          dispatch(setup({ code, rules: setupOptions(type) }));
+        }
       }}
       ref={containerRef}
       onMouseEnter={() => {
@@ -207,23 +209,24 @@ function QuestionDesign({
       data-code={code}
     >
       <Box className={styles.contentContainer}>
-        {collapsed && (
-          <div className={styles.moveBox} ref={drag}>
-            <ViewCompactIcon style={{ color: primaryColor }} />
-          </div>
-        )}
-        {designMode == DESIGN_SURVEY_MODE.DESIGN && (isInSetup || hovered) && (
+        {designMode == DESIGN_SURVEY_MODE.DESIGN && (
           <div className={styles.actionToolbarVisible}>
             <ActionToolbar
               t={t}
-              isGroup={false}
+              isHovered={hovered}
               isInSetup={isInSetup}
+              isGroup={false}
               code={code}
               parentCode={parentCode}
               onClone={onClone}
               onDelete={onDelete}
               disableDelete={false}
             />
+          </div>
+        )}
+        {designMode == DESIGN_SURVEY_MODE.DESIGN && (
+          <div className={styles.moveBox} ref={drag}>
+            <ViewCompactIcon style={{ color: primaryColor }} />
           </div>
         )}
       </Box>

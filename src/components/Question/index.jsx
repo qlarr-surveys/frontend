@@ -1,7 +1,7 @@
 import React, { Suspense, forwardRef } from "react";
 import { useSelector } from "react-redux";
 
-import { Box, useTheme } from "@mui/material";
+import { Box, Select, useTheme } from "@mui/material";
 import styles from "./Question.module.css";
 import { stripTags } from "~/utils/design/utils";
 import LoadingDots from "../common/LoadingDots";
@@ -12,6 +12,7 @@ const DateTimeQuestion = React.lazy(() =>
   import("../Questions/DateTime/DateTimeQuestion")
 );
 const SCQ = React.lazy(() => import("../Questions/Scq/Scq"));
+const SelectQuestion = React.lazy(() => import("../Questions/SelectQuestion/SelectQuestion"));
 const SCQArray = React.lazy(() => import("../Questions/SCQArray/SCQArray"));
 const Signature = React.lazy(() => import("../Questions/Signature/Signature"));
 const PhotoCapture = React.lazy(() =>
@@ -98,11 +99,18 @@ const Question = forwardRef((props, ref) => {
             component={props.component}
           />
         );
-      case "scq":
+        case "scq":
+          return (
+            <SCQ
+              lang={props.lang}
+              key={props.component.qualifiedCode}
+              component={props.component}
+            />
+          );
+      case "select":
         return (
-          <SCQ
+          <SelectQuestion
             lang={props.lang}
-            key={props.component.qualifiedCode}
             component={props.component}
           />
         );

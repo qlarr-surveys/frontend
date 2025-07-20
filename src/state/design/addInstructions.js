@@ -2,6 +2,7 @@ export const addSkipInstructions = (state, code) => {
   const component = state[code];
   if (
     component.type != "scq" &&
+    component.type != "select" &&
     component.type != "image_scq" &&
     component.type != "icon_scq"
   ) {
@@ -16,7 +17,7 @@ export const addSkipInstructions = (state, code) => {
 export const refreshEnumforSingleChoice = (component, state) => {
   if (
     !component.type ||
-    !["scq", "icon_scq", "image_scq", "scq_icon_array", "scq_array"].includes(
+    !["scq", "icon_scq", "image_scq", "scq_icon_array", "scq_array", "select"].includes(
       component.type
     )
   ) {
@@ -26,6 +27,7 @@ export const refreshEnumforSingleChoice = (component, state) => {
     case "image_scq":
     case "icon_scq":
     case "scq":
+    case "select":
       let valueInstruction = component.instructionList.find(
         (it) => it.code == "value"
       );
@@ -98,6 +100,7 @@ export const addMaskedValuesInstructions = (
       "image_mcq",
       "icon_mcq",
       "scq",
+      "select",
       "icon_scq",
       "number",
       "image_scq",
@@ -165,6 +168,7 @@ export const addMaskedValuesInstructions = (
     case "image_scq":
     case "icon_scq":
     case "scq":
+    case "select":
       if (component.children && component.children.length) {
         let objText =
           "{" +
@@ -347,6 +351,7 @@ export const addQuestionInstructions = (question) => {
         },
       ];
       break;
+    case "select":
     case "scq":
       question.instructionList = [
         {
@@ -500,7 +505,9 @@ export const addAnswerInstructions = (
       questionType == "nps" ||
       questionType == "image_ranking"
         ? "int"
-        : questionType == "scq_array" || questionType == "scq_icon_array" || questionType == "multiple_text"
+        : questionType == "scq_array" ||
+          questionType == "scq_icon_array" ||
+          questionType == "multiple_text"
         ? "string"
         : "boolean",
     text: "",
@@ -534,7 +541,7 @@ export const addAnswerInstructions = (
       });
       break;
     default:
-      if (questionType !== "scq") {
+      if (questionType !== "scq" || questionType !== "select") {
         changeInstruction(answer, valueInstruction);
       }
       break;
@@ -763,10 +770,8 @@ const requiredText = (qualifiedCode, component) => {
       ` < ` +
       rows.length
     );
-  } else if (
-    component.type == "multiple_text"
-  ) {
-    const rows = component.children
+  } else if (component.type == "multiple_text") {
+    const rows = component.children;
     return (
       `[${rows.map(
         (answer) => answer.qualifiedCode + ".value"

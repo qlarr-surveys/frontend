@@ -93,6 +93,10 @@ const buildReference = (code, component, state, mainLang) => {
       type = "SCQ";
       instruction = `${code}.masked_value`;
       break;
+    case "select":
+      type = "Select";
+      instruction = `${code}.masked_value`;
+      break;
     case "icon_scq":
       type = "Icon SCQ";
       instruction = `${code}.masked_value`;

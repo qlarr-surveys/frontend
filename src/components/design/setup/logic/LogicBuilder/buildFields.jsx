@@ -202,6 +202,7 @@ const buildField = (code, component, state, mainLang) => {
       };
     case "image_scq":
     case "icon_scq":
+    case "select":
     case "scq":
       let scqReturnList = {};
       let scqListValues = {};

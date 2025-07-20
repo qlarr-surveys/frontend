@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { onDrag, setup } from "~/state/design/designState";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 import { DESIGN_SURVEY_MODE } from "~/routes";
-import { setupOptions } from '~/constants/design';
+import { setupOptions } from "~/constants/design";
 function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
   const dispatch = useDispatch();
   const group = useSelector((state) => {
@@ -26,9 +26,8 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
     );
   });
 
-
   const isInSetup = useSelector((state) => {
-    return state.designState.setup?.code == code;
+    return inDesign && state.designState.setup?.code == code;
   });
 
   const theme = useTheme();
@@ -133,7 +132,9 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
       onClick={(event) => {
         event.stopPropagation();
         event.preventDefault();
-        dispatch(setup({ code, rules: setupOptions(type) }));
+        if (designMode == DESIGN_SURVEY_MODE.DESIGN) {
+          dispatch(setup({ code, rules: setupOptions(type) }));
+        }
       }}
       sx={
         isInSetup
@@ -150,69 +151,69 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
       style={getStyles(isDragging)}
     >
       <div style={{ backgroundColor: isInSetup ? contrastColor : undefined }}>
-      {collapsed == true && type !== "welcome" && type !== "end" ? (
-        <div className={styles.moveBox} ref={drag}>
-          <ViewCompactIcon style={{ color: textColor }} />
-        </div>
-      ) : (
-        <></>
-      )}
-      <GroupHeader
-        t={t}
-        code={code}
-        index={index}
-        designMode={designMode}
-        children={children}
-      />
-      {collapsed !== true && (
-        <>
-          {children && children.length > 0 && (
-            <QuestionDropArea
-              index={0}
-              parentCode={code}
-              parentType={type}
-              parentIndex={index}
-              t={t}
-            />
-          )}
-          {children?.map((quest, childIndex) => {
-            return (
-              <React.Fragment key={quest.code}>
-                <QuestionDesign
-                  t={t}
-                  key={quest.code}
-                  parentCode={code}
-                  parentIndex={index}
-                  index={childIndex}
-                  isLast={children.length == childIndex + 1}
-                  type={quest.type}
-                  code={quest.code}
-                  designMode={designMode}
-                  onMainLang={inDesign}
-                  lastAddedComponent={lastAddedComponent}
-                />
-                <QuestionDropArea
-                  isLast={children.length == childIndex + 1}
-                  index={childIndex + 1}
-                  parentIndex={index}
-                  parentCode={code}
-                  parentType={type}
-                  t={t}
-                />
-              </React.Fragment>
-            );
-          })}
-          {(!children || !children.length)  && (
-            <QuestionDropArea
-              t={t}
-              index={0}
-              parentCode={code}
-              parentType={type}
-              emptyGroup={true}
-            />
-          )}
-        </>
-      )}
+        {collapsed == true && type !== "welcome" && type !== "end" ? (
+          <div className={styles.moveBox} ref={drag}>
+            <ViewCompactIcon style={{ color: textColor }} />
+          </div>
+        ) : (
+          <></>
+        )}
+        <GroupHeader
+          t={t}
+          code={code}
+          index={index}
+          designMode={designMode}
+          children={children}
+        />
+        {collapsed !== true && (
+          <>
+            {children && children.length > 0 && (
+              <QuestionDropArea
+                index={0}
+                parentCode={code}
+                parentType={type}
+                parentIndex={index}
+                t={t}
+              />
+            )}
+            {children?.map((quest, childIndex) => {
+              return (
+                <React.Fragment key={quest.code}>
+                  <QuestionDesign
+                    t={t}
+                    key={quest.code}
+                    parentCode={code}
+                    parentIndex={index}
+                    index={childIndex}
+                    isLast={children.length == childIndex + 1}
+                    type={quest.type}
+                    code={quest.code}
+                    designMode={designMode}
+                    onMainLang={inDesign}
+                    lastAddedComponent={lastAddedComponent}
+                  />
+                  <QuestionDropArea
+                    isLast={children.length == childIndex + 1}
+                    index={childIndex + 1}
+                    parentIndex={index}
+                    parentCode={code}
+                    parentType={type}
+                    t={t}
+                  />
+                </React.Fragment>
+              );
+            })}
+            {(!children || !children.length) && (
+              <QuestionDropArea
+                t={t}
+                index={0}
+                parentCode={code}
+                parentType={type}
+                emptyGroup={true}
+              />
+            )}
+          </>
+        )}
       </div>
     </Box>
   );

@@ -5,7 +5,10 @@
 }
 
 .moveBox {
-  width: 100%;
+  position: absolute;
+  top: 4px;
+  width: 50%;
+  left: 25%;
   display: flex;
   justify-content: center;
 }
