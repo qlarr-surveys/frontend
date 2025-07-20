@@ -17,6 +17,8 @@ import {
   Tabs,
   Tab,
   Tooltip,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -56,15 +58,34 @@ function ResponsesSurvey() {
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [exportMenuAnchor, setExportMenuAnchor] = useState(null);
 
-  const exportResponses = () => {
+  const handleExportMenuOpen = (event) => {
+    setExportMenuAnchor(event.currentTarget);
+  };
+
+  const handleExportMenuClose = () => {
+    setExportMenuAnchor(null);
+  };
+
+  const handleExport = (format) => {
+    handleExportMenuClose();
+    exportResponses(format);
+  };
+
+  const exportResponses = (format) => {
     setFetching(true);
     surveyService
-      .exportResponses(surveyId, timezone, dbResponses, completeResponses)
+      .exportResponses(surveyId, timezone, dbResponses, completeResponses, format)
       .then((data) => {
         if (data) {
-          var file = new File([data], `${surveyId}-responses-export.csv`, {
-            type: "text/csv;charset=utf-8",
+          const fileExtension = format === 'xlsx' ? 'xlsx' : 'csv';
+          const mimeType = format === 'xlsx' 
+            ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            : 'text/csv;charset=utf-8';
+          
+          var file = new File([data], `${surveyId}-responses-export.${fileExtension}`, {
+            type: mimeType,
           });
           FileSaver.saveAs(file);
         }
@@ -183,10 +204,22 @@ function ResponsesSurvey() {
             disabled={surveyor || false}
             size="small"
             variant="contained"
-            onClick={() => exportResponses()}
+            onClick={handleExportMenuOpen}
           >
             <ArrowOutward />
           </Button>
+          <Menu
+            anchorEl={exportMenuAnchor}
+            open={Boolean(exportMenuAnchor)}
+            onClose={handleExportMenuClose}
+          >
+            <MenuItem onClick={() => handleExport('csv')}>
+              Export as CSV
+            </MenuItem>
+            <MenuItem onClick={() => handleExport('xlsx')}>
+              Export as Excel
+            </MenuItem>
+          </Menu>
         </Box>
       </Box>
 
