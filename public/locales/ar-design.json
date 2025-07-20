@@ -1,7 +1,7 @@
 {
   "components": "المكونات",
   "setup": "الإعداد",
-  "setup_for": "إعداد لـ {{name}}",
+  "setup_for": "إعداد لـ",
   "design": "التصميم",
   "settings": "الإعدادات",
   "responses": "الردود",

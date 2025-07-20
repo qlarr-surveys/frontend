@@ -9,7 +9,7 @@ import Relevance from "../logic/Relevance";
 import SkipLogic from "../SkipLogic";
 import styles from "./SetupPanel.module.css";
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, IconButton, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { resetSetup, setupToggleExpand } from "~/state/design/designState";
 import OrderPrioritySetup from "../random/OrderPrioritySetup";
@@ -59,10 +59,12 @@ function SetupPanel({ t }) {
     >
       <div className={styles.titleContainer}>
         <Box display="flex" alignItems="center" gap={1}>
-          {questionIconByType(`${type}`, undefined)}
-
           <Typography variant="h6" component="h2">
-            {t("setup_for", { name: order })}
+            {t("setup_for")}
+          </Typography>
+          {questionIconByType(`${type}`, undefined)}
+          <Typography variant="h6" component="h2">
+            {code}
           </Typography>
         </Box>
 
@@ -74,7 +76,7 @@ function SetupPanel({ t }) {
           <CloseIcon />
         </IconButton>
       </div>
-
+      <Divider />
       <SetupSection rules={rules} code={code} t={t} highlighted={highlighted} />
     </div>
   );
@@ -456,7 +458,13 @@ const SetupSection = React.memo(({ rules, code, t, highlighted }) => {
         {rules.map((rule) => (
           <Tab
             className={styles.tabStyle}
-            sx={{ px: 1.5 }}
+            sx={{
+              px: 1.5,
+              borderBottom: "2px solid transparent",
+              "&.Mui-selected": {
+                borderBottom: "2px solid #000",
+              },
+            }}
             key={rule.key}
             label={t(rule.title)}
           />
