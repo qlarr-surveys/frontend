@@ -79,10 +79,22 @@ function ResponsesSurvey() {
       .exportResponses(surveyId, timezone, dbResponses, completeResponses, format)
       .then((data) => {
         if (data) {
-          const fileExtension = format === 'xlsx' ? 'xlsx' : 'csv';
-          const mimeType = format === 'xlsx' 
-            ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            : 'text/csv;charset=utf-8';
+          let fileExtension, mimeType;
+          
+          switch (format) {
+            case 'xlsx':
+              fileExtension = 'xlsx';
+              mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+              break;
+            case 'ods':
+              fileExtension = 'ods';
+              mimeType = 'application/vnd.oasis.opendocument.spreadsheet';
+              break;
+            default: // csv
+              fileExtension = 'csv';
+              mimeType = 'text/csv;charset=utf-8';
+              break;
+          }
           
           var file = new File([data], `${surveyId}-responses-export.${fileExtension}`, {
             type: mimeType,
@@ -218,6 +230,9 @@ function ResponsesSurvey() {
             </MenuItem>
             <MenuItem onClick={() => handleExport('xlsx')}>
               Export as Excel
+            </MenuItem>
+            <MenuItem onClick={() => handleExport('ods')}>
+              Export as ODS
             </MenuItem>
           </Menu>
         </Box>
