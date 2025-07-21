@@ -18,6 +18,7 @@ import BarcodeDesign from "../Questions/Barcode/BarcodeDesign";
 import ChoiceQuestion from "../Questions/Choice/ChoiceDesign";
 import ImageChoiceQuestion from "../Questions/Imagechoice/ImageChoiceDesign";
 import SCQIconArrayDesign from "../Questions/SCQArray/SCQIconArrayDesign";
+import { RHFSelect } from "../hook-form";
 
 function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
   switch (type) {
@@ -61,6 +62,20 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
           code={code}
           type="radio"
         />
+      );
+    case "select":
+      return (
+        <>
+          <RHFSelect sx={{ width: "50%" }} disabled={true} />
+          <ChoiceQuestion
+            key={code}
+            t={t}
+            designMode={designMode}
+            onMainLang={onMainLang}
+            code={code}
+            type="select"
+          />
+        </>
       );
     case "image_mcq":
     case "image_scq":
@@ -119,6 +134,17 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
           onMainLang={onMainLang}
           t={t}
           type="checkbox"
+        />
+      );
+    case "multiple_text":
+      return (
+        <ChoiceQuestion
+          key={code}
+          designMode={designMode}
+          code={code}
+          onMainLang={onMainLang}
+          t={t}
+          type="text"
         />
       );
     case "ranking":

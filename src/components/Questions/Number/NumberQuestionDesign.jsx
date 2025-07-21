@@ -19,7 +19,8 @@ function NumberQuestionDesign({ code }) {
     <div className={styles.questionItem}>
       <TextField
         disabled
-        variant="standard"
+        size="small"
+        variant="outlined"
         required={
           state.validation?.validation_required?.isActive ? true : false
         }

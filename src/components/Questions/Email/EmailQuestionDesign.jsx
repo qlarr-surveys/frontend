@@ -20,7 +20,8 @@ function EmailQuestionDesign({ code }) {
     <div className={styles.questionItem}>
       <TextField
         disabled
-        variant="standard"
+        variant="outlined"
+        size="small"
         required={
           state.validation?.validation_required?.isActive ? true : false
         }

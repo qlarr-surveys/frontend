@@ -30,11 +30,12 @@ function Content(props) {
   const isRtl = rtlLanguage.includes(lang);
 
   if (!props.content) {
-    return "";
+    return <span style={{ flex: 1 }} />;
   } else if (!isComplex) {
     return (
       <div
         style={{
+          ...props.style,
           fontFamily: props.fontFamily,
           color: props.color,
           fontSize: props.fontSize + "px",
@@ -47,6 +48,7 @@ function Content(props) {
     return (
       <div
         style={{
+          ...props.style,
           fontFamily: props.fontFamily,
           color: props.color,
           fontSize: props.fontSize + "px",

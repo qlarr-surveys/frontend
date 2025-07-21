@@ -56,15 +56,7 @@ function DateTimeQuestion(props) {
             <DateTimePicker
               renderInput={(props) => (
                 <TextField
-                  sx={{
-                    svg: { color: theme.textStyles.text.color },
-                    border: '1px solid',
-                    '& .MuiOutlinedInput-root': {
-                      '&.Mui-focused fieldset': {
-                        borderColor: theme.textStyles.text.color,
-                      },
-                    },
-                  }}
+                  size="small"
                   onKeyDown={(e) => e.preventDefault()} {...props} />
               )}
               margin="normal"
@@ -120,15 +112,7 @@ function DateTimeQuestion(props) {
           <TimePicker
             renderInput={(params) => (
               <TextField
-                sx={{
-                  svg: { color: theme.textStyles.text.color },
-                  border: '1px solid',
-                  '& .MuiOutlinedInput-root': {
-                    '&.Mui-focused fieldset': {
-                      borderColor: theme.textStyles.text.color,
-                    },
-                  },
-                }}
+                size="small"
                 onKeyDown={(e) => e.preventDefault()} {...params} />
             )}
             margin="normal"
@@ -161,17 +145,7 @@ function DateTimeQuestion(props) {
           <DatePicker
             renderInput={(params) => (
               <TextField
-                sx={{
-                  svg: { color: theme.textStyles.text.color },
-                  input: { color: theme.textStyles.text.color },
-                  border: '1px solid',
-                  '& .MuiOutlinedInput-root': {
-                    '&.Mui-focused fieldset': {
-                      borderColor: theme.textStyles.text.color,
-                    },
-                  },
-                }}
-
+                size="small"
                 onKeyDown={(e) => e.preventDefault()} {...params} />
             )}
             margin="normal"

@@ -1,3 +1,6 @@
+
+import { colorToThemeMode } from '~/components/Questions/utils';
+
 export const BG_COLOR = '#dfe2ef';
 export const TEXT_COLOR = '#091133';
 export const PRIMARY_COLOR = '#2d3cb1';
@@ -10,7 +13,7 @@ export const defualtTheme = (theme) => {
     textStyles: {
       group: {
         font: theme?.textStyles?.group?.font || "Rubik",
-        size: theme?.textStyles?.group?.size || 26,
+        size: theme?.textStyles?.group?.size || 34,
         color: theme?.textStyles?.group?.color || TEXT_COLOR,
       },
       question: {
@@ -25,7 +28,7 @@ export const defualtTheme = (theme) => {
       },
     },
     palette: {
-      type: "light",
+      mode: colorToThemeMode(theme?.textColor || TEXT_COLOR),
       primary: {
         main: theme?.primaryColor || PRIMARY_COLOR,
       },
@@ -39,6 +42,9 @@ export const defualtTheme = (theme) => {
         default: theme?.bgColor || BG_COLOR,
         paper: theme?.paperColor || PAPER_COLOR,
       },
+      text: {
+        primary: theme?.textColor || TEXT_COLOR, // Main text color
+      },
     },
   };
 };
@@ -47,7 +53,7 @@ export const defaultSurveyTheme = {
   textStyles: {
     group: {
       font: "Rubik",
-      size: 26,
+      size: 34,
       color: TEXT_COLOR,
     },
     question: {

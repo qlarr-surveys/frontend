@@ -20,8 +20,6 @@ export const reorderSetup = {
   ],
 };
 
-
-
 export const themeSetup = {
   code: "Survey",
   rules: [
@@ -41,7 +39,7 @@ export const themeSetup = {
       title: "order_priority",
       key: "random",
       rules: ["randomize_groups", "prioritize_groups"],
-    }
+    },
   ],
 };
 export const languageSetup = {
@@ -286,6 +284,7 @@ export const setupOptions = (type) => {
           rules: ["validation_required"],
         },
       ];
+    case "select":
     case "scq":
       return [
         { title: "show_hide", key: "relevance", rules: ["relevance"] },
@@ -361,6 +360,21 @@ export const setupOptions = (type) => {
             "validation_max_option_count",
             "validation_option_count",
           ],
+        },
+      ];
+    case "multiple_text":
+      return [
+        { title: "show_hide", key: "relevance", rules: ["relevance"] },
+        { title: "setup", key: "setup", rules: ["showDescription"] },
+        {
+          title: "order_priority",
+          key: "random",
+          rules: ["randomize_options", "prioritize_options"],
+        },
+        {
+          title: "validation",
+          key: "validation",
+          rules: ["validation_required"],
         },
       ];
     case "ranking":

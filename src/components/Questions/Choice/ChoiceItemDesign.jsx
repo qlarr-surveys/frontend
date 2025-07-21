@@ -2,10 +2,11 @@ import styles from "./ChoiceItemDesign.module.css";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import CloseIcon from "@mui/icons-material/Close";
 import BuildIcon from "@mui/icons-material/Build";
-import { Box, Checkbox, Radio } from "@mui/material";
+import { Box, Checkbox, Radio, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
+  changeContent,
   onDrag,
   removeAnswer,
   setup,
@@ -15,16 +16,27 @@ import { useDrag, useDrop } from "react-dnd";
 import { useRef } from "react";
 import { contentEditable, inDesign } from "~/routes";
 import ContentEditor from "~/components/design/ContentEditor";
+import { useTheme } from "@emotion/react";
 
 function ChoiceItemDesign(props) {
   const dispatch = useDispatch();
   const ref = useRef(null);
-
+  const theme = useTheme();
 
   const answer = useSelector((state) => {
     return state.designState[props.qualifiedCode];
   });
 
+  const langInfo = useSelector((state) => {
+    return state.designState.langInfo;
+  });
+
+  const onMainLang = langInfo.lang === langInfo.mainLang;
+  const lang = langInfo.lang;
+
+  const content = useSelector((state) => {
+    return state.designState[props.qualifiedCode].content?.[lang]?.["label"];
+  });
 
   const isInSetup = useSelector((state) => {
     return (
@@ -32,7 +44,6 @@ function ChoiceItemDesign(props) {
       state.designState.setup?.code == props.qualifiedCode + "Atext"
     );
   });
-
 
   const getStyles = (isDragging) => {
     const styles = {
@@ -124,6 +135,11 @@ function ChoiceItemDesign(props) {
       <Box
         sx={{ backgroundColor: isInSetup ? "beige" : "inherit" }}
         className={styles.answerItem}
+        style={{
+          gap: "8px",
+          marginTop: props.type === "text" ? "8px" : "inherit",
+          marginBottom: props.type === "text" ? "8px" : "inherit",
+        }}
       >
         {inDesign(props.designMode) && (
           <div ref={drag} className={styles.answerIcon}>
@@ -136,22 +152,59 @@ function ChoiceItemDesign(props) {
           </div>
         )}
         {props.type === "checkbox" ? (
-          <Checkbox  disabled />
+          <Checkbox disabled />
         ) : props.type === "radio" ? (
-          <Radio  disabled />
+          <Radio disabled />
         ) : null}{" "}
-        {props.label === "Aother" ? <b>Other</b> : ""}
-        <ContentEditor
+        {answer.type === "other" ? (
+          <TextField
+            variant="outlined"
+            size="small"
+            fullWidth
+            sx={{
+              "& .MuiInputBase-input": {
+                color: theme.palette.text.disabled,
+              },
+            }}
+            disabled={!contentEditable(props.designMode)}
+            value={content || ""}
+            onChange={(e) =>
+              dispatch(
+                changeContent({
+                  code: props.qualifiedCode,
+                  key: "label",
+                  lang: lang,
+                  value: e.target.value,
+                })
+              )
+            }
+            placeholder={
+              onMainLang
+                ? props.t("content_editor_placeholder_option")
+                : mainContent || props.t("content_editor_placeholder_option")
+            }
+          />
+        ) : (
+          <ContentEditor
             code={props.qualifiedCode}
             editorTheme="bubble"
+            sx={{
+              flex: 1,
+            }}
             onNewLine={props.onNewLine}
             onMoreLines={props.onMoreLines}
             editable={contentEditable(props.designMode)}
             extended={false}
-            placeholder={ props.t("content_editor_placeholder_option")}
+            placeholder={props.t("content_editor_placeholder_option")}
             contentKey="label"
           />
-          <span style={{ margin: "8px" }} />
+        )}
+        {props.type === "text" && (
+          <>
+            <TextField sx={{ flex: 2 }} size="small" disabled variant="outlined" />
+          </>
+        )}
+        <span style={{ margin: "8px" }} />
         {answer.type === "other" && (
           <BuildIcon
             key="setup"

@@ -108,11 +108,12 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
         <FieldSize
           label={"textarea_lines"}
           lowerBound={1}
+          rule={rule}
           t={t}
-          upperBound={500}
-          code={code}
-          defaultValue={20}
           key={code + rule}
+          upperBound={15}
+          code={code}
+          defaultValue={4}
         />
       );
     case "hideText":

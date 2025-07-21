@@ -37,7 +37,8 @@ function TextQuestion(props) {
   return (
     <div className={styles.questionItem}>
       <TextField
-        variant="standard"
+        variant="outlined"
+        size="small"
         required={
           props.component.validation?.validation_required?.isActive
             ? true
@@ -58,7 +59,6 @@ function TextQuestion(props) {
             fontFamily: theme.textStyles.text.font,
             color: theme.textStyles.text.color,
             fontSize: theme.textStyles.text.size,
-            borderBottom: "1px solid",
           },
         }}
       />
