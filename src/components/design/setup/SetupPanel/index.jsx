@@ -46,6 +46,10 @@ function SetupPanel({ t }) {
     return state.designState[code].type;
   });
 
+  const order = useSelector((state) => {
+    return state.designState.index[code];
+  });
+
   return (
     <div
       className={styles.rightContent}
@@ -60,7 +64,7 @@ function SetupPanel({ t }) {
           </Typography>
           {questionIconByType(`${type}`, undefined)}
           <Typography variant="h6" component="h2">
-            {code}
+            {order}
           </Typography>
         </Box>
 
