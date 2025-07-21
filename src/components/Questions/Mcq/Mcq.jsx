@@ -29,6 +29,7 @@ function MCQ(props) {
           } else {
             return (
               <MCQAnswer
+                lang={props.lang}
                 key={option.qualifiedCode}
                 Answer={option}
                 parentCode={props.component.qualifiedCode}

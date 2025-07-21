@@ -202,6 +202,7 @@ const buildField = (code, component, state, mainLang) => {
       };
     case "image_scq":
     case "icon_scq":
+    case "select":
     case "scq":
       let scqReturnList = {};
       let scqListValues = {};
@@ -390,6 +391,56 @@ const buildField = (code, component, state, mainLang) => {
           };
         });
       return scqArrayReturnList;
+    case "multiple_text":
+      return {
+        [code]: {
+          label: label,
+          type: "text",
+          valueSources: ["value"],
+          operators: [
+            "is_relevant",
+            "is_not_relevant",
+            "is_valid",
+            "is_not_valid",
+            "is_empty",
+            "is_not_empty",
+            "equal",
+            "not_equal",
+            "like",
+            "not_like",
+            "starts_with",
+            "ends_with",
+          ],
+        },
+      };
+      let multipleTextReturnList = {};
+      component.children.forEach((element) => {
+        multipleTextReturnList[code + element.code] = {
+          label:
+            label +
+            " - " +
+            stripTags(
+              state[element.qualifiedCode].content?.[mainLang]?.label || ""
+            ),
+          type: "text",
+          valueSources: ["value"],
+          operators: [
+            "is_relevant",
+            "is_not_relevant",
+            "is_valid",
+            "is_not_valid",
+            "is_empty",
+            "is_not_empty",
+            "equal",
+            "not_equal",
+            "like",
+            "not_like",
+            "starts_with",
+            "ends_with",
+          ],
+        };
+      });
+      return multipleTextReturnList;
     case "ranking":
     case "image_ranking":
       let rankingReturnList = {};

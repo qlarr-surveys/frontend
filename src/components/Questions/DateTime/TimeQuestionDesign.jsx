@@ -20,6 +20,7 @@ function TimeQuestionDesign({ code }) {
       <TextField
         disabled
         variant="standard"
+        size="small"
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
@@ -30,13 +31,6 @@ function TimeQuestionDesign({ code }) {
         }
         value={""}
         type="time"
-        InputProps={{
-          sx: {
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          },
-        }}
       />
     </div>
   );

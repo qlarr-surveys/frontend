@@ -18,6 +18,8 @@ import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 function ActionToolbar({
   code,
   isGroup,
+  isHovered,
+  isInSetup,
   parentCode,
   disableDelete,
   onDelete,
@@ -47,7 +49,10 @@ function ActionToolbar({
     return (
       !isGroup &&
       state.designState[code]?.instructionList?.filter(
-        (el) => el.code.startsWith("validation_") && el.code != "validation_enum" && !el.errors
+        (el) =>
+          el.code.startsWith("validation_") &&
+          el.code != "validation_enum" &&
+          !el.errors
       )?.length > 0
     );
   });
@@ -104,7 +109,7 @@ function ActionToolbar({
     }
   };
 
-  const textColor = theme.textStyles.question.color;
+  const textColor = theme.palette.primary.main;
   const hasSkip = useSelector((state) => {
     let skipInstructions = state.designState[code]?.instructionList?.filter(
       (el) => el.code.startsWith("skip_to")
@@ -192,20 +197,25 @@ function ActionToolbar({
           </IconButton>
         </CustomTooltip>
       )}
+      {(isHovered || isInSetup) && (
+        <>
+          {!isGroup && (
+            <IconButton onClick={() => onClone()}>
+              <SurveyIcon
+                name="duplicate"
+                size=".75em"
+                color={`${textColor}`}
+              />
+            </IconButton>
+          )}
+          {!disableDelete && (
+            <IconButton onClick={() => setOpen(true)} disabled={disableDelete}>
+              <SurveyIcon name="delete" size=".75em" color={textColor} />
+            </IconButton>
+          )}
+        </>
+      )}
 
-      <IconButton onClick={() => setSetup()}>
-        <SurveyIcon name="settings" size=".75em" color={`${textColor}`} />
-      </IconButton>
-      {!isGroup && (
-        <IconButton onClick={() => onClone()}>
-          <SurveyIcon name="duplicate" size=".75em" color={`${textColor}`} />
-        </IconButton>
-      )}
-      {!disableDelete && (
-        <IconButton onClick={() => setOpen(true)} disabled={disableDelete}>
-          <SurveyIcon name="delete" size=".75em" color={textColor} />
-        </IconButton>
-      )}
       <DeleteModal
         open={open}
         description={t("delete_question")}

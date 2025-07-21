@@ -19,7 +19,8 @@ function DateTimeQuestionDesign({ code }) {
     <div className={styles.questionItem}>
       <TextField
         disabled
-        variant="standard"
+        size="small"
+        variant="outlined"
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
@@ -29,13 +30,6 @@ function DateTimeQuestionDesign({ code }) {
             : "" || ""
         }
         value={""}
-        InputProps={{
-          sx: {
-            fontFamily: theme.textStyles.text,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          },
-        }}
         placeholder={state.dateFormat}
       />
     </div>

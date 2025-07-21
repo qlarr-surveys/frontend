@@ -19,8 +19,9 @@ function TextQuestionDesign({ code }) {
   return (
     <div className={styles.questionItem}>
       <TextField
+        variant="outlined"
+        size="small"
         disabled
-        variant="standard"
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
@@ -31,10 +32,6 @@ function TextQuestionDesign({ code }) {
             fontFamily: theme.textStyles.text.font,
             color: theme.textStyles.text.color,
             fontSize: theme.textStyles.text.size,
-            "&.Mui-disabled": {
-              color: theme.textStyles.text.color,
-              borderBottom: '1px solid'
-            }
           },
         }}
       />
