@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { isNotEmptyHtml } from "~/utils/design/utils";
 import cloneDeep from "lodash.clonedeep";
 
-function ContentEditor({ placeholder, extended, contentKey, onNewLine,code,onMoreLines, editable, editorTheme = "snow" }) {
+function ContentEditor({ placeholder, extended, contentKey, onNewLine,code,onMoreLines, editable, editorTheme = "snow", style, sx }) {
   const dispatch = useDispatch();
 
   const content = useSelector((state) => {
@@ -77,7 +77,6 @@ function ContentEditor({ placeholder, extended, contentKey, onNewLine,code,onMor
     ? content?.[mainLang]?.[contentKey]
     : placeholder;
   const [isActive, setActive] = useState(false);
-  const boxRef = useRef(null);
 
   useEffect(() => {
     if (focus && !isActive && editable) {
@@ -107,7 +106,8 @@ function ContentEditor({ placeholder, extended, contentKey, onNewLine,code,onMor
 
   return (
     <Box
-      ref={boxRef}
+      style={style}
+      sx={sx}
       className={styles.fullWidth}
       onClick={(e) => {
         if (editable) {

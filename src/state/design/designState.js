@@ -215,6 +215,7 @@ export const designState = createSlice({
       });
       cleanupRandomRules(group);
       state.index = buildCodeIndex(state);
+      state.focus = newQuestionId;
     },
     removeAnswer: (state, action) => {
       const answerQualifiedCode = action.payload;

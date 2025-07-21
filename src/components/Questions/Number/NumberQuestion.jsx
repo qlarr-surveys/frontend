@@ -82,12 +82,13 @@ function NumberQuestion(props) {
   return (
     <div className={styles.questionItem}>
       <TextField
-        variant="standard"
+        variant="outlined"
         required={
           props.component.validation?.validation_required?.isActive
             ? true
             : false
         }
+        size="small"
         id={props.component.qualifiedCode}
         name={props.component.qualifiedCode}
         label={(props.component.showHint && props.component.content?.hint )|| ""}
@@ -101,7 +102,6 @@ function NumberQuestion(props) {
             fontFamily: theme.textStyles.text.font,
             color: theme.textStyles.text.color,
             fontSize: theme.textStyles.text.size,
-            borderBottom: '1px solid'
 
           },
         }}

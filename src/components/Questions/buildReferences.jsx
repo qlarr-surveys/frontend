@@ -30,7 +30,7 @@ const buildReference = (code, component, state, mainLang) => {
               label +
               " - " +
               code +
-              ". " +
+              "." +
               stripTags(
                 state[element.qualifiedCode].content?.[mainLang]?.label
               ),
@@ -39,6 +39,24 @@ const buildReference = (code, component, state, mainLang) => {
             instruction: code + element.code + ".masked_value",
           };
         });
+    case "multiple_text":
+      return component.children
+      .map((element) => {
+        return {
+          value:
+            label +
+            " - " +
+            code +
+            "." +
+            stripTags(
+              state[element.qualifiedCode].content?.[mainLang]?.label
+            ),
+          id: code + element.code,
+          type: "Multiple Text",
+          instruction: code + element.code + ".value",
+        };
+      });
+      break;
     case "text":
       type = "Short Text";
       instruction = `${code}.value`;
@@ -73,6 +91,10 @@ const buildReference = (code, component, state, mainLang) => {
       break;
     case "scq":
       type = "SCQ";
+      instruction = `${code}.masked_value`;
+      break;
+    case "select":
+      type = "Select";
       instruction = `${code}.masked_value`;
       break;
     case "icon_scq":

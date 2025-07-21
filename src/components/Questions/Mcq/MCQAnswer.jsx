@@ -1,5 +1,3 @@
-
-
 import React, { memo } from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -9,6 +7,7 @@ import { useTheme } from "@mui/material/styles";
 import { valueChange } from "~/state/runState";
 import { Box } from "@mui/material";
 import { setDirty } from "~/state/templateState";
+import Content from '~/components/run/Content';
 
 function McqAnswer(props) {
   const theme = useTheme();
@@ -45,14 +44,15 @@ function McqAnswer(props) {
         />
       }
       label={
-        <Box
-          sx={{
-            fontFamily: theme.textStyles.text.font,
-            fontSize: theme.textStyles.text.size,
-          }}
-        >
-          {props.Answer.content?.label}
-        </Box>
+        <Content
+          elementCode={props.Answer.code}
+          fontFamily={theme.textStyles.text.font}
+          color={theme.textStyles.text.color}
+          fontSize={theme.textStyles.text.size}
+          name="label"
+          lang={props.lang}
+          content={props.Answer.content?.label}
+        />
       }
     />
   ) : (

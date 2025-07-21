@@ -71,7 +71,7 @@ function Theming({ t }) {
         changeAttribute({
           code: "Survey",
           key: "theme",
-          value: { ...theme, textStyles: updatedTextStyles },
+          value: { ...theme, textStyles: updatedTextStyles, textColor: val },
         })
       );
     } else if (key === "bgColor") {

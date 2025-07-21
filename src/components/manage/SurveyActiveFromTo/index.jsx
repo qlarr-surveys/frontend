@@ -11,6 +11,7 @@ const renderInput = (props) => {
     <TextField
       {...props}
       variant="outlined"
+      size="small"
       sx={{
         "& .MuiOutlinedInput-root": {
           borderRadius: "16px",
