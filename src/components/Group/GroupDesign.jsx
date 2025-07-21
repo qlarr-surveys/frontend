@@ -150,7 +150,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
       ref={containerRef}
       style={getStyles(isDragging)}
     >
-      <div style={{ backgroundColor: isInSetup ? contrastColor : undefined }}>
+      <div style={{ backgroundColor: isInSetup ? contrastColor : undefined, padding: "0rem 0rem 2rem 0rem" }}>
         {collapsed == true && type !== "welcome" && type !== "end" ? (
           <div className={styles.moveBox} ref={drag}>
             <ViewCompactIcon style={{ color: textColor }} />

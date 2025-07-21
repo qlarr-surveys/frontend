@@ -13,7 +13,7 @@ export const defualtTheme = (theme) => {
     textStyles: {
       group: {
         font: theme?.textStyles?.group?.font || "Rubik",
-        size: theme?.textStyles?.group?.size || 26,
+        size: theme?.textStyles?.group?.size || 34,
         color: theme?.textStyles?.group?.color || TEXT_COLOR,
       },
       question: {
@@ -53,7 +53,7 @@ export const defaultSurveyTheme = {
   textStyles: {
     group: {
       font: "Rubik",
-      size: 26,
+      size: 34,
       color: TEXT_COLOR,
     },
     question: {

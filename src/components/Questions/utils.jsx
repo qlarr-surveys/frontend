@@ -21,7 +21,7 @@ export const questionIconByType = (type, size = "1.25em", color) => {
     case "text":
       return <SurveyIcon name="shortText" size={size} color={color} />;
     case "multiple_text":
-      return <SurveyIcon name="shortText" size={size} color={color} />;
+      return <SurveyIcon name="multipleText" size={size} color={color} />;
     case "paragraph":
       return <SurveyIcon name="longText" size={size} color={color} />;
     case "barcode":
@@ -33,7 +33,7 @@ export const questionIconByType = (type, size = "1.25em", color) => {
     case "scq":
       return <SurveyIcon name="singleChoice" size={size} color={color} />;
     case "select":
-      return <SurveyIcon name="singleChoice" size={size} color={color} />;
+      return <SurveyIcon name="select" size={size} color={color} />;
     case "icon_scq":
       return <SurveyIcon name="singleIconChoice" size={size} color={color} />;
     case "image_scq":
@@ -212,6 +212,24 @@ export const QUESTION_TYPES = [
         icon: questionIconByType("select"),
       },
       {
+        type: "scq_array",
+        icon: questionIconByType("scq_array"),
+      },
+      {
+        type: "mcq",
+        icon: questionIconByType("mcq"),
+      },
+      {
+        type: "nps",
+        icon: questionIconByType("nps"),
+      },
+    ],
+  },,
+  {
+    name: "section_image_choice_based",
+    type: "choice",
+    items: [
+      {
         type: "icon_scq",
         icon: questionIconByType("icon_scq"),
       },
@@ -220,16 +238,8 @@ export const QUESTION_TYPES = [
         icon: questionIconByType("image_scq"),
       },
       {
-        type: "scq_array",
-        icon: questionIconByType("scq_array"),
-      },
-      {
         type: "scq_icon_array",
         icon: questionIconByType("scq_icon_array"),
-      },
-      {
-        type: "mcq",
-        icon: questionIconByType("mcq"),
       },
       {
         type: "icon_mcq",
@@ -238,11 +248,7 @@ export const QUESTION_TYPES = [
       {
         type: "image_mcq",
         icon: questionIconByType("image_mcq"),
-      },
-      {
-        type: "nps",
-        icon: questionIconByType("nps"),
-      },
+      }
     ],
   },
   {
