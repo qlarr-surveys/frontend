@@ -6,10 +6,6 @@
   justify-content: space-between;
 }
 
-.textCenter.textCenter {
-  margin-right: auto;
-}
-
 .userInfo {
   display: flex;
   align-items: center;
