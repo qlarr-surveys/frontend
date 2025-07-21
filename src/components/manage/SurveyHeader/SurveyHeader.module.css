@@ -1,0 +1,21 @@
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 4rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.container {
+  display: flex;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: 3.5rem;
+}
+
+.containerRtl {
+  display: flex;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-right: 3.5rem;
+}
