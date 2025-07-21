@@ -1,7 +1,7 @@
 import FieldSize from "~/components/design/setup/FieldSize";
 import ShowHint, { SetupTextInput } from "~/components/design/setup/ShowHint";
 import ValidationSetupItem from "~/components/design/setup/validation/ValidationSetupItem";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import ToggleValue from "../ToggleValue";
 import SelectValue from "../SelectValue";
 import SelectDate from "../SelectDate";
@@ -11,7 +11,7 @@ import styles from "./SetupPanel.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { resetSetup, setupToggleExpand } from "~/state/design/designState";
+import { resetSetup } from "~/state/design/designState";
 import OrderPrioritySetup from "../random/OrderPrioritySetup";
 import { NavigationMode } from "~/components/manage/NavigationMode";
 import { useSelector } from "react-redux";
@@ -23,24 +23,18 @@ import { questionIconByType } from "~/components/Questions/utils";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
-  const toggleExpand = useCallback((key) => {
-    dispatch(setupToggleExpand(key));
-  });
 
   const theme = useTheme();
 
   const selectSetupInfo = (state) => state.designState.setup || {};
   const selectSetupData = createSelector([selectSetupInfo], (setupInfo) => ({
     code: setupInfo.code,
-    expanded: setupInfo.expanded,
     highlighted: setupInfo.highlighted,
     rules: setupInfo.rules,
-    isSingleRule: setupInfo.rules?.length === 1,
     ...setupInfo,
   }));
 
-  const { code, expanded, highlighted, rules, isSingleRule } =
-    useSelector(selectSetupData);
+  const { code, highlighted, rules } = useSelector(selectSetupData);
 
   const type = useSelector((state) => {
     return state.designState[code].type;
@@ -77,13 +71,7 @@ function SetupPanel({ t }) {
         </IconButton>
       </div>
       <Divider />
-      <SetupSection
-        expanded={expanded}
-        rules={rules}
-        code={code}
-        t={t}
-        highlighted={highlighted}
-      />
+      <SetupSection rules={rules} code={code} t={t} highlighted={highlighted} />
     </div>
   );
 }
@@ -478,18 +466,20 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
   }
 });
 
-const SetupSection = React.memo(({ expanded, rules, code, t, highlighted }) => {
+const SetupSection = React.memo(({ highlighted, rules, code, t }) => {
   const [selectedTab, setSelectedTab] = React.useState(0);
 
   useEffect(() => {
-    if (!rules || !expanded) {
+    if (!rules || !highlighted) {
+      setSelectedTab(0);
       return;
     }
-    const index = rules.findIndex((rule) => expanded.includes(rule.key));
+
+    const index = rules.findIndex((rule) => rule.key === highlighted);
     if (index !== -1 && index !== selectedTab) {
       setSelectedTab(index);
     }
-  }, [expanded, rules]);
+  }, [highlighted, rules]);
 
   const handleTabChange = (_, newValue) => setSelectedTab(newValue);
 
@@ -533,7 +523,7 @@ const SetupSection = React.memo(({ expanded, rules, code, t, highlighted }) => {
       >
         {rules[selectedTab]?.rules?.map((el) => (
           <div className={styles.setupContainer} key={el}>
-            <SetupComponent code={code} rule={el} t={t} key={el} />
+            <SetupComponent code={code} rule={el} t={t} />
           </div>
         ))}
       </Box>
