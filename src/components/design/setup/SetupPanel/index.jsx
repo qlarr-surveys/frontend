@@ -485,7 +485,7 @@ const SetupSection = React.memo(({ expanded, rules, code, t, highlighted }) => {
     if (index !== -1 && index !== selectedTab) {
       setSelectedTab(index);
     }
-  }, [expanded, rules, selectedTab]);
+  }, [expanded, rules]);
 
   const handleTabChange = (_, newValue) => setSelectedTab(newValue);
 
