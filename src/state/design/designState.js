@@ -62,7 +62,6 @@ export const designState = createSlice({
       if (
         payload.code != state.setup?.code ||
         !isEquivalent(payload.rules, state.setup?.rules) ||
-        payload.expanded ||
         payload.highlighted
       ) {
         state.setup = action.payload;
@@ -71,17 +70,6 @@ export const designState = createSlice({
     newVersionReceived(state, action) {
       const payload = action.payload;
       state.versionDto = payload;
-    },
-    setupToggleExpand(state, action) {
-      const key = action.payload;
-      if (!state.setup.expanded) {
-        state.setup.expanded = [];
-      }
-      if (!state.setup.expanded.includes(key)) {
-        state.setup.expanded.push(key);
-      } else {
-        state.setup.expanded.splice(state.setup.expanded.indexOf(key), 1);
-      }
     },
     changeValidationValue(state, action) {
       let payload = action.payload;
@@ -675,7 +663,6 @@ export const {
   setDesignModeToTheme,
   removeAnswer,
   setup,
-  setupToggleExpand,
   resetSetup,
   changeValidationValue,
   updateRandom,
