@@ -513,7 +513,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t }) => {
           />
         ))}
       </Tabs>
-
+      <Divider />
       <Box
         sx={{
           backgroundColor:
