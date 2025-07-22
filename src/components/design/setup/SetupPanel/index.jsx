@@ -30,7 +30,7 @@ function SetupPanel({ t }) {
   const selectSetupData = createSelector([selectSetupInfo], (setupInfo) => ({
     code: setupInfo.code,
     highlighted: setupInfo.highlighted,
-    rules: setupInfo.rules,
+    rules: setupInfo.rules || [],
     ...setupInfo,
   }));
 
@@ -71,7 +71,7 @@ function SetupPanel({ t }) {
         </IconButton>
       </div>
       <Divider />
-      <SetupSection rules={rules} code={code} t={t} highlighted={highlighted} />
+      <SetupSection rules={rules || []} code={code} t={t} highlighted={highlighted} />
     </div>
   );
 }

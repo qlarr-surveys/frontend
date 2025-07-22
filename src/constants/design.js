@@ -488,6 +488,7 @@ export const setupOptions = (type) => {
           rules: ["validation_required", "validation_one_response_per_col"],
         },
       ];
+    case "mcq_array":
     case "scq_array":
       return [
         { title: "show_hide", key: "relevance", rules: ["relevance"] },

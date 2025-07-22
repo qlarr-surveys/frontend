@@ -174,7 +174,6 @@ function DraftEditor({
           const text = sanitizedText[0];
           const rest = sanitizedText.slice(1);
           if (typeof onMoreLines === "function" && rest.length > 0) {
-            console.log("onMoreLines", text);
             const delta = new Delta()
               .retain(range.index)
               .delete(range.length)
@@ -185,7 +184,6 @@ function DraftEditor({
               onMoreLines(rest);
             }
           } else {
-            console.log("pasteData", pasteData);
             const delta = new Delta()
               .retain(range.index)
               .delete(range.length)
@@ -231,7 +229,6 @@ function DraftEditor({
   };
 
   const onChange = (value) => {
-    console.log("onChange", value);
     onFocus();
     if(!extended && onNewLine && value!="<p><br></p>" && value.endsWith("<p><br></p>")) {
       onNewLine(value);

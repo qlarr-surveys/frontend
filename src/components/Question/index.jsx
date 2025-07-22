@@ -13,7 +13,7 @@ const DateTimeQuestion = React.lazy(() =>
 );
 const SCQ = React.lazy(() => import("../Questions/Scq/Scq"));
 const SelectQuestion = React.lazy(() => import("../Questions/SelectQuestion/SelectQuestion"));
-const SCQArray = React.lazy(() => import("../Questions/SCQArray/SCQArray"));
+const Array = React.lazy(() => import("../Questions/SCQArray/Array"));
 const Signature = React.lazy(() => import("../Questions/Signature/Signature"));
 const PhotoCapture = React.lazy(() =>
   import("../Questions/PhotoCapture/PhotoCapture")
@@ -122,9 +122,10 @@ const Question = forwardRef((props, ref) => {
             component={props.component}
           />
         );
+      case "mcq_array":
       case "scq_array":
         return (
-          <SCQArray
+          <Array
             key={props.component.qualifiedCode}
             component={props.component}
           />

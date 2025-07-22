@@ -16,7 +16,6 @@ function SelectQuestion({ lang, component }) {
   const dispatch = useDispatch();
 
   const handleChange = (event) => {
-    console.log(event.target.name, event.target.value);
     dispatch(
       valueChange({
         componentCode: component.qualifiedCode,

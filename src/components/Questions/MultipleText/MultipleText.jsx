@@ -8,8 +8,6 @@ import { setDirty } from "~/state/templateState";
 import Content from "~/components/run/Content";
 
 function MultipleText(props) {
-  console.log(props.component);
-
   return (
     <Box
       style={{
@@ -19,7 +17,6 @@ function MultipleText(props) {
       }}
     >
       {props.component.answers.map((option) => {
-        console.log(option);
         return (
           <MultipleTextItem
             lang={props.lang}

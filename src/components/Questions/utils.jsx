@@ -41,6 +41,8 @@ export const questionIconByType = (type, size = "1.25em", color) => {
     case "scq_icon_array":
     case "scq_array":
       return <SurveyIcon name="singleChoiceArray" size={size} color={color} />;
+    case "mcq_array":
+      return <SurveyIcon name="multipleChoiceArray" size={size} color={color} />;
     case "mcq":
       return <SurveyIcon name="multipleChoice" size={size} color={color} />;
     case "icon_mcq":
@@ -214,6 +216,10 @@ export const QUESTION_TYPES = [
       {
         type: "scq_array",
         icon: questionIconByType("scq_array"),
+      },
+      {
+        type: "mcq_array",
+        icon: questionIconByType("mcq_array"),
       },
       {
         type: "mcq",
@@ -625,6 +631,7 @@ export const createQuestion = (type, qId, lang) => {
 
       break;
     case "scq_array":
+    case "mcq_array":
       returnObj[`Q${qId}Ac1`] = {
         type: "column",
       };
@@ -724,6 +731,7 @@ export const questionDesignError = (question) => {
   switch (question.type) {
     case "scq_icon_array":
     case "scq_array":
+    case "mcq_array":
       if (
         !question.children ||
         question.children.filter((child) => child.type == "row").length === 0

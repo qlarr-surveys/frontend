@@ -21,6 +21,7 @@ const buildReference = (code, component, state, mainLang) => {
   let type = component.type;
   switch (component.type) {
     case "scq_icon_array":
+    case "mcq_array":
     case "scq_array":
       return component.children
         .filter((el) => el.type == "row")
@@ -35,7 +36,7 @@ const buildReference = (code, component, state, mainLang) => {
                 state[element.qualifiedCode].content?.[mainLang]?.label
               ),
             id: code + element.code,
-            type: "SCQ Array Row",
+            type: "Array Row",
             instruction: code + element.code + ".masked_value",
           };
         });

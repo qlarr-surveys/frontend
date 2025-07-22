@@ -3,6 +3,7 @@ import styles from "./SCQArrayDesign.module.css";
 import {
   Box,
   Button,
+  Checkbox,
   Radio,
   Table,
   TableBody,
@@ -31,8 +32,9 @@ import { rtlLanguage } from "~/utils/common";
 import { inDesign } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
 import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
+import { Check } from '@mui/icons-material';
 
-function SCQArray(props) {
+function ArrayDesign(props) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const t = props.t;
@@ -99,7 +101,7 @@ function SCQArray(props) {
               ></TableCell>
               {columns.map((item, index) => {
                 return (
-                  <SCQArrayHeaderDesign
+                  <ArrayHeaderDesign
                     parentQualifiedCode={props.qualifiedCode}
                     langInfo={langInfo}
                     designMode={props.designMode}
@@ -125,8 +127,9 @@ function SCQArray(props) {
           <TableBody>
             {rows.map((item, index) => {
               return (
-                <SCQArrayRowDesign
+                <ArrayRowDesign
                   parentQualifiedCode={props.code}
+                  type={props.type}
                   langInfo={langInfo}
                   t={props.t}
                   designMode={props.designMode}
@@ -161,13 +164,14 @@ function SCQArray(props) {
   );
 }
 
-export default React.memo(SCQArray);
+export default React.memo(ArrayDesign);
 
-function SCQArrayRowDesign({
+function ArrayRowDesign({
   item,
   index,
   colCount,
   designMode,
+  type,
   t,
   langInfo,
   parentQualifiedCode,
@@ -290,7 +294,6 @@ function SCQArrayRowDesign({
             onChange={(e) => {
               const value = e.target.value;
               if (value.endsWith("\n")) {
-                console.log("onNewLine");
                 dispatch(
                   onNewLine({
                     questionCode: parentQualifiedCode,
@@ -350,7 +353,8 @@ function SCQArrayRowDesign({
               padding: "0px",
             }}
           >
-            <Radio
+            {type === "scq_array" ? (
+              <Radio
               sx={{
                 "&.Mui-disabled": {
                   color: theme.textStyles.text.color,
@@ -358,6 +362,16 @@ function SCQArrayRowDesign({
               }}
               disabled={true}
             />
+            ) : (
+              <Checkbox
+                sx={{
+                  "&.Mui-disabled": {
+                    color: theme.textStyles.text.color,
+                  },
+                }}
+                disabled={true}
+              />
+            )}
           </TableCell>
         );
       })}
@@ -378,7 +392,7 @@ function SCQArrayRowDesign({
   );
 }
 
-function SCQArrayHeaderDesign({
+function ArrayHeaderDesign({
   item,
   index,
   designMode,

@@ -8,12 +8,12 @@ import TableRow from "@mui/material/TableRow";
 import { useTheme } from "@emotion/react";
 import { shallowEqual, useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { Radio } from "@mui/material";
+import { Checkbox, Radio } from "@mui/material";
 import { valueChange } from "~/state/runState";
 import Validation from "~/components/run/Validation";
 import { columnMinWidth } from "~/utils/design/utils";
 
-function SCQArray(props) {
+function Array(props) {
   const theme = useTheme();
   let columns = props.component.answers.filter(
     (answer) => answer.type == "column"
@@ -64,7 +64,8 @@ function SCQArray(props) {
           {rows.map((answer) => {
             return (
               <React.Fragment key={answer.qualifiedCode}>
-                <SCQArrayRow
+                <ArrayRow
+                  type={props.component.type}
                   key={answer.qualifiedCode}
                   answer={answer}
                   choices={columns}
@@ -78,7 +79,7 @@ function SCQArray(props) {
   );
 }
 
-function SCQArrayRow(props) {
+function ArrayRow(props) {
   const theme = useTheme();
   const state = useSelector((state) => {
     return {
@@ -91,12 +92,28 @@ function SCQArrayRow(props) {
   const dispatch = useDispatch();
 
   const handleChange = (event) => {
+    if (props.type === "scq_array") {
     dispatch(
       valueChange({
         componentCode: event.target.name,
-        value: event.target.value,
-      })
-    );
+          value: event.target.value,
+        })
+      );
+    } else if (props.type === "mcq_array") {
+      let currentValue = state.value || []
+      let value = [...currentValue];
+      if (event.target.checked) {
+        value.push(event.target.value);
+      } else {
+        value = value.filter((el) => el !== event.target.value);
+      }
+      dispatch(
+        valueChange({
+          componentCode: event.target.name,
+          value: value,
+        })
+      );
+    }
   };
 
   const invalid =
@@ -128,7 +145,8 @@ function SCQArrayRow(props) {
                 padding: "2px",
               }}
             >
-              <Radio
+              {props.type === "scq_array" ? (
+                <Radio
                 name={props.answer.qualifiedCode}
                 onChange={handleChange}
                 checked={state.value === option.code}
@@ -137,6 +155,14 @@ function SCQArrayRow(props) {
                   color: theme.textStyles.text.color,
                 }}
               />
+              ) : (
+                <Checkbox
+                  name={props.answer.qualifiedCode}
+                  onChange={handleChange}
+                  checked={(state.value || []).indexOf(option.code) > -1}
+                  value={option.code}
+                />
+              )}
             </TableCell>
           );
         })}
@@ -159,4 +185,4 @@ function SCQArrayRow(props) {
   );
 }
 
-export default SCQArray;
+export default Array;
