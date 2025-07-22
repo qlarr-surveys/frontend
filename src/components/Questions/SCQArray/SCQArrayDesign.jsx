@@ -36,7 +36,6 @@ function SCQArray(props) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const t = props.t;
-  const width = columnMinWidth();
 
   const { header, rowLabel } = columnMinWidth(props.code);
   const langInfo = useSelector((state) => {
@@ -127,7 +126,7 @@ function SCQArray(props) {
             {rows.map((item, index) => {
               return (
                 <SCQArrayRowDesign
-                  parentQualifiedCode={props.qualifiedCode}
+                  parentQualifiedCode={props.code}
                   langInfo={langInfo}
                   t={props.t}
                   designMode={props.designMode}
@@ -291,6 +290,7 @@ function SCQArrayRowDesign({
             onChange={(e) => {
               const value = e.target.value;
               if (value.endsWith("\n")) {
+                console.log("onNewLine");
                 dispatch(
                   onNewLine({
                     questionCode: parentQualifiedCode,

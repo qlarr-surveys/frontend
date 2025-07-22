@@ -183,7 +183,7 @@ export const addMaskedValuesInstructions = (
             .map((el) =>
               el.type == "other"
                 ? `"${el.code}": ${el.qualifiedCode}Atext.value`
-                : `"${el.code}": ${el.qualifiedCode}.label`
+                : `"${el.code}": QlarrScripts.stripTags(${el.qualifiedCode}.label)`
             )
             .join(",") +
           "}";
@@ -205,18 +205,10 @@ export const addMaskedValuesInstructions = (
         const text =
           "{" +
           component.children.map((answer) => {
-            console.log(answer);
-            console.log(
-              `"${answer.code}": ${
-                answer.type == "other"
-                  ? answer.qualifiedCode + "Atext.value"
-                  : answer.qualifiedCode + ".label"
-              }`
-            );
             return `"${answer.code}": ${
               answer.type == "other"
                 ? answer.qualifiedCode + "Atext.value"
-                : answer.qualifiedCode + ".label"
+                : `QlarrScripts.stripTags(${answer.qualifiedCode}.label)`
             }`;
           }) +
           "}";
@@ -247,7 +239,7 @@ export const addMaskedValuesInstructions = (
           "{" +
           component.children
             .filter((el) => el.type == "column")
-            .map((el) => `"${el.code}": ${el.qualifiedCode}.label`)
+            .map((el) => `"${el.code}": QlarrScripts.stripTags(${el.qualifiedCode}.label)`)
             .join(",") +
           "}";
 
