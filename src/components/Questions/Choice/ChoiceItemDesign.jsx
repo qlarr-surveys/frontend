@@ -210,7 +210,9 @@ function ChoiceItemDesign(props) {
             key="setup"
             sx={{ fontSize: 18 }}
             className={styles.answerIconOther}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
               dispatch(
                 setup({
                   code: props.qualifiedCode + "Atext",

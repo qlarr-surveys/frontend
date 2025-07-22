@@ -1,3 +1,5 @@
+import { current } from "@reduxjs/toolkit";
+
 export const addSkipInstructions = (state, code) => {
   const component = state[code];
   if (
@@ -17,9 +19,14 @@ export const addSkipInstructions = (state, code) => {
 export const refreshEnumforSingleChoice = (component, state) => {
   if (
     !component.type ||
-    !["scq", "icon_scq", "image_scq", "scq_icon_array", "scq_array", "select"].includes(
-      component.type
-    )
+    ![
+      "scq",
+      "icon_scq",
+      "image_scq",
+      "scq_icon_array",
+      "scq_array",
+      "select",
+    ].includes(component.type)
   ) {
     return;
   }
@@ -195,26 +202,33 @@ export const addMaskedValuesInstructions = (
     case "icon_mcq":
     case "mcq":
       if (component.children && component.children.length) {
-        let text =
-          "[" +
-          component.children
-            .map((answer) => {
-              return (
-                `{ "value":${answer.qualifiedCode}.value,` +
-                ` "label":${
-                  answer.type == "other"
-                    ? answer.qualifiedCode + "Atext.value"
-                    : answer.qualifiedCode + ".label"
-                } }`
-              );
-            })
-            .join(", ") +
-          "]";
+        const text =
+          "{" +
+          component.children.map((answer) => {
+            console.log(answer);
+            console.log(
+              `"${answer.code}": ${
+                answer.type == "other"
+                  ? answer.qualifiedCode + "Atext.value"
+                  : answer.qualifiedCode + ".label"
+              }`
+            );
+            return `"${answer.code}": ${
+              answer.type == "other"
+                ? answer.qualifiedCode + "Atext.value"
+                : answer.qualifiedCode + ".label"
+            }`;
+          }) +
+          "}";
+        console.log(text);
+        console.log(
+          `QlarrScripts.listStrings((${qualifiedCode}.value || []).map(function(el){return QlarrScripts.safeAccess(${text},el)}), Survey.lang)`
+        );
         const instruction = {
           code: "masked_value",
           isActive: true,
           returnType: "string",
-          text: `QlarrScripts.listStrings(${text}.filter(function(elem){return QlarrScripts.safeAccess(elem,"value")}).map(function(elem){return QlarrScripts.safeAccess(elem,"label")}), Survey.lang)`,
+          text: `QlarrScripts.listStrings((${qualifiedCode}.value || []).map(function(el){return QlarrScripts.safeAccess(${text},el)}), Survey.lang)`,
         };
         changeInstruction(component, instruction);
       } else {
@@ -362,6 +376,18 @@ export const addQuestionInstructions = (question) => {
         },
       ];
       break;
+    case "icon_mcq":
+    case "image_mcq":
+    case "mcq":
+      question.instructionList = [
+        {
+          code: "value",
+          isActive: false,
+          returnType: "list",
+          text: "",
+        },
+      ];
+      break;
     case "icon_scq":
       question.instructionList = [
         {
@@ -479,9 +505,6 @@ export const addQuestionInstructions = (question) => {
     case "image_display":
     case "scq_icon_array":
     case "scq_array":
-    case "icon_mcq":
-    case "image_mcq":
-    case "mcq":
     case "image_ranking":
     case "ranking":
     default:
@@ -505,11 +528,7 @@ export const addAnswerInstructions = (
       questionType == "nps" ||
       questionType == "image_ranking"
         ? "int"
-        : questionType == "scq_array" ||
-          questionType == "scq_icon_array" ||
-          questionType == "multiple_text"
-        ? "string"
-        : "boolean",
+        : "string",
     text: "",
   };
   switch (type) {
@@ -537,11 +556,21 @@ export const addAnswerInstructions = (
         text:
           questionType === "scq"
             ? `${questionCode}.value === 'Aother'`
-            : `${parentCode}.value === true`,
+            : `(${questionCode}.value || []).indexOf('Aother') > -1`,
       });
       break;
     default:
-      if (questionType !== "scq" || questionType !== "select") {
+      if (
+        ![
+          "scq",
+          "icon_scq",
+          "image_scq",
+          "select",
+          "mcq",
+          "icon_mcq",
+          "image_mcq",
+        ].includes(questionType)
+      ) {
         changeInstruction(answer, valueInstruction);
       }
       break;
@@ -1037,9 +1066,7 @@ const jsonToJs = (json, nested, getComponentType) => {
       } else if (
         ["mcq", "image_mcq", "icon_mcq"].indexOf(getComponentType(code)) > -1
       ) {
-        return `[${value[1].map(
-          (el) => code + el + ".value"
-        )}].filter(x=>x).length > 0`;
+        return `[${value[1].map((el) => "'" + el + "'")}].filter((el) => ${code}.value?.indexOf(el) > -1).length > 0`;
       } else {
         return `[${value[1].map(
           (el) => '"' + el + '"'
@@ -1056,9 +1083,7 @@ const jsonToJs = (json, nested, getComponentType) => {
       } else if (
         ["mcq", "image_mcq", "icon_mcq"].indexOf(getComponentType(code1)) > -1
       ) {
-        return `[${value[1].map(
-          (el) => questionCode1 + el + ".value"
-        )}].filter(x=>x).length == 0`;
+        return `[${value[1].map((el) => "'" + el + "'")}].filter((el) => ${code}.value?.indexOf(el) > -1).length == 0`;
       } else {
         return `[${value[1].map(
           (el) => '"' + el + '"'
