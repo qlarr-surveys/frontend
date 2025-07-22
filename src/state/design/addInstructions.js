@@ -784,6 +784,8 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         `&& ${qualifiedCode}.value == ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_option_count":
+      instructionText = `(${qualifiedCode}.value || []).length ` + `< ${validation.min_count || 0}`;
+      return booleanActiveInstruction(key, instructionText);
     case "validation_min_ranking_count":
       instructionText =
         `[${component.children.map(
@@ -791,6 +793,8 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         )}].filter(x=>x).length ` + `< ${validation.min_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_option_count":
+      instructionText = `(${qualifiedCode}.value || []).length ` + `> ${validation.max_count || 0}`;
+      return booleanActiveInstruction(key, instructionText);
     case "validation_max_ranking_count":
       instructionText =
         `[${component.children.map(
@@ -798,6 +802,8 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         )}].filter(x=>x).length ` + `> ${validation.max_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_option_count":
+      instructionText = `(${qualifiedCode}.value || []).length ` + `!== ${validation.count || 0}`;
+    return booleanActiveInstruction(key, instructionText);
     case "validation_ranking_count":
       instructionText =
         `[${component.children.map(
