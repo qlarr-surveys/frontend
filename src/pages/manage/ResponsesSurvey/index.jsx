@@ -27,7 +27,7 @@ import {
   formatlocalDateTime,
   serverDateTimeToLocalDateTime,
 } from "~/utils/DateUtils";
-import { previewUrl } from "~/networking/run";
+import { previewUrlByQuestionCode } from "~/networking/run";
 import { ResponseDelete } from "~/components/manage/ResponseDelete";
 import FileSaver from "file-saver";
 import { stripTags, truncateWithEllipsis } from "~/utils/design/utils";
@@ -70,7 +70,29 @@ function ResponsesSurvey() {
 
   const handleExport = (format) => {
     handleExportMenuClose();
-    exportResponses(format);
+    if (format === 'files') {
+      downloadResponseFiles();
+    } else {
+      exportResponses(format);
+    }
+  };
+
+  const downloadResponseFiles = () => {
+    setFetching(true);
+    surveyService
+      .downloadResponseFiles(surveyId)
+      .then((data) => {
+        if (data) {
+          var file = new File([data], `${surveyId}-response-files.zip`, {
+            type: 'application/zip',
+          });
+          FileSaver.saveAs(file);
+        }
+        setFetching(false);
+      })
+      .catch((err) => {
+        processApirror(err);
+      });
   };
 
   const exportResponses = (format) => {
@@ -233,6 +255,9 @@ function ResponsesSurvey() {
             </MenuItem>
             <MenuItem onClick={() => handleExport('ods')}>
               Export as ODS
+            </MenuItem>
+            <MenuItem onClick={() => handleExport('files')}>
+              Download Response Files
             </MenuItem>
           </Menu>
         </Box>
@@ -401,9 +426,9 @@ function ResponsesSurvey() {
                               <a
                                 target="_blank"
                                 download={value.stored_filename}
-                                href={previewUrl(
-                                  response.id,
-                                  key.split(".")[0]
+                                href={previewUrlByQuestionCode(
+                                  key.split(".")[0],
+                                  response.id
                                 )}
                               >
                                 {value.filename} -

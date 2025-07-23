@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
-import { previewUrl, uploadFile } from "~/networking/run";
+import { previewUrlByFilename, uploadFile } from "~/networking/run";
 import { styled, useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import ValidationItem from "~/components/run/ValidationItem";
@@ -193,7 +193,7 @@ function FileUpload(props) {
               {state.filename} - {Math.round(state.size / 1024)}K
             </Link>
           ) : (
-            <Link target="_blank" href={previewUrl(state.stored_filename)}>
+            <Link target="_blank" href={previewUrlByFilename(state.stored_filename)}>
               {state.filename} - {Math.round(state.size / 1024)}K
             </Link>
           )}

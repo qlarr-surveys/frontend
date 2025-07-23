@@ -79,6 +79,15 @@ class SurveyService extends BaseService {
     return response.data;
   }
 
+  async downloadResponseFiles(surveyId) {
+    const response = await this.handleRequest(() =>
+      authenticatedApi.get(`/survey/${surveyId}/response/files/download`, {
+        responseType: 'blob'
+      })
+    );
+    return response.data;
+  }
+
   async deleteResponse(surveyId, responseId) {
     const response = await this.handleRequest(() =>
       authenticatedApi.delete(`/survey/${surveyId}/response/${responseId}`)
