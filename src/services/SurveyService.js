@@ -66,13 +66,24 @@ class SurveyService extends BaseService {
     return response.data;
   }
 
-  async exportResponses(surveyId, timezone, dbValues, complete) {
+  async exportResponses(surveyId, timezone, dbValues, complete, format = 'csv') {
     const shouldAddComplete = complete === true || complete === false;
     const response = await this.handleRequest(() =>
       authenticatedApi.get(
-        `/survey/${surveyId}/response/export?db_values=${dbValues}&timezone=${timezone}` +
-          `${shouldAddComplete ? `&complete=${complete}` : ""}`
+        `/survey/${surveyId}/response/export/${format}?db_values=${dbValues}&timezone=${timezone}` +
+          `${shouldAddComplete ? `&complete=${complete}` : ""}`, {
+            responseType: 'blob'
+          }
       )
+    );
+    return response.data;
+  }
+
+  async downloadResponseFiles(surveyId) {
+    const response = await this.handleRequest(() =>
+      authenticatedApi.get(`/survey/${surveyId}/response/files/download`, {
+        responseType: 'blob'
+      })
     );
     return response.data;
   }

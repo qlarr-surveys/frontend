@@ -7,7 +7,7 @@ import SignatureCanvas from "react-signature-canvas";
 import { useService } from "~/hooks/use-service";
 import {
   downloadFileAsBase64,
-  previewUrl,
+  previewUrlByFilename,
   uploadDataUrl,
 } from "~/networking/run";
 import { valueChange } from "~/state/runState";
@@ -84,7 +84,7 @@ function Signature(props) {
   useEffect(() => {
     if (state && state.stored_filename) {
       setClearEnabled(true);
-      downloadFileAsBase64(previewUrl(state.stored_filename)).then(
+      downloadFileAsBase64(previewUrlByFilename(state.stored_filename)).then(
         (response) => {
           setSubmitEnabled(false);
           setSignature(response);

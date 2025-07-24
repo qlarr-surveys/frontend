@@ -17,6 +17,8 @@ import {
   Tabs,
   Tab,
   Tooltip,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -25,7 +27,7 @@ import {
   formatlocalDateTime,
   serverDateTimeToLocalDateTime,
 } from "~/utils/DateUtils";
-import { previewUrl } from "~/networking/run";
+import { previewUrlByQuestionCode } from "~/networking/run";
 import { ResponseDelete } from "~/components/manage/ResponseDelete";
 import FileSaver from "file-saver";
 import { stripTags, truncateWithEllipsis } from "~/utils/design/utils";
@@ -56,15 +58,68 @@ function ResponsesSurvey() {
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [exportMenuAnchor, setExportMenuAnchor] = useState(null);
 
-  const exportResponses = () => {
+  const handleExportMenuOpen = (event) => {
+    setExportMenuAnchor(event.currentTarget);
+  };
+
+  const handleExportMenuClose = () => {
+    setExportMenuAnchor(null);
+  };
+
+  const handleExport = (format) => {
+    handleExportMenuClose();
+    if (format === 'files') {
+      downloadResponseFiles();
+    } else {
+      exportResponses(format);
+    }
+  };
+
+  const downloadResponseFiles = () => {
     setFetching(true);
     surveyService
-      .exportResponses(surveyId, timezone, dbResponses, completeResponses)
+      .downloadResponseFiles(surveyId)
       .then((data) => {
         if (data) {
-          var file = new File([data], `${surveyId}-responses-export.csv`, {
-            type: "text/csv;charset=utf-8",
+          var file = new File([data], `${surveyId}-response-files.zip`, {
+            type: 'application/zip',
+          });
+          FileSaver.saveAs(file);
+        }
+        setFetching(false);
+      })
+      .catch((err) => {
+        processApirror(err);
+      });
+  };
+
+  const exportResponses = (format) => {
+    setFetching(true);
+    surveyService
+      .exportResponses(surveyId, timezone, dbResponses, completeResponses, format)
+      .then((data) => {
+        if (data) {
+          let fileExtension, mimeType;
+          
+          switch (format) {
+            case 'xlsx':
+              fileExtension = 'xlsx';
+              mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+              break;
+            case 'ods':
+              fileExtension = 'ods';
+              mimeType = 'application/vnd.oasis.opendocument.spreadsheet';
+              break;
+            default: // csv
+              fileExtension = 'csv';
+              mimeType = 'text/csv;charset=utf-8';
+              break;
+          }
+          
+          var file = new File([data], `${surveyId}-responses-export.${fileExtension}`, {
+            type: mimeType,
           });
           FileSaver.saveAs(file);
         }
@@ -183,10 +238,28 @@ function ResponsesSurvey() {
             disabled={surveyor || false}
             size="small"
             variant="contained"
-            onClick={() => exportResponses()}
+            onClick={handleExportMenuOpen}
           >
             <ArrowOutward />
           </Button>
+          <Menu
+            anchorEl={exportMenuAnchor}
+            open={Boolean(exportMenuAnchor)}
+            onClose={handleExportMenuClose}
+          >
+            <MenuItem onClick={() => handleExport('csv')}>
+              Export as CSV
+            </MenuItem>
+            <MenuItem onClick={() => handleExport('xlsx')}>
+              Export as Excel
+            </MenuItem>
+            <MenuItem onClick={() => handleExport('ods')}>
+              Export as ODS
+            </MenuItem>
+            <MenuItem onClick={() => handleExport('files')}>
+              Download Response Files
+            </MenuItem>
+          </Menu>
         </Box>
       </Box>
 
@@ -353,9 +426,9 @@ function ResponsesSurvey() {
                               <a
                                 target="_blank"
                                 download={value.stored_filename}
-                                href={previewUrl(
-                                  response.id,
-                                  key.split(".")[0]
+                                href={previewUrlByQuestionCode(
+                                  key.split(".")[0],
+                                  response.id
                                 )}
                               >
                                 {value.filename} -
