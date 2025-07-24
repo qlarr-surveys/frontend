@@ -1,24 +1,29 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Chip, IconButton, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import styles from "./SurveyHeader.module.css";
 import { onEditErrorSeen } from "~/state/edit/editState";
 import { isSessionRtl } from "~/utils/common";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { MANAGE_SURVEY_LANDING_PAGES, routes } from "~/routes";
+import TokenService from "~/services/TokenService";
+import { availablePages } from "~/pages/ManageSurvey";
 
 export const SurveyHeader = () => {
   const { t } = useTranslation("manage");
   const dispatch = useDispatch();
   const nav = useNavigate();
   const isRtl = isSessionRtl();
-
+  const { surveyId } = useParams();
   const surveyName = useSelector(
     (state) => state.editState?.survey?.name || ""
   );
 
+  const user = TokenService.getUser();
+  const tabAvailable = (tab) => availablePages(user).includes(tab);
   return (
     <Box className={styles.header}>
       <Box
@@ -26,7 +31,6 @@ export const SurveyHeader = () => {
           dispatch(onEditErrorSeen());
           nav("/");
         }}
-        gap="12px"
         className={isRtl ? styles.containerRtl : styles.container}
       >
         <CustomTooltip showIcon={false} title={t(`goBack`)}>
@@ -41,8 +45,21 @@ export const SurveyHeader = () => {
             />
           </IconButton>
         </CustomTooltip>
+        <Typography variant="h3">{surveyName}</Typography>
       </Box>
-      <Typography variant="h3">{surveyName}</Typography>
+      {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.PREVIEW) && (
+        <Chip
+          label={t("preview")}
+          color="primary"
+          onClick={() => {
+            window.open(
+              routes.preview.replace(":surveyId", surveyId),
+              "_blank"
+            );
+          }}
+          sx={{ mr: 2 }}
+        />
+      )}
     </Box>
   );
 };

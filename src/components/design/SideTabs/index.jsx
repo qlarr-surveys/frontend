@@ -42,12 +42,6 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
 
   const published = versionDto?.published;
 
-  const value = availablePages.indexOf(selectedPage);
-
-  const designMode = useSelector((state) => {
-    return state.designState.designMode;
-  });
-
   function component() {
     return (
       <List>
@@ -66,23 +60,6 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
               }}
             />
           </>
-        )}
-        {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.PREVIEW) && (
-          <SideTab
-            tooltip={t("preview")}
-            style={getTabButtonStyle(
-              selectedPage == MANAGE_SURVEY_LANDING_PAGES.PREVIEW
-            )}
-            link={routes.preview.replace(":surveyId", surveyId)}
-            icon={<Visibility sx={{ color: "#fff" }} />}
-            onClick={() => {
-              window.open(
-                routes.preview.replace(":surveyId", surveyId),
-                "_blank"
-              );
-            }}
-            isLink={false}
-          />
         )}
         {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.SETTINGS) && (
           <SideTab

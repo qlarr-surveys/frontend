@@ -33,6 +33,7 @@
   width: 100%;
   margin: auto;
   background-size: cover;
+  background-attachment: fixed;
   background-position: center;
 }
 .customScrollBar::-webkit-scrollbar {

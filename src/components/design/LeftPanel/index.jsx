@@ -14,11 +14,9 @@ function LeftPanel({ t }) {
     );
   });
 
-  const setup = useSelector((state) => {
-    return state.designState?.setup || {};
-  });
+  const setup = useSelector((state) => state.designState?.setup);
 
-  const hasSetup = Object.keys(setup).length > 0;
+  const hasSetup = setup && Object.keys(setup).length > 0;
 
   const theme = useTheme();
 

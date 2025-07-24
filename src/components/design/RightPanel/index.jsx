@@ -5,13 +5,11 @@ import { useTheme } from "@emotion/react";
 import SetupPanel from "../setup/SetupPanel";
 
 function RightPanel({ t }) {
-  const setup = useSelector((state) => {
-    return state.designState?.setup || {};
-  });
+  const setup = useSelector((state) => state.designState?.setup);
 
   const theme = useTheme();
 
-  const hasSetup = Object.keys(setup).length > 0;
+  const hasSetup = setup && Object.keys(setup).length > 0;
 
   return (
     <Collapse
