@@ -91,6 +91,11 @@ function SCQArrayRow(props) {
   const state = useSelector(
     (state) => state.runState.values[props.answer.qualifiedCode]
   );
+
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const validity = React.useMemo(() => state?.validity, [state]);
   const value = React.useMemo(() => state?.value, [state]);
   const relevance = React.useMemo(() => state?.relevance, [state]);
@@ -135,7 +140,11 @@ function SCQArrayRow(props) {
               }}
             >
               <DynamicSvg
-                onIconClick={() => handleChange(option.code)}
+                onIconClick={() => {
+                  if ( !isPreviewMode ) {
+                    handleChange(option.code)
+                  }
+                }}
                 imageHeight={"64px"}
                 isSelected={value == option.code}
                 theme={theme}

@@ -40,6 +40,10 @@ function FileUpload(props) {
     return state.runState.preview;
   });
 
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const dispatch = useDispatch();
 
   const [selectedFile, setSelectedFile] = useState();
@@ -114,9 +118,10 @@ function FileUpload(props) {
           type="file"
           accept={accepted ? accepted.join(",") : undefined}
           onChange={changeHandler}
+          disabled={isPreviewMode}
         />
         <Button
-          disabled={isUploading}
+          disabled={isUploading || isPreviewMode}
           onClick={onButtonClick}
           variant="contained"
           component="span"
@@ -133,7 +138,7 @@ function FileUpload(props) {
           </span>
           {shouldUpload ? (
             <Button
-              disabled={isUploading}
+              disabled={isUploading || isPreviewMode}
               variant="text"
               onClick={uploadSelectedFile}
             >
@@ -143,7 +148,7 @@ function FileUpload(props) {
             ""
           )}
           <Button
-            disabled={isUploading}
+            disabled={isUploading || isPreviewMode}
             sx={{
               fontFamily: theme.textStyles.text.font,
               fontSize: theme.textStyles.text.size,

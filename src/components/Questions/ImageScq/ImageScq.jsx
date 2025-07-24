@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import styles from "./ImageScq.module.css";
 import { valueChange } from "~/state/runState";
 import { useTheme } from "@emotion/react";
-import { Box, Card, Grid, Radio } from "@mui/material";
+import { Box, Radio } from "@mui/material";
 import { buildResourceUrl } from "~/networking/common";
 import { rtlLanguage } from "~/utils/common";
 
@@ -19,6 +19,11 @@ function ImageScq(props) {
         (show_errors || isDirty) && questionState?.validity === false,
     };
   }, shallowEqual);
+
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const dispatch = useDispatch();
 
   const handleChange = (componentCode, value) => {
@@ -47,10 +52,13 @@ function ImageScq(props) {
             key={option.code}
             sx={{
               flex: `0 1 calc(${100 / props.component.columns}% - ${props.component.spacing}px)`,
-              cursor: "pointer",
+              cursor: !isPreviewMode && 'pointer',
             }}
-            onClick={() =>
-              handleChange(props.component.qualifiedCode, option.code)
+            onClick={() => {
+              if ( !isPreviewMode ) {
+                handleChange(props.component.qualifiedCode, option.code)
+              }
+            }
             }
           >
             <Box
@@ -75,9 +83,11 @@ function ImageScq(props) {
                   className={styles.radioCheck}
                   name={props.component.qualifiedCode}
                   size="large"
+                  disabled={isPreviewMode}
                   sx={{
                     m:'5px',
                     color: theme.textStyles.text.color,
+                    cursor: !isPreviewMode && 'pointer'
                   }}
                 />
               </div>
@@ -86,7 +96,7 @@ function ImageScq(props) {
               <Box
                 sx={{
                   fontFamily: theme.textStyles.text.font,
-                  color: theme.textStyles.text.color,
+                  color: isPreviewMode ? 'grey' : theme.textStyles.text.color,
                   fontSize: theme.textStyles.text.size,
                   textAlign: "center",
                   marginTop: "8px",

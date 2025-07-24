@@ -1,4 +1,4 @@
-import React, { Suspense, forwardRef } from "react";
+import React, {Suspense, forwardRef } from "react";
 import { useSelector } from "react-redux";
 
 import { Box, useTheme } from "@mui/material";
@@ -63,6 +63,8 @@ const Question = forwardRef((props, ref) => {
       questionState?.relevance
     );
   });
+
+  const isPreviewMode = useSelector((state) => state.runState.data?.survey.isPreviewMode);
 
   const theme = useTheme();
   const showDescription =
@@ -266,7 +268,7 @@ const Question = forwardRef((props, ref) => {
               name="label"
               lang={props.lang}
               fontFamily={theme.textStyles.question.font}
-              color={theme.textStyles.text.color}
+              color={!isPreviewMode ? theme.textStyles.text.color : 'darkGrey'}
               fontSize={theme.textStyles.question.size}
               elementCode={props.component.qualifiedCode}
               content={props.component.content?.label}

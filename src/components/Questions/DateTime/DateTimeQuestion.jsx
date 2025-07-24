@@ -26,6 +26,11 @@ function DateTimeQuestion(props) {
         : null,
     };
   }, shallowEqual);
+
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const dispatch = useDispatch();
 
   const handleDateChange = (date) => {
@@ -54,10 +59,11 @@ function DateTimeQuestion(props) {
         {props.component.type == "date_time" ? (
           <>
             <DateTimePicker
+              disabled={isPreviewMode}
               renderInput={(props) => (
                 <TextField
                   sx={{
-                    svg: { color: theme.textStyles.text.color },
+                    svg: { color: isPreviewMode ? 'grey' : theme.textStyles.text.color },
                     border: '1px solid',
                     '& .MuiOutlinedInput-root': {
                       '&.Mui-focused fieldset': {
@@ -118,10 +124,11 @@ function DateTimeQuestion(props) {
           </>
         ) : props.component.type == "time" ? (
           <TimePicker
+            disabled={isPreviewMode}
             renderInput={(params) => (
               <TextField
                 sx={{
-                  svg: { color: theme.textStyles.text.color },
+                  svg: { color: isPreviewMode ? 'grey' : theme.textStyles.text.color },
                   border: '1px solid',
                   '& .MuiOutlinedInput-root': {
                     '&.Mui-focused fieldset': {
@@ -159,10 +166,11 @@ function DateTimeQuestion(props) {
           />
         ) : (
           <DatePicker
+            disabled={isPreviewMode}
             renderInput={(params) => (
               <TextField
                 sx={{
-                  svg: { color: theme.textStyles.text.color },
+                  svg: { color: isPreviewMode ? 'grey' : theme.textStyles.text.color },
                   input: { color: theme.textStyles.text.color },
                   border: '1px solid',
                   '& .MuiOutlinedInput-root': {

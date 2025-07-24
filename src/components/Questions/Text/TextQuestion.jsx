@@ -19,6 +19,9 @@ function TextQuestion(props) {
       invalid: invalid,
     };
   }, shallowEqual);
+
+  const isPreviewMode = useSelector((state) => state.runState.data?.survey.isPreviewMode);
+
   const dispatch = useDispatch();
 
   const handleChange = (event) => {
@@ -51,8 +54,9 @@ function TextQuestion(props) {
         onChange={handleChange}
         onBlur={lostFocus}
         inputProps={{ maxLength: props.component.maxChars || undefined }}
-        value={state.value}
+        value={!isPreviewMode ? (state.value) : 'Input disabled because of preview mode'}
         error={state.invalid}
+        disabled={isPreviewMode}
         InputProps={{
           sx: {
             fontFamily: theme.textStyles.text.font,

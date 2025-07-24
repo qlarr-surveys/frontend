@@ -89,6 +89,11 @@ function SCQArrayRow(props) {
       relevance: state.runState.values[props.answer.qualifiedCode]?.relevance,
     };
   }, shallowEqual);
+
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const dispatch = useDispatch();
 
   const handleChange = (event) => {
@@ -134,6 +139,7 @@ function SCQArrayRow(props) {
                 onChange={handleChange}
                 checked={state.value === option.code}
                 value={option.code}
+                disabled={isPreviewMode}
                 sx={{
                   color: theme.textStyles.text.color,
                 }}

@@ -18,6 +18,11 @@ function ImageRanking(props) {
     });
     return valuesMap;
   }, shallowEqual);
+
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const dispatch = useDispatch();
 
   const containerRef = useRef(null);
@@ -46,17 +51,19 @@ function ImageRanking(props) {
   }, []);
 
   const onItemClick = (componentCode) => {
-    dispatch(setDirty(props.component.qualifiedCode));
-    dispatch(setDirty(props.parentCode));
-    if (+values[componentCode] > 0) {
-      dispatch(valueChange({ componentCode, undefined }));
-    } else {
-      let keys = Object.keys(values);
-      let allValues = keys.map((key) => values[key]);
-      for (var i = 1; i <= keys.length; i++) {
-        if (!allValues.includes(i)) {
-          dispatch(valueChange({ componentCode, value: i }));
-          return;
+    if ( !isPreviewMode ) {
+      dispatch(setDirty(props.component.qualifiedCode));
+      dispatch(setDirty(props.parentCode));
+      if (+values[componentCode] > 0) {
+        dispatch(valueChange({ componentCode, undefined }));
+      } else {
+        let keys = Object.keys(values);
+        let allValues = keys.map((key) => values[key]);
+        for (var i = 1; i <= keys.length; i++) {
+          if (!allValues.includes(i)) {
+            dispatch(valueChange({ componentCode, value: i }));
+            return;
+          }
         }
       }
     }
@@ -87,6 +94,7 @@ function ImageRanking(props) {
             imageHeight={imageHeight}
             imageWidth={imageWidth}
             key={option.qualifiedCode}
+            isPreviewMode={isPreviewMode}
           />
         );
       })}
@@ -114,7 +122,7 @@ function ImageRankingItem(props) {
       key={props.option.code}
       sx={{
         flex: `0 1 calc(${100 / props.columns}% - ${props.spacing}px)`,
-        cursor: "pointer",
+        cursor: !props.isPreviewMode && "pointer",
       }}
     >
 

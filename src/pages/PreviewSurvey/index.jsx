@@ -17,14 +17,15 @@ function PreviewSurvey() {
   const [previewMode, setPreviewMode] = useState(
     searchParams.get("mode") || "online"
   );
+  const [ responsePreviewMode ] = useState(
+    searchParams.get('response_preview') || false
+  )
 
   const { t: tDesign } = useTranslation("design");
-
 
   const [navigationMode, setNavigationMode] = useState(searchParams.get("navigation_mode") || "GROUP_BY_GROUP");
   const lang = useState(searchParams.get("lang"));
   const surveyId = getparam(useParams(), "surveyId");
-
 
   const withEmbeddedParam = (surveyId, previewMode, lang) => {
     return (
@@ -32,7 +33,8 @@ function PreviewSurvey() {
       "?mode=" +
       previewMode +
       (lang ? "&lang=" + lang : "")+
-      (navigationMode ? "&navigation_mode=" + navigationMode : "")
+      (navigationMode ? "&navigation_mode=" + navigationMode : "") +
+      (responsePreviewMode ? "&response_preview=" + responsePreviewMode : "") // if the response_preview searchParam exists, add it to embedded params
     );
   };
 
@@ -49,14 +51,14 @@ function PreviewSurvey() {
       <Box
         mb={2}
         onClick={() => navigate(-1)}
-        sx={{ position: "absolute", left: "8px", top: "8px", zIndex: "1" }}
+        sx={{ position: "absolute", left: "8px", top: "8px", zIndex: "1", }}
       >
         <Chip
           label={t("preview")}
           color="primary"
           onDelete={() => navigate(`/design-survey/${surveyId}`)}
           deleteIcon={<Close />}
-          style={{ marginLeft: "auto", marginRight: "auto" }} 
+          style={{ marginLeft: "auto", marginRight: "auto" }}
         />
       </Box>
 
@@ -117,7 +119,7 @@ function PreviewSurvey() {
         {previewMode == "online" ? (
           <div style={{ height: "calc(100vh - 48px)" }}>
             <iframe
-              src={withEmbeddedParam(surveyId, previewMode, lang)}
+              src={withEmbeddedParam(surveyId, previewMode, lang, responsePreviewMode)}
               className={styles.onlinePreview}
               style={{ width: "100%", height: "100%" }}
             />
@@ -127,7 +129,7 @@ function PreviewSurvey() {
             <div className={styles.wrapperMob}>
               <img src="/phone-android.png" className={styles.phoneBg} />
               <iframe
-                src={withEmbeddedParam(surveyId, previewMode, lang)}
+                src={withEmbeddedParam(surveyId, previewMode, lang, responsePreviewMode)}
                 className={styles.offlinePreview}
               />
             </div>
@@ -136,7 +138,7 @@ function PreviewSurvey() {
           <div className={styles.wrapperMob}>
             <img src="/phone-android.png" className={styles.phoneBg} />
             <iframe
-              src={withEmbeddedParam(surveyId, previewMode, lang)}
+              src={withEmbeddedParam(surveyId, previewMode, lang, responsePreviewMode)}
               className={styles.offlinePreview}
             />
           </div>

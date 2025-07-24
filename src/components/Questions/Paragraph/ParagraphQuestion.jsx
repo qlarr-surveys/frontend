@@ -1,7 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useTranslation } from "react-i18next";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
 
 import styles from "./ParagraphQuestion.module.css";
 import { valueChange } from "~/state/runState";
@@ -16,6 +15,7 @@ function ParagraphQuestion(props) {
     let validity = questionState?.validity;
     let invalid = (show_errors || isDirty) && validity === false;
     let value = questionState?.value || "";
+
     return {
       value: value,
       wordCount: window.QlarrScripts
@@ -24,6 +24,11 @@ function ParagraphQuestion(props) {
       invalid: invalid,
     };
   }, shallowEqual);
+
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const dispatch = useDispatch();
 
   const { t } = useTranslation("run");
@@ -53,11 +58,12 @@ function ParagraphQuestion(props) {
         multiline
         id={props.component.qualifiedCode}
         name={props.component.qualifiedCode}
-        minRows={props.component.minRows || 2}
+        minRows={!isPreviewMode ? (props.component.minRows || 2) : 1}
         label={(props.component.showHint && props.component.content?.hint )|| ""}
         onChange={handleChange}
         onBlur={lostFocus}
-        value={state.value}
+        value={!isPreviewMode ? (state.value) : 'Input disabled because of preview mode'}
+        disabled={isPreviewMode}
       />
       {props.component.showWordCount ? (
         <div className={styles.wordCount}>

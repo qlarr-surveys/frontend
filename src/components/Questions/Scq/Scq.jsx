@@ -19,6 +19,9 @@ function SCQ(props) {
       value: questionState?.value || "",
     };
   }, shallowEqual);
+
+  const isPreviewMode = useSelector((state) => state.runState.data?.survey.isPreviewMode);
+
   const dispatch = useDispatch();
 
   const handleChange = (event) => {
@@ -43,10 +46,11 @@ function SCQ(props) {
                 parentCode={props.component.qualifiedCode}
                 key={option.qualifiedCode}
                 Choice={option}
+                isPreviewMode={isPreviewMode}
               />
             );
           } else {
-            return <ScqChoice key={option.qualifiedCode} Choice={option} />;
+            return <ScqChoice key={option.qualifiedCode} Choice={option} isPreviewMode={isPreviewMode} />;
           }
         })}
       </RadioGroup>
@@ -72,7 +76,7 @@ function ScqChoice(props) {
             <Content
                 elementCode={props.Choice.code}
                 fontFamily={theme.textStyles.text.font}
-                color={theme.textStyles.text.color}
+                color={!props.isPreviewMode ? theme.textStyles.text.color : 'grey'}
                 fontSize={theme.textStyles.text.size}
                 name="label"
                 lang={props.lang}
@@ -81,6 +85,7 @@ function ScqChoice(props) {
 
         }
         value={props.Choice.code}
+        disabled={props.isPreviewMode}
       />
     );
   };
@@ -138,6 +143,7 @@ function ScqChoiceOther(props) {
     return (
       <div className="text-left d-flex">
         <FormControlLabel
+          disabled={props.isPreviewMode}
           key={props.Choice.qualifiedCode}
           control={<Radio
             sx={{
@@ -163,6 +169,7 @@ function ScqChoiceOther(props) {
                 onFocus={handleFocus}
                 onBlur={lostFocus}
                 value={state.value}
+                disabled={props.isPreviewMode}
                 InputProps={{
                   sx: {
                     fontFamily: theme.textStyles.text.font,

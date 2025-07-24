@@ -19,6 +19,11 @@ function NumberQuestion(props) {
       invalid: invalid,
     };
   }, shallowEqual);
+
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const dispatch = useDispatch();
 
   const cleanupValue = (oldValue, newValue) => {
@@ -94,8 +99,9 @@ function NumberQuestion(props) {
         onChange={handleChange}
         onBlur={lostFocus}
         inputProps={{ maxLength: props.component.maxChars || undefined }}
-        value={formatValue(state.value)}
+        value={!isPreviewMode ? (state.value) : formatValue('Input disabled because of preview mode')}
         error={state.invalid}
+        disabled={isPreviewMode}
         InputProps={{
           sx: {
             fontFamily: theme.textStyles.text.font,

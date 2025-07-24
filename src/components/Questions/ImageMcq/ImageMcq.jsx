@@ -50,6 +50,10 @@ function ImageMcqItem(props) {
     };
   }, shallowEqual);
 
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const dispatch = useDispatch();
   const handleChange = (componentCode, value) => {
     dispatch(valueChange({ componentCode, value }));
@@ -65,12 +69,15 @@ function ImageMcqItem(props) {
       key={props.option.code}
       sx={{
         flex: `0 1 calc(${100 / props.columns}% - ${props.spacing}px)`,
-        cursor: "pointer",
+        cursor: !isPreviewMode && "pointer",
       }}
     >
       <Box
         className={styles.imageContainer}
-        onClick={() => handleChange(props.option.qualifiedCode, !state.checked)}
+        onClick={() => {
+          if ( !isPreviewMode ) {
+          handleChange(props.option.qualifiedCode, !state.checked)}}
+        }
         style={{
           paddingTop: 100 / props.aspectRatio + "%",
           backgroundImage: backgroundImage,
@@ -82,8 +89,12 @@ function ImageMcqItem(props) {
       >
         <div className={styles.selection}>
           <Checkbox
-            onChange={(event) =>
-              handleChange(props.option.qualifiedCode, !state.checked)
+            disabled={isPreviewMode}
+            onChange={(event) => {
+              if ( !isPreviewMode ) {
+                handleChange(props.option.qualifiedCode, !state.checked)
+              }
+            }
             }
             size="large"
             sx={{
@@ -98,7 +109,7 @@ function ImageMcqItem(props) {
         <Box
           sx={{
             fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
+            color: isPreviewMode ? 'grey' : theme.textStyles.text.color,
             fontSize: theme.textStyles.text.size,
           }}
         >

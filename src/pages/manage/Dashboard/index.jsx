@@ -340,9 +340,8 @@ function Dashboard() {
                   >
                     {surveys?.surveys?.map((survey) => {
                       return (
-                        <Suspense fallback={<LoadingDots />}>
+                        <Suspense key={survey.id} fallback={<LoadingDots />}>
                           <Survey
-                            key={survey.id}
                             survey={survey}
                             highlight={
                               survey.name === recentlyUpdatedSurveyName

@@ -20,6 +20,11 @@ function McqAnswer(props) {
       checked: answerState?.value || false,
     };
   }, shallowEqual);
+
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const dispatch = useDispatch();
   const handleChange = (event) => {
     dispatch(
@@ -39,6 +44,7 @@ function McqAnswer(props) {
           checked={state.checked}
           onChange={handleChange}
           name={props.Answer.qualifiedCode}
+          disabled={isPreviewMode}
           sx={{
             color: theme.textStyles.text.color,
           }}
