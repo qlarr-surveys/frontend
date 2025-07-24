@@ -16,6 +16,7 @@
     "title": "Neuen Benutzer hinzufügen"
   },
   "goBack": "Zurückgehen",
+  "preview": "Vorschau der Umfrage",
   "timezone_info": "Wir verwenden Ihre lokale Zeitzone, um die Ablaufzeit der Umfrage zu berechnen.",
   "timezone_tooltip": "Die Umfrage läuft um 00:00 Uhr am ausgewählten Enddatum in Ihrer lokalen Zeitzone ab",
   "added": "Hinzugefügt:",
