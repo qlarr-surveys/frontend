@@ -6,7 +6,6 @@ import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import { Box, Chip, FormControl, InputLabel, MenuItem, Select, Tab, Tabs } from "@mui/material";
 import { BG_COLOR } from "~/constants/theme";
 import { PREVIEW_MODE, routes } from "~/routes";
-import { Close } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
 function PreviewSurvey() {
@@ -46,20 +45,6 @@ function PreviewSurvey() {
 
   return (
     <>
-      <Box
-        mb={2}
-        onClick={() => navigate(-1)}
-        sx={{ position: "absolute", left: "8px", top: "8px", zIndex: "1" }}
-      >
-        <Chip
-          label={t("preview")}
-          color="primary"
-          onDelete={() => navigate(`/design-survey/${surveyId}`)}
-          deleteIcon={<Close />}
-          style={{ marginLeft: "auto", marginRight: "auto" }} 
-        />
-      </Box>
-
       <Box
         display="flex"
         position="relative"

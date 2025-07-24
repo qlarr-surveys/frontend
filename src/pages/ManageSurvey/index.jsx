@@ -144,7 +144,7 @@ function ManageSurvey({ landingPage }) {
 }
 export default React.memo(ManageSurvey);
 
-const availablePages = (user) => {
+export const availablePages = (user) => {
   if (isSurveyAdmin(user)) {
     return [
       MANAGE_SURVEY_LANDING_PAGES.DESIGN,
