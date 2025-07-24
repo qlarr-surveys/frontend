@@ -6,26 +6,34 @@ import { Box, Checkbox, Radio, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
+  addNewAnswers,
   changeContent,
   onDrag,
+  onNewLine,
   removeAnswer,
   setup,
 } from "~/state/design/designState";
 import { setupOptions } from "~/constants/design";
 import { useDrag, useDrop } from "react-dnd";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { contentEditable, inDesign } from "~/routes";
-import ContentEditor from "~/components/design/ContentEditor";
 import { useTheme } from "@emotion/react";
+import { sanitizePastedText } from '~/components/design/ContentEditor/QuillEditor';
 
 function ChoiceItemDesign(props) {
   const dispatch = useDispatch();
   const ref = useRef(null);
   const theme = useTheme();
 
+  const inputRef = useRef();
+  const inFocus = useSelector((state) => {
+    return state.designState.focus == props.qualifiedCode;
+  });
+
   const answer = useSelector((state) => {
     return state.designState[props.qualifiedCode];
   });
+  
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
@@ -130,6 +138,19 @@ function ChoiceItemDesign(props) {
   });
 
   drop(preview(ref));
+
+
+
+  useEffect(() => {
+    if (inFocus) {
+      // Use setTimeout to ensure the DOM is ready
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, 10);
+    }
+  }, [inFocus, inputRef.current]);
   return (
     <div ref={ref} style={getStyles(isDragging)} data-handler-id={handlerId}>
       <Box
@@ -185,19 +206,60 @@ function ChoiceItemDesign(props) {
             }
           />
         ) : (
-          <ContentEditor
-            code={props.qualifiedCode}
-            editorTheme="bubble"
-            sx={{
-              flex: 1,
+          <TextField
+            inputRef={inputRef}
+            variant="standard"
+            value={content || ""}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value.endsWith("\n")) {
+                props.onNewLine();
+              } else {
+                const sanitizedText = sanitizePastedText(e.target.value);
+                const text = sanitizedText[0];
+                const rest = sanitizedText.slice(1);
+                if (rest.length > 0) {
+                  console.log("rest", rest);
+                  props.onMoreLines(rest);
+                }
+                dispatch(
+                  changeContent({
+                    code: props.qualifiedCode,
+                    key: "label",
+                    lang: langInfo.lang,
+                    value: text,
+                  })
+                );
+              }
             }}
-            onNewLine={props.onNewLine}
-            onMoreLines={props.onMoreLines}
-            editable={contentEditable(props.designMode)}
-            extended={false}
-            placeholder={props.t("content_editor_placeholder_option")}
-            contentKey="label"
+            placeholder={
+              onMainLang
+                ? props.t("content_editor_placeholder_option")
+                : mainContent || props.t("content_editor_placeholder_option")
+            }
+            multiline
+            InputProps={{
+              disableUnderline: true,
+              sx: {
+                fontFamily: theme.textStyles.text.font,
+                color: theme.textStyles.text.color,
+                fontSize: theme.textStyles.text.size,
+              },
+            }}
           />
+          // <ContentEditor
+          //   code={props.qualifiedCode}
+          //   editorTheme="bubble"
+          //   sx={{
+          //     flex: 1,
+          //   }}
+          //   onNewLine={props.onNewLine}
+          //   onMoreLines={props.onMoreLines}
+          //   editable={contentEditable(props.designMode)}
+          //   extended={false}
+          //   placeholder={props.t("content_editor_placeholder_option")}
+          //   contentKey="label"
+          // />
         )}
         {props.type === "text" && (
           <>
