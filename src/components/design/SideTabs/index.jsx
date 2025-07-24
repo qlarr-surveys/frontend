@@ -1,21 +1,27 @@
-import {
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  Tab,
-  Tabs,
-  Tooltip,
-} from "@mui/material";
+import { List, ListItem, ListItemButton, ListItemIcon } from "@mui/material";
 import TableRowsIcon from "@mui/icons-material/TableRows";
 import styles from "./SideTabs.module.css";
 import React from "react";
-import { Edit, Settings, Visibility } from "@mui/icons-material";
-import { MANAGE_SURVEY_LANDING_PAGES, routes } from "~/routes";
+import {
+  Edit,
+  Palette,
+  Settings,
+  Translate,
+  Visibility,
+} from "@mui/icons-material";
+import {
+  DESIGN_SURVEY_MODE,
+  MANAGE_SURVEY_LANDING_PAGES,
+  routes,
+} from "~/routes";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { resetSetup } from "~/state/design/designState";
+import {
+  resetSetup,
+  setDesignModeToLang,
+  setDesignModeToTheme,
+} from "~/state/design/designState";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
@@ -37,6 +43,11 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
   const published = versionDto?.published;
 
   const value = availablePages.indexOf(selectedPage);
+
+  const designMode = useSelector((state) => {
+    return state.designState.designMode;
+  });
+
   function component() {
     return (
       <List>
@@ -65,7 +76,10 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
             link={routes.preview.replace(":surveyId", surveyId)}
             icon={<Visibility sx={{ color: "#fff" }} />}
             onClick={() => {
-              window.open(routes.preview.replace(":surveyId", surveyId), '_blank');
+              window.open(
+                routes.preview.replace(":surveyId", surveyId),
+                "_blank"
+              );
             }}
             isLink={false}
           />
@@ -103,6 +117,23 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
             }}
           />
         )}
+
+        <SideTab
+          tooltip={t("translation")}
+          style={getTabButtonStyle(designMode == DESIGN_SURVEY_MODE.LANGUAGES)}
+          icon={<Translate sx={{ color: "#fff" }} />}
+          onClick={() => {
+            dispatch(setDesignModeToLang());
+          }}
+        />
+        <SideTab
+          tooltip={t("theme")}
+          style={getTabButtonStyle(designMode == DESIGN_SURVEY_MODE.THEME)}
+          icon={<Palette sx={{ color: "#fff" }} />}
+          onClick={() => {
+            dispatch(setDesignModeToTheme());
+          }}
+        />
       </List>
     );
   }
