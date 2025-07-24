@@ -43,6 +43,7 @@ function SCQ(props) {
           if (option.type === "other") {
             return (
               <ScqChoiceOther
+                lang={props.lang}
                 parentCode={props.component.qualifiedCode}
                 key={option.qualifiedCode}
                 Choice={option}
@@ -151,9 +152,9 @@ function ScqChoiceOther(props) {
             }}
           />}
           label={
-            <div className="w-100">
               <TextField
                 variant="standard"
+                fullWidth
                 required={
                   state.textChild?.relevance &&
                   nestedTextChild.validation?.required
@@ -185,7 +186,6 @@ function ScqChoiceOther(props) {
                   )
                 }
               />
-            </div>
           }
           onChange={onButtonClick}
           value={props.Choice.code}

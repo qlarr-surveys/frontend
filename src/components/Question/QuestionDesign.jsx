@@ -2,9 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 
 import styles from "./QuestionDesign.module.css";
-import { nextId } from "~/utils/design/utils";
 import ContentEditor from "~/components/design/ContentEditor";
-import { Box, Collapse } from "@mui/material";
+import { alpha, Box, Collapse } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import { useSelector } from "react-redux";
@@ -19,7 +18,6 @@ import { useDrag, useDrop } from "react-dnd";
 
 import ActionToolbar from "~/components/design/ActionToolbar";
 import QuestionDesignBody from "./QuestionDesignBody";
-import { getContrastColor, questionIconByType } from "../Questions/utils";
 import { setupOptions } from "~/constants/design";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 
@@ -47,7 +45,7 @@ function QuestionDesign({
   });
 
   const order = useSelector((state) => {
-    return  state.designState.index[code];
+    return state.designState.index[code];
   });
 
   const question = useSelector((state) => {
@@ -137,9 +135,10 @@ function QuestionDesign({
 
   drop(preview(containerRef));
 
-
-  const contrastColor = getContrastColor(theme.palette.background.paper);
+  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
+  const hoverColor = alpha(theme.textStyles.question.color, 0.05);
   const textColor = theme.textStyles.question.color;
+  const primaryColor = theme.palette.primary.main;
 
   useEffect(() => {
     const element = containerRef.current;
@@ -179,7 +178,9 @@ function QuestionDesign({
       onClick={(event) => {
         event.stopPropagation();
         event.preventDefault();
-        dispatch(setup({ code, rules: setupOptions(type) }));
+        if (designMode == DESIGN_SURVEY_MODE.DESIGN) {
+          dispatch(setup({ code, rules: setupOptions(type) }));
+        }
       }}
       ref={containerRef}
       onMouseEnter={() => {
@@ -191,8 +192,12 @@ function QuestionDesign({
       style={
         isInSetup
           ? {
-              border: `0.5px solid ${textColor}`,
               backgroundColor: contrastColor,
+              color: textColor,
+            }
+          : hovered
+          ? {
+              backgroundColor: hoverColor,
               color: textColor,
             }
           : {
@@ -204,23 +209,24 @@ function QuestionDesign({
       data-code={code}
     >
       <Box className={styles.contentContainer}>
-        {collapsed && (
-          <div className={styles.moveBox} ref={drag}>
-            <ViewCompactIcon style={{ color: textColor }} />
-          </div>
-        )}
-        {designMode == DESIGN_SURVEY_MODE.DESIGN && (isInSetup || hovered) && (
+        {designMode == DESIGN_SURVEY_MODE.DESIGN && (
           <div className={styles.actionToolbarVisible}>
             <ActionToolbar
               t={t}
-              isGroup={false}
+              isHovered={hovered}
               isInSetup={isInSetup}
+              isGroup={false}
               code={code}
               parentCode={parentCode}
               onClone={onClone}
               onDelete={onDelete}
               disableDelete={false}
             />
+          </div>
+        )}
+        {designMode == DESIGN_SURVEY_MODE.DESIGN && (
+          <div className={styles.moveBox} ref={drag}>
+            <ViewCompactIcon style={{ color: primaryColor }} />
           </div>
         )}
       </Box>
@@ -233,11 +239,9 @@ function QuestionDesign({
           fontSize: theme.textStyles.question.size,
         }}
       >
-        <Box className={styles.iconBox}>
-          {questionIconByType(`${type}`, undefined, textColor)}
-          <span style={{ width: "max-content" }}>{order}.</span>
-        </Box>
-
+        <span style={{ width: "max-content", color: primaryColor }}>
+          {order}.
+        </span>
         <div className={styles.titleQuestion}>
           <ContentEditor
             code={code}

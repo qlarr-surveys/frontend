@@ -129,7 +129,7 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
         dispatch(setFetching(false));
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         handleError(err);
       });
   };

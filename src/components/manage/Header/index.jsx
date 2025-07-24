@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import { Box, Menu, MenuItem } from "@mui/material";
 import {
   KeyboardArrowDown,
   KeyboardArrowUp,
@@ -15,11 +15,10 @@ import { MANAGE_SURVEY_LANDING_PAGES, routes } from "~/routes";
 import { useDispatch } from "react-redux";
 import { onEditErrorSeen, setLoading } from "~/state/edit/editState";
 import { isSuperAdmin } from "~/constants/roles";
-import { useSelector } from "react-redux";
 import { isSessionRtl } from "~/utils/common";
 import { useService } from "~/hooks/use-service";
 import { useTranslation } from "react-i18next";
-import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { SurveyHeader } from "../SurveyHeader";
 
 export const Header = () => {
   const authService = useService("auth");
@@ -53,10 +52,9 @@ export const Header = () => {
     return showTitle(location);
   }, [location]);
 
-  const surveyName = useSelector((state) =>
-    showSurveyTitle ? state.editState?.survey?.name || "" : ""
-  );
-
+  if (showSurveyTitle) {
+    return <SurveyHeader />;
+  }
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -74,22 +72,9 @@ export const Header = () => {
         gap="12px"
         className={isRtl ? styles.imageContainerRtl : styles.imageContainer}
       >
-        {showSurveyTitle && (
-          <CustomTooltip showIcon={false} title={t(`goBack`)}>
-            <img
-              src={isRtl ? "/arrow-back-rtl.png" : "/arrow-back.png"}
-              style={{ height: "40px" }}
-            />
-          </CustomTooltip>
-        )}
         <img src="/qlarr.png" style={{ height: "40px" }} />
       </Box>
 
-      {showSurveyTitle && (
-        <Typography className={styles.textCenter} variant="h3">
-          {surveyName}
-        </Typography>
-      )}
       <Box className={isRtl ? styles.userInfoRtl : styles.userInfo}>
         <LanguageSelector />
         {TokenService.isAuthenticated() && (

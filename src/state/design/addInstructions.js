@@ -1,7 +1,10 @@
+import { current } from "@reduxjs/toolkit";
+
 export const addSkipInstructions = (state, code) => {
   const component = state[code];
   if (
     component.type != "scq" &&
+    component.type != "select" &&
     component.type != "image_scq" &&
     component.type != "icon_scq"
   ) {
@@ -16,9 +19,14 @@ export const addSkipInstructions = (state, code) => {
 export const refreshEnumforSingleChoice = (component, state) => {
   if (
     !component.type ||
-    !["scq", "icon_scq", "image_scq", "scq_icon_array", "scq_array"].includes(
-      component.type
-    )
+    ![
+      "scq",
+      "icon_scq",
+      "image_scq",
+      "scq_icon_array",
+      "scq_array",
+      "select",
+    ].includes(component.type)
   ) {
     return;
   }
@@ -26,6 +34,7 @@ export const refreshEnumforSingleChoice = (component, state) => {
     case "image_scq":
     case "icon_scq":
     case "scq":
+    case "select":
       let valueInstruction = component.instructionList.find(
         (it) => it.code == "value"
       );
@@ -98,11 +107,13 @@ export const addMaskedValuesInstructions = (
       "image_mcq",
       "icon_mcq",
       "scq",
+      "select",
       "icon_scq",
       "number",
       "image_scq",
       "scq_icon_array",
       "scq_array",
+      "mcq_array",
       "date",
       "date_time",
       "time",
@@ -165,6 +176,7 @@ export const addMaskedValuesInstructions = (
     case "image_scq":
     case "icon_scq":
     case "scq":
+    case "select":
       if (component.children && component.children.length) {
         let objText =
           "{" +
@@ -172,7 +184,7 @@ export const addMaskedValuesInstructions = (
             .map((el) =>
               el.type == "other"
                 ? `"${el.code}": ${el.qualifiedCode}Atext.value`
-                : `"${el.code}": ${el.qualifiedCode}.label`
+                : `"${el.code}": QlarrScripts.stripTags(${el.qualifiedCode}.label)`
             )
             .join(",") +
           "}";
@@ -191,26 +203,21 @@ export const addMaskedValuesInstructions = (
     case "icon_mcq":
     case "mcq":
       if (component.children && component.children.length) {
-        let text =
-          "[" +
-          component.children
-            .map((answer) => {
-              return (
-                `{ "value":${answer.qualifiedCode}.value,` +
-                ` "label":${
-                  answer.type == "other"
-                    ? answer.qualifiedCode + "Atext.value"
-                    : answer.qualifiedCode + ".label"
-                } }`
-              );
-            })
-            .join(", ") +
-          "]";
+        const text =
+          "{" +
+          component.children.map((answer) => {
+            return `"${answer.code}": ${
+              answer.type == "other"
+                ? answer.qualifiedCode + "Atext.value"
+                : `QlarrScripts.stripTags(${answer.qualifiedCode}.label)`
+            }`;
+          }) +
+          "}";
         const instruction = {
           code: "masked_value",
           isActive: true,
           returnType: "string",
-          text: `QlarrScripts.listStrings(${text}.filter(function(elem){return QlarrScripts.safeAccess(elem,"value")}).map(function(elem){return QlarrScripts.safeAccess(elem,"label")}), Survey.lang)`,
+          text: `QlarrScripts.listStrings((${qualifiedCode}.value || []).map(function(el){return QlarrScripts.safeAccess(${text},el)}), Survey.lang)`,
         };
         changeInstruction(component, instruction);
       } else {
@@ -229,7 +236,10 @@ export const addMaskedValuesInstructions = (
           "{" +
           component.children
             .filter((el) => el.type == "column")
-            .map((el) => `"${el.code}": ${el.qualifiedCode}.label`)
+            .map(
+              (el) =>
+                `"${el.code}": QlarrScripts.stripTags(${el.qualifiedCode}.label)`
+            )
             .join(",") +
           "}";
 
@@ -241,6 +251,50 @@ export const addMaskedValuesInstructions = (
               isActive: true,
               returnType: "string",
               text: `${el.qualifiedCode}.value ? QlarrScripts.safeAccess(${objText},${el.qualifiedCode}.value) : ''`,
+            };
+            changeInstruction(state[el.qualifiedCode], instruction);
+          });
+      } else if (
+        component.children &&
+        component.children.filter((el) => el.type === "row").length
+      ) {
+        component.children
+          .filter((el) => el.type === "row")
+          .forEach((el) => {
+            changeInstruction(state[el.qualifiedCode], {
+              code: "masked_value",
+              remove: true,
+            });
+          });
+      }
+      break;
+    case "mcq_array":
+      if (
+        component.children &&
+        component.children.length &&
+        component.children.filter((el) => el.type == "column").length &&
+        component.children.filter((el) => el.type === "row").length
+      ) {
+        let objText =
+          "{" +
+          component.children
+            .filter((el) => el.type == "column")
+            .map(
+              (el) =>
+                `"${el.code}": QlarrScripts.stripTags(${el.qualifiedCode}.label)`
+            )
+            .join(",") +
+          "}";
+
+        component.children
+          .filter((el) => el.type === "row")
+          .forEach((el) => {
+            const instruction = {
+              code: "masked_value",
+              isActive: true,
+              returnType: "string",
+
+              text: `QlarrScripts.listStrings((${el.qualifiedCode}.value || []).map(function(el){return QlarrScripts.safeAccess(${objText},el)}), Survey.lang)`,
             };
             changeInstruction(state[el.qualifiedCode], instruction);
           });
@@ -347,12 +401,25 @@ export const addQuestionInstructions = (question) => {
         },
       ];
       break;
+    case "select":
     case "scq":
       question.instructionList = [
         {
           code: "value",
           isActive: false,
           returnType: "string",
+          text: "",
+        },
+      ];
+      break;
+    case "icon_mcq":
+    case "image_mcq":
+    case "mcq":
+      question.instructionList = [
+        {
+          code: "value",
+          isActive: false,
+          returnType: "list",
           text: "",
         },
       ];
@@ -474,9 +541,7 @@ export const addQuestionInstructions = (question) => {
     case "image_display":
     case "scq_icon_array":
     case "scq_array":
-    case "icon_mcq":
-    case "image_mcq":
-    case "mcq":
+    case "mcq_array":
     case "image_ranking":
     case "ranking":
     default:
@@ -500,9 +565,9 @@ export const addAnswerInstructions = (
       questionType == "nps" ||
       questionType == "image_ranking"
         ? "int"
-        : questionType == "scq_array" || questionType == "scq_icon_array"
-        ? "string"
-        : "boolean",
+        : questionType == "mcq_array"
+        ? "list"
+        : "string",
     text: "",
   };
   switch (type) {
@@ -530,11 +595,21 @@ export const addAnswerInstructions = (
         text:
           questionType === "scq"
             ? `${questionCode}.value === 'Aother'`
-            : `${parentCode}.value === true`,
+            : `(${questionCode}.value || []).indexOf('Aother') > -1`,
       });
       break;
     default:
-      if (questionType !== "scq") {
+      if (
+        ![
+          "scq",
+          "icon_scq",
+          "image_scq",
+          "select",
+          "mcq",
+          "icon_mcq",
+          "image_mcq",
+        ].includes(questionType)
+      ) {
         changeInstruction(answer, valueInstruction);
       }
       break;
@@ -709,6 +784,8 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         `&& ${qualifiedCode}.value == ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_option_count":
+      instructionText = `(${qualifiedCode}.value || []).length ` + `< ${validation.min_count || 0}`;
+      return booleanActiveInstruction(key, instructionText);
     case "validation_min_ranking_count":
       instructionText =
         `[${component.children.map(
@@ -716,6 +793,8 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         )}].filter(x=>x).length ` + `< ${validation.min_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_option_count":
+      instructionText = `(${qualifiedCode}.value || []).length ` + `> ${validation.max_count || 0}`;
+      return booleanActiveInstruction(key, instructionText);
     case "validation_max_ranking_count":
       instructionText =
         `[${component.children.map(
@@ -723,6 +802,8 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         )}].filter(x=>x).length ` + `> ${validation.max_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_option_count":
+      instructionText = `(${qualifiedCode}.value || []).length ` + `!== ${validation.count || 0}`;
+    return booleanActiveInstruction(key, instructionText);
     case "validation_ranking_count":
       instructionText =
         `[${component.children.map(
@@ -756,6 +837,24 @@ const requiredText = (qualifiedCode, component) => {
     component.type == "scq_icon_array"
   ) {
     const rows = component.children.filter((child) => child.type == "row");
+    return (
+      `[${rows.map(
+        (answer) => answer.qualifiedCode + ".value"
+      )}].filter(x=>x).length ` +
+      ` < ` +
+      rows.length
+    );
+  } else if (component.type == "mcq_array") {
+    const rows = component.children.filter((child) => child.type == "row");
+    return (
+      `[${rows.map(
+        (answer) => answer.qualifiedCode + ".value"
+      )}].filter(x=>x && x.length > 0).length ` +
+      ` < ` +
+      rows.length
+    );
+  } else if (component.type == "multiple_text") {
+    const rows = component.children;
     return (
       `[${rows.map(
         (answer) => answer.qualifiedCode + ".value"
@@ -862,6 +961,16 @@ export const updateRandomByRule = (componentState, randomRule) => {
   }
 };
 
+const getQuestionType = (state, code) => {
+  const match = code.match(/^Q[a-z0-9_]+/);
+  const captured = match ? match[0] : null;
+  if (captured) {
+    return state[captured].type;
+  } else {
+    return null;
+  }
+}
+
 export const conditionalRelevanceEquation = (logic, rule, state) => {
   const code = "conditional_relevance";
   if (rule == "show_always") {
@@ -874,7 +983,7 @@ export const conditionalRelevanceEquation = (logic, rule, state) => {
       returnType: "boolean",
     };
   }
-  const text = jsonToJs(logic, false, (code) => state[code].type);
+  const text = jsonToJs(logic, false, (code) => state[code].type, (code) => getQuestionType(state, code));
   if (rule == "show_if") {
     return { code, text, isActive: true, returnType: "boolean" };
   } else if (rule == "hide_if") {
@@ -889,7 +998,7 @@ export const conditionalRelevanceEquation = (logic, rule, state) => {
   }
 };
 
-const jsonToJs = (json, nested, getComponentType) => {
+const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
   if (typeof json !== "object") {
     return "";
   }
@@ -899,19 +1008,19 @@ const jsonToJs = (json, nested, getComponentType) => {
     case "and":
       return wrapIfNested(
         nested,
-        value.map((el) => jsonToJs(el, true, getComponentType)).join(" && ")
+        value.map((el) => jsonToJs(el, true, getComponentType, getQuestionType)).join(" && ")
       );
     case "or":
       return wrapIfNested(
         nested,
-        value.map((el) => jsonToJs(el, true, getComponentType)).join(" || ")
+        value.map((el) => jsonToJs(el, true, getComponentType, getQuestionType)).join(" || ")
       );
     case "!":
       return (
         "!" +
         wrapIfNested(
           nested,
-          jsonToJs(value, true, getComponentType) + (nested ? ")" : "")
+          jsonToJs(value, true, getComponentType, getQuestionType) + (nested ? ")" : "")
         )
       );
     case "is_relevant":
@@ -1019,11 +1128,12 @@ const jsonToJs = (json, nested, getComponentType) => {
       } else if (getComponentType(code) == "nps") {
         return `[${value[1].map((el) => +el)}].indexOf(${code}.value) !== -1`;
       } else if (
-        ["mcq", "image_mcq", "icon_mcq"].indexOf(getComponentType(code)) > -1
+        ["mcq", "image_mcq", "icon_mcq"].indexOf(getComponentType(code)) > -1 ||
+        getQuestionType(code) == "mcq_array"
       ) {
         return `[${value[1].map(
-          (el) => code + el + ".value"
-        )}].filter(x=>x).length > 0`;
+          (el) => "'" + el + "'"
+        )}].filter((el) => ${code}.value?.indexOf(el) > -1).length > 0`;
       } else {
         return `[${value[1].map(
           (el) => '"' + el + '"'
@@ -1041,8 +1151,8 @@ const jsonToJs = (json, nested, getComponentType) => {
         ["mcq", "image_mcq", "icon_mcq"].indexOf(getComponentType(code1)) > -1
       ) {
         return `[${value[1].map(
-          (el) => questionCode1 + el + ".value"
-        )}].filter(x=>x).length == 0`;
+          (el) => "'" + el + "'"
+        )}].filter((el) => ${code}.value?.indexOf(el) > -1).length == 0`;
       } else {
         return `[${value[1].map(
           (el) => '"' + el + '"'
@@ -1255,7 +1365,10 @@ export const processValidation = (state, code, rule, modifyEquation = true) => {
   // we have this special situation that the SCQ array validation is copied to its children
   // This is specifically important when an SCQ array is implemented at SCQ in smaller screens
   if (
-    (component.type == "scq_array" || component.type == "scq_icon_array") &&
+    (component.type == "scq_array" ||
+      component.type == "mcq_array" ||
+      component.type == "multiple_text" ||
+      component.type == "scq_icon_array") &&
     rule == "validation_required"
   ) {
     component.children

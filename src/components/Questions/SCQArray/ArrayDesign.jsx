@@ -3,6 +3,7 @@ import styles from "./SCQArrayDesign.module.css";
 import {
   Box,
   Button,
+  Checkbox,
   Radio,
   Table,
   TableBody,
@@ -31,13 +32,14 @@ import { rtlLanguage } from "~/utils/common";
 import { inDesign } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
 import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
+import { Check } from '@mui/icons-material';
 
-function SCQArray(props) {
+function ArrayDesign(props) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const t = props.t;
-  const width = columnMinWidth();
 
+  const { header, rowLabel } = columnMinWidth(props.code);
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
   });
@@ -45,7 +47,6 @@ function SCQArray(props) {
   const children = useSelector(
     (state) => state.designState[props.code].children
   );
-
   const rows = React.useMemo(
     () => children?.filter((el) => el.type == "row") || [],
     [children]
@@ -87,25 +88,24 @@ function SCQArray(props) {
         <Table
           sx={{
             tableLayout: "fixed",
-            minWidth: `${columns.length * width + 20}px`,
           }}
         >
           <TableHead>
             <TableRow>
               <TableCell
                 sx={{
-                  width: width + "px",
                   padding: "2px",
+                  width: rowLabel + "px",
                 }}
                 key="move"
               ></TableCell>
               {columns.map((item, index) => {
                 return (
-                  <SCQArrayHeaderDesign
+                  <ArrayHeaderDesign
                     parentQualifiedCode={props.qualifiedCode}
                     langInfo={langInfo}
                     designMode={props.designMode}
-                    width={width}
+                    width={header}
                     t={props.t}
                     key={item.qualifiedCode}
                     item={item}
@@ -127,9 +127,9 @@ function SCQArray(props) {
           <TableBody>
             {rows.map((item, index) => {
               return (
-                <SCQArrayRowDesign
-                  width={width}
+                <ArrayRowDesign
                   parentQualifiedCode={props.code}
+                  type={props.type}
                   langInfo={langInfo}
                   t={props.t}
                   designMode={props.designMode}
@@ -164,17 +164,17 @@ function SCQArray(props) {
   );
 }
 
-export default React.memo(SCQArray);
+export default React.memo(ArrayDesign);
 
-function SCQArrayRowDesign({
+function ArrayRowDesign({
   item,
   index,
   colCount,
   designMode,
+  type,
   t,
   langInfo,
   parentQualifiedCode,
-  width,
 }) {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -279,7 +279,6 @@ function SCQArrayRowDesign({
           color: theme.textStyles.text.color,
           fontSize: theme.textStyles.text.size,
           padding: "2px",
-          width: width + "px",
         }}
       >
         <Box display="flex" alignItems="center">
@@ -354,7 +353,8 @@ function SCQArrayRowDesign({
               padding: "0px",
             }}
           >
-            <Radio
+            {type === "scq_array" ? (
+              <Radio
               sx={{
                 "&.Mui-disabled": {
                   color: theme.textStyles.text.color,
@@ -362,6 +362,16 @@ function SCQArrayRowDesign({
               }}
               disabled={true}
             />
+            ) : (
+              <Checkbox
+                sx={{
+                  "&.Mui-disabled": {
+                    color: theme.textStyles.text.color,
+                  },
+                }}
+                disabled={true}
+              />
+            )}
           </TableCell>
         );
       })}
@@ -382,7 +392,7 @@ function SCQArrayRowDesign({
   );
 }
 
-function SCQArrayHeaderDesign({
+function ArrayHeaderDesign({
   item,
   index,
   designMode,
@@ -485,6 +495,7 @@ function SCQArrayHeaderDesign({
         padding: "2px",
         width: width + "px",
       }}
+      style={{ width: width + "px" }}
       key={item.qualifiedCode}
     >
       {inDesign(designMode) && (

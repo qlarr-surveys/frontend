@@ -1,8 +1,7 @@
 import FieldSize from "~/components/design/setup/FieldSize";
 import ShowHint, { SetupTextInput } from "~/components/design/setup/ShowHint";
 import ValidationSetupItem from "~/components/design/setup/validation/ValidationSetupItem";
-import React, { useCallback } from "react";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import React, { useEffect } from "react";
 import ToggleValue from "../ToggleValue";
 import SelectValue from "../SelectValue";
 import SelectDate from "../SelectDate";
@@ -10,14 +9,9 @@ import Relevance from "../logic/Relevance";
 import SkipLogic from "../SkipLogic";
 import styles from "./SetupPanel.module.css";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  IconButton,
-} from "@mui/material";
+import { Box, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { resetSetup, setupToggleExpand } from "~/state/design/designState";
+import { resetSetup } from "~/state/design/designState";
 import OrderPrioritySetup from "../random/OrderPrioritySetup";
 import { NavigationMode } from "~/components/manage/NavigationMode";
 import { useSelector } from "react-redux";
@@ -25,26 +19,30 @@ import { createSelector } from "@reduxjs/toolkit";
 import Theming from "../Theming";
 import { ManageLanguages } from "~/pages/manage/ManageTranslations";
 import { useTheme } from "@emotion/react";
+import { questionIconByType } from "~/components/Questions/utils";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
-  const toggleExpand = useCallback((key) => {
-    dispatch(setupToggleExpand(key));
-  });
 
   const theme = useTheme();
 
   const selectSetupInfo = (state) => state.designState.setup || {};
   const selectSetupData = createSelector([selectSetupInfo], (setupInfo) => ({
     code: setupInfo.code,
-    expanded: setupInfo.expanded,
     highlighted: setupInfo.highlighted,
-    rules: setupInfo.rules,
-    isSingleRule: setupInfo.rules?.length === 1,
+    rules: setupInfo.rules || [],
+    ...setupInfo,
   }));
 
-  const { code, expanded, highlighted, rules, isSingleRule } =
-    useSelector(selectSetupData);
+  const { code, highlighted, rules } = useSelector(selectSetupData);
+
+  const type = useSelector((state) => {
+    return state.designState[code].type;
+  });
+
+  const order = useSelector((state) => {
+    return state.designState.index[code];
+  });
 
   return (
     <div
@@ -53,7 +51,17 @@ function SetupPanel({ t }) {
         left: theme.direction == "rtl" ? "0px" : "",
       }}
     >
-      <div className={styles.close}>
+      <div className={styles.titleContainer}>
+        <Box display="flex" alignItems="center" gap={1}>
+          <Typography variant="h6" component="h2">
+            {t("setup_for")}
+          </Typography>
+          {questionIconByType(`${type}`, undefined)}
+          <Typography variant="h6" component="h2">
+            {order}
+          </Typography>
+        </Box>
+
         <IconButton
           onClick={() => {
             dispatch(resetSetup());
@@ -62,19 +70,8 @@ function SetupPanel({ t }) {
           <CloseIcon />
         </IconButton>
       </div>
-
-      {rules?.map((rule) => (
-        <SetupSection
-          expanded={expanded?.includes(rule.key) || isSingleRule || false}
-          isSingleRule={isSingleRule}
-          code={code}
-          t={t}
-          toggleExpand={toggleExpand}
-          key={code + rule.title}
-          highlighted={rule.key == highlighted}
-          rule={rule}
-        />
-      ))}
+      <Divider />
+      <SetupSection rules={rules || []} code={code} t={t} highlighted={highlighted} />
     </div>
   );
 }
@@ -111,11 +108,12 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
         <FieldSize
           label={"textarea_lines"}
           lowerBound={1}
+          rule={rule}
           t={t}
-          upperBound={500}
-          code={code}
-          defaultValue={20}
           key={code + rule}
+          upperBound={15}
+          code={code}
+          defaultValue={4}
         />
       );
     case "hideText":
@@ -279,6 +277,41 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           t={t}
         />
       );
+
+    case "minHeaderMobile":
+    case "minHeaderDesktop":
+    case "minRowLabelMobile":
+    case "minRowLabelDesktop":
+      let label = "min_header_mobile";
+      switch (rule) {
+        case "minHeaderMobile":
+          label = "min_header_mobile";
+          break;
+        case "minHeaderDesktop":
+          label = "min_header_desktop";
+          break;
+        case "minRowLabelMobile":
+          label = "min_row_label_mobile";
+          break;
+        case "minRowLabelDesktop":
+          label = "min_row_label_desktop";
+          break;
+      }
+      const widthOptions = [60, 90, 120, 150, 180];
+      const widthOptionLabels = ["60px", "90px", "120px", "150px", "180px"];
+      return (
+        <SelectValue
+          values={widthOptions}
+          labels={widthOptionLabels}
+          key={code + rule}
+          defaultValue={
+            rule == "minHeaderMobile" || rule == "minRowLabelMobile" ? 60 : 90
+          }
+          label={label}
+          rule={rule}
+          code={code}
+        />
+      );
     case "dateFormat":
       const listDateFormat = [
         "DD.MM.YYYY",
@@ -434,29 +467,67 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
   }
 });
 
-const SetupSection = React.memo(
-  ({ expanded, highlighted, code, rule, isSingleRule, t, toggleExpand }) => {
-    return (
-      <Accordion
-        expanded={expanded}
-        className={styles.accordionStyle}
-        slotProps={{ transition: { unmountOnExit: true } }}
+const SetupSection = React.memo(({ highlighted, rules, code, t }) => {
+  const [selectedTab, setSelectedTab] = React.useState(0);
+
+  useEffect(() => {
+    if (!rules || !highlighted) {
+      setSelectedTab(0);
+      return;
+    }
+
+    const index = rules.findIndex((rule) => rule.key === highlighted);
+    if (index !== -1 && index !== selectedTab) {
+      setSelectedTab(index);
+    }
+  }, [highlighted, rules]);
+
+  const handleTabChange = (_, newValue) => setSelectedTab(newValue);
+
+  return (
+    <>
+      <Tabs
+        className={styles.tabContainer}
+        value={selectedTab}
+        onChange={handleTabChange}
+        variant="standard"
+        TabIndicatorProps={{ sx: { display: "none" } }}
+        sx={{
+          "& .MuiTabs-flexContainer": {
+            flexWrap: "wrap",
+          },
+        }}
       >
-        <AccordionSummary
-          onClick={() => toggleExpand(rule.key)}
-          className={styles.setupHeader}
-          expandIcon={isSingleRule ? null : <ExpandMoreIcon />}
-        >
-          <span className={styles.sectionTitle}>{t(rule.title)}</span>
-        </AccordionSummary>
-        <AccordionDetails
-          sx={{ backgroundColor: highlighted ? "#fff" : "background.paper" }}
-        >
-          {rule.rules.map((el) => (
-            <SetupComponent code={code} rule={el} t={t} key={el} />
-          ))}
-        </AccordionDetails>
-      </Accordion>
-    );
-  }
-);
+        {rules.map((rule) => (
+          <Tab
+            className={styles.tabStyle}
+            sx={{
+              px: 1.5,
+              borderBottom: "2px solid transparent",
+              "&.Mui-selected": {
+                borderBottom: "2px solid #000",
+              },
+            }}
+            key={rule.key}
+            label={t(rule.title)}
+          />
+        ))}
+      </Tabs>
+      <Divider />
+      <Box
+        sx={{
+          backgroundColor:
+            rules[selectedTab]?.key === highlighted
+              ? "#fff"
+              : "background.paper",
+        }}
+      >
+        {rules[selectedTab]?.rules?.map((el) => (
+          <div className={styles.setupContainer} key={el}>
+            <SetupComponent code={code} rule={el} t={t} />
+          </div>
+        ))}
+      </Box>
+    </>
+  );
+});

@@ -49,6 +49,7 @@ function ParagraphQuestion(props) {
   return (
     <div className={styles.questionItem}>
       <TextField
+      size="small"
         className={styles.paragraph}
         required={
           props.component.validation?.validation_required?.isActive

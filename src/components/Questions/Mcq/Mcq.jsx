@@ -29,6 +29,7 @@ function MCQ(props) {
           } else {
             return (
               <MCQAnswer
+                lang={props.lang}
                 key={option.qualifiedCode}
                 Answer={option}
                 parentCode={props.component.qualifiedCode}
@@ -44,6 +45,10 @@ function MCQ(props) {
 function McqAnswerOther(props) {
   const theme = useTheme();
   const nestedTextChild = props.Answer.answers[0];
+  const parentValue = useSelector((state) => {
+    return state.runState.values[props.parentCode].value || [];
+  }, shallowEqual);
+  const isSelected = parentValue.indexOf(props.Answer.code) > -1;
   const state = useSelector((state) => {
     let own = state.runState.values[props.Answer.qualifiedCode];
     let textChild = state.runState.values[nestedTextChild.qualifiedCode];
@@ -55,7 +60,6 @@ function McqAnswerOther(props) {
         (show_errors || isChildDirty) &&
         textChild?.relevance === true &&
         textChild?.validity === false,
-      checked: own?.value || false,
       textValue: textChild?.value || "",
       textRelevance: state.textChild?.relevance,
     };
@@ -67,10 +71,16 @@ function McqAnswerOther(props) {
 
   const dispatch = useDispatch();
   const onButtonClick = (event) => {
+    let value = [...parentValue];
+    if (event.target.checked) {
+      value.push(props.Answer.code);
+    } else {
+      value = value.filter((el) => el !== props.Answer.code);
+    }
     dispatch(
       valueChange({
-        componentCode: event.target.name,
-        value: event.target.checked,
+        componentCode: props.parentCode,
+        value: value,
       })
     );
     dispatch(setDirty(event.target.name));
@@ -90,9 +100,14 @@ function McqAnswerOther(props) {
 
   const textInput = useRef();
   const handleFocus = (event) => {
-    dispatch(
-      valueChange({ componentCode: props.Answer.qualifiedCode, value: true })
-    );
+    let value = [...parentValue];
+    if (value.indexOf(props.Answer.code) == -1) {
+      value.push(props.Answer.code);
+      dispatch(
+        valueChange({ componentCode: props.parentCode, value: value })
+      );
+    }
+    
   };
 
   const lostFocus = (event) => {
@@ -104,7 +119,7 @@ function McqAnswerOther(props) {
       <FormControlLabel
         control={
           <Checkbox
-            checked={state.checked}
+            checked={isSelected}
             onChange={onButtonClick}
             disabled={isPreviewMode}
             name={props.Answer.qualifiedCode}

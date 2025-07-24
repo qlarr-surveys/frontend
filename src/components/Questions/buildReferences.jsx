@@ -21,6 +21,7 @@ const buildReference = (code, component, state, mainLang) => {
   let type = component.type;
   switch (component.type) {
     case "scq_icon_array":
+    case "mcq_array":
     case "scq_array":
       return component.children
         .filter((el) => el.type == "row")
@@ -30,15 +31,33 @@ const buildReference = (code, component, state, mainLang) => {
               label +
               " - " +
               code +
-              ". " +
+              "." +
               stripTags(
                 state[element.qualifiedCode].content?.[mainLang]?.label
               ),
             id: code + element.code,
-            type: "SCQ Array Row",
+            type: "Array Row",
             instruction: code + element.code + ".masked_value",
           };
         });
+    case "multiple_text":
+      return component.children
+      .map((element) => {
+        return {
+          value:
+            label +
+            " - " +
+            code +
+            "." +
+            stripTags(
+              state[element.qualifiedCode].content?.[mainLang]?.label
+            ),
+          id: code + element.code,
+          type: "Multiple Text",
+          instruction: code + element.code + ".value",
+        };
+      });
+      break;
     case "text":
       type = "Short Text";
       instruction = `${code}.value`;
@@ -73,6 +92,10 @@ const buildReference = (code, component, state, mainLang) => {
       break;
     case "scq":
       type = "SCQ";
+      instruction = `${code}.masked_value`;
+      break;
+    case "select":
+      type = "Select";
       instruction = `${code}.masked_value`;
       break;
     case "icon_scq":

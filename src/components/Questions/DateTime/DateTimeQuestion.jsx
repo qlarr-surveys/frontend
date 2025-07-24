@@ -62,6 +62,7 @@ function DateTimeQuestion(props) {
               disabled={isPreviewMode}
               renderInput={(props) => (
                 <TextField
+                  size="small"
                   sx={{
                     svg: { color: isPreviewMode ? 'grey' : theme.textStyles.text.color },
                     border: '1px solid',
@@ -136,6 +137,7 @@ function DateTimeQuestion(props) {
                     },
                   },
                 }}
+                size="small"
                 onKeyDown={(e) => e.preventDefault()} {...params} />
             )}
             margin="normal"
@@ -180,6 +182,7 @@ function DateTimeQuestion(props) {
                   },
                 }}
 
+                size="small"
                 onKeyDown={(e) => e.preventDefault()} {...params} />
             )}
             margin="normal"

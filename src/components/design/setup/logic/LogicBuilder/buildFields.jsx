@@ -202,6 +202,7 @@ const buildField = (code, component, state, mainLang) => {
       };
     case "image_scq":
     case "icon_scq":
+    case "select":
     case "scq":
       let scqReturnList = {};
       let scqListValues = {};
@@ -348,20 +349,21 @@ const buildField = (code, component, state, mainLang) => {
       return npsReturnList;
     case "scq_icon_array":
     case "scq_array":
-      let scqArrayReturnList = {};
-      let scqArrayListValues = {};
+    case "mcq_array":
+      let arrayReturnList = {};
+      let arrayListValues = {};
       component.children
         ?.filter((el) => el.type == "column")
         .forEach((element) => {
           const label = stripTags(
             state[element.qualifiedCode].content?.[mainLang]?.label || ""
           );
-          scqArrayListValues[element.code] = label
+          arrayListValues[element.code] = label
             ? element.code + " - " + label
             : element.code;
         });
 
-      scqArrayReturnList[code] = {
+      arrayReturnList[code] = {
         label: label,
         type: "text",
         valueSources: ["value"],
@@ -376,20 +378,73 @@ const buildField = (code, component, state, mainLang) => {
       component.children
         ?.filter((el) => el.type == "row")
         .forEach((element) => {
-          scqArrayReturnList[code + element.code] = {
+          arrayReturnList[code + element.code] = {
             label:
               label +
               " - " +
               stripTags(
                 state[element.qualifiedCode].content?.[mainLang]?.label || ""
               ),
-            type: "select",
+            type: component.type == "mcq_array" ? "multiselect" : "select",
             valueSources: ["value"],
-            fieldSettings: { listValues: scqArrayListValues },
-            operators: ["select_any_in", "select_not_any_in"],
+            fieldSettings: { listValues: arrayListValues },
+            operators:
+              component.type == "mcq_array"
+                ? ["multiselect_equals", "multiselect_not_equals"]
+                : ["select_any_in", "select_not_any_in"],
           };
         });
-      return scqArrayReturnList;
+      return arrayReturnList;
+    case "multiple_text":
+      return {
+        [code]: {
+          label: label,
+          type: "text",
+          valueSources: ["value"],
+          operators: [
+            "is_relevant",
+            "is_not_relevant",
+            "is_valid",
+            "is_not_valid",
+            "is_empty",
+            "is_not_empty",
+            "equal",
+            "not_equal",
+            "like",
+            "not_like",
+            "starts_with",
+            "ends_with",
+          ],
+        },
+      };
+      let multipleTextReturnList = {};
+      component.children.forEach((element) => {
+        multipleTextReturnList[code + element.code] = {
+          label:
+            label +
+            " - " +
+            stripTags(
+              state[element.qualifiedCode].content?.[mainLang]?.label || ""
+            ),
+          type: "text",
+          valueSources: ["value"],
+          operators: [
+            "is_relevant",
+            "is_not_relevant",
+            "is_valid",
+            "is_not_valid",
+            "is_empty",
+            "is_not_empty",
+            "equal",
+            "not_equal",
+            "like",
+            "not_like",
+            "starts_with",
+            "ends_with",
+          ],
+        };
+      });
+      return multipleTextReturnList;
     case "ranking":
     case "image_ranking":
       let rankingReturnList = {};

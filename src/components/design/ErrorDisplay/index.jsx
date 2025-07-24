@@ -55,8 +55,7 @@ function ErrorDisplay(props) {
         setup({
           code: props.code,
           rules: setupOptions(type),
-          highlighted: "relevance",
-          expanded: ["relevance"],
+          highlighted: "relevance"
         })
       );
     } else if (
@@ -70,8 +69,7 @@ function ErrorDisplay(props) {
           setup({
             code: props.code,
             rules: setupOptions(type),
-            highlighted: "random",
-            expanded: ["random"],
+            highlighted: "random"
           })
         );
       }
@@ -80,8 +78,7 @@ function ErrorDisplay(props) {
         setup({
           code: props.code,
           rules: setupOptions(type),
-          highlighted: "skip_logic",
-          expanded: ["skip_logic"],
+          highlighted: "skip_logic"
         })
       );
     }
