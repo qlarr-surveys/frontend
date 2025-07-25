@@ -18,6 +18,9 @@ function Navigation(props) {
       has_errors: state.runState.values.Survey.show_errors,
     };
   }, shallowEqual);
+
+  const isPreviewMode = useSelector(state => state.runState.data?.survey.isPreviewMode);
+
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation("run");
 
@@ -65,6 +68,7 @@ function Navigation(props) {
       )}
       <Button
         variant="contained"
+        disabled={!state.has_next && isPreviewMode}
         onClick={() => {
           next();
         }}
@@ -82,17 +86,17 @@ export default Navigation;
 
 function getClosestScrollableParent(element) {
   if (!element) return null;
-  
+
   let parent = element.parentElement;
   while (parent) {
     const style = window.getComputedStyle(parent);
     const overflowY = style.overflowY;
     const isScrollable = (overflowY === "auto" || overflowY === "scroll") && parent.scrollHeight > parent.clientHeight;
-    
+
     if (isScrollable) {
       return parent;
     }
-    
+
     parent = parent.parentElement;
   }
 

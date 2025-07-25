@@ -1,3 +1,5 @@
+
+
 import React, { memo } from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -5,6 +7,7 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import Checkbox from "@mui/material/Checkbox";
 import { useTheme } from "@mui/material/styles";
 import { valueChange } from "~/state/runState";
+import { Box } from "@mui/material";
 import { setDirty } from "~/state/templateState";
 import Content from "~/components/run/Content";
 
@@ -23,7 +26,10 @@ function McqAnswer(props) {
     return state.runState.values[props.parentCode].value || [];
   }, shallowEqual);
 
-  
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const handleChange = (event) => {
     let value = [...parentValue];
     if (event.target.checked) {
@@ -49,6 +55,7 @@ function McqAnswer(props) {
           checked={parentValue.indexOf(props.Answer.code) > -1}
           onChange={handleChange}
           name={props.Answer.qualifiedCode}
+          disabled={isPreviewMode}
           sx={{
             color: theme.textStyles.text.color,
           }}

@@ -18,6 +18,10 @@ function NPS(props) {
     return state.runState.values[props.component.qualifiedCode].value;
   }, shallowEqual);
 
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const handleChange = (option) => {
     dispatch(
       valueChange({
@@ -42,14 +46,18 @@ function NPS(props) {
             <Box
               key={option}
               className={styles.choice}
-              onClick={() => handleChange(option)}
+              onClick={() => {
+                if ( !isPreviewMode )
+                  handleChange(option)
+              }}
               sx={{
-                color: isSelected
+                color: (isPreviewMode ? 'grey' : isSelected
                   ? highlightContrast
-                  : theme.textStyles.text.color,
+                  : theme.textStyles.text.color),
                 backgroundColor: isSelected
                   ? "primary.main"
                   : "background.paper",
+                cursor: !isPreviewMode && 'pointer'
               }}
             >
               {option}

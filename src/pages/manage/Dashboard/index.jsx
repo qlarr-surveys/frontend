@@ -342,7 +342,6 @@ function Dashboard() {
                       return (
                         <Suspense key={survey.id} fallback={<LoadingDots />}>
                           <Survey
-                            key={survey.id}
                             survey={survey}
                             highlight={
                               survey.name === recentlyUpdatedSurveyName

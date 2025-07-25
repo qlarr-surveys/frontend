@@ -65,6 +65,10 @@ function McqAnswerOther(props) {
     };
   }, shallowEqual);
 
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const dispatch = useDispatch();
   const onButtonClick = (event) => {
     let value = [...parentValue];
@@ -117,6 +121,7 @@ function McqAnswerOther(props) {
           <Checkbox
             checked={isSelected}
             onChange={onButtonClick}
+            disabled={isPreviewMode}
             name={props.Answer.qualifiedCode}
             sx={{
               color: theme.textStyles.text.color,
@@ -137,10 +142,11 @@ function McqAnswerOther(props) {
               onChange={handleChange}
               onFocus={handleFocus}
               onBlur={lostFocus}
+              disabled={isPreviewMode}
               sx={{
                 label: { color: theme.textStyles.text.color },
               }}
-              value={state.textValue}
+              value={!isPreviewMode ? (state.textValue) : 'Input disabled because of preview mode'}
               InputProps={{
                 sx: {
                   fontFamily: theme.textStyles.text.font,

@@ -20,6 +20,7 @@ function IconMcq(props) {
         (show_errors || isDirty) && questionState?.validity === false,
     };
   }, shallowEqual);
+
   const dispatch = useDispatch();
 
   const handleChange = (componentCode, value) => {
@@ -66,6 +67,11 @@ function IconMcqChoice({
   hideText,
   theme,
 }) {
+
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const dispatch = useDispatch();
   const checked = useSelector(
     (state) => state.runState.values[component.qualifiedCode].value || false
@@ -76,7 +82,7 @@ function IconMcqChoice({
       sx={{
         flex: `0 1 calc(${100 / columns}% - ${spacing || 8}px)`,
         textAlign: "center",
-        cursor: "pointer",
+        cursor: !isPreviewMode && "pointer",
       }}
     >
       <div
@@ -87,13 +93,15 @@ function IconMcqChoice({
         }}
       >
         <DynamicSvg
-          onIconClick={() =>
-            dispatch(
-              valueChange({
-                componentCode: component.qualifiedCode,
-                value: !checked,
-              })
-          )}
+          onIconClick={() => {
+            if (!isPreviewMode) {
+              dispatch(
+                valueChange({
+                  componentCode: component.qualifiedCode,
+                  value: !checked,
+                }))
+            }
+          }}
           imageHeight="100%"
           maxHeight={iconSize + "px"}
           svgUrl={
@@ -111,9 +119,9 @@ function IconMcqChoice({
           sx={{
             textAlign: "center",
             fontFamily: theme.textStyles.text.font,
-            color: checked
+            color: (isPreviewMode ? 'grey' : checked
               ? theme.palette.primary.main
-              : theme.textStyles.text.color,
+              : theme.textStyles.text.color),
             fontSize: theme.textStyles.text.size,
           }}
         >

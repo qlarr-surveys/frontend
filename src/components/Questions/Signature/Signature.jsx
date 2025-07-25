@@ -12,6 +12,7 @@ import {
 } from "~/networking/run";
 import { valueChange } from "~/state/runState";
 import styles from "./Signature.module.css";
+import Typography from "@mui/material/Typography";
 
 function Signature(props) {
   const runService = useService("run");
@@ -49,6 +50,10 @@ function Signature(props) {
   const preview = useSelector((state) => {
     return state.runState.preview;
   });
+
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
 
   const sigCanvas = useRef();
   const dispatch = useDispatch();
@@ -101,38 +106,74 @@ function Signature(props) {
       >
         <Box
           ref={containerRef}
-          sx={{ maxWidth: Math.min(canvasWidth, 400) + "px" }}
+          sx={{ maxWidth: Math.min(canvasWidth, 400) + "px", position: "relative" }}
           className={styles.signatureCanvas}
         >
           {signature ? (
             <img
               src={signature}
+              alt="Signature"
               style={{
                 width: Math.min(canvasWidth, 400) + "px",
                 height: "200px",
               }}
             />
           ) : (
-            <SignatureCanvas
-              penColor="red"
-              clearOnResize={true}
-              onBegin={() => {
-                setSubmitEnabled(true);
-                setClearEnabled(true);
-              }}
-              ref={sigCanvas}
-              canvasProps={{ width: Math.min(canvasWidth, 400), height: 200 }}
-            />
+            <>
+              <SignatureCanvas
+                penColor="red"
+                clearOnResize={true}
+                onBegin={() => {
+                  if (!isPreviewMode) {
+                    setSubmitEnabled(true);
+                    setClearEnabled(true);
+                  }
+                }}
+                ref={sigCanvas}
+                canvasProps={{
+                  width: Math.min(canvasWidth, 400),
+                  height: 200,
+                  style: {
+                    pointerEvents: isPreviewMode ? "none" : "auto",
+                    cursor: isPreviewMode ? "not-allowed" : "crosshair",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                  },
+                }}
+              />
+              {isPreviewMode && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: Math.min(canvasWidth, 400),
+                    height: 200,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "rgba(255, 255, 255, 0.6)",
+                    zIndex: 2,
+                    borderRadius: "4px",
+                    pointerEvents: "none", // just in case
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    Signature disabled in preview mode
+                  </Typography>
+                </Box>
+              )}
+            </>
           )}
         </Box>
       </Box>
       <br />
 
       <div className={styles.buttonContainer}>
-        <Button onClick={() => clear()} disabled={!clearEnabled}>
+        <Button onClick={() => clear()} disabled={!clearEnabled || isPreviewMode}>
           Clear
         </Button>
-        <Button onClick={() => submit()} disabled={!submitEnabled}>
+        <Button onClick={() => submit()} disabled={!submitEnabled || isPreviewMode}>
           Submit
         </Button>
       </div>

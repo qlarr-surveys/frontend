@@ -7,14 +7,14 @@ import { CacheProvider } from "@emotion/react";
 import {
   loadScript,
   startNavigation,
-  continueNavigation,
+  continueNavigation, getparam,
 } from "~/networking/run";
 import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { defualtTheme } from "~/constants/theme";
-import { stateReceived } from "~/state/runState";
+import {stateReceived} from "~/state/runState";
 import { useSelector } from "react-redux";
 import { Box, Button, Typography } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
+import {useLocation, useNavigate } from "react-router-dom";
 import { setFetching } from "~/state/templateState";
 import Survey from "~/components/run/Survey";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
@@ -34,6 +34,8 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const lang = searchParams.get("lang");
+  const isPreviewMode = searchParams.get("response_preview");
+
   const [render, setRender] = React.useState(false);
   const [expanded, setExpanded] = React.useState(COLLAPSE);
   const [error, setError] = React.useState(false);
@@ -98,6 +100,10 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
   const startNav = () => {
     startNavigation(runService, lang, preview, mode, navigationMode)
       .then((response) => {
+        if (response.survey) {
+          // if the search param ?response_preview=true, add isPreviewMode to the state
+          response.survey.isPreviewMode = isPreviewMode === 'true';
+        }
         setRender(true);
         dispatch(stateReceived({ response, preview }));
         sessionStorage.setItem("responseId", response.responseId);
@@ -113,6 +119,9 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
     dispatch(setFetching(true));
     continueNavigation(runService, payload, responseId, preview, mode)
       .then((response) => {
+        if (response.survey) {
+          response.survey.isPreviewMode = isPreviewMode === 'true';
+        }
         setRender(true);
         dispatch(stateReceived({ response, preview }));
         sessionStorage.setItem("responseId", response.responseId);
@@ -193,7 +202,7 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
             />
           )}
           {render && (
-            <div 
+            <div
               className={styles.mainContainer}
               ref={containerRef}
               style={{

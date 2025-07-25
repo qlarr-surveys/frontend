@@ -19,6 +19,11 @@ function IconScq(props) {
         (show_errors || isDirty) && questionState?.validity === false,
     };
   }, shallowEqual);
+
+  const isPreviewMode = useSelector((state)=>{
+    return state.runState.data?.survey.isPreviewMode;
+  })
+
   const dispatch = useDispatch();
 
   const handleChange = (componentCode, value) => {
@@ -45,7 +50,7 @@ function IconScq(props) {
                 props.component.spacing || 8
               }px)`,
               textAlign: "center",
-              cursor: "pointer",
+              cursor: !isPreviewMode && "pointer",
             }}
           >
             <div
@@ -76,9 +81,9 @@ function IconScq(props) {
                 sx={{
                   textAlign: "center",
                   fontFamily: theme.textStyles.text.font,
-                  color: isSelected
+                  color: (isPreviewMode ? 'grey' : isSelected
                     ? theme.palette.primary.main
-                    : theme.textStyles.text.color,
+                    : theme.textStyles.text.color),
                   fontSize: theme.textStyles.text.size,
                 }}
               >
