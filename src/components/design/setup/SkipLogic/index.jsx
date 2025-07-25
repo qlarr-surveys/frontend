@@ -7,7 +7,7 @@ import {
   editSkipToEnd,
   removeSkipDestination,
 } from "~/state/design/designState";
-import React from "react";
+import React, { useMemo } from "react";
 import { Trans } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -20,15 +20,13 @@ function SkipLogic({ code, t }) {
     return state.designState[code].skip_logic || {};
   });
 
-  const destinations = useSelector((state) => {
-    const mainLang = state.designState.langInfo.mainLang;
-    return jumpDestinations(
-      state.designState.componentIndex,
-      code,
-      state.designState,
-      mainLang
-    );
-  });
+  const componentIndex = useSelector((state) => state.designState.componentIndex);
+  const mainLang = useSelector((state) => state.designState.langInfo.mainLang);
+  const designState = useSelector((state) => state.designState);
+
+  const destinations = useMemo(() => {
+    return jumpDestinations(componentIndex, code, designState, mainLang);
+  }, [componentIndex, code, designState, mainLang]);
 
   const instructions = useSelector((state) => {
     return state.designState[code].instructionList.filter((el) =>
@@ -36,17 +34,19 @@ function SkipLogic({ code, t }) {
     );
   });
 
-  const children = useSelector((state) => {
-    const lang = state.designState.langInfo.lang;
-    return state.designState[code]?.children?.map((child) => {
+  const lang = useSelector((state) => state.designState.langInfo.lang);
+  const codeData = useSelector((state) => state.designState[code]);
+
+  const children = useMemo(() => {
+    return codeData?.children?.map((child) => {
       return {
         code: child.code,
         label:
-          state.designState[child.qualifiedCode].content?.[lang]?.label ||
+          designState[child.qualifiedCode].content?.[lang]?.label ||
           child.code,
       };
     });
-  });
+  }, [codeData, designState, lang]);
 
   const onChange = (answerCode, targetCode) => {
     if (targetCode == "proceed") {
