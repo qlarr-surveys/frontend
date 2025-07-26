@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Chip, IconButton, Typography } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, Visibility } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import styles from "./SurveyHeader.module.css";
 import { onEditErrorSeen } from "~/state/edit/editState";
@@ -48,17 +48,18 @@ export const SurveyHeader = () => {
         <Typography variant="h3">{surveyName}</Typography>
       </Box>
       {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.PREVIEW) && (
-        <Chip
-          label={t("preview")}
-          color="primary"
-          onClick={() => {
-            window.open(
-              routes.preview.replace(":surveyId", surveyId),
-              "_blank"
-            );
-          }}
-          sx={{ mr: 2 }}
-        />
+          <CustomTooltip title={t("preview")} showIcon={false}>
+            <IconButton sx={{ mr: 2 }}
+              onClick={() => {
+                window.open(
+                  routes.preview.replace(":surveyId", surveyId),
+                  "_blank"
+                );
+              }}
+            >
+              <Visibility />
+            </IconButton>
+          </CustomTooltip>
       )}
     </Box>
   );
