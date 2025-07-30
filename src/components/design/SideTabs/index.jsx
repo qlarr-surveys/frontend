@@ -1,21 +1,27 @@
-import {
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  Tab,
-  Tabs,
-  Tooltip,
-} from "@mui/material";
+import { List, ListItem, ListItemButton, ListItemIcon } from "@mui/material";
 import TableRowsIcon from "@mui/icons-material/TableRows";
 import styles from "./SideTabs.module.css";
 import React from "react";
-import { Edit, Settings, Visibility } from "@mui/icons-material";
-import { MANAGE_SURVEY_LANDING_PAGES, routes } from "~/routes";
+import {
+  Edit,
+  Palette,
+  Settings,
+  Translate,
+  Visibility,
+} from "@mui/icons-material";
+import {
+  DESIGN_SURVEY_MODE,
+  MANAGE_SURVEY_LANDING_PAGES,
+  routes,
+} from "~/routes";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { resetSetup } from "~/state/design/designState";
+import {
+  resetSetup,
+  setDesignModeToLang,
+  setDesignModeToTheme,
+} from "~/state/design/designState";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
@@ -36,6 +42,10 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
 
   const published = versionDto?.published;
 
+  const designMode = useSelector((state) => {
+    return state.designState.designMode;
+  });
+
   function component() {
     return (
       <List>
@@ -44,13 +54,33 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
             <SideTab
               tooltip={t("design")}
               style={getTabButtonStyle(
-                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN
+                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.DESIGN
               )}
               link={routes.designSurvey.replace(":surveyId", surveyId)}
               icon={<Edit sx={{ color: "#fff" }} />}
               onClick={() => {
                 dispatch(resetSetup());
                 onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
+              }}
+            />
+            <SideTab
+              tooltip={t("theme")}
+              style={getTabButtonStyle(selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.THEME)}
+              icon={<Palette sx={{ color: "#fff" }} />}
+              onClick={() => {
+                onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
+                dispatch(setDesignModeToTheme());
+              }}
+            />
+            <SideTab
+              tooltip={t("translation")}
+              style={getTabButtonStyle(
+                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.LANGUAGES
+              )}
+              icon={<Translate sx={{ color: "#fff" }} />}
+              onClick={() => {
+                onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
+                dispatch(setDesignModeToLang());
               }}
             />
           </>

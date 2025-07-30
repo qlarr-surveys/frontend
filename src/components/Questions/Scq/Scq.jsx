@@ -64,9 +64,6 @@ function ScqChoice(props) {
         key={props.Choice.qualifiedCode}
         control={
           <Radio
-            sx={{
-              color: theme.textStyles.text.color,
-            }}
           />
         }
         label={

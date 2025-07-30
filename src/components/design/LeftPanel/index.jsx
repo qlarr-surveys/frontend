@@ -1,8 +1,7 @@
-import { Box, Collapse } from "@mui/material";
+import { Box } from "@mui/material";
 import NewComponentsPanel from "~/components/design/NewComponentsPanel";
 import React from "react";
 import { useSelector } from "react-redux";
-import { useTheme } from "@emotion/react";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import SetupPanel from "../setup/SetupPanel";
 function LeftPanel({ t }) {
@@ -18,7 +17,6 @@ function LeftPanel({ t }) {
 
   const hasSetup = setup && Object.keys(setup).length > 0;
 
-  const theme = useTheme();
 
   return (
     <Box sx={{width:"22rem", flex:"0 0 auto"}}>

@@ -29,10 +29,9 @@ import {
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
-import { inDesign } from "~/routes";
+import { contentEditable, inDesign } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
 import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
-import { Check } from '@mui/icons-material';
 
 function ArrayDesign(props) {
   const theme = useTheme();
@@ -291,6 +290,7 @@ function ArrayRowDesign({
             inputRef={inputRef}
             variant="standard"
             value={content || ""}
+            disabled={!contentEditable(designMode)}
             onChange={(e) => {
               const value = e.target.value;
               if (value.endsWith("\n")) {
@@ -355,20 +355,10 @@ function ArrayRowDesign({
           >
             {type === "scq_array" ? (
               <Radio
-              sx={{
-                "&.Mui-disabled": {
-                  color: theme.textStyles.text.color,
-                },
-              }}
               disabled={true}
             />
             ) : (
               <Checkbox
-                sx={{
-                  "&.Mui-disabled": {
-                    color: theme.textStyles.text.color,
-                  },
-                }}
                 disabled={true}
               />
             )}
@@ -524,6 +514,7 @@ function ArrayHeaderDesign({
         variant="standard"
         value={content || ""}
         multiline
+        disabled={!contentEditable(designMode)}
         onChange={(e) => {
           dispatch(
             changeContent({

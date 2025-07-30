@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Chip, IconButton, Typography } from "@mui/material";
@@ -8,9 +8,9 @@ import styles from "./SurveyHeader.module.css";
 import { onEditErrorSeen } from "~/state/edit/editState";
 import { isSessionRtl } from "~/utils/common";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
-import { MANAGE_SURVEY_LANDING_PAGES, routes } from "~/routes";
+import { routes } from "~/routes";
 import TokenService from "~/services/TokenService";
-import { availablePages } from "~/pages/ManageSurvey";
+import { availablePages } from '~/constants/roles';
 
 export const SurveyHeader = () => {
   const { t } = useTranslation("manage");
@@ -23,9 +23,13 @@ export const SurveyHeader = () => {
   );
 
   const user = TokenService.getUser();
-  const tabAvailable = (tab) => availablePages(user).includes(tab);
+
+  const availablePagesMemo = useMemo(() => {
+    return availablePages(user);
+  }, [user]);
+
   return (
-    <Box className={styles.header}>
+    availablePagesMemo.length > 0 && <Box className={styles.header}>
       <Box
         onClick={() => {
           dispatch(onEditErrorSeen());
@@ -47,19 +51,15 @@ export const SurveyHeader = () => {
         </CustomTooltip>
         <Typography variant="h3">{surveyName}</Typography>
       </Box>
-      {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.PREVIEW) && (
-        <Chip
-          label={t("preview")}
-          color="primary"
-          onClick={() => {
-            window.open(
-              routes.preview.replace(":surveyId", surveyId),
-              "_blank"
-            );
-          }}
-          sx={{ mr: 2 }}
-        />
-      )}
+
+      <Chip
+        label={t("preview")}
+        color="primary"
+        onClick={() => {
+          window.open(routes.preview.replace(":surveyId", surveyId), "_blank");
+        }}
+        sx={{ mr: 2 }}
+      />
     </Box>
   );
 };
