@@ -184,7 +184,9 @@ function QuestionDesign({
       }}
       ref={containerRef}
       onMouseEnter={() => {
-        setHovered(true);
+        if (designMode == DESIGN_SURVEY_MODE.DESIGN) {
+          setHovered(true);
+        }
       }}
       onMouseLeave={() => {
         setHovered(false);

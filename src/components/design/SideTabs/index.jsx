@@ -42,6 +42,10 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
 
   const published = versionDto?.published;
 
+  const designMode = useSelector((state) => {
+    return state.designState.designMode;
+  });
+
   function component() {
     return (
       <List>
@@ -50,13 +54,33 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
             <SideTab
               tooltip={t("design")}
               style={getTabButtonStyle(
-                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN
+                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.DESIGN
               )}
               link={routes.designSurvey.replace(":surveyId", surveyId)}
               icon={<Edit sx={{ color: "#fff" }} />}
               onClick={() => {
                 dispatch(resetSetup());
                 onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
+              }}
+            />
+            <SideTab
+              tooltip={t("theme")}
+              style={getTabButtonStyle(selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.THEME)}
+              icon={<Palette sx={{ color: "#fff" }} />}
+              onClick={() => {
+                onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
+                dispatch(setDesignModeToTheme());
+              }}
+            />
+            <SideTab
+              tooltip={t("translation")}
+              style={getTabButtonStyle(
+                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.LANGUAGES
+              )}
+              icon={<Translate sx={{ color: "#fff" }} />}
+              onClick={() => {
+                onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
+                dispatch(setDesignModeToLang());
               }}
             />
           </>
@@ -94,23 +118,6 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
             }}
           />
         )}
-
-        <SideTab
-          tooltip={t("translation")}
-          style={getTabButtonStyle(designMode == DESIGN_SURVEY_MODE.LANGUAGES)}
-          icon={<Translate sx={{ color: "#fff" }} />}
-          onClick={() => {
-            dispatch(setDesignModeToLang());
-          }}
-        />
-        <SideTab
-          tooltip={t("theme")}
-          style={getTabButtonStyle(designMode == DESIGN_SURVEY_MODE.THEME)}
-          icon={<Palette sx={{ color: "#fff" }} />}
-          onClick={() => {
-            dispatch(setDesignModeToTheme());
-          }}
-        />
       </List>
     );
   }

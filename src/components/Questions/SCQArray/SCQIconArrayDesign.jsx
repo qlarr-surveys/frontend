@@ -46,7 +46,7 @@ function SCQIconArrayDesign(props) {
     return state.designState.langInfo;
   });
 
-  const inDesgin = props.designMode == DESIGN_SURVEY_MODE.DESIGN;
+  const inDesign = props.designMode == DESIGN_SURVEY_MODE.DESIGN;
 
   const children = useSelector((state) => {
     return state.designState[props.code].children;
@@ -61,7 +61,7 @@ function SCQIconArrayDesign(props) {
 
   return (
     <>
-      {inDesgin && (
+      {inDesign && (
         <div className={styles.addColumn}>
           <Button
             sx={{
@@ -105,13 +105,13 @@ function SCQIconArrayDesign(props) {
                     t={props.t}
                     key={item.qualifiedCode}
                     item={item}
-                    inDesgin={inDesgin}
+                    inDesign={inDesign}
                     icons={icons}
                     index={index}
                   />
                 );
               })}
-              {inDesgin && (
+              {inDesign && (
                 <TableCell
                   sx={{
                     width: "30px",
@@ -132,7 +132,7 @@ function SCQIconArrayDesign(props) {
                   t={props.t}
                   key={item.qualifiedCode}
                   item={item}
-                  inDesgin={inDesgin}
+                  inDesign={inDesign}
                   width={width}
                   columns={columns}
                   icons={icons}
@@ -143,7 +143,7 @@ function SCQIconArrayDesign(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      {inDesgin && (
+      {inDesign && (
         <div className={styles.addRow}>
           <Button
             sx={{
@@ -172,7 +172,7 @@ function SCQArrayRowDesign({
   columns,
   icons,
   width,
-  inDesgin,
+  inDesign,
   t,
   langInfo,
   parentQualifiedCode,
@@ -284,7 +284,7 @@ function SCQArrayRowDesign({
         }}
       >
         <Box display="flex" alignItems="center">
-          {inDesgin && (
+          {inDesign && (
             <div ref={drag}>
               <DragIndicatorIcon />
             </div>
@@ -292,6 +292,7 @@ function SCQArrayRowDesign({
           <TextField
             variant="standard"
             inputRef={inputRef}
+            disabled={!inDesign}
             value={content || ""}
             onChange={(e) => {
               const value = e.target.value;
@@ -365,7 +366,7 @@ function SCQArrayRowDesign({
           </TableCell>
         );
       })}
-      {inDesgin && (
+      {inDesign && (
         <TableCell
           onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
           key="remove"
@@ -386,7 +387,7 @@ function SCQArrayHeaderDesign({
   item,
   index,
   icons,
-  inDesgin,
+  inDesign,
   t,
   langInfo,
   parentQualifiedCode,
@@ -513,7 +514,7 @@ function SCQArrayHeaderDesign({
         }}
         key={item.qualifiedCode}
       >
-        {inDesgin && (
+        {inDesign && (
           <div style={{ display: "inline-flex" }}>
             <div
               ref={drag}
@@ -550,6 +551,7 @@ function SCQArrayHeaderDesign({
         <TextField
           variant="standard"
           value={content || ""}
+          disabled={!inDesign}
           onChange={(e) => {
             dispatch(
               changeContent({

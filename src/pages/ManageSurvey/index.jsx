@@ -1,4 +1,4 @@
-import React, { Suspense, useCallback, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 
 import { useDispatch } from "react-redux";
 import {
@@ -9,7 +9,7 @@ import {
 import { GetData } from "~/networking/design";
 import { setLoading, surveyReceived } from "~/state/edit/editState";
 import SavingSurvey from "~/components/design/SavingSurvey";
-import { isAnalyst, isSurveyAdmin } from "~/constants/roles";
+import { availablePages, isAnalyst, isSurveyAdmin } from "~/constants/roles";
 import TokenService from "~/services/TokenService";
 import { useParams } from "react-router-dom";
 import {  MANAGE_SURVEY_LANDING_PAGES } from "~/routes";
@@ -19,6 +19,7 @@ import styles from "./ManageSurvey.module.css";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import SideTabs from "~/components/design/SideTabs";
+import PreviewSurvey from '../PreviewSurvey';
 
 
 const ManageTranslations = React.lazy(() => import("../manage/ManageTranslations"));
@@ -102,15 +103,21 @@ function ManageSurvey({ landingPage }) {
     setSelectedTab(tab);
   }, []);
 
+  const availablePagesMemo = useMemo(() => {
+    return availablePages(user);
+  }, [user]);
+
   return (
     <>
       <Box sx={{ display: "flex" }}>
+      {availablePagesMemo.length > 0 && (
         <SideTabs
-          availablePages={availablePages(user)}
+          availablePages={availablePagesMemo}
           selectedPage={selectedPage}
           surveyId={params.surveyId}
           onPageChange={changePage}
         />
+        )}
         <Suspense fallback={<LoadingDots fullHeight />}>
           <Box className={styles.wrapper}>
             {shouldShowResponses() ? (
@@ -120,7 +127,7 @@ function ManageSurvey({ landingPage }) {
             ) : shouldShowDesign() ? (
               <DesignSurvey />
             ) : (
-              <></>
+              <PreviewSurvey />
             )}
           </Box>
         </Suspense>
@@ -143,24 +150,6 @@ function ManageSurvey({ landingPage }) {
   );
 }
 export default React.memo(ManageSurvey);
-
-export const availablePages = (user) => {
-  if (isSurveyAdmin(user)) {
-    return [
-      MANAGE_SURVEY_LANDING_PAGES.DESIGN,
-      MANAGE_SURVEY_LANDING_PAGES.PREVIEW,
-      MANAGE_SURVEY_LANDING_PAGES.SETTINGS,
-      MANAGE_SURVEY_LANDING_PAGES.RESPONSES,
-    ];
-  } else if (isAnalyst(user)) {
-    return [
-      MANAGE_SURVEY_LANDING_PAGES.PREVIEW,
-      MANAGE_SURVEY_LANDING_PAGES.RESPONSES,
-    ];
-  } else {
-    return [MANAGE_SURVEY_LANDING_PAGES.PREVIEW];
-  }
-};
 
 export const landingTab = (landingPage, user) => {
   if (isAnalyst(user) && landingPage == MANAGE_SURVEY_LANDING_PAGES.RESPONSES) {
