@@ -18,7 +18,7 @@ import { useDrag, useDrop } from "react-dnd";
 import { useEffect, useRef } from "react";
 import { contentEditable, inDesign } from "~/routes";
 import { useTheme } from "@emotion/react";
-import { sanitizePastedText } from '~/components/design/ContentEditor/QuillEditor';
+import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
 
 function ChoiceItemDesign(props) {
   const dispatch = useDispatch();
@@ -33,7 +33,6 @@ function ChoiceItemDesign(props) {
   const answer = useSelector((state) => {
     return state.designState[props.qualifiedCode];
   });
-  
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
@@ -139,8 +138,6 @@ function ChoiceItemDesign(props) {
 
   drop(preview(ref));
 
-
-
   useEffect(() => {
     if (inFocus) {
       // Use setTimeout to ensure the DOM is ready
@@ -209,6 +206,7 @@ function ChoiceItemDesign(props) {
           <TextField
             inputRef={inputRef}
             variant="standard"
+            disabled={!contentEditable(props.designMode)}
             value={content || ""}
             onChange={(e) => {
               const value = e.target.value;
@@ -238,32 +236,28 @@ function ChoiceItemDesign(props) {
                 : mainContent || props.t("content_editor_placeholder_option")
             }
             multiline
+            sx={{
+              flex: 1,
+              fontFamily: theme.textStyles.text.font,
+              color: theme.textStyles.text.color,
+              fontSize: theme.textStyles.text.size,
+            }}
             InputProps={{
               disableUnderline: true,
-              sx: {
-                fontFamily: theme.textStyles.text.font,
-                color: theme.textStyles.text.color,
-                fontSize: theme.textStyles.text.size,
-              },
+              fontFamily: theme.textStyles.text.font,
+              color: theme.textStyles.text.color,
+              fontSize: theme.textStyles.text.size,
             }}
           />
-          // <ContentEditor
-          //   code={props.qualifiedCode}
-          //   editorTheme="bubble"
-          //   sx={{
-          //     flex: 1,
-          //   }}
-          //   onNewLine={props.onNewLine}
-          //   onMoreLines={props.onMoreLines}
-          //   editable={contentEditable(props.designMode)}
-          //   extended={false}
-          //   placeholder={props.t("content_editor_placeholder_option")}
-          //   contentKey="label"
-          // />
         )}
         {props.type === "text" && (
           <>
-            <TextField sx={{ flex: 2 }} size="small" disabled variant="outlined" />
+            <TextField
+              sx={{ flex: 2 }}
+              size="small"
+              disabled
+              variant="outlined"
+            />
           </>
         )}
         <span style={{ margin: "8px" }} />

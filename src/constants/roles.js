@@ -1,3 +1,4 @@
+import { MANAGE_SURVEY_LANDING_PAGES } from '~/routes';
 import TokenService from "~/services/TokenService";
 
 export const ROLES = {
@@ -13,6 +14,22 @@ export const isSurveyAdmin = () => {
     roles.indexOf(ROLES.SUPER_ADMIN) != -1 ||
     roles.indexOf(ROLES.SURVEY_ADMIN) != -1
   );
+};
+
+export const availablePages = (user) => {
+  if (isSurveyAdmin(user)) {
+    return [
+      MANAGE_SURVEY_LANDING_PAGES.DESIGN,
+      MANAGE_SURVEY_LANDING_PAGES.SETTINGS,
+      MANAGE_SURVEY_LANDING_PAGES.RESPONSES,
+    ];
+  } else if (isAnalyst(user)) {
+    return [
+      MANAGE_SURVEY_LANDING_PAGES.RESPONSES,
+    ];
+  } else {
+    return [];
+  }
 };
 
 export const isSuperAdmin = () => {

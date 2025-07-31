@@ -51,27 +51,35 @@ function SetupPanel({ t }) {
         left: theme.direction == "rtl" ? "0px" : "",
       }}
     >
-      <div className={styles.titleContainer}>
-        <Box display="flex" alignItems="center" gap={1}>
-          <Typography variant="h6" component="h2">
-            {t("setup_for")}
-          </Typography>
-          {questionIconByType(`${type}`, undefined)}
-          <Typography variant="h6" component="h2">
-            {order}
-          </Typography>
-        </Box>
+      {code !== "Survey" && (
+        <div className={styles.titleContainer}>
+          <Box display="flex" alignItems="center" gap={1}>
+            <Typography variant="h6" component="h2">
+              {t("setup_for")}
+            </Typography>
+            {questionIconByType(`${type}`, undefined)}
+            <Typography variant="h6" component="h2">
+              {order}
+            </Typography>
+          </Box>
 
-        <IconButton
-          onClick={() => {
-            dispatch(resetSetup());
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </div>
+          <IconButton
+            onClick={() => {
+              dispatch(resetSetup());
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
+      )}
+
       <Divider />
-      <SetupSection rules={rules || []} code={code} t={t} highlighted={highlighted} />
+      <SetupSection
+        rules={rules || []}
+        code={code}
+        t={t}
+        highlighted={highlighted}
+      />
     </div>
   );
 }
@@ -524,7 +532,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t }) => {
       >
         {rules[selectedTab]?.rules?.map((el) => (
           <div className={styles.setupContainer} key={el}>
-            <SetupComponent code={code} rule={el} t={t} />
+            <SetupComponent key={el} code={code} rule={el} t={t} />
           </div>
         ))}
       </Box>

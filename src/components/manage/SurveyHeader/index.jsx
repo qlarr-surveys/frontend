@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Chip, IconButton, Typography } from "@mui/material";
@@ -10,7 +10,7 @@ import { isSessionRtl } from "~/utils/common";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { MANAGE_SURVEY_LANDING_PAGES, routes } from "~/routes";
 import TokenService from "~/services/TokenService";
-import { availablePages } from "~/pages/ManageSurvey";
+import { availablePages } from "~/constants/roles";
 
 export const SurveyHeader = () => {
   const { t } = useTranslation("manage");
@@ -23,44 +23,49 @@ export const SurveyHeader = () => {
   );
 
   const user = TokenService.getUser();
-  const tabAvailable = (tab) => availablePages(user).includes(tab);
+
+  const availablePagesMemo = useMemo(() => {
+    return availablePages(user);
+  }, [user]);
+
   return (
-    <Box className={styles.header}>
-      <Box
-        onClick={() => {
-          dispatch(onEditErrorSeen());
-          nav("/");
-        }}
-        className={isRtl ? styles.containerRtl : styles.container}
-      >
-        <CustomTooltip showIcon={false} title={t(`goBack`)}>
-          <IconButton>
-            <ArrowBack
-              sx={{
-                fontSize: 30,
-                transform: isRtl ? "scaleX(-1)" : "none",
-                cursor: "pointer",
-                color: "black",
-              }}
-            />
-          </IconButton>
-        </CustomTooltip>
-        <Typography variant="h3">{surveyName}</Typography>
-      </Box>
-      {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.PREVIEW) && (
-          <CustomTooltip title={t("preview")} showIcon={false}>
-            <IconButton sx={{ mr: 2 }}
-              onClick={() => {
-                window.open(
-                  routes.preview.replace(":surveyId", surveyId),
-                  "_blank"
-                );
-              }}
-            >
-              <Visibility />
+    availablePagesMemo.length > 0 && (
+      <Box className={styles.header}>
+        <Box
+          onClick={() => {
+            dispatch(onEditErrorSeen());
+            nav("/");
+          }}
+          className={isRtl ? styles.containerRtl : styles.container}
+        >
+          <CustomTooltip showIcon={false} title={t(`goBack`)}>
+            <IconButton>
+              <ArrowBack
+                sx={{
+                  fontSize: 30,
+                  transform: isRtl ? "scaleX(-1)" : "none",
+                  cursor: "pointer",
+                  color: "black",
+                }}
+              />
             </IconButton>
           </CustomTooltip>
-      )}
-    </Box>
+          <Typography variant="h3">{surveyName}</Typography>
+        </Box>
+        <CustomTooltip title={t("preview")} showIcon={false}>
+          <IconButton
+            sx={{ mr: 2 }}
+            onClick={() => {
+              window.open(
+                routes.preview.replace(":surveyId", surveyId),
+                "_blank"
+              );
+            }}
+          >
+            <Visibility />
+          </IconButton>
+        </CustomTooltip>
+      </Box>
+    )
   );
 };

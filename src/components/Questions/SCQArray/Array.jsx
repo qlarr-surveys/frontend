@@ -151,9 +151,6 @@ function ArrayRow(props) {
                 onChange={handleChange}
                 checked={state.value === option.code}
                 value={option.code}
-                sx={{
-                  color: theme.textStyles.text.color,
-                }}
               />
               ) : (
                 <Checkbox

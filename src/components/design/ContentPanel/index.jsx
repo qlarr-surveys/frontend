@@ -121,7 +121,9 @@ function ContentPanel({ designMode }, ref) {
       ref={ref}
       className={`content-panel ${styles.contentPanel}`}
       onClick={(event) => {
-        dispatch(resetSetup());
+        if (designMode == DESIGN_SURVEY_MODE.DESIGN) {
+          dispatch(resetSetup());
+        }
       }}
       style={{
         backgroundColor: theme.palette.background.default,

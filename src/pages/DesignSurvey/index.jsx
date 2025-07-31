@@ -1,21 +1,10 @@
 import React, { Suspense, useEffect, useMemo, useRef } from "react";
-import {
-  Backdrop,
-  Box,
-  Chip,
-  SpeedDial,
-  SpeedDialAction,
-  SpeedDialIcon,
-  ThemeProvider,
-  createTheme,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Box, Chip, ThemeProvider, createTheme } from "@mui/material";
 import styles from "./DesignSurvey.module.css";
 
-import ExtensionIcon from "@mui/icons-material/Extension";
 import { defualtTheme } from "~/constants/theme";
 import { I18nextProvider, useTranslation } from "react-i18next";
-import { cacheRtl, isSessionRtl, rtlLanguage } from "~/utils/common";
+import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { CacheProvider } from "@emotion/react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -23,17 +12,8 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { isTouchDevice } from "~/utils/isTouchDevice";
 import { TouchBackend } from "react-dnd-touch-backend";
-import {
-  resetSetup,
-  setDesignModeToLang,
-  setDesignModeToReorder,
-  setDesignModeToTheme,
-} from "~/state/design/designState";
-import TranslateIcon from "@mui/icons-material/Translate";
-import { Cancel, Palette } from "@mui/icons-material";
-import { DESIGN_SURVEY_MODE } from "~/routes";
+import { resetSetup } from "~/state/design/designState";
 import { buildResourceUrl } from "~/networking/common";
-import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import LoadingDots from "~/components/common/LoadingDots";
 
 const ContentPanel = React.lazy(() =>
@@ -46,7 +26,6 @@ function DesignSurvey() {
   const childI18n = useMemo(() => i18n.cloneInstance(), []);
   const contentRef = useRef(null);
 
-  const [optionsOpen, setOptionsOpen] = React.useState(false);
   const containerRef = useRef();
 
   const langInfo = useSelector((state) => {
@@ -135,13 +114,6 @@ function DesignSurvey() {
             </I18nextProvider>
           </ThemeProvider>
         </CacheProvider>
-        <DesignChip onCancel={toDesign} designMode={designMode} t={t} />
-        <DesignOptions
-          t={t}
-          designMode={designMode}
-          optionsOpen={optionsOpen}
-          setOptionsOpen={setOptionsOpen}
-        />
       </DndProvider>
     </Box>
   );
@@ -149,83 +121,3 @@ function DesignSurvey() {
 
 export default React.memo(DesignSurvey);
 
-function DesignOptions({ setOptionsOpen, optionsOpen, designMode, t }) {
-  const dispatch = useDispatch();
-  const actions = [
-    {
-      icon: <TranslateIcon />,
-      name: t("translation"),
-      onClick: () => {
-        setOptionsOpen(false);
-        dispatch(setDesignModeToLang());
-      },
-    },
-    {
-      icon: <Palette />,
-      name: t("theme"),
-      onClick: () => {
-        setOptionsOpen(false);
-        dispatch(setDesignModeToTheme());
-      },
-    },
-    {
-      icon: <SurveyIcon name="sort" />,
-      name: t("reorder"),
-      onClick: () => {
-        setOptionsOpen(false);
-        dispatch(setDesignModeToReorder());
-      },
-    },
-  ];
-  return (
-    designMode == DESIGN_SURVEY_MODE.DESIGN && (
-      <>
-        <Backdrop style={{ zIndex: 1 }} open={optionsOpen} />
-        <SpeedDial
-          open={optionsOpen}
-          ariaLabel="SpeedDial"
-          onClick={() => setOptionsOpen(!optionsOpen)}
-          sx={{ position: "absolute", bottom: "16px", right: "16px" }}
-          icon={
-            <SpeedDialIcon icon={<ExtensionIcon />} openIcon={<CloseIcon />} />
-          }
-        >
-          {actions.map((action) => (
-            <SpeedDialAction
-              onClick={action.onClick}
-              key={action.name}
-              icon={action.icon}
-              tooltipOpen
-              tooltipTitle={action.name}
-            />
-          ))}
-        </SpeedDial>
-      </>
-    )
-  );
-}
-
-function DesignChip({ designMode, onCancel, t }) {
-  const isRtl = isSessionRtl();
-  return (
-    designMode != DESIGN_SURVEY_MODE.DESIGN && (
-      <Chip
-        sx={{
-          borderRadius: "48px",
-          height: "48px",
-          fontSize: "24px",
-          padding: "8px",
-        }}
-        style={
-          isRtl
-            ? { position: "absolute", bottom: "16px", left: "16px" }
-            : { position: "absolute", bottom: "16px", right: "16px" }
-        }
-        label={t("back_to_design")}
-        icon={<Cancel />}
-        color="primary"
-        onClick={onCancel}
-      />
-    )
-  );
-}
