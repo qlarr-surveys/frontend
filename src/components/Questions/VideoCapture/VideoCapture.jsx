@@ -1,7 +1,7 @@
 import { Box } from "@mui/system";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { previewUrl, uploadFile } from "~/networking/run";
+import { previewUrlByFilename, uploadFile } from "~/networking/run";
 import { valueChange } from "~/state/runState";
 import styles from "./VideoCapture.module.css";
 import ReactPlayer from "react-player";
@@ -81,7 +81,7 @@ function VideoCapture(props) {
           }}
         >
           <ReactPlayer
-            url={previewUrl(state.value.stored_filename)}
+            url={previewUrlByFilename(state.value.stored_filename)}
             loop={false}
             light={true}
             controls={true}
