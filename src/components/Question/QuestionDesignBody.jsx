@@ -7,7 +7,6 @@ import ParagraphQuestionDesign from "~/components/Questions/Paragraph/ParagraphQ
 import FileUploadQuestionDesign from "~/components/Questions/FileUpload/FileUploadQuestionDesign";
 import DateTimeQuestionDesign from "~/components/Questions/DateTime/DateTimeQuestionDesign";
 import TimeQuestionDesign from "~/components/Questions/DateTime/TimeQuestionDesign";
-import SCQArray from "~/components/Questions/SCQArray/ArrayDesign";
 import VideoDisplayDesign from "~/components/Questions/VideoDisplay/VideoDisplayDesign";
 import SignatureDesign from "~/components/Questions/Signature/SignatureDesign";
 import ImageDisplayDesign from "~/components/Questions/ImageDisplay/ImageDisplayDesign";

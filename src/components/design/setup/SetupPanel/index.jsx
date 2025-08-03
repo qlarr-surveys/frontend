@@ -220,7 +220,6 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           t={t}
         />
       );
-
     case "loop":
       return (
         <ToggleValue
@@ -285,7 +284,6 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           t={t}
         />
       );
-
     case "minHeaderMobile":
     case "minHeaderDesktop":
     case "minRowLabelMobile":
@@ -452,7 +450,6 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           key={code + rule}
         />
       );
-
     case "spacing":
       return (
         <FieldSize

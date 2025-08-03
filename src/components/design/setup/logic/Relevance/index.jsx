@@ -14,25 +14,10 @@ function Relevance({ code, t }) {
 
   const [logicDialogOpen, setLogicDialogOpen] = useState(false);
 
-  const designState = useSelector((state) => {
-    return state.designState;
+  const state = useSelector((state) => {
+    return state.designState[code];
   });
 
-  const langInfo = React.useMemo(() => designState.langInfo);
-
-  const state = React.useMemo(() => designState[code]);
-
-  const fields = React.useMemo(
-    () =>
-      buildFields(
-        designState.componentIndex,
-        code,
-        designState,
-        langInfo.mainLang,
-        langInfo.languagesList.map((lang) => lang.code)
-      ),
-    [designState]
-  );
 
   const instruction = state.instructionList?.find(
     (instruction) => instruction.code == "conditional_relevance"
@@ -40,7 +25,7 @@ function Relevance({ code, t }) {
   const errors = instruction?.errors || [];
   const hasErrors = errors.length > 0;
   const logic = state.relevance?.logic;
-  const logicDisabled = !hasErrors && Object.keys(fields).length > 0;
+  const logicDisabled = !hasErrors;
 
   const [rule, setRule] = useState(state.relevance?.rule || "show_always");
   const shouldHaveLogic = rule == "show_if" || rule == "hide_if";
@@ -142,16 +127,16 @@ function Relevance({ code, t }) {
           title={
             rule == "show_if" ? t("condition_to_show") : t("condition_to_hide")
           }
+          code={code}
           onChange={onLogicChange}
           onDialogStateChanged={(state) => setLogicDialogOpen(state)}
-          fields={fields}
           t={t}
           dialogOpen={logicDialogOpen}
           logic={logic}
         />
       )}
 
-      {hasErrors ? (
+      {hasErrors && !logicDialogOpen ? (
         <div className={styles.errorContainer}>
           <Trans t={t} i18nKey="wrong_logic_err" />
           <Button variant="contained" onClick={() => reset()}>
@@ -161,7 +146,7 @@ function Relevance({ code, t }) {
       ) : (
         ""
       )}
-      {shouldHaveLogic && !logic ? (
+      {shouldHaveLogic && !logicDialogOpen && !logic ? (
         <div>
           <Trans t={t} i18nKey="no_logic_err" />
         </div>

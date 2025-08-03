@@ -16,7 +16,7 @@ export const buildReferences = (componentIndices, code, state, mainLang) => {
 };
 
 const buildReference = (code, component, state, mainLang) => {
-  const label = code + ". " + stripTags(component.content?.[mainLang]?.label);
+  const label = state.index[code] + ". " + stripTags(component.content?.[mainLang]?.label);
   let instruction = "";
   let type = component.type;
   switch (component.type) {

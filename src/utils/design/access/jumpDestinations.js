@@ -2,7 +2,7 @@ import { isGroup, isQuestion, stripTags } from "~/utils/design/utils";
 
 const buildField = (code, state, mainLang) => {
   const component = state[code];
-  const label = code + ". " + stripTags(component.content?.[mainLang]?.label);
+  const label = state.index[code] + ". " + stripTags(component.content?.[mainLang]?.label);
   return { code: code, label: label };
 };
 

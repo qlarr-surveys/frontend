@@ -217,7 +217,6 @@ function ChoiceItemDesign(props) {
                 const text = sanitizedText[0];
                 const rest = sanitizedText.slice(1);
                 if (rest.length > 0) {
-                  console.log("rest", rest);
                   props.onMoreLines(rest);
                 }
                 dispatch(

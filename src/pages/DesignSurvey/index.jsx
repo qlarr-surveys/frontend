@@ -37,10 +37,6 @@ function DesignSurvey() {
     return state.designState.designMode;
   });
 
-  const toDesign = () => {
-    dispatch(resetSetup());
-  };
-
   const lang = langInfo?.lang;
 
   const theme = useSelector((state) => {

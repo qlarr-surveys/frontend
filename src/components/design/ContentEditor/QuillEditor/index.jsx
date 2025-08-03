@@ -32,23 +32,24 @@ class MentionDisplayModule {
     mentions.forEach((mention) => {
       const parentMention = mention.closest(".mention");
       const id = parentMention?.getAttribute("data-id");
-      const type = parentMention?.getAttribute("data-type");
 
       // Don't modify if already processed
-      if (mention.getAttribute("data-display-processed")) return;
 
-      // Your replacement logic
+      // Follow the same logic as fixedValue
       const displayText = this.getDisplayText(id, mention.textContent);
       if (displayText) {
         mention.textContent = displayText;
-        mention.setAttribute("data-display-processed", "true");
       }
     });
   }
 
   getDisplayText(id, textContent) {
-    if (this.options.referenceInstruction[id]) {
-      return textContent.replaceAll(id, this.options.referenceInstruction[id]);
+    if (this.options.referenceInstruction && this.options.referenceInstruction[id]) {
+      // Follow the same logic as fixedValue - replace the key with referenceInstruction[key] in the data-value
+      return textContent.replace(
+        new RegExp(`{{${id}:`, "g"),
+        `{{${this.options.referenceInstruction[id]}:`
+      );
     }
     return textContent;
   }

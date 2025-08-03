@@ -39,7 +39,9 @@ export const buildFields = (
 
 const buildField = (code, component, state, mainLang) => {
   const label =
-    code + ". " + stripTags(component.content?.[mainLang]?.label || "");
+    state.index[code] +
+    ". " +
+    stripTags(component.content?.[mainLang]?.label || "");
   if (isGroup(code)) {
     return {
       [code]: {
@@ -65,18 +67,18 @@ const buildField = (code, component, state, mainLang) => {
           type: "text",
           valueSources: ["value"],
           operators: [
-            "is_relevant",
-            "is_not_relevant",
-            "is_valid",
-            "is_not_valid",
-            "is_empty",
-            "is_not_empty",
             "equal",
             "not_equal",
             "like",
             "not_like",
             "starts_with",
             "ends_with",
+            "is_relevant",
+            "is_not_relevant",
+            "is_valid",
+            "is_not_valid",
+            "is_empty",
+            "is_not_empty",
           ],
         },
       };
@@ -87,16 +89,16 @@ const buildField = (code, component, state, mainLang) => {
           type: "text",
           valueSources: ["value"],
           operators: [
+            "like",
+            "not_like",
+            "starts_with",
+            "ends_with",
             "is_relevant",
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
             "is_empty",
             "is_not_empty",
-            "like",
-            "not_like",
-            "starts_with",
-            "ends_with",
           ],
         },
       };
@@ -107,12 +109,6 @@ const buildField = (code, component, state, mainLang) => {
           type: "number",
           valueSources: ["value"],
           operators: [
-            "is_relevant",
-            "is_not_relevant",
-            "is_valid",
-            "is_not_valid",
-            "is_empty",
-            "is_not_empty",
             "equal",
             "not_equal",
             "less",
@@ -121,6 +117,12 @@ const buildField = (code, component, state, mainLang) => {
             "greater_or_equal",
             "between",
             "not_between",
+            "is_relevant",
+            "is_not_relevant",
+            "is_valid",
+            "is_not_valid",
+            "is_empty",
+            "is_not_empty",
           ],
         },
       };
@@ -134,12 +136,12 @@ const buildField = (code, component, state, mainLang) => {
           type: "text",
           valueSources: ["value"],
           operators: [
+            "is_empty",
+            "is_not_empty",
             "is_relevant",
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
-            "is_empty",
-            "is_not_empty",
           ],
         },
       };
@@ -150,15 +152,15 @@ const buildField = (code, component, state, mainLang) => {
           type: "date",
           valueSources: ["value"],
           operators: [
+            "greater_or_equal",
+            "less_or_equal",
+            "between",
             "is_relevant",
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
             "is_empty",
             "is_not_empty",
-            "greater_or_equal",
-            "less_or_equal",
-            "between",
           ],
         },
       };
@@ -169,15 +171,15 @@ const buildField = (code, component, state, mainLang) => {
           type: "time",
           valueSources: ["value"],
           operators: [
+            "greater_or_equal",
+            "less_or_equal",
+            "between",
             "is_relevant",
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
             "is_empty",
             "is_not_empty",
-            "greater_or_equal",
-            "less_or_equal",
-            "between",
           ],
         },
       };
@@ -188,15 +190,15 @@ const buildField = (code, component, state, mainLang) => {
           type: "datetime",
           valueSources: ["value"],
           operators: [
+            "greater_or_equal",
+            "less_or_equal",
+            "between",
             "is_relevant",
             "is_not_relevant",
             "is_valid",
             "is_not_valid",
             "is_empty",
             "is_not_empty",
-            "greater_or_equal",
-            "less_or_equal",
-            "between",
           ],
         },
       };
@@ -223,14 +225,14 @@ const buildField = (code, component, state, mainLang) => {
         type: "select",
         valueSources: ["value"],
         operators: [
+          "select_any_in",
+          "select_not_any_in",
           "is_relevant",
           "is_not_relevant",
           "is_valid",
           "is_not_valid",
           "is_empty",
           "is_not_empty",
-          "select_any_in",
-          "select_not_any_in",
         ],
       };
       let scqOther = component.children?.find((el) => el.code === "Aother");
@@ -247,18 +249,18 @@ const buildField = (code, component, state, mainLang) => {
           type: "text",
           valueSources: ["value"],
           operators: [
-            "is_relevant",
-            "is_not_relevant",
-            "is_valid",
-            "is_not_valid",
-            "is_empty",
-            "is_not_empty",
             "equal",
             "not_equal",
             "like",
             "not_like",
             "starts_with",
             "ends_with",
+            "is_relevant",
+            "is_not_relevant",
+            "is_valid",
+            "is_not_valid",
+            "is_empty",
+            "is_not_empty",
           ],
         };
       }
@@ -284,12 +286,12 @@ const buildField = (code, component, state, mainLang) => {
         type: "multiselect",
         valueSources: ["value"],
         operators: [
+          "multiselect_equals",
+          "multiselect_not_equals",
           "is_relevant",
           "is_not_relevant",
           "is_valid",
           "is_not_valid",
-          "multiselect_equals",
-          "multiselect_not_equals",
         ],
       };
       let mcqOther = component.children?.find((el) => el.code === "Aother");
@@ -306,18 +308,19 @@ const buildField = (code, component, state, mainLang) => {
           type: "text",
           valueSources: ["value"],
           operators: [
-            "is_relevant",
-            "is_not_relevant",
-            "is_valid",
-            "is_not_valid",
-            "is_empty",
-            "is_not_empty",
             "equal",
             "not_equal",
             "like",
             "not_like",
             "starts_with",
             "ends_with",
+            "is_relevant",
+            "is_not_relevant",
+            "is_valid",
+            "is_not_valid",
+            "is_empty",
+            "is_not_empty",
+
           ],
         };
       }
@@ -396,28 +399,8 @@ const buildField = (code, component, state, mainLang) => {
         });
       return arrayReturnList;
     case "multiple_text":
-      return {
-        [code]: {
-          label: label,
-          type: "text",
-          valueSources: ["value"],
-          operators: [
-            "is_relevant",
-            "is_not_relevant",
-            "is_valid",
-            "is_not_valid",
-            "is_empty",
-            "is_not_empty",
-            "equal",
-            "not_equal",
-            "like",
-            "not_like",
-            "starts_with",
-            "ends_with",
-          ],
-        },
+      let multipleTextReturnList = {
       };
-      let multipleTextReturnList = {};
       component.children.forEach((element) => {
         multipleTextReturnList[code + element.code] = {
           label:
@@ -429,18 +412,18 @@ const buildField = (code, component, state, mainLang) => {
           type: "text",
           valueSources: ["value"],
           operators: [
-            "is_relevant",
-            "is_not_relevant",
-            "is_valid",
-            "is_not_valid",
-            "is_empty",
-            "is_not_empty",
             "equal",
             "not_equal",
             "like",
             "not_like",
             "starts_with",
             "ends_with",
+            "is_relevant",
+            "is_not_relevant",
+            "is_valid",
+            "is_not_valid",
+            "is_empty",
+            "is_not_empty",
           ],
         };
       });
@@ -463,8 +446,6 @@ const buildField = (code, component, state, mainLang) => {
           },
           valueSources: ["value"],
           operators: [
-            "is_empty",
-            "is_not_empty",
             "equal",
             "not_equal",
             "less",
@@ -473,6 +454,8 @@ const buildField = (code, component, state, mainLang) => {
             "greater_or_equal",
             "between",
             "not_between",
+            "is_empty",
+            "is_not_empty",
           ],
         };
       });

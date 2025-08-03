@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Query, Builder, Utils } from "@react-awesome-query-builder/mui";
 import loadedConfig from "./config";
 import "@react-awesome-query-builder/mui/css/styles.css";
@@ -13,6 +13,8 @@ import {
 } from "@mui/material";
 import { EditOutlined } from "@mui/icons-material";
 import { stripTags, truncateWithEllipsis } from "~/utils/design/utils";
+import { buildFields } from "./buildFields";
+import { useSelector } from "react-redux";
 
 function LogicBuilder(props) {
   const {
@@ -23,10 +25,26 @@ function LogicBuilder(props) {
     loadFromJsonLogic,
     checkTree,
   } = Utils;
-  const config = { ...loadedConfig, fields: props.fields };
+  const designState = useSelector((state) => {
+    return state.designState;
+  });
+  const langInfo = React.useMemo(() => designState.langInfo);
+  const fields = React.useMemo(
+    () =>
+      buildFields(
+        designState.componentIndex,
+        props.code,
+        designState,
+        langInfo.mainLang,
+        langInfo.languagesList.map((lang) => lang.code)
+      ),
+    [designState]
+  );
+  const config = { ...loadedConfig, fields };
   const initTree = props.logic
     ? checkTree(loadFromJsonLogic(props.logic, config), config)
     : loadTree({ id: uuid(), type: "group" });
+  console.log("props.logic", props.logic);
   const [tree, setTree] = useState(initTree);
   const [html, setHtml] = useState(queryString(tree, config, true));
 
@@ -48,25 +66,30 @@ function LogicBuilder(props) {
     props.onChange(logic);
   };
 
+  useEffect(() => {
+    setHtml(queryString(tree, config, true));
+  }, [designState.index]);
+
   return (
     <>
-      <div key="result" className="query-builder-result">
-        {props.logic && html ? (
-          <pre
-            className="condition-human-text"
-          >
-            {truncateWithEllipsis(stripTags(html), 50)}
-          </pre>
-        ) : (
-          <pre className="condition-human-text">{props.t("no_condition")}</pre>
-        )}
-        <div className="icon-container">
-
-          <IconButton onClick={() => props.onDialogStateChanged(true)}>
-            <EditOutlined />
-          </IconButton>
+      {!props.dialogOpen && (
+        <div key="result" className="query-builder-result">
+          {props.logic && html ? (
+            <pre className="condition-human-text">
+              {truncateWithEllipsis(stripTags(html), 50)}
+            </pre>
+          ) : (
+            <pre className="condition-human-text">
+              {props.t("no_condition")}
+            </pre>
+          )}
+          <div className="icon-container">
+            <IconButton onClick={() => props.onDialogStateChanged(true)}>
+              <EditOutlined />
+            </IconButton>
+          </div>
         </div>
-      </div>
+      )}
 
       <Dialog
         fullScreen={true}

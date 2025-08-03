@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useState, useEffect, useRef } from "react";
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import styles from "./ContentEditor.module.css";
 import "./ContentEditor.css";
 import { Box } from "@mui/material";
@@ -10,7 +16,18 @@ import { useSelector } from "react-redux";
 import { isNotEmptyHtml } from "~/utils/design/utils";
 import cloneDeep from "lodash.clonedeep";
 
-function ContentEditor({ placeholder, extended, contentKey, onNewLine,code,onMoreLines, editable, editorTheme = "snow", style, sx }) {
+function ContentEditor({
+  placeholder,
+  extended,
+  contentKey,
+  onNewLine,
+  code,
+  onMoreLines,
+  editable,
+  editorTheme = "snow",
+  style,
+  sx,
+}) {
   const dispatch = useDispatch();
 
   const content = useSelector((state) => {
@@ -28,6 +45,7 @@ function ContentEditor({ placeholder, extended, contentKey, onNewLine,code,onMor
   const index = useSelector((state) => {
     return state.designState.index;
   });
+  console.log("index", index);
 
   const lang = langInfo.lang;
   const mainLang = langInfo.mainLang;
@@ -53,23 +71,52 @@ function ContentEditor({ placeholder, extended, contentKey, onNewLine,code,onMor
       returnResult[uniqueCode] = index[uniqueCode];
     });
     return returnResult;
-  }, [instructionList]);
+  }, [instructionList, index]);
 
-  const fixedValue = useCallback(
-    (value) => {
-      let updated = cloneDeep(value);
-      Object.keys(referenceInstruction).forEach((key) => {
-        updated = updated.replace(
-          `>{{${key}:`,
-          `>{{${referenceInstruction[key]}:`
-        );
-      })
-      return updated;
-    },
-    [referenceInstruction]
-  );
+
 
   const value = content?.[lang]?.[contentKey] || "";
+
+  const fixedValue = useMemo(
+    () => {
+      if (!referenceInstruction || !Object.keys(referenceInstruction).length) {
+        return value;
+      }
+      let updated = cloneDeep(value);
+
+      // Create a temporary DOM element to parse and manipulate the HTML
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = updated;
+
+      Object.keys(referenceInstruction).forEach((key) => {
+        // Find all spans with data-id matching the key
+        const spans = tempDiv.querySelectorAll(`span[data-id="${key}"]`);
+
+        spans.forEach((span) => {
+          // Get the data-value attribute
+          const dataValue = span.getAttribute("data-value");
+          console.log("referenceInstruction[key]", referenceInstruction[key]);
+          if (dataValue) {
+            // Replace the key with referenceInstruction[key] in the data-value
+            const newDataValue = dataValue.replace(
+              new RegExp(`{{${key}:`, "g"),
+              `{{${referenceInstruction[key]}:`
+            );
+            // Find the nested span with contenteditable="false" and update its content
+            const nestedSpan = span.querySelector(
+              'span[contenteditable="false"]'
+            );
+            if (nestedSpan) {
+              nestedSpan.textContent = newDataValue;
+            }
+          }
+        });
+      });
+
+      return tempDiv.innerHTML;
+    },
+    [referenceInstruction, value]
+  );
 
   const finalPlaceholder = onMainLang
     ? placeholder
@@ -131,7 +178,7 @@ function ContentEditor({ placeholder, extended, contentKey, onNewLine,code,onMor
       ) : isNotEmptyHtml(value) ? (
         <div
           className={`${isRtl ? "rtl" : "ltr"} ql-editor ${styles.noPadding}`}
-          dangerouslySetInnerHTML={{ __html: fixedValue(value) }}
+          dangerouslySetInnerHTML={{ __html: fixedValue }}
         />
       ) : (
         <div

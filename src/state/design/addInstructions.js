@@ -784,7 +784,9 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         `&& ${qualifiedCode}.value == ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_option_count":
-      instructionText = `(${qualifiedCode}.value || []).length ` + `< ${validation.min_count || 0}`;
+      instructionText =
+        `(${qualifiedCode}.value || []).length ` +
+        `< ${validation.min_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_ranking_count":
       instructionText =
@@ -793,7 +795,9 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         )}].filter(x=>x).length ` + `< ${validation.min_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_option_count":
-      instructionText = `(${qualifiedCode}.value || []).length ` + `> ${validation.max_count || 0}`;
+      instructionText =
+        `(${qualifiedCode}.value || []).length ` +
+        `> ${validation.max_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_ranking_count":
       instructionText =
@@ -802,8 +806,10 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         )}].filter(x=>x).length ` + `> ${validation.max_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_option_count":
-      instructionText = `(${qualifiedCode}.value || []).length ` + `!== ${validation.count || 0}`;
-    return booleanActiveInstruction(key, instructionText);
+      instructionText =
+        `(${qualifiedCode}.value || []).length ` +
+        `!== ${validation.count || 0}`;
+      return booleanActiveInstruction(key, instructionText);
     case "validation_ranking_count":
       instructionText =
         `[${component.children.map(
@@ -969,7 +975,7 @@ const getQuestionType = (state, code) => {
   } else {
     return null;
   }
-}
+};
 
 export const conditionalRelevanceEquation = (logic, rule, state) => {
   const code = "conditional_relevance";
@@ -983,7 +989,12 @@ export const conditionalRelevanceEquation = (logic, rule, state) => {
       returnType: "boolean",
     };
   }
-  const text = jsonToJs(logic, false, (code) => state[code].type, (code) => getQuestionType(state, code));
+  const text = jsonToJs(
+    logic,
+    false,
+    (code) => state[code].type,
+    (code) => getQuestionType(state, code)
+  );
   if (rule == "show_if") {
     return { code, text, isActive: true, returnType: "boolean" };
   } else if (rule == "hide_if") {
@@ -1008,19 +1019,24 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
     case "and":
       return wrapIfNested(
         nested,
-        value.map((el) => jsonToJs(el, true, getComponentType, getQuestionType)).join(" && ")
+        value
+          .map((el) => jsonToJs(el, true, getComponentType, getQuestionType))
+          .join(" && ")
       );
     case "or":
       return wrapIfNested(
         nested,
-        value.map((el) => jsonToJs(el, true, getComponentType, getQuestionType)).join(" || ")
+        value
+          .map((el) => jsonToJs(el, true, getComponentType, getQuestionType))
+          .join(" || ")
       );
     case "!":
       return (
         "!" +
         wrapIfNested(
           nested,
-          jsonToJs(value, true, getComponentType, getQuestionType) + (nested ? ")" : "")
+          jsonToJs(value, true, getComponentType, getQuestionType) +
+            (nested ? ")" : "")
         )
       );
     case "is_relevant":

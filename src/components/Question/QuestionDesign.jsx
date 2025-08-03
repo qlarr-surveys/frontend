@@ -52,14 +52,6 @@ function QuestionDesign({
     return state.designState[code];
   });
 
-  const children = question.children;
-
-  const collapsed = useSelector((state) => {
-    return (
-      state.designState["globalSetup"]?.reorder_setup === "collapse_questions"
-    );
-  });
-
   const onDelete = useCallback(() => dispatch(deleteQuestion(code)), []);
   const onClone = useCallback(() => dispatch(cloneQuestion(code)), []);
 
@@ -102,14 +94,16 @@ function QuestionDesign({
       const clientOffset = monitor.getClientOffset();
       if (
         dragIndex < hoverIndex &&
-        clientOffset.y < hoverBoundingRect.top + 20
+        clientOffset.y <
+          (2 * hoverBoundingRect.top + hoverBoundingRect.bottom) / 3
       ) {
         return;
       }
       // Dragging upwards
       if (
         dragIndex > hoverIndex &&
-        clientOffset.y > hoverBoundingRect.bottom - 20
+        clientOffset.y >
+          (hoverBoundingRect.top + 2 * hoverBoundingRect.bottom) / 3
       ) {
         return;
       }
@@ -273,15 +267,13 @@ function QuestionDesign({
         </Box>
       )}
 
-      <Collapse in={collapsed !== true} timeout="auto" unmountOnExit>
-        <QuestionDesignBody
-          code={code}
-          type={type}
-          t={t}
-          designMode={designMode}
-          onMainLang={onMainLang}
-        />
-      </Collapse>
+      <QuestionDesignBody
+        code={code}
+        type={type}
+        t={t}
+        designMode={designMode}
+        onMainLang={onMainLang}
+      />
       <ErrorDisplay code={code} />
     </div>
   );
