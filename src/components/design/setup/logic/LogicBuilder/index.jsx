@@ -44,7 +44,6 @@ function LogicBuilder(props) {
   const initTree = props.logic
     ? checkTree(loadFromJsonLogic(props.logic, config), config)
     : loadTree({ id: uuid(), type: "group" });
-  console.log("props.logic", props.logic);
   const [tree, setTree] = useState(initTree);
   const [html, setHtml] = useState(queryString(tree, config, true));
 

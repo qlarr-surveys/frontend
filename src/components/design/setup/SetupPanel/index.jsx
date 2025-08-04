@@ -251,15 +251,10 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
         />
       );
     case "randomize_questions":
-    case "prioritize_questions":
     case "randomize_options":
-    case "prioritize_options":
     case "randomize_groups":
-    case "prioritize_groups":
     case "randomize_rows":
-    case "prioritize_rows":
     case "randomize_columns":
-    case "prioritize_columns":
       return (
         <OrderPrioritySetup t={t} key={code + rule} rule={rule} code={code} />
       );

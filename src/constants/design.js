@@ -4,7 +4,7 @@ export const surveySetup = {
     {
       title: "order_priority",
       key: "random",
-      rules: ["randomize_groups", "prioritize_groups"],
+      rules: ["randomize_groups"],
     },
   ],
 };
@@ -38,7 +38,7 @@ export const themeSetup = {
     {
       title: "order_priority",
       key: "random",
-      rules: ["randomize_groups", "prioritize_groups"],
+      rules: ["randomize_groups"],
     },
   ],
 };
@@ -58,7 +58,7 @@ export const setupOptions = (type) => {
         {
           title: "order_priority",
           key: "random",
-          rules: ["randomize_questions", "prioritize_questions"],
+          rules: ["randomize_questions"],
         },
       ];
     case "text_display":
@@ -293,7 +293,7 @@ export const setupOptions = (type) => {
         {
           title: "order_priority",
           key: "random",
-          rules: ["randomize_options", "prioritize_options"],
+          rules: ["randomize_options"],
         },
         {
           title: "validation",
@@ -309,7 +309,7 @@ export const setupOptions = (type) => {
         {
           title: "order_priority",
           key: "random",
-          rules: ["randomize_options", "prioritize_options"],
+          rules: ["randomize_options"],
         },
         {
           title: "display",
@@ -335,7 +335,7 @@ export const setupOptions = (type) => {
         {
           title: "order_priority",
           key: "random",
-          rules: ["randomize_options", "prioritize_options"],
+          rules: ["randomize_options"],
         },
         {
           title: "validation",
@@ -350,7 +350,7 @@ export const setupOptions = (type) => {
         {
           title: "order_priority",
           key: "random",
-          rules: ["randomize_options", "prioritize_options"],
+          rules: ["randomize_options"],
         },
         {
           title: "validation",
@@ -369,7 +369,7 @@ export const setupOptions = (type) => {
         {
           title: "order_priority",
           key: "random",
-          rules: ["randomize_options", "prioritize_options"],
+          rules: ["randomize_options"],
         },
         {
           title: "validation",
@@ -384,7 +384,7 @@ export const setupOptions = (type) => {
         {
           title: "order_priority",
           key: "random",
-          rules: ["randomize_options", "prioritize_options"],
+          rules: ["randomize_options"],
         },
         {
           title: "validation",
@@ -408,7 +408,7 @@ export const setupOptions = (type) => {
         {
           title: "order_priority",
           key: "random",
-          rules: ["randomize_options", "prioritize_options"],
+          rules: ["randomize_options"],
         },
         {
           title: "validation",
@@ -432,7 +432,7 @@ export const setupOptions = (type) => {
         {
           title: "order_priority",
           key: "random",
-          rules: ["randomize_options", "prioritize_options"],
+          rules: ["randomize_options"],
         },
         {
           title: "validation",
@@ -456,7 +456,7 @@ export const setupOptions = (type) => {
         {
           title: "order_priority",
           key: "random",
-          rules: ["randomize_options", "prioritize_options"],
+          rules: ["randomize_options"],
         },
         {
           title: "validation",
@@ -477,9 +477,7 @@ export const setupOptions = (type) => {
           key: "random",
           rules: [
             "randomize_rows",
-            "prioritize_rows",
             "randomize_columns",
-            "prioritize_columns",
           ],
         },
         {
@@ -508,9 +506,7 @@ export const setupOptions = (type) => {
           key: "random",
           rules: [
             "randomize_rows",
-            "prioritize_rows",
             "randomize_columns",
-            "prioritize_columns",
           ],
         },
         {

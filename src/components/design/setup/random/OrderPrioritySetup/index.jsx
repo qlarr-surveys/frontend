@@ -3,7 +3,6 @@ import { FormControl, MenuItem, Select } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeAttribute } from "~/state/design/designState";
-import CustomPriority from "../CustomPriority";
 import styles from "./OrderPrioritySetup.module.css";
 import CustomRandom from "../CustomRandom";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
@@ -30,11 +29,6 @@ export default function OrderPrioritySetup({ t, rule, code }) {
       ];
       values = ["NONE", "RANDOM", "FLIP", "custom"];
       break;
-    case "prioritize_questions":
-      title = "questions_priority";
-      labels = [t("no_priority"), t("prioritise_questions")];
-      values = ["NONE", "prioritize"];
-      break;
     case "randomize_groups":
       title = "groups_order";
       labels = [
@@ -44,11 +38,6 @@ export default function OrderPrioritySetup({ t, rule, code }) {
         t("custom_random"),
       ];
       values = ["NONE", "RANDOM", "FLIP", "custom"];
-      break;
-    case "prioritize_groups":
-      title = "groups_priority";
-      labels = [t("no_priority"), t("prioritise_groups")];
-      values = ["NONE", "prioritize"];
       break;
     case "randomize_options":
       title = "options_order";
@@ -61,11 +50,6 @@ export default function OrderPrioritySetup({ t, rule, code }) {
       ];
       values = ["NONE", "RANDOM", "FLIP", "ALPHA", "custom"];
       break;
-    case "prioritize_options":
-      title = "options_priority";
-      labels = [t("no_priority"), t("prioritise_options")];
-      values = ["NONE", "prioritize"];
-      break;
     case "randomize_rows":
       title = "rows_order";
       labels = [
@@ -77,11 +61,6 @@ export default function OrderPrioritySetup({ t, rule, code }) {
       ];
       values = ["NONE", "RANDOM", "FLIP", "ALPHA", "custom"];
       break;
-    case "prioritize_rows":
-      title = "rows_priority";
-      labels = [t("no_priority"), t("prioritise_rows")];
-      values = ["NONE", "prioritize"];
-      break;
     case "randomize_columns":
       title = "columns_order";
       labels = [
@@ -92,11 +71,6 @@ export default function OrderPrioritySetup({ t, rule, code }) {
         t("custom_random"),
       ];
       values = ["NONE", "RANDOM", "FLIP", "ALPHA", "custom"];
-      break;
-    case "prioritize_columns":
-      title = "columns_priority";
-      labels = [t("no_priority"), t("prioritise_columns")];
-      values = ["NONE", "prioritize"];
       break;
   }
 
@@ -138,21 +112,9 @@ export default function OrderPrioritySetup({ t, rule, code }) {
       {value == "custom" && "randomize_rows" == rule && (
         <CustomRandom label="" type="row" code={code} t={t} />
       )}
-      {value == "prioritize" && "prioritize_rows" == rule && (
-        <CustomPriority label="" type="row" code={code} t={t} />
-      )}
       {value == "custom" && "randomize_columns" == rule && (
         <CustomRandom label="" type="column" code={code} t={t} />
       )}
-      {value == "prioritize" && "prioritize_columns" == rule && (
-        <CustomPriority label="" type="column" code={code} t={t} />
-      )}
-      {value == "prioritize" &&
-        [
-          "prioritize_questions",
-          "prioritize_options",
-          "prioritize_groups",
-        ].indexOf(rule) !== -1 && <CustomPriority label="" code={code} t={t} />}
     </>
   );
 }

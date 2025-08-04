@@ -153,18 +153,6 @@ export const designState = createSlice({
         ].indexOf(action.payload.key) > -1
       ) {
         updateRandomByRule(state[payload.code], action.payload.key);
-      } else if (
-        [
-          "prioritize_questions",
-          "prioritize_groups",
-          "prioritize_options",
-          "prioritize_rows",
-          "prioritize_columns",
-        ].indexOf(action.payload.key) > -1
-      ) {
-        if (!payload.value) {
-          removeInstruction(state[payload.code], "priority_groups");
-        }
       }
     },
     changeRelevance: (state, action) => {
@@ -435,19 +423,6 @@ export const designState = createSlice({
         removeInstruction(componentState, "random_group");
       }
     },
-    updatePriority: (state, action) => {
-      const payload = action.payload;
-      const componentState = state[payload.code];
-      if (payload.priorities) {
-        const instruction = {
-          code: "priority_groups",
-          priorities: payload.priorities,
-        };
-        changeInstruction(componentState, instruction);
-      } else {
-        removeInstruction(componentState, "priority_groups");
-      }
-    },
     updateRandomByType: (state, action) => {
       const payload = action.payload;
       const componentState = state[payload.code];
@@ -468,29 +443,6 @@ export const designState = createSlice({
         changeInstruction(componentState, instruction);
       } else {
         removeInstruction(componentState, "random_group");
-      }
-    },
-    updatePriorityByType: (state, action) => {
-      const payload = action.payload;
-      const componentState = state[payload.code];
-      const otherChildrenCodes = state[payload.code]?.children
-        ?.filter((el) => el.type !== payload.type)
-        ?.map((el) => el.code);
-      const priorityInstruction = instructionByCode(
-        componentState,
-        "priority_groups"
-      );
-      const otherPriorities =
-        priorityInstruction?.priorities?.filter(
-          (x) =>
-            x && x.weights.some((el) => otherChildrenCodes.includes(el.code))
-        ) || [];
-      const priorities = payload.priorities.concat(otherPriorities);
-      if (priorities) {
-        const instruction = { code: "priority_groups", priorities };
-        changeInstruction(componentState, instruction);
-      } else {
-        removeInstruction(componentState, "priority_groups");
       }
     },
     removeSkipDestination: (state, action) => {

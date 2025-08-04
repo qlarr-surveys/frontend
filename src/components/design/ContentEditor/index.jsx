@@ -45,7 +45,6 @@ function ContentEditor({
   const index = useSelector((state) => {
     return state.designState.index;
   });
-  console.log("index", index);
 
   const lang = langInfo.lang;
   const mainLang = langInfo.mainLang;
@@ -95,7 +94,6 @@ function ContentEditor({
         spans.forEach((span) => {
           // Get the data-value attribute
           const dataValue = span.getAttribute("data-value");
-          console.log("referenceInstruction[key]", referenceInstruction[key]);
           if (dataValue) {
             // Replace the key with referenceInstruction[key] in the data-value
             const newDataValue = dataValue.replace(
