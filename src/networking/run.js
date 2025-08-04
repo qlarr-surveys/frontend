@@ -111,12 +111,23 @@ export const loadScript = (runService, preview) =>
       });
   });
 
-export const previewUrl = (fileName, questionCode) => {
+export const previewUrlByFilename = (fileName) => {
   const surveyId = sessionStorage.getItem("surveyId");
+  const responseId = sessionStorage.getItem("responseId");
+  
   return (
     BACKEND_BASE_URL +
-    `/survey/${surveyId}/response/attach/${fileName}${
-      questionCode ? "/" + questionCode : ""
-    }`
+    `/survey/${surveyId}/response/${responseId}/attach/${fileName}`
   );
 };
+
+export const previewUrlByQuestionCode = (questionCode, responseId) => {
+  const surveyId = sessionStorage.getItem("surveyId");
+  
+  return (
+    BACKEND_BASE_URL +
+    `/survey/${surveyId}/response/attach/${responseId}/${questionCode}`
+  );
+};
+
+
