@@ -885,85 +885,176 @@ const isValidRegex = (regex) => {
   return true;
 };
 
-export const updateRandomByRule = (componentState, randomRule) => {
+export const updateRandomByRule = (
+  componentState,
+  randomRule,
+  initialSetup = false
+) => {
   if (
     ["randomize_questions", "randomize_groups", "randomize_options"].indexOf(
       randomRule
-    ) > -1 &&
-    componentState[randomRule] !== "custom"
+    ) > -1
   ) {
     const childCodes = componentState.children
-      ?.filter(
-        (it) =>
-          it.groupType?.toLowerCase() != "end" &&
-          it.type?.toLowerCase() != "other" &&
-          it.groupType?.toLowerCase() != "welcome"
+      ?.filter((it) =>
+        it.groupType?.toLowerCase() != "end" && initialSetup
+          ? it.type?.toLowerCase() != "other"
+          : true
       )
       ?.map((it) => it.code);
     if (childCodes.length == 0 || !componentState[randomRule]) {
-      componentState[randomRule] = false;
+      componentState[randomRule] = undefined;
       removeInstruction(componentState, "random_group");
       return;
     }
-    const instruction = {
-      code: "random_group",
-      groups: [{ codes: childCodes, randomOption: componentState[randomRule] }],
-    };
-    changeInstruction(componentState, instruction);
-  } else if (
-    ["randomize_rows"].indexOf(randomRule) > -1 &&
-    componentState[randomRule] !== "custom"
-  ) {
+    let instruction;
+    if (initialSetup) {
+      instruction = {
+        code: "random_group",
+        groups: [
+          { codes: childCodes, randomOption: componentState[randomRule] },
+        ],
+      };
+    } else {
+      instruction = instructionByCode(componentState, "random_group");
+      instruction.groups = instruction.groups
+        .map((group) => {
+          const newCodes = group.codes.filter((code) =>
+            childCodes.includes(code)
+          );
+          if (newCodes.length > 0) {
+            group.codes = newCodes;
+            return group;
+          } else {
+            return undefined;
+          }
+        })
+        .filter((group) => group !== undefined);
+    }
+    if (instruction.groups.length == 0) {
+      componentState[randomRule] = undefined;
+      removeInstruction(componentState, "random_group");
+    } else {
+      changeInstruction(componentState, instruction);
+    }
+  } else if (["randomize_rows"].indexOf(randomRule) > -1) {
     const childCodes = componentState.children
       ?.filter((child) => child.type == "row")
       ?.map((it) => it.code);
-    if (childCodes.length == 0 || !componentState[randomRule]) {
-      componentState[randomRule] = false;
-      removeInstruction(componentState, "random_group");
-      return;
-    }
+
     const randomInstruction = instructionByCode(componentState, "random_group");
     const groups = randomInstruction?.groups || [];
-    const groupsWithRowAnswers = groups.filter((group) => {
+    const groupsWithColAnswers = groups.filter((group) => {
       return !group.codes.some((item) => childCodes.includes(item));
     });
-    groupsWithRowAnswers.push({
-      codes: childCodes,
-      randomOption: componentState[randomRule],
-    });
-
-    const instruction = {
-      code: "random_group",
-      groups: groupsWithRowAnswers,
-    };
-    changeInstruction(componentState, instruction);
-  } else if (
-    ["randomize_columns"].indexOf(randomRule) > -1 &&
-    componentState[randomRule] !== "custom"
-  ) {
+    if (childCodes.length == 0 || !componentState[randomRule]) {
+      componentState[randomRule] = undefined;
+      if (groupsWithColAnswers.length == 0) {
+        removeInstruction(componentState, "random_group");
+      } else {
+        changeInstruction(componentState, {
+          code: "random_group",
+          groups: groupsWithColAnswers,
+        });
+      }
+      return;
+    }
+    if (initialSetup) {
+      groupsWithColAnswers.push({
+        codes: childCodes,
+        randomOption: componentState[randomRule],
+      });
+      const updated = {
+        code: "random_group",
+        groups: groupsWithColAnswers,
+      };
+      changeInstruction(componentState, updated);
+    } else {
+      const childCodesIncluded = groups
+        .filter((group) => {
+          return group.codes.some((item) => childCodes.includes(item));
+        })
+        .map((group) => group.codes.filter((item) => childCodes.includes(item)))
+        .flat();
+      if (childCodesIncluded.length > 0) {
+        groupsWithColAnswers.push({
+          codes: childCodesIncluded,
+          randomOption: componentState[randomRule],
+        });
+        const updated = {
+          code: "random_group",
+          groups: groupsWithColAnswers,
+        };
+        changeInstruction(componentState, updated);
+      } else {
+        componentState[randomRule] = undefined;
+        const updated = {
+          code: "random_group",
+          groups: groupsWithColAnswers,
+        };
+        changeInstruction(componentState, updated);
+      }
+    }
+  } else if (["randomize_columns"].indexOf(randomRule) > -1) {
     const childCodes = componentState.children
       ?.filter((child) => child.type == "column")
       ?.map((it) => it.code);
-    if (childCodes.length == 0 || !componentState[randomRule]) {
-      componentState[randomRule] = false;
-      removeInstruction(componentState, "random_group");
-      return;
-    }
+
     const randomInstruction = instructionByCode(componentState, "random_group");
     const groups = randomInstruction?.groups || [];
     const groupsWithRowAnswers = groups.filter((group) => {
       return !group.codes.some((item) => childCodes.includes(item));
     });
-    groupsWithRowAnswers.push({
-      codes: childCodes,
-      randomOption: componentState[randomRule],
-    });
-
-    const instruction = {
-      code: "random_group",
-      groups: groupsWithRowAnswers,
-    };
-    changeInstruction(componentState, instruction);
+    if (childCodes.length == 0 || !componentState[randomRule]) {
+      componentState[randomRule] = undefined;
+      if (groupsWithRowAnswers.length == 0) {
+        removeInstruction(componentState, "random_group");
+      } else {
+        console.log("here");
+        console.log("groupsWithRowAnswers", groupsWithRowAnswers);
+        changeInstruction(componentState, {
+          code: "random_group",
+          groups: groupsWithRowAnswers,
+        });
+      }
+      return;
+    }
+    if (initialSetup) {
+      groupsWithRowAnswers.push({
+        codes: childCodes,
+        randomOption: componentState[randomRule],
+      });
+      const updated = {
+        code: "random_group",
+        groups: groupsWithRowAnswers,
+      };
+      changeInstruction(componentState, updated);
+    } else {
+      const childCodesIncluded = groups
+        .filter((group) => {
+          return group.codes.some((item) => childCodes.includes(item));
+        })
+        .map((group) => group.codes.filter((item) => childCodes.includes(item)))
+        .flat();
+      if (childCodesIncluded.length > 0) {
+        groupsWithRowAnswers.push({
+          codes: childCodesIncluded,
+          randomOption: componentState[randomRule],
+        });
+        const updated = {
+          code: "random_group",
+          groups: groupsWithRowAnswers,
+        };
+        changeInstruction(componentState, updated);
+      } else {
+        componentState[randomRule] = undefined;
+        const updated = {
+          code: "random_group",
+          groups: groupsWithRowAnswers,
+        };
+        changeInstruction(componentState, updated);
+      }
+    }
   }
 };
 

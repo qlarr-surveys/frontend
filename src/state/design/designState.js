@@ -133,6 +133,7 @@ export const designState = createSlice({
       if (!state[payload.code]) {
         state[payload.code] = {};
       }
+      const originalValue = state[payload.code][payload.key];
 
       state[payload.code][payload.key] = payload.value;
       if (action.payload.key == "maxChars") {
@@ -152,7 +153,7 @@ export const designState = createSlice({
           "randomize_columns",
         ].indexOf(action.payload.key) > -1
       ) {
-        updateRandomByRule(state[payload.code], action.payload.key);
+        updateRandomByRule(state[payload.code], action.payload.key, !originalValue || originalValue == "NONE");
       }
     },
     changeRelevance: (state, action) => {

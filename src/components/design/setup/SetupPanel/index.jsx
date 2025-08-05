@@ -12,7 +12,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Box, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { resetSetup } from "~/state/design/designState";
-import OrderPrioritySetup from "../random/OrderPrioritySetup";
 import { NavigationMode } from "~/components/manage/NavigationMode";
 import { useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
@@ -20,6 +19,7 @@ import Theming from "../Theming";
 import { ManageLanguages } from "~/pages/manage/ManageTranslations";
 import { useTheme } from "@emotion/react";
 import { questionIconByType } from "~/components/Questions/utils";
+import OrderSetup from '../random/OrderSetup';
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -256,7 +256,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "randomize_rows":
     case "randomize_columns":
       return (
-        <OrderPrioritySetup t={t} key={code + rule} rule={rule} code={code} />
+        <OrderSetup t={t} key={code + rule} rule={rule} code={code} />
       );
     case "maxDate":
       return (

@@ -1,7 +1,13 @@
-.title {
-  margin: 0;
-  line-height: 40px;
+.selectValue {
+  margin-bottom: 20px !important;
 }
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 
 .list {
   padding-left: 7px;
