@@ -58,7 +58,12 @@ function ImageDisplayDesign({ code, t, onMainLang }) {
         </div>
       ) : onMainLang ? (
         <div className={styles.buttonContainer}>
-          <Button variant="outlined" component="label">
+          <Button variant="outlined" 
+          component="label"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
             <PhotoIcon className="mr-10" />
             {state.resources?.imageUrl ? t("replace_image") : t("upload_image")}
             <input

@@ -1,7 +1,7 @@
 import { Box } from "@mui/system";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { previewUrl, uploadFile } from "~/networking/run";
+import { previewUrlByFilename, uploadFile } from "~/networking/run";
 import { valueChange } from "~/state/runState";
 import styles from "./PhotoCapture.module.css";
 import { getFileFromPath } from '~/networking/common';
@@ -71,7 +71,7 @@ function PhotoCapture(props) {
       ) : (
         <img
           onClick={onImageClick}
-          src={previewUrl(state.value.stored_filename)}
+          src={previewUrlByFilename(state.value.stored_filename)}
           style={{
             maxHeight: "400px",
             maxWidth: "100%",

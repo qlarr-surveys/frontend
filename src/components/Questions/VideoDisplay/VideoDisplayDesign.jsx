@@ -79,6 +79,9 @@ function VideoDisplayDesign({ code, t, onMainLang }) {
             component="label"
             variant="outlined"
             startIcon={<VideocamIcon />}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           >
             {state.resources?.videoUrl ? t("replace_video") : t("upload_video")}
             <input
