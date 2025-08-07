@@ -6,7 +6,11 @@ import ChoiceItemDesign from "~/components/Questions/Choice/ChoiceItemDesign";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { inDesign } from "~/routes";
-import { addNewAnswer, addNewAnswers, onNewLine } from "~/state/design/designState";
+import {
+  addNewAnswer,
+  addNewAnswers,
+  onNewLine,
+} from "~/state/design/designState";
 
 function ChoiceQuestion(props) {
   const theme = useTheme();
@@ -21,9 +25,17 @@ function ChoiceQuestion(props) {
     return state.designState[props.code].type;
   });
 
-  const isOther =
+  const canHaveOther =
     (questionType == "mcq" || questionType == "scq") &&
-    (!children || !children.some((el) => el.code === "Aother"));
+    (!children || !children.some((el) => el.type === "other"));
+
+  const canHaveNone =
+    questionType == "mcq" &&
+    (!children || !children.some((el) => el.type === "none"));
+
+  const canHaveAll =
+    questionType == "mcq" &&
+    (!children || !children.some((el) => el.type === "all"));
 
   return (
     <div className={styles.questionItem}>
@@ -45,7 +57,7 @@ function ChoiceQuestion(props) {
                 );
               }}
               onNewLine={() => {
-                dispatch(onNewLine({questionCode: props.code, index}))
+                dispatch(onNewLine({ questionCode: props.code, index }));
               }}
               label={item.code}
               key={item.code}
@@ -69,32 +81,59 @@ function ChoiceQuestion(props) {
           >
             {t("add_option")}
           </Button>
-          {isOther && (
-            <>
-              <span
-                style={{
-                  color: theme.textStyles.question.color,
-                }}
-              >
-                {t("or")}
-              </span>
-              <Button
-                style={{
-                  fontFamily: theme.textStyles.text.font,
-                  fontSize: theme.textStyles.text.size,
-                  color: theme.textStyles.question.color,
-                }}
-                size="small"
-                className={styles.answerIcon}
-                onClick={() =>
-                  dispatch(
-                    addNewAnswer({ questionCode: props.code, type: "other" })
-                  )
-                }
-              >
-                {t("add_other")}
-              </Button>
-            </>
+          {canHaveOther && (
+            <Button
+              style={{
+                fontFamily: theme.textStyles.text.font,
+                fontSize: theme.textStyles.text.size,
+                color: theme.textStyles.question.color,
+              }}
+              size="small"
+              className={styles.answerIcon}
+              onClick={() =>
+                dispatch(
+                  addNewAnswer({ questionCode: props.code, type: "other" })
+                )
+              }
+            >
+              {t("add_other")}
+            </Button>
+          )}
+          {canHaveAll && (
+            <Button
+              style={{
+                fontFamily: theme.textStyles.text.font,
+                fontSize: theme.textStyles.text.size,
+                color: theme.textStyles.question.color,
+              }}
+              size="small"
+              className={styles.answerIcon}
+              onClick={() =>
+                dispatch(
+                  addNewAnswer({ questionCode: props.code, type: "all" })
+                )
+              }
+            >
+              {t("add_all")}
+            </Button>
+          )}
+          {canHaveNone && (
+            <Button
+              style={{
+                fontFamily: theme.textStyles.text.font,
+                fontSize: theme.textStyles.text.size,
+                color: theme.textStyles.question.color,
+              }}
+              size="small"
+              className={styles.answerIcon}
+              onClick={() =>
+                dispatch(
+                  addNewAnswer({ questionCode: props.code, type: "none" })
+                )
+              }
+            >
+              {t("add_none")}
+            </Button>
           )}
         </div>
       )}

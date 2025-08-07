@@ -153,7 +153,11 @@ export const designState = createSlice({
           "randomize_columns",
         ].indexOf(action.payload.key) > -1
       ) {
-        updateRandomByRule(state[payload.code], action.payload.key, !originalValue || originalValue == "NONE");
+        updateRandomByRule(
+          state[payload.code],
+          action.payload.key,
+          !originalValue || originalValue == "NONE"
+        );
       }
     },
     changeRelevance: (state, action) => {
@@ -219,7 +223,10 @@ export const designState = createSlice({
       const type = action.payload.type;
       let index = action.payload.index;
       const question = state[questionCode];
-      const children = question.children?.filter((it) => state[it.qualifiedCode].type == type) || [];
+      const children =
+        question.children?.filter(
+          (it) => state[it.qualifiedCode].type == type
+        ) || [];
       data.forEach((item, itemIndex) => {
         if (item) {
           const nextAnswer = children[index + 1];
@@ -325,6 +332,34 @@ export const designState = createSlice({
             qualifiedCode: qualifiedCode + "Atext",
             type: "other_text",
             index,
+          });
+          break;
+
+        case "all":
+          code = "Aall";
+          label = "All of the above";
+          qualifiedCode = questionCode + code;
+          addAnswer(state, {
+            code,
+            qualifiedCode,
+            type,
+            label,
+            index,
+            focus,
+          });
+          break;
+
+        case "none":
+          code = "Anone";
+          label = "None of the above";
+          qualifiedCode = questionCode + code;
+          addAnswer(state, {
+            code,
+            qualifiedCode,
+            type,
+            label,
+            index,
+            focus,
           });
           break;
         default:
