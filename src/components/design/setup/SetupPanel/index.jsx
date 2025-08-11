@@ -20,6 +20,7 @@ import { ManageLanguages } from "~/pages/manage/ManageTranslations";
 import { useTheme } from "@emotion/react";
 import { questionIconByType } from "~/components/Questions/utils";
 import OrderSetup from '../random/OrderSetup';
+import QuestionActions from "../QuestionActions";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -146,6 +147,14 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           code={code}
         />
       );
+      case "questionActions" : return (
+         <QuestionActions
+          key={code + rule}
+          t={t}
+          rule={rule}
+          code={code}
+        />
+      )
     case "showWordCount":
       return (
         <ToggleValue

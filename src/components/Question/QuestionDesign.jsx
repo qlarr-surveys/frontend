@@ -1,15 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {  useEffect, useRef, useState } from "react";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 
 import styles from "./QuestionDesign.module.css";
 import ContentEditor from "~/components/design/ContentEditor";
-import { alpha, Box, Collapse } from "@mui/material";
+import { alpha, Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import { useSelector } from "react-redux";
 import {
-  cloneQuestion,
-  deleteQuestion,
   onDrag,
   setup,
 } from "~/state/design/designState";
@@ -51,9 +49,6 @@ function QuestionDesign({
   const question = useSelector((state) => {
     return state.designState[code];
   });
-
-  const onDelete = useCallback(() => dispatch(deleteQuestion(code)), []);
-  const onClone = useCallback(() => dispatch(cloneQuestion(code)), []);
 
   const [isDragging, drag, preview] = useDrag({
     type: "questions",
@@ -208,15 +203,9 @@ function QuestionDesign({
         {designMode == DESIGN_SURVEY_MODE.DESIGN && (
           <div className={styles.actionToolbarVisible}>
             <ActionToolbar
-              t={t}
-              isHovered={hovered}
-              isInSetup={isInSetup}
               isGroup={false}
               code={code}
               parentCode={parentCode}
-              onClone={onClone}
-              onDelete={onDelete}
-              disableDelete={false}
             />
           </div>
         )}

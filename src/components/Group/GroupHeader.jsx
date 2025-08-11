@@ -38,10 +38,7 @@ function GroupHeader({ t, code, children, designMode }) {
             <div className={styles.actionToolbarVisible}>
               <ActionToolbar
                 code={code}
-                t={t}
                 isGroup={true}
-                onDelete={onDelete}
-                disableDelete={children && children.length > 0}
               />
             </div>
           )}
