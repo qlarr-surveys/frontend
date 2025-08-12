@@ -1,8 +1,8 @@
-import { IconButton, Tooltip } from "@mui/material";
+import { IconButton } from "@mui/material";
 import styles from "./ActionToolbar.module.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import React, { useState } from "react";
+import React from "react";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import LowPriorityIcon from "@mui/icons-material/LowPriority";
 import MoveDownIcon from "@mui/icons-material/MoveDown";
@@ -10,21 +10,13 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setupOptions } from "~/constants/design";
 import { setup } from "~/state/design/designState";
-import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import { useTheme } from "@emotion/react";
-import DeleteModal from "~/components/common/DeleteModal";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function ActionToolbar({
   code,
   isGroup,
-  isHovered,
-  isInSetup,
   parentCode,
-  disableDelete,
-  onDelete,
-  onClone,
-  t,
 }) {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -35,9 +27,6 @@ function ActionToolbar({
       : state.designState[code].type;
   });
 
-  const [open, setOpen] = useState(false);
-
-  const handleClose = () => setOpen(false);
   const hasRelevance = useSelector((state) => {
     let instruction = state.designState[code]?.instructionList?.find(
       (el) => el.code == "conditional_relevance"
@@ -57,9 +46,6 @@ function ActionToolbar({
     );
   });
 
-  const setSetup = () => {
-    dispatch(setup({ code, rules: setupOptions(type) }));
-  };
 
   const expandRelevance = () => {
     dispatch(
@@ -197,31 +183,6 @@ function ActionToolbar({
           </IconButton>
         </CustomTooltip>
       )}
-      {(isHovered || isInSetup) && (
-        <>
-          {!isGroup && (
-            <IconButton onClick={() => onClone()}>
-              <SurveyIcon
-                name="duplicate"
-                size=".75em"
-                color={`${textColor}`}
-              />
-            </IconButton>
-          )}
-          {!disableDelete && (
-            <IconButton onClick={() => setOpen(true)} disabled={disableDelete}>
-              <SurveyIcon name="delete" size=".75em" color={textColor} />
-            </IconButton>
-          )}
-        </>
-      )}
-
-      <DeleteModal
-        open={open}
-        description={t("delete_question")}
-        handleClose={handleClose}
-        handleDelete={onDelete}
-      />
     </div>
   );
 }
