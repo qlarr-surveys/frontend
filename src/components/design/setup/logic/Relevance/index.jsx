@@ -61,7 +61,6 @@ function Relevance({ code, t }) {
   const resetToShowAlways = () =>
     setRelevance({ rule: "show_always", logic: undefined });
 
-  if (isDisabled) return null;
   const shouldHaveLogic = conditionOn || logicDialogOpen;
 
 
@@ -74,6 +73,7 @@ function Relevance({ code, t }) {
         </div>
         <Switch
           id="conditional-visibility-switch"
+          disabled={isDisabled}
           checked={conditionOn || logicDialogOpen}
           onChange={(e) => handleToggle(e.target.checked)}
           inputProps={{ "aria-label": "conditional-visibility-switch" }}

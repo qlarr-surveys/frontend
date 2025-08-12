@@ -56,7 +56,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["showDescription", "disabled", "questionActions"],
+          rules: ["questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -69,7 +69,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["showDescription", "disabled", "questionActions"],
+          rules: ["questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -84,10 +84,10 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
-            "showDescription",
-            "disabled",
-            "imageWidth",
             "questionActions",
+            "disabled",
+            "showDescription",
+            "imageWidth",
           ],
         },
         {
@@ -103,11 +103,11 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
-            "showDescription",
+            "questionActions",
             "disabled",
+            "showDescription",
             "audio_only",
             "loop",
-            "questionActions",
           ],
         },
         {
@@ -123,11 +123,11 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
-            "showDescription",
+            "questionActions",
             "disabled",
+            "showDescription",
             "maxChars",
             "hint",
-            "questionActions",
           ],
         },
         {
@@ -176,12 +176,12 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
-            "showDescription",
+            "questionActions",
             "disabled",
+            "showDescription",
             "maxChars",
             "decimal_separator",
             "hint",
-            "questionActions",
           ],
         },
         {
@@ -212,11 +212,11 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
-            "showDescription",
+            "questionActions",
             "disabled",
+            "showDescription",
             "maxChars",
             "hint",
-            "questionActions",
           ],
         },
         {
@@ -243,8 +243,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "questionActions",
-            "showDescription",
             "disabled",
+            "showDescription",
             "minRows",
             "showWordCount",
             "hint",
@@ -273,7 +273,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["showDescription", "disabled", "questionActions"],
+          rules: ["questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -296,7 +296,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["showDescription", "disabled", "questionActions"],
+          rules: ["questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -315,7 +315,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["showDescription", "disabled", "hint", "questionActions"],
+          rules: ["questionActions", "disabled", "showDescription", "hint"],
         },
         {
           title: "logic",
@@ -334,7 +334,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["showDescription", "disabled", "hint", "questionActions"],
+          rules: ["questionActions", "disabled", "showDescription", "hint"],
         },
         {
           title: "logic",
@@ -353,7 +353,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["showDescription", "disabled", "hint", "questionActions"],
+          rules: ["questionActions", "disabled", "showDescription", "hint"],
         },
         {
           title: "logic",
@@ -374,8 +374,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "questionActions",
-            "showDescription",
             "disabled",
+            "showDescription",
             "dateFormat",
             "fullDayFormat",
             "maxDate",
@@ -401,8 +401,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "questionActions",
-            "showDescription",
             "disabled",
+            "showDescription",
             "dateFormat",
             "maxDate",
             "minDate",
@@ -426,10 +426,10 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
-            "showDescription",
-            "disabled",
-            "fullDayFormat",
             "questionActions",
+            "disabled",
+            "showDescription",
+            "fullDayFormat",
           ],
         },
         {
@@ -450,7 +450,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["showDescription", "disabled", "questionActions"],
+          rules: ["questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -471,8 +471,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "questionActions",
-            "showDescription",
             "disabled",
+            "showDescription",
             "hideText",
             "columns",
             "iconSize",
@@ -498,8 +498,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "questionActions",
-            "showDescription",
             "disabled",
+            "showDescription",
             "hideText",
             "columns",
             "imageAspectRatio",
@@ -523,7 +523,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["showDescription", "disabled", "questionActions"],
+          rules: ["questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -546,7 +546,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["showDescription", "disabled", "questionActions"],
+          rules: ["questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -565,7 +565,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["showDescription", "disabled", "questionActions"],
+          rules: ["questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -590,8 +590,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "questionActions",
-            "showDescription",
             "disabled",
+            "showDescription",
             "hideText",
             "columns",
             "imageAspectRatio",
@@ -621,8 +621,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "questionActions",
-            "showDescription",
             "disabled",
+            "showDescription",
             "hideText",
             "columns",
             "iconSize",
@@ -652,8 +652,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "questionActions",
-            "showDescription",
             "disabled",
+            "showDescription",
             "hideText",
             "columns",
             "imageAspectRatio",
@@ -680,7 +680,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["showDescription", "disabled", "questionActions"],
+          rules: ["questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -727,8 +727,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "questionActions",
-            "showDescription",
             "disabled",
+            "showDescription",
             "lower_bound_hint",
             "higher_bound_hint",
           ],
