@@ -1,135 +1,91 @@
-import { FormControl, MenuItem, Select, Button } from "@mui/material";
+// components/design/setup/logic/Relevance.tsx
+import { FormControlLabel, Switch, Button } from "@mui/material";
 import LogicBuilder from "~/components/design/setup/logic/LogicBuilder";
 import { changeRelevance } from "~/state/design/designState";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { buildFields } from "../LogicBuilder/buildFields";
+import React, { useMemo, useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./Relevance.module.css";
 import { Trans } from "react-i18next";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function Relevance({ code, t }) {
   const dispatch = useDispatch();
-
   const [logicDialogOpen, setLogicDialogOpen] = useState(false);
 
-  const state = useSelector((state) => {
-    return state.designState[code];
-  });
-
-
-  const instruction = state.instructionList?.find(
-    (instruction) => instruction.code == "conditional_relevance"
+  const state = useSelector((s) => s.designState[code]);
+  const instruction = state?.instructionList?.find(
+    (i) => i.code === "conditional_relevance"
   );
   const errors = instruction?.errors || [];
   const hasErrors = errors.length > 0;
-  const logic = state.relevance?.logic;
-  const logicDisabled = !hasErrors;
 
-  const [rule, setRule] = useState(state.relevance?.rule || "show_always");
-  const shouldHaveLogic = rule == "show_if" || rule == "hide_if";
+  const rule = state?.relevance?.rule ?? "show_always";
+  const logic = state?.relevance?.logic;
 
-  const onRuleChange = (rule) => {
-    setRule(rule);
-    switch (rule) {
-      case "show_always":
-        reset();
-        return;
-      case "hide_always":
-        dispatch(
-          changeRelevance({
-            code,
-            key: "relevance",
-            value: { logic: undefined, rule: rule },
-          })
-        );
-        return;
-      case "show_if":
-      case "hide_if":
-        if (logic?.rule != "show_if" && logic?.rule != "hide_if") {
-          setLogicDialogOpen(true);
-        }
-        if (logic) {
-          dispatch(
-            changeRelevance({
-              code,
-              key: "relevance",
-              value: { logic: logic, rule: rule },
-            })
-          );
-        }
-        return;
-      default:
-        break;
-    }
-  };
+  // Disabled behaves like "hide_always" → this UI should disappear
+  const isDisabled = rule === "hide_always";
 
-  const reset = () =>
-    dispatch(
-      changeRelevance({
-        code,
-        key: "relevance",
-        value: { logic: undefined, rule: "show_always" },
-      })
-    );
+  // our single toggle = “Use condition to show”
+  const conditionOn = useMemo(() => rule === "show_if", [rule]);
 
-  const onLogicChange = (logic) => {
-    setLogicDialogOpen(false);
-    if (shouldHaveLogic) {
+  const setRelevance = useCallback(
+    (next) => {
       dispatch(
         changeRelevance({
           code,
           key: "relevance",
-          value: { logic: logic, rule: rule },
+          value: { rule: next.rule, logic: next.logic },
         })
       );
+    },
+    [code, dispatch]
+  );
+
+  const handleToggle = (checked) => {
+    if (checked) {
+      if (!logic) {
+        setLogicDialogOpen(true);
+        return;
+      }
+      setRelevance({ rule: "show_if", logic });
+    } else {
+      setRelevance({ rule: "show_always", logic: undefined });
     }
   };
 
+  const onLogicChange = (newLogic) => {
+    setLogicDialogOpen(false);
+    setRelevance({ rule: "show_if", logic: newLogic });
+  };
+
+  const resetToShowAlways = () =>
+    setRelevance({ rule: "show_always", logic: undefined });
+
+  if (isDisabled) return null;
+  const shouldHaveLogic = conditionOn || logicDialogOpen;
+
+
   return (
     <div className={`${hasErrors ? styles.relevanceError : ""}`}>
-      <div className={styles.label}>
-        <CustomTooltip body={t(`tooltips.revelance`)} />
-        <FormControl variant="standard" fullWidth>
-          <Select
-            id="show-hide-select"
-            value={rule}
-            label="Age"
-            onChange={(e) => onRuleChange(e.target.value)}
-          >
-            <MenuItem
-              disabled={hasErrors}
-              key="show_always"
-              value="show_always"
-            >
-              {t("show_always")}
-            </MenuItem>
-            <MenuItem disabled={!logicDisabled} key="show_if" value="show_if">
-              {t("show_if")}
-            </MenuItem>
-            <MenuItem disabled={!logicDisabled} key="hide_if" value="hide_if">
-              {t("hide_if")}
-            </MenuItem>
-            <MenuItem
-              disabled={hasErrors}
-              key="hide_always"
-              value="hide_always"
-            >
-              {t("hide_always")}
-            </MenuItem>
-          </Select>
-        </FormControl>
+      <div className={styles.toggleValue}>
+        <div className={styles.label}>
+          <CustomTooltip body={t("tooltips.relevance")} />
+          <h4>{t("relevance")}</h4>
+        </div>
+        <Switch
+          id="conditional-visibility-switch"
+          checked={conditionOn || logicDialogOpen}
+          onChange={(e) => handleToggle(e.target.checked)}
+          inputProps={{ "aria-label": "conditional-visibility-switch" }}
+        />
       </div>
 
       {!hasErrors && shouldHaveLogic && (
         <LogicBuilder
-          title={
-            rule == "show_if" ? t("condition_to_show") : t("condition_to_hide")
-          }
+          title={t("condition_to_show")}
           code={code}
           onChange={onLogicChange}
-          onDialogStateChanged={(state) => setLogicDialogOpen(state)}
+          onDialogStateChanged={setLogicDialogOpen}
           t={t}
           dialogOpen={logicDialogOpen}
           logic={logic}
@@ -139,20 +95,17 @@ function Relevance({ code, t }) {
       {hasErrors && !logicDialogOpen ? (
         <div className={styles.errorContainer}>
           <Trans t={t} i18nKey="wrong_logic_err" />
-          <Button variant="contained" onClick={() => reset()}>
+          <Button variant="contained" onClick={resetToShowAlways}>
             OK
           </Button>
         </div>
-      ) : (
-        ""
-      )}
+      ) : null}
+
       {shouldHaveLogic && !logicDialogOpen && !logic ? (
         <div>
           <Trans t={t} i18nKey="no_logic_err" />
         </div>
-      ) : (
-        ""
-      )}
+      ) : null}
     </div>
   );
 }

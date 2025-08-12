@@ -21,6 +21,7 @@ import { useTheme } from "@emotion/react";
 import { questionIconByType } from "~/components/Questions/utils";
 import OrderSetup from '../random/OrderSetup';
 import QuestionActions from "../QuestionActions";
+import DisabledToggle from "../Disabled";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -467,6 +468,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           key={code + rule}
         />
       );
+    case "disabled":
+      return <DisabledToggle t={t} key={code + rule} code={code} />;
     case "skip_logic":
       return <SkipLogic t={t} key={code + rule} code={code} />;
     case "relevance":
