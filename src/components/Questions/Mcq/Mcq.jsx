@@ -14,6 +14,20 @@ import { setDirty } from "~/state/templateState";
 import MCQAnswer from "./MCQAnswer";
 
 function MCQ(props) {
+  const parentValue = useSelector((state) => {
+    return state.runState.values[props.component.qualifiedCode].value || [];
+  }, shallowEqual);
+  const allCodes = props.component.answers
+    .filter(
+      (answer) =>
+        answer.type !== "all" &&
+        answer.type !== "none" &&
+        answer.type !== "other"
+    )
+    .map((answer) => answer.code);
+  const allSelected = allCodes.every((code) => parentValue.indexOf(code) > -1);
+  const noneSelected = parentValue.indexOf("Anone") > -1;
+
   return (
     <FormControl component="fieldset">
       <FormGroup>
@@ -21,7 +35,10 @@ function MCQ(props) {
           if (option.type === "other") {
             return (
               <McqAnswerOther
+                disabled={allSelected || noneSelected}
                 key={option.qualifiedCode}
+                allSelected={allSelected}
+                noneSelected={noneSelected}
                 Answer={option}
                 parentCode={props.component.qualifiedCode}
               />
@@ -30,9 +47,13 @@ function MCQ(props) {
             return (
               <MCQAnswer
                 lang={props.lang}
+                parentValue={parentValue}
                 key={option.qualifiedCode}
                 Answer={option}
+                allCodes={allCodes}
                 parentCode={props.component.qualifiedCode}
+                allSelected={allSelected}
+                noneSelected={noneSelected}
               />
             );
           }
@@ -99,11 +120,8 @@ function McqAnswerOther(props) {
     let value = [...parentValue];
     if (value.indexOf(props.Answer.code) == -1) {
       value.push(props.Answer.code);
-      dispatch(
-        valueChange({ componentCode: props.parentCode, value: value })
-      );
+      dispatch(valueChange({ componentCode: props.parentCode, value: value }));
     }
-    
   };
 
   const lostFocus = (event) => {
@@ -116,6 +134,7 @@ function McqAnswerOther(props) {
         control={
           <Checkbox
             checked={isSelected}
+            disabled={props.disabled}
             onChange={onButtonClick}
             name={props.Answer.qualifiedCode}
             sx={{
@@ -124,7 +143,7 @@ function McqAnswerOther(props) {
           />
         }
         label={
-          <div className="w-100">
+          <div >
             <TextField
               variant="standard"
               required={
@@ -133,6 +152,7 @@ function McqAnswerOther(props) {
               inputRef={textInput}
               id={nestedTextChild.qualifiedCode}
               name={nestedTextChild.qualifiedCode}
+              disabled={props.disabled}
               label={props.Answer.content?.label}
               onChange={handleChange}
               onFocus={handleFocus}

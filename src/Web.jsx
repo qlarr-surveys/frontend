@@ -66,6 +66,26 @@ function Web() {
         }
       />
       <Route
+        path={routes.iframePreviewSurvey}
+        element={
+          <Suspense fallback={<LoadingIndicator />}>
+            <Provider store={runStore}>
+              <PreviewSurveyWrapper resume={true} />
+            </Provider>
+          </Suspense>
+        }
+      />
+      <Route
+        path={routes.resumeIframePreviewSurvey}
+        element={
+          <Suspense fallback={<LoadingIndicator />}>
+            <Provider store={runStore}>
+              <PreviewSurveyWrapper resume={true} />
+            </Provider>
+          </Suspense>
+        }
+      />
+      <Route
         path={routes.designSurvey}
         element={
           <Suspense fallback={<LoadingIndicator />}>
@@ -78,11 +98,45 @@ function Web() {
         }
       />
       <Route
+        path={routes.surveyLang}
+        element={
+          <Suspense fallback={<LoadingIndicator />}>
+            <ManagePageWrapper>
+              <PrivateDesignSurvey
+                landingPage={MANAGE_SURVEY_LANDING_PAGES.LANG}
+              />
+            </ManagePageWrapper>
+          </Suspense>
+        }
+      />
+      <Route
+        path={routes.surveyTheme}
+        element={
+          <Suspense fallback={<LoadingIndicator />}>
+            <ManagePageWrapper>
+              <PrivateDesignSurvey
+                landingPage={MANAGE_SURVEY_LANDING_PAGES.THEME}
+              />
+            </ManagePageWrapper>
+          </Suspense>
+        }
+      />
+      <Route
         path={routes.preview}
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <ManagePageWrapper showHeader={false}>
               <PrivatePreviewSurvey />
+            </ManagePageWrapper>
+          </Suspense>
+        }
+      />
+      <Route
+        path={routes.resumePreview}
+        element={
+          <Suspense fallback={<LoadingIndicator />}>
+            <ManagePageWrapper showHeader={false}>
+              <PrivatePreviewSurvey resume={true} />
             </ManagePageWrapper>
           </Suspense>
         }
@@ -254,12 +308,14 @@ const PrivateDesignSurvey = ({ landingPage }) => {
   );
 };
 
-const PrivatePreviewSurvey = () => {
+const PrivatePreviewSurvey = ({ resume = false }) => {
+  console.log("PrivatePreviewSurvey", resume);
   const params = useParams();
   sessionStorage.setItem("surveyId", params.surveyId);
   const location = useLocation();
+  const responseId = getparam(useParams(), "responseId");
   return TokenService.isAuthenticated() ? (
-    <PreviewSurvey />
+    <PreviewSurvey resume={resume} responseId={responseId} />
   ) : (
     <Navigate to="/login" replace state={{ from: location }} />
   );
@@ -302,14 +358,15 @@ const RunSurveyWrapper = ({ resume = false }) => {
   return <RunSurvey responseId={responseId} resume={resume} />;
 };
 
-const PreviewSurveyWrapper = () => {
+const PreviewSurveyWrapper = ({ resume = false }) => {
   const surveyId = getparam(useParams(), "surveyId");
   sessionStorage.setItem("surveyId", surveyId);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const mode = searchParams.get("mode") || "online";
+  const responseId = getparam(useParams(), "responseId");
   const navigationMode = searchParams.get("navigation_mode");
-  return <RunSurvey preview={true} mode={mode} navigationMode={navigationMode} />;
+  return <RunSurvey preview={true} responseId={responseId} resume={resume} mode={mode} navigationMode={navigationMode} />;
 };
 
 export default Web;
