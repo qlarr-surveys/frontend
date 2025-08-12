@@ -11,6 +11,8 @@
   "add_new_random_rule": "أضف قاعدة عشوائية جديدة",
   "add_option": "إضافة خيار",
   "add_other": "أضف \"أخرى\"",
+  "add_all": "أضف \"الكل\"",
+  "add_none": "أضف \"لا شيء\"",
   "add_priority_rule": "أضف قاعدة الأولوية",
   "add_random_rule": "أضف قاعدة عشوائية",
   "add_row": "إضافة صف",
@@ -262,6 +264,8 @@
   "validation_required_title": "مطلوب",
   "video_options": "خيارات الفيديو",
   "wrong_logic_err": "❌ حدث خطأ في المنطق ولذلك تمت إعادة ضبطه على <strong>العرض دائمًا</strong>",
+  "general": "عام",
+  "logic": "منطق",
   "tooltips": {
     "group": "أضف صفحة جديدة لتنظيم الاستبيان إلى أقسام",
     "text": "اجمع إجابات سريعة من سطر واحد",

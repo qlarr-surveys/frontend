@@ -3,7 +3,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 
 import Checkbox from "@mui/material/Checkbox";
-import { useTheme } from "@mui/material/styles";
+import { alpha, useTheme } from "@mui/material/styles";
 import { valueChange } from "~/state/runState";
 import { setDirty } from "~/state/templateState";
 import Content from "~/components/run/Content";
@@ -12,6 +12,10 @@ function McqAnswer(props) {
   const theme = useTheme();
   const dispatch = useDispatch();
 
+  const disabled =
+    (props.Answer.type !== "all" && props.allSelected) ||
+    (props.Answer.type !== "none" && props.noneSelected);
+
   const relevance = useSelector((state) => {
     let answerState = state.runState.values[props.Answer?.qualifiedCode];
     return (
@@ -19,18 +23,21 @@ function McqAnswer(props) {
     );
   }, shallowEqual);
 
-  const parentValue = useSelector((state) => {
-    return state.runState.values[props.parentCode].value || [];
-  }, shallowEqual);
 
-  
   const handleChange = (event) => {
-    let value = [...parentValue];
-    if (event.target.checked) {
+    let value = [...props.parentValue];
+    if (event.target.checked && props.Answer.code === "Aall") {
+      value = props.allCodes;
+    } else if (!event.target.checked && props.Answer.code === "Aall") {
+      value = [];
+    } else if (event.target.checked && props.Answer.code === "Anone") {
+      value = ["Anone"];
+    } else if (event.target.checked) {
       value.push(props.Answer.code);
     } else {
       value = value.filter((el) => el !== props.Answer.code);
     }
+    console.log(value);
     dispatch(
       valueChange({
         componentCode: props.parentCode,
@@ -41,13 +48,16 @@ function McqAnswer(props) {
     dispatch(setDirty(props.parentCode));
   };
 
-
   return relevance ? (
     <FormControlLabel
       control={
         <Checkbox
-          checked={parentValue.indexOf(props.Answer.code) > -1}
+          checked={
+            props.parentValue.indexOf(props.Answer.code) > -1 ||
+            (props.Answer.code === "Aall" && props.allSelected)
+          }
           onChange={handleChange}
+          disabled={disabled}
           name={props.Answer.qualifiedCode}
           sx={{
             color: theme.textStyles.text.color,
@@ -58,7 +68,7 @@ function McqAnswer(props) {
         <Content
           elementCode={props.Answer.code}
           fontFamily={theme.textStyles.text.font}
-          color={theme.textStyles.text.color}
+          color={alpha(theme.textStyles.text.color, disabled ? 0.5 : 1)}
           fontSize={theme.textStyles.text.size}
           name="label"
           lang={props.lang}

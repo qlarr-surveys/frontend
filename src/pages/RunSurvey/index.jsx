@@ -48,11 +48,6 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
     return state.runState.data?.responseId;
   });
 
-  const canJump = useSelector(
-    (state) => state.runState.data?.survey?.allowJump,
-    shallowEqual
-  );
-
   const backgroundImage = useSelector((state) => {
     return state.runState.data?.survey?.resources?.backgroundImage;
   });
@@ -63,6 +58,7 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
 
   const { t, i18n } = useTranslation("run");
   const dispatch = useDispatch();
+
 
   useEffect(() => {
     if (navigation) {
@@ -100,6 +96,12 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
       .then((response) => {
         setRender(true);
         dispatch(stateReceived({ response, preview }));
+        if(preview){
+          window.parent.postMessage({
+            type: "RESPONSE_ID_RECEIVED",
+            responseId: response.responseId,
+          }, window.location.origin);
+        }
         sessionStorage.setItem("responseId", response.responseId);
         i18n.changeLanguage(response.lang.code);
         dispatch(setFetching(false));

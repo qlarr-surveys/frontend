@@ -67,6 +67,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
               tooltip={t("theme")}
               style={getTabButtonStyle(selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.THEME)}
               icon={<Palette sx={{ color: "#fff" }} />}
+              link={routes.designSurvey.replace(":surveyId", surveyId)}
               onClick={() => {
                 onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
                 dispatch(setDesignModeToTheme());
@@ -74,6 +75,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
             />
             <SideTab
               tooltip={t("translation")}
+              link={routes.designSurvey.replace(":surveyId", surveyId)}
               style={getTabButtonStyle(
                 selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.LANGUAGES
               )}

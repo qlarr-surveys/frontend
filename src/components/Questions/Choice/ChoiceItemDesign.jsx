@@ -45,6 +45,12 @@ function ChoiceItemDesign(props) {
     return state.designState[props.qualifiedCode].content?.[lang]?.["label"];
   });
 
+  const mainContent = useSelector((state) => {
+    return state.designState[props.qualifiedCode].content?.[langInfo.mainLang]?.[
+      "label"
+    ];
+  });
+
   const isInSetup = useSelector((state) => {
     return (
       answer.type === "other" &&

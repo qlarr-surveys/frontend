@@ -9,6 +9,8 @@
   "add_new_random_rule": "Neue Zufallsregel hinzufügen",
   "add_option": "Option hinzufügen",
   "add_other": "\"Andere\" hinzufügen",
+  "add_all": "\"Alle\" hinzufügen",
+  "add_none": "\"Keine\" hinzufügen",
   "add_priority_rule": "Prioritätsregel hinzufügen",
   "add_random_rule": "Zufallsregel hinzufügen",
   "add_row": "Zeile hinzufügen",
@@ -258,6 +260,8 @@
   "validation_required_title": "Erforderlich",
   "video_options": "Videooptionen",
   "wrong_logic_err": "❌ Es gab einen Fehler in Logic, daher wurde dies auf <strong>Immer anzeigen</strong> zurückgesetzt",
+  "general": "Allgemein",
+  "logic": "Logik",
   "tooltips": {
     "group": "Fügen Sie eine neue Seite hinzu, um Ihre Umfrage in Abschnitte zu unterteilen",
     "text": "Sammeln Sie schnelle, einzeilige Antworten",
