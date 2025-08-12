@@ -261,6 +261,8 @@
   "validation_required_title": "Required",
   "video_options": "Video Options",
   "wrong_logic_err": "❌ There was an error in Logic therefore this was reset to <strong>Always Show</strong>",
+  "general":"General",
+  "logic":"Logic",
   "tooltips": {
     "group": "Add a new page to organize your survey into sections",
     "text": "Collect quick, one-line answers",
