@@ -28,6 +28,14 @@ function Navigation(props) {
   };
 
   useEffect(() => {
+    if (state.has_errors) return;
+    const id = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 0);
+    return () => clearTimeout(id);
+  }, [props.navigationIndex?.groupId, state.has_errors]);
+
+  useEffect(() => {
     if (state.has_errors) {
       setTimeout(() => {
         const invalidQuestion = document.querySelector(".invalidQuestion");
@@ -82,17 +90,17 @@ export default Navigation;
 
 function getClosestScrollableParent(element) {
   if (!element) return null;
-  
+
   let parent = element.parentElement;
   while (parent) {
     const style = window.getComputedStyle(parent);
     const overflowY = style.overflowY;
     const isScrollable = (overflowY === "auto" || overflowY === "scroll") && parent.scrollHeight > parent.clientHeight;
-    
+
     if (isScrollable) {
       return parent;
     }
-    
+
     parent = parent.parentElement;
   }
 
