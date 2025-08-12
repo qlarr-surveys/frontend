@@ -259,6 +259,8 @@
   "validation_required_title": "مطلوب",
   "video_options": "خيارات الفيديو",
   "wrong_logic_err": "❌ حدث خطأ في المنطق ولذلك تمت إعادة ضبطه على <strong>العرض دائمًا</strong>",
+  "general": "عام",
+  "logic": "منطق",
   "tooltips": {
     "group": "أضف صفحة جديدة لتنظيم الاستبيان إلى أقسام",
     "text": "اجمع إجابات سريعة من سطر واحد",
