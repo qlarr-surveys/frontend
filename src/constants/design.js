@@ -154,7 +154,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["disabled", "maxChars", "questionActions"],
+          rules: ["maxChars"],
         },
         {
           title: "validation",
@@ -242,12 +242,12 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "questionActions",
             "showDescription",
             "disabled",
             "minRows",
             "showWordCount",
             "hint",
-            "questionActions",
           ],
         },
         {
@@ -373,13 +373,13 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "questionActions",
             "showDescription",
             "disabled",
             "dateFormat",
             "fullDayFormat",
             "maxDate",
             "minDate",
-            "questionActions",
           ],
         },
         {
@@ -400,12 +400,12 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "questionActions",
             "showDescription",
             "disabled",
             "dateFormat",
             "maxDate",
             "minDate",
-            "questionActions",
           ],
         },
         {
@@ -470,13 +470,13 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "questionActions",
             "showDescription",
             "disabled",
             "hideText",
             "columns",
             "iconSize",
             "spacing",
-            "questionActions",
           ],
         },
         {
@@ -497,13 +497,13 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "questionActions",
             "showDescription",
             "disabled",
             "hideText",
             "columns",
             "imageAspectRatio",
             "spacing",
-            "questionActions",
           ],
         },
         {
@@ -589,13 +589,13 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "questionActions",
             "showDescription",
             "disabled",
             "hideText",
             "columns",
             "imageAspectRatio",
             "spacing",
-            "questionActions",
           ],
         },
         {
@@ -620,13 +620,13 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "questionActions",
             "showDescription",
             "disabled",
             "hideText",
             "columns",
             "iconSize",
             "spacing",
-            "questionActions",
           ],
         },
         {
@@ -651,13 +651,13 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "questionActions",
             "showDescription",
             "disabled",
             "hideText",
             "columns",
             "imageAspectRatio",
             "spacing",
-            "questionActions",
           ],
         },
         {
@@ -700,13 +700,13 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "questionActions",
             "showDescription",
             "disabled",
             "minHeaderMobile",
             "minHeaderDesktop",
             "minRowLabelMobile",
             "minRowLabelDesktop",
-            "questionActions",
           ],
         },
         {
@@ -726,11 +726,11 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "questionActions",
             "showDescription",
             "disabled",
             "lower_bound_hint",
             "higher_bound_hint",
-            "questionActions",
           ],
         },
         {
