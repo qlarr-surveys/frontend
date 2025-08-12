@@ -257,6 +257,8 @@
   "validation_required_title": "Erforderlich",
   "video_options": "Videooptionen",
   "wrong_logic_err": "❌ Es gab einen Fehler in Logic, daher wurde dies auf <strong>Immer anzeigen</strong> zurückgesetzt",
+  "general": "Allgemein",
+  "logic": "Logik",
   "tooltips": {
     "group": "Fügen Sie eine neue Seite hinzu, um Ihre Umfrage in Abschnitte zu unterteilen",
     "text": "Sammeln Sie schnelle, einzeilige Antworten",
