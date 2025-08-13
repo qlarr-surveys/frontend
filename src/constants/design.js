@@ -53,42 +53,87 @@ export const setupOptions = (type) => {
     case "welcome":
     case "end":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
-          title: "order_priority",
-          key: "random",
-          rules: ["randomize_questions"],
+          title: "general",
+          key: "general",
+          rules: ["questionActions", "disabled", "showDescription"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "randomize_questions"],
         },
       ];
     case "text_display":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
+        {
+          title: "general",
+          key: "general",
+          rules: ["questionActions", "disabled", "showDescription"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
+        },
       ];
+
     case "image_display":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
-        { title: "display", key: "display", rules: ["imageWidth"] },
+        {
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "imageWidth",
+          ],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
+        },
       ];
+
     case "video_display":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
-          title: "video_options",
-          key: "video_options",
-          rules: ["audio_only", "loop"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "audio_only",
+            "loop",
+          ],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
         },
       ];
+
     case "text":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
         {
-          title: "setup",
-          key: "setup",
-          rules: ["showDescription", "maxChars", "hint"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "maxChars",
+            "hint",
+          ],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
         },
         {
           title: "validation",
@@ -103,9 +148,14 @@ export const setupOptions = (type) => {
           ],
         },
       ];
+
     case "other_text":
       return [
-        { title: "setup", key: "setup", rules: ["maxChars"] },
+        {
+          title: "general",
+          key: "general",
+          rules: ["maxChars"],
+        },
         {
           title: "validation",
           key: "validation",
@@ -119,13 +169,25 @@ export const setupOptions = (type) => {
           ],
         },
       ];
+
     case "number":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
         {
-          title: "setup",
-          key: "setup",
-          rules: ["showDescription", "maxChars", "decimal_separator", "hint"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "maxChars",
+            "decimal_separator",
+            "hint",
+          ],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
         },
         {
           title: "validation",
@@ -143,13 +205,24 @@ export const setupOptions = (type) => {
           ],
         },
       ];
+
     case "email":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
         {
-          title: "setup",
-          key: "setup",
-          rules: ["showDescription", "maxChars", "hint"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "maxChars",
+            "hint",
+          ],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
         },
         {
           title: "validation",
@@ -162,13 +235,25 @@ export const setupOptions = (type) => {
           ],
         },
       ];
+
     case "paragraph":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
         {
-          title: "setup",
-          key: "setup",
-          rules: ["showDescription", "minRows", "showWordCount", "hint"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "minRows",
+            "showWordCount",
+            "hint",
+          ],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
         },
         {
           title: "validation",
@@ -182,10 +267,19 @@ export const setupOptions = (type) => {
           ],
         },
       ];
+
     case "file_upload":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
+        {
+          title: "general",
+          key: "general",
+          rules: ["questionActions", "disabled", "showDescription"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
+        },
         {
           title: "validation",
           key: "validation",
@@ -196,53 +290,91 @@ export const setupOptions = (type) => {
           ],
         },
       ];
+
     case "signature":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
+        {
+          title: "general",
+          key: "general",
+          rules: ["questionActions", "disabled", "showDescription"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
+        },
         {
           title: "validation",
           key: "validation",
           rules: ["validation_required"],
         },
       ];
+
     case "photo_capture":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription", "hint"] },
+        {
+          title: "general",
+          key: "general",
+          rules: ["questionActions", "disabled", "showDescription", "hint"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
+        },
         {
           title: "validation",
           key: "validation",
           rules: ["validation_required", "validation_max_file_size"],
         },
       ];
+
     case "barcode":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription", "hint"] },
+        {
+          title: "general",
+          key: "general",
+          rules: ["questionActions", "disabled", "showDescription", "hint"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
+        },
         {
           title: "validation",
           key: "validation",
           rules: ["validation_required"],
         },
       ];
+
     case "video_capture":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription", "hint"] },
+        {
+          title: "general",
+          key: "general",
+          rules: ["questionActions", "disabled", "showDescription", "hint"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
+        },
         {
           title: "validation",
           key: "validation",
           rules: ["validation_required", "validation_max_file_size"],
         },
       ];
+
     case "date_time":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
         {
-          title: "setup",
-          key: "setup",
+          title: "general",
+          key: "general",
           rules: [
+            "questionActions",
+            "disabled",
             "showDescription",
             "dateFormat",
             "fullDayFormat",
@@ -251,18 +383,35 @@ export const setupOptions = (type) => {
           ],
         },
         {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
+        },
+        {
           title: "validation",
           key: "validation",
           rules: ["validation_required"],
         },
       ];
+
     case "date":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
         {
-          title: "setup",
-          key: "setup",
-          rules: ["showDescription", "dateFormat", "maxDate", "minDate"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "dateFormat",
+            "maxDate",
+            "minDate",
+          ],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
         },
         {
           title: "validation",
@@ -270,13 +419,23 @@ export const setupOptions = (type) => {
           rules: ["validation_required"],
         },
       ];
+
     case "time":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
         {
-          title: "setup",
-          key: "setup",
-          rules: ["showDescription", "fullDayFormat"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "fullDayFormat",
+          ],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
         },
         {
           title: "validation",
@@ -284,16 +443,19 @@ export const setupOptions = (type) => {
           rules: ["validation_required"],
         },
       ];
+
     case "select":
     case "scq":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
-        { title: "skip_logic", key: "skip_logic", rules: ["skip_logic"] },
         {
-          title: "order_priority",
-          key: "random",
-          rules: ["randomize_options"],
+          title: "general",
+          key: "general",
+          rules: ["questionActions", "disabled", "showDescription"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "randomize_options", "skip_logic"],
         },
         {
           title: "validation",
@@ -301,20 +463,26 @@ export const setupOptions = (type) => {
           rules: ["validation_required"],
         },
       ];
+
     case "icon_scq":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
-        { title: "skip_logic", key: "skip_logic", rules: ["skip_logic"] },
         {
-          title: "order_priority",
-          key: "random",
-          rules: ["randomize_options"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "hideText",
+            "columns",
+            "iconSize",
+            "spacing",
+          ],
         },
         {
-          title: "display",
-          key: "display",
-          rules: ["hideText", "columns", "iconSize", "spacing"],
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "randomize_options", "skip_logic"],
         },
         {
           title: "validation",
@@ -322,20 +490,26 @@ export const setupOptions = (type) => {
           rules: ["validation_required"],
         },
       ];
+
     case "image_scq":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
-          title: "display",
-          key: "display",
-          rules: ["hideText", "columns", "imageAspectRatio", "spacing"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "hideText",
+            "columns",
+            "imageAspectRatio",
+            "spacing",
+          ],
         },
-        { title: "skip_logic", key: "skip_logic", rules: ["skip_logic"] },
         {
-          title: "order_priority",
-          key: "random",
-          rules: ["randomize_options"],
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "randomize_options", "skip_logic"],
         },
         {
           title: "validation",
@@ -343,14 +517,18 @@ export const setupOptions = (type) => {
           rules: ["validation_required"],
         },
       ];
+
     case "mcq":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
-          title: "order_priority",
-          key: "random",
-          rules: ["randomize_options"],
+          title: "general",
+          key: "general",
+          rules: ["questionActions", "disabled", "showDescription"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "randomize_options"],
         },
         {
           title: "validation",
@@ -362,14 +540,18 @@ export const setupOptions = (type) => {
           ],
         },
       ];
+
     case "multiple_text":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
-          title: "order_priority",
-          key: "random",
-          rules: ["randomize_options"],
+          title: "general",
+          key: "general",
+          rules: ["questionActions", "disabled", "showDescription"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "randomize_options"],
         },
         {
           title: "validation",
@@ -377,14 +559,18 @@ export const setupOptions = (type) => {
           rules: ["validation_required"],
         },
       ];
+
     case "ranking":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
-          title: "order_priority",
-          key: "random",
-          rules: ["randomize_options"],
+          title: "general",
+          key: "general",
+          rules: ["questionActions", "disabled", "showDescription"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "randomize_options"],
         },
         {
           title: "validation",
@@ -396,19 +582,26 @@ export const setupOptions = (type) => {
           ],
         },
       ];
+
     case "image_ranking":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
-          title: "display",
-          key: "display",
-          rules: ["hideText", "columns", "imageAspectRatio", "spacing"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "hideText",
+            "columns",
+            "imageAspectRatio",
+            "spacing",
+          ],
         },
         {
-          title: "order_priority",
-          key: "random",
-          rules: ["randomize_options"],
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "randomize_options"],
         },
         {
           title: "validation",
@@ -420,19 +613,26 @@ export const setupOptions = (type) => {
           ],
         },
       ];
+
     case "icon_mcq":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
-          title: "display",
-          key: "display",
-          rules: ["hideText", "columns", "iconSize", "spacing"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "hideText",
+            "columns",
+            "iconSize",
+            "spacing",
+          ],
         },
         {
-          title: "order_priority",
-          key: "random",
-          rules: ["randomize_options"],
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "randomize_options"],
         },
         {
           title: "validation",
@@ -444,19 +644,26 @@ export const setupOptions = (type) => {
           ],
         },
       ];
+
     case "image_mcq":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
-          title: "display",
-          key: "display",
-          rules: ["hideText", "columns", "imageAspectRatio", "spacing"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "hideText",
+            "columns",
+            "imageAspectRatio",
+            "spacing",
+          ],
         },
         {
-          title: "order_priority",
-          key: "random",
-          rules: ["randomize_options"],
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "randomize_options"],
         },
         {
           title: "validation",
@@ -470,15 +677,15 @@ export const setupOptions = (type) => {
       ];
     case "scq_icon_array":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
-        { title: "setup", key: "setup", rules: ["showDescription"] },
         {
-          title: "order_priority",
-          key: "random",
-          rules: [
-            "randomize_rows",
-            "randomize_columns",
-          ],
+          title: "general",
+          key: "general",
+          rules: ["questionActions", "disabled", "showDescription"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "randomize_rows", "randomize_columns"],
         },
         {
           title: "validation",
@@ -489,12 +696,13 @@ export const setupOptions = (type) => {
     case "mcq_array":
     case "scq_array":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
         {
-          title: "setup",
-          key: "setup",
+          title: "general",
+          key: "general",
           rules: [
+            "questionActions",
             "showDescription",
+            "disabled",
             "minHeaderMobile",
             "minHeaderDesktop",
             "minRowLabelMobile",
@@ -502,12 +710,9 @@ export const setupOptions = (type) => {
           ],
         },
         {
-          title: "order_priority",
-          key: "random",
-          rules: [
-            "randomize_rows",
-            "randomize_columns",
-          ],
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "randomize_rows", "randomize_columns"],
         },
         {
           title: "validation",
@@ -517,11 +722,21 @@ export const setupOptions = (type) => {
       ];
     case "nps":
       return [
-        { title: "show_hide", key: "relevance", rules: ["relevance"] },
         {
-          title: "setup",
-          key: "setup",
-          rules: ["showDescription", "lower_bound_hint", "higher_bound_hint"],
+          title: "general",
+          key: "general",
+          rules: [
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "lower_bound_hint",
+            "higher_bound_hint",
+          ],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
         },
         {
           title: "validation",

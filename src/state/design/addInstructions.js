@@ -898,7 +898,7 @@ export const updateRandomByRule = (
     const childCodes = componentState.children
       ?.filter((it) =>
         it.groupType?.toLowerCase() != "end" && initialSetup
-          ? it.type?.toLowerCase() != "other"
+          ? ["other", "none", "all"].indexOf(it.type?.toLowerCase()) == -1
           : true
       )
       ?.map((it) => it.code);

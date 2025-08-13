@@ -1,8 +1,7 @@
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { CardMedia, useTheme } from "@mui/material";
-import { buildResourceUrl } from "~/networking/common";
+import { useTheme } from "@mui/material";
 import { FORM_ID } from "~/constants/run";
 import Group from "~/components/Group";
 import Navigation from "~/components/run/Navigation";

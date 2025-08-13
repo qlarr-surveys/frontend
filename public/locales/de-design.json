@@ -9,6 +9,8 @@
   "add_new_random_rule": "Neue Zufallsregel hinzufügen",
   "add_option": "Option hinzufügen",
   "add_other": "\"Andere\" hinzufügen",
+  "add_all": "\"Alle\" hinzufügen",
+  "add_none": "\"Keine\" hinzufügen",
   "add_priority_rule": "Prioritätsregel hinzufügen",
   "add_random_rule": "Zufallsregel hinzufügen",
   "add_row": "Zeile hinzufügen",
@@ -18,6 +20,7 @@
   "allow_previous": "Zurück zulassen",
   "are_you_sure": "Bist du sicher?",
   "delete_question": "Sind Sie sicher, dass Sie diese Frage löschen wollen?",
+  "delete_page": "Sind Sie sicher, dass Sie diese Seite löschen wollen?",
   "as_is": "Wie es ist",
   "audio_only": "Nur Audio",
   "background_color": "Hintergrundfarbe",
@@ -177,6 +180,8 @@
   "setup": "Setup",
   "setup_for": "Setup für",
   "show_always": "Immer anzeigen",
+  "disabled": "Frage ausblenden",
+  "relevance": "Steuern, wann diese Frage angezeigt wird – mit oder ohne Bedingungen.",
   "show_description": "Fügen Sie eine Beschreibung unter dem Fragentitel hinzu, um den Nutzern Kontext oder Anweisungen zu geben.",
   "show_description_page": "Fügen Sie eine Beschreibung unter dem Seitentitel hinzu, um den Nutzern Kontext oder Anweisungen zu geben.",
   "show_hide": "Anzeigen/Ausblenden",
@@ -255,6 +260,8 @@
   "validation_required_title": "Erforderlich",
   "video_options": "Videooptionen",
   "wrong_logic_err": "❌ Es gab einen Fehler in Logic, daher wurde dies auf <strong>Immer anzeigen</strong> zurückgesetzt",
+  "general": "Allgemein",
+  "logic": "Logik",
   "tooltips": {
     "group": "Fügen Sie eine neue Seite hinzu, um Ihre Umfrage in Abschnitte zu unterteilen",
     "text": "Sammeln Sie schnelle, einzeilige Antworten",
@@ -304,7 +311,6 @@
     "spacing": "Legen Sie den Abstand zwischen den Optionen in der Frage fest.",
     "image_aspect_ratio": "Seitenverhältnis für das Bild festlegen",
     "image_width": "Passen Sie die Breite des Bildes innerhalb der Frage an.",
-    "revelance": "Steuern Sie die Sichtbarkeit dieser Seite mit Logikregeln. Wählen Sie:\n\n● Immer anzeigen oder immer ausblenden\n● Anzeigen, wenn oder ausblenden, wenn bestimmte Bedingungen erfüllt sind\n\nSie können Ihre Regeln basieren auf:\n\n● Umfragemodus (online/offline)\n● Umfragesprache\n● Bestimmte Antworten auf vorherige Fragen\n● Ob eine Frage oder Seite angezeigt oder gültig ist\n\nFügen Sie mehrere Regeln hinzu, um den Ablauf für jeden Nutzer zu personalisieren.",
     "validation_required": "Machen Sie diese Frage verpflichtend, bevor Nutzer fortfahren können.",
     "validation_max_char_length": "Begrenzen Sie die Anzahl der Zeichen, die ein Nutzer eingeben kann.",
     "validation_min_char_length": "Legen Sie die minimale Anzahl an Zeichen fest, die in der Antwort erforderlich sind.",
@@ -343,6 +349,8 @@
     "groups_priority": "Priorität der Gruppen festlegen",
     "title": "Geben Sie Ihrer Umfrage einen Titel, damit Benutzer sie erkennen können",
     "description": "Geben Sie eine Beschreibung für Ihre Umfrage an, damit Benutzer sie besser verstehen",
-    "textarea_lines": "Anzahl der Zeilen für das Textfeld festlegen"
+    "textarea_lines": "Anzahl der Zeilen für das Textfeld festlegen",
+    "relevance": "Steuern Sie, wann diese Seite oder Frage sichtbar ist. Sie können:\n\n● Sie immer anzeigen\n● Sie nur anzeigen, wenn bestimmte Bedingungen erfüllt sind\n\nBedingungen können basieren auf:\n\n● Modus der Umfrage (online/offline)\n● Sprache der Umfrage\n● Antworten auf vorherige Fragen\n● Ob eine andere Frage oder Seite angezeigt oder gültig ist\n\nFügen Sie mehrere Bedingungen hinzu, um den Ablauf für jeden Teilnehmer anzupassen.",
+    "disabled": "Diese Frage vollständig ausblenden, damit Befragte sie weder sehen noch damit interagieren können. Alle Sichtbarkeitsbedingungen werden gelöscht."
   }
 }

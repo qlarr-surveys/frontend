@@ -20,6 +20,8 @@ import { ManageLanguages } from "~/pages/manage/ManageTranslations";
 import { useTheme } from "@emotion/react";
 import { questionIconByType } from "~/components/Questions/utils";
 import OrderSetup from '../random/OrderSetup';
+import QuestionActions from "../QuestionActions";
+import DisabledToggle from "../Disabled";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -146,6 +148,14 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           code={code}
         />
       );
+      case "questionActions" : return (
+         <QuestionActions
+          key={code + rule}
+          t={t}
+          rule={rule}
+          code={code}
+        />
+      )
     case "showWordCount":
       return (
         <ToggleValue
@@ -458,6 +468,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           key={code + rule}
         />
       );
+    case "disabled":
+      return <DisabledToggle t={t} key={code + rule} code={code} />;
     case "skip_logic":
       return <SkipLogic t={t} key={code + rule} code={code} />;
     case "relevance":

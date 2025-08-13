@@ -270,14 +270,16 @@ const buildField = (code, component, state, mainLang) => {
     case "mcq":
       let mcqReturnList = {};
       let mcqListValues = {};
-      component.children?.forEach((element) => {
-        const label = stripTags(
-          state[element.qualifiedCode].content?.[mainLang]?.label || ""
-        );
-        mcqListValues[element.code] = label
-          ? element.code + " - " + label
-          : element.code;
-      });
+      component.children
+        ?.filter((el) => el.type !== "all")
+        ?.forEach((element) => {
+          const label = stripTags(
+            state[element.qualifiedCode].content?.[mainLang]?.label || ""
+          );
+          mcqListValues[element.code] = label
+            ? element.code + " - " + label
+            : element.code;
+        });
       mcqReturnList[code] = {
         label: label,
         fieldSettings: {
@@ -320,7 +322,6 @@ const buildField = (code, component, state, mainLang) => {
             "is_not_valid",
             "is_empty",
             "is_not_empty",
-
           ],
         };
       }
@@ -399,8 +400,7 @@ const buildField = (code, component, state, mainLang) => {
         });
       return arrayReturnList;
     case "multiple_text":
-      let multipleTextReturnList = {
-      };
+      let multipleTextReturnList = {};
       component.children.forEach((element) => {
         multipleTextReturnList[code + element.code] = {
           label:
