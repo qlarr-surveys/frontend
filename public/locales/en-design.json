@@ -183,8 +183,10 @@
   "section_sections": "Sections",
   "section_text_based": "Text based",
   "setup": "Setup",
-  "setup_for":"Setup for",
+  "setup_for": "Setup for",
   "show_always": "Show Always",
+  "disabled": "Hide question",
+  "relevance": "Control when this question is shown, with or without conditions.",
   "show_description": "Add a description under the question title to give users context or instructions.",
   "show_description_page": "Add a description under the page title to give users context or instructions.",
   "show_hide": "Show/Hide",
@@ -316,7 +318,7 @@
     "spacing": "Set the space between options in the question.",
     "image_aspect_ratio": "Set the aspect ratio for the image",
     "image_width": "Adjust how wide the image appears within the question.",
-    "revelance": "Control this page’s visibility using logic rules. Choose to:\n\n● Show always or hide always\n● Show if or hide if certain conditions are met\n\nYou can base your rules on:\n\n● Survey mode (online/offline)\n● Survey language\n● Specific answers to previous questions\n● Whether a question or page is shown or valid\n\nAdd multiple rules to personalize the flow for each user.",
+    "relevance": "Control when this page or question is visible. You can:\n\n● Always show it\n● Show it only when specific conditions are met\n\nConditions can be based on:\n\n● Survey mode (online/offline)\n● Survey language\n● Answers to previous questions\n● Whether another question or page is shown or valid\n\nAdd multiple conditions to customize the flow for each respondent.",
     "validation_required": "Make this question mandatory before users can continue.",
     "validation_max_char_length": "Limit the number of characters a user can enter. ",
     "validation_min_char_length": "Set the minimum number of characters required in the answer.",
@@ -359,6 +361,7 @@
     "groups_priority": "Set the priority of the groups",
     "title": "Provide a title for your survey to help users identify it",
     "description": "Provide a description for your survey to help users understand it",
-    "textarea_lines": "Set the number of lines for the text area"
+    "textarea_lines": "Set the number of lines for the text area",
+    "disabled": "Completely hide this question so respondents cannot see or interact with it. Any visibility conditions will be cleared."
   }
 }
