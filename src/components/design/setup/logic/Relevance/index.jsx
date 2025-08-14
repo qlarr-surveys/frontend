@@ -69,7 +69,7 @@ function Relevance({ code, t }) {
       <div className={styles.toggleValue}>
         <div className={styles.label}>
           <CustomTooltip body={t("tooltips.relevance")} />
-          <Typography fontWeight={700}>{t("relevance")}</Typography>
+          <Typography color={isDisabled && 'text.disabled'} fontWeight={700}>{t("relevance")}</Typography>
         </div>
         <Switch
           id="conditional-visibility-switch"
