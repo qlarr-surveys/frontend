@@ -1,6 +1,6 @@
 import React from "react";
 import Switch from "@mui/material/Switch";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import styles from "./ValidationSetupItem.module.css";
 import ValidationSetupMessage from "~/components/design/setup/validation/ValidationSetupMessage";
 import ValidationSetupValue from "~/components/design/setup/validation/ValidationSetupValue";
@@ -36,7 +36,7 @@ function ValidationSetupItem({ rule, t, code }) {
       <div className={styles.title}>
         <div className={styles.label}>
           <CustomTooltip body={t(`tooltips.${rule}`)} />
-          <h4>{t(rule + "_title")}</h4>
+          <Typography fontWeight={700}>{t(rule + "_title")}</Typography>
         </div>
         <Switch
           {...label}

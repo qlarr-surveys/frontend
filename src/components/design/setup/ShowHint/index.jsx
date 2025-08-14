@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeAttribute, changeContent } from "~/state/design/designState";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { Typography } from "@mui/material";
 
 function ShowHint({ code, t }) {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ function ShowHint({ code, t }) {
       <div className={styles.showHint}>
         <div className={styles.label}>
           <CustomTooltip body={t("tooltips.show_question_hint")} />
-          <h4>{t("show_question_hint")}</h4>
+          <Typography fontWeight={700}>{t("show_question_hint")}</Typography>
         </div>
         <Switch
           checked={showHint}

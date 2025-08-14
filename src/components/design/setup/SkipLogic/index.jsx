@@ -1,5 +1,5 @@
 import { ErrorOutlineOutlined } from "@mui/icons-material";
-import { Button, FormControl, MenuItem, Select, Switch } from "@mui/material";
+import { Button, Divider, FormControl, MenuItem, Select, Switch, Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import { jumpDestinations } from "~/utils/design/access/jumpDestinations";
 import {
@@ -62,6 +62,8 @@ function SkipLogic({ code, t }) {
 
   return (
     <>
+      <Typography fontWeight={700}>{t("skip_logic")}</Typography>
+      <Divider sx={{ my: 1 }} />
       {children?.map((element) => {
         const code = element.code;
         const original = skipLogic?.[code];
@@ -149,7 +151,7 @@ function skipSelectValue(
       </FormControl>
       {skipToCode && skipToCode.startsWith("G") && (
         <div className={styles.toEnd}>
-          <h4>{t("to_group_end")}</h4>
+          <Typography fontWeight={700}>{t("to_group_end")}</Typography>
           <Switch
             checked={toEnd || false}
             onChange={(event) =>

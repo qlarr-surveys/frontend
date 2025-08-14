@@ -1,6 +1,6 @@
 import React from "react";
 import Switch from "@mui/material/Switch";
-import { TextField } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import styles from "./ValidationSetupMessage.module.css";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -43,7 +43,7 @@ function ValidationSetupMessage({ validationRule, code, rule, t }) {
   const label = { inputProps: { "aria-label": "Switch validation" } };
   return (
     <>
-      <h4>{t("standard_error")}</h4>
+      <Typography fontWeight={700}>{t("standard_error")}</Typography>
       <div className={styles.errorWrapper}>
         <div className={styles.errorLabelWrapper}>
           {languagesList.map((l) => (
@@ -64,7 +64,7 @@ function ValidationSetupMessage({ validationRule, code, rule, t }) {
         </div>
       </div>
       <div className={styles.title}>
-        <h4 className={styles.mt10}>{t("custom_error")}</h4>
+        <Typography fontWeight={700} className={styles.mt10}>{t("custom_error")}</Typography>
         <Switch
           {...label}
           checked={isCustomErrorActive}
