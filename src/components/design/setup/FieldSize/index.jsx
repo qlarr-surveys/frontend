@@ -6,6 +6,7 @@ import { changeAttribute } from "~/state/design/designState";
 import { Trans } from "react-i18next";
 import styles from "./FieldSize.module.css";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { Typography } from "@mui/material";
 
 function FieldSize({
   label,
@@ -57,7 +58,7 @@ function FieldSize({
     <>
       <div className={styles.label}>
         <CustomTooltip body={t(`tooltips.${label}`)} />
-        <h4>{t(label)}:</h4>
+        <Typography fontWeight={700}>{t(label)}:</Typography>
       </div>
       <TextField
         label={t(label)}
@@ -79,7 +80,10 @@ function FieldSize({
           ) : null
         }
         size="small"
-        style={{ maxWidth: "200px" }}
+        sx={{ maxWidth: "200px" ,
+
+          ml:2,
+         }}
         value={value}
         onBlur={lostFocus}
         onChange={(event) => onValueChange(event)}

@@ -4,10 +4,12 @@ import styles from "./Disabled.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { changeRelevance } from "~/state/design/designState";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { Typography } from "@mui/material";
 
 export default function DisabledToggle({ code, t }) {
   const dispatch = useDispatch();
-  const rule = useSelector((s) => s.designState[code]?.relevance?.rule) ?? "show_always";
+  const rule =
+    useSelector((s) => s.designState[code]?.relevance?.rule) ?? "show_always";
   const checked = rule === "hide_always";
 
   const onChange = (nextChecked) => {
@@ -17,7 +19,7 @@ export default function DisabledToggle({ code, t }) {
         key: "relevance",
         value: {
           rule: nextChecked ? "hide_always" : "show_always",
-          logic: undefined, 
+          logic: undefined,
         },
       })
     );
@@ -26,7 +28,7 @@ export default function DisabledToggle({ code, t }) {
     <div className={styles.toggleValue}>
       <div className={styles.label}>
         <CustomTooltip body={t("tooltips.disabled")} />
-        <h4>{t("disabled")}</h4>
+        <Typography fontWeight={700}>{t("disabled")}</Typography>
       </div>
       <Switch
         checked={checked}
