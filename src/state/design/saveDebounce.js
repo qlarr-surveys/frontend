@@ -67,6 +67,7 @@ const MUTATING = [
   "designState/removeSkipDestination",
   "designState/editSkipDestination",
   "designState/editSkipToEnd",
+  "designState/editDisqualifyToEnd",
   "designState/changeRelevance",
   "designState/addComponent",
   "designState/onDrag",

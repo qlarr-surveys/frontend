@@ -3,6 +3,7 @@ import { Button, FormControl, MenuItem, Select, Switch } from "@mui/material";
 import { Box } from "@mui/material";
 import { jumpDestinations } from "~/utils/design/access/jumpDestinations";
 import {
+  editDisqualifyToEnd,
   editSkipDestination,
   editSkipToEnd,
   removeSkipDestination,
@@ -60,6 +61,10 @@ function SkipLogic({ code, t }) {
     dispatch(editSkipToEnd({ code, answerCode, toEnd: checked }));
   };
 
+  const onDisqualifyChanged = (answerCode, checked) => {
+    dispatch(editDisqualifyToEnd({ code, answerCode, disqualify: checked }));
+  };
+
   return (
     <>
       {children?.map((element) => {
@@ -88,6 +93,8 @@ function SkipLogic({ code, t }) {
                   original?.toEnd,
                   onChange,
                   onToEndChanged,
+                  onDisqualifyChanged,
+                  original?.disqualify,
                   t
                 )}
           </div>
@@ -123,6 +130,8 @@ function skipSelectValue(
   toEnd,
   onChange,
   onToEndChanged,
+  onDisqualifyChanged,
+  disqualified,
   t
 ) {
   return (
@@ -148,15 +157,27 @@ function skipSelectValue(
         </Select>
       </FormControl>
       {skipToCode && skipToCode.startsWith("G") && (
-        <div className={styles.toEnd}>
-          <h4>{t("to_group_end")}</h4>
-          <Switch
-            checked={toEnd || false}
-            onChange={(event) =>
-              onToEndChanged(answerCode, event.target.checked)
-            }
-          />
-        </div>
+        <Box>
+          <div className={styles.toEnd}>
+            <h4>{t("to_group_end")}</h4>
+            <Switch
+              disabled
+              checked={toEnd || false}
+              onChange={(event) =>
+                onToEndChanged(answerCode, event.target.checked)
+              }
+            />
+          </div>
+          <div className={styles.toEnd}>
+            <h4>{t("disqualify")}</h4>
+            <Switch
+              checked={disqualified || false}
+              onChange={(event) =>
+                onDisqualifyChanged(answerCode, event.target.checked)
+              }
+            />
+          </div>
+        </Box>
       )}
     </>
   );

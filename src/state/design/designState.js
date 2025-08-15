@@ -509,6 +509,12 @@ export const designState = createSlice({
       state[payload.code].skip_logic[payload.answerCode].toEnd = payload.toEnd;
       addSkipInstructions(state, payload.code);
     },
+    editDisqualifyToEnd: (state, action) => {
+      const payload = action.payload;
+      state[payload.code].skip_logic[payload.answerCode].disqualify =
+        payload.disqualify;
+      addSkipInstructions(state, payload.code);
+    },
     onBaseLangChanged: (state, action) => {
       state.langInfo.mainLang = action.payload.code;
       state.Survey.defaultLang = action.payload;
@@ -660,6 +666,7 @@ export const {
   removeSkipDestination,
   editSkipDestination,
   editSkipToEnd,
+  editDisqualifyToEnd,
   changeRelevance,
   onDrag,
   addComponent,
