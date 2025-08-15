@@ -22,7 +22,7 @@ import TableRowsIcon from "@mui/icons-material/TableRows";
 import WarningIcon from "@mui/icons-material/Warning";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { isSurveyAdmin } from "~/constants/roles";
+import { isAnalyst, isSurveyAdmin } from "~/constants/roles";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
@@ -373,7 +373,7 @@ const Survey = ({
           }}
           className={styles.surveyActions}
         >
-          {isSurveyAdmin() ? (
+          {isSurveyAdmin() || isAnalyst() ? (
             <CustomTooltip showIcon={false} title={t("edit_survey.title")}>
               <IconButton
                 className={styles.iconButton}
