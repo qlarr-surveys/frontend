@@ -254,7 +254,7 @@ const Survey = ({
               isEditable={isSurveyAdmin()}
             />
 
-            {(
+            {
               <>
                 <div className={styles.statusAndIcons}>
                   <CustomTooltip
@@ -330,15 +330,17 @@ const Survey = ({
                   </div>
                 </div>
               </>
-            )}
+            }
           </Stack>
 
           <Typography variant="caption" sx={{ px: 3, color: "text.disabled" }}>
-            <strong>{t("edit_survey.metadata.created")}</strong>: {fDate(survey.creationDate)}
+            <strong>{t("edit_survey.metadata.created")}</strong>:{" "}
+            {fDate(survey.creationDate)}
             <span style={{ margin: "0 0.5rem" }}>•</span>
-            <strong>{t("edit_survey.metadata.last_modified")}</strong>: {fDate(survey.lastModified)}
+            <strong>{t("edit_survey.metadata.last_modified")}</strong>:{" "}
+            {fDate(survey.lastModified)}
           </Typography>
-          { survey.startDate && (
+          {survey.startDate && (
             <Typography
               variant="caption"
               sx={{ px: 3, color: "text.disabled" }}
@@ -371,25 +373,47 @@ const Survey = ({
           }}
           className={styles.surveyActions}
         >
-          <CustomTooltip showIcon={false} title={t("edit_survey.title")}>
-            <IconButton
-              className={styles.iconButton}
-              sx={{
-                backgroundColor: theme.palette.primary.main,
-                "&:hover": {
+          {isSurveyAdmin() ? (
+            <CustomTooltip showIcon={false} title={t("edit_survey.title")}>
+              <IconButton
+                className={styles.iconButton}
+                sx={{
                   backgroundColor: theme.palette.primary.main,
-                },
-              }}
-              aria-label="redirect"
-              size="large"
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/design-survey/${survey.id}`);
-              }}
-            >
-              <ArticleIcon sx={{ color: "#fff" }} />
-            </IconButton>
-          </CustomTooltip>
+                  "&:hover": {
+                    backgroundColor: theme.palette.primary.main,
+                  },
+                }}
+                aria-label="redirect"
+                size="large"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/design-survey/${survey.id}`);
+                }}
+              >
+                <ArticleIcon sx={{ color: "#fff" }} />
+              </IconButton>
+            </CustomTooltip>
+          ) : (
+            <CustomTooltip showIcon={false} title={t("preview")}>
+              <IconButton
+                className={styles.iconButton}
+                aria-label="redirect"
+                size="large"
+                sx={{
+                  backgroundColor: theme.palette.primary.main,
+                  "&:hover": {
+                    backgroundColor: theme.palette.primary.main,
+                  },
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(`/preview/${survey.id}`, '_blank');
+                }}
+              >
+                <VisibilityIcon sx={{ color: "#fff" }} />
+              </IconButton>
+            </CustomTooltip>
+          )}
 
           {isSurveyAdmin() && survey.status === "active" && (
             <CustomTooltip
@@ -422,7 +446,7 @@ const Survey = ({
             </CustomTooltip>
           )}
 
-          {survey.status !== STATUS.ACTIVE && (
+          {isSurveyAdmin() && survey.status !== STATUS.ACTIVE && (
             <CustomTooltip showIcon={false} title={t("action_btn.delete")}>
               <IconButton
                 className={styles.iconButton}

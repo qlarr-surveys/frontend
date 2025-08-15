@@ -19,7 +19,6 @@ import styles from "./ManageSurvey.module.css";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import SideTabs from "~/components/design/SideTabs";
-import PreviewSurvey from '../PreviewSurvey';
 
 
 const ManageTranslations = React.lazy(() => import("../manage/ManageTranslations"));
@@ -127,7 +126,7 @@ function ManageSurvey({ landingPage }) {
             ) : shouldShowDesign() ? (
               <DesignSurvey />
             ) : (
-              <PreviewSurvey />
+              <></>
             )}
           </Box>
         </Suspense>
