@@ -166,32 +166,6 @@ function Web() {
           </Suspense>
         }
       />
-
-      <Route
-        path={routes.language}
-        element={
-          <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.LANGUAGE}
-              />
-            </ManagePageWrapper>
-          </Suspense>
-        }
-      />
-
-      <Route
-        path={routes.theme}
-        element={
-          <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.THEME}
-              />
-            </ManagePageWrapper>
-          </Suspense>
-        }
-      />
       <Route
         path={routes.manageUsers}
         element={
