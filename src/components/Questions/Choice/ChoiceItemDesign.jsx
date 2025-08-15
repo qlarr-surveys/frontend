@@ -2,7 +2,13 @@ import styles from "./ChoiceItemDesign.module.css";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import CloseIcon from "@mui/icons-material/Close";
 import BuildIcon from "@mui/icons-material/Build";
-import { Box, Checkbox, Radio, TextField } from "@mui/material";
+import {
+  alpha,
+  Box,
+  Checkbox,
+  Radio,
+  TextField,
+} from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
@@ -154,10 +160,13 @@ function ChoiceItemDesign(props) {
       }, 10);
     }
   }, [inFocus, inputRef.current]);
+
+  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
+
   return (
     <div ref={ref} style={getStyles(isDragging)} data-handler-id={handlerId}>
       <Box
-        sx={{ backgroundColor: isInSetup ? "beige" : "inherit" }}
+        sx={{ backgroundColor: isInSetup ? contrastColor : "inherit" }}
         className={styles.answerItem}
         style={{
           gap: "8px",
@@ -207,6 +216,25 @@ function ChoiceItemDesign(props) {
                 ? props.t("content_editor_placeholder_option")
                 : mainContent || props.t("content_editor_placeholder_option")
             }
+            InputProps={{
+              endAdornment: (
+                <BuildIcon
+                  key="setup"
+                  sx={{ fontSize: 18 }}
+                  className={styles.answerIconOther}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    dispatch(
+                      setup({
+                        code: props.qualifiedCode + "Atext",
+                        rules: setupOptions("other_text"),
+                      })
+                    );
+                  }}
+                />
+              ),
+            }}
           />
         ) : (
           <TextField
@@ -266,7 +294,7 @@ function ChoiceItemDesign(props) {
           </>
         )}
         <span style={{ margin: "8px" }} />
-        {answer.type === "other" && (
+        {answer.type !== "other" && (
           <BuildIcon
             key="setup"
             sx={{ fontSize: 18 }}
@@ -276,8 +304,8 @@ function ChoiceItemDesign(props) {
               e.preventDefault();
               dispatch(
                 setup({
-                  code: props.qualifiedCode + "Atext",
-                  rules: setupOptions("other_text"),
+                  code: props.qualifiedCode,
+                  rules: setupOptions("options"),
                 })
               );
             }}
