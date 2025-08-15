@@ -22,7 +22,7 @@ import TableRowsIcon from "@mui/icons-material/TableRows";
 import WarningIcon from "@mui/icons-material/Warning";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { isAnalyst, isSurveyAdmin } from "~/constants/roles";
+import { isAnalyst, isSurveyAdmin, isSurveyorOnly } from "~/constants/roles";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
@@ -373,47 +373,34 @@ const Survey = ({
           }}
           className={styles.surveyActions}
         >
-          {isSurveyAdmin() || isAnalyst() ? (
-            <CustomTooltip showIcon={false} title={t("edit_survey.title")}>
-              <IconButton
-                className={styles.iconButton}
-                sx={{
+          <CustomTooltip
+            showIcon={false}
+            title={t(isSurveyorOnly() ? "preview" : "edit_survey.title")}
+          >
+            <IconButton
+              className={styles.iconButton}
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                "&:hover": {
                   backgroundColor: theme.palette.primary.main,
-                  "&:hover": {
-                    backgroundColor: theme.palette.primary.main,
-                  },
-                }}
-                aria-label="redirect"
-                size="large"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`/design-survey/${survey.id}`);
-                }}
-              >
-                <ArticleIcon sx={{ color: "#fff" }} />
-              </IconButton>
-            </CustomTooltip>
-          ) : (
-            <CustomTooltip showIcon={false} title={t("preview")}>
-              <IconButton
-                className={styles.iconButton}
-                aria-label="redirect"
-                size="large"
-                sx={{
-                  backgroundColor: theme.palette.primary.main,
-                  "&:hover": {
-                    backgroundColor: theme.palette.primary.main,
-                  },
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  window.open(`/preview/${survey.id}`, '_blank');
-                }}
-              >
+                },
+              }}
+              aria-label="redirect"
+              size="large"
+              onClick={(e) => {
+                e.stopPropagation();
+                isSurveyorOnly()
+                  ? window.open(`/preview/${survey.id}`, "_blank")
+                  : navigate(`/design-survey/${survey.id}`);
+              }}
+            >
+              {isSurveyorOnly() ? (
                 <VisibilityIcon sx={{ color: "#fff" }} />
-              </IconButton>
-            </CustomTooltip>
-          )}
+              ) : (
+                <ArticleIcon sx={{ color: "#fff" }} />
+              )}
+            </IconButton>
+          </CustomTooltip>
 
           {isSurveyAdmin() && survey.status === "active" && (
             <CustomTooltip
