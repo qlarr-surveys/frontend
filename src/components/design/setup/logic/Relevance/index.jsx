@@ -1,5 +1,5 @@
 // components/design/setup/logic/Relevance.tsx
-import { FormControlLabel, Switch, Button, Typography } from "@mui/material";
+import { Switch, Button, Typography } from "@mui/material";
 import LogicBuilder from "~/components/design/setup/logic/LogicBuilder";
 import { changeRelevance } from "~/state/design/designState";
 import React, { useMemo, useState, useCallback } from "react";
