@@ -3,6 +3,7 @@ import { Button, Divider, FormControl, MenuItem, Select, Switch, Typography } fr
 import { Box } from "@mui/material";
 import { jumpDestinations } from "~/utils/design/access/jumpDestinations";
 import {
+  editDisqualifyToEnd,
   editSkipDestination,
   editSkipToEnd,
   removeSkipDestination,
@@ -60,6 +61,10 @@ function SkipLogic({ code, t }) {
     dispatch(editSkipToEnd({ code, answerCode, toEnd: checked }));
   };
 
+  const onDisqualifyChanged = (answerCode, checked) => {
+    dispatch(editDisqualifyToEnd({ code, answerCode, disqualify: checked }));
+  };
+
   return (
     <>
       <Typography fontWeight={700}>{t("skip_logic")}</Typography>
@@ -90,6 +95,8 @@ function SkipLogic({ code, t }) {
                   original?.toEnd,
                   onChange,
                   onToEndChanged,
+                  onDisqualifyChanged,
+                  original?.disqualify,
                   t
                 )}
           </div>
@@ -125,8 +132,15 @@ function skipSelectValue(
   toEnd,
   onChange,
   onToEndChanged,
+  onDisqualifyChanged,
+  disqualified,
   t
 ) {
+  let toEndDisabled = false;
+  if(skipToCode && skipToCode.startsWith("G")){
+    const groups = destinations.filter(el => el.code.startsWith("G"))
+    toEndDisabled = groups.length >= 2 && groups[groups.length - 1].code == skipToCode
+  }
   return (
     <>
       <FormControl variant="standard" fullWidth>
@@ -150,15 +164,27 @@ function skipSelectValue(
         </Select>
       </FormControl>
       {skipToCode && skipToCode.startsWith("G") && (
-        <div className={styles.toEnd}>
-          <Typography fontWeight={700}>{t("to_group_end")}</Typography>
-          <Switch
-            checked={toEnd || false}
-            onChange={(event) =>
-              onToEndChanged(answerCode, event.target.checked)
-            }
-          />
-        </div>
+        <Box>
+          <div className={styles.toEnd}>
+          <Typography sx={{color: toEndDisabled ? "grey.500" : "text.primary"}} fontWeight={600}>{t("to_group_end")}</Typography>
+            <Switch
+              disabled={toEndDisabled}
+              checked={toEnd || false}
+              onChange={(event) =>
+                onToEndChanged(answerCode, event.target.checked)
+              }
+            />
+          </div>
+          <div className={styles.toEnd}>
+            <Typography fontWeight={600}>{t("disqualify")}</Typography>
+            <Switch
+              checked={disqualified || false}
+              onChange={(event) =>
+                onDisqualifyChanged(answerCode, event.target.checked)
+              }
+            />
+          </div>
+        </Box>
       )}
     </>
   );
