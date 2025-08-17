@@ -22,7 +22,7 @@ import TableRowsIcon from "@mui/icons-material/TableRows";
 import WarningIcon from "@mui/icons-material/Warning";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { isSurveyAdmin } from "~/constants/roles";
+import { isAnalyst, isSurveyAdmin, isSurveyorOnly } from "~/constants/roles";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
@@ -254,7 +254,7 @@ const Survey = ({
               isEditable={isSurveyAdmin()}
             />
 
-            {(
+            {
               <>
                 <div className={styles.statusAndIcons}>
                   <CustomTooltip
@@ -330,15 +330,17 @@ const Survey = ({
                   </div>
                 </div>
               </>
-            )}
+            }
           </Stack>
 
           <Typography variant="caption" sx={{ px: 3, color: "text.disabled" }}>
-            <strong>{t("edit_survey.metadata.created")}</strong>: {fDate(survey.creationDate)}
+            <strong>{t("edit_survey.metadata.created")}</strong>:{" "}
+            {fDate(survey.creationDate)}
             <span style={{ margin: "0 0.5rem" }}>•</span>
-            <strong>{t("edit_survey.metadata.last_modified")}</strong>: {fDate(survey.lastModified)}
+            <strong>{t("edit_survey.metadata.last_modified")}</strong>:{" "}
+            {fDate(survey.lastModified)}
           </Typography>
-          { survey.startDate && (
+          {survey.startDate && (
             <Typography
               variant="caption"
               sx={{ px: 3, color: "text.disabled" }}
@@ -371,7 +373,10 @@ const Survey = ({
           }}
           className={styles.surveyActions}
         >
-          <CustomTooltip showIcon={false} title={t("edit_survey.title")}>
+          <CustomTooltip
+            showIcon={false}
+            title={t(isSurveyorOnly() ? "preview" : "edit_survey.title")}
+          >
             <IconButton
               className={styles.iconButton}
               sx={{
@@ -384,10 +389,16 @@ const Survey = ({
               size="large"
               onClick={(e) => {
                 e.stopPropagation();
-                navigate(`/design-survey/${survey.id}`);
+                isSurveyorOnly()
+                  ? window.open(`/preview/${survey.id}`, "_blank")
+                  : navigate(`/design-survey/${survey.id}`);
               }}
             >
-              <ArticleIcon sx={{ color: "#fff" }} />
+              {isSurveyorOnly() ? (
+                <VisibilityIcon sx={{ color: "#fff" }} />
+              ) : (
+                <ArticleIcon sx={{ color: "#fff" }} />
+              )}
             </IconButton>
           </CustomTooltip>
 
@@ -422,7 +433,7 @@ const Survey = ({
             </CustomTooltip>
           )}
 
-          {survey.status !== STATUS.ACTIVE && (
+          {isSurveyAdmin() && survey.status !== STATUS.ACTIVE && (
             <CustomTooltip showIcon={false} title={t("action_btn.delete")}>
               <IconButton
                 className={styles.iconButton}
