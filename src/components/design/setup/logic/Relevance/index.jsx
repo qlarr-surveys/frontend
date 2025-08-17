@@ -1,5 +1,5 @@
 // components/design/setup/logic/Relevance.tsx
-import { FormControlLabel, Switch, Button } from "@mui/material";
+import { Switch, Button, Typography } from "@mui/material";
 import LogicBuilder from "~/components/design/setup/logic/LogicBuilder";
 import { changeRelevance } from "~/state/design/designState";
 import React, { useMemo, useState, useCallback } from "react";
@@ -69,7 +69,7 @@ function Relevance({ code, t }) {
       <div className={styles.toggleValue}>
         <div className={styles.label}>
           <CustomTooltip body={t("tooltips.relevance")} />
-          <h4>{t("relevance")}</h4>
+          <Typography color={isDisabled && 'text.disabled'} fontWeight={700}>{t("relevance")}</Typography>
         </div>
         <Switch
           id="conditional-visibility-switch"

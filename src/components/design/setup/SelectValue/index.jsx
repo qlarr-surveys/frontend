@@ -29,7 +29,6 @@ function SelectValue({ label, rule, defaultValue, code, values, labels }) {
         onChange={(e) => {
           onChange(e.target.value);
         }}
-        sx={{ mb: 1 }}
       >
         {values.map((element, index) => {
           return (

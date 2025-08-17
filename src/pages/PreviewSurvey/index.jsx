@@ -16,15 +16,13 @@ import { BG_COLOR } from "~/constants/theme";
 import { PREVIEW_MODE, routes } from "~/routes";
 import { useTranslation } from "react-i18next";
 
-function PreviewSurvey({ resume = false, responseId = null }) {
+function PreviewSurvey({ responseId = null }) {
   const [searchParams] = useSearchParams();
   const [previewMode, setPreviewMode] = useState(
     searchParams.get("mode") || "online"
   );
 
-  const [currentResponseId, setCurrentResponseId] = useState(
-    responseId
-  );
+  let currentResponseId = responseId;
 
   const { t: tDesign } = useTranslation("design");
 
@@ -34,11 +32,11 @@ function PreviewSurvey({ resume = false, responseId = null }) {
   const lang = useState(searchParams.get("lang"));
   const surveyId = getparam(useParams(), "surveyId");
 
-  const withEmbeddedParam = (surveyId, previewMode, lang, setCurrentResponseId) => {
-    return setCurrentResponseId
+  const withEmbeddedParam = (surveyId, previewMode, lang, currentResponseId) => {
+    return currentResponseId
       ? routes.resumeIframePreviewSurvey
           .replace(":surveyId", surveyId)
-          .replace(":responseId", setCurrentResponseId)
+          .replace(":responseId", currentResponseId)
       : routes.iframePreviewSurvey.replace(":surveyId", surveyId) +
           "?mode=" +
           previewMode +
@@ -62,7 +60,7 @@ function PreviewSurvey({ resume = false, responseId = null }) {
 
       const iFrameResponseId = event.data.responseId;
       if (currentResponseId != iFrameResponseId) {
-        setCurrentResponseId(iFrameResponseId);
+        currentResponseId = iFrameResponseId;
         window.history.replaceState(
           {},
           "",

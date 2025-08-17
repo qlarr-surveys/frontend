@@ -6,13 +6,12 @@ import { defualtTheme } from "~/constants/theme";
 import { I18nextProvider, useTranslation } from "react-i18next";
 import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { CacheProvider } from "@emotion/react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { isTouchDevice } from "~/utils/isTouchDevice";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { resetSetup } from "~/state/design/designState";
 import { buildResourceUrl } from "~/networking/common";
 import LoadingDots from "~/components/common/LoadingDots";
 
@@ -31,7 +30,6 @@ function DesignSurvey() {
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
   });
-  const dispatch = useDispatch();
 
   const designMode = useSelector((state) => {
     return state.designState.designMode;
