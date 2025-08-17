@@ -653,6 +653,7 @@ const scqSkipEquations = (qualifiedCode, component) => {
         code: instructionCode,
         condition: qualifiedCode + '.value == "' + key + '"',
         isActive: true,
+        disqualify: skipObj.disqualify || false,
         toEnd: skipObj.toEnd || false,
         skipToComponent: skipObj.skipTo,
       };

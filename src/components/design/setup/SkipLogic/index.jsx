@@ -136,6 +136,11 @@ function skipSelectValue(
   disqualified,
   t
 ) {
+  let toEndDisabled = false;
+  if(skipToCode && skipToCode.startsWith("G")){
+    const groups = destinations.filter(el => el.code.startsWith("G"))
+    toEndDisabled = groups.length >= 2 && groups[groups.length - 1].code == skipToCode
+  }
   return (
     <>
       <FormControl variant="standard" fullWidth>
@@ -161,9 +166,9 @@ function skipSelectValue(
       {skipToCode && skipToCode.startsWith("G") && (
         <Box>
           <div className={styles.toEnd}>
-          <Typography fontWeight={700}>{t("to_group_end")}</Typography>
+          <Typography sx={{color: toEndDisabled ? "grey.500" : "text.primary"}} fontWeight={600}>{t("to_group_end")}</Typography>
             <Switch
-              disabled
+              disabled={toEndDisabled}
               checked={toEnd || false}
               onChange={(event) =>
                 onToEndChanged(answerCode, event.target.checked)
@@ -171,7 +176,7 @@ function skipSelectValue(
             />
           </div>
           <div className={styles.toEnd}>
-            <Typography fontWeight={700}>{t("disqualify")}</Typography>
+            <Typography fontWeight={600}>{t("disqualify")}</Typography>
             <Switch
               checked={disqualified || false}
               onChange={(event) =>
