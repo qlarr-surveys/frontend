@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { changeAttribute } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { Typography } from "@mui/material";
 
 function ToggleValue({ label, code, rule, t }) {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ function ToggleValue({ label, code, rule, t }) {
     <div className={styles.toggleValue}>
       <div className={styles.label}>
         <CustomTooltip body={t(`tooltips.${label}`)} />
-        <h4>{t(label)}</h4>
+        <Typography fontWeight={700}>{t(label)}</Typography>
       </div>
       <Switch
         {...swithLabel}

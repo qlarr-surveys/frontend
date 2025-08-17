@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import { changeAttribute } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -16,7 +16,7 @@ function SelectDate({ label, rule, code, t }) {
     <div className={styles.selectDate}>
       <div className={styles.label}>
         <CustomTooltip body={t(`tooltips.${label}`)} />
-        <h4>{t(label)}</h4>
+        <Typography fontWeight={700}>{t(label)}</Typography>
       </div>
       <TextField
         className={styles.selectDateField}
