@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { valueChange } from "~/state/runState";
 import { useTheme } from "@emotion/react";
-import { Box, Card, Checkbox, Grid } from "@mui/material";
+import { Box, Checkbox } from "@mui/material";
 import { buildResourceUrl } from "~/networking/common";
 import styles from "./ImageMcq.module.css";
 import { setDirty } from "~/state/templateState";
@@ -12,6 +12,10 @@ function ImageMcq(props) {
   const lang = useSelector((state) => {
     return state.runState.values["Survey"].lang;
   });
+
+  const parentValue = useSelector((state) => {
+    return state.runState.values[props.component.qualifiedCode].value || [];
+  }, shallowEqual);
   const isRtl = rtlLanguage.includes(lang);
 
   return (
@@ -26,6 +30,7 @@ function ImageMcq(props) {
         return (
           <ImageMcqItem
             option={option}
+            parentValue={parentValue}
             aspectRatio={props.component.imageAspectRatio}
             columns={props.component.columns || 3}
             spacing={props.component.spacing || 8}
@@ -46,13 +51,23 @@ function ImageMcqItem(props) {
     return {
       showAnswer:
         typeof answerState?.relevance == "undefined" || answerState.relevance,
-      checked: answerState?.value || false,
     };
   }, shallowEqual);
 
   const dispatch = useDispatch();
   const handleChange = (componentCode, value) => {
-    dispatch(valueChange({ componentCode, value }));
+    let parentValue = [...props.parentValue];
+    if (value) {
+      parentValue.push(props.option.code);
+    } else {
+      parentValue = parentValue.filter((el) => el !== props.option.code);
+    }
+    dispatch(
+      valueChange({
+        componentCode: props.parentCode,
+        value: parentValue,
+      })
+    );
     dispatch(setDirty(componentCode));
     dispatch(setDirty(props.parentCode));
   };
@@ -90,7 +105,9 @@ function ImageMcqItem(props) {
               m: "5px",
             }}
             className={styles.radioCheck}
-            checked={state.checked}
+            checked={
+              props.parentValue.indexOf(props.option.code) > -1 
+            }
           />
         </div>
       </Box>
