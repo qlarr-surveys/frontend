@@ -59,7 +59,7 @@ export const isAnalystOnly = (user) => {
   return roles.length == 1 && roles.indexOf(ROLES.ANALYST) != -1;
 };
 
-export const isSurveyorOnly = (user) => {
-  const roles = user.roles;
+export const isSurveyorOnly = () => {
+  const roles = TokenService.getUser().roles;
   return roles.length == 1 && roles.indexOf(ROLES.SURVEYOR) != -1;
 };

@@ -136,7 +136,7 @@ function Web() {
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <ManagePageWrapper showHeader={false}>
-              <PrivatePreviewSurvey resume={true} />
+              <PrivatePreviewSurvey />
             </ManagePageWrapper>
           </Suspense>
         }
@@ -161,32 +161,6 @@ function Web() {
             <ManagePageWrapper>
               <PrivateDesignSurvey
                 landingPage={MANAGE_SURVEY_LANDING_PAGES.RESPONSES}
-              />
-            </ManagePageWrapper>
-          </Suspense>
-        }
-      />
-
-      <Route
-        path={routes.language}
-        element={
-          <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.LANGUAGE}
-              />
-            </ManagePageWrapper>
-          </Suspense>
-        }
-      />
-
-      <Route
-        path={routes.theme}
-        element={
-          <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.THEME}
               />
             </ManagePageWrapper>
           </Suspense>
@@ -308,14 +282,13 @@ const PrivateDesignSurvey = ({ landingPage }) => {
   );
 };
 
-const PrivatePreviewSurvey = ({ resume = false }) => {
-  console.log("PrivatePreviewSurvey", resume);
+const PrivatePreviewSurvey = () => {
   const params = useParams();
   sessionStorage.setItem("surveyId", params.surveyId);
   const location = useLocation();
   const responseId = getparam(useParams(), "responseId");
   return TokenService.isAuthenticated() ? (
-    <PreviewSurvey resume={resume} responseId={responseId} />
+    <PreviewSurvey responseId={responseId} />
   ) : (
     <Navigate to="/login" replace state={{ from: location }} />
   );
@@ -366,7 +339,15 @@ const PreviewSurveyWrapper = ({ resume = false }) => {
   const mode = searchParams.get("mode") || "online";
   const responseId = getparam(useParams(), "responseId");
   const navigationMode = searchParams.get("navigation_mode");
-  return <RunSurvey preview={true} responseId={responseId} resume={resume} mode={mode} navigationMode={navigationMode} />;
+  return (
+    <RunSurvey
+      preview={true}
+      responseId={responseId}
+      resume={resume}
+      mode={mode}
+      navigationMode={navigationMode}
+    />
+  );
 };
 
 export default Web;
