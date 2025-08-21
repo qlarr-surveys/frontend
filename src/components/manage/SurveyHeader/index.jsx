@@ -1,14 +1,14 @@
 import React, { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Chip, IconButton, Typography } from "@mui/material";
-import { ArrowBack, Visibility } from "@mui/icons-material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
+import { ArrowBack } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import styles from "./SurveyHeader.module.css";
 import { onEditErrorSeen } from "~/state/edit/editState";
 import { isSessionRtl } from "~/utils/common";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
-import { MANAGE_SURVEY_LANDING_PAGES, routes } from "~/routes";
+import { routes } from "~/routes";
 import TokenService from "~/services/TokenService";
 import { availablePages } from "~/constants/roles";
 
@@ -52,19 +52,19 @@ export const SurveyHeader = () => {
           </CustomTooltip>
           <Typography variant="h3">{surveyName}</Typography>
         </Box>
-        <CustomTooltip title={t("preview")} showIcon={false}>
-          <IconButton
-            sx={{ mr: 2 }}
-            onClick={() => {
-              window.open(
-                routes.preview.replace(":surveyId", surveyId),
-                "_blank"
-              );
-            }}
-          >
-            <Visibility />
-          </IconButton>
-        </CustomTooltip>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mr: 2 }}
+          onClick={() => {
+            window.open(
+              routes.preview.replace(":surveyId", surveyId),
+              "_blank"
+            );
+          }}
+        >
+          {t("preview")}
+        </Button>
       </Box>
     )
   );
