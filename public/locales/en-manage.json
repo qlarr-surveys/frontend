@@ -18,7 +18,7 @@
   "timezone_info": "We use your local timezone to calculate the survey expiration time.",
   "timezone_tooltip": "The survey will expire at 00:00 on the selected end date in your local timezone",
   "goBack": "Go Back",
-  "preview": "Preview Survey",
+  "preview": "Preview",
   "added": "Added:",
   "admins": "admins",
   "analysts": "analysts",

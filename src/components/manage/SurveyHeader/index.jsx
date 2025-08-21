@@ -11,6 +11,7 @@ import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { routes } from "~/routes";
 import TokenService from "~/services/TokenService";
 import { availablePages } from "~/constants/roles";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 export const SurveyHeader = () => {
   const { t } = useTranslation("manage");
@@ -56,6 +57,7 @@ export const SurveyHeader = () => {
           variant="contained"
           color="primary"
           sx={{ mr: 2 }}
+          endIcon={<VisibilityIcon sx={{ color: "#fff" }} />}
           onClick={() => {
             window.open(
               routes.preview.replace(":surveyId", surveyId),
