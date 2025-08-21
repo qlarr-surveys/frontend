@@ -13,11 +13,7 @@ import { setup } from "~/state/design/designState";
 import { useTheme } from "@emotion/react";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
-function ActionToolbar({
-  code,
-  isGroup,
-  parentCode,
-}) {
+function ActionToolbar({ code, isGroup, parentCode }) {
   const dispatch = useDispatch();
   const theme = useTheme();
 
@@ -46,14 +42,12 @@ function ActionToolbar({
     );
   });
 
-
   const expandRelevance = () => {
     dispatch(
       setup({
         code,
         rules: setupOptions(type),
         highlighted: "relevance",
-        expanded: ["relevance"],
       })
     );
   };
@@ -64,7 +58,6 @@ function ActionToolbar({
         code,
         rules: setupOptions(type),
         highlighted: "validation",
-        expanded: ["validation"],
       })
     );
   };
@@ -75,7 +68,6 @@ function ActionToolbar({
         code,
         rules: setupOptions(type),
         highlighted: "skip_logic",
-        expanded: ["skip_logic"],
       })
     );
   };
@@ -89,7 +81,6 @@ function ActionToolbar({
           code: parentCode,
           rules: setupOptions("group"),
           highlighted: "random",
-          expanded: ["random"],
         })
       );
     }

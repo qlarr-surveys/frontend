@@ -1,7 +1,7 @@
 import FieldSize from "~/components/design/setup/FieldSize";
 import ShowHint, { SetupTextInput } from "~/components/design/setup/ShowHint";
 import ValidationSetupItem from "~/components/design/setup/validation/ValidationSetupItem";
-import React, { useEffect } from "react";
+import React from "react";
 import ToggleValue from "../ToggleValue";
 import SelectValue from "../SelectValue";
 import SelectDate from "../SelectDate";
@@ -9,7 +9,14 @@ import Relevance from "../logic/Relevance";
 import SkipLogic from "../SkipLogic";
 import styles from "./SetupPanel.module.css";
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { useDispatch } from "react-redux";
 import { resetSetup } from "~/state/design/designState";
 import { NavigationMode } from "~/components/manage/NavigationMode";
@@ -81,6 +88,7 @@ function SetupPanel({ t }) {
         code={code}
         t={t}
         highlighted={highlighted}
+        theme={theme}
       />
     </div>
   );
@@ -473,23 +481,34 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
   }
 });
 
-const SetupSection = React.memo(({ highlighted, rules, code, t }) => {
-  const [selectedTab, setSelectedTab] = React.useState(0);
-  useEffect(() => {
-    if (!rules || !highlighted) {
-      setSelectedTab(0);
-      return;
-    }
+const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
+  const targetTabIndex = React.useMemo(() => {
+    if (!rules?.length) return 0;
 
-    const index = rules.findIndex((rule) => rule.key === highlighted);
-    if (index !== -1 && index !== selectedTab) {
-      setSelectedTab(index);
-    }
-  }, [highlighted, rules]);
+    const byKey = rules.findIndex((r) => r.key === highlighted);
+    if (byKey !== -1) return byKey;
+
+    const byChild = rules.findIndex((r) => r.rules?.includes(highlighted));
+    if (byChild !== -1) return byChild;
+
+    return 0;
+  }, [rules, highlighted]);
+
+  const [selectedTab, setSelectedTab] = React.useState(() => targetTabIndex);
+
+  React.useEffect(() => {
+    setSelectedTab(targetTabIndex);
+  }, [targetTabIndex]);
 
   const handleTabChange = (_, newValue) => setSelectedTab(newValue);
 
   const hasTitles = rules?.some((rule) => !!rule.title);
+
+  const rowSx = (el) => ({
+    borderRadius: "5px",
+    backgroundColor: el === highlighted ? theme?.palette?.grey[300] : "inherit",
+    transition: "background-color 120ms ease",
+  });
 
   if (!hasTitles) {
     return (
@@ -545,7 +564,9 @@ const SetupSection = React.memo(({ highlighted, rules, code, t }) => {
       >
         {rules[selectedTab]?.rules?.map((el) => (
           <div className={styles.setupContainer} key={el}>
-            <SetupComponent key={el} code={code} rule={el} t={t} />
+            <Box sx={rowSx(el)}>
+              <SetupComponent key={el} code={code} rule={el} t={t} />
+            </Box>
           </div>
         ))}
       </Box>
