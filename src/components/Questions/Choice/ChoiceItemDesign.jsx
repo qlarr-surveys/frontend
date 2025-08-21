@@ -2,13 +2,7 @@ import styles from "./ChoiceItemDesign.module.css";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import CloseIcon from "@mui/icons-material/Close";
 import BuildIcon from "@mui/icons-material/Build";
-import {
-  alpha,
-  Box,
-  Checkbox,
-  Radio,
-  TextField,
-} from "@mui/material";
+import { alpha, Box, Checkbox, Radio, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
@@ -52,16 +46,19 @@ function ChoiceItemDesign(props) {
   });
 
   const mainContent = useSelector((state) => {
-    return state.designState[props.qualifiedCode].content?.[langInfo.mainLang]?.[
-      "label"
-    ];
+    return state.designState[props.qualifiedCode].content?.[
+      langInfo.mainLang
+    ]?.["label"];
   });
 
-  const isInSetup = useSelector((state) => {
+  const isInSetupText = useSelector((state) => {
     return (
       answer.type === "other" &&
       state.designState.setup?.code == props.qualifiedCode + "Atext"
     );
+  });
+  const isInSetup = useSelector((state) => {
+    return state.designState.setup?.code == props.qualifiedCode;
   });
 
   const getStyles = (isDragging) => {
@@ -198,6 +195,9 @@ function ChoiceItemDesign(props) {
               "& .MuiInputBase-input": {
                 color: theme.palette.text.disabled,
               },
+              "& .MuiInputBase-root": {
+                backgroundColor: isInSetupText ? contrastColor : "inherit",
+              },
             }}
             disabled={!contentEditable(props.designMode)}
             value={content || ""}
@@ -294,23 +294,21 @@ function ChoiceItemDesign(props) {
           </>
         )}
         <span style={{ margin: "8px" }} />
-        {answer.type !== "other" && (
-          <BuildIcon
-            key="setup"
-            sx={{ fontSize: 18 }}
-            className={styles.answerIconOther}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              dispatch(
-                setup({
-                  code: props.qualifiedCode,
-                  rules: setupOptions("options"),
-                })
-              );
-            }}
-          />
-        )}
+        <BuildIcon
+          key="setup"
+          sx={{ fontSize: 18 }}
+          className={styles.answerIconOther}
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            dispatch(
+              setup({
+                code: props.qualifiedCode,
+                rules: setupOptions("options"),
+              })
+            );
+          }}
+        />
         {inDesign(props.designMode) && (
           <CloseIcon
             key="close"

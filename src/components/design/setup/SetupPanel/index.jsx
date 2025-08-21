@@ -19,7 +19,7 @@ import Theming from "../Theming";
 import { ManageLanguages } from "~/pages/manage/ManageTranslations";
 import { useTheme } from "@emotion/react";
 import { questionIconByType } from "~/components/Questions/utils";
-import OrderSetup from '../random/OrderSetup';
+import OrderSetup from "../random/OrderSetup";
 import QuestionActions from "../QuestionActions";
 import DisabledToggle from "../Disabled";
 
@@ -148,14 +148,10 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           code={code}
         />
       );
-      case "questionActions" : return (
-         <QuestionActions
-          key={code + rule}
-          t={t}
-          rule={rule}
-          code={code}
-        />
-      )
+    case "questionActions":
+      return (
+        <QuestionActions key={code + rule} t={t} rule={rule} code={code} />
+      );
     case "showWordCount":
       return (
         <ToggleValue
@@ -265,9 +261,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "randomize_groups":
     case "randomize_rows":
     case "randomize_columns":
-      return (
-        <OrderSetup t={t} key={code + rule} rule={rule} code={code} />
-      );
+      return <OrderSetup t={t} key={code + rule} rule={rule} code={code} />;
     case "maxDate":
       return (
         <SelectDate
@@ -481,7 +475,6 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
 
 const SetupSection = React.memo(({ highlighted, rules, code, t }) => {
   const [selectedTab, setSelectedTab] = React.useState(0);
-
   useEffect(() => {
     if (!rules || !highlighted) {
       setSelectedTab(0);
@@ -495,6 +488,22 @@ const SetupSection = React.memo(({ highlighted, rules, code, t }) => {
   }, [highlighted, rules]);
 
   const handleTabChange = (_, newValue) => setSelectedTab(newValue);
+
+  const hasTitles = rules?.some((rule) => !!rule.title);
+
+  if (!hasTitles) {
+    return (
+      <Box>
+        {rules?.flatMap((rule) =>
+          rule.rules?.map((el) => (
+            <div className={styles.setupContainer} key={el}>
+              <SetupComponent key={el} code={code} rule={el} t={t} />
+            </div>
+          ))
+        )}
+      </Box>
+    );
+  }
 
   return (
     <>
