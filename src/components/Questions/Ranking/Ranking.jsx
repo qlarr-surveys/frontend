@@ -5,17 +5,25 @@ import { shallowEqual, useSelector } from "react-redux";
 import styles from "./Ranking.module.css";
 import { useDrag, useDrop } from "react-dnd";
 import { orderChange, valueChange } from "~/state/runState";
-import Content from '~/components/run/Content';
-import { useTheme } from '@emotion/react';
+import Content from "~/components/run/Content";
+import { useTheme } from "@emotion/react";
 
 function Ranking(props) {
   const dispatch = useDispatch();
   const theme = useTheme();
   const lang = props.lang;
 
+  const visibleAnswers = useSelector(
+    (state) =>
+      props.component.answers.filter((ans) => {
+          return state.runState.values[ans.qualifiedCode]?.relevance ?? true;
+      }),
+    shallowEqual
+  );
+
   const state = useSelector((state) => {
     let valuesMap = {};
-    props.component.answers.forEach((element) => {
+    visibleAnswers.forEach((element) => {
       valuesMap[element.qualifiedCode] =
         state.runState.values[element.qualifiedCode].value;
     });
@@ -26,9 +34,11 @@ function Ranking(props) {
     return isNaN(state[code]) ? "unsorted" : "sorted";
   };
 
+
+
   const order = useSelector((state) => {
     let valuesMap = {};
-    props.component.answers.forEach((element) => {
+    visibleAnswers.forEach((element) => {
       if (state.runState.order) {
         valuesMap[element.qualifiedCode] =
           state.runState.order[element.qualifiedCode];
@@ -40,13 +50,13 @@ function Ranking(props) {
     return valuesMap;
   }, shallowEqual);
 
-  const withoutOrder = props.component.answers
+  const withoutOrder = visibleAnswers
     .filter((option) => !state[option.qualifiedCode])
     .sort(function (a, b) {
       return order[a.qualifiedCode] - order[b.qualifiedCode];
     });
 
-  const withOrder = props.component.answers
+  const withOrder = visibleAnswers
     .filter((option) => +state[option.qualifiedCode] > 0)
     .sort(function (a, b) {
       return state[a.qualifiedCode] - state[b.qualifiedCode];

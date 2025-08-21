@@ -60,8 +60,6 @@ function ScqChoice(props) {
     return state.runState.values[props.Choice.qualifiedCode]?.relevance ?? true;
   });
 
-  console.log(" relevance for ", props.Choice.qualifiedCode, relevance);
-
   return !relevance ? <></> : (
     <FormControlLabel
       key={props.Choice.qualifiedCode}
