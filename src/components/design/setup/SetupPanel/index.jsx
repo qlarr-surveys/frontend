@@ -9,14 +9,7 @@ import Relevance from "../logic/Relevance";
 import SkipLogic from "../SkipLogic";
 import styles from "./SetupPanel.module.css";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Divider,
-  IconButton,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { resetSetup } from "~/state/design/designState";
 import { NavigationMode } from "~/components/manage/NavigationMode";
@@ -482,6 +475,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
 });
 
 const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
+  const [highlightedEl, setHighlightedEl] = React.useState(highlighted);
+
   const targetTabIndex = React.useMemo(() => {
     if (!rules?.length) return 0;
 
@@ -504,10 +499,19 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
 
   const hasTitles = rules?.some((rule) => !!rule.title);
 
+  React.useEffect(() => {
+    if (!highlighted) return;
+
+    setHighlightedEl(highlighted);
+    const timer = setTimeout(() => setHighlightedEl(null), 2000);
+    return () => clearTimeout(timer);
+  }, [highlighted]);
+
   const rowSx = (el) => ({
     borderRadius: "5px",
-    backgroundColor: el === highlighted ? theme?.palette?.grey[300] : "inherit",
-    transition: "background-color 120ms ease",
+    backgroundColor:
+      el === highlightedEl ? theme?.palette?.grey[300] : "inherit",
+    transition: "background-color 400ms ease",
   });
 
   if (!hasTitles) {
