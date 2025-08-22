@@ -6,7 +6,6 @@ import Chip from "@mui/material/Chip";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import MenuItem from "@mui/material/MenuItem";
-import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -32,7 +31,7 @@ export function RHFSelect({
       <FormControl fullWidth {...other}>
         <InputLabel>{label}</InputLabel>
         <Select
-          value={value}
+          value={value ?? ""}
           sx={{
             borderRadius: "12px",
             "& .MuiOutlinedInput-notchedOutline": {
