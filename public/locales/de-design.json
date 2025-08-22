@@ -264,6 +264,12 @@
   "general": "Allgemein",
   "logic": "Logik",
   "tooltips": {
+    "has_relevance": "Hat eine Sichtbarkeitsbedingung",
+    "is_disabled": "Ist deaktiviert",
+    "has_validation": "Hat eine Validierung",
+    "is_randomized": "Ist Teil einer gültigen Zufallsgruppe (innerhalb des übergeordneten Elements)",
+    "is_prioritized": "Ist Teil einer gültigen Prioritätsgruppe (innerhalb des übergeordneten Elements)",
+    "has_skip": "Hat eine aktive Überspring-Logik",
     "group": "Fügen Sie eine neue Seite hinzu, um Ihre Umfrage in Abschnitte zu unterteilen",
     "text": "Sammeln Sie schnelle, einzeilige Antworten",
     "paragraph": "Sammeln Sie detaillierte, offene Antworten",

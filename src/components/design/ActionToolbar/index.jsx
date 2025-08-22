@@ -12,10 +12,13 @@ import { setupOptions } from "~/constants/design";
 import { setup } from "~/state/design/designState";
 import { useTheme } from "@emotion/react";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { VisibilityOff } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 function ActionToolbar({ code, isGroup, parentCode }) {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const { t } = useTranslation(["design"]);
 
   const type = useSelector((state) => {
     return isGroup
@@ -23,12 +26,14 @@ function ActionToolbar({ code, isGroup, parentCode }) {
       : state.designState[code].type;
   });
 
-  const hasRelevance = useSelector((state) => {
-    let instruction = state.designState[code]?.instructionList?.find(
-      (el) => el.code == "conditional_relevance"
-    );
-    return typeof instruction !== "undefined" && !instruction.errors;
-  });
+  const relevanceInstruction = useSelector((state) =>
+    state.designState[code]?.instructionList?.find(
+      (el) => el.code === "conditional_relevance"
+    )
+  );
+
+  const hasRelevance = !!relevanceInstruction && !relevanceInstruction.errors;
+  const isDisabled = hasRelevance && relevanceInstruction.text === "false";
 
   const hasValidation = useSelector((state) => {
     return (
@@ -48,6 +53,16 @@ function ActionToolbar({ code, isGroup, parentCode }) {
         code,
         rules: setupOptions(type),
         highlighted: "relevance",
+      })
+    );
+  };
+
+  const expandDisabled = () => {
+    dispatch(
+      setup({
+        code,
+        rules: setupOptions(type),
+        highlighted: "disabled",
       })
     );
   };
@@ -118,8 +133,8 @@ function ActionToolbar({ code, isGroup, parentCode }) {
         }
       }}
     >
-      {hasRelevance && (
-        <CustomTooltip title="Has show/Hide Condition" showIcon={false}>
+      {hasRelevance && !isDisabled && (
+        <CustomTooltip title={t("tooltips.has_relevance")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandRelevance()}
@@ -128,8 +143,20 @@ function ActionToolbar({ code, isGroup, parentCode }) {
           </IconButton>
         </CustomTooltip>
       )}
+
+      {isDisabled && (
+        <CustomTooltip title={t("tooltips.is_disabled")} showIcon={false}>
+          <IconButton
+            className={styles.statusIcon}
+            onClick={() => expandDisabled()}
+          >
+            <VisibilityOff style={{ color: textColor }} />
+          </IconButton>
+        </CustomTooltip>
+      )}
+
       {hasValidation && (
-        <CustomTooltip title="Has Validation" showIcon={false}>
+        <CustomTooltip title={t("tooltips.has_validation")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandValidation()}
@@ -139,10 +166,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
         </CustomTooltip>
       )}
       {isRandomized && (
-        <CustomTooltip
-          title="Is part of a valid Random Group (within parent)"
-          showIcon={false}
-        >
+        <CustomTooltip title={t("tooltips.is_randomized")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandParentRandom()}
@@ -152,10 +176,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
         </CustomTooltip>
       )}
       {isPrioritised && (
-        <CustomTooltip
-          title="Is part of a valid Priority Group (within parent)"
-          showIcon={false}
-        >
+        <CustomTooltip title={t("tooltips.is_prioritized")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandParentRandom()}
@@ -165,7 +186,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
         </CustomTooltip>
       )}
       {hasSkip && (
-        <CustomTooltip title="Has active Skip Logic" showIcon={false}>
+        <CustomTooltip title={t("tooltips.has_skip")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandSkipLogic()}

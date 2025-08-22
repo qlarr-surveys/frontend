@@ -270,6 +270,12 @@
   "general": "General",
   "logic": "Logic",
   "tooltips": {
+    "has_relevance": "Has show/Hide Condition",
+    "is_disabled": "Is Disabled",
+    "has_validation": "Has Validation",
+    "is_randomized": "Is part of a valid Random Group (within parent)",
+    "is_prioritized": "Is part of a valid Priority Group (within parent)",
+    "has_skip": "Has active Skip Logic",
     "group": "Add a new page to organize your survey into sections",
     "text": "Collect quick, one-line answers",
     "multiple_text": "Collect multiple text",
