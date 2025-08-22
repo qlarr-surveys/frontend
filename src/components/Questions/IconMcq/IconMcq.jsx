@@ -3,35 +3,21 @@ import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import styles from "./IconMcq.module.css";
 import { valueChange } from "~/state/runState";
 import { useTheme } from "@emotion/react";
-import { Box, Grid } from "@mui/material";
-import { rtlLanguage } from "~/utils/common";
+import { Box } from "@mui/material";
 import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 
 function IconMcq(props) {
   const theme = useTheme();
-  const state = useSelector((state) => {
-    let questionState = state.runState.values[props.component.qualifiedCode];
-    let show_errors = state.runState.values.Survey.show_errors;
-    let isDirty = state.templateState[props.component.qualifiedCode];
-    return {
-      value: questionState?.value || "",
-      showValidation:
-        (show_errors || isDirty) && questionState?.validity === false,
-    };
-  }, shallowEqual);
-  const dispatch = useDispatch();
 
-  const handleChange = (componentCode, value) => {
-    dispatch(valueChange({ componentCode, value }));
-  };
+  const parentValue = useSelector((state) => {
+    return state.runState.values[props.component.qualifiedCode].value || [];
+  }, shallowEqual);
+
+
 
   const hideText = props.component?.hideText || false;
 
-  const lang = useSelector((state) => {
-    return state.runState.values["Survey"].lang;
-  });
-  const isRtl = rtlLanguage.includes(lang);
 
   return (
     <Box
@@ -44,6 +30,8 @@ function IconMcq(props) {
         return (
           <IconMcqChoice
             key={option.code}
+            parentValue={parentValue}
+            parentCode={props.component.qualifiedCode}
             component={option}
             columns={props.component.columns || 3}
             iconSize={props.component.iconSize || "150"}
@@ -60,6 +48,8 @@ function IconMcq(props) {
 function IconMcqChoice({
   key,
   component,
+  parentValue,
+  parentCode,
   iconSize,
   columns,
   spacing,
@@ -67,9 +57,7 @@ function IconMcqChoice({
   theme,
 }) {
   const dispatch = useDispatch();
-  const checked = useSelector(
-    (state) => state.runState.values[component.qualifiedCode].value || false
-  );
+  const checked = parentValue.indexOf(component.code) > -1;
   return (
     <Box
       key={key}
@@ -87,13 +75,15 @@ function IconMcqChoice({
         }}
       >
         <DynamicSvg
-          onIconClick={() =>
-            dispatch(
-              valueChange({
-                componentCode: component.qualifiedCode,
-                value: !checked,
-              })
-          )}
+          onIconClick={() =>{
+            let parentValue2 = [...parentValue];
+            if (checked) {
+              parentValue2 = parentValue2.filter((el) => el !== component.code);
+            } else {
+              parentValue2.push(component.code);
+            }
+            dispatch(valueChange({ componentCode: parentCode, value: parentValue2 }));
+          }}
           imageHeight="100%"
           maxHeight={iconSize + "px"}
           svgUrl={
