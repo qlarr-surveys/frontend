@@ -10,7 +10,7 @@ import {
 } from "~/state/design/designState";
 import React, { useMemo } from "react";
 import { Trans } from "react-i18next";
-import { useDispatch } from "react-redux";
+import { shallowEqual, useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import styles from "./SkipLogic.module.css";
 
@@ -29,11 +29,13 @@ function SkipLogic({ code, t }) {
     return jumpDestinations(componentIndex, code, designState, mainLang);
   }, [componentIndex, code, designState, mainLang]);
 
-  const instructions = useSelector((state) => {
-    return state.designState[code].instructionList.filter((el) =>
-      el.code.startsWith("skip_to")
-    );
-  });
+  const instructions = useSelector(
+    (state) =>
+      (state.designState[code]?.instructionList || []).filter((el) =>
+        el.code?.startsWith("skip_to")
+      ),
+    shallowEqual
+  );
 
   const lang = useSelector((state) => state.designState.langInfo.lang);
   const codeData = useSelector((state) => state.designState[code]);

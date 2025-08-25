@@ -8,9 +8,8 @@ import Radio from "@mui/material/Radio";
 import { valueChange } from "~/state/runState";
 import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
-import { Box } from "@mui/material";
 import { setDirty } from "~/state/templateState";
-import Content from '~/components/run/Content';
+import Content from "~/components/run/Content";
 
 function SCQ(props) {
   const state = useSelector((state) => {
@@ -57,33 +56,28 @@ function SCQ(props) {
 
 function ScqChoice(props) {
   const theme = useTheme();
+  const relevance = useSelector((state) => {
+    return state.runState.values[props.Choice.qualifiedCode]?.relevance ?? true;
+  });
 
-  const showChoice = () => {
-    return (
-      <FormControlLabel
-        key={props.Choice.qualifiedCode}
-        control={
-          <Radio
-          />
-        }
-        label={
-            <Content
-                elementCode={props.Choice.code}
-                fontFamily={theme.textStyles.text.font}
-                color={theme.textStyles.text.color}
-                fontSize={theme.textStyles.text.size}
-                name="label"
-                lang={props.lang}
-                content={props.Choice.content?.label}
-              />
-
-        }
-        value={props.Choice.code}
-      />
-    );
-  };
-
-  return showChoice ? showChoice() : "";
+  return !relevance ? <></> : (
+    <FormControlLabel
+      key={props.Choice.qualifiedCode}
+      control={<Radio />}
+      label={
+        <Content
+          elementCode={props.Choice.code}
+          fontFamily={theme.textStyles.text.font}
+          color={theme.textStyles.text.color}
+          fontSize={theme.textStyles.text.size}
+          name="label"
+          lang={props.lang}
+          content={props.Choice.content?.label}
+        />
+      }
+      value={props.Choice.code}
+    />
+  );
 }
 
 function ScqChoiceOther(props) {
@@ -137,45 +131,47 @@ function ScqChoiceOther(props) {
       <div className="text-left d-flex">
         <FormControlLabel
           key={props.Choice.qualifiedCode}
-          control={<Radio
-            sx={{
-              color: theme.textStyles.text.color,
-            }}
-          />}
+          control={
+            <Radio
+              sx={{
+                color: theme.textStyles.text.color,
+              }}
+            />
+          }
           label={
-              <TextField
-                variant="standard"
-                fullWidth
-                required={
-                  state.textChild?.relevance &&
-                  nestedTextChild.validation?.required
-                }
-                sx={{
-                  label: { color: theme.textStyles.text.color },
-                }}
-                inputRef={textInput}
-                id={nestedTextChild.qualifiedCode}
-                name={nestedTextChild.qualifiedCode}
-                label={props.Choice.content?.label}
-                onChange={handleChange}
-                onFocus={handleFocus}
-                onBlur={lostFocus}
-                value={state.value}
-                InputProps={{
-                  sx: {
-                    fontFamily: theme.textStyles.text.font,
-                    color: theme.textStyles.text.color,
-                    fontSize: theme.textStyles.text.size,
-                  },
-                }}
-                helperText={
-                  state.childInvalid ? (
-                    <Validation component={nestedTextChild} limit={1} />
-                  ) : (
-                    ""
-                  )
-                }
-              />
+            <TextField
+              variant="standard"
+              fullWidth
+              required={
+                state.textChild?.relevance &&
+                nestedTextChild.validation?.required
+              }
+              sx={{
+                label: { color: theme.textStyles.text.color },
+              }}
+              inputRef={textInput}
+              id={nestedTextChild.qualifiedCode}
+              name={nestedTextChild.qualifiedCode}
+              label={props.Choice.content?.label}
+              onChange={handleChange}
+              onFocus={handleFocus}
+              onBlur={lostFocus}
+              value={state.value}
+              InputProps={{
+                sx: {
+                  fontFamily: theme.textStyles.text.font,
+                  color: theme.textStyles.text.color,
+                  fontSize: theme.textStyles.text.size,
+                },
+              }}
+              helperText={
+                state.childInvalid ? (
+                  <Validation component={nestedTextChild} limit={1} />
+                ) : (
+                  ""
+                )
+              }
+            />
           }
           onChange={onButtonClick}
           value={props.Choice.code}

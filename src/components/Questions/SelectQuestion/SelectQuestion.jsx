@@ -2,8 +2,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { RHFSelect } from "~/components/hook-form";
 import { valueChange } from "~/state/runState";
 import { shallowEqual } from "react-redux";
-import { useTheme } from '@emotion/react';
-import Content from '~/components/run/Content';
+import { useTheme } from "@emotion/react";
+import Content from "~/components/run/Content";
 
 function SelectQuestion({ lang, component }) {
   const theme = useTheme();
@@ -23,17 +23,27 @@ function SelectQuestion({ lang, component }) {
       })
     );
   };
+
+  const visibleAnswers = useSelector(
+    (state) =>
+      component.answers.filter((ans) => {
+        return state.runState.values[ans.qualifiedCode]?.relevance ?? true;
+      }),
+    shallowEqual
+  );
+
   return (
-    <RHFSelect
-      sx={{ width: "50%" }}
-      name={component.qualifiedCode}
-      value={state.value}
-      onChange={handleChange}
-    >
-      {component.answers.map((option) => {
-        return (
-          <option key={option.code} value={option.code}>
-            <Content
+    <>
+      <RHFSelect
+        sx={{ width: "50%" }}
+        name={component.qualifiedCode}
+        value={state.value}
+        onChange={handleChange}
+      >
+        {visibleAnswers.map((option) => {
+          return (
+            <option key={option.code} value={option.code}>
+              <Content
                 elementCode={option.code}
                 fontFamily={theme.textStyles.text.font}
                 color={theme.textStyles.text.color}
@@ -42,10 +52,11 @@ function SelectQuestion({ lang, component }) {
                 lang={lang}
                 content={option.content?.label}
               />
-          </option>
-        );
-      })}
-    </RHFSelect>
+            </option>
+          );
+        })}
+      </RHFSelect>
+    </>
   );
 }
 
