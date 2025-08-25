@@ -14,12 +14,14 @@ export const buildFields = (
       label: "Mode",
       type: "text",
       valueSources: ["value"],
+      defaultOperator: "is_online",
       operators: ["is_offline", "is_online"],
     },
     survey_lang: {
       label: "Language",
       type: "select",
       valueSources: ["value"],
+      defaultOperator: "select_any_in",
       operators: ["select_any_in", "select_not_any_in"],
       fieldSettings: {
         listValues: langList,
@@ -48,6 +50,7 @@ const buildField = (code, component, state, mainLang) => {
         label: label,
         type: "text",
         valueSources: ["value"],
+        defaultOperator: "is_relevant",
         operators: [
           "is_relevant",
           "is_not_relevant",
@@ -66,6 +69,7 @@ const buildField = (code, component, state, mainLang) => {
           label: label,
           type: "text",
           valueSources: ["value"],
+          defaultOperator: "equal",
           operators: [
             "equal",
             "not_equal",
@@ -88,6 +92,7 @@ const buildField = (code, component, state, mainLang) => {
           label: label,
           type: "text",
           valueSources: ["value"],
+          defaultOperator: "like",
           operators: [
             "like",
             "not_like",
@@ -108,6 +113,7 @@ const buildField = (code, component, state, mainLang) => {
           label: label,
           type: "number",
           valueSources: ["value"],
+          defaultOperator: "equal",
           operators: [
             "equal",
             "not_equal",
@@ -135,6 +141,7 @@ const buildField = (code, component, state, mainLang) => {
           label: label,
           type: "text",
           valueSources: ["value"],
+          defaultOperator: "is_not_empty",
           operators: [
             "is_empty",
             "is_not_empty",
@@ -151,6 +158,7 @@ const buildField = (code, component, state, mainLang) => {
           label: label,
           type: "date",
           valueSources: ["value"],
+          defaultOperator: "greater_or_equal",
           operators: [
             "greater_or_equal",
             "less_or_equal",
@@ -170,6 +178,7 @@ const buildField = (code, component, state, mainLang) => {
           label: label,
           type: "time",
           valueSources: ["value"],
+          defaultOperator: "greater_or_equal",
           operators: [
             "greater_or_equal",
             "less_or_equal",
@@ -189,6 +198,7 @@ const buildField = (code, component, state, mainLang) => {
           label: label,
           type: "datetime",
           valueSources: ["value"],
+          defaultOperator: "greater_or_equal",
           operators: [
             "greater_or_equal",
             "less_or_equal",
@@ -224,6 +234,8 @@ const buildField = (code, component, state, mainLang) => {
 
         type: "select",
         valueSources: ["value"],
+        defaultOperator: "select_any_in",
+        defaultOperator: "select_any_in",
         operators: [
           "select_any_in",
           "select_not_any_in",
@@ -248,6 +260,7 @@ const buildField = (code, component, state, mainLang) => {
           }]`,
           type: "text",
           valueSources: ["value"],
+          defaultOperator: "equal",
           operators: [
             "equal",
             "not_equal",
@@ -287,6 +300,7 @@ const buildField = (code, component, state, mainLang) => {
         },
         type: "multiselect",
         valueSources: ["value"],
+        defaultOperator: "multiselect_equals",
         operators: [
           "multiselect_equals",
           "multiselect_not_equals",
@@ -309,6 +323,7 @@ const buildField = (code, component, state, mainLang) => {
           }]`,
           type: "text",
           valueSources: ["value"],
+          defaultOperator: "equal",
           operators: [
             "equal",
             "not_equal",
@@ -371,6 +386,7 @@ const buildField = (code, component, state, mainLang) => {
         label: label,
         type: "text",
         valueSources: ["value"],
+        defaultOperator: "is_valid",
         operators: [
           "is_relevant",
           "is_not_relevant",
@@ -392,6 +408,10 @@ const buildField = (code, component, state, mainLang) => {
             type: component.type == "mcq_array" ? "multiselect" : "select",
             valueSources: ["value"],
             fieldSettings: { listValues: arrayListValues },
+            defaultOperator:
+              component.type == "mcq_array"
+                ? "multiselect_equals"
+                : "select_any_in",
             operators:
               component.type == "mcq_array"
                 ? ["multiselect_equals", "multiselect_not_equals"]
@@ -411,6 +431,7 @@ const buildField = (code, component, state, mainLang) => {
             ),
           type: "text",
           valueSources: ["value"],
+          defaultOperator: "equal",
           operators: [
             "equal",
             "not_equal",
@@ -445,6 +466,7 @@ const buildField = (code, component, state, mainLang) => {
             max: component.children.length,
           },
           valueSources: ["value"],
+          defaultOperator: "equal",
           operators: [
             "equal",
             "not_equal",
