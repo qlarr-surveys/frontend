@@ -149,6 +149,15 @@ export const setupOptions = (type) => {
         },
       ];
 
+    case "options":
+      return [
+        {
+          title: "",
+          key: "",
+          rules: ["disabled", "relevance"],
+        },
+      ];
+
     case "other_text":
       return [
         {
