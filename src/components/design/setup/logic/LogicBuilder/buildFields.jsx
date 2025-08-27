@@ -235,7 +235,6 @@ const buildField = (code, component, state, mainLang) => {
         type: "select",
         valueSources: ["value"],
         defaultOperator: "select_any_in",
-        defaultOperator: "select_any_in",
         operators: [
           "select_any_in",
           "select_not_any_in",

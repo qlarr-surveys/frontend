@@ -38,12 +38,10 @@ function ActionToolbar({ code, isGroup, parentCode }) {
   const hasValidation = useSelector((state) => {
     return (
       !isGroup &&
-      state.designState[code]?.instructionList?.filter(
-        (el) =>
-          el.code.startsWith("validation_") &&
-          el.code != "validation_enum" &&
-          !el.errors
-      )?.length > 0
+      state.designState[code]?.validation &&
+      Object.values(state.designState[code].validation).some(
+        (el) => el.isActive === true
+      )
     );
   });
 
