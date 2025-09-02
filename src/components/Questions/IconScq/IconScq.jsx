@@ -27,6 +27,7 @@ function IconScq(props) {
 
   const hideText = props.component?.hideText || false;
 
+  const runValues = useSelector((s) => s.runState.values);
 
   return (
     <Box
@@ -37,6 +38,8 @@ function IconScq(props) {
     >
       {props.component.answers.map((option) => {
         const isSelected = state.value == option.code;
+        const relevance = runValues[option.qualifiedCode]?.relevance ?? true;
+        if (!relevance) return null;
         return (
           <Box
             key={option.code}
