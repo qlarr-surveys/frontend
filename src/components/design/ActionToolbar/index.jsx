@@ -1,6 +1,5 @@
 import { IconButton } from "@mui/material";
 import styles from "./ActionToolbar.module.css";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import React from "react";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
@@ -12,7 +11,7 @@ import { setupOptions } from "~/constants/design";
 import { setup } from "~/state/design/designState";
 import { useTheme } from "@emotion/react";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
-import { VisibilityOff } from "@mui/icons-material";
+import { RuleOutlined, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 
 function ActionToolbar({ code, isGroup, parentCode }) {
@@ -87,7 +86,13 @@ function ActionToolbar({ code, isGroup, parentCode }) {
 
   const expandParentRandom = () => {
     if (isGroup) {
-      dispatch(setup({ ...surveySetup, highlighted: "random" }));
+      dispatch(
+        setup({
+          code,
+          rules: setupOptions("group"),
+          highlighted: "logic",
+        })
+      );
     } else {
       dispatch(
         setup({
@@ -108,10 +113,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
   });
 
   const isRandomized = useSelector((state) => {
-    let indexObj = state.designState.componentIndex?.find(
-      (el) => el.code == code
-    );
-    return indexObj && indexObj.minIndex != indexObj.maxIndex;
+    return state.designState[code].randomize_questions == "RANDOM";
   });
 
   const isPrioritised = useSelector((state) => {
@@ -120,7 +122,6 @@ function ActionToolbar({ code, isGroup, parentCode }) {
     );
     return indexObj?.prioritisedSiblings?.length > 0;
   });
-
   return (
     <div
       className={styles.actionControl}
@@ -137,7 +138,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
             className={styles.statusIcon}
             onClick={() => expandRelevance()}
           >
-            <VisibilityIcon style={{ color: textColor }} />
+            <RuleOutlined style={{ color: textColor }} />
           </IconButton>
         </CustomTooltip>
       )}
