@@ -297,7 +297,7 @@ function ChoiceItemDesign(props) {
         <BuildIcon
           key="setup"
           sx={{ fontSize: 18 }}
-          className={styles.answerIconOther}
+          className={styles.answerIconSettings}
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();

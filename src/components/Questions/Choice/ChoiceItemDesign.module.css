@@ -5,6 +5,7 @@
   /*margin-bottom: 15px;*/
   transition: all 200ms;
   height: auto;
+  position: relative;
 }
 
 .answerIcon {
@@ -15,9 +16,15 @@
   cursor: pointer;
 }
 
-.answerItem .answerIconOther {
+.answerItem .answerIconSettings {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  cursor: pointer;
   align-self: center;
   margin-right: 10px;
+}
+.answerItem:hover .answerIconSettings {
+  opacity: 1;
 }
 
 .answerItem .answerIconOther:hover {
