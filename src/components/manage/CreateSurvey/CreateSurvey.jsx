@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useService } from "~/hooks/use-service";
+import { useNavigate } from "react-router-dom";
 
 const surveyMode_options = [
   { value: SURVEY_MODE.WEB, label: `mode.${SURVEY_MODE.WEB}` },
@@ -21,6 +22,7 @@ const surveyMode_options = [
 ];
 function CreateSurvey({ onSurveyCreated }) {
   const surveyService = useService("survey");
+  const navigate = useNavigate();
 
   const { t } = useTranslation("manage");
   const dispatch = useDispatch();
@@ -65,11 +67,8 @@ function CreateSurvey({ onSurveyCreated }) {
 
     surveyService
       .createSurvey(model)
-      .then(() => {
-        if (onSurveyCreated) {
-          onSurveyCreated(model);
-          reset();
-        }
+      .then((res) => {
+        navigate("/design-survey/" + res.id);
       })
       .catch((processedError) => {
         if (

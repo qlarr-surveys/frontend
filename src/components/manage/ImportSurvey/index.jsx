@@ -9,12 +9,15 @@ import { setLoading } from "~/state/edit/editState";
 import { useService } from "~/hooks/use-service";
 import { FileUpload } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
+import { useNavigate } from "react-router-dom";
 
 export const ImportSurvey = ({ open, onResult }) => {
   const surveyService = useService("survey");
 
   const { t } = useTranslation("manage");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const theme = useTheme();
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
@@ -29,7 +32,7 @@ export const ImportSurvey = ({ open, onResult }) => {
         setProgress(percent);
       })
       .then((response) => {
-        onResult(response.name);
+        navigate("/design-survey/" + response.id);
       })
       .catch((processedError) => {
         if (
@@ -90,20 +93,20 @@ export const ImportSurvey = ({ open, onResult }) => {
               {error}
             </Typography>
           ) : fileToImport && (
-            <Box className={styles.progressBarContainer}>
-              <Box className={styles.progressBarBackground}>
-                <Box
-                  className={styles.progressBarFill}
-                  sx={{
-                    width: `${progress}%`,
-                    backgroundColor: theme.palette.primary.main,
-                  }}
-                />
+              <Box className={styles.progressBarContainer}>
+                <Box className={styles.progressBarBackground}>
+                  <Box
+                    className={styles.progressBarFill}
+                    sx={{
+                      width: `${progress}%`,
+                      backgroundColor: theme.palette.primary.main,
+                    }}
+                  />
+                </Box>
+                <Typography variant="body2">
+                  {Math.min(Math.round(progress), 100)}%
+                </Typography>
               </Box>
-              <Typography variant="body2">
-                {Math.min(Math.round(progress), 100)}%
-              </Typography>
-            </Box>
           )}
         </div>
       </Box>
