@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { shallowEqual, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import styles from "./RunSurvey.module.css";
 import { useTranslation } from "react-i18next";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -11,7 +11,7 @@ import {
 } from "~/networking/run";
 import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { defualtTheme } from "~/constants/theme";
-import { stateReceived } from "~/state/runState";
+import { previewModeChange, stateReceived } from "~/state/runState";
 import { useSelector } from "react-redux";
 import { Box, Button, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -38,6 +38,8 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
   const [expanded, setExpanded] = React.useState(COLLAPSE);
   const [error, setError] = React.useState(false);
   const [inlineError, setInlineError] = React.useState(false);
+  const [currentMode, setCurrentMode] = React.useState(mode);
+  const [currentNavigationMode, setCurrentNavigationMode] = React.useState(navigationMode);
   const containerRef = useRef(null);
 
   const surveyTheme = useSelector((state) => {
@@ -65,6 +67,31 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
       continueNav(navigation, navResponseId);
     }
   }, [navigation]);
+
+  useEffect(() => {
+    if (preview) {
+      const handleMessage = (event) => {
+        // Always verify the origin for security
+        if (
+          event.origin !== window.location.origin ||
+          event.data.type !== "PREVIEW_MODE_CHANGED"
+        ) {
+          return;
+        }
+  
+        const mode = event.data.mode;
+        const navigationMode = event.data.navigationMode;
+        dispatch(previewModeChange({ mode: mode, navigationMode: navigationMode }));
+      };
+  
+      window.addEventListener("message", handleMessage);
+  
+      // Cleanup listener on component unmount
+      return () => {
+        window.removeEventListener("message", handleMessage);
+      };
+    }
+  }, []);
 
   useEffect(() => {
     if (rtlLanguage.includes(i18n.language)) {
@@ -113,7 +140,16 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
 
   const continueNav = (payload, responseId) => {
     dispatch(setFetching(true));
-    continueNavigation(runService, payload, responseId, preview, mode)
+    if(payload.mode){
+      setCurrentMode(payload.mode);
+    }
+    if(payload.navigationMode){
+      setCurrentNavigationMode(payload.navigationMode);
+    }
+    
+    const useCaseMode = payload.mode ?? currentMode;
+    const useCaseNavMode = payload.navigationMode ?? currentNavigationMode;
+    continueNavigation(runService, payload, responseId, preview, useCaseMode, useCaseNavMode)
       .then((response) => {
         setRender(true);
         dispatch(stateReceived({ response, preview }));
