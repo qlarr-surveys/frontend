@@ -84,21 +84,21 @@ function ActionToolbar({ code, isGroup, parentCode }) {
     );
   };
 
-  const expandParentRandom = () => {
+  const expandRandom = (randomRule) => {
     if (isGroup) {
       dispatch(
         setup({
           code,
           rules: setupOptions("group"),
-          highlighted: "logic",
+          highlighted: randomRule,
         })
       );
     } else {
       dispatch(
         setup({
-          code: parentCode,
-          rules: setupOptions("group"),
-          highlighted: "random",
+          code,
+          rules: setupOptions(type),
+          highlighted: randomRule,
         })
       );
     }
@@ -112,16 +112,16 @@ function ActionToolbar({ code, isGroup, parentCode }) {
     return skipInstructions?.filter((el) => !el.errors)?.length >= 1;
   });
 
-  const isRandomized = useSelector((state) => {
-    return state.designState[code].randomize_questions == "RANDOM";
+  const randomRule = useSelector((state) => {
+    return (
+      state.designState[code].randomize_questions ? "randomize_questions" :
+      state.designState[code].randomize_options ? "randomize_options" :
+      state.designState[code].randomize_rows ? "randomize_rows" :
+      state.designState[code].randomize_columns ? "randomize_columns" :
+      undefined
+    );
   });
 
-  const isPrioritised = useSelector((state) => {
-    let indexObj = state.designState.componentIndex?.find(
-      (el) => el.code == code
-    );
-    return indexObj?.prioritisedSiblings?.length > 0;
-  });
   return (
     <div
       className={styles.actionControl}
@@ -164,23 +164,13 @@ function ActionToolbar({ code, isGroup, parentCode }) {
           </IconButton>
         </CustomTooltip>
       )}
-      {isRandomized && (
+      {randomRule && (
         <CustomTooltip title={t("tooltips.is_randomized")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
-            onClick={() => expandParentRandom()}
+            onClick={() => expandRandom(randomRule)}
           >
             <ShuffleIcon style={{ color: textColor }} />
-          </IconButton>
-        </CustomTooltip>
-      )}
-      {isPrioritised && (
-        <CustomTooltip title={t("tooltips.is_prioritized")} showIcon={false}>
-          <IconButton
-            className={styles.statusIcon}
-            onClick={() => expandParentRandom()}
-          >
-            <LowPriorityIcon style={{ color: textColor }} />
           </IconButton>
         </CustomTooltip>
       )}
