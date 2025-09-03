@@ -30,6 +30,8 @@ function ImageScq(props) {
   });
   const isRtl = rtlLanguage.includes(lang);
 
+  const runValues = useSelector((s) => s.runState.values);
+
   return (
     <Box
       sx={{
@@ -42,6 +44,9 @@ function ImageScq(props) {
         const backgroundImage = option.resources?.image
           ? `url('${buildResourceUrl(option.resources?.image)}')`
           : `url('/placeholder-image.jpg')`;
+
+        const relevance = runValues[option.qualifiedCode]?.relevance ?? true;
+        if (!relevance) return null;
         return (
           <Box
             key={option.code}

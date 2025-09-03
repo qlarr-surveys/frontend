@@ -1,5 +1,5 @@
 import styles from "./IconChoiceItemDesign.module.css";
-import { Box, Card, Grid, IconButton, TextField } from "@mui/material";
+import { alpha, Box, Grid, IconButton, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import {
   changeResources,
   onDrag,
   removeAnswer,
+  setup,
 } from "~/state/design/designState";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddIcon from "@mui/icons-material/Add";
@@ -21,6 +22,8 @@ import { useService } from "~/hooks/use-service";
 import { buildResourceUrl } from "~/networking/common";
 import DynamicSvg from "~/components/DynamicSvg";
 import { contentEditable, inDesign } from "~/routes";
+import { setupOptions } from "~/constants/design";
+import { Build } from "@mui/icons-material";
 
 function IconChoiceItemDesign({
   parentCode,
@@ -66,6 +69,12 @@ function IconChoiceItemDesign({
       dispatch(removeAnswer(qualifiedCode));
     }
   };
+
+  const isInSetup = useSelector((state) => {
+    return state.designState.setup?.code == qualifiedCode;
+  });
+  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
+
   const dragType = parentCode + "icon-drag";
   const getRowByIndex = (index) => {
     return Math.round(index / columnNumber);
@@ -224,25 +233,54 @@ function IconChoiceItemDesign({
           opacity: isDragging ? "0.2" : "1",
         }}
         item
+        position="relative"
         xs={12 / columnNumber}
         key={qualifiedCode}
       >
-        <div ref={ref} data-handler-id={handlerId}>
+        {isInSetup && (
+          <div
+            className={styles.overlay}
+            style={{ backgroundColor: contrastColor }}
+          />
+        )}
+        <div
+          ref={ref}
+          data-handler-id={handlerId}
+          className={styles.imageContainer}
+        >
           {inDesign(designMode) && (
             <div className={styles.buttonContainers}>
               <IconButton
                 sx={{ color: theme.textStyles.text.color }}
-                className={styles.imageIconButton}
+                className={styles.imageHoverIconButton}
                 onClick={() => {
                   onDelete();
                 }}
               >
                 <DeleteOutlineIcon />
               </IconButton>
+
+              <IconButton
+                sx={{
+                  color: theme.textStyles.text.color,
+                }}
+                className={styles.imageHoverIconButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(
+                    setup({
+                      code: qualifiedCode,
+                      rules: setupOptions("options"),
+                    })
+                  );
+                }}
+              >
+                <Build />
+              </IconButton>
               <IconButton
                 sx={{ color: theme.textStyles.text.color }}
                 component="label"
-                className={styles.imageIconButton}
+                className={styles.imageHoverIconButton}
                 onClick={() => setIconSelectorOpen(true)}
               >
                 <PhotoCamera />
