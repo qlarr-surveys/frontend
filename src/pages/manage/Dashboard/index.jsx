@@ -295,13 +295,7 @@ function Dashboard() {
                 >
                   <Close color="#000" />
                 </IconButton>
-                <CreateSurvey
-                  onSurveyCreated={(newSurvey) => {
-                    fetchSurveys();
-                    setRecentlyUpdatedSurveyName(newSurvey.name);
-                    setTimeout(() => setRecentlyUpdatedSurveyName(null), 3000);
-                  }}
-                />
+                <CreateSurvey />
               </div>
             </Fade>
           )}
@@ -432,13 +426,7 @@ function Dashboard() {
       </Container>
       <ImportSurvey
         open={openImportModal}
-        onResult={(result) => {
-          setOpenImportModal(false);
-          if (result) {
-            setRecentlyUpdatedSurveyName(result);
-            fetchSurveys();
-          }
-        }}
+
       />
       <DeleteModal
         open={open}
