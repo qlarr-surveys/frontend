@@ -18,6 +18,8 @@ function IconMcq(props) {
 
   const hideText = props.component?.hideText || false;
 
+  const runValues = useSelector((s) => s.runState.values);
+
 
   return (
     <Box
@@ -27,6 +29,9 @@ function IconMcq(props) {
       className={styles.iconFlexContainer}
     >
       {props.component.answers.map((option) => {
+        const relevance = runValues[option.qualifiedCode]?.relevance ?? true;
+        if (!relevance) return null;
+
         return (
           <IconMcqChoice
             key={option.code}

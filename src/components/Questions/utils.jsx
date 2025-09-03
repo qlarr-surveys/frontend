@@ -210,6 +210,10 @@ export const QUESTION_TYPES = [
         icon: questionIconByType("scq"),
       },
       {
+        type: "mcq",
+        icon: questionIconByType("mcq"),
+      },
+      {
         type: "select",
         icon: questionIconByType("select"),
       },
@@ -221,16 +225,14 @@ export const QUESTION_TYPES = [
         type: "mcq_array",
         icon: questionIconByType("mcq_array"),
       },
-      {
-        type: "mcq",
-        icon: questionIconByType("mcq"),
-      },
+
       {
         type: "nps",
         icon: questionIconByType("nps"),
       },
     ],
-  },,
+  },
+  ,
   {
     name: "section_image_choice_based",
     type: "choice",
@@ -254,7 +256,7 @@ export const QUESTION_TYPES = [
       {
         type: "image_mcq",
         icon: questionIconByType("image_mcq"),
-      }
+      },
     ],
   },
   {
