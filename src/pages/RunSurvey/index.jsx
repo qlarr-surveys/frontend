@@ -28,8 +28,15 @@ import RunLoadingDots from "~/components/common/RunLoadingDots";
 
 import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
 import SurveyAppBar from "~/components/run/SurveyAppBar";
+import { routes } from '~/routes';
 
-function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }) {
+function RunSurvey({
+  preview,
+  mode,
+  resume = false,
+  responseId,
+  navigationMode,
+}) {
   const runService = useService("run");
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -39,7 +46,8 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
   const [error, setError] = React.useState(false);
   const [inlineError, setInlineError] = React.useState(false);
   const [currentMode, setCurrentMode] = React.useState(mode);
-  const [currentNavigationMode, setCurrentNavigationMode] = React.useState(navigationMode);
+  const [currentNavigationMode, setCurrentNavigationMode] =
+    React.useState(navigationMode);
   const containerRef = useRef(null);
 
   const surveyTheme = useSelector((state) => {
@@ -61,7 +69,6 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
   const { t, i18n } = useTranslation("run");
   const dispatch = useDispatch();
 
-
   useEffect(() => {
     if (navigation) {
       continueNav(navigation, navResponseId);
@@ -78,14 +85,16 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
         ) {
           return;
         }
-  
+
         const mode = event.data.mode;
         const navigationMode = event.data.navigationMode;
-        dispatch(previewModeChange({ mode: mode, navigationMode: navigationMode }));
+        dispatch(
+          previewModeChange({ mode: mode, navigationMode: navigationMode })
+        );
       };
-  
+
       window.addEventListener("message", handleMessage);
-  
+
       // Cleanup listener on component unmount
       return () => {
         window.removeEventListener("message", handleMessage);
@@ -123,33 +132,52 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
       .then((response) => {
         setRender(true);
         dispatch(stateReceived({ response, preview }));
-        if(preview){
-          window.parent.postMessage({
-            type: "RESPONSE_ID_RECEIVED",
-            responseId: response.responseId,
-          }, window.location.origin);
+        if (preview) {
+          window.parent.postMessage(
+            {
+              type: "RESPONSE_ID_RECEIVED",
+              responseId: response.responseId,
+            },
+            window.location.origin
+          );
+        } else {
+          window.history.replaceState(
+            {},
+            "",
+            routes.resumeSurvey
+              .replace(":surveyId", sessionStorage.getItem("surveyId"))
+              .replace(":responseId", response.responseId)
+          );
         }
         sessionStorage.setItem("responseId", response.responseId);
         i18n.changeLanguage(response.lang.code);
         dispatch(setFetching(false));
       })
       .catch((err) => {
+        console.error(err);
         handleError(err);
       });
   };
 
   const continueNav = (payload, responseId) => {
     dispatch(setFetching(true));
-    if(payload.mode){
+    if (payload.mode) {
       setCurrentMode(payload.mode);
     }
-    if(payload.navigationMode){
+    if (payload.navigationMode) {
       setCurrentNavigationMode(payload.navigationMode);
     }
-    
+
     const useCaseMode = payload.mode ?? currentMode;
     const useCaseNavMode = payload.navigationMode ?? currentNavigationMode;
-    continueNavigation(runService, payload, responseId, preview, useCaseMode, useCaseNavMode)
+    continueNavigation(
+      runService,
+      payload,
+      responseId,
+      preview,
+      useCaseMode,
+      useCaseNavMode
+    )
       .then((response) => {
         setRender(true);
         dispatch(stateReceived({ response, preview }));
@@ -231,7 +259,7 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
             />
           )}
           {render && (
-            <div 
+            <div
               className={styles.mainContainer}
               ref={containerRef}
               style={{
