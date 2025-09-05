@@ -12,7 +12,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Box, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { resetSetup } from "~/state/design/designState";
-import { NavigationMode } from "~/components/manage/NavigationMode";
 import { useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import Theming from "../Theming";
@@ -159,48 +158,6 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           t={t}
           key={code + rule}
           label={"show_word_count"}
-          rule={rule}
-          code={code}
-        />
-      );
-    case "navigationMode":
-      return <NavigationMode key={code + rule} />;
-    case "allowPrevious":
-      return (
-        <ToggleValue
-          t={t}
-          key={code + rule}
-          label={"allow_previous"}
-          rule={rule}
-          code={code}
-        />
-      );
-    case "allowIncomplete":
-      return (
-        <ToggleValue
-          t={t}
-          key={code + rule}
-          label={"allow_incomplete"}
-          rule={rule}
-          code={code}
-        />
-      );
-    case "allowJump":
-      return (
-        <ToggleValue
-          t={t}
-          key={code + rule}
-          label={"allow_jump"}
-          rule={rule}
-          code={code}
-        />
-      );
-    case "skipInvalid":
-      return (
-        <ToggleValue
-          t={t}
-          key={code + rule}
-          label={"skip_invalid"}
           rule={rule}
           code={code}
         />
