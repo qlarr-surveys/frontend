@@ -1,5 +1,5 @@
 .imageIconButton {
-  float: right;
+  float: left;
   border-radius: 0 !important;
   padding: 4px !important;
   margin: 4px !important;
@@ -23,9 +23,9 @@
 .overlay {
   z-index: 1;
   position: absolute;
-  inset: 0; 
-  opacity: 0.6; 
-  pointer-events: none; 
+  inset: 0;
+  opacity: 0.6;
+  pointer-events: none;
 }
 .loadingContainer {
   text-align: center;
