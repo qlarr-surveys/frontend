@@ -1,155 +1,76 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import {
-  TablePagination,
-  IconButton,
+  Box,
   Button,
-  Typography,
-  Tabs,
-  Tab,
-  Tooltip,
+  Chip,
+  Divider,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemText,
   Menu,
   MenuItem,
+  Paper,
+  TablePagination,
+  Typography,
+  FormControl,
+  Skeleton,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { ArrowOutward } from "@mui/icons-material";
 
 import styles from "./ResponsesSurvey.module.css";
 import {
   formatlocalDateTime,
   serverDateTimeToLocalDateTime,
 } from "~/utils/DateUtils";
-import { previewUrlByQuestionCode } from "~/networking/run";
 import { ResponseDelete } from "~/components/manage/ResponseDelete";
 import FileSaver from "file-saver";
-import { stripTags, truncateWithEllipsis } from "~/utils/design/utils";
-import { RHFSwitch } from "~/components/hook-form";
-import { ArrowOutward } from "@mui/icons-material";
+import { RHFSelect } from "~/components/hook-form";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
+function InfoItem({ label, value }) {
+  return (
+    <Box display="grid" gridTemplateColumns="160px 1fr" gap={1} py={0.5}>
+      <Typography color="text.secondary" fontWeight={500}>
+        {label}
+      </Typography>
+      <Typography>{value ?? "—"}</Typography>
+    </Box>
+  );
+}
+
 function ResponsesSurvey() {
   const surveyService = useService("survey");
-
   const { t } = useTranslation("manage");
-  const [fetching, setFetching] = useState(true);
+  const { surveyId } = useParams();
 
+  const [fetching, setFetching] = useState(true);
   const [dbResponses, setDbResponses] = useState(false);
   const [completeResponses, setCompleteResponses] = useState("none");
   const [surveyor, setSurveyor] = useState(null);
 
-  const { surveyId } = useParams();
-
-  const processApirror = (e) => {
-    setFetching(false);
-  };
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
   const [allResponse, setAllResponse] = useState(null);
+  const [selected, setSelected] = useState(null);
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
   const [exportMenuAnchor, setExportMenuAnchor] = useState(null);
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const handleExportMenuOpen = (event) => {
-    setExportMenuAnchor(event.currentTarget);
-  };
+  const processApirror = () => setFetching(false);
 
-  const handleExportMenuClose = () => {
-    setExportMenuAnchor(null);
-  };
-
-  const handleExport = (format) => {
-    handleExportMenuClose();
-    if (format === 'files') {
-      downloadResponseFiles();
-    } else {
-      exportResponses(format);
-    }
-  };
-
-  const downloadResponseFiles = () => {
-    setFetching(true);
-    surveyService
-      .downloadResponseFiles(surveyId)
-      .then((data) => {
-        if (data) {
-          var file = new File([data], `${surveyId}-response-files.zip`, {
-            type: 'application/zip',
-          });
-          FileSaver.saveAs(file);
-        }
-        setFetching(false);
-      })
-      .catch((err) => {
-        processApirror(err);
-      });
-  };
-
-  const exportResponses = (format) => {
-    setFetching(true);
-    surveyService
-      .exportResponses(surveyId, timezone, dbResponses, completeResponses, format)
-      .then((data) => {
-        if (data) {
-          let fileExtension, mimeType;
-          
-          switch (format) {
-            case 'xlsx':
-              fileExtension = 'xlsx';
-              mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-              break;
-            case 'ods':
-              fileExtension = 'ods';
-              mimeType = 'application/vnd.oasis.opendocument.spreadsheet';
-              break;
-            default: // csv
-              fileExtension = 'csv';
-              mimeType = 'text/csv;charset=utf-8';
-              break;
-          }
-          
-          var file = new File([data], `${surveyId}-responses-export.${fileExtension}`, {
-            type: mimeType,
-          });
-          FileSaver.saveAs(file);
-        }
-        setFetching(false);
-      })
-      .catch((err) => {
-        processApirror(err);
-      });
-  };
-
-  const onSurveyorClicked = (response) => {
-    setCompleteResponses("none");
-    setSurveyor(response.surveyorID);
-  };
-
-  const findBoolean = (response) => {
-    switch (response) {
-      case "true":
-        return true;
-      case "false":
-        return false;
-      case "none":
-      default:
-        return undefined;
-    }
-  };
+  const findBoolean = (v) =>
+    v === "true" ? true : v === "false" ? false : undefined;
 
   const fetchResponses = (deleted = false) => {
     setFetching(true);
-    const updateCompleteResponses = findBoolean(completeResponses);
+    const completed = findBoolean(completeResponses);
 
     surveyService
       .allResponse(
@@ -157,24 +78,25 @@ function ResponsesSurvey() {
         dbResponses,
         page,
         rowsPerPage,
-        updateCompleteResponses,
+        completed,
         surveyor
       )
       .then((data) => {
         if (data) {
-          const updatedTotalCount = data.totalCount;
-          const totalPages = Math.ceil(updatedTotalCount / rowsPerPage);
+          const totalPages = Math.ceil(data.totalCount / rowsPerPage) || 1;
           const newPage = page > totalPages ? totalPages : page;
-          if (deleted && page > totalPages) {
-            setPage(newPage + 1);
-          }
+          if (deleted && page > totalPages) setPage(newPage);
+
           setAllResponse(data);
+          if (!selected || !data.responses.find((r) => r.id === selected.id)) {
+            setSelected(data.responses[0] || null);
+          }
         }
         setFetching(false);
       })
       .catch((err) => {
         processApirror(err);
-        setFetching(false);
+        console.error(err);
       });
   };
 
@@ -182,290 +104,375 @@ function ResponsesSurvey() {
     fetchResponses();
   }, [page, rowsPerPage, dbResponses, completeResponses, surveyor]);
 
-  const [responseToDelete, setResponseToDelete] = useState();
-  const onCloseModal = () => {
-    setResponseToDelete(null);
-  };
-
+  const [responseToDelete, setResponseToDelete] = useState(null);
+  const onCloseModal = () => setResponseToDelete(null);
   const deleteResponse = () => {
+    if (!responseToDelete) return;
     onCloseModal();
     surveyService
       .deleteResponse(surveyId, responseToDelete.id)
-      .then(() => {
-        fetchResponses(true);
+      .then(() => fetchResponses(true))
+      .catch(processApirror);
+  };
+
+  const handleExportMenuOpen = (e) => setExportMenuAnchor(e.currentTarget);
+  const handleExportMenuClose = () => setExportMenuAnchor(null);
+
+  const downloadResponseFiles = () => {
+    setFetching(true);
+    surveyService
+      .downloadResponseFiles(surveyId)
+      .then((data) => {
+        if (data) {
+          const file = new File([data], `${surveyId}-response-files.zip`, {
+            type: "application/zip",
+          });
+          FileSaver.saveAs(file);
+        }
+        setFetching(false);
       })
-      .catch((e) => {
-        processApirror(e);
-      });
+      .catch(processApirror);
   };
-  const tabValues = {
-    SHOW_ALL: "none",
-    SHOW_COMPLETED: "true",
-    SHOW_INCOMPLETE: "false",
+
+  const exportResponses = (format) => {
+    setFetching(true);
+    surveyService
+      .exportResponses(
+        surveyId,
+        timezone,
+        dbResponses,
+        completeResponses,
+        format
+      )
+      .then((data) => {
+        if (data) {
+          const map = {
+            csv: { ext: "csv", type: "text/csv;charset=utf-8" },
+            xlsx: {
+              ext: "xlsx",
+              type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            },
+            ods: {
+              ext: "ods",
+              type: "application/vnd.oasis.opendocument.spreadsheet",
+            },
+          };
+          const f = map[format];
+          const file = new File(
+            [data],
+            `${surveyId}-responses-export.${f.ext}`,
+            { type: f.type }
+          );
+          FileSaver.saveAs(file);
+        }
+        setFetching(false);
+      })
+      .catch(processApirror);
   };
+
+  const handleExport = (format) => {
+    handleExportMenuClose();
+    if (format === "files") downloadResponseFiles();
+    else exportResponses(format);
+  };
+
+  const onSurveyorClicked = (response) => {
+    setCompleteResponses("none");
+    setSurveyor(response.surveyorID || null);
+  };
+
+  if (fetching && !allResponse) {
+    return (
+      <div className={styles.loadingWrapper}>
+        <LoadingDots fullHeight />
+      </div>
+    );
+  }
 
   return (
     <Box className={styles.mainContainer}>
-      <Box
-        display="flex"
-        flexWrap={{ xs: "wrap", sm: "wrap", md: "nowrap" }}
-        gap={10}
-      >
-        <Box width="100%" className={styles.cardContent}>
-          <Box display="flex" alignItems="center" gap={1}>
-            <CustomTooltip body={t("tooltips.raw_values")} />
-            <Typography variant="h5" color="primary" fontWeight={600}>
-              {t("responses.raw_values")}
-            </Typography>
-          </Box>
-          <RHFSwitch
-            checked={dbResponses}
-            onChange={(event) => {
-              setDbResponses(event.target.checked);
-            }}
-          />
-        </Box>
-        <Box width="100%" className={styles.cardContent}>
-          <Box display="flex" alignItems="center" gap={1}>
-            <CustomTooltip body={t("tooltips.export_responses")} />
-            <Typography variant="h5" color="primary" fontWeight={600}>
-              {t("responses.export")}
-            </Typography>
-          </Box>
-          <Button
-            sx={{ minWidth: "50px" }}
-            color="primary"
-            disabled={surveyor || false}
-            size="small"
-            variant="contained"
-            onClick={handleExportMenuOpen}
-          >
-            <ArrowOutward />
-          </Button>
-          <Menu
-            anchorEl={exportMenuAnchor}
-            open={Boolean(exportMenuAnchor)}
-            onClose={handleExportMenuClose}
-          >
-            <MenuItem onClick={() => handleExport('csv')}>
-              Export as CSV
-            </MenuItem>
-            <MenuItem onClick={() => handleExport('xlsx')}>
-              Export as Excel
-            </MenuItem>
-            <MenuItem onClick={() => handleExport('ods')}>
-              Export as ODS
-            </MenuItem>
-            <MenuItem onClick={() => handleExport('files')}>
-              Download Response Files
-            </MenuItem>
-          </Menu>
-        </Box>
-      </Box>
-
-      <Box
-        display="flex"
-        alignItems="center"
-        sx={{ borderBottom: 1, borderColor: "divider" }}
-      >
-        <Typography
-          color="primary"
-          variant="h4"
-          fontWeight={600}
-          sx={{ width: "33%" }}
-        >
-          {t("responses.filter_completed")}
-        </Typography>
-        <Tabs
-          sx={{ width: "100%" }}
-          value={completeResponses}
-          onChange={(event, newValue) => {
-            setPage(1);
-            setCompleteResponses(newValue);
-          }}
-          textColor="primary"
-          indicatorColor="primary"
-          variant="fullWidth"
-        >
-          <Tab
-            disabled={surveyor || false}
-            label={t("responses.filter_completed_show_all")}
-            value={tabValues.SHOW_ALL}
-          />
-          <Tab
-            disabled={surveyor || false}
-            label={t("responses.filter_completed_show_completed")}
-            value={tabValues.SHOW_COMPLETED}
-          />
-          <Tab
-            disabled={surveyor || false}
-            label={t("responses.filter_completed_show_incomplete")}
-            value={tabValues.SHOW_INCOMPLETE}
-          />
-        </Tabs>
-      </Box>
-
       {surveyor && (
-        <>
-          <br />
-          <Button sx={{ margin: "8px" }} onClick={() => setSurveyor(null)}>
+        <Box mb={1}>
+          <Button sx={{ m: 1 }} onClick={() => setSurveyor(null)}>
             {t("responses.reset_surveyor_filter")}
           </Button>
-        </>
+        </Box>
       )}
-      {fetching ? (
-        <div className={styles.loadingWrapper}>
-          <LoadingDots fullHeight />
-        </div>
-      ) : (
-        <Paper sx={{ width: "100%", background: "transparent", mb: 2 }}>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                {allResponse && (
-                  <TableRow>
-                    <TableCell key="btns" />
-                    <TableCell key="id" align="left">
-                      ID
-                    </TableCell>
 
-                    <TableCell key="surveyor" align="left">
-                      {t("label.surveyor")}
-                    </TableCell>
+      <Box
+        display="grid"
+        gridTemplateColumns={{ xs: "1fr", md: "500px 1fr" }}
+        gap={2}
+        minHeight={520}
+      >
+        <Paper
+          elevation={0}
+          variant="outlined"
+          sx={{ overflow: "hidden", display: "flex", flexDirection: "column" }}
+        >
+          <Box
+            px={2}
+            py={1.5}
+            display="flex"
+            alignItems="center"
+            gap={1}
+            justifyContent="space-between"
+          >
+            <FormControl size="small" sx={{ minWidth: 220 }}>
+              <RHFSelect
+                label="Select"
+                value={completeResponses}
+                onChange={(e) => {
+                  setPage(1);
+                  setCompleteResponses(e.target.value);
+                }}
+              >
+                <MenuItem value="none">
+                  {t("responses.filter_completed_show_all")}
+                </MenuItem>
+                <MenuItem value="true">
+                  {t("responses.filter_completed_show_completed")}
+                </MenuItem>
+                <MenuItem value="false">
+                  {t("responses.filter_completed_show_incomplete")}
+                </MenuItem>
+              </RHFSelect>
+            </FormControl>
 
-                    <TableCell key="ip" align="left">
-                      {t("responses.ip_addr")}
-                    </TableCell>
-                    <TableCell key="start_date" align="left">
-                      {t("responses.start_date")}
-                    </TableCell>
-                    <TableCell key="submit_date" align="left">
-                      {t("responses.submit_date")}
-                    </TableCell>
-                    <TableCell key="lang" align="left">
-                      {t("responses.lang")}
-                    </TableCell>
-
-                    {Object.values(allResponse?.columnNames).map((label) => {
-                      return (
-                        <TableCell key={label} align="left">
-                          {stripTags(label)}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                )}
-              </TableHead>
-              <TableBody>
-                {allResponse?.responses.map((response) => {
+            <Box display="flex" alignItems="center" gap={1}>
+              <CustomTooltip body={t("tooltips.export_responses")} />
+              <Button
+                sx={{ minWidth: 50 }}
+                color="primary"
+                disabled={Boolean(surveyor)}
+                size="small"
+                variant="contained"
+                onClick={handleExportMenuOpen}
+                aria-haspopup="menu"
+                aria-controls="export-menu"
+              >
+                <ArrowOutward />
+              </Button>
+              <Menu
+                id="export-menu"
+                anchorEl={exportMenuAnchor}
+                open={Boolean(exportMenuAnchor)}
+                onClose={handleExportMenuClose}
+              >
+                <MenuItem onClick={() => handleExport("csv")}>
+                  Export as CSV
+                </MenuItem>
+                <MenuItem onClick={() => handleExport("xlsx")}>
+                  Export as Excel
+                </MenuItem>
+                <MenuItem onClick={() => handleExport("ods")}>
+                  Export as ODS
+                </MenuItem>
+                <MenuItem onClick={() => handleExport("files")}>
+                  Download Response Files
+                </MenuItem>
+              </Menu>
+            </Box>
+          </Box>
+          <Divider />
+          {fetching ? (
+            <Box p={2}>
+              {[...Array(8)].map((_, i) => (
+                <Box key={i} display="flex" alignItems="center" gap={2} py={1}>
+                  <Skeleton variant="rounded" width={28} height={24} />
+                  <Skeleton variant="text" width="50%" />
+                  <Skeleton
+                    variant="rounded"
+                    width={80}
+                    height={22}
+                    style={{ marginLeft: "auto" }}
+                  />
+                </Box>
+              ))}
+            </Box>
+          ) : (
+            <>
+              <List dense disablePadding sx={{ overflowY: "auto", flex: 1 }}>
+                {allResponse?.responses.map((r) => {
+                  const isSelected = selected && selected.id === r.id;
                   return (
-                    <TableRow key={response.id} sx={{ minHeight: "100px" }}>
-                      <TableCell key="btns" align="left">
-                        <Box sx={{ display: "flex" }}>
-                          <IconButton
-                            onClick={() => {
-                              setResponseToDelete(response);
-                            }}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Box>
-                      </TableCell>
-                      <TableCell key="id" align="left">
-                        {response.index}
-                      </TableCell>
-
-                      <TableCell key="surveyor" align="left">
-                        {response.surveyorName ? (
-                          <Link
-                            onClick={() => {
-                              onSurveyorClicked(response);
-                            }}
-                          >
-                            {response.surveyorName}
-                          </Link>
-                        ) : (
-                          ""
-                        )}
-                      </TableCell>
-
-                      <TableCell key="ip" align="left">
-                        {response.ipAddress}
-                      </TableCell>
-                      <TableCell key="startDate" align="left">
-                        {formatlocalDateTime(
-                          serverDateTimeToLocalDateTime(response.startDate)
-                        )}
-                      </TableCell>
-                      <TableCell key="submitDate" align="left">
-                        {response.submitDate
-                          ? formatlocalDateTime(
-                              serverDateTimeToLocalDateTime(response.submitDate)
-                            )
-                          : " - "}
-                      </TableCell>
-                      <TableCell key="lang" align="left">
-                        {response.lang}
-                      </TableCell>
-                      {Object.keys(response.values).map((key) => {
-                        const value = response.values[key];
-                        return (
-                          <TableCell align="left" key={key}>
-                            {value === null ||
-                            value === undefined ||
-                            value === "" ? (
-                              " - "
-                            ) : typeof value === "string" ? (
-                              <CustomTooltip showIcon={false} title={value}>
-                                <span>{truncateWithEllipsis(value, 25)}</span>
-                              </CustomTooltip>
-                            ) : typeof value === "object" &&
-                              "size" in value &&
-                              "filename" in value &&
-                              "stored_filename" in value ? (
-                              <a
-                                target="_blank"
-                                download={value.stored_filename}
-                                href={previewUrlByQuestionCode(
-                                  key.split(".")[0],
-                                  response.id
+                    <ListItemButton
+                      key={r.id}
+                      selected={isSelected}
+                      onClick={() => setSelected(r)}
+                      sx={{ alignItems: "flex-start" }}
+                    >
+                      <ListItemText
+                        primary={
+                          <Box display="flex" gap={1} alignItems="center">
+                            <Typography fontWeight={600}>#{r.index}</Typography>
+                            {r.submitDate ? (
+                              <Chip
+                                size="small"
+                                label={t(
+                                  "responses.filter_completed_show_completed"
                                 )}
-                              >
-                                {value.filename} -
-                                {Math.round(value.size / 1000) + "K"}
-                              </a>
+                              />
                             ) : (
-                              JSON.stringify(value)
+                              <Chip
+                                size="small"
+                                variant="outlined"
+                                label={t(
+                                  "responses.filter_completed_show_incomplete"
+                                )}
+                              />
                             )}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
+                          </Box>
+                        }
+                        secondary={
+                          <>
+                            <Typography variant="body2">
+                              {formatlocalDateTime(
+                                serverDateTimeToLocalDateTime(r.startDate)
+                              )}
+                            </Typography>
+                            {r.surveyorName && (
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {t("label.surveyor")}:{" "}
+                                <Link
+                                  to="#"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    onSurveyorClicked(r);
+                                  }}
+                                >
+                                  {r.surveyorName}
+                                </Link>
+                              </Typography>
+                            )}
+                          </>
+                        }
+                      />
+                      <IconButton
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setResponseToDelete(r);
+                        }}
+                        aria-label="delete"
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </ListItemButton>
                   );
                 })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 50, 100]}
-            component="div"
-            labelDisplayedRows={({ from, to, count, page }) => {
-              return t("responses.label_displayed_rows", { from, to, count });
-            }}
-            labelRowsPerPage={t("responses.label_rows_per_page")}
-            count={allResponse?.totalCount}
-            rowsPerPage={rowsPerPage}
-            page={page - 1}
-            onPageChange={(event, newPage) => {
-              setPage(newPage + 1);
-            }}
-            onRowsPerPageChange={(event) => {
-              setRowsPerPage(parseInt(event.target.value, 10));
-              setPage(1);
-            }}
-          />
+              </List>
+
+              <Divider />
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 50, 100]}
+                component="div"
+                labelDisplayedRows={({ from, to, count }) =>
+                  t("responses.label_displayed_rows", { from, to, count })
+                }
+                labelRowsPerPage={t("responses.label_rows_per_page")}
+                count={allResponse?.totalCount || 0}
+                rowsPerPage={rowsPerPage}
+                page={page - 1}
+                onPageChange={(_, newPage) => setPage(newPage + 1)}
+                onRowsPerPageChange={(e) => {
+                  setRowsPerPage(parseInt(e.target.value, 10));
+                  setPage(1);
+                }}
+              />
+            </>
+          )}
         </Paper>
-      )}
+
+        <Paper elevation={0} variant="outlined" sx={{ p: 2 }}>
+          {!selected ? (
+            <Box p={4} textAlign="center">
+              <Typography color="text.secondary">
+                {t("responses.no_selection") || "Select a response"}
+              </Typography>
+            </Box>
+          ) : (
+            <>
+              <Box
+                display="grid"
+                gridTemplateColumns={{ xs: "1fr", lg: "1fr 1fr" }}
+                columnGap={4}
+              >
+                <Box>
+                  <InfoItem label="ID" value={`#${selected.index}`} />
+                  <InfoItem
+                    label={t("label.surveyor")}
+                    value={
+                      selected.surveyorName ? (
+                        <Link
+                          to="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onSurveyorClicked(selected);
+                          }}
+                        >
+                          {selected.surveyorName}
+                        </Link>
+                      ) : (
+                        "—"
+                      )
+                    }
+                  />
+                  <InfoItem
+                    label={t("responses.ip_addr")}
+                    value={selected.ipAddress || "—"}
+                  />
+                  <InfoItem
+                    label={t("responses.start_date")}
+                    value={formatlocalDateTime(
+                      serverDateTimeToLocalDateTime(selected.startDate)
+                    )}
+                  />
+                </Box>
+                <Box>
+                  <InfoItem
+                    label={t("responses.submit_date")}
+                    value={
+                      selected.submitDate
+                        ? formatlocalDateTime(
+                            serverDateTimeToLocalDateTime(selected.submitDate)
+                          )
+                        : "—"
+                    }
+                  />
+                  <InfoItem
+                    label={t("responses.lang")}
+                    value={selected.lang || "—"}
+                  />
+                  <InfoItem
+                    label={t("responses.status") || "Status"}
+                    value={
+                      selected.submitDate ? (
+                        <Chip
+                          size="small"
+                          label={t("responses.filter_completed_show_completed")}
+                        />
+                      ) : (
+                        <Chip
+                          size="small"
+                          variant="outlined"
+                          label={t(
+                            "responses.filter_completed_show_incomplete"
+                          )}
+                        />
+                      )
+                    }
+                  />
+                </Box>
+              </Box>
+            </>
+          )}
+        </Paper>
+      </Box>
+
       {Boolean(responseToDelete) && (
         <ResponseDelete
           onDelete={deleteResponse}
