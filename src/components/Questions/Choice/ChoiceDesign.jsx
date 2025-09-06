@@ -30,7 +30,7 @@ function ChoiceQuestion(props) {
     (!children || !children.some((el) => el.type === "other"));
 
   const canHaveNone =
-    questionType == "mcq" &&
+    (questionType == "mcq" || questionType == "scq") &&
     (!children || !children.some((el) => el.type === "none"));
 
   const canHaveAll =

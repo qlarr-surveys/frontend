@@ -40,7 +40,9 @@ function LogicBuilder(props) {
       ),
     [designState]
   );
+
   const config = { ...loadedConfig, fields };
+
   const initTree = props.logic
     ? checkTree(loadFromJsonLogic(props.logic, config), config)
     : loadTree({ id: uuid(), type: "group" });
@@ -56,7 +58,16 @@ function LogicBuilder(props) {
   );
 
   const onChange = (immutableTree) => {
+    console.log("immutableTree:", immutableTree);
     setTree(immutableTree);
+  };
+
+  const onInit = (immutableTree, _cfg, _actionMeta, actions) => {
+    const children = immutableTree.get("children1");
+    if (!children || children.size === 0) {
+      const rootId = immutableTree.get("id");
+      actions.addRule([rootId]);
+    }
   };
 
   const saveState = () => {
@@ -105,6 +116,7 @@ function LogicBuilder(props) {
           <Query
             {...config}
             value={tree}
+            onInit={onInit}
             onChange={onChange}
             renderBuilder={renderBuilder}
           />

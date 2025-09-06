@@ -1,11 +1,12 @@
 import React from "react";
 import { Checkbox, FormControl, MenuItem, Select } from "@mui/material";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeAttribute, updateRandom } from "~/state/design/designState";
 import styles from "./OrderSetup.module.css";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { instructionByCode } from "~/state/design/addInstructions";
+import { stripTags } from "~/utils/design/utils";
 
 export default function OrderSetup({ t, rule, code }) {
   const dispatch = useDispatch();
@@ -72,14 +73,14 @@ export default function OrderSetup({ t, rule, code }) {
     return state.designState.langInfo.lang;
   });
 
-  const childrenCodes = useSelector((state) => {
-    return (
-      state.designState[code]?.children
-        ?.filter((el) => (type ? el.type == type : true))
-        ?.filter((el) => el.groupType?.toLowerCase() != "end")
-        ?.map((el) => el.code) || []
-    );
-  });
+  const childrenCodes = useSelector(
+    (state) =>
+      (state.designState[code]?.children || [])
+        .filter((el) => (type ? el.type === type : true))
+        .filter((el) => el.groupType?.toLowerCase() !== "end")
+        .map((el) => el.code),
+    shallowEqual
+  );
 
   const randomInstruction = instructionByCode(state, "random_group");
   const randomGroups = randomInstruction?.groups || [];
@@ -185,13 +186,14 @@ export default function OrderSetup({ t, rule, code }) {
 }
 
 function RandomisedChildDisplay({ code, label, checked, handleChange }) {
+
   return (
     <li className={styles.listItem}>
       <Checkbox
         checked={checked}
         onChange={(e) => handleChange(e.target.checked)}
       />
-      {code}: {label}
+      {code}: {stripTags(label)}
     </li>
   );
 }

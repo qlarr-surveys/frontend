@@ -18,6 +18,8 @@ function ImageMcq(props) {
   }, shallowEqual);
   const isRtl = rtlLanguage.includes(lang);
 
+  const runValues = useSelector((s) => s.runState.values);
+
   return (
     <Box
       sx={{
@@ -27,6 +29,9 @@ function ImageMcq(props) {
       className={styles.imageFlexContainer}
     >
       {props.component.answers.map((option) => {
+        const relevance = runValues[option.qualifiedCode]?.relevance ?? true;
+        if (!relevance) return null;
+
         return (
           <ImageMcqItem
             option={option}

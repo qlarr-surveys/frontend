@@ -1,5 +1,5 @@
 import styles from "./ImageChoiceItemDesign.module.css";
-import { Box, Card, Grid, IconButton, TextField } from "@mui/material";
+import { alpha, Box, Grid, IconButton, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import {
   changeResources,
   onDrag,
   removeAnswer,
+  setup,
 } from "~/state/design/designState";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { buildResourceUrl } from "~/networking/common";
@@ -20,6 +21,8 @@ import { useDrag, useDrop } from "react-dnd";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import { contentEditable, inDesign } from "~/routes";
+import { Build } from "@mui/icons-material";
+import { setupOptions } from "~/constants/design";
 
 function ImageChoiceItemDesign({
   parentCode,
@@ -69,6 +72,12 @@ function ImageChoiceItemDesign({
       dispatch(removeAnswer(qualifiedCode));
     }
   };
+
+  const isInSetup = useSelector((state) => {
+    return state.designState.setup?.code == qualifiedCode;
+  });
+
+  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
 
   const backgroundImage = answer?.resources?.image
     ? `url('${buildResourceUrl(answer.resources.image)}')`
@@ -231,9 +240,16 @@ function ImageChoiceItemDesign({
           opacity: isDragging ? "0.2" : "1",
         }}
         item
+        position="relative"
         xs={12 / columnNumber}
         key={qualifiedCode}
       >
+        {isInSetup && (
+          <div
+            className={styles.overlay}
+            style={{ backgroundColor: contrastColor }}
+          />
+        )}
         <div
           className={styles.imageContainer}
           style={{
@@ -249,7 +265,7 @@ function ImageChoiceItemDesign({
                 sx={{
                   color: theme.textStyles.text.color,
                 }}
-                className={styles.imageIconButton}
+                className={styles.imageHoverIconButton}
                 onClick={() => {
                   onDelete();
                 }}
@@ -260,8 +276,25 @@ function ImageChoiceItemDesign({
                 sx={{
                   color: theme.textStyles.text.color,
                 }}
+                className={styles.imageHoverIconButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(
+                    setup({
+                      code: qualifiedCode,
+                      rules: setupOptions("options"),
+                    })
+                  );
+                }}
+              >
+                <Build />
+              </IconButton>
+              <IconButton
+                sx={{
+                  color: theme.textStyles.text.color,
+                }}
                 component="label"
-                className={styles.imageIconButton}
+                className={styles.imageHoverIconButton}
                 onClick={(e) => {
                   e.stopPropagation();
                 }}

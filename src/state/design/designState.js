@@ -971,7 +971,7 @@ const buildCodeIndex = (state) => {
   let questionCount = 0;
   state.Survey.children?.forEach((group) => {
     groupCount++;
-    retrunRestult[group.code] = "G" + groupCount;
+    retrunRestult[group.code] = "P" + groupCount;
     let groupObj = state[group.code];
     if (groupObj.children) {
       groupObj.children.forEach((question) => {
