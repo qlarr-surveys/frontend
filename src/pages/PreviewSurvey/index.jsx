@@ -22,7 +22,7 @@ function PreviewSurvey({ responseId = null }) {
     searchParams.get("mode") || "online"
   );
   const [navigationMode, setNavigationMode] = useState(
-    searchParams.get("navigation_mode") || "GROUP_BY_GROUP"
+    searchParams.get("navigation_mode") || "ALL_IN_ONE"
   );
   const [currentResponseId, setCurrentResponseId] = useState(responseId);
   const { t: tDesign } = useTranslation("design");
