@@ -36,7 +36,15 @@ export const runState = createSlice({
       state.navigation = {
         values: getValues(state.values),
         lang: action.payload.lang,
-        navigationDirection: { name: "CHANGE_LANGE" },
+        navigationDirection: { name: "RESUME" },
+      };
+    },
+    previewModeChange: (state, action) => {
+      state.navigation = {
+        values: getValues(state.values),
+        mode: action.payload.mode,
+        navigationMode: action.payload.navigationMode,
+        navigationDirection: { name: "RESUME" },
       };
     },
     navigateNext: (state) => {
@@ -61,6 +69,7 @@ export const {
   orderChange,
   stateReceived,
   langChange,
+  previewModeChange,
   navigateNext,
   navigatePrevious,
   jump,

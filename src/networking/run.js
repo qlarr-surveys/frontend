@@ -26,12 +26,16 @@ export const continueNavigation = (
   payload,
   responseId,
   preview,
-  mode
+  mode,
+  navigationMode
 ) => {
   const finalObj = {
     ...payload,
     responseId: responseId,
   };
+  if(navigationMode){
+    finalObj.navigationMode = navigationMode;
+  }
   if (window["Android"]) {
     return new Promise((resolve, reject) => {
       window["Android"].navigate(JSON.stringify(finalObj));
