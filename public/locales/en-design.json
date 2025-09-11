@@ -369,6 +369,10 @@
     "title": "Provide a title for your survey to help users identify it",
     "description": "Provide a description for your survey to help users understand it",
     "textarea_lines": "Set the number of lines for the text area",
-    "disabled": "Completely hide this question so respondents cannot see or interact with it. Any visibility conditions will be cleared."
+    "disabled": "Completely hide this question so respondents cannot see or interact with it. Any visibility conditions will be cleared.",
+    "allow_previous": "Allow respondents to navigate back to previous pages to review or change their answers.",
+    "allow_jump": "Enable a survey index so respondents can jump to any page in the survey.",
+    "allow_incomplete": "Let respondents save their progress and return later to complete the survey.",
+    "skip_invalid": "Allow respondents to proceed even if some answers are invalid, enforcing validation only when they submit the survey."
   }
 }

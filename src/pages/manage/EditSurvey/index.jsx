@@ -12,12 +12,18 @@ import SurveyQuota from "~/components/manage/SurveyQuota";
 import ExportSurvey from "~/components/manage/ExportSurvey";
 import { useSelector } from "react-redux";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import NavigationSettings from "~/components/manage/NavigationSettings";
 
 function EditSurvey({ onPublish }) {
   const { t } = useTranslation("manage");
   const survey = useSelector((state) => state.editState.survey);
 
   const sections = [
+    {
+      id: "navigation",
+      title: t("edit_survey.navigation"),
+      component: <NavigationSettings/>,
+    },
     {
       id: "quotas",
       title: t("edit_survey.quotas"),

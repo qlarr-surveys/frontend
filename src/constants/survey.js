@@ -11,9 +11,9 @@ export const SURVEY_STATUS = {
 };
 
 export const NAVIGATION_MODE = {
-  ALL_IN_ONE: "all_in_one",
-  GROUP_BY_GROUP: "group_by_group",
-  QUESTION_BY_QUESTION: "question_by_question",
+  ALL_IN_ONE: "ALL_IN_ONE",
+  GROUP_BY_GROUP: "GROUP_BY_GROUP",
+  QUESTION_BY_QUESTION: "QUESTION_BY_QUESTION",
 };
 
 export const SURVEY = {
