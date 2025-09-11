@@ -1,4 +1,4 @@
-import { EventBusy, HourglassEmpty } from "@mui/icons-material";
+import {HourglassEmpty } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -27,7 +27,7 @@ function ErrorLayout({ setErrorSeen, error, onRetry }) {
       <Dialog 
       open={true}>
         <DialogTitle>
-          {t("error.component_deleted_title", "Deletion not allowed")}
+          {t("error.component_deleted_titlae", "Deletion not allowed")}
         </DialogTitle>
         <DialogContent>
           <Typography>
@@ -38,7 +38,7 @@ function ErrorLayout({ setErrorSeen, error, onRetry }) {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => window.location.reload()}
+          onClick={() => setErrorSeen()}
             variant="contained"
             style={{
               backgroundColor: theme.palette.primary.main,
