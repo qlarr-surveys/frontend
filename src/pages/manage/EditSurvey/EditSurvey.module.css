@@ -23,9 +23,7 @@
   background-color: white;
 }
 
-.accordionDetails {
-  padding: 1.5rem 4rem;
-}
+
 
 @media (max-width: 600px) {
   .mainContainer {
@@ -34,9 +32,7 @@
   .accordionContainer {
     padding: 0.25rem;
   }
-  .accordionDetails {
-    padding: 1rem;
-  }
+
 }
 @media (min-width: 601px) and (max-width: 1024px) {
   .mainContainer {
@@ -45,9 +41,7 @@
   .accordionContainer {
     padding: 0.75rem;
   }
-  .accordionDetails {
-    padding: 1.5rem;
-  }
+
 }
 
 .accordionContainer:first-of-type {

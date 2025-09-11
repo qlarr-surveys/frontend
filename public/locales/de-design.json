@@ -358,6 +358,10 @@
     "description": "Geben Sie eine Beschreibung für Ihre Umfrage an, damit Benutzer sie besser verstehen",
     "textarea_lines": "Anzahl der Zeilen für das Textfeld festlegen",
     "relevance": "Steuern Sie, wann diese Seite oder Frage sichtbar ist. Sie können:\n\n● Sie immer anzeigen\n● Sie nur anzeigen, wenn bestimmte Bedingungen erfüllt sind\n\nBedingungen können basieren auf:\n\n● Modus der Umfrage (online/offline)\n● Sprache der Umfrage\n● Antworten auf vorherige Fragen\n● Ob eine andere Frage oder Seite angezeigt oder gültig ist\n\nFügen Sie mehrere Bedingungen hinzu, um den Ablauf für jeden Teilnehmer anzupassen.",
-    "disabled": "Diese Frage vollständig ausblenden, damit Befragte sie weder sehen noch damit interagieren können. Alle Sichtbarkeitsbedingungen werden gelöscht."
+    "disabled": "Diese Frage vollständig ausblenden, damit Befragte sie weder sehen noch damit interagieren können. Alle Sichtbarkeitsbedingungen werden gelöscht.",
+    "allow_previous": "Ermöglichen Sie es den Befragten, zu vorherigen Seiten zurückzukehren, um ihre Antworten zu überprüfen oder zu ändern.",
+    "allow_jump": "Aktivieren Sie einen Umfrageindex, damit Befragte zu jeder Seite in der Umfrage springen können.",
+    "allow_incomplete": "Lassen Sie die Befragten ihren Fortschritt speichern und später zurückkehren, um die Umfrage zu vervollständigen.",
+    "skip_invalid": "Ermöglichen Sie es den Befragten, fortzufahren, auch wenn einige Antworten ungültig sind, und erzwingen Sie die Validierung nur beim Absenden der Umfrage."
   }
 }
