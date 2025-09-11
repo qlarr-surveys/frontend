@@ -1,6 +1,12 @@
-import React, { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   designStateReceived,
   onAddComponentsVisibilityChange,
@@ -12,7 +18,7 @@ import SavingSurvey from "~/components/design/SavingSurvey";
 import { availablePages, isAnalyst, isSurveyAdmin } from "~/constants/roles";
 import TokenService from "~/services/TokenService";
 import { useParams } from "react-router-dom";
-import {  MANAGE_SURVEY_LANDING_PAGES } from "~/routes";
+import { MANAGE_SURVEY_LANDING_PAGES } from "~/routes";
 import { Box } from "@mui/material";
 import styles from "./ManageSurvey.module.css";
 
@@ -20,8 +26,9 @@ import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import SideTabs from "~/components/design/SideTabs";
 
-
-const ManageTranslations = React.lazy(() => import("../manage/ManageTranslations"));
+const ManageTranslations = React.lazy(() =>
+  import("../manage/ManageTranslations")
+);
 const ResponsesSurvey = React.lazy(() => import("../manage/ResponsesSurvey"));
 const EditSurvey = React.lazy(() => import("../manage/EditSurvey"));
 const DesignSurvey = React.lazy(() => import("../DesignSurvey"));
@@ -34,6 +41,8 @@ function ManageSurvey({ landingPage }) {
   const [selectedPage, setSelectedTab] = useState(
     landingTab(landingPage, user)
   );
+  const refetchError = useSelector((state) => state.editState.error);
+
   const [designAvailable, setDesignAvailable] = useState(false);
 
   const dispatch = useDispatch();
@@ -77,6 +86,24 @@ function ManageSurvey({ landingPage }) {
       .catch((err) => {});
   };
 
+  const refetchAll = useCallback(() => {
+    if (isSurveyAdmin(user)) {
+      dispatch(setLoading(true));
+      GetData(designService, setState, processApirror)
+        .then((data) => {
+          if (data) setDesignAvailable(true);
+        })
+        .finally(() => dispatch(setLoading(false)));
+    }
+    loadSurvey();
+  }, [user, designService, dispatch, setState, processApirror, loadSurvey]);
+
+  useEffect(() => {
+    if (refetchError?.name === "component_deleted" && refetchError?.seen) {
+      refetchAll();
+    }
+  }, [refetchError?.name, refetchError?.seen, refetchAll]);
+
   useEffect(() => {
     const handlePopState = () => {
       const currentPath = window.location.pathname;
@@ -109,13 +136,13 @@ function ManageSurvey({ landingPage }) {
   return (
     <>
       <Box sx={{ display: "flex" }}>
-      {availablePagesMemo.length > 0 && (
-        <SideTabs
-          availablePages={availablePagesMemo}
-          selectedPage={selectedPage}
-          surveyId={params.surveyId}
-          onPageChange={changePage}
-        />
+        {availablePagesMemo.length > 0 && (
+          <SideTabs
+            availablePages={availablePagesMemo}
+            selectedPage={selectedPage}
+            surveyId={params.surveyId}
+            onPageChange={changePage}
+          />
         )}
         <Suspense fallback={<LoadingDots fullHeight />}>
           <Box className={styles.wrapper}>
@@ -136,13 +163,13 @@ function ManageSurvey({ landingPage }) {
       {designAvailable &&
         selectedPage == MANAGE_SURVEY_LANDING_PAGES.LANGUAGE && (
           <Suspense fallback={<LoadingDots fullHeight />}>
-          <ManageTranslations
-            onManageTranslationsClose={() => {
-              setSelectedTab(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
-            }}
-            permissionsLoadingpermissionsLoading
-            onStartTranslation={() => {}}
-          />
+            <ManageTranslations
+              onManageTranslationsClose={() => {
+                setSelectedTab(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
+              }}
+              permissionsLoadingpermissionsLoading
+              onStartTranslation={() => {}}
+            />
           </Suspense>
         )}
     </>
