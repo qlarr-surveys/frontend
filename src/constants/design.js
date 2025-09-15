@@ -23,28 +23,12 @@ export const reorderSetup = {
 export const themeSetup = {
   code: "Survey",
   rules: [
-    { title: "theme", rules: ["theme"] },
-    {
-      title: "navigation_options",
-      key: "navigation",
-      rules: [
-        "navigationMode",
-        "allowPrevious",
-        "allowIncomplete",
-        "allowJump",
-        "skipInvalid",
-      ],
-    },
-    {
-      title: "order_priority",
-      key: "random",
-      rules: ["randomize_groups"],
-    },
+    { title: "", rules: ["theme"] },
   ],
 };
 export const languageSetup = {
   code: "Survey",
-  rules: [{ title: "Translations", rules: ["language"] }],
+  rules: [{ title: "", rules: ["language"] }],
 };
 
 export const setupOptions = (type) => {
