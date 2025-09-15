@@ -57,3 +57,13 @@
   background-color: rgb(69, 79, 91);
   box-shadow: none;
 }
+
+.fixedBg {
+  position: fixed;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: -1;
+  pointer-events: none;
+}
