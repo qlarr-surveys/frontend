@@ -27,7 +27,7 @@ function ErrorLayout({ setErrorSeen, error, onRetry }) {
       <Dialog 
       open={true}>
         <DialogTitle>
-          {t("error.component_deleted_titlae", "Deletion not allowed")}
+          {t("component_deleted_title")}
         </DialogTitle>
         <DialogContent>
           <Typography>
@@ -45,7 +45,7 @@ function ErrorLayout({ setErrorSeen, error, onRetry }) {
               color: theme.palette.primary.contrastText,
             }}
           >
-            OK
+            {t("ok")}
           </Button>
         </DialogActions>
       </Dialog>

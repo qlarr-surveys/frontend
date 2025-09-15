@@ -165,6 +165,8 @@
   "import_survey": "Umfrage importieren",
   "upload_zip_folder": "ZIP-Ordner hochladen",
   "password_required": "Passwort ist erforderlich",
+  "component_deleted_title": "Löschung nicht erlaubt",
+  "ok": "OK",
   "processed_errors": {
     "invalid_file_for_survey_export": "Diese ZIP-Datei enthält keine gültige Qlarr-Umfrage. Bitte überprüfen Sie, ob Sie die Umfrage korrekt exportiert haben.",
     "backend_down": "Backend ist nicht erreichbar... Bitte versuchen Sie es später erneut",
