@@ -269,6 +269,7 @@
   "wrong_logic_err": "❌ There was an error in Logic therefore this was reset to <strong>Always Show</strong>",
   "general": "General",
   "logic": "Logic",
+  "response_expiry":"Response expiry (time since start)",
   "tooltips": {
     "has_relevance": "Has show/Hide Condition",
     "is_disabled": "Is Disabled",

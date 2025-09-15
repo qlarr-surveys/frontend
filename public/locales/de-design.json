@@ -263,6 +263,7 @@
   "wrong_logic_err": "❌ Es gab einen Fehler in Logic, daher wurde dies auf <strong>Immer anzeigen</strong> zurückgesetzt",
   "general": "Allgemein",
   "logic": "Logik",
+  "response_expiry":"Antwortablauf (Zeit seit Beginn)",
   "tooltips": {
     "has_relevance": "Hat eine Sichtbarkeitsbedingung",
     "is_disabled": "Ist deaktiviert",

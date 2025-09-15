@@ -151,7 +151,7 @@ const NavigationSettings = () => {
         labelId="resume-expiry-label"
         value={resumePresetKey}
         disabled={isDisabled}
-        label={t("since_start.label", "Time since start")}
+        label={t("response_expiry")}
         onChange={onResumeExpiryChanged}
       >
         {RESUME_EXPIRY_PRESETS.map((p) => (
