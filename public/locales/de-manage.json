@@ -228,7 +228,12 @@
     "submit_date": "Sendedatum",
     "title": "Antworten",
     "title_delete_response": "Antwort löschen?",
-    "version": "Version"
+    "version": "Version",
+    "status": "Status",
+    "complete_response":"Vollständige Antwort",
+    "incomplete_response":"Unvollständige Antwort",
+    "filter_by_type":"Nach Typ filtern"
+
   },
   "responses_count": "Antworten",
   "roles_required": "Roles ist erforderlich",

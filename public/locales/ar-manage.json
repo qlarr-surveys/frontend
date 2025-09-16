@@ -228,7 +228,12 @@
     "submit_date": "تاريخ الإرسال",
     "title": "الردود",
     "title_delete_response": "حذف الرد؟",
-    "version": "الإصدار"
+    "version": "الإصدار",
+    "status": "حالة",
+    "complete_response":"إجابة كاملة",
+    "incomplete_response":"رد غير مكتمل",
+    "filter_by_type":"تصفية حسب النوع"
+    
   },
   "responses_count": "الردود",
   "roles_required": "الأدوار مطلوبة",

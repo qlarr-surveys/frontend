@@ -7,7 +7,9 @@
     "close": "Close",
     "delete": "Delete",
     "save": "Save",
-    "create": "Create"
+    "create": "Create",
+    "export":"Export",
+    "download":"Download"
   },
   "add_user": {
     "cancel": "Cancel",
@@ -228,7 +230,12 @@
     "submit_date": "Submit Date",
     "title": "Responses",
     "title_delete_response": "Delete Response?",
-    "version": "Version"
+    "version": "Version",
+    "status":"Status",
+    "complete_response":"Complete Response",
+    "incomplete_response":"Incomplete Response",
+    "filter_by_type":"Filter by type"
+
   },
   "responses_count": "Responses",
   "roles_required": "Roles is Required",
