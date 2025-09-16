@@ -12,7 +12,7 @@ function Navigation(props) {
     return {
       has_previous:
         state.runState.values.Survey.has_previous &&
-        state.runState.data.survey.allowPrevious,
+        state.runState.data.navigationData.allowPrevious,
       has_next: state.runState.values.Survey.has_next,
       can_save: state.runState.data.survey.allowIncomplete,
       has_errors: state.runState.values.Survey.show_errors,

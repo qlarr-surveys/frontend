@@ -32,9 +32,9 @@ function SurveyAppBar({ toggleDrawer }) {
   }, shallowEqual);
 
   const canSave = useSelector((state) => {
-    return state.runState.data.survey.allowIncomplete;
+    return state.runState.data.navigationData.allowIncomplete;
   }, shallowEqual);
-  console.log("sss", canSave);
+
   const theme = useTheme();
 
   const [saveOpen, setSaveOpen] = useState(false);
