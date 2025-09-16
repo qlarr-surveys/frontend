@@ -44,5 +44,9 @@
   "validation_pattern_email": "Sollte wie eine E-Mail aussehen",
   "validation_ranking_count": "Bitte wählen Sie höchstens {{count}} Optionen aus",
   "validation_required": "Dies ist erforderlich",
-  "word_count": "Wortzahl: {{count}}"
+  "word_count": "Wortzahl: {{count}}",
+  "saveAndContinueLaterTitle": "Speichern und später fortfahren",
+  "saveAndContinueLaterDesc": "Wir speichern deinen aktuellen Fortschritt. Du kannst später zu dieser Umfrage zurückkehren.",
+  "saveForLater": "Für später speichern",
+  "linkCopied": "Link in die Zwischenablage kopiert!"
 }

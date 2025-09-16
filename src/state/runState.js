@@ -26,6 +26,7 @@ export const runState = createSlice({
       state.data = {
         survey: response.survey,
         navigationIndex: response.navigationIndex,
+        navigationData: response.navigationData,
         additionalLang: response.additionalLang,
         lang: response.lang,
         responseId: response.responseId,

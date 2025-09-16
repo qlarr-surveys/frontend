@@ -23,7 +23,7 @@ function SurveyIndex(props) {
   }, shallowEqual);
 
   const canJump = useSelector((state) => {
-    return state.runState.data.survey.allowJump;
+    return state.runState.data.navigationData.allowJump;
   }, shallowEqual);
 
   const isCurrentGroup = (groupCode) => {
