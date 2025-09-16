@@ -236,16 +236,6 @@ function RunSurvey({
     setExpanded(open ? EXPAND : COLLAPSE);
   };
 
-  const backgroundStyle = backgroundImage
-    ? {
-        backgroundImage: `url(${buildResourceUrl(backgroundImage)})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        // backgroundSize: "100% 100%",
-        backgroundPosition: "center",
-      }
-    : {};
-
   return (
     <>
       <CacheProvider value={cacheRtlMemo}>
@@ -259,25 +249,38 @@ function RunSurvey({
             />
           )}
           {render && (
-            <div
-              className={styles.mainContainer}
-              ref={containerRef}
-              style={{
-                backgroundColor: theme.palette.background.default,
-                fontFamily: theme.textStyles.text.font,
-                color: theme.textStyles.text.color,
-                fontSize: theme.textStyles.text.size,
-                ...backgroundStyle,
-              }}
-            >
-              <SurveyAppBar toggleDrawer={toggleDrawer} />
-              <SurveyMemo key="Survey" />
-              <SurveyDrawer
-                expanded={expanded}
-                toggleDrawer={toggleDrawer}
-                t={t}
-              />
-            </div>
+            <>
+              {backgroundImage && (
+                <div
+                  aria-hidden
+                  className={styles.fixedBg}
+                  style={{
+                    backgroundImage: `url(${buildResourceUrl(
+                      backgroundImage
+                    )})`,
+                  }}
+                />
+              )}
+              <div
+                className={styles.mainContainer}
+                ref={containerRef}
+                style={{
+                  backgroundColor: theme.palette.background.default,
+                  fontFamily: theme.textStyles.text.font,
+                  color: theme.textStyles.text.color,
+                  fontSize: theme.textStyles.text.size,
+                  height: "calc(100vh - 48px)",
+                }}
+              >
+                <SurveyAppBar toggleDrawer={toggleDrawer} />
+                <SurveyMemo key="Survey" />
+                <SurveyDrawer
+                  expanded={expanded}
+                  toggleDrawer={toggleDrawer}
+                  t={t}
+                />
+              </div>
+            </>
           )}
           <RunLoadingDots />
         </ThemeProvider>
