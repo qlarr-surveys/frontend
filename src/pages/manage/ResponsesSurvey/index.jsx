@@ -17,22 +17,9 @@ import {
   Typography,
   FormControl,
   Skeleton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  RadioGroup,
-  FormControlLabel,
-  DialogActions,
-  Radio,
-  FormLabel,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  ArrowOutward,
-  FileDownloadOutlined,
-  FileUploadOutlined,
-} from "@mui/icons-material";
+import { FileDownloadOutlined, FileUploadOutlined } from "@mui/icons-material";
 
 import styles from "./ResponsesSurvey.module.css";
 import {
@@ -44,7 +31,8 @@ import FileSaver from "file-saver";
 import { RHFSelect } from "~/components/hook-form";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
-import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import ResponsesDownload from "~/components/manage/ResponsesDownload";
+import ResponsesExport from "~/components/manage/ResponsesExport";
 
 function InfoItem({ label, value }) {
   return (
@@ -73,20 +61,8 @@ function ResponsesSurvey() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [exportMenuAnchor, setExportMenuAnchor] = useState(null);
-
   const [exportDlgOpen, setExportDlgOpen] = useState(false);
   const [downloadDlgOpen, setDownloadDlgOpen] = useState(false);
-
-  const [exportFrom, setExportFrom] = useState(1);
-  const [exportTo, setExportTo] = useState(1);
-  const [exportFilter, setExportFilter] = useState("all");
-  const [exportFormat, setExportFormat] = useState("csv");
-  const [exportMode, setExportMode] = useState("database");
-
-  const [downloadFrom, setDownloadFrom] = useState(1);
-  const [downloadTo, setDownloadTo] = useState(1);
-  const [downloadFilter, setDownloadFilter] = useState("all");
 
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -141,9 +117,6 @@ function ResponsesSurvey() {
       .then(() => fetchResponses(true))
       .catch(processApirror);
   };
-
-  const handleExportMenuOpen = (e) => setExportMenuAnchor(e.currentTarget);
-  const handleExportMenuClose = () => setExportMenuAnchor(null);
 
   const downloadResponseFiles = () => {
     setFetching(true);
@@ -215,178 +188,27 @@ function ResponsesSurvey() {
       </div>
     );
   }
-
   return (
     <>
-      <Dialog
+      <ResponsesExport
         open={exportDlgOpen}
         onClose={() => setExportDlgOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>{t("responses.export")}</DialogTitle>
-        <DialogContent sx={{ display: "grid", gap: 2 }}>
-          <Box display="flex" gap={2}>
-            <TextField
-              label="From"
-              type="number"
-              value={exportFrom}
-              onChange={(e) => setExportFrom(Number(e.target.value))}
-              inputProps={{ min: 1, max: allResponse?.totalCount || 1 }}
-            />
-            <TextField
-              label="To"
-              type="number"
-              value={exportTo}
-              onChange={(e) => setExportTo(Number(e.target.value))}
-              inputProps={{ min: 1, max: allResponse?.totalCount || 1 }}
-            />
-          </Box>
-          <FormControl>
-            <FormLabel>Responses Type</FormLabel>
+        onExport={(format, opts) => {
+          exportResponses(format, opts);
+        }}
+        maxCount={allResponse?.totalCount || 1}
+        t={t}
+      />
 
-            <RadioGroup
-              row
-              value={exportFilter}
-              onChange={(e) => setExportFilter(e.target.value)}
-            >
-              <FormControlLabel value="all" control={<Radio />} label="All" />
-              <FormControlLabel
-                value="complete"
-                control={<Radio />}
-                label="Completed"
-              />
-              <FormControlLabel
-                value="incomplete"
-                control={<Radio />}
-                label="Incomplete"
-              />
-            </RadioGroup>
-          </FormControl>
-
-          <FormControl>
-            <FormLabel>Export Format</FormLabel>
-
-            <RadioGroup
-              row
-              value={exportFormat}
-              onChange={(e) => setExportFormat(e.target.value)}
-            >
-              <FormControlLabel value="csv" control={<Radio />} label="CSV" />
-              <FormControlLabel
-                value="xlsx"
-                control={<Radio />}
-                label="Excel"
-              />
-              <FormControlLabel value="ods" control={<Radio />} label="ODS" />
-            </RadioGroup>
-          </FormControl>
-          <FormControl>
-            <FormLabel>Mode</FormLabel>
-
-            <RadioGroup
-              row
-              value={exportMode}
-              onChange={(e) => setExportMode(e.target.value)}
-            >
-              <FormControlLabel
-                value="database"
-                control={<Radio />}
-                label="Database Format"
-              />
-              <FormControlLabel
-                value="text"
-                control={<Radio />}
-                label="Text Format"
-              />
-            </RadioGroup>
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setExportDlgOpen(false)}>
-            {t("action_btn.cancel")}
-          </Button>
-          <Button
-            onClick={() => {
-              setExportDlgOpen(false);
-              exportResponses(exportFormat, {
-                from: exportFrom,
-                to: exportTo,
-                filter: exportFilter,
-                mode: exportMode,
-              });
-            }}
-            variant="contained"
-          >
-            {t("action_btn.export")}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
+      <ResponsesDownload
         open={downloadDlgOpen}
         onClose={() => setDownloadDlgOpen(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>
-          {t("responses.download_dialog_title") || "Download Response Files"}
-        </DialogTitle>
-        <DialogContent sx={{ display: "grid", gap: 2 }}>
-          <Box display="flex" gap={2}>
-            <TextField
-              label="From"
-              type="number"
-              value={downloadFrom}
-              onChange={(e) => setDownloadFrom(Number(e.target.value))}
-              inputProps={{ min: 1, max: allResponse?.totalCount || 1 }}
-            />
-            <TextField
-              label="To"
-              type="number"
-              value={downloadTo}
-              onChange={(e) => setDownloadTo(Number(e.target.value))}
-              inputProps={{ min: 1, max: allResponse?.totalCount || 1 }}
-            />
-          </Box>
-
-          <RadioGroup
-            value={downloadFilter}
-            row
-            onChange={(e) => setDownloadFilter(e.target.value)}
-          >
-            <FormControlLabel value="all" control={<Radio />} label="All" />
-            <FormControlLabel
-              value="complete"
-              control={<Radio />}
-              label="Completed"
-            />
-            <FormControlLabel
-              value="incomplete"
-              control={<Radio />}
-              label="Incomplete"
-            />
-          </RadioGroup>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDownloadDlgOpen(false)}>
-            {t("common.cancel") || "Cancel"}
-          </Button>
-          <Button
-            onClick={() => {
-              setDownloadDlgOpen(false);
-              downloadResponseFiles({
-                from: downloadFrom,
-                to: downloadTo,
-                filter: downloadFilter,
-              });
-            }}
-            variant="contained"
-          >
-            {t("common.download") || "Download"}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onDownload={({ from, to, filter }) => {
+          downloadResponseFiles({ from, to, filter });
+        }}
+        maxCount={allResponse?.totalCount || 1}
+        t={t}
+      />
 
       <Box className={styles.mainContainer}>
         {surveyor && (

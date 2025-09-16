@@ -8,8 +8,8 @@
     "delete": "Delete",
     "save": "Save",
     "create": "Create",
-    "export":"Export",
-    "download":"Download"
+    "export": "Export",
+    "download": "Download"
   },
   "add_user": {
     "cancel": "Cancel",
@@ -231,11 +231,24 @@
     "title": "Responses",
     "title_delete_response": "Delete Response?",
     "version": "Version",
-    "status":"Status",
-    "complete_response":"Complete Response",
-    "incomplete_response":"Incomplete Response",
-    "filter_by_type":"Filter by type"
-
+    "status": "Status",
+    "complete_response": "Complete Response",
+    "incomplete_response": "Incomplete Response",
+    "filter_by_type": "Filter by type",
+    "export_type": "Export Type",
+    "responses_type": "Responses Type",
+    "mode": "Mode",
+    "download": "Download Responses",
+    "from": "From",
+    "to": "To",
+    "complete_responses": "Complete Responses",
+    "incomplete_responses": "Incomplete Responses",
+    "database_format": "Database Format",
+    "text_format": "Text Format",
+    "range_invalid": "“From” cannot be greater than “To”.",
+    "max": "Max {{max}}",
+    "min": "Min {{min}}",
+    "enter_a_number": "Enter a number"
   },
   "responses_count": "Responses",
   "roles_required": "Roles is Required",
