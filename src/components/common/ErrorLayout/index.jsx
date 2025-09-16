@@ -1,20 +1,57 @@
-import { EventBusy, HourglassEmpty } from "@mui/icons-material";
-import { Box, Button, Typography, createTheme } from "@mui/material";
+import {HourglassEmpty } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+  createTheme,
+} from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import Image from "~/components/image/image";
 import CompactLayout from "~/layouts/compact";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { palette } from "~/theme/palette";
 
 function ErrorLayout({ setErrorSeen, error, onRetry }) {
   const { t } = useTranslation("manage");
   const navigate = useNavigate();
   const theme = createTheme({
-    palette: palette('light'),
+    palette: palette("light"),
   });
-
-  if (error.name == 'survey_quota') {
+  if (error.name === "component_deleted") {
+    return (
+      <Dialog 
+      open={true}>
+        <DialogTitle>
+          {t("component_deleted_title")}
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            {t(
+              "processed_errors.component_deleted",
+            )}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+          onClick={() => setErrorSeen()}
+            variant="contained"
+            style={{
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.primary.contrastText,
+            }}
+          >
+            {t("ok")}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+  if (error.name == "survey_quota") {
     return (
       <CompactLayout>
         <div>
@@ -34,7 +71,8 @@ function ErrorLayout({ setErrorSeen, error, onRetry }) {
               maxWidth: 320,
               my: { xs: 5, sm: 5 },
             }}
-            style={{ fontSize: 50, color: 'red' }} />
+            style={{ fontSize: 50, color: "red" }}
+          />
         </div>
         <Box display="flex" gap={2}>
           <Button
@@ -47,8 +85,8 @@ function ErrorLayout({ setErrorSeen, error, onRetry }) {
             {t("goBack")}
           </Button>
         </Box>
-      </CompactLayout >
-    )
+      </CompactLayout>
+    );
   }
 
   return (
@@ -75,8 +113,10 @@ function ErrorLayout({ setErrorSeen, error, onRetry }) {
           color="inherit"
           variant="contained"
           onClick={onRetry}
-          style={{ backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }}
-
+          style={{
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
+          }}
         >
           {t("retry")}
         </Button>
@@ -86,8 +126,10 @@ function ErrorLayout({ setErrorSeen, error, onRetry }) {
           color="inherit"
           variant="contained"
           onClick={() => setErrorSeen()}
-          style={{ backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }}
-
+          style={{
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
+          }}
         >
           OK
         </Button>
