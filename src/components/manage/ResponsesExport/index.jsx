@@ -18,14 +18,15 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import FormProvider from "~/components/hook-form";
+import FileSaver from "file-saver";
+import { useService } from "~/hooks/use-service";
+import { useParams } from "react-router-dom";
 
-export default function ResponsesExport({
-  open,
-  onClose,
-  onExport,
-  maxCount = 1,
-  t,
-}) {
+export default function ResponsesExport({ open, onClose, maxCount = 1, t }) {
+  const { surveyId } = useParams();
+
+  const surveyService = useService("survey");
+
   const min = 1;
   const max = Math.max(1, Number(maxCount) || 1);
 
@@ -70,17 +71,39 @@ export default function ResponsesExport({
     formState: { errors },
   } = methods;
 
-  const onSubmit = handleSubmit((data) => {
-    const payload = {
-      from: Number(data.from),
-      to: Number(data.to),
-      filter: data.filter,
-      mode: data.mode,
-    };
-    onExport?.(data.format, payload);
-    onClose?.();
-  });
+  const onSubmit = handleSubmit(async (data) => {
+    const from = Number(data.from);
+    const to = Number(data.to);
+    const complete =
+      data.filter === "all" ? null : data.filter === "complete" ? true : false;
+    const dbValues = data.mode === "database";
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
 
+    try {
+      const blob = await surveyService.exportResponses(surveyId, {
+        format: data.format,
+        from,
+        to,
+        dbValues,
+        complete,
+        timezone,
+      });
+
+      const fileName = `${surveyId}-responses-export.${data.format}`;
+      const mimeByFormat = {
+        csv: "text/csv",
+        xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        ods: "application/vnd.oasis.opendocument.spreadsheet",
+      };
+
+      const file = new File([blob], fileName, {
+        type: mimeByFormat[data.format] || "application/octet-stream",
+      });
+      FileSaver.saveAs(file);
+    } finally {
+      onClose?.();
+    }
+  });
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>{t("responses.export")}</DialogTitle>

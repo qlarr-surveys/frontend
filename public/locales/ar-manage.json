@@ -236,7 +236,7 @@
     "export_type": "نوع التصدير",
     "responses_type": "نوع الردود",
     "mode": "الوضع",
-    "download": "تنزيل الردود",
+    "download": "تنزيل ملفات الردود",
     "from": "من",
     "to": "إلى",
     "complete_responses": "الردود المكتملة",
@@ -246,7 +246,8 @@
     "range_invalid": "لا يمكن أن يكون 'من' أكبر من 'إلى'.",
     "max": "الحد الأقصى {{max}}",
     "min": "الحد الأدنى {{min}}",
-    "enter_a_number": "أدخل رقمًا"
+    "enter_a_number": "أدخل رقمًا",
+    "no_files_found": "لم يتم العثور على ملفات للنطاق المحدد"
   },
   "responses_count": "الردود",
   "roles_required": "الأدوار مطلوبة",

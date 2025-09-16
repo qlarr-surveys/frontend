@@ -236,7 +236,7 @@
     "export_type": "Exporttyp",
     "responses_type": "Antworttyp",
     "mode": "Modus",
-    "download": "Antworten herunterladen",
+    "download": "Antwortdateien herunterladen",
     "from": "Von",
     "to": "Zu",
     "complete_responses": "Vollständige Antworten",
@@ -246,7 +246,8 @@
     "range_invalid": "“From” kann nicht größer sein als “To”.",
     "max": "Max {{max}}",
     "min": "Min {{min}}",
-    "enter_a_number": "Geben Sie eine Zahl ein"
+    "enter_a_number": "Geben Sie eine Zahl ein",
+    "no_files_found": "Keine Dateien für den ausgewählten Bereich gefunden"
   },
   "responses_count": "Antworten",
   "roles_required": "Roles ist erforderlich",

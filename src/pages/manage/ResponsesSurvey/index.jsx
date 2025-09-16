@@ -10,7 +10,6 @@ import {
   List,
   ListItemButton,
   ListItemText,
-  Menu,
   MenuItem,
   Paper,
   TablePagination,
@@ -27,7 +26,6 @@ import {
   serverDateTimeToLocalDateTime,
 } from "~/utils/DateUtils";
 import { ResponseDelete } from "~/components/manage/ResponseDelete";
-import FileSaver from "file-saver";
 import { RHFSelect } from "~/components/hook-form";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
@@ -64,8 +62,6 @@ function ResponsesSurvey() {
   const [exportDlgOpen, setExportDlgOpen] = useState(false);
   const [downloadDlgOpen, setDownloadDlgOpen] = useState(false);
 
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
   const processApirror = () => setFetching(false);
 
   const findBoolean = (v) =>
@@ -74,16 +70,14 @@ function ResponsesSurvey() {
   const fetchResponses = (deleted = false) => {
     setFetching(true);
     const completed = findBoolean(completeResponses);
-
+    const status =
+      completed === true
+        ? "COMPLETE"
+        : completed === false
+        ? "INCOMPLETE"
+        : undefined;
     surveyService
-      .allResponse(
-        surveyId,
-        dbResponses,
-        page,
-        rowsPerPage,
-        completed,
-        surveyor
-      )
+      .allResponse(surveyId, page, rowsPerPage, status, surveyor)
       .then((data) => {
         if (data) {
           const totalPages = Math.ceil(data.totalCount / rowsPerPage) || 1;
@@ -91,6 +85,7 @@ function ResponsesSurvey() {
           if (deleted && page > totalPages) setPage(newPage);
 
           setAllResponse(data);
+
           if (!selected || !data.responses.find((r) => r.id === selected.id)) {
             setSelected(data.responses[0] || null);
           }
@@ -100,6 +95,7 @@ function ResponsesSurvey() {
       .catch((err) => {
         processApirror(err);
         console.error(err);
+        setFetching(false);
       });
   };
 
@@ -116,64 +112,6 @@ function ResponsesSurvey() {
       .deleteResponse(surveyId, responseToDelete.id)
       .then(() => fetchResponses(true))
       .catch(processApirror);
-  };
-
-  const downloadResponseFiles = () => {
-    setFetching(true);
-    surveyService
-      .downloadResponseFiles(surveyId)
-      .then((data) => {
-        if (data) {
-          const file = new File([data], `${surveyId}-response-files.zip`, {
-            type: "application/zip",
-          });
-          FileSaver.saveAs(file);
-        }
-        setFetching(false);
-      })
-      .catch(processApirror);
-  };
-
-  const exportResponses = (format) => {
-    setFetching(true);
-    surveyService
-      .exportResponses(
-        surveyId,
-        timezone,
-        dbResponses,
-        completeResponses,
-        format
-      )
-      .then((data) => {
-        if (data) {
-          const map = {
-            csv: { ext: "csv", type: "text/csv;charset=utf-8" },
-            xlsx: {
-              ext: "xlsx",
-              type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            },
-            ods: {
-              ext: "ods",
-              type: "application/vnd.oasis.opendocument.spreadsheet",
-            },
-          };
-          const f = map[format];
-          const file = new File(
-            [data],
-            `${surveyId}-responses-export.${f.ext}`,
-            { type: f.type }
-          );
-          FileSaver.saveAs(file);
-        }
-        setFetching(false);
-      })
-      .catch(processApirror);
-  };
-
-  const handleExport = (format) => {
-    handleExportMenuClose();
-    if (format === "files") downloadResponseFiles();
-    else exportResponses(format);
   };
 
   const onSurveyorClicked = (response) => {
@@ -193,9 +131,6 @@ function ResponsesSurvey() {
       <ResponsesExport
         open={exportDlgOpen}
         onClose={() => setExportDlgOpen(false)}
-        onExport={(format, opts) => {
-          exportResponses(format, opts);
-        }}
         maxCount={allResponse?.totalCount || 1}
         t={t}
       />
@@ -203,9 +138,6 @@ function ResponsesSurvey() {
       <ResponsesDownload
         open={downloadDlgOpen}
         onClose={() => setDownloadDlgOpen(false)}
-        onDownload={({ from, to, filter }) => {
-          downloadResponseFiles({ from, to, filter });
-        }}
         maxCount={allResponse?.totalCount || 1}
         t={t}
       />

@@ -238,7 +238,7 @@
     "export_type": "Export Type",
     "responses_type": "Responses Type",
     "mode": "Mode",
-    "download": "Download Responses",
+    "download": "Download Responses Files",
     "from": "From",
     "to": "To",
     "complete_responses": "Complete Responses",
@@ -248,7 +248,8 @@
     "range_invalid": "“From” cannot be greater than “To”.",
     "max": "Max {{max}}",
     "min": "Min {{min}}",
-    "enter_a_number": "Enter a number"
+    "enter_a_number": "Enter a number",
+    "no_files_found"  : "No files found for the selected range"
   },
   "responses_count": "Responses",
   "roles_required": "Roles is Required",

@@ -54,36 +54,45 @@ class SurveyService extends BaseService {
     return response.data;
   }
 
-  async allResponse(surveyId, dbValues, page, per_page, complete, surveyor) {
-    const shouldAddComplete = complete === true || complete === false;
+  async allResponse(surveyId, page, per_page, complete, surveyor) {
     const response = await this.handleRequest(() =>
       authenticatedApi.get(
-        `/survey/${surveyId}/response/all?db_values=${dbValues}&page=${page}&per_page=${per_page}` +
-          `${shouldAddComplete ? `&complete=${complete}` : ""}` +
+        `/survey/${surveyId}/response/summary?page=${page}&per_page=${per_page}` +
+          `${complete ? `&status=${complete}` : ""}` +
           `${surveyor ? `&surveyor=${surveyor}` : ""}`
       )
     );
     return response.data;
   }
 
-  async exportResponses(surveyId, timezone, dbValues, complete, format = 'csv') {
+  async exportResponses(
+    surveyId,
+    { format = "csv", from, to, dbValues = true, complete, timezone }
+  ) {
+    const base = `/survey/${surveyId}/response/export/${format}/${from}/${to}`;
     const shouldAddComplete = complete === true || complete === false;
+    const tz = encodeURIComponent(timezone);
+
+    const url =
+      `${base}?db_values=${dbValues}&timezone=${tz}` +
+      `${shouldAddComplete ? `&complete=${complete}` : ""}`;
+
     const response = await this.handleRequest(() =>
-      authenticatedApi.get(
-        `/survey/${surveyId}/response/export/${format}?db_values=${dbValues}&timezone=${timezone}` +
-          `${shouldAddComplete ? `&complete=${complete}` : ""}`, {
-            responseType: 'blob'
-          }
-      )
+      authenticatedApi.get(url, { responseType: "blob" })
     );
     return response.data;
   }
 
-  async downloadResponseFiles(surveyId) {
+  async downloadResponseFiles(surveyId, from, to, complete) {
+    const base = `/survey/${surveyId}/response/files/download/${from}/${to}`;
+    const query =
+      complete === true
+        ? "?complete=true"
+        : complete === false
+        ? "?complete=false"
+        : "";
     const response = await this.handleRequest(() =>
-      authenticatedApi.get(`/survey/${surveyId}/response/files/download`, {
-        responseType: 'blob'
-      })
+      authenticatedApi.get(`${base}${query}`, { responseType: "blob" })
     );
     return response.data;
   }
