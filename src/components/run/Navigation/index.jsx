@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch, shallowEqual } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -6,16 +6,6 @@ import Button from "@mui/material/Button";
 import { navigateNext, navigatePrevious } from "~/state/runState";
 import { rtlLanguage } from "~/utils/common";
 import styles from "./Navigation.module.css";
-import {
-  Alert,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Snackbar,
-  Typography,
-} from "@mui/material";
-import { LoadingButton } from "@mui/lab";
 
 function Navigation(props) {
   const state = useSelector((state) => {
@@ -64,27 +54,6 @@ function Navigation(props) {
     dispatch(navigateNext());
   };
 
-  const [saveOpen, setSaveOpen] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  const handleSaveLater = async () => {
-    setSaving(true);
-    try {
-      await new Promise((res) => setTimeout(res, 2000));
-      setSaveOpen(false);
-      setSnackbarOpen(true);
-    } catch (e) {
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleSnackbarClose = (_, reason) => {
-    if (reason === "clickaway") return;
-    setSnackbarOpen(false);
-  };
-
   return props.navigationIndex.name == "end" ? (
     ""
   ) : (
@@ -111,61 +80,7 @@ function Navigation(props) {
         >
           {state.has_next ? t("next") : t("finish")}
         </Button>
-
-        <Button variant="contained" onClick={() => setSaveOpen(true)}>
-          {t("save")}
-        </Button>
       </div>
-      <Dialog
-        open={saveOpen}
-        onClose={(_, reason) => {
-          if (saving) return;
-          setSaveOpen(false);
-        }}
-        disableEscapeKeyDown={saving}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>
-          {t("saveAndContinueLaterTitle", "Save and continue later")}
-        </DialogTitle>
-        <DialogContent dividers>
-          <Typography sx={{ mb: 2 }}>
-            {t(
-              "saveAndContinueLaterDesc",
-              "We’ll save your current progress. You can return to this survey anytime using this link:"
-            )}
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setSaveOpen(false)} disabled={saving}>
-            {t("cancel", "Cancel")}
-          </Button>
-          <LoadingButton
-            onClick={handleSaveLater}
-            variant="contained"
-            loading={saving}
-          >
-            {t("saveForLater", "Save for later")}
-          </LoadingButton>
-        </DialogActions>
-      </Dialog>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity="success"
-          elevation={6}
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {t("linkCopied", "Link copied to clipboard!")}
-        </Alert>
-      </Snackbar>
     </>
   );
 }
