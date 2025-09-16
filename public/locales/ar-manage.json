@@ -165,6 +165,8 @@
   "import_survey": "تحميل استطلاع",
   "upload_zip_folder": "تحميل مجلد مضغوط",
   "password_required": "كلمة المرور مطلوبة",
+  "component_deleted_title": "حذف غير مسموح به",
+  "ok": "حسنا",
   "processed_errors": {
     "invalid_file_for_survey_export": "هذا الملف المضغوط لا يحتوي على استطلاع Qlarr صالح. يرجى التحقق من أنك قمت بتصدير الاستطلاع بشكل صحيح.",
     "backend_down": "الخلفية لا يمكن الوصول إليها ... يرجى المحاولة مرة أخرى لاحقًا",

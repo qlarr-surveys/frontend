@@ -165,6 +165,8 @@
   "import_survey": "Import a survey",
   "upload_zip_folder": "Upload Zip Folder",
   "password_required": "Password is Required",
+  "component_deleted_title": "Deletion not allowed",
+  "ok": "OK",
   "processed_errors": {
     "invalid_file_for_survey_export": "This ZIP file doesn't contain a valid Qlarr Survey. Please check that you exported the survey correctly.",
     "backend_down": "Backend is Unreachable... Please Try again later",

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { shallowEqual, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import styles from "./RunSurvey.module.css";
 import { useTranslation } from "react-i18next";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -11,7 +11,7 @@ import {
 } from "~/networking/run";
 import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { defualtTheme } from "~/constants/theme";
-import { stateReceived } from "~/state/runState";
+import { previewModeChange, stateReceived } from "~/state/runState";
 import { useSelector } from "react-redux";
 import { Box, Button, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -28,8 +28,15 @@ import RunLoadingDots from "~/components/common/RunLoadingDots";
 
 import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
 import SurveyAppBar from "~/components/run/SurveyAppBar";
+import { routes } from '~/routes';
 
-function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }) {
+function RunSurvey({
+  preview,
+  mode,
+  resume = false,
+  responseId,
+  navigationMode,
+}) {
   const runService = useService("run");
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -38,6 +45,9 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
   const [expanded, setExpanded] = React.useState(COLLAPSE);
   const [error, setError] = React.useState(false);
   const [inlineError, setInlineError] = React.useState(false);
+  const [currentMode, setCurrentMode] = React.useState(mode);
+  const [currentNavigationMode, setCurrentNavigationMode] =
+    React.useState(navigationMode);
   const containerRef = useRef(null);
 
   const surveyTheme = useSelector((state) => {
@@ -59,12 +69,38 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
   const { t, i18n } = useTranslation("run");
   const dispatch = useDispatch();
 
-
   useEffect(() => {
     if (navigation) {
       continueNav(navigation, navResponseId);
     }
   }, [navigation]);
+
+  useEffect(() => {
+    if (preview) {
+      const handleMessage = (event) => {
+        // Always verify the origin for security
+        if (
+          event.origin !== window.location.origin ||
+          event.data.type !== "PREVIEW_MODE_CHANGED"
+        ) {
+          return;
+        }
+
+        const mode = event.data.mode;
+        const navigationMode = event.data.navigationMode;
+        dispatch(
+          previewModeChange({ mode: mode, navigationMode: navigationMode })
+        );
+      };
+
+      window.addEventListener("message", handleMessage);
+
+      // Cleanup listener on component unmount
+      return () => {
+        window.removeEventListener("message", handleMessage);
+      };
+    }
+  }, []);
 
   useEffect(() => {
     if (rtlLanguage.includes(i18n.language)) {
@@ -96,24 +132,52 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
       .then((response) => {
         setRender(true);
         dispatch(stateReceived({ response, preview }));
-        if(preview){
-          window.parent.postMessage({
-            type: "RESPONSE_ID_RECEIVED",
-            responseId: response.responseId,
-          }, window.location.origin);
+        if (preview) {
+          window.parent.postMessage(
+            {
+              type: "RESPONSE_ID_RECEIVED",
+              responseId: response.responseId,
+            },
+            window.location.origin
+          );
+        } else {
+          window.history.replaceState(
+            {},
+            "",
+            routes.resumeSurvey
+              .replace(":surveyId", sessionStorage.getItem("surveyId"))
+              .replace(":responseId", response.responseId)
+          );
         }
         sessionStorage.setItem("responseId", response.responseId);
         i18n.changeLanguage(response.lang.code);
         dispatch(setFetching(false));
       })
       .catch((err) => {
+        console.error(err);
         handleError(err);
       });
   };
 
   const continueNav = (payload, responseId) => {
     dispatch(setFetching(true));
-    continueNavigation(runService, payload, responseId, preview, mode)
+    if (payload.mode) {
+      setCurrentMode(payload.mode);
+    }
+    if (payload.navigationMode) {
+      setCurrentNavigationMode(payload.navigationMode);
+    }
+
+    const useCaseMode = payload.mode ?? currentMode;
+    const useCaseNavMode = payload.navigationMode ?? currentNavigationMode;
+    continueNavigation(
+      runService,
+      payload,
+      responseId,
+      preview,
+      useCaseMode,
+      useCaseNavMode
+    )
       .then((response) => {
         setRender(true);
         dispatch(stateReceived({ response, preview }));
@@ -172,16 +236,6 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
     setExpanded(open ? EXPAND : COLLAPSE);
   };
 
-  const backgroundStyle = backgroundImage
-    ? {
-        backgroundImage: `url(${buildResourceUrl(backgroundImage)})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        // backgroundSize: "100% 100%",
-        backgroundPosition: "center",
-      }
-    : {};
-
   return (
     <>
       <CacheProvider value={cacheRtlMemo}>
@@ -195,25 +249,38 @@ function RunSurvey({ preview, mode, resume = false, responseId, navigationMode }
             />
           )}
           {render && (
-            <div 
-              className={styles.mainContainer}
-              ref={containerRef}
-              style={{
-                backgroundColor: theme.palette.background.default,
-                fontFamily: theme.textStyles.text.font,
-                color: theme.textStyles.text.color,
-                fontSize: theme.textStyles.text.size,
-                ...backgroundStyle,
-              }}
-            >
-              <SurveyAppBar toggleDrawer={toggleDrawer} />
-              <SurveyMemo key="Survey" />
-              <SurveyDrawer
-                expanded={expanded}
-                toggleDrawer={toggleDrawer}
-                t={t}
-              />
-            </div>
+            <>
+              {backgroundImage && (
+                <div
+                  aria-hidden
+                  className={styles.fixedBg}
+                  style={{
+                    backgroundImage: `url(${buildResourceUrl(
+                      backgroundImage
+                    )})`,
+                  }}
+                />
+              )}
+              <div
+                className={styles.mainContainer}
+                ref={containerRef}
+                style={{
+                  backgroundColor: theme.palette.background.default,
+                  fontFamily: theme.textStyles.text.font,
+                  color: theme.textStyles.text.color,
+                  fontSize: theme.textStyles.text.size,
+                  height: "calc(100vh - 48px)",
+                }}
+              >
+                <SurveyAppBar toggleDrawer={toggleDrawer} />
+                <SurveyMemo key="Survey" />
+                <SurveyDrawer
+                  expanded={expanded}
+                  toggleDrawer={toggleDrawer}
+                  t={t}
+                />
+              </div>
+            </>
           )}
           <RunLoadingDots />
         </ThemeProvider>
