@@ -1,7 +1,7 @@
 import { getparam } from "~/networking/run";
 import styles from "./PreviewSurvey.module.css";
 import { useParams, useSearchParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import {
   Box,
@@ -21,31 +21,48 @@ function PreviewSurvey({ responseId = null }) {
   const [previewMode, setPreviewMode] = useState(
     searchParams.get("mode") || "online"
   );
-
-  let currentResponseId = responseId;
-
+  const [navigationMode, setNavigationMode] = useState(
+    searchParams.get("navigation_mode") || "ALL_IN_ONE"
+  );
+  const [currentResponseId, setCurrentResponseId] = useState(responseId);
   const { t: tDesign } = useTranslation("design");
 
-  const [navigationMode, setNavigationMode] = useState(
-    searchParams.get("navigation_mode") || "GROUP_BY_GROUP"
-  );
-  const lang = useState(searchParams.get("lang"));
   const surveyId = getparam(useParams(), "surveyId");
 
-  const withEmbeddedParam = (surveyId, previewMode, lang, currentResponseId) => {
-    return currentResponseId
-      ? routes.resumeIframePreviewSurvey
-          .replace(":surveyId", surveyId)
-          .replace(":responseId", currentResponseId)
-      : routes.iframePreviewSurvey.replace(":surveyId", surveyId) +
-          "?mode=" +
-          previewMode +
-          (lang ? "&lang=" + lang : "") +
-          (navigationMode ? "&navigation_mode=" + navigationMode : "");
+  const notifyIframe = (previewMode, navigationMode) => {
+    const iframe = document.getElementById("myIframe");
+    iframe.contentWindow.postMessage(
+      {
+        type: "PREVIEW_MODE_CHANGED",
+        mode: previewMode == "offline" ? "offline" : "online",
+        navigationMode: navigationMode,
+      },
+      window.location.origin
+    );
   };
 
+  const embeddedParams = useMemo(
+    () =>
+      (responseId
+        ? routes.resumeIframePreviewSurvey
+            .replace(":surveyId", surveyId)
+            .replace(":responseId", responseId)
+        : routes.iframePreviewSurvey.replace(":surveyId", surveyId)) +
+          "?mode=" + previewMode +
+          (navigationMode ? "&navigation_mode=" + navigationMode : ""),
+    []
+  );
+
   const handleChange = (event, newValue) => {
+    notifyIframe(newValue, navigationMode);
     setPreviewMode(newValue);
+    formatUrl(newValue, navigationMode);
+  };
+
+  const handleNavigationModeChange = (event) => {
+    notifyIframe(previewMode, event.target.value);
+    setNavigationMode(event.target.value);
+    formatUrl(previewMode, event.target.value);
   };
 
   useEffect(() => {
@@ -60,7 +77,7 @@ function PreviewSurvey({ responseId = null }) {
 
       const iFrameResponseId = event.data.responseId;
       if (currentResponseId != iFrameResponseId) {
-        currentResponseId = iFrameResponseId;
+        setCurrentResponseId(iFrameResponseId);
         window.history.replaceState(
           {},
           "",
@@ -80,8 +97,17 @@ function PreviewSurvey({ responseId = null }) {
     };
   }, []);
 
-  const handleNavigationModeChange = (event) => {
-    setNavigationMode(event.target.value);
+  const formatUrl = (previewMode, navigationMode) => {
+    window.history.replaceState(
+      {},
+      "",
+      routes.resumePreview
+        .replace(":surveyId", surveyId)
+        .replace(":responseId", currentResponseId) +
+        "?mode=" +
+        previewMode +
+        (navigationMode ? "&navigation_mode=" + navigationMode : ""),
+    );
   };
 
   return (
@@ -140,33 +166,28 @@ function PreviewSurvey({ responseId = null }) {
           backgroundColor: BG_COLOR,
         }}
       >
-        {previewMode == "online" ? (
-          <div style={{ height: "calc(100vh - 48px)" }}>
-            <iframe
-              src={withEmbeddedParam(surveyId, previewMode, lang, currentResponseId)}
-              className={styles.onlinePreview}
-              style={{ width: "100%", height: "100%" }}
-            />
-          </div>
-        ) : previewMode == "online-phone" ? (
-          <>
-            <div className={styles.wrapperMob}>
-              <img src="/phone-android.png" className={styles.phoneBg} />
-              <iframe
-                src={withEmbeddedParam(surveyId, previewMode, lang, currentResponseId)}
-                className={styles.offlinePreview}
-              />
-            </div>
-          </>
-        ) : (
-          <div className={styles.wrapperMob}>
+        <div
+          className={previewMode === "online" ? "" : styles.wrapperMob}
+          style={
+            previewMode === "online" ? { height: "calc(100vh - 48px)" } : {}
+          }
+        >
+          {previewMode !== "online" && (
             <img src="/phone-android.png" className={styles.phoneBg} />
-            <iframe
-              src={withEmbeddedParam(surveyId, previewMode, lang, currentResponseId)}
-              className={styles.offlinePreview}
-            />
-          </div>
-        )}
+          )}
+          <iframe
+            id="myIframe"
+            src={embeddedParams}
+            className={
+              previewMode === "online"
+                ? styles.onlinePreview
+                : styles.offlinePreview
+            }
+            style={
+              previewMode === "online" ? { width: "100%", height: "100%" } : {}
+            }
+          />
+        </div>
       </div>
     </>
   );

@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./SurveyIndex.module.css";
 import { Card } from "@mui/material";
 import { Box } from "@mui/system";
-import { stripTags, truncateWithEllipsis } from "~/utils/design/utils";
+import { stripTags } from "~/utils/design/utils";
 import { shallowEqual, useSelector } from "react-redux";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
