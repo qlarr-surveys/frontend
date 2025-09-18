@@ -54,6 +54,7 @@ function ResponsesSurvey() {
   const [surveyor, setSurveyor] = useState(null);
 
   const [allResponse, setAllResponse] = useState(null);
+  const [responseId, setResponseId] = useState(null);
   const [selected, setSelected] = useState(null);
 
   const [page, setPage] = useState(1);
@@ -86,9 +87,6 @@ function ResponsesSurvey() {
 
           setAllResponse(data);
 
-          if (!selected || !data.responses.find((r) => r.id === selected.id)) {
-            setSelected(data.responses[0] || null);
-          }
         }
         setFetching(false);
       })
@@ -102,6 +100,21 @@ function ResponsesSurvey() {
   useEffect(() => {
     fetchResponses();
   }, [page, rowsPerPage, dbResponses, completeResponses, surveyor]);
+
+  useEffect(() => {
+    if (!responseId) {
+      return;
+    }
+    surveyService
+      .getResponseById(responseId)
+      .then((data) => {
+        setSelected(data);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+  }, [responseId]);
+
 
   const [responseToDelete, setResponseToDelete] = useState(null);
   const onCloseModal = () => setResponseToDelete(null);
@@ -238,12 +251,14 @@ function ResponsesSurvey() {
               <>
                 <List dense disablePadding sx={{ overflowY: "auto", flex: 1 }}>
                   {allResponse?.responses.map((r) => {
-                    const isSelected = selected && selected.id === r.id;
+
+                    const isSelected = responseId && responseId === r.id;
+
                     return (
                       <ListItemButton
                         key={r.id}
                         selected={isSelected}
-                        onClick={() => setSelected(r)}
+                        onClick={() => setResponseId(r.id)}
                         sx={{ alignItems: "flex-start" }}
                       >
                         <ListItemText
@@ -333,7 +348,7 @@ function ResponsesSurvey() {
             {!selected ? (
               <Box p={4} textAlign="center">
                 <Typography color="text.secondary">
-                  {t("responses.no_selection") || "Select a response"}
+                  {t("responses.no_selection", "Select a response")}
                 </Typography>
               </Box>
             ) : (

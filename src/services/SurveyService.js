@@ -65,6 +65,13 @@ class SurveyService extends BaseService {
     return response.data;
   }
 
+  async getResponseById(responseId) {
+    const response = await this.handleRequest(() =>
+      authenticatedApi.get(`/response/${responseId}`)
+    );
+    return response.data;
+  }
+
   async exportResponses(
     surveyId,
     { format = "csv", from, to, dbValues = true, complete, timezone }
