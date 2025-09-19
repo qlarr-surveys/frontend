@@ -86,7 +86,6 @@ function ResponsesSurvey() {
           if (deleted && page > totalPages) setPage(newPage);
 
           setAllResponse(data);
-
         }
         setFetching(false);
       })
@@ -112,9 +111,8 @@ function ResponsesSurvey() {
       })
       .catch((err) => {
         console.error(err);
-      })
+      });
   }, [responseId]);
-
 
   const [responseToDelete, setResponseToDelete] = useState(null);
   const onCloseModal = () => setResponseToDelete(null);
@@ -139,6 +137,12 @@ function ResponsesSurvey() {
       </div>
     );
   }
+
+  const formatValue = (v) => {
+    if (v === null || v === undefined || v === "") return "—";
+    if (typeof v === "object") return JSON.stringify(v);
+    return String(v);
+  };
   return (
     <>
       <ResponsesExport
@@ -251,7 +255,6 @@ function ResponsesSurvey() {
               <>
                 <List dense disablePadding sx={{ overflowY: "auto", flex: 1 }}>
                   {allResponse?.responses.map((r) => {
-
                     const isSelected = responseId && responseId === r.id;
 
                     return (
@@ -352,89 +355,122 @@ function ResponsesSurvey() {
                 </Typography>
               </Box>
             ) : (
-              <>
-                <Box
-                  display="grid"
-                  gridTemplateColumns={{ xs: "1fr", lg: "1fr 1fr" }}
-                  columnGap={4}
-                >
-                  <Box>
-                    <InfoItem label="ID" value={`#${selected.index}`} />
-                    <InfoItem
-                      label={t("label.surveyor")}
-                      value={
-                        selected.surveyorName ? (
-                          <Link
-                            to="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              onSurveyorClicked(selected);
-                            }}
-                          >
-                            {selected.surveyorName}
-                          </Link>
-                        ) : (
-                          "—"
-                        )
-                      }
-                    />
-                    <InfoItem
-                      label={t("responses.ip_addr")}
-                      value={selected.ipAddress || "—"}
-                    />
-                    <InfoItem
-                      label={t("responses.start_date")}
-                      value={formatlocalDateTime(
-                        serverDateTimeToLocalDateTime(selected.startDate)
-                      )}
-                    />
-                  </Box>
-                  <Box>
-                    <InfoItem
-                      label={t("responses.submit_date")}
-                      value={
-                        selected.submitDate
-                          ? formatlocalDateTime(
-                              serverDateTimeToLocalDateTime(selected.submitDate)
-                            )
-                          : "—"
-                      }
-                    />
-                    <InfoItem
-                      label={t("responses.lang")}
-                      value={selected.lang || "—"}
-                    />
-                    <InfoItem
-                      label={t("responses.status") || "Status"}
-                      value={
-                        selected.submitDate ? (
-                          <Chip
-                            size="small"
-                            label={t("responses.complete_response")}
-                          />
-                        ) : (
-                          <Chip
-                            size="small"
-                            variant="outlined"
-                            label={t("responses.incomplete_response")}
-                          />
-                        )
-                      }
-                    />
-                  </Box>
+              <Box
+                display="grid"
+                gridTemplateColumns={{ xs: "1fr", lg: "420px 1fr" }}
+                gap={3}
+              >
+                <Box display="flex" gap={1} flexDirection="column">
+                  <InfoItem label="ID" value={`#${selected.index}`} />
+                  <InfoItem
+                    label={t("label.surveyor")}
+                    value={
+                      selected.surveyorName ? (
+                        <Link
+                          to="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onSurveyorClicked(selected);
+                          }}
+                        >
+                          {selected.surveyorName}
+                        </Link>
+                      ) : (
+                        "—"
+                      )
+                    }
+                  />
+                  <InfoItem
+                    label={t("responses.ip_addr")}
+                    value={selected.ipAddress || "—"}
+                  />
+                  <InfoItem
+                    label={t("responses.start_date")}
+                    value={formatlocalDateTime(
+                      serverDateTimeToLocalDateTime(selected.startDate)
+                    )}
+                  />
+                  <InfoItem
+                    label={t("responses.submit_date")}
+                    value={
+                      selected.submitDate
+                        ? formatlocalDateTime(
+                            serverDateTimeToLocalDateTime(selected.submitDate)
+                          )
+                        : "—"
+                    }
+                  />
+                  <InfoItem
+                    label={t("responses.lang")}
+                    value={selected.lang || "—"}
+                  />
+                  <InfoItem
+                    label={t("responses.status") || "Status"}
+                    value={
+                      selected.submitDate ? (
+                        <Chip
+                          size="small"
+                          label={t("responses.complete_response")}
+                        />
+                      ) : (
+                        <Chip
+                          size="small"
+                          variant="outlined"
+                          label={t("responses.incomplete_response")}
+                        />
+                      )
+                    }
+                  />
                 </Box>
-              </>
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography
+                    variant="subtitle2"
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    {t("responses.answers", "Answers")}
+                  </Typography>
+                  <>
+                    {selected.values && Object.keys(selected.values).length && (
+                      <Box
+                        display="grid"
+                        gap={0.5}
+                        sx={{
+                          maxHeight: { xs: "unset", lg: 420 },
+                          overflowY: { xs: "visible", lg: "auto" },
+                        }}
+                      >
+                        {Object.entries(selected.values).map(([key, val]) => (
+                          <InfoItem
+                            key={key}
+                            label={key}
+                            value={
+                              <Typography
+                                sx={{
+                                  whiteSpace: "pre-wrap",
+                                  wordBreak: "break-word",
+                                }}
+                              >
+                                {formatValue(val)}
+                              </Typography>
+                            }
+                          />
+                        ))}
+                      </Box>
+                    )}
+                  </>
+                </Box>
+              </Box>
             )}
           </Paper>
+          {Boolean(responseToDelete) && (
+            <ResponseDelete
+              onDelete={deleteResponse}
+              open={Boolean(responseToDelete)}
+              onClose={onCloseModal}
+            />
+          )}
         </Box>
-
-        {Boolean(responseToDelete) && (
-          <ResponseDelete
-            onDelete={deleteResponse}
-            open={Boolean(responseToDelete)}
-            onClose={onCloseModal}
-          />
-        )}
       </Box>
     </>
   );
