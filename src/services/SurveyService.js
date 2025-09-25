@@ -54,14 +54,17 @@ class SurveyService extends BaseService {
     return response.data;
   }
 
-  async allResponse(surveyId, page, per_page, complete, surveyor) {
-    const response = await this.handleRequest(() =>
-      authenticatedApi.get(
-        `/survey/${surveyId}/response/summary?page=${page}&per_page=${per_page}` +
-          `${complete ? `&status=${complete}` : ""}` +
-          `${surveyor ? `&surveyor=${surveyor}` : ""}`
-      )
-    );
+  async allResponse(surveyId, page, per_page, complete, surveyor, opts = {}) {
+    const { confirmFilesExport = false } = opts;
+
+    const url =
+      `/survey/${surveyId}/response/summary` +
+      `?page=${page}&per_page=${per_page}` +
+      `${complete ? `&status=${complete}` : ""}` +
+      `${surveyor ? `&surveyor=${surveyor}` : ""}` +
+      `${confirmFilesExport ? `&confirm_files_export=true` : ""}`;
+
+    const response = await this.handleRequest(() => authenticatedApi.get(url));
     return response.data;
   }
 

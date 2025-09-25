@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -49,7 +49,6 @@ function ResponsesSurvey() {
   const { surveyId } = useParams();
 
   const [fetching, setFetching] = useState(true);
-  const [dbResponses, setDbResponses] = useState(false);
   const [completeResponses, setCompleteResponses] = useState("none");
   const [surveyor, setSurveyor] = useState(null);
 
@@ -62,6 +61,7 @@ function ResponsesSurvey() {
 
   const [exportDlgOpen, setExportDlgOpen] = useState(false);
   const [downloadDlgOpen, setDownloadDlgOpen] = useState(false);
+  const firstFetchThisVisitRef = useRef(true);
 
   const processApirror = () => setFetching(false);
 
@@ -77,8 +77,13 @@ function ResponsesSurvey() {
         : completed === false
         ? "INCOMPLETE"
         : undefined;
+
+    const confirmFilesExport = firstFetchThisVisitRef.current === true;
+
     surveyService
-      .allResponse(surveyId, page, rowsPerPage, status, surveyor)
+      .allResponse(surveyId, page, rowsPerPage, status, surveyor, {
+        confirmFilesExport,
+      })
       .then((data) => {
         if (data) {
           const totalPages = Math.ceil(data.totalCount / rowsPerPage) || 1;
@@ -93,12 +98,21 @@ function ResponsesSurvey() {
         processApirror(err);
         console.error(err);
         setFetching(false);
+      })
+      .finally(() => {
+        if (firstFetchThisVisitRef.current) {
+          firstFetchThisVisitRef.current = false;
+        }
       });
   };
 
   useEffect(() => {
+    firstFetchThisVisitRef.current = true;
+  }, [surveyId]);
+
+  useEffect(() => {
     fetchResponses();
-  }, [page, rowsPerPage, dbResponses, completeResponses, surveyor]);
+  }, [page, rowsPerPage, completeResponses, surveyor]);
 
   useEffect(() => {
     if (!responseId) {
@@ -429,7 +443,9 @@ function ResponsesSurvey() {
                   <InfoItem
                     label={t("responses.disqualified")}
                     value={
-                      selected.disqualified ? t("responses.yes") : t("responses.no")
+                      selected.disqualified
+                        ? t("responses.yes")
+                        : t("responses.no")
                     }
                   />
                 </Box>
