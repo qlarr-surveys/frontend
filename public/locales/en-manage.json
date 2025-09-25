@@ -249,7 +249,11 @@
     "max": "Max {{max}}",
     "min": "Min {{min}}",
     "enter_a_number": "Enter a number",
-    "no_files_found"  : "No files found for the selected range"
+    "no_files_found": "No files found for the selected range",
+    "yes": "Yes",
+    "no": "No",
+    "disqualified": "Disqualified",
+    "preview_not_exportable": "Preview responses cannot be exported"
   },
   "responses_count": "Responses",
   "roles_required": "Roles is Required",

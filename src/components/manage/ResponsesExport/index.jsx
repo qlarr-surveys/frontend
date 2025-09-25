@@ -13,6 +13,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  FormHelperText,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -175,6 +176,9 @@ export default function ResponsesExport({ open, onClose, maxCount = 1, t }) {
                 </RadioGroup>
               )}
             />
+            <FormHelperText sx={{ color: "warning.main" ,ml:0 }}>
+              {t("responses.preview_not_exportable")}
+            </FormHelperText>
           </FormControl>
 
           <FormControl>

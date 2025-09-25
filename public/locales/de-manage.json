@@ -247,7 +247,11 @@
     "max": "Max {{max}}",
     "min": "Min {{min}}",
     "enter_a_number": "Geben Sie eine Zahl ein",
-    "no_files_found": "Keine Dateien für den ausgewählten Bereich gefunden"
+    "no_files_found": "Keine Dateien für den ausgewählten Bereich gefunden",
+    "yes": "Ja",
+    "no": "Nein",
+    "disqualified": "Disqualifiziert",
+    "preview_not_exportable": "Vorschauantworten können nicht exportiert werden"
   },
   "responses_count": "Antworten",
   "roles_required": "Roles ist erforderlich",

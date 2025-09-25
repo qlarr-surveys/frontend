@@ -247,7 +247,11 @@
     "max": "الحد الأقصى {{max}}",
     "min": "الحد الأدنى {{min}}",
     "enter_a_number": "أدخل رقمًا",
-    "no_files_found": "لم يتم العثور على ملفات للنطاق المحدد"
+    "no_files_found": "لم يتم العثور على ملفات للنطاق المحدد",
+    "yes": "نعم",
+    "no": "لا",
+    "disqualified": "مستبعد",
+    "preview_not_exportable": "لا يمكن تصدير الردود التجريبية"
   },
   "responses_count": "الردود",
   "roles_required": "الأدوار مطلوبة",

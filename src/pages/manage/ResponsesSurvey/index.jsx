@@ -270,7 +270,13 @@ function ResponsesSurvey() {
                               <Typography fontWeight={600}>
                                 #{r.index}
                               </Typography>
-                              {r.submitDate ? (
+                              {r.preview ? (
+                                <Chip
+                                  size="small"
+                                  variant="outlined"
+                                  label={t("responses.preview")}
+                                />
+                              ) : r.submitDate ? (
                                 <Chip
                                   size="small"
                                   label={t("responses.complete_response")}
@@ -355,12 +361,11 @@ function ResponsesSurvey() {
                 </Typography>
               </Box>
             ) : (
-              <Box
-                display="grid"
-                gridTemplateColumns={{ xs: "1fr", lg: "420px 1fr" }}
-                gap={3}
-              >
-                <Box display="flex" gap={1} flexDirection="column">
+              <Box display="flex" flexDirection="column" gap={3}>
+                <Box
+                  display="grid"
+                  gridTemplateColumns={{ xs: "1fr", lg: "500px 1fr" }}
+                >
                   <InfoItem label="ID" value={`#${selected.index}`} />
                   <InfoItem
                     label={t("label.surveyor")}
@@ -402,7 +407,7 @@ function ResponsesSurvey() {
                   />
                   <InfoItem
                     label={t("responses.lang")}
-                    value={selected.lang || "—"}
+                    value={t(`language.${selected.lang}`) || "—"}
                   />
                   <InfoItem
                     label={t("responses.status") || "Status"}
@@ -419,6 +424,12 @@ function ResponsesSurvey() {
                           label={t("responses.incomplete_response")}
                         />
                       )
+                    }
+                  />
+                  <InfoItem
+                    label={t("responses.disqualified")}
+                    value={
+                      selected.disqualified ? t("responses.yes") : t("responses.no")
                     }
                   />
                 </Box>
