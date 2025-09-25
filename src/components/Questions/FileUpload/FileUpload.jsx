@@ -26,10 +26,16 @@ function FileUpload(props) {
     props.component.validation?.validation_file_types?.fileTypes
   );
 
-  const maxFileSize =
+  const validationMaxSize =
     (props.component.validation?.validation_max_file_size?.isActive &&
       props.component.validation?.validation_max_file_size?.max_size) ||
     -1;
+  
+  // Limit to validation value or 10MB (10240 KB), whichever is smaller
+  const IMAGE_MAX_SIZE_KB = 10240; // 10MB
+  const maxFileSize = validationMaxSize > 0 
+    ? Math.min(validationMaxSize, IMAGE_MAX_SIZE_KB)
+    : IMAGE_MAX_SIZE_KB;
 
   const state = useSelector((state) => {
     let questionState = state.runState.values[props.component.qualifiedCode];
