@@ -449,44 +449,46 @@ function ResponsesSurvey() {
                     }
                   />
                 </Box>
-                <Box sx={{ minWidth: 0 }}>
-                  <Typography
-                    variant="subtitle2"
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    {t("responses.answers", "Answers")}
-                  </Typography>
-                  <>
-                    {selected.values && Object.keys(selected.values).length && (
-                      <Box
-                        display="grid"
-                        gap={0.5}
-                        sx={{
-                          maxHeight: { xs: "unset", lg: 420 },
-                          overflowY: { xs: "visible", lg: "auto" },
-                        }}
-                      >
-                        {Object.entries(selected.values).map(([key, val]) => (
-                          <InfoItem
-                            key={key}
-                            label={key}
-                            value={
-                              <Typography
-                                sx={{
-                                  whiteSpace: "pre-wrap",
-                                  wordBreak: "break-word",
-                                }}
-                              >
-                                {formatValue(val)}
-                              </Typography>
-                            }
-                          />
-                        ))}
-                      </Box>
-                    )}
-                  </>
-                </Box>
+                {selected.values && Object.keys(selected.values).length > 0 && (
+                  <Box sx={{ minWidth: 0 }}>
+                    <Typography
+                      variant="subtitle2"
+                      color="text.secondary"
+                      gutterBottom
+                    >
+                      {t("responses.answers", "Answers")}
+                    </Typography>
+                    <Box>
+                      {Object.entries(selected.values).map(([key, val]) => (
+                        <Box
+                          key={key}
+                          display="flex"
+                          alignItems="flex-start"
+                          gap={1}
+                          py={0.5}
+                        >
+                          <Typography
+                            color="text.secondary"
+                            fontWeight={500}
+                            sx={{ minWidth: 200, flexShrink: 0 }}
+                          >
+                            {key}
+                          </Typography>
+
+                          <Typography
+                            sx={{
+                              flex: 1,
+                              whiteSpace: "pre-wrap",
+                              wordBreak: "break-word",
+                            }}
+                          >
+                            {formatValue(val)}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+                )}
               </Box>
             )}
           </Paper>
