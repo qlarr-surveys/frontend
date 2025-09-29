@@ -1,4 +1,3 @@
-
 export const buildValidationDefaultData = (rule) => {
   switch (rule) {
     case "validation_required":
@@ -95,7 +94,6 @@ export const buildValidationDefaultData = (rule) => {
   }
 };
 
-
 export const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -105,42 +103,84 @@ export const reorder = (list, startIndex, endIndex) => {
 
 export const nextGroupId = (groups) => {
   if (groups && groups.length) {
-      const codes = groups.map((group) => parseInt(group.code.replace("G", "")))
-        .filter((code) =>typeof code === 'number' && !Number.isNaN(code))
-        .sort(function (a, b) {
-          return a - b;
-        })
-        if([codes.length > 0]){
-          return codes[codes.length - 1] + 1
-        }
-  }
-  return 1;
-};
-
-export const nextQuestionId = (state, groups) => {
-  if (groups.length) {
-    let questions = [];
-    groups.forEach((group) => {
-      let groupObj = state[group.code];
-      if (groupObj.children) {
-        groupObj.children.forEach((question) => {
-          const code = parseInt(question.code.replace("Q", ""));
-          if (typeof code === 'number' && !Number.isNaN(code)) {
-            questions.push(parseInt(code));
-          }
-        });
-      }
-    });
-    if (questions.length) {
-      return (
-        questions.sort(function (a, b) {
-          return a - b;
-        })[questions.length - 1] + 1
-      );
+    const codes = groups
+      .map((group) => parseInt(group.code.replace("G", "")))
+      .filter((code) => typeof code === "number" && !Number.isNaN(code))
+      .sort(function (a, b) {
+        return a - b;
+      });
+    if ([codes.length > 0]) {
+      return codes[codes.length - 1] + 1;
     }
   }
   return 1;
 };
+
+function collectExistingIds(state, groups) {
+  const ids = new Set();
+
+  groups.forEach((group) => {
+    const groupObj = state[group.code];
+    if (groupObj && groupObj.children) {
+      groupObj.children.forEach((q) => {
+        if (q.code) {
+          ids.add(q.code);
+        }
+      });
+    }
+  });
+  return ids;
+}
+
+function randChar(chars) {
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  return chars[array[0] % chars.length];
+}
+
+function generateId(existing) {
+  const letters = "abcdefghijklmnopqrstuvwxyz";
+  const numbers = "0123456789";
+  let id = "";
+
+  do {
+    const numPart = Array.from({ length: 3 }, () => randChar(numbers)).join("");
+    const letPart = Array.from({ length: 3 }, () => randChar(letters)).join("");
+    id = numPart + letPart;
+  } while (existing.has(id));
+
+  return id;
+}
+
+export const nextQuestionId = (state, groups) => {
+  const existing = collectExistingIds(state, groups);
+  return generateId(existing);
+};
+
+// export const nextQuestionId = (state, groups) => {
+//   if (groups.length) {
+//     let questions = [];
+//     groups.forEach((group) => {
+//       let groupObj = state[group.code];
+//       if (groupObj.children) {
+//         groupObj.children.forEach((question) => {
+//           const code = parseInt(question.code.replace("Q", ""));
+//           if (typeof code === 'number' && !Number.isNaN(code)) {
+//             questions.push(parseInt(code));
+//           }
+//         });
+//       }
+//     });
+//     if (questions.length) {
+//       return (
+//         questions.sort(function (a, b) {
+//           return a - b;
+//         })[questions.length - 1] + 1
+//       );
+//     }
+//   }
+//   return 1;
+// };
 
 export const buildReferenceInstruction = (content, name, key) => {
   const allMatches = getAllMatches(content);
