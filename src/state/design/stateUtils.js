@@ -101,19 +101,19 @@ export const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-export const nextGroupId = (groups) => {
-  if (groups && groups.length) {
-    const codes = groups
-      .map((group) => parseInt(group.code.replace("G", "")))
-      .filter((code) => typeof code === "number" && !Number.isNaN(code))
-      .sort(function (a, b) {
-        return a - b;
-      });
-    if ([codes.length > 0]) {
-      return codes[codes.length - 1] + 1;
-    }
+function collectExistingGroupCodes(groups) {
+  const ids = new Set();
+  if (Array.isArray(groups)) {
+    groups.forEach((g) => {
+      if (g && g.code) ids.add(g.code);
+    });
   }
-  return 1;
+  return ids;
+}
+
+export const nextGroupId = (groups) => {
+  const existing = collectExistingGroupCodes(groups);
+  return generateId(existing);
 };
 
 function collectExistingIds(state, groups) {
@@ -156,31 +156,6 @@ export const nextQuestionId = (state, groups) => {
   const existing = collectExistingIds(state, groups);
   return generateId(existing);
 };
-
-// export const nextQuestionId = (state, groups) => {
-//   if (groups.length) {
-//     let questions = [];
-//     groups.forEach((group) => {
-//       let groupObj = state[group.code];
-//       if (groupObj.children) {
-//         groupObj.children.forEach((question) => {
-//           const code = parseInt(question.code.replace("Q", ""));
-//           if (typeof code === 'number' && !Number.isNaN(code)) {
-//             questions.push(parseInt(code));
-//           }
-//         });
-//       }
-//     });
-//     if (questions.length) {
-//       return (
-//         questions.sort(function (a, b) {
-//           return a - b;
-//         })[questions.length - 1] + 1
-//       );
-//     }
-//   }
-//   return 1;
-// };
 
 export const buildReferenceInstruction = (content, name, key) => {
   const allMatches = getAllMatches(content);
