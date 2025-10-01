@@ -31,6 +31,7 @@ import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import ResponsesDownload from "~/components/manage/ResponsesDownload";
 import ResponsesExport from "~/components/manage/ResponsesExport";
+import { previewUrlByQuestionCode } from "~/networking/run";
 
 function InfoItem({ label, value }) {
   return (
@@ -104,6 +105,36 @@ function ResponsesSurvey() {
           firstFetchThisVisitRef.current = false;
         }
       });
+  };
+
+  const isFileObj = (v) =>
+    v &&
+    typeof v === "object" &&
+    "size" in v &&
+    "filename" in v &&
+    "stored_filename" in v;
+
+  const getQuestionCodeFromKey = (key) => {
+    if (!key) return "";
+    const first = String(key).split(".")[0].trim();
+    const m = first.match(/[A-Za-z]+[A-Za-z0-9]*/);
+    return (m && m[0]) || first;
+  };
+
+  const renderFileLink = (questionKey, respId, file) => {
+    const code = getQuestionCodeFromKey(questionKey);
+    return (
+      <a
+        key={file.stored_filename}
+        target="_blank"
+        rel="noreferrer"
+        download={file.stored_filename}
+        href={previewUrlByQuestionCode(code, respId)}
+        style={{ wordBreak: "break-all" }}
+      >
+        {file.filename} — {Math.round(file.size / 1000)}K
+      </a>
+    );
   };
 
   useEffect(() => {
@@ -475,15 +506,48 @@ function ResponsesSurvey() {
                             {key}
                           </Typography>
 
-                          <Typography
-                            sx={{
-                              flex: 1,
-                              whiteSpace: "pre-wrap",
-                              wordBreak: "break-word",
-                            }}
-                          >
-                            {formatValue(val)}
-                          </Typography>
+                          <Box sx={{ flex: 1, minWidth: 0 }}>
+                            {val === null || val === undefined || val === "" ? (
+                              <Typography
+                                sx={{
+                                  whiteSpace: "pre-wrap",
+                                  wordBreak: "break-word",
+                                }}
+                              >
+                                —
+                              </Typography>
+                            ) : Array.isArray(val) && val.every(isFileObj) ? (
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                gap={0.5}
+                              >
+                                {val.map((file) =>
+                                  renderFileLink(key, selected.id, file)
+                                )}
+                              </Box>
+                            ) : isFileObj(val) ? (
+                              renderFileLink(key, selected.id, val)
+                            ) : typeof val === "object" ? (
+                              <Typography
+                                sx={{
+                                  whiteSpace: "pre-wrap",
+                                  wordBreak: "break-word",
+                                }}
+                              >
+                                {JSON.stringify(val)}
+                              </Typography>
+                            ) : (
+                              <Typography
+                                sx={{
+                                  whiteSpace: "pre-wrap",
+                                  wordBreak: "break-word",
+                                }}
+                              >
+                                {String(val)}
+                              </Typography>
+                            )}
+                          </Box>
                         </Box>
                       ))}
                     </Box>
