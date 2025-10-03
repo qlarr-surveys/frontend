@@ -10,7 +10,7 @@ import { setDirty } from "~/state/templateState";
 import { useTranslation } from "react-i18next";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
-import { fileTypesToMimesArray } from '~/state/design/addInstructions';
+import { fileTypesToMimesArray } from "~/state/design/addInstructions";
 
 const Input = styled("input")({
   display: "none",
@@ -68,16 +68,27 @@ function FileUpload(props) {
     selectedFile.size / 1024 > maxFileSize;
 
   const changeHandler = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
     dispatch(setDirty(props.component.qualifiedCode));
-    setSelectedFile(event.target.files[0]);
+    setSelectedFile(file);
+
+    const invalidType = accepted.length > 0 && !accepted.includes(file.type);
+    const tooBig = maxFileSize > 0 && file.size / 1024 > maxFileSize;
+
+    if (!invalidType && !tooBig) {
+      uploadSelectedFile(file);
+    }
   };
 
-  const uploadSelectedFile = () => {
+  const uploadSelectedFile = (file) => {
+    if (!file) return;
     setUploading(true);
-    uploadFile(runService, props.component.qualifiedCode, preview, selectedFile)
+    uploadFile(runService, props.component.qualifiedCode, preview, file)
       .then((response) => {
         setUploading(false);
-        resetSelectedFile();
+        setSelectedFile(undefined);
         dispatch(
           valueChange({
             componentCode: props.component.qualifiedCode,
@@ -90,22 +101,31 @@ function FileUpload(props) {
         console.error(err);
       });
   };
+
   const resetSelectedFile = () => {
     setSelectedFile(undefined);
   };
 
   const onButtonClick = (event) => {
     if (window["Android"]) {
-      const code = props.component.qualifiedCode;
       event.preventDefault();
+      const code = props.component.qualifiedCode;
       window["Android"].selectFile(
         code,
         accepted?.join(",") || "",
         maxFileSize || -1
       );
       window["onFileSelected" + code] = (name, size, type) => {
-        dispatch(setDirty(props.component.qualifiedCode));
-        setSelectedFile({ name, size, type });
+        const fileLike = { name, size, type };
+        dispatch(setDirty(code));
+        setSelectedFile(fileLike);
+
+        const invalidType = accepted.length > 0 && !accepted.includes(type);
+        const tooBig = maxFileSize > 0 && size / 1024 > maxFileSize;
+
+        if (!invalidType && !tooBig) {
+          uploadSelectedFile(fileLike);
+        }
       };
     }
   };
@@ -137,17 +157,7 @@ function FileUpload(props) {
           <span>
             &nbsp;{selectedFile.name} - {Math.round(selectedFile.size / 1024)}K
           </span>
-          {shouldUpload ? (
-            <Button
-              disabled={isUploading}
-              variant="text"
-              onClick={uploadSelectedFile}
-            >
-              {t("upload")}
-            </Button>
-          ) : (
-            ""
-          )}
+       
           <Button
             disabled={isUploading}
             sx={{
@@ -199,10 +209,28 @@ function FileUpload(props) {
               {state.filename} - {Math.round(state.size / 1024)}K
             </Link>
           ) : (
-            <Link target="_blank" href={previewUrlByFilename(state.stored_filename)}>
+            <Link
+              target="_blank"
+              href={previewUrlByFilename(state.stored_filename)}
+            >
               {state.filename} - {Math.round(state.size / 1024)}K
             </Link>
           )}
+
+          <Button
+            variant="text"
+            size="small"
+            onClick={() =>
+              dispatch(
+                valueChange({
+                  componentCode: props.component.qualifiedCode,
+                  value: null,
+                })
+              )
+            }
+          >
+            {t("remove_file", "Remove")}
+          </Button>
         </React.Fragment>
       )}
     </div>
