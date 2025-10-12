@@ -153,6 +153,7 @@ function ContentPanel({ designMode }, ref) {
                 return (
                   <GroupDesign
                     t={t}
+                    key={item.group.code}
                     designMode={designMode}
                     code={item.group.code}
                     index={item.index}
