@@ -25,7 +25,8 @@ import { DESIGN_SURVEY_MODE } from "~/routes";
 import {
   addAnswerInstructions,
   addMaskedValuesInstructions,
-  refreshEnumforSingleChoice,
+  refreshEnumForSingleChoice,
+  refreshListForMultipleChoice,
   addQuestionInstructions,
   addSkipInstructions,
   changeInstruction,
@@ -213,7 +214,8 @@ export const designState = createSlice({
       state.index = buildCodeIndex(state);
       question.designErrors = questionDesignError(question);
       cleanupValidation(state, codes[0]);
-      refreshEnumforSingleChoice(question, state);
+      refreshEnumForSingleChoice(question, state);
+      refreshListForMultipleChoice(question, state);
       addMaskedValuesInstructions(codes[0], question, state);
       cleanupRandomRules(question);
     },
@@ -766,7 +768,8 @@ const newQuestion = (state, payload) => {
     );
   });
   cleanupValidation(state, newCode);
-  refreshEnumforSingleChoice(questionObject[newCode], state);
+  refreshEnumForSingleChoice(questionObject[newCode], state);
+  refreshListForMultipleChoice(questionObject[newCode], state);
   addMaskedValuesInstructions(newCode, questionObject[newCode], state);
   destinationGroup.children.splice(
     destinationQuestionIndex,
@@ -879,7 +882,8 @@ const addAnswer = (state, answer) => {
     state[qualifiedCode].type = answer.type;
   }
   addAnswerInstructions(state, state[qualifiedCode], parentCode, questionCode);
-  refreshEnumforSingleChoice(state[questionCode], state);
+  refreshEnumForSingleChoice(state[questionCode], state);
+  refreshListForMultipleChoice(state[questionCode], state);
   if (answer.focus) {
     state.focus = qualifiedCode;
   }

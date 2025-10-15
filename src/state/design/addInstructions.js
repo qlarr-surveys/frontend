@@ -16,7 +16,7 @@ export const addSkipInstructions = (state, code) => {
   });
 };
 
-export const refreshEnumforSingleChoice = (component, state) => {
+export const refreshEnumForSingleChoice = (component, state) => {
   if (
     !component.type ||
     ![
@@ -87,6 +87,81 @@ export const refreshEnumforSingleChoice = (component, state) => {
             );
             if (valueInstruction) {
               valueInstruction.returnType = "string";
+              changeInstruction(row, valueInstruction);
+            }
+          });
+      }
+  }
+  return component;
+};
+
+export const refreshListForMultipleChoice = (component, state) => {
+  if (
+    !component.type ||
+    ![
+      "mcq",
+      "icon_mcq",
+      "image_mcq",
+      "mcq_array",
+    ].includes(component.type)
+  ) {
+    return;
+  }
+  switch (component.type) {
+    case "image_mcq":
+    case "icon_mcq":
+    case "mcq":
+      let valueInstruction = component.instructionList.find(
+        (it) => it.code == "value"
+      );
+      if (component.children && component.children.length) {
+        valueInstruction.returnType = {
+          type: "list",
+          values: component.children.map((it) => it.code),
+        };
+        changeInstruction(component, valueInstruction);
+      } else {
+        valueInstruction.returnType = "list";
+        changeInstruction(component, valueInstruction);
+      }
+      break;
+    case "mcq_array":
+      if (
+        component.children &&
+        component.children.length &&
+        component.children.filter((el) => el.type == "column").length &&
+        component.children.filter((el) => el.type === "row").length
+      ) {
+        component.children
+          .filter((el) => el.type === "row")
+          .forEach((el) => {
+            const row = state[el.qualifiedCode];
+            const valueInstruction = row.instructionList.find(
+              (it) => it.code == "value"
+            );
+            if (valueInstruction) {
+              valueInstruction.returnType = {
+                type: "list",
+                values: component.children
+                  .filter((el) => el.type == "column")
+                  .map((el) => el.code),
+              };
+              changeInstruction(row, valueInstruction);
+            }
+          });
+      } else if (
+        component.children &&
+        component.children.filter((el) => el.type === "row").length
+      ) {
+        component.children
+          .filter((el) => el.type === "row")
+          .forEach((el) => {
+            const row = state[el.qualifiedCode];
+            const valueInstruction = row.instructionList.find(
+              (it) => it.code == "value"
+            );
+            if (valueInstruction) {
+              valueInstruction.returnType = "list";
               changeInstruction(row, valueInstruction);
             }
           });
