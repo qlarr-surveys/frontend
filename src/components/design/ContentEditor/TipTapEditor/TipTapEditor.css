@@ -1,0 +1,90 @@
+/* TipTap Editor Wrapper */
+.tiptap-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TipTap Editor Content */
+.tiptap-editor {
+  padding: 0 !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  outline: none;
+}
+
+.tiptap-editor:focus {
+  outline: none;
+}
+
+/* Paragraph styles */
+.tiptap-editor p {
+  margin: 0;
+}
+
+.tiptap-editor > :first-child {
+  margin-top: 0;
+}
+
+.tiptap-editor > :last-child {
+  margin-bottom: 0;
+}
+
+/* RTL Support */
+.tiptap-editor.rtl {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.tiptap-editor.ltr {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* Link styles */
+.tiptap-link {
+  color: #0066cc;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.tiptap-link:hover {
+  color: #004499;
+}
+
+/* Mention styles */
+.mention {
+  background-color: #f0f0f0;
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  color: #333;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.mention span[contenteditable="false"] {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* List styles */
+.tiptap-editor ul,
+.tiptap-editor ol {
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.tiptap-editor li {
+  margin: 0;
+}
+
+/* Placeholder */
+.tiptap-editor.ProseMirror p.is-editor-empty:first-child::before {
+  color: #aaa;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}

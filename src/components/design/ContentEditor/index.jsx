@@ -8,7 +8,7 @@ import React, {
 import styles from "./ContentEditor.module.css";
 import "./ContentEditor.css";
 import { Box } from "@mui/material";
-import DraftEditor from "./QuillEditor";
+import DraftEditor from "./TipTapEditor";
 import { rtlLanguage } from "~/utils/common";
 import { useDispatch } from "react-redux";
 import { changeContent, resetFocus } from "~/state/design/designState";
