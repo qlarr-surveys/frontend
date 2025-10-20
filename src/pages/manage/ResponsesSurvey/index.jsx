@@ -36,8 +36,8 @@ import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import ResponsesDownload from "~/components/manage/ResponsesDownload";
 import ResponsesExport from "~/components/manage/ResponsesExport";
-import { previewUrlByQuestionCode } from "~/networking/run";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { previewUrlByFilename, previewUrlByResponseIdAndFilename } from '~/networking/run';
 
 function InfoItem({ label, value }) {
   return (
@@ -215,7 +215,7 @@ function ResponsesSurvey() {
         target="_blank"
         rel="noreferrer"
         download={file.stored_filename}
-        href={previewUrlByQuestionCode(code, respId)}
+        href={previewUrlByResponseIdAndFilename(respId, file.stored_filename)}
         style={{ wordBreak: "break-all" }}
       >
         {file.filename} — {Math.round(file.size / 1000)}K
@@ -620,18 +620,20 @@ function ResponsesSurvey() {
                                     maxWidth: 0,
                                   }}
                                 >
-                                  <CustomTooltip
-                                    showIcon={false}
-                                    title={answerTooltip}
-                                  >
+                                  {answerTooltip.length > 20 ? (
+                                    <CustomTooltip
+                                      showIcon={false}
+                                      title={answerTooltip}
+                                    >
+                                      <Box>
+                                        {renderAnswerClamped(key, selected.id, val)}
+                                      </Box>
+                                    </CustomTooltip>
+                                  ) : (
                                     <Box>
-                                      {renderAnswerClamped(
-                                        key,
-                                        selected.id,
-                                        val
-                                      )}
+                                      {renderAnswerClamped(key, selected.id, val)}
                                     </Box>
-                                  </CustomTooltip>
+                                  )}
                                 </TableCell>
                               </TableRow>
                             );

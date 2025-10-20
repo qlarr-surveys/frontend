@@ -125,12 +125,12 @@ export const previewUrlByFilename = (fileName) => {
   );
 };
 
-export const previewUrlByQuestionCode = (questionCode, responseId) => {
+export const previewUrlByResponseIdAndFilename = (responseId, fileName) => {
   const surveyId = sessionStorage.getItem("surveyId");
   
   return (
     BACKEND_BASE_URL +
-    `/survey/${surveyId}/response/attach/${responseId}/${questionCode}`
+    `/survey/${surveyId}/response/${responseId}/attach/${fileName}`
   );
 };
 
