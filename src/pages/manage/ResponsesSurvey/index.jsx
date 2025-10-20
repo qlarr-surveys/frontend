@@ -16,10 +16,15 @@ import {
   Typography,
   FormControl,
   Skeleton,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { FileDownloadOutlined, FileUploadOutlined } from "@mui/icons-material";
-
 import styles from "./ResponsesSurvey.module.css";
 import {
   formatlocalDateTime,
@@ -32,6 +37,7 @@ import { useService } from "~/hooks/use-service";
 import ResponsesDownload from "~/components/manage/ResponsesDownload";
 import ResponsesExport from "~/components/manage/ResponsesExport";
 import { previewUrlByQuestionCode } from "~/networking/run";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function InfoItem({ label, value }) {
   return (
@@ -40,6 +46,23 @@ function InfoItem({ label, value }) {
         {label}
       </Typography>
       <Typography>{value ?? "—"}</Typography>
+    </Box>
+  );
+}
+
+function ClampTwoLines({ children, sx }) {
+  return (
+    <Box
+      sx={{
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        ...sx,
+      }}
+    >
+      {children}
     </Box>
   );
 }
@@ -114,6 +137,69 @@ function ResponsesSurvey() {
     "filename" in v &&
     "stored_filename" in v;
 
+  const getTooltipString = (val) => {
+    if (val === null || val === undefined || val === "") return "—";
+    if (Array.isArray(val) && val.every(isFileObj)) {
+      return val
+        .map((f) => `${f.filename} (${Math.round(f.size / 1000)}K)`)
+        .join(", ");
+    }
+    if (isFileObj(val)) {
+      return `${val.filename} (${Math.round(val.size / 1000)}K)`;
+    }
+    if (typeof val === "object") return JSON.stringify(val, null, 2);
+    return String(val);
+  };
+
+  const renderAnswerClamped = (key, respId, val) => {
+    if (val === null || val === undefined || val === "") {
+      return <Typography>—</Typography>;
+    }
+
+    if (Array.isArray(val) && val.every(isFileObj)) {
+      return (
+        <ClampTwoLines>
+          <Box display="inline" sx={{ wordBreak: "break-word" }}>
+            {val.map((file, idx) => (
+              <React.Fragment key={file.stored_filename}>
+                {idx > 0 ? ", " : null}
+                {renderFileLink(key, respId, file)}
+              </React.Fragment>
+            ))}
+          </Box>
+        </ClampTwoLines>
+      );
+    }
+
+    if (isFileObj(val)) {
+      return (
+        <ClampTwoLines>
+          <Box display="inline" sx={{ wordBreak: "break-word" }}>
+            {renderFileLink(key, respId, val)}
+          </Box>
+        </ClampTwoLines>
+      );
+    }
+
+    if (typeof val === "object") {
+      return (
+        <ClampTwoLines>
+          <Typography sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+            {JSON.stringify(val)}
+          </Typography>
+        </ClampTwoLines>
+      );
+    }
+
+    return (
+      <ClampTwoLines>
+        <Typography sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+          {String(val)}
+        </Typography>
+      </ClampTwoLines>
+    );
+  };
+
   const getQuestionCodeFromKey = (key) => {
     if (!key) return "";
     const first = String(key).split(".")[0].trim();
@@ -183,11 +269,6 @@ function ResponsesSurvey() {
     );
   }
 
-  const formatValue = (v) => {
-    if (v === null || v === undefined || v === "") return "—";
-    if (typeof v === "object") return JSON.stringify(v);
-    return String(v);
-  };
   return (
     <>
       <ResponsesExport
@@ -489,68 +570,75 @@ function ResponsesSurvey() {
                     >
                       {t("responses.answers", "Answers")}
                     </Typography>
-                    <Box>
-                      {Object.entries(selected.values).map(([key, val]) => (
-                        <Box
-                          key={key}
-                          display="flex"
-                          alignItems="flex-start"
-                          gap={1}
-                          py={0.5}
-                        >
-                          <Typography
-                            color="text.secondary"
-                            fontWeight={500}
-                            sx={{ minWidth: 200, flexShrink: 0 }}
-                          >
-                            {key}
-                          </Typography>
 
-                          <Box sx={{ flex: 1, minWidth: 0 }}>
-                            {val === null || val === undefined || val === "" ? (
-                              <Typography
-                                sx={{
-                                  whiteSpace: "pre-wrap",
-                                  wordBreak: "break-word",
-                                }}
-                              >
-                                —
-                              </Typography>
-                            ) : Array.isArray(val) && val.every(isFileObj) ? (
-                              <Box
-                                display="flex"
-                                flexDirection="column"
-                                gap={0.5}
-                              >
-                                {val.map((file) =>
-                                  renderFileLink(key, selected.id, file)
-                                )}
-                              </Box>
-                            ) : isFileObj(val) ? (
-                              renderFileLink(key, selected.id, val)
-                            ) : typeof val === "object" ? (
-                              <Typography
-                                sx={{
-                                  whiteSpace: "pre-wrap",
-                                  wordBreak: "break-word",
-                                }}
-                              >
-                                {JSON.stringify(val)}
-                              </Typography>
-                            ) : (
-                              <Typography
-                                sx={{
-                                  whiteSpace: "pre-wrap",
-                                  wordBreak: "break-word",
-                                }}
-                              >
-                                {String(val)}
-                              </Typography>
-                            )}
-                          </Box>
-                        </Box>
-                      ))}
-                    </Box>
+                    <TableContainer component={Paper} variant="outlined">
+                      <Table size="small" aria-label="answers table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell sx={{ width: "33%" }}>
+                              {t("responses.question", "Question")}
+                            </TableCell>
+                            <TableCell sx={{ width: "67%" }}>
+                              {t("responses.answer", "Answer")}
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {Object.entries(selected.values).map(([key, val]) => {
+                            const answerTooltip = getTooltipString(val);
+                            const questionTooltip = getTooltipString(key);
+                            return (
+                              <TableRow key={key} hover>
+                                <TableCell
+                                  sx={{
+                                    verticalAlign: "top",
+                                    maxWidth: 0,
+                                  }}
+                                >
+                                  <ClampTwoLines>
+                                    <CustomTooltip
+                                      showIcon={false}
+                                      title={questionTooltip}
+                                    >
+                                      <Typography
+                                        color="text.secondary"
+                                        fontWeight={500}
+                                        sx={{
+                                          wordBreak: "break-word",
+                                          whiteSpace: "pre-wrap",
+                                        }}
+                                      >
+                                        {key}
+                                      </Typography>
+                                    </CustomTooltip>
+                                  </ClampTwoLines>
+                                </TableCell>
+
+                                <TableCell
+                                  sx={{
+                                    verticalAlign: "top",
+                                    maxWidth: 0,
+                                  }}
+                                >
+                                  <CustomTooltip
+                                    showIcon={false}
+                                    title={answerTooltip}
+                                  >
+                                    <Box>
+                                      {renderAnswerClamped(
+                                        key,
+                                        selected.id,
+                                        val
+                                      )}
+                                    </Box>
+                                  </CustomTooltip>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
                   </Box>
                 )}
               </Box>
