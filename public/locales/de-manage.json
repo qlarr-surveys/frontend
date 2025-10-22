@@ -17,6 +17,8 @@
   },
   "goBack": "Zurückgehen",
   "preview": "Vorschau",
+  "mobile_view": "Konsole nicht für kleine Bildschirme optimiert",
+  "mobile_view_working": "Unsere Konsole ist komplex und unterstützt kleinere Bildschirme nicht für die beste Erfahrung. Aber keine Sorge - die Umfragen, die wir Ihnen helfen zu erstellen, sind großartig auf kleinen Bildschirmen!",
   "timezone_info": "Wir verwenden Ihre lokale Zeitzone, um die Ablaufzeit der Umfrage zu berechnen.",
   "timezone_tooltip": "Die Umfrage läuft um 00:00 Uhr am ausgewählten Enddatum in Ihrer lokalen Zeitzone ab",
   "added": "Hinzugefügt:",
@@ -311,8 +313,6 @@
     "code_characters": "Der Code muss aus mindestens 6 Zahlen bestehen",
     "email_changed": "Ihre E-Mail wurde erfolgreich aktualisiert!"
   },
-  "mobile_view": "Die mobile Ansicht wird derzeit nicht unterstützt",
-  "mobile_view_working": "Wir arbeiten hart daran, diese Funktion zu ermöglichen!",
   "tooltips": {
     "quotas": "Aktivieren Sie Quoten und legen Sie Grenzen für die Anzahl der Antworten fest",
     "export": "Exportieren Sie die Umfragedaten",

@@ -21,6 +21,8 @@
   "timezone_tooltip": "The survey will expire at 00:00 on the selected end date in your local timezone",
   "goBack": "Go Back",
   "preview": "Preview",
+  "mobile_view": "Console Not Optimized for Small Screens",
+  "mobile_view_working": "Our console is complex and doesn't support smaller screens for the best experience. But don't worry - the surveys we help you create are awesome on small screens!",
   "added": "Added:",
   "admins": "admins",
   "analysts": "analysts",
@@ -316,8 +318,6 @@
     "code_characters": "Code must be at least 6 numbers",
     "email_changed": "Your email has been updated successfully!"
   },
-  "mobile_view": "Mobile view is currently not supported",
-  "mobile_view_working": "We're working hard to enable this feature!",
   "tooltips": {
     "quotas": "Enable quotas and set limits for the number of responses. This limit applies to both online and offline survey responses, depending on how frequently offline responses are synced.",
     "export": "Export the survey data",
