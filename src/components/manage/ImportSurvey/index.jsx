@@ -57,7 +57,14 @@ export const ImportSurvey = ({ open, onResult }) => {
         },
       }}
       open={open}
-      onClose={() => onResult(false)}
+      onClose={(event, reason) => {
+        // Allow closing on backdrop click and escape key
+        if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+          onResult(false);
+        }
+      }}
+      closeAfterTransition
+      disableEscapeKeyDown={false}
     >
       <Box className={styles.wrapper}>
         <Typography fontWeight={600} variant="h5">
