@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import {
@@ -47,6 +47,7 @@ export const Header = () => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const dropdownRef = useRef(null);
 
   const showSurveyTitle = useMemo(() => {
     return showTitle(location);
@@ -61,6 +62,22 @@ export const Header = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        handleClose();
+      }
+    };
+
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [open]);
 
   return (
     <Box className={styles.header}>
@@ -80,6 +97,7 @@ export const Header = () => {
         {TokenService.isAuthenticated() && (
           <>
             <Box
+              ref={dropdownRef}
               sx={{
                 position: "relative",
                 display: "inline-flex",
