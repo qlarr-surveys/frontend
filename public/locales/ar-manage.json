@@ -253,7 +253,9 @@
     "yes": "نعم",
     "no": "لا",
     "disqualified": "مستبعد",
-    "preview_not_exportable": "لا يمكن تصدير الردود التجريبية"
+    "preview_not_exportable": "لا يمكن تصدير الردود التجريبية",
+    "question":"السؤال",
+    "answer":"الإجابة"
   },
   "responses_count": "الردود",
   "roles_required": "الأدوار مطلوبة",

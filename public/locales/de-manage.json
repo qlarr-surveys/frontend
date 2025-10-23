@@ -253,7 +253,9 @@
     "yes": "Ja",
     "no": "Nein",
     "disqualified": "Disqualifiziert",
-    "preview_not_exportable": "Vorschauantworten können nicht exportiert werden"
+    "preview_not_exportable": "Vorschauantworten können nicht exportiert werden",
+    "question":"Frage",
+    "answer":"Antwort"
   },
   "responses_count": "Antworten",
   "roles_required": "Roles ist erforderlich",

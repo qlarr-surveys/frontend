@@ -255,7 +255,9 @@
     "yes": "Yes",
     "no": "No",
     "disqualified": "Disqualified",
-    "preview_not_exportable": "Preview responses cannot be exported"
+    "preview_not_exportable": "Preview responses cannot be exported",
+    "question":"Question",
+    "answer":"Answer"
   },
   "responses_count": "Responses",
   "roles_required": "Roles is Required",

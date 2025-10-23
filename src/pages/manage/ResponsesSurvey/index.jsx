@@ -37,7 +37,7 @@ import { useService } from "~/hooks/use-service";
 import ResponsesDownload from "~/components/manage/ResponsesDownload";
 import ResponsesExport from "~/components/manage/ResponsesExport";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
-import { previewUrlByFilename, previewUrlByResponseIdAndFilename } from '~/networking/run';
+import { previewUrlByResponseIdAndFilename } from "~/networking/run";
 
 function InfoItem({ label, value }) {
   return (
@@ -576,68 +576,82 @@ function ResponsesSurvey() {
                         <TableHead>
                           <TableRow>
                             <TableCell sx={{ width: "33%" }}>
-                              {t("responses.question", "Question")}
+                              {t("responses.question")}
                             </TableCell>
                             <TableCell sx={{ width: "67%" }}>
-                              {t("responses.answer", "Answer")}
+                              {t("responses.answer")}
                             </TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {Object.entries(selected.values).map(([key, val]) => {
-                            const answerTooltip = getTooltipString(val);
-                            const questionTooltip = getTooltipString(key);
-                            return (
-                              <TableRow key={key} hover>
-                                <TableCell
-                                  sx={{
-                                    verticalAlign: "top",
-                                    maxWidth: 0,
-                                  }}
-                                >
-                                  <ClampTwoLines>
-                                    <CustomTooltip
-                                      showIcon={false}
-                                      title={questionTooltip}
-                                    >
-                                      <Typography
-                                        color="text.secondary"
-                                        fontWeight={500}
-                                        sx={{
-                                          wordBreak: "break-word",
-                                          whiteSpace: "pre-wrap",
-                                        }}
+                          {Object.entries(selected.values)
+                            .filter(([_, val]) => {
+                              return !val.events.some(
+                                (e) => e?.name === "START"
+                              );
+                            })
+                            .map(([key, val]) => {
+                              const answerTooltip = getTooltipString(val.value);
+                              const questionTooltip = getTooltipString(key);
+                              return (
+                                <TableRow key={key} hover>
+                                  <TableCell
+                                    sx={{
+                                      verticalAlign: "top",
+                                      maxWidth: 0,
+                                    }}
+                                  >
+                                    <ClampTwoLines>
+                                      <CustomTooltip
+                                        showIcon={false}
+                                        title={questionTooltip}
                                       >
-                                        {key}
-                                      </Typography>
-                                    </CustomTooltip>
-                                  </ClampTwoLines>
-                                </TableCell>
+                                        <Typography
+                                          color="text.secondary"
+                                          fontWeight={500}
+                                          sx={{
+                                            wordBreak: "break-word",
+                                            whiteSpace: "pre-wrap",
+                                          }}
+                                        >
+                                          {key}
+                                        </Typography>
+                                      </CustomTooltip>
+                                    </ClampTwoLines>
+                                  </TableCell>
 
-                                <TableCell
-                                  sx={{
-                                    verticalAlign: "top",
-                                    maxWidth: 0,
-                                  }}
-                                >
-                                  {answerTooltip.length > 20 ? (
-                                    <CustomTooltip
-                                      showIcon={false}
-                                      title={answerTooltip}
-                                    >
+                                  <TableCell
+                                    sx={{
+                                      verticalAlign: "top",
+                                      maxWidth: 0,
+                                    }}
+                                  >
+                                    {answerTooltip.length > 20 ? (
+                                      <CustomTooltip
+                                        showIcon={false}
+                                        title={answerTooltip}
+                                      >
+                                        <Box>
+                                          {renderAnswerClamped(
+                                            key,
+                                            selected.id,
+                                            val.value
+                                          )}
+                                        </Box>
+                                      </CustomTooltip>
+                                    ) : (
                                       <Box>
-                                        {renderAnswerClamped(key, selected.id, val)}
+                                        {renderAnswerClamped(
+                                          key,
+                                          selected.id,
+                                          val.value
+                                        )}
                                       </Box>
-                                    </CustomTooltip>
-                                  ) : (
-                                    <Box>
-                                      {renderAnswerClamped(key, selected.id, val)}
-                                    </Box>
-                                  )}
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
                         </TableBody>
                       </Table>
                     </TableContainer>
