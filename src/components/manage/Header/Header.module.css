@@ -4,9 +4,11 @@
   align-items: center;
   height: 4rem;
   justify-content: space-between;
+  z-index: 1300; /* Ensure header is above main content */
 }
 
 .userInfo {
+  position: relative; /* Create positioning context for dropdown */
   display: flex;
   align-items: center;
   gap: 20px;
@@ -14,6 +16,7 @@
 }
 
 .userInfoRtl {
+  position: relative; /* Create positioning context for dropdown */
   display: flex;
   align-items: center;
   gap: 20px;
