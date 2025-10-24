@@ -10,28 +10,15 @@ export default function UnsupportedView() {
     const { t } = useTranslation("manage");
     return (
         <CompactLayout>
-
-            <Box>
+            <Box sx={{ textAlign: 'center', py: 4 }}>
                 <Typography variant="h4" paragraph>
                     {t("mobile_view")}
                 </Typography>
 
-                <Typography sx={{ color: 'text.secondary' }}>
+                <Typography sx={{ color: 'text.secondary', mb: 4 }}>
                     {t("mobile_view_working")}
                 </Typography>
-
-                <Image
-                    alt="maintenance"
-                    src="/illustration_maintenance.svg"
-                    sx={{
-                        mx: 'auto',
-                        maxWidth: 320,
-                        my: { xs: 5, sm: 8 },
-                    }}
-                />
-
             </Box>
         </CompactLayout>
-
     );
 }
