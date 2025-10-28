@@ -426,7 +426,12 @@ function Dashboard() {
       </Container>
       <ImportSurvey
         open={openImportModal}
-
+        onResult={(success) => {
+          setOpenImportModal(false);
+          if (success) {
+            fetchSurveys();
+          }
+        }}
       />
       <DeleteModal
         open={open}

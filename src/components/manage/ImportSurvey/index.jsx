@@ -1,4 +1,4 @@
-import { Box, Modal, Typography, Button } from "@mui/material";
+import { Box, Modal, Typography, Button, IconButton } from "@mui/material";
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -7,7 +7,7 @@ import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
 import { useService } from "~/hooks/use-service";
-import { FileUpload } from "@mui/icons-material";
+import { FileUpload, Close } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 
@@ -57,12 +57,38 @@ export const ImportSurvey = ({ open, onResult }) => {
         },
       }}
       open={open}
-      onClose={() => onResult(false)}
+      onClose={(event, reason) => {
+        // Allow closing on backdrop click and escape key
+        if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+          onResult(false);
+        }
+      }}
+      closeAfterTransition
+      disableEscapeKeyDown={false}
     >
       <Box className={styles.wrapper}>
-        <Typography fontWeight={600} variant="h5">
-          {t("import_survey")}
-        </Typography>
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          mb: 2 
+        }}>
+          <Typography fontWeight={600} variant="h5">
+            {t("import_survey")}
+          </Typography>
+          <IconButton
+            onClick={() => onResult(false)}
+            sx={{
+              color: 'text.secondary',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.04)',
+              },
+            }}
+            aria-label="close"
+          >
+            <Close />
+          </IconButton>
+        </Box>
 
         <div className={styles.upload}>
           <Button variant="outlined" component="label" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
