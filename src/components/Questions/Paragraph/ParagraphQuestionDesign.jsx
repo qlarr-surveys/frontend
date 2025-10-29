@@ -25,6 +25,9 @@ function ParagraphQuestionDesign({ code, t }) {
         placeholder={state.showHint && (state.content?.[lang]?.hint || "")}
         minRows={state.minRows || 15}
         value={""}
+        sx={{
+          pointerEvents: 'none',
+        }}
       />
       {state.showWordCount ? (
         <div className={styles.wordCount}>
