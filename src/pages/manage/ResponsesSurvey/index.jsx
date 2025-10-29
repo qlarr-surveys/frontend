@@ -74,6 +74,7 @@ function ResponsesSurvey() {
 
   const [fetching, setFetching] = useState(true);
   const [completeResponses, setCompleteResponses] = useState("none");
+  const [previewFilter, setPreviewFilter] = useState("actual");
   const [surveyor, setSurveyor] = useState(null);
 
   const [allResponse, setAllResponse] = useState(null);
@@ -229,7 +230,7 @@ function ResponsesSurvey() {
 
   useEffect(() => {
     fetchResponses();
-  }, [page, rowsPerPage, completeResponses, surveyor]);
+  }, [page, rowsPerPage, completeResponses, surveyor, previewFilter]);
 
   useEffect(() => {
     if (!responseId) {
@@ -316,27 +317,51 @@ function ResponsesSurvey() {
               alignItems="center"
               gap={1}
               justifyContent="space-between"
+              flexWrap="wrap"
             >
-              <FormControl size="small" sx={{ minWidth: 220 }}>
-                <RHFSelect
-                  label={t("responses.filter_by_type")}
-                  value={completeResponses}
-                  onChange={(e) => {
-                    setPage(1);
-                    setCompleteResponses(e.target.value);
-                  }}
-                >
-                  <MenuItem value="none">
-                    {t("responses.filter_completed_show_all")}
-                  </MenuItem>
-                  <MenuItem value="true">
-                    {t("responses.filter_completed_show_completed")}
-                  </MenuItem>
-                  <MenuItem value="false">
-                    {t("responses.filter_completed_show_incomplete")}
-                  </MenuItem>
-                </RHFSelect>
-              </FormControl>
+              <Box display="flex" gap={1} flexWrap="wrap">
+                <FormControl size="small" sx={{ minWidth: 200 }}>
+                  <RHFSelect
+                    label={t("responses.filter_by_type")}
+                    value={completeResponses}
+                    onChange={(e) => {
+                      setPage(1);
+                      setCompleteResponses(e.target.value);
+                    }}
+                  >
+                    <MenuItem value="none">
+                      {t("responses.filter_completed_show_all")}
+                    </MenuItem>
+                    <MenuItem value="true">
+                      {t("responses.filter_completed_show_completed")}
+                    </MenuItem>
+                    <MenuItem value="false">
+                      {t("responses.filter_completed_show_incomplete")}
+                    </MenuItem>
+                  </RHFSelect>
+                </FormControl>
+                
+                <FormControl size="small" sx={{ minWidth: 180 }}>
+                  <RHFSelect
+                    label={t("responses.filter_preview")}
+                    value={previewFilter}
+                    onChange={(e) => {
+                      setPage(1);
+                      setPreviewFilter(e.target.value);
+                    }}
+                  >
+                    <MenuItem value="actual">
+                      {t("responses.filter_preview_show_actual")}
+                    </MenuItem>
+                    <MenuItem value="all">
+                      {t("responses.filter_preview_show_all")}
+                    </MenuItem>
+                    <MenuItem value="preview">
+                      {t("responses.filter_preview_show_preview")}
+                    </MenuItem>
+                  </RHFSelect>
+                </FormControl>
+              </Box>
               <Box display="flex" alignItems="center" gap={1}>
                 <Button
                   size="small"
@@ -380,7 +405,13 @@ function ResponsesSurvey() {
             ) : (
               <>
                 <List dense disablePadding sx={{ overflowY: "auto", flex: 1 }}>
-                  {allResponse?.responses.map((r) => {
+                  {allResponse?.responses
+                    .filter((r) => {
+                      if (previewFilter === "actual") return !r.preview;
+                      if (previewFilter === "preview") return r.preview;
+                      return true;
+                    })
+                    .map((r) => {
                     const isSelected = responseId && responseId === r.id;
 
                     return (

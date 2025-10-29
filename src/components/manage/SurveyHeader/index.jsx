@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
@@ -17,6 +17,7 @@ export const SurveyHeader = () => {
   const { t } = useTranslation("manage");
   const dispatch = useDispatch();
   const nav = useNavigate();
+  const location = useLocation();
   const isRtl = isSessionRtl();
   const { surveyId } = useParams();
   const surveyName = useSelector(
@@ -28,6 +29,8 @@ export const SurveyHeader = () => {
   const availablePagesMemo = useMemo(() => {
     return availablePages(user);
   }, [user]);
+
+  const isResponsesPage = location.pathname.includes('/responses');
 
   return (
     availablePagesMemo.length > 0 && (
@@ -53,20 +56,22 @@ export const SurveyHeader = () => {
           </CustomTooltip>
           <Typography variant="h3">{surveyName}</Typography>
         </Box>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ mr: 2 }}
-          endIcon={<VisibilityIcon sx={{ color: "#fff" }} />}
-          onClick={() => {
-            window.open(
-              routes.preview.replace(":surveyId", surveyId),
-              "_blank"
-            );
-          }}
-        >
-          {t("preview")}
-        </Button>
+        {!isResponsesPage && (
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mr: 2 }}
+            endIcon={<VisibilityIcon sx={{ color: "#fff" }} />}
+            onClick={() => {
+              window.open(
+                routes.preview.replace(":surveyId", surveyId),
+                "_blank"
+              );
+            }}
+          >
+            {t("preview")}
+          </Button>
+        )}
       </Box>
     )
   );
