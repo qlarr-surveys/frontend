@@ -8,9 +8,12 @@ import { getContrastColor, isDisplay } from "~/components/Questions/utils";
 import { useInView } from "react-intersection-observer";
 import { Box } from "@mui/material";
 import { HelpOutline } from "@mui/icons-material";
+import { inDesign } from "~/routes";
 
 export function GroupDropArea({ index, groupsCount, t, emptySurvey }) {
   const dispatch = useDispatch();
+
+  const designMode = useSelector((state) => state.designState.designMode);
 
   const [{ isOver, item }, drop] = useDrop(
     () => ({
@@ -42,6 +45,10 @@ export function GroupDropArea({ index, groupsCount, t, emptySurvey }) {
   const theme = useTheme();
 
   const contrastColor = getContrastColor(theme.palette.background.paper);
+
+  if (!inDesign(designMode)) {
+    return null;
+  }
 
   return (
     <div
@@ -84,6 +91,7 @@ export function QuestionDropArea({
   const theme = useTheme();
   const dispatch = useDispatch();
 
+  const designMode = useSelector((state) => state.designState.designMode);
 
   // This is a "hack" to make these components refresh when questions are being reordered.
   // So the first and the last Drag elements can refresh and resize accordingly
@@ -159,7 +167,11 @@ export function QuestionDropArea({
     delay: isDragging ? 100 : 0,
   });
 
-  const textContrast = theme.palette.text.primary
+  const textContrast = theme.palette.text.primary;
+
+  if (!inDesign(designMode)) {
+    return null;
+  }
 
   return (
     <div ref={ref}>
