@@ -17,6 +17,7 @@ import { getparam } from "./networking/run";
 
 import LoadingIndicator from "./components/common/LoadingIndicator";
 import { ROLES } from "./constants/roles";
+import { HEADER_OPTIONS } from './pages/ManagePageWrapper';
 
 const AuthIllustrationLayout = lazy(() => import("./layouts/authlayout"));
 const ManagePageWrapper = lazy(() => import("./pages/ManagePageWrapper"));
@@ -89,7 +90,7 @@ function Web() {
         path={routes.designSurvey}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
               <PrivateDesignSurvey
                 landingPage={MANAGE_SURVEY_LANDING_PAGES.DESIGN}
               />
@@ -101,7 +102,7 @@ function Web() {
         path={routes.surveyLang}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
               <PrivateDesignSurvey
                 landingPage={MANAGE_SURVEY_LANDING_PAGES.LANG}
               />
@@ -113,7 +114,7 @@ function Web() {
         path={routes.surveyTheme}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
               <PrivateDesignSurvey
                 landingPage={MANAGE_SURVEY_LANDING_PAGES.THEME}
               />
@@ -125,7 +126,7 @@ function Web() {
         path={routes.preview}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper showHeader={false}>
+            <ManagePageWrapper  headerOptions={HEADER_OPTIONS.NONE}>
               <PrivatePreviewSurvey />
             </ManagePageWrapper>
           </Suspense>
@@ -135,7 +136,7 @@ function Web() {
         path={routes.resumePreview}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper showHeader={false}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.NONE}>
               <PrivatePreviewSurvey />
             </ManagePageWrapper>
           </Suspense>
@@ -145,7 +146,7 @@ function Web() {
         path={routes.editSurvey}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
               <PrivateDesignSurvey
                 landingPage={MANAGE_SURVEY_LANDING_PAGES.SETTINGS}
               />
@@ -158,7 +159,7 @@ function Web() {
         path={routes.responses}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY_NO_PREVIEW}>
               <PrivateDesignSurvey
                 landingPage={MANAGE_SURVEY_LANDING_PAGES.RESPONSES}
               />
@@ -171,7 +172,7 @@ function Web() {
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <PrivateManageUsers roles={[ROLES.SUPER_ADMIN]}>
-              <ManagePageWrapper>
+              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
                 <ManageUsers />
               </ManagePageWrapper>
             </PrivateManageUsers>
@@ -183,7 +184,7 @@ function Web() {
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <PrivateComponent>
-              <ManagePageWrapper>
+              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
                 <ProfileView />
               </ManagePageWrapper>
             </PrivateComponent>
@@ -195,7 +196,7 @@ function Web() {
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <PrivateManageUsers roles={[ROLES.SUPER_ADMIN, ROLES.SUPER_ADMIN]}>
-              <ManagePageWrapper>
+              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
                 <CreateSurvey />
               </ManagePageWrapper>
             </PrivateManageUsers>
@@ -215,7 +216,7 @@ function Web() {
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <PrivateComponent>
-              <ManagePageWrapper>
+              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
                 <Dashboard />
               </ManagePageWrapper>
             </PrivateComponent>
@@ -227,7 +228,7 @@ function Web() {
         path={routes.login}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
               <AuthIllustrationLayout>
                 <LoginView />
               </AuthIllustrationLayout>
@@ -239,7 +240,7 @@ function Web() {
         path={routes.forgotPassword}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
               <AuthIllustrationLayout>
                 <ForgotPasswordView />
               </AuthIllustrationLayout>
@@ -251,7 +252,7 @@ function Web() {
         path={routes.resetPassword}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
               <ResetPasswordView />
             </ManagePageWrapper>
           </Suspense>
@@ -261,7 +262,7 @@ function Web() {
         path={routes.confirmNewUser}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
               <ResetPasswordView confirmNewUser={true} />
             </ManagePageWrapper>
           </Suspense>

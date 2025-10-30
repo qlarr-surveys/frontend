@@ -20,7 +20,7 @@ import { useService } from "~/hooks/use-service";
 import { useTranslation } from "react-i18next";
 import { SurveyHeader } from "../SurveyHeader";
 
-export const Header = () => {
+export const Header = ({ headerOptions }) => {
   const authService = useService("auth");
   const { t } = useTranslation("manage");
 
@@ -53,8 +53,8 @@ export const Header = () => {
     return showTitle(location);
   }, [location]);
 
-  if (showSurveyTitle) {
-    return <SurveyHeader />;
+  if (headerOptions.showSurveyHeader) {
+    return <SurveyHeader showPreview={headerOptions.showPreview} />;
   }
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

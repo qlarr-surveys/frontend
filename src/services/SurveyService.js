@@ -54,8 +54,7 @@ class SurveyService extends BaseService {
     return response.data;
   }
 
-  async allResponse(surveyId, page, per_page, complete, surveyor, opts = {}) {
-    const { confirmFilesExport = false } = opts;
+  async allResponse(surveyId, page, per_page, complete, surveyor, confirmFilesExport) {
 
     const url =
       `/survey/${surveyId}/response/summary` +
