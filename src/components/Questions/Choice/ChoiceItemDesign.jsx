@@ -286,7 +286,7 @@ function ChoiceItemDesign(props) {
         {props.type === "text" && (
           <>
             <TextField
-              sx={{ flex: 2 }}
+              sx={{ flex: 2, pointerEvents: 'none', }}
               size="small"
               disabled
               variant="outlined"

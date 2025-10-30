@@ -27,6 +27,9 @@ function TextQuestionDesign({ code }) {
         }
         label={state.showHint && (state.content?.[lang]?.hint || "")}
         value={""}
+        sx={{
+          pointerEvents: 'none', 
+        }}
         InputProps={{
           sx: {
             fontFamily: theme.textStyles.text.font,
