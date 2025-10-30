@@ -13,7 +13,7 @@ import TokenService from "~/services/TokenService";
 import { availablePages } from "~/constants/roles";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-export const SurveyHeader = () => {
+export const SurveyHeader = ({ showPreview }) => {
   const { t } = useTranslation("manage");
   const dispatch = useDispatch();
   const nav = useNavigate();
@@ -28,6 +28,7 @@ export const SurveyHeader = () => {
   const availablePagesMemo = useMemo(() => {
     return availablePages(user);
   }, [user]);
+
 
   return (
     availablePagesMemo.length > 0 && (
@@ -53,20 +54,22 @@ export const SurveyHeader = () => {
           </CustomTooltip>
           <Typography variant="h3">{surveyName}</Typography>
         </Box>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ mr: 2 }}
-          endIcon={<VisibilityIcon sx={{ color: "#fff" }} />}
-          onClick={() => {
-            window.open(
-              routes.preview.replace(":surveyId", surveyId),
-              "_blank"
-            );
-          }}
-        >
-          {t("preview")}
-        </Button>
+        {showPreview && (
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mr: 2 }}
+            endIcon={<VisibilityIcon sx={{ color: "#fff" }} />}
+            onClick={() => {
+              window.open(
+                routes.preview.replace(":surveyId", surveyId),
+                "_blank"
+              );
+            }}
+          >
+            {t("preview")}
+          </Button>
+        )}
       </Box>
     )
   );
