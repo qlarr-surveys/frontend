@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
@@ -13,11 +13,10 @@ import TokenService from "~/services/TokenService";
 import { availablePages } from "~/constants/roles";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-export const SurveyHeader = () => {
+export const SurveyHeader = ({ showPreview }) => {
   const { t } = useTranslation("manage");
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const location = useLocation();
   const isRtl = isSessionRtl();
   const { surveyId } = useParams();
   const surveyName = useSelector(
@@ -30,7 +29,6 @@ export const SurveyHeader = () => {
     return availablePages(user);
   }, [user]);
 
-  const isResponsesPage = location.pathname.includes('/responses');
 
   return (
     availablePagesMemo.length > 0 && (
@@ -56,7 +54,7 @@ export const SurveyHeader = () => {
           </CustomTooltip>
           <Typography variant="h3">{surveyName}</Typography>
         </Box>
-        {!isResponsesPage && (
+        {showPreview && (
           <Button
             variant="contained"
             color="primary"
