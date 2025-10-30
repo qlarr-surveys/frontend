@@ -158,10 +158,6 @@ function QuestionDesign({
     }
   }, [lastAddedComponent, parentIndex, index]);
 
-  const isLastAdded =
-    lastAddedComponent?.type === "question" &&
-    lastAddedComponent.groupIndex === parentIndex &&
-    lastAddedComponent.questionIndex === index;
   return (
     <div
       onClick={(event) => {
