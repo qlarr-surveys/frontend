@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { shallowEqual, useDispatch } from "react-redux";
 import styles from "./RunSurvey.module.css";
 import { useTranslation } from "react-i18next";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -57,6 +57,11 @@ function RunSurvey({
   const navResponseId = useSelector((state) => {
     return state.runState.data?.responseId;
   });
+
+  const navigationIndex = useSelector((state) => {
+    return state.runState.data?.navigationIndex;
+  }, shallowEqual);
+  const SURVEY_ENDED = navigationIndex?.name === "end";
 
   const backgroundImage = useSelector((state) => {
     return state.runState.data?.survey?.resources?.backgroundImage;
@@ -272,7 +277,7 @@ function RunSurvey({
                   height: "calc(100vh - 48px)",
                 }}
               >
-                <SurveyAppBar toggleDrawer={toggleDrawer} />
+                {!SURVEY_ENDED && <SurveyAppBar toggleDrawer={toggleDrawer} />}
                 <SurveyMemo key="Survey" />
                 <SurveyDrawer
                   expanded={expanded}
