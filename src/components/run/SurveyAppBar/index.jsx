@@ -1,6 +1,5 @@
 import {
   Alert,
-  AppBar,
   Box,
   Button,
   Dialog,
@@ -61,9 +60,6 @@ function SurveyAppBar({ toggleDrawer }) {
   return (
     <>
       <Toolbar
-        sx={{
-          backgroundColor: theme.palette.background.default,
-        }}
         className={styles.toolbar}
       >
         <IconButton
