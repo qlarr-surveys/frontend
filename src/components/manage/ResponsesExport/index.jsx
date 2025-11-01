@@ -1,5 +1,5 @@
 // ResponsesExport.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -23,7 +23,14 @@ import FileSaver from "file-saver";
 import { useService } from "~/hooks/use-service";
 import { useParams } from "react-router-dom";
 
-export default function ResponsesExport({ open, onClose, maxCount = 1, t }) {
+export default function ResponsesExport({ 
+  open, 
+  onClose, 
+  maxCount = 1, 
+  currentFrom = 1, 
+  currentTo = 1, 
+  t 
+}) {
   const { surveyId } = useParams();
 
   const surveyService = useService("survey");
@@ -58,8 +65,8 @@ export default function ResponsesExport({ open, onClose, maxCount = 1, t }) {
     mode: "onChange",
     resolver: yupResolver(Schema),
     defaultValues: {
-      from: 1,
-      to: 1,
+      from: currentFrom,
+      to: currentTo,
       filter: "all",
       format: "csv",
       mode: "database",
@@ -69,8 +76,21 @@ export default function ResponsesExport({ open, onClose, maxCount = 1, t }) {
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = methods;
+
+  useEffect(() => {
+    if (open) {
+      reset({
+        from: currentFrom,
+        to: currentTo,
+        filter: "all",
+        format: "csv",
+        mode: "database",
+      });
+    }
+  }, [open, currentFrom, currentTo, reset]);
 
   const onSubmit = handleSubmit(async (data) => {
     const from = Number(data.from);

@@ -276,6 +276,8 @@ function ResponsesSurvey() {
         open={exportDlgOpen}
         onClose={() => setExportDlgOpen(false)}
         maxCount={allResponse?.totalCount || 1}
+        currentFrom={(page - 1) * rowsPerPage + 1}
+        currentTo={Math.min(page * rowsPerPage, allResponse?.totalCount || 1)}
         t={t}
       />
 
