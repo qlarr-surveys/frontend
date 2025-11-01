@@ -117,7 +117,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance"],
+          rules: ["relevance", "prefill"],
         },
         {
           title: "validation",
@@ -180,7 +180,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance"],
+          rules: ["relevance", "prefill"],
         },
         {
           title: "validation",
@@ -215,7 +215,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance"],
+          rules: ["relevance", "prefill"],
         },
         {
           title: "validation",
@@ -246,7 +246,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance"],
+          rules: ["relevance", "prefill"],
         },
         {
           title: "validation",
@@ -378,7 +378,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance"],
+          rules: ["relevance", "prefill"],
         },
         {
           title: "validation",
@@ -404,7 +404,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance"],
+          rules: ["relevance", "prefill"],
         },
         {
           title: "validation",
@@ -428,7 +428,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance"],
+          rules: ["relevance", "prefill"],
         },
         {
           title: "validation",
@@ -448,7 +448,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "randomize_options", "skip_logic"],
+          rules: ["relevance", "prefill", "randomize_options", "skip_logic"],
         },
         {
           title: "validation",
@@ -475,7 +475,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "randomize_options", "skip_logic"],
+          rules: ["relevance", "prefill", "randomize_options", "skip_logic"],
         },
         {
           title: "validation",
@@ -502,7 +502,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "randomize_options", "skip_logic"],
+          rules: ["relevance", "prefill", "randomize_options", "skip_logic"],
         },
         {
           title: "validation",
@@ -521,7 +521,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "randomize_options"],
+          rules: ["relevance", "prefill", "randomize_options"],
         },
         {
           title: "validation",
@@ -544,7 +544,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "randomize_options"],
+          rules: ["relevance", "prefill", "randomize_options"],
         },
         {
           title: "validation",
@@ -563,7 +563,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "randomize_options"],
+          rules: ["relevance", "prefill", "randomize_options"],
         },
         {
           title: "validation",
@@ -594,7 +594,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "randomize_options"],
+          rules: ["relevance", "prefill", "randomize_options"],
         },
         {
           title: "validation",
@@ -625,7 +625,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "randomize_options"],
+          rules: ["relevance", "prefill", "randomize_options"],
         },
         {
           title: "validation",
@@ -656,7 +656,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "randomize_options"],
+          rules: ["relevance", "prefill", "randomize_options"],
         },
         {
           title: "validation",
@@ -729,7 +729,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance"],
+          rules: ["relevance", "prefill"],
         },
         {
           title: "validation",
