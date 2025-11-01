@@ -54,7 +54,7 @@ function ParagraphQuestion(props) {
         multiline
         id={props.component.qualifiedCode}
         name={props.component.qualifiedCode}
-        minRows={props.component.minRows || 2}
+        minRows={props.component.minRows || 4}
         label={(props.component.showHint && props.component.content?.hint )|| ""}
         onChange={handleChange}
         onBlur={lostFocus}

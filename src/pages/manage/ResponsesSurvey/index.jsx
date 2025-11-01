@@ -16,10 +16,15 @@ import {
   Typography,
   FormControl,
   Skeleton,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { FileDownloadOutlined, FileUploadOutlined } from "@mui/icons-material";
-
 import styles from "./ResponsesSurvey.module.css";
 import {
   formatlocalDateTime,
@@ -31,7 +36,8 @@ import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import ResponsesDownload from "~/components/manage/ResponsesDownload";
 import ResponsesExport from "~/components/manage/ResponsesExport";
-import { previewUrlByQuestionCode } from "~/networking/run";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { previewUrlByResponseIdAndFilename } from "~/networking/run";
 
 function InfoItem({ label, value }) {
   return (
@@ -44,18 +50,37 @@ function InfoItem({ label, value }) {
   );
 }
 
+function ClampTwoLines({ children, sx }) {
+  return (
+    <Box
+      sx={{
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        ...sx,
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
+
 function ResponsesSurvey() {
   const surveyService = useService("survey");
   const { t } = useTranslation("manage");
   const { surveyId } = useParams();
 
   const [fetching, setFetching] = useState(true);
-  const [completeResponses, setCompleteResponses] = useState("none");
+  const [status, setStatus] = useState("all");
   const [surveyor, setSurveyor] = useState(null);
 
   const [allResponse, setAllResponse] = useState(null);
   const [responseId, setResponseId] = useState(null);
   const [selected, setSelected] = useState(null);
+  const [canExportFiles, setCanExportFiles] = useState(false);
+  const [askedAboutFiles, setAskedAboutFiles] = useState(false);
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -66,31 +91,30 @@ function ResponsesSurvey() {
 
   const processApirror = () => setFetching(false);
 
-  const findBoolean = (v) =>
-    v === "true" ? true : v === "false" ? false : undefined;
-
   const fetchResponses = (deleted = false) => {
     setFetching(true);
-    const completed = findBoolean(completeResponses);
-    const status =
-      completed === true
-        ? "COMPLETE"
-        : completed === false
-        ? "INCOMPLETE"
-        : undefined;
 
     const confirmFilesExport = firstFetchThisVisitRef.current === true;
 
     surveyService
-      .allResponse(surveyId, page, rowsPerPage, status, surveyor, {
-        confirmFilesExport,
-      })
+      .allResponse(
+        surveyId,
+        page,
+        rowsPerPage,
+        status,
+        surveyor,
+        !askedAboutFiles
+      )
       .then((data) => {
         if (data) {
+          setAskedAboutFiles(true);
           const totalPages = Math.ceil(data.totalCount / rowsPerPage) || 1;
           const newPage = page > totalPages ? totalPages : page;
           if (deleted && page > totalPages) setPage(newPage);
-
+          if (!askedAboutFiles) {
+            setAskedAboutFiles(true);
+            setCanExportFiles(data.canExportFiles);
+          }
           setAllResponse(data);
         }
         setFetching(false);
@@ -114,6 +138,69 @@ function ResponsesSurvey() {
     "filename" in v &&
     "stored_filename" in v;
 
+  const getTooltipString = (val) => {
+    if (val === null || val === undefined || val === "") return "—";
+    if (Array.isArray(val) && val.every(isFileObj)) {
+      return val
+        .map((f) => `${f.filename} (${Math.round(f.size / 1000)}K)`)
+        .join(", ");
+    }
+    if (isFileObj(val)) {
+      return `${val.filename} (${Math.round(val.size / 1000)}K)`;
+    }
+    if (typeof val === "object") return JSON.stringify(val, null, 2);
+    return String(val);
+  };
+
+  const renderAnswerClamped = (key, respId, val) => {
+    if (val === null || val === undefined || val === "") {
+      return <Typography>—</Typography>;
+    }
+
+    if (Array.isArray(val) && val.every(isFileObj)) {
+      return (
+        <ClampTwoLines>
+          <Box display="inline" sx={{ wordBreak: "break-word" }}>
+            {val.map((file, idx) => (
+              <React.Fragment key={file.stored_filename}>
+                {idx > 0 ? ", " : null}
+                {renderFileLink(key, respId, file)}
+              </React.Fragment>
+            ))}
+          </Box>
+        </ClampTwoLines>
+      );
+    }
+
+    if (isFileObj(val)) {
+      return (
+        <ClampTwoLines>
+          <Box display="inline" sx={{ wordBreak: "break-word" }}>
+            {renderFileLink(key, respId, val)}
+          </Box>
+        </ClampTwoLines>
+      );
+    }
+
+    if (typeof val === "object") {
+      return (
+        <ClampTwoLines>
+          <Typography sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+            {JSON.stringify(val)}
+          </Typography>
+        </ClampTwoLines>
+      );
+    }
+
+    return (
+      <ClampTwoLines>
+        <Typography sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+          {String(val)}
+        </Typography>
+      </ClampTwoLines>
+    );
+  };
+
   const getQuestionCodeFromKey = (key) => {
     if (!key) return "";
     const first = String(key).split(".")[0].trim();
@@ -129,7 +216,7 @@ function ResponsesSurvey() {
         target="_blank"
         rel="noreferrer"
         download={file.stored_filename}
-        href={previewUrlByQuestionCode(code, respId)}
+        href={previewUrlByResponseIdAndFilename(respId, file.stored_filename)}
         style={{ wordBreak: "break-all" }}
       >
         {file.filename} — {Math.round(file.size / 1000)}K
@@ -143,7 +230,7 @@ function ResponsesSurvey() {
 
   useEffect(() => {
     fetchResponses();
-  }, [page, rowsPerPage, completeResponses, surveyor]);
+  }, [page, rowsPerPage, status, surveyor]);
 
   useEffect(() => {
     if (!responseId) {
@@ -171,7 +258,7 @@ function ResponsesSurvey() {
   };
 
   const onSurveyorClicked = (response) => {
-    setCompleteResponses("none");
+    setCompleteResponses("all");
     setSurveyor(response.surveyorID || null);
   };
 
@@ -183,11 +270,6 @@ function ResponsesSurvey() {
     );
   }
 
-  const formatValue = (v) => {
-    if (v === null || v === undefined || v === "") return "—";
-    if (typeof v === "object") return JSON.stringify(v);
-    return String(v);
-  };
   return (
     <>
       <ResponsesExport
@@ -235,27 +317,33 @@ function ResponsesSurvey() {
               alignItems="center"
               gap={1}
               justifyContent="space-between"
+              flexWrap="wrap"
             >
-              <FormControl size="small" sx={{ minWidth: 220 }}>
-                <RHFSelect
-                  label={t("responses.filter_by_type")}
-                  value={completeResponses}
-                  onChange={(e) => {
-                    setPage(1);
-                    setCompleteResponses(e.target.value);
-                  }}
-                >
-                  <MenuItem value="none">
-                    {t("responses.filter_completed_show_all")}
-                  </MenuItem>
-                  <MenuItem value="true">
-                    {t("responses.filter_completed_show_completed")}
-                  </MenuItem>
-                  <MenuItem value="false">
-                    {t("responses.filter_completed_show_incomplete")}
-                  </MenuItem>
-                </RHFSelect>
-              </FormControl>
+              <Box display="flex" gap={1} flexWrap="wrap">
+                <FormControl size="small" sx={{ width: 300 }}>
+                  <RHFSelect
+                    label={t("responses.filter_by_type")}
+                    value={status}
+                    onChange={(e) => {
+                      setPage(1);
+                      setStatus(e.target.value);
+                    }}
+                  >
+                    <MenuItem value="all">
+                      {t("responses.filter_completed_show_all")}
+                    </MenuItem>
+                    <MenuItem value="preview">
+                      {t("responses.filter_preview_show_preview")}
+                    </MenuItem>
+                    <MenuItem value="complete">
+                      {t("responses.filter_completed_show_completed")}
+                    </MenuItem>
+                    <MenuItem value="incomplete">
+                      {t("responses.filter_completed_show_incomplete")}
+                    </MenuItem>
+                  </RHFSelect>
+                </FormControl>
+              </Box>
               <Box display="flex" alignItems="center" gap={1}>
                 <Button
                   size="small"
@@ -265,13 +353,15 @@ function ResponsesSurvey() {
                   <FileUploadOutlined />
                 </Button>
 
-                <Button
-                  size="small"
-                  variant="contained"
-                  onClick={() => setDownloadDlgOpen(true)}
-                >
-                  <FileDownloadOutlined />
-                </Button>
+                {canExportFiles && (
+                  <Button
+                    size="small"
+                    variant="contained"
+                    onClick={() => setDownloadDlgOpen(true)}
+                  >
+                    <FileDownloadOutlined />
+                  </Button>
+                )}
               </Box>
             </Box>
             <Divider />
@@ -329,7 +419,7 @@ function ResponsesSurvey() {
                               ) : (
                                 <Chip
                                   size="small"
-                                  variant="outlined"
+                                  color="secondary"
                                   label={t("responses.incomplete_response")}
                                 />
                               )}
@@ -457,7 +547,13 @@ function ResponsesSurvey() {
                   <InfoItem
                     label={t("responses.status") || "Status"}
                     value={
-                      selected.submitDate ? (
+                      selected.preview ? (
+                        <Chip
+                          size="small"
+                          variant="outlined"
+                          label={t("responses.preview")}
+                        />
+                      ) : selected.submitDate ? (
                         <Chip
                           size="small"
                           label={t("responses.complete_response")}
@@ -465,7 +561,7 @@ function ResponsesSurvey() {
                       ) : (
                         <Chip
                           size="small"
-                          variant="outlined"
+                          color="secondary"
                           label={t("responses.incomplete_response")}
                         />
                       )
@@ -489,68 +585,85 @@ function ResponsesSurvey() {
                     >
                       {t("responses.answers", "Answers")}
                     </Typography>
-                    <Box>
-                      {Object.entries(selected.values).map(([key, val]) => (
-                        <Box
-                          key={key}
-                          display="flex"
-                          alignItems="flex-start"
-                          gap={1}
-                          py={0.5}
-                        >
-                          <Typography
-                            color="text.secondary"
-                            fontWeight={500}
-                            sx={{ minWidth: 200, flexShrink: 0 }}
-                          >
-                            {key}
-                          </Typography>
 
-                          <Box sx={{ flex: 1, minWidth: 0 }}>
-                            {val === null || val === undefined || val === "" ? (
-                              <Typography
-                                sx={{
-                                  whiteSpace: "pre-wrap",
-                                  wordBreak: "break-word",
-                                }}
-                              >
-                                —
-                              </Typography>
-                            ) : Array.isArray(val) && val.every(isFileObj) ? (
-                              <Box
-                                display="flex"
-                                flexDirection="column"
-                                gap={0.5}
-                              >
-                                {val.map((file) =>
-                                  renderFileLink(key, selected.id, file)
-                                )}
-                              </Box>
-                            ) : isFileObj(val) ? (
-                              renderFileLink(key, selected.id, val)
-                            ) : typeof val === "object" ? (
-                              <Typography
-                                sx={{
-                                  whiteSpace: "pre-wrap",
-                                  wordBreak: "break-word",
-                                }}
-                              >
-                                {JSON.stringify(val)}
-                              </Typography>
-                            ) : (
-                              <Typography
-                                sx={{
-                                  whiteSpace: "pre-wrap",
-                                  wordBreak: "break-word",
-                                }}
-                              >
-                                {String(val)}
-                              </Typography>
-                            )}
-                          </Box>
-                        </Box>
-                      ))}
-                    </Box>
+                    <TableContainer component={Paper} variant="outlined">
+                      <Table size="small" aria-label="answers table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell sx={{ width: "33%" }}>
+                              {t("responses.question")}
+                            </TableCell>
+                            <TableCell sx={{ width: "67%" }}>
+                              {t("responses.answer")}
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {Object.entries(selected.values).map(([key, val]) => {
+                            const answerTooltip = getTooltipString(val.value);
+                            const questionTooltip = getTooltipString(key);
+                            return (
+                              <TableRow key={key} hover>
+                                <TableCell
+                                  sx={{
+                                    verticalAlign: "top",
+                                    maxWidth: 0,
+                                  }}
+                                >
+                                  <ClampTwoLines>
+                                    <CustomTooltip
+                                      showIcon={false}
+                                      title={questionTooltip}
+                                    >
+                                      <Typography
+                                        color="text.secondary"
+                                        fontWeight={500}
+                                        sx={{
+                                          wordBreak: "break-word",
+                                          whiteSpace: "pre-wrap",
+                                        }}
+                                      >
+                                        {key}
+                                      </Typography>
+                                    </CustomTooltip>
+                                  </ClampTwoLines>
+                                </TableCell>
+
+                                <TableCell
+                                  sx={{
+                                    verticalAlign: "top",
+                                    maxWidth: 0,
+                                  }}
+                                >
+                                  {answerTooltip.length > 20 ? (
+                                    <CustomTooltip
+                                      showIcon={false}
+                                      title={answerTooltip}
+                                    >
+                                      <Box>
+                                        {renderAnswerClamped(
+                                          key,
+                                          selected.id,
+                                          val.value
+                                        )}
+                                      </Box>
+                                    </CustomTooltip>
+                                  ) : (
+                                    <Box>
+                                      {renderAnswerClamped(
+                                        key,
+                                        selected.id,
+                                        val.value
+                                      )}
+                                    </Box>
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
                   </Box>
                 )}
               </Box>

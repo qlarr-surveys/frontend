@@ -47,7 +47,7 @@ export const dataSaver = (store) => (next) => (action) => {
 };
 
 const MUTATING = [
-  "templateState/onBaseLangChanged",
+  "designState/onBaseLangChanged",
   "designState/onAdditionalLangAdded",
   "designState/onAdditionalLangRemoved",
   "designState/changeAttribute",
