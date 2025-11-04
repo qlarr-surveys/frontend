@@ -158,10 +158,14 @@ export const nextQuestionId = (state, groups) => {
 };
 
 export const buildReferenceInstruction = (content, name, key) => {
+  console.log("content", content);
+  console.log("name", name);
+  console.log("key", key);
   const allMatches = getAllMatches(content);
   if (allMatches.length) {
     return {
       code: `reference_${name}_${key}`,
+      contentPath: ["content", key, name],
       references: allMatches,
       lang: key,
     };
