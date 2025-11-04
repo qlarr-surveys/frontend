@@ -17,8 +17,10 @@ const saveDebounce = (store) => {
     store.dispatch(setUpdating(true));
     const state = store.getState();
     const diff = getDiff(state.designState, state.designState.latest);
+    // Ensure langInfo is always included for proper language preservation
+    const stateWithLangInfo = { ...diff, langInfo: state.designState.langInfo };
     SetData(
-      diff,
+      stateWithLangInfo,
       (state) => {
         setState(store, state);
       },
@@ -47,6 +49,7 @@ export const dataSaver = (store) => (next) => (action) => {
 };
 
 const MUTATING = [
+  "designState/changeLang",
   "designState/onBaseLangChanged",
   "designState/onAdditionalLangAdded",
   "designState/onAdditionalLangRemoved",
