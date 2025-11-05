@@ -91,7 +91,10 @@ export const designState = createSlice({
       );
     },
     resetSetup(state) {
-      if (state.langInfo) {
+      const currentLang = state.langInfo?.lang;
+      const isInTranslationMode = state.designMode === DESIGN_SURVEY_MODE.LANGUAGES;
+      
+      if (state.langInfo && !isInTranslationMode) {
         state.langInfo.lang = state.langInfo.mainLang;
         state.langInfo.onMainLang = true;
       }
@@ -100,7 +103,10 @@ export const designState = createSlice({
       }
       state.globalSetup.reorder_setup = undefined;
       delete state["setup"];
-      state.designMode = DESIGN_SURVEY_MODE.DESIGN;
+      
+      if (!isInTranslationMode) {
+        state.designMode = DESIGN_SURVEY_MODE.DESIGN;
+      }
     },
     setDesignModeToLang(state) {
       designState.caseReducers.resetSetup(state);
