@@ -275,14 +275,16 @@ function ResponsesSurvey() {
       <ResponsesExport
         open={exportDlgOpen}
         onClose={() => setExportDlgOpen(false)}
-        maxCount={allResponse?.totalCount || 1}
+        currentFrom={allResponse?.responses?.length > 0 ? allResponse.responses[0].index : 1}
+        currentTo={allResponse?.responses?.length > 0 ? allResponse.responses[allResponse.responses.length - 1].index : 1}
         t={t}
       />
 
       <ResponsesDownload
         open={downloadDlgOpen}
         onClose={() => setDownloadDlgOpen(false)}
-        maxCount={allResponse?.totalCount || 1}
+        currentFrom={allResponse?.responses?.length > 0 ? allResponse.responses[0].index : 1}
+        currentTo={allResponse?.responses?.length > 0 ? allResponse.responses[allResponse.responses.length - 1].index : 1}
         t={t}
       />
 

@@ -1,5 +1,5 @@
 // ResponsesExport.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -23,27 +23,30 @@ import FileSaver from "file-saver";
 import { useService } from "~/hooks/use-service";
 import { useParams } from "react-router-dom";
 
-export default function ResponsesExport({ open, onClose, maxCount = 1, t }) {
+export default function ResponsesExport({ 
+  open, 
+  onClose, 
+  currentFrom = 1, 
+  currentTo = 1, 
+  t 
+}) {
   const { surveyId } = useParams();
 
   const surveyService = useService("survey");
 
   const min = 1;
-  const max = Math.max(1, Number(maxCount) || 1);
 
   const Schema = yup.object().shape({
     from: yup
       .number()
       .typeError(t("responses.enter_a_number"))
       .required(t("responses.enter_a_number"))
-      .min(min, t("responses.min", { min }))
-      .max(max, t("responses.max", { max })),
+      .min(min, t("responses.min", { min })),
     to: yup
       .number()
       .typeError(t("responses.enter_a_number"))
       .required(t("responses.enter_a_number"))
       .min(min, t("responses.min", { min }))
-      .max(max, t("responses.max", { max }))
       .test("gte-from", t("responses.range_invalid"), function (value) {
         const { from } = this.parent;
         if (typeof from !== "number" || typeof value !== "number") return false;
@@ -58,8 +61,8 @@ export default function ResponsesExport({ open, onClose, maxCount = 1, t }) {
     mode: "onChange",
     resolver: yupResolver(Schema),
     defaultValues: {
-      from: 1,
-      to: 1,
+      from: currentFrom,
+      to: currentTo,
       filter: "all",
       format: "csv",
       mode: "database",
@@ -69,8 +72,21 @@ export default function ResponsesExport({ open, onClose, maxCount = 1, t }) {
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = methods;
+
+  useEffect(() => {
+    if (open) {
+      reset({
+        from: currentFrom,
+        to: currentTo,
+        filter: "all",
+        format: "csv",
+        mode: "database",
+      });
+    }
+  }, [open, currentFrom, currentTo, reset]);
 
   const onSubmit = handleSubmit(async (data) => {
     const from = Number(data.from);
@@ -120,7 +136,7 @@ export default function ResponsesExport({ open, onClose, maxCount = 1, t }) {
                   {...field}
                   label={t("responses.from")}
                   type="number"
-                  inputProps={{ min, max }}
+                  inputProps={{ min }}
                   error={!!errors.from}
                   helperText={errors.from?.message || ""}
                   onChange={(e) => {
@@ -139,7 +155,7 @@ export default function ResponsesExport({ open, onClose, maxCount = 1, t }) {
                   {...field}
                   label={t("responses.to")}
                   type="number"
-                  inputProps={{ min, max }}
+                  inputProps={{ min }}
                   error={!!errors.to}
                   helperText={errors.to?.message || ""}
                   onChange={(e) => {

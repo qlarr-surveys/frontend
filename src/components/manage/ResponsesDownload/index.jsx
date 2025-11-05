@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -22,7 +22,13 @@ import FormProvider from "~/components/hook-form";
 import { useParams } from "react-router-dom";
 import { useService } from "~/hooks/use-service";
 
-export default function ResponsesDownload({ open, onClose, maxCount = 1, t }) {
+export default function ResponsesDownload({
+  open,
+  onClose,
+  t,
+  currentFrom = 1,
+  currentTo = 1,
+}) {
   const { surveyId } = useParams();
   const surveyService = useService("survey");
 
@@ -36,21 +42,18 @@ export default function ResponsesDownload({ open, onClose, maxCount = 1, t }) {
     setSnackbar((prev) => ({ ...prev, open: false }));
 
   const min = 1;
-  const max = Math.max(1, Number(maxCount) || 1);
 
   const VerifySchema = yup.object().shape({
     from: yup
       .number()
       .typeError(t("responses.enter_a_number"))
       .required(t("responses.enter_a_number"))
-      .min(min, t("responses.min", { min }))
-      .max(max, t("responses.max", { max })),
+      .min(min, t("responses.min", { min })),
     to: yup
       .number()
       .typeError(t("responses.enter_a_number"))
       .required(t("responses.enter_a_number"))
       .min(min, t("responses.min", { min }))
-      .max(max, t("responses.max", { max }))
       .test("gte-from", t("responses.range_invalid"), function (value) {
         const { from } = this.parent;
         if (typeof from !== "number" || typeof value !== "number") return false;
@@ -63,8 +66,8 @@ export default function ResponsesDownload({ open, onClose, maxCount = 1, t }) {
     mode: "onChange",
     resolver: yupResolver(VerifySchema),
     defaultValues: {
-      from: 1,
-      to: 1,
+      from: currentFrom,
+      to: currentTo,
       filter: "all",
     },
   });
@@ -72,8 +75,18 @@ export default function ResponsesDownload({ open, onClose, maxCount = 1, t }) {
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = methods;
+
+  useEffect(() => {
+      if (open) {
+        reset({
+          from: currentFrom,
+          to: currentTo,
+        });
+      }
+    }, [open, currentFrom, currentTo, reset]);
 
   const onSubmit = handleSubmit((data) => {
     if (!surveyId) {
@@ -108,7 +121,7 @@ export default function ResponsesDownload({ open, onClose, maxCount = 1, t }) {
           FileSaver.saveAs(file);
         }
         onClose?.();
-      })
+      });
   });
 
   return (
@@ -127,7 +140,7 @@ export default function ResponsesDownload({ open, onClose, maxCount = 1, t }) {
                     {...field}
                     label={t("responses.from")}
                     type="number"
-                    inputProps={{ min, max }}
+                    inputProps={{ min }}
                     error={!!errors.from}
                     helperText={errors.from?.message || ""}
                     onChange={(e) => {
@@ -146,7 +159,7 @@ export default function ResponsesDownload({ open, onClose, maxCount = 1, t }) {
                     {...field}
                     label={t("responses.to")}
                     type="number"
-                    inputProps={{ min, max }}
+                    inputProps={{ min }}
                     error={!!errors.to}
                     helperText={errors.to?.message || ""}
                     onChange={(e) => {
