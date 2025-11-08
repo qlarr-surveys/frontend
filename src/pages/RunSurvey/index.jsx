@@ -11,7 +11,10 @@ import {
 } from "~/networking/run";
 import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { defualtTheme } from "~/constants/theme";
-import { previewModeChange, stateReceived } from "~/state/runState";
+import {
+  previewModeChange,
+  stateReceived,
+} from "~/state/runState";
 import { useSelector } from "react-redux";
 import { Box, Button, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -28,7 +31,7 @@ import RunLoadingDots from "~/components/common/RunLoadingDots";
 
 import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
 import SurveyAppBar from "~/components/run/SurveyAppBar";
-import { routes } from '~/routes';
+import { routes } from "~/routes";
 
 function RunSurvey({
   preview,
@@ -277,7 +280,7 @@ function RunSurvey({
                   height: "calc(100vh - 48px)",
                 }}
               >
-                {!SURVEY_ENDED && <SurveyAppBar toggleDrawer={toggleDrawer} />}
+                {!SURVEY_ENDED && <SurveyAppBar preview={preview} toggleDrawer={toggleDrawer} />}
                 <SurveyMemo key="Survey" />
                 <SurveyDrawer
                   expanded={expanded}
