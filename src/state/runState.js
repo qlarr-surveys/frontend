@@ -19,8 +19,8 @@ export const runState = createSlice({
     stateReceived: (state, action) => {
       let keys = Object.keys(state);
       keys.forEach((key) => delete state[key]);
-      state.preview = action.payload.preview
-      let response = action.payload.response
+      state.preview = action.payload.preview;
+      let response = action.payload.response;
       qlarrDependents = response.state.qlarrDependents;
       state.navigation = undefined;
       state.data = {
@@ -37,6 +37,12 @@ export const runState = createSlice({
       state.navigation = {
         values: getValues(state.values),
         lang: action.payload.lang,
+        navigationDirection: { name: "RESUME" },
+      };
+    },
+    saveForLater: (state) => {
+      state.navigation = {
+        values: getValues(state.values),
         navigationDirection: { name: "RESUME" },
       };
     },
@@ -71,13 +77,13 @@ export const {
   stateReceived,
   langChange,
   previewModeChange,
+  saveForLater,
   navigateNext,
   navigatePrevious,
   jump,
 } = runState.actions;
 
 export default runState.reducer;
-
 
 function setValueInState(state, payload) {
   let componentCode = payload.componentCode;
@@ -94,7 +100,7 @@ function setValueInState(state, payload) {
       "value",
       value,
       "VALUE CHANGE"
-  )
+    );
     console.debug("NEW STATE in: " + (Date.now() - time) + " millis");
   }
 }

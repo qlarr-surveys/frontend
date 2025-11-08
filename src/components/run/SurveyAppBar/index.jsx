@@ -20,7 +20,7 @@ import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-function SurveyAppBar({ toggleDrawer }) {
+function SurveyAppBar({ toggleDrawer, onSaveForLater }) {
   const lang = useSelector((state) => {
     return state.runState.data?.lang;
   }, shallowEqual);
@@ -43,7 +43,7 @@ function SurveyAppBar({ toggleDrawer }) {
   const handleSaveLater = async () => {
     setSaving(true);
     try {
-      await new Promise((res) => setTimeout(res, 2000));
+      onSaveForLater();
       setSaveOpen(false);
       setSnackbarOpen(true);
     } catch (e) {
@@ -59,9 +59,7 @@ function SurveyAppBar({ toggleDrawer }) {
 
   return (
     <>
-      <Toolbar
-        className={styles.toolbar}
-      >
+      <Toolbar className={styles.toolbar}>
         <IconButton
           color="primary"
           size="large"
