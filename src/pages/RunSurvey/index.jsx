@@ -13,7 +13,6 @@ import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { defualtTheme } from "~/constants/theme";
 import {
   previewModeChange,
-  saveForLater,
   stateReceived,
 } from "~/state/runState";
 import { useSelector } from "react-redux";
@@ -281,12 +280,7 @@ function RunSurvey({
                   height: "calc(100vh - 48px)",
                 }}
               >
-                {!SURVEY_ENDED && (
-                  <SurveyAppBar
-                    toggleDrawer={toggleDrawer}
-                    onSaveForLater={() => dispatch(saveForLater())}
-                  />
-                )}
+                {!SURVEY_ENDED && <SurveyAppBar preview={preview} toggleDrawer={toggleDrawer} />}
                 <SurveyMemo key="Survey" />
                 <SurveyDrawer
                   expanded={expanded}

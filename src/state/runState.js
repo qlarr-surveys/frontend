@@ -40,12 +40,6 @@ export const runState = createSlice({
         navigationDirection: { name: "RESUME" },
       };
     },
-    saveForLater: (state) => {
-      state.navigation = {
-        values: getValues(state.values),
-        navigationDirection: { name: "RESUME" },
-      };
-    },
     previewModeChange: (state, action) => {
       state.navigation = {
         values: getValues(state.values),
@@ -77,7 +71,6 @@ export const {
   stateReceived,
   langChange,
   previewModeChange,
-  saveForLater,
   navigateNext,
   navigatePrevious,
   jump,
@@ -140,7 +133,7 @@ function next(state) {
   }
 }
 
-function getValues(values) {
+export function getValues(values) {
   let retrunObj = {};
   for (var key in values) {
     if (values.hasOwnProperty(key)) {
