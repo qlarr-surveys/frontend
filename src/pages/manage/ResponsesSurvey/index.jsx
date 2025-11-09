@@ -37,7 +37,7 @@ import { useService } from "~/hooks/use-service";
 import ResponsesDownload from "~/components/manage/ResponsesDownload";
 import ResponsesExport from "~/components/manage/ResponsesExport";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
-import { previewUrlByResponseIdAndFilename } from "~/networking/run";
+import { previewUrlByResponseIdAndCode } from "~/networking/run";
 
 function InfoItem({ label, value }) {
   return (
@@ -152,7 +152,7 @@ function ResponsesSurvey() {
     return String(val);
   };
 
-  const renderAnswerClamped = (key, respId, val) => {
+  const renderAnswerClamped = (code, respId, val) => {
     if (val === null || val === undefined || val === "") {
       return <Typography>—</Typography>;
     }
@@ -164,7 +164,7 @@ function ResponsesSurvey() {
             {val.map((file, idx) => (
               <React.Fragment key={file.stored_filename}>
                 {idx > 0 ? ", " : null}
-                {renderFileLink(key, respId, file)}
+                {renderFileLink(code, respId, file)}
               </React.Fragment>
             ))}
           </Box>
@@ -176,7 +176,7 @@ function ResponsesSurvey() {
       return (
         <ClampTwoLines>
           <Box display="inline" sx={{ wordBreak: "break-word" }}>
-            {renderFileLink(key, respId, val)}
+            {renderFileLink(code, respId, val)}
           </Box>
         </ClampTwoLines>
       );
@@ -208,15 +208,14 @@ function ResponsesSurvey() {
     return (m && m[0]) || first;
   };
 
-  const renderFileLink = (questionKey, respId, file) => {
-    const code = getQuestionCodeFromKey(questionKey);
+  const renderFileLink = (code, respId, file) => {
     return (
       <a
         key={file.stored_filename}
         target="_blank"
         rel="noreferrer"
         download={file.stored_filename}
-        href={previewUrlByResponseIdAndFilename(respId, file.stored_filename)}
+        href={previewUrlByResponseIdAndCode(respId, code)}
         style={{ wordBreak: "break-all" }}
       >
         {file.filename} — {Math.round(file.size / 1000)}K
@@ -601,11 +600,11 @@ function ResponsesSurvey() {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {Object.entries(selected.values).map(([key, val]) => {
+                          {selected.values.map((val) => {
                             const answerTooltip = getTooltipString(val.value);
-                            const questionTooltip = getTooltipString(key);
+                            const questionTooltip = getTooltipString(val.key);
                             return (
-                              <TableRow key={key} hover>
+                              <TableRow key={val.code} hover>
                                 <TableCell
                                   sx={{
                                     verticalAlign: "top",
@@ -625,7 +624,7 @@ function ResponsesSurvey() {
                                           whiteSpace: "pre-wrap",
                                         }}
                                       >
-                                        {key}
+                                        {val.key}
                                       </Typography>
                                     </CustomTooltip>
                                   </ClampTwoLines>
@@ -644,7 +643,7 @@ function ResponsesSurvey() {
                                     >
                                       <Box>
                                         {renderAnswerClamped(
-                                          key,
+                                          val.code,
                                           selected.id,
                                           val.value
                                         )}
@@ -653,7 +652,7 @@ function ResponsesSurvey() {
                                   ) : (
                                     <Box>
                                       {renderAnswerClamped(
-                                        key,
+                                        val.code,
                                         selected.id,
                                         val.value
                                       )}
