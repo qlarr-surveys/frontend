@@ -15,7 +15,23 @@ import MCQAnswer from "./MCQAnswer";
 
 function MCQ(props) {
   const parentValue = useSelector((state) => {
-    return state.runState.values[props.component.qualifiedCode].value || [];
+    const currentValue = state.runState.values[props.component.qualifiedCode].value;
+    
+    // If no value is set and we're in preview mode, use default values
+    if ((!currentValue || currentValue.length === 0) && state.runState.preview) {
+      const valueInstruction = props.component.instructionList?.find(
+        (instruction) => instruction.code === "value"
+      );
+      if (valueInstruction?.text) {
+        try {
+          return JSON.parse(valueInstruction.text);
+        } catch (e) {
+          return [];
+        }
+      }
+    }
+    
+    return currentValue || [];
   }, shallowEqual);
   const hasAll = props.component.answers
   .some((answer) => answer.type == "all");

@@ -90,6 +90,13 @@ export const designState = createSlice({
         payload.rule != "content"
       );
     },
+    changeInstructionValue(state, action) {
+      let payload = action.payload;
+      let componentState = state[payload.code];
+      if (componentState) {
+        changeInstruction(componentState, payload.instruction);
+      }
+    },
     resetSetup(state) {
       const currentLang = state.langInfo?.lang;
       const isInTranslationMode = state.designMode === DESIGN_SURVEY_MODE.LANGUAGES;
@@ -667,6 +674,7 @@ export const {
   setup,
   resetSetup,
   changeValidationValue,
+  changeInstructionValue,
   updateRandom,
   updatePriority,
   updateRandomByType,

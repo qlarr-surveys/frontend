@@ -182,9 +182,19 @@ function ChoiceItemDesign(props) {
           </div>
         )}
         {props.type === "checkbox" ? (
-          <Checkbox disabled />
+          <ChoiceCheckbox 
+            disabled 
+            qualifiedCode={props.qualifiedCode}
+            parentCode={props.code}
+            questionType="mcq"
+          />
         ) : props.type === "radio" ? (
-          <Radio disabled />
+          <ChoiceRadio 
+            disabled 
+            qualifiedCode={props.qualifiedCode}
+            parentCode={props.code}
+            questionType="scq"
+          />
         ) : null}{" "}
         {answer.type === "other" ? (
           <TextField
@@ -320,6 +330,74 @@ function ChoiceItemDesign(props) {
       </Box>
     </div>
   );
+}
+
+// Component to show checkbox with default value state
+function ChoiceCheckbox({ disabled, qualifiedCode, parentCode, questionType }) {
+  const answerCode = useSelector((state) => {
+    return state.designState[qualifiedCode]?.code;
+  });
+
+  const parentQualifiedCode = useSelector((state) => {
+    // Find the parent question code by removing the answer part
+    if (!qualifiedCode) return null;
+    const parts = qualifiedCode.split('A');
+    return parts[0]; // This gives us the question code like Q1, Q2, etc.
+  });
+
+  const defaultValues = useSelector((state) => {
+    if (!parentQualifiedCode) return [];
+    const valueInstruction = state.designState[parentQualifiedCode]?.instructionList?.find(
+      (instruction) => instruction.code === "value"
+    );
+    if (valueInstruction?.text) {
+      try {
+        const parsed = JSON.parse(valueInstruction.text);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  });
+
+  const isChecked = answerCode && defaultValues && Array.isArray(defaultValues) && defaultValues.includes(answerCode);
+
+  return <Checkbox disabled={disabled} checked={!!isChecked} />;
+}
+
+// Component to show radio with default value state
+function ChoiceRadio({ disabled, qualifiedCode, parentCode, questionType }) {
+  const answerCode = useSelector((state) => {
+    return state.designState[qualifiedCode]?.code;
+  });
+
+  const parentQualifiedCode = useSelector((state) => {
+    // Find the parent question code by removing the answer part
+    if (!qualifiedCode) return null;
+    const parts = qualifiedCode.split('A');
+    return parts[0]; // This gives us the question code like Q1, Q2, etc.
+  });
+
+  const defaultValues = useSelector((state) => {
+    if (!parentQualifiedCode) return [];
+    const valueInstruction = state.designState[parentQualifiedCode]?.instructionList?.find(
+      (instruction) => instruction.code === "value"
+    );
+    if (valueInstruction?.text) {
+      try {
+        const parsed = JSON.parse(valueInstruction.text);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  });
+
+  const isChecked = answerCode && defaultValues && Array.isArray(defaultValues) && defaultValues.includes(answerCode);
+
+  return <Radio disabled={disabled} checked={!!isChecked} />;
 }
 
 export default ChoiceItemDesign;

@@ -5,6 +5,7 @@ import React from "react";
 import ToggleValue from "../ToggleValue";
 import SelectValue from "../SelectValue";
 import SelectDate from "../SelectDate";
+import ChoiceDefaultValue from "../ChoiceDefaultValue";
 import Relevance from "../logic/Relevance";
 import SkipLogic from "../SkipLogic";
 import styles from "./SetupPanel.module.css";
@@ -151,6 +152,10 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
     case "questionActions":
       return (
         <QuestionActions key={code + rule} t={t} rule={rule} code={code} />
+      );
+    case "mcq_default_value":
+      return (
+        <ChoiceDefaultValue key={code + rule} t={t} code={code} />
       );
     case "showWordCount":
       return (

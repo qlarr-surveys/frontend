@@ -14,8 +14,25 @@ import Content from "~/components/run/Content";
 function SCQ(props) {
   const state = useSelector((state) => {
     let questionState = state.runState.values[props.component.qualifiedCode];
+    let currentValue = questionState?.value || "";
+    
+    // If no value is set and we're in preview mode, use default values
+    if (!currentValue && state.runState.preview) {
+      const valueInstruction = props.component.instructionList?.find(
+        (instruction) => instruction.code === "value"
+      );
+      if (valueInstruction?.text) {
+        try {
+          const defaultValues = JSON.parse(valueInstruction.text);
+          currentValue = defaultValues.length > 0 ? defaultValues[0] : "";
+        } catch (e) {
+          currentValue = "";
+        }
+      }
+    }
+    
     return {
-      value: questionState?.value || "",
+      value: currentValue,
     };
   }, shallowEqual);
   const dispatch = useDispatch();

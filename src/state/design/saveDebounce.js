@@ -74,6 +74,7 @@ const MUTATING = [
   "designState/changeRelevance",
   "designState/addComponent",
   "designState/onDrag",
+  "designState/changeInstructionValue",
 ];
 
 const setState = (store, state) => {

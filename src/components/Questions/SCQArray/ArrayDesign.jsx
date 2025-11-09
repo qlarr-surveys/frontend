@@ -175,6 +175,11 @@ function ArrayRowDesign({
   langInfo,
   parentQualifiedCode,
 }) {
+  // Get columns data to access column codes
+  const columns = useSelector((state) => {
+    const children = state.designState[parentQualifiedCode]?.children;
+    return children?.filter((el) => el.type === "column") || [];
+  });
   const dispatch = useDispatch();
   const theme = useTheme();
   const ref = useRef();
@@ -343,10 +348,10 @@ function ArrayRowDesign({
         </Box>
       </TableCell>
 
-      {[...Array(colCount)].map((_option, index) => {
+      {columns.map((column, colIndex) => {
         return (
           <TableCell
-            key={index}
+            key={colIndex}
             scope="row"
             align="center"
             sx={{
@@ -354,12 +359,18 @@ function ArrayRowDesign({
             }}
           >
             {type === "scq_array" ? (
-              <Radio
-              disabled={true}
-            />
-            ) : (
-              <Checkbox
+              <ArrayRadio
                 disabled={true}
+                rowCode={item.code}
+                colCode={column.code}
+                questionCode={parentQualifiedCode}
+              />
+            ) : (
+              <ArrayCheckbox
+                disabled={true}
+                rowCode={item.code}
+                colCode={column.code}
+                questionCode={parentQualifiedCode}
               />
             )}
           </TableCell>
@@ -542,4 +553,58 @@ function ArrayHeaderDesign({
       />
     </TableCell>
   );
+}
+
+// Component to show array radio with default value state
+function ArrayRadio({ disabled, rowCode, colCode, questionCode }) {
+  const defaultValues = useSelector((state) => {
+    if (!questionCode) return [];
+    const valueInstruction = state.designState[questionCode]?.instructionList?.find(
+      (instruction) => instruction.code === "value"
+    );
+    if (valueInstruction?.text) {
+      try {
+        const parsed = JSON.parse(valueInstruction.text);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  });
+
+  // For array questions, check if this row-column combination is selected
+  const isChecked = rowCode && colCode && Array.isArray(defaultValues) && defaultValues.some(value => 
+    (typeof value === 'object' && value && value.row === rowCode && value.col === colCode) ||
+    (typeof value === 'string' && value === `${rowCode}:${colCode}`)
+  );
+
+  return <Radio disabled={disabled} checked={!!isChecked} />;
+}
+
+// Component to show array checkbox with default value state  
+function ArrayCheckbox({ disabled, rowCode, colCode, questionCode }) {
+  const defaultValues = useSelector((state) => {
+    if (!questionCode) return [];
+    const valueInstruction = state.designState[questionCode]?.instructionList?.find(
+      (instruction) => instruction.code === "value"
+    );
+    if (valueInstruction?.text) {
+      try {
+        const parsed = JSON.parse(valueInstruction.text);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  });
+
+  // For array questions, check if this row-column combination is selected
+  const isChecked = rowCode && colCode && Array.isArray(defaultValues) && defaultValues.some(value => 
+    (typeof value === 'object' && value && value.row === rowCode && value.col === colCode) ||
+    (typeof value === 'string' && value === `${rowCode}:${colCode}`)
+  );
+
+  return <Checkbox disabled={disabled} checked={!!isChecked} />;
 }

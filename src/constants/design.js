@@ -443,7 +443,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["questionActions", "disabled", "showDescription", "mcq_default_value"],
         },
         {
           title: "logic",
@@ -466,6 +466,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "mcq_default_value",
             "hideText",
             "columns",
             "iconSize",
@@ -493,6 +494,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "mcq_default_value",
             "hideText",
             "columns",
             "imageAspectRatio",
@@ -516,7 +518,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["questionActions", "disabled", "showDescription", "mcq_default_value"],
         },
         {
           title: "logic",
@@ -616,6 +618,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "mcq_default_value",
             "hideText",
             "columns",
             "iconSize",
@@ -647,6 +650,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "mcq_default_value",
             "hideText",
             "columns",
             "imageAspectRatio",
@@ -673,7 +677,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["questionActions", "disabled", "showDescription", "mcq_default_value"],
         },
         {
           title: "logic",
@@ -696,6 +700,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "showDescription",
             "disabled",
+            "mcq_default_value",
             "minHeaderMobile",
             "minHeaderDesktop",
             "minRowLabelMobile",
@@ -722,6 +727,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "mcq_default_value",
             "lower_bound_hint",
             "higher_bound_hint",
           ],

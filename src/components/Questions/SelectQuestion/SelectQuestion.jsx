@@ -9,8 +9,25 @@ function SelectQuestion({ lang, component }) {
   const theme = useTheme();
   const state = useSelector((state) => {
     let questionState = state.runState.values[component.qualifiedCode];
+    let currentValue = questionState?.value || "";
+    
+    // If no value is set and we're in preview mode, use default values
+    if (!currentValue && state.runState.preview) {
+      const valueInstruction = component.instructionList?.find(
+        (instruction) => instruction.code === "value"
+      );
+      if (valueInstruction?.text) {
+        try {
+          const defaultValues = JSON.parse(valueInstruction.text);
+          currentValue = defaultValues.length > 0 ? defaultValues[0] : "";
+        } catch (e) {
+          currentValue = "";
+        }
+      }
+    }
+    
     return {
-      value: questionState?.value || "",
+      value: currentValue,
     };
   }, shallowEqual);
   const dispatch = useDispatch();

@@ -19,6 +19,8 @@ import ImageChoiceQuestion from "../Questions/Imagechoice/ImageChoiceDesign";
 import SCQIconArrayDesign from "../Questions/SCQArray/SCQIconArrayDesign";
 import { RHFSelect } from "../hook-form";
 import ArrayDesign from '~/components/Questions/SCQArray/ArrayDesign';
+import { FormControl, InputLabel, Select, MenuItem, useTheme } from "@mui/material";
+import { useSelector } from "react-redux";
 
 function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
   switch (type) {
@@ -66,7 +68,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
     case "select":
       return (
         <>
-          <RHFSelect sx={{ width: "50%" }} disabled={true} />
+          <SelectDesign code={code} />
           <ChoiceQuestion
             key={code}
             t={t}
@@ -174,6 +176,74 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
     default:
       return "";
   }
+}
+
+// Component to show select dropdown with default value
+function SelectDesign({ code }) {
+  const theme = useTheme();
+  
+  const children = useSelector((state) => {
+    return state.designState[code]?.children || [];
+  });
+
+  const langInfo = useSelector((state) => {
+    return state.designState.langInfo;
+  });
+
+  const currentLang = langInfo?.lang || langInfo?.mainLang || "en";
+
+  const defaultValues = useSelector((state) => {
+    if (!code) return [];
+    const valueInstruction = state.designState[code]?.instructionList?.find(
+      (instruction) => instruction.code === "value"
+    );
+    if (valueInstruction?.text) {
+      try {
+        const parsed = JSON.parse(valueInstruction.text);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  });
+
+  const answerLabels = useSelector((state) => {
+    const labels = {};
+    if (Array.isArray(children)) {
+      children.forEach(answer => {
+        if (answer && answer.qualifiedCode) {
+          const answerData = state.designState[answer.qualifiedCode];
+          labels[answer.code] = answerData?.content?.[currentLang]?.label || answer.code;
+        }
+      });
+    }
+    return labels;
+  });
+
+  const getAnswerLabel = (answerCode) => {
+    return answerLabels[answerCode] || answerCode;
+  };
+
+  const selectedValue = Array.isArray(defaultValues) && defaultValues.length > 0 ? defaultValues[0] : "";
+
+  return (
+    <FormControl sx={{ width: "50%", mb: 2 }} size="small">
+      <InputLabel>Select an option</InputLabel>
+      <Select
+        value={selectedValue}
+        disabled={true}
+        label="Select an option"
+        displayEmpty
+      >
+        {children.map((answer) => (
+          <MenuItem key={answer.code} value={answer.code}>
+            {getAnswerLabel(answer.code)}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
 }
 
 export default React.memo(QuestionDesignBody);
