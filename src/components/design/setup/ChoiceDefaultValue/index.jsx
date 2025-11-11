@@ -19,33 +19,38 @@ function ChoiceDefaultValue({ code, t }) {
   const langInfo = useSelector((state) => state.designState.langInfo);
   const currentLang = langInfo?.lang || langInfo?.mainLang || "en";
 
-  // Check if this is an array question type
-  const isArrayQuestion = questionType?.includes('array');
-  
-  // Determine if this is a single choice question (only one default answer allowed)
-  const isSingleChoice = [
-    'scq', 'select', 'icon_scq', 'image_scq', 'nps', 
-    'scq_array', 'scq_icon_array'
-  ].includes(questionType);
+  // Only support SCQ questions
+  if (questionType !== 'scq') {
+    return null;
+  }
 
-  // For NPS questions, generate numeric options 0-10
-  const npsOptions = questionType === 'nps' ? 
-    Array.from({ length: 11 }, (_, i) => ({ code: i.toString(), content: { title: { [currentLang]: i.toString() } } })) : 
-    [];
-
-  // Use NPS options for NPS questions, regular answers for others
-  const availableOptions = questionType === 'nps' ? npsOptions : answers;
+  // For SCQ, it's always single choice
+  const isSingleChoice = true;
+  const availableOptions = answers;
 
   // Get current default values from the "value" instruction
   const currentDefaultValues = useSelector((state) => {
-    const valueInstruction = state.designState[code]?.instructionList?.find(
+    const questionData = state.designState[code];
+    
+    // Get from value instruction
+    const valueInstruction = questionData?.instructionList?.find(
       (instruction) => instruction.code === "value"
     );
     if (valueInstruction?.text) {
       try {
-        return JSON.parse(valueInstruction.text);
+        // For single choice, text might be just the string value (e.g., "A1")
+        // For multiple choice, text is JSON array (e.g., "[\"A1\", \"A2\"]")
+        if (isSingleChoice) {
+          // For single choice, return the text directly as array for UI
+          return valueInstruction.text ? [valueInstruction.text] : [];
+        } else {
+          // For multiple choice, parse JSON
+          const parsedValue = JSON.parse(valueInstruction.text);
+          return Array.isArray(parsedValue) ? parsedValue : [];
+        }
       } catch (e) {
-        return [];
+        // If JSON parsing fails, treat as single string value
+        return valueInstruction.text ? [valueInstruction.text] : [];
       }
     }
     return [];
@@ -54,14 +59,14 @@ function ChoiceDefaultValue({ code, t }) {
   const handleDefaultValueChange = (event) => {
     let selectedValues = event.target.value;
     
-    // For single choice questions, ensure only one value is selected
+    // For single choice questions, store as single string value
     if (isSingleChoice) {
-      // If it's a string, keep it as is. If it's an array, take the last selected value
+      // If it's an array, take the last selected value
       if (Array.isArray(selectedValues)) {
         selectedValues = selectedValues[selectedValues.length - 1] || "";
       }
-      // For single choice, store as array with single value for consistency
-      selectedValues = selectedValues ? [selectedValues] : [];
+      // For single choice, store as single string (not array)
+      // selectedValues is now a string or empty string
     } else {
       // For multiple choice, ensure it's always an array
       if (!Array.isArray(selectedValues)) {
@@ -77,7 +82,7 @@ function ChoiceDefaultValue({ code, t }) {
         type: "list",
         values: availableOptions.map(answer => answer.code)
       },
-      text: JSON.stringify(selectedValues)
+      text: isSingleChoice ? selectedValues : JSON.stringify(selectedValues)
     };
 
     console.log('Dispatching value instruction:', { code, instruction });
