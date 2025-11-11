@@ -443,7 +443,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["questionActions", "disabled", "showDescription", "mcq_default_value"],
         },
         {
           title: "logic",

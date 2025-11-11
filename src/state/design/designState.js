@@ -172,6 +172,10 @@ export const designState = createSlice({
       state[payload.code].relevance = payload.value;
       addRelevanceInstructions(state, payload.code, payload.value);
     },
+    updateInstruction: (state, action) => {
+      const { code, instruction } = action.payload;
+      changeInstruction(state[code], instruction);
+    },
     cloneQuestion: (state, action) => {
       const code = action.payload;
       const survey = state.Survey;
@@ -676,6 +680,7 @@ export const {
   editSkipToEnd,
   editDisqualifyToEnd,
   changeRelevance,
+  updateInstruction,
   onDrag,
   addComponent,
   collapseAllGroups,
