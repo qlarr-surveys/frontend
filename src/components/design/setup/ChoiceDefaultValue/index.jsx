@@ -79,7 +79,7 @@ function ChoiceDefaultValue({ code, t }) {
       code: "value",
       isActive: false,
       returnType: {
-        type: "list",
+        type: "enum",
         values: availableOptions.map(answer => answer.code)
       },
       text: isSingleChoice ? selectedValues : JSON.stringify(selectedValues)
