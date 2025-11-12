@@ -30,6 +30,7 @@ import {
   addQuestionInstructions,
   addSkipInstructions,
   changeInstruction,
+  cleanupDefaultValue,
   conditionalRelevanceEquation,
   instructionByCode,
   processValidation,
