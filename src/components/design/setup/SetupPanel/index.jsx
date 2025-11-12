@@ -153,7 +153,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
       return (
         <QuestionActions key={code + rule} t={t} rule={rule} code={code} />
       );
-    case "mcq_default_value":
+    case "scq_default_value":
       return (
         <ScqDefaultValue key={code + rule} code={code} />
       );
