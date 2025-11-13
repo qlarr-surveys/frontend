@@ -45,7 +45,6 @@ function ContentPanel({ designMode }, ref) {
       list.push({ name: ELEMENTS.GROUP, group: groups[i], index: i });
       if (
         groups[i].type !== "end" &&
-        designMode &&
         groups[i].groupType?.toLowerCase() !== "end"
       ) {
         list.push({ name: ELEMENTS.DROP_AREA, group: groups[i], index: i + 1 });
