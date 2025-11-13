@@ -1,21 +1,25 @@
 import React from "react";
 import { MenuItem, Typography, FormControl, InputLabel, Select } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { updateInstruction } from "../../../../state/design/designState";
 
 function ScqDefaultValue({ code }) {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   // Get the question data and its children (answers)
   const answers = useSelector((state) => state.designState[code]?.children || []);
 
-  // Get current default value from the "value" instruction
-  const currentDefaultValue = useSelector((state) => {
-    const valueInstruction = state.designState[code]?.instructionList?.find(
+  // Get the current "value" instruction
+  const currentInstruction = useSelector((state) => {
+    return state.designState[code]?.instructionList?.find(
       (instruction) => instruction.code === "value"
     );
-    return valueInstruction?.text || "";
   });
+
+  // Get current default value from the instruction
+  const currentDefaultValue = currentInstruction?.text || "";
 
   // Get answer labels for display
   const answerLabels = useSelector((state) => {
@@ -36,23 +40,14 @@ function ScqDefaultValue({ code }) {
   const handleDefaultValueChange = (event) => {
     const selectedValue = event.target.value;
     
-    if (selectedValue === "") {
-      // Remove instruction if no value selected
-      const instruction = {
-        code: "value",
-        remove: true
-      };
-      dispatch(updateInstruction({ code, instruction }));
-    } else {
-      // Update instruction with selected value and enum returnType
-      const instruction = {
-        code: "value",
-        isActive: false,
-        returnType: "enum",
-        text: selectedValue
-      };
-      dispatch(updateInstruction({ code, instruction }));
-    }
+    // Only modify the text field, preserve all other properties
+    const instruction = {
+      ...currentInstruction,
+      code: "value",
+      text: selectedValue
+    };
+    
+    dispatch(updateInstruction({ code, instruction }));
   };
 
   if (!answers.length) {
@@ -62,17 +57,17 @@ function ScqDefaultValue({ code }) {
   return (
     <div style={{ marginBottom: '16px' }}>
       <Typography fontWeight={700} style={{ marginBottom: '8px' }}>
-        Default Value
+        {t("Default Value")}
       </Typography>
       <FormControl fullWidth size="small">
-        <InputLabel>Select default answer</InputLabel>
+        <InputLabel>{t("Select default answer")}</InputLabel>
         <Select
           value={currentDefaultValue}
           onChange={handleDefaultValueChange}
-          label="Select default answer"
+          label={t("Select default answer")}
         >
           <MenuItem value="">
-            <em>No default</em>
+            <em>{t("No default")}</em>
           </MenuItem>
           {answers.map((answer) => (
             <MenuItem key={answer.code} value={answer.code}>
