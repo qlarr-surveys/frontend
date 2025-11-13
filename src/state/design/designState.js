@@ -30,6 +30,7 @@ import {
   addQuestionInstructions,
   addSkipInstructions,
   changeInstruction,
+  cleanupDefaultValue,
   conditionalRelevanceEquation,
   instructionByCode,
   processValidation,
@@ -166,6 +167,10 @@ export const designState = createSlice({
       let payload = action.payload;
       state[payload.code].relevance = payload.value;
       addRelevanceInstructions(state, payload.code, payload.value);
+    },
+    updateInstruction: (state, action) => {
+      const { code, instruction } = action.payload;
+      changeInstruction(state[code], instruction);
     },
     cloneQuestion: (state, action) => {
       const code = action.payload;
@@ -671,6 +676,7 @@ export const {
   editSkipToEnd,
   editDisqualifyToEnd,
   changeRelevance,
+  updateInstruction,
   onDrag,
   addComponent,
   collapseAllGroups,
