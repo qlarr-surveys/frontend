@@ -108,6 +108,10 @@ export const designState = createSlice({
         state.designMode = DESIGN_SURVEY_MODE.DESIGN;
       }
     },
+    setDesignModeToDesign(state) {
+      designState.caseReducers.resetSetup(state);
+      state.designMode = DESIGN_SURVEY_MODE.DESIGN;
+    },
     setDesignModeToLang(state) {
       designState.caseReducers.resetSetup(state);
       designState.caseReducers.setup(state, { payload: languageSetup });
@@ -117,15 +121,6 @@ export const designState = createSlice({
       designState.caseReducers.resetSetup(state);
       designState.caseReducers.setup(state, { payload: themeSetup });
       state.designMode = DESIGN_SURVEY_MODE.THEME;
-    },
-    setDesignModeToReorder(state) {
-      designState.caseReducers.resetSetup(state);
-      designState.caseReducers.setup(state, { payload: reorderSetup });
-      if (!state.globalSetup) {
-        state.globalSetup = {};
-      }
-      state.globalSetup.reorder_setup = "collapse_questions";
-      state.designMode = DESIGN_SURVEY_MODE.REORDER;
     },
     changeAttribute: (state, action) => {
       let payload = action.payload;
@@ -660,8 +655,8 @@ export const {
   resetFocus,
   addNewAnswer,
   addNewAnswers,
+  setDesignModeToDesign,
   setDesignModeToLang,
-  setDesignModeToReorder,
   setDesignModeToTheme,
   removeAnswer,
   setup,
