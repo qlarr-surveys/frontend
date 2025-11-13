@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   resetSetup,
+  setDesignModeToDesign,
   setDesignModeToLang,
   setDesignModeToTheme,
 } from "~/state/design/designState";
@@ -59,8 +60,9 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
               link={routes.designSurvey.replace(":surveyId", surveyId)}
               icon={<Edit sx={{ color: "#fff" }} />}
               onClick={() => {
-                dispatch(resetSetup());
+                console.log("what is happening here")
                 onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
+                dispatch(setDesignModeToDesign());
               }}
             />
             <SideTab

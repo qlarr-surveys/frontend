@@ -13,8 +13,6 @@ import { inDesign } from "~/routes";
 export function GroupDropArea({ index, groupsCount, t, emptySurvey }) {
   const dispatch = useDispatch();
 
-  const designMode = useSelector((state) => state.designState.designMode);
-
   const [{ isOver, item }, drop] = useDrop(
     () => ({
       accept: "groups",
@@ -45,10 +43,6 @@ export function GroupDropArea({ index, groupsCount, t, emptySurvey }) {
   const theme = useTheme();
 
   const contrastColor = getContrastColor(theme.palette.background.paper);
-
-  if (!inDesign(designMode)) {
-    return null;
-  }
 
   return (
     <div
