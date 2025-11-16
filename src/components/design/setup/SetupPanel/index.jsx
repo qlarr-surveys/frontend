@@ -21,6 +21,7 @@ import { questionIconByType } from "~/components/Questions/utils";
 import OrderSetup from "../random/OrderSetup";
 import QuestionActions from "../QuestionActions";
 import DisabledToggle from "../Disabled";
+import EntityCodeEditor from "../EntityCodeEditor";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -533,6 +534,11 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
               : "background.paper",
         }}
       >
+        {rules[selectedTab]?.key === "general" && (
+          <div className={styles.setupContainer}>
+            <EntityCodeEditor />
+          </div>
+        )}
         {rules[selectedTab]?.rules?.map((el) => (
           <div className={styles.setupContainer} key={el}>
             <Box sx={rowSx(el)}>

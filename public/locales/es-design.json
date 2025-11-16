@@ -92,6 +92,7 @@
   "err_misplaced_end_group": "La Página Final debe ser siempre la última página",
   "err_misplaced_welcome_group": "La Página de Bienvenida debe ser siempre la primera página",
   "err_no_end_group": "Debe haber una página final válida",
+  "entity_code": "Código de elemento",
   "err_priority": "Error de Instrucción de Grupo de Prioridad",
   "err_priority_group_item_not_child": "Esos elementos están eliminados o tienen errores y por lo tanto no pueden estar en el Grupo de Prioridad: <strong>{{items}}</strong>",
   "err_priority_limit_mismatch": "En uno de los grupos de prioridad, el límite es mayor o igual al número de elementos",
