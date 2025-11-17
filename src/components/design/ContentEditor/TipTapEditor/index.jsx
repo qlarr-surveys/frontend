@@ -78,7 +78,6 @@ function DraftEditor({
   editorTheme = "snow",
   referenceInstruction = {},
 }) {
-  console.debug("TipTap DraftEditor for: " + code);
 
   const editorRef = useRef(null);
   const wrapperRef = useRef(null);
@@ -135,36 +134,6 @@ function DraftEditor({
           class: "mention",
         },
         suggestion: suggestion(getMentionSuggestions, referenceInstruction),
-        renderHTML({ node, HTMLAttributes }) {
-          const { id, label } = node.attrs;
-          const type = node.attrs["data-type"] || "";
-
-          // Apply reference instruction replacement if available
-          let displayText = `{{${id}:${type}}}`;
-          if (referenceInstruction && referenceInstruction[id]) {
-            displayText = displayText.replace(
-              new RegExp(`{{${id}:`, "g"),
-              `{{${referenceInstruction[id]}:`
-            );
-          }
-
-          return [
-            "span",
-            {
-              ...HTMLAttributes,
-              "data-id": id,
-              "data-type": type,
-              "data-value": `{{${id}:${type}}}`,
-            },
-            [
-              "span",
-              {
-                contenteditable: "false",
-              },
-              displayText,
-            ],
-          ];
-        },
       }),
     ];
   }, [getMentionSuggestions, referenceInstruction]);
