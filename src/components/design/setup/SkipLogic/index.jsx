@@ -151,6 +151,13 @@ function skipSelectValue(
           value={skipToCode}
           label={t("skip_to")}
           onChange={(e) => onChange(answerCode, e.target.value)}
+          MenuProps={{
+            PaperProps: {
+              sx: {
+                ml: "50px",
+              },
+            },
+          }}
         >
           <MenuItem key="proceed" value="proceed">
             {t("proceed_as_usual")}

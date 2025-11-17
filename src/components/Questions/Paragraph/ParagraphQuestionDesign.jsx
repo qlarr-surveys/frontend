@@ -23,8 +23,11 @@ function ParagraphQuestionDesign({ code, t }) {
           state.validation?.validation_required?.isActive ? true : false
         }
         placeholder={state.showHint && (state.content?.[lang]?.hint || "")}
-        minRows={state.minRows || 15}
+        minRows={state.minRows || 4}
         value={""}
+        sx={{
+          pointerEvents: 'none',
+        }}
       />
       {state.showWordCount ? (
         <div className={styles.wordCount}>

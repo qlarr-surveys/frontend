@@ -1,6 +1,5 @@
 import {
   Alert,
-  AppBar,
   Box,
   Button,
   Dialog,
@@ -14,14 +13,18 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChangeLang from "../ChangeLang";
-import { shallowEqual, useSelector } from "react-redux";
+import { shallowEqual, useSelector, useStore } from "react-redux";
 import styles from "./SurveyAppBar.module.css";
 import { useTheme } from "@emotion/react";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { getValues } from "~/state/runState";
+import { useService } from "~/hooks/use-service";
+import { routes } from "~/routes";
+import { FRONT_END_HOST, PROTOCOL } from '~/constants/networking';
 
-function SurveyAppBar({ toggleDrawer }) {
+function SurveyAppBar({ toggleDrawer, preview }) {
   const lang = useSelector((state) => {
     return state.runState.data?.lang;
   }, shallowEqual);
@@ -41,16 +44,39 @@ function SurveyAppBar({ toggleDrawer }) {
   const [saving, setSaving] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
+  const store = useStore();
+  const runService = useService("run");
+
   const handleSaveLater = async () => {
     setSaving(true);
-    try {
-      await new Promise((res) => setTimeout(res, 2000));
-      setSaveOpen(false);
-      setSnackbarOpen(true);
-    } catch (e) {
-    } finally {
-      setSaving(false);
-    }
+    runService
+      .navigate(
+        {
+          values: getValues(store.getState().runState.values),
+          responseId: sessionStorage.getItem("responseId"),
+          navigationDirection: { name: "RESUME" },
+        },
+        preview
+      )
+      .then((response) => {
+        routes.resumePreview;
+        console.log(window.location.href);
+        navigator.clipboard.writeText(
+          `${PROTOCOL}://${FRONT_END_HOST}${(preview
+            ? routes.resumePreview
+            : routes.resumeSurvey
+          )
+            .replace(":responseId", sessionStorage.getItem("responseId"))
+            .replace(":surveyId", sessionStorage.getItem("surveyId"))}`
+        );
+        setSnackbarOpen(true);
+        setSaving(false);
+        setSaveOpen(false);
+      })
+      .catch((e) => {
+        setSaving(false);
+        setSaveOpen(false);
+      });
   };
 
   const handleSnackbarClose = (_, reason) => {
@@ -60,12 +86,7 @@ function SurveyAppBar({ toggleDrawer }) {
 
   return (
     <>
-      <Toolbar
-        sx={{
-          backgroundColor: theme.palette.background.default,
-        }}
-        className={styles.toolbar}
-      >
+      <Toolbar className={styles.toolbar}>
         <IconButton
           color="primary"
           size="large"

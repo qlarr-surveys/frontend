@@ -42,6 +42,7 @@ function ManageSurvey({ landingPage }) {
     landingTab(landingPage, user)
   );
   const refetchError = useSelector((state) => state.editState.error);
+  const langInfo = useSelector((state) => state.designState.langInfo);
 
   const [designAvailable, setDesignAvailable] = useState(false);
 
@@ -62,7 +63,7 @@ function ManageSurvey({ landingPage }) {
       return;
     }
     dispatch(setLoading(true));
-    GetData(designService, setState, processApirror)
+    GetData(designService, setState, processApirror, langInfo)
       .then((data) => {
         if (data) {
           setDesignAvailable(true);
@@ -89,14 +90,14 @@ function ManageSurvey({ landingPage }) {
   const refetchAll = useCallback(() => {
     if (isSurveyAdmin(user)) {
       dispatch(setLoading(true));
-      GetData(designService, setState, processApirror)
+      GetData(designService, setState, processApirror, langInfo)
         .then((data) => {
           if (data) setDesignAvailable(true);
         })
         .finally(() => dispatch(setLoading(false)));
     }
     loadSurvey();
-  }, [user, designService, dispatch, setState, processApirror, loadSurvey]);
+  }, [user, designService, dispatch, setState, processApirror, loadSurvey, langInfo]);
 
   useEffect(() => {
     if (refetchError?.name === "component_deleted" && refetchError?.seen) {

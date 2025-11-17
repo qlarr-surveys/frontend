@@ -32,6 +32,7 @@ function Survey() {
           fontFamily: theme.textStyles.text.font,
           color: theme.textStyles.text.color,
           fontSize: theme.textStyles.text.size,
+          marginTop: "4rem",
         }}
       >
         <div className={styles.surveyGroups}>

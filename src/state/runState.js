@@ -19,8 +19,8 @@ export const runState = createSlice({
     stateReceived: (state, action) => {
       let keys = Object.keys(state);
       keys.forEach((key) => delete state[key]);
-      state.preview = action.payload.preview
-      let response = action.payload.response
+      state.preview = action.payload.preview;
+      let response = action.payload.response;
       qlarrDependents = response.state.qlarrDependents;
       state.navigation = undefined;
       state.data = {
@@ -78,7 +78,6 @@ export const {
 
 export default runState.reducer;
 
-
 function setValueInState(state, payload) {
   let componentCode = payload.componentCode;
   logTimes(state, componentCode);
@@ -94,7 +93,7 @@ function setValueInState(state, payload) {
       "value",
       value,
       "VALUE CHANGE"
-  )
+    );
     console.debug("NEW STATE in: " + (Date.now() - time) + " millis");
   }
 }
@@ -134,7 +133,7 @@ function next(state) {
   }
 }
 
-function getValues(values) {
+export function getValues(values) {
   let retrunObj = {};
   for (var key in values) {
     if (values.hasOwnProperty(key)) {

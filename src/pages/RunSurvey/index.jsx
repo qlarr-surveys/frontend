@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { shallowEqual, useDispatch } from "react-redux";
 import styles from "./RunSurvey.module.css";
 import { useTranslation } from "react-i18next";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -11,7 +11,10 @@ import {
 } from "~/networking/run";
 import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { defualtTheme } from "~/constants/theme";
-import { previewModeChange, stateReceived } from "~/state/runState";
+import {
+  previewModeChange,
+  stateReceived,
+} from "~/state/runState";
 import { useSelector } from "react-redux";
 import { Box, Button, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -28,7 +31,7 @@ import RunLoadingDots from "~/components/common/RunLoadingDots";
 
 import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
 import SurveyAppBar from "~/components/run/SurveyAppBar";
-import { routes } from '~/routes';
+import { routes } from "~/routes";
 
 function RunSurvey({
   preview,
@@ -57,6 +60,11 @@ function RunSurvey({
   const navResponseId = useSelector((state) => {
     return state.runState.data?.responseId;
   });
+
+  const navigationIndex = useSelector((state) => {
+    return state.runState.data?.navigationIndex;
+  }, shallowEqual);
+  const SURVEY_ENDED = navigationIndex?.name === "end";
 
   const backgroundImage = useSelector((state) => {
     return state.runState.data?.survey?.resources?.backgroundImage;
@@ -272,7 +280,7 @@ function RunSurvey({
                   height: "calc(100vh - 48px)",
                 }}
               >
-                <SurveyAppBar toggleDrawer={toggleDrawer} />
+                {!SURVEY_ENDED && <SurveyAppBar preview={preview} toggleDrawer={toggleDrawer} />}
                 <SurveyMemo key="Survey" />
                 <SurveyDrawer
                   expanded={expanded}

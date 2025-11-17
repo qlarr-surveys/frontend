@@ -26,6 +26,9 @@ function EmailQuestionDesign({ code }) {
           state.validation?.validation_required?.isActive ? true : false
         }
         label={state.showHint && (state.content?.[lang]?.hint || "")}
+        sx={{
+          pointerEvents: 'none',
+        }}
         InputProps={{
           sx: {
             fontFamily: theme.textStyles.text.font,

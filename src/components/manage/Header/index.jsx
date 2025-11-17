@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Menu, MenuItem } from "@mui/material";
+import { Box } from "@mui/material";
 import {
   KeyboardArrowDown,
   KeyboardArrowUp,
@@ -20,7 +20,7 @@ import { useService } from "~/hooks/use-service";
 import { useTranslation } from "react-i18next";
 import { SurveyHeader } from "../SurveyHeader";
 
-export const Header = () => {
+export const Header = ({ headerOptions }) => {
   const authService = useService("auth");
   const { t } = useTranslation("manage");
 
@@ -47,13 +47,14 @@ export const Header = () => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const dropdownRef = useRef(null);
 
   const showSurveyTitle = useMemo(() => {
     return showTitle(location);
   }, [location]);
 
-  if (showSurveyTitle) {
-    return <SurveyHeader />;
+  if (headerOptions.showSurveyHeader) {
+    return <SurveyHeader showPreview={headerOptions.showPreview} />;
   }
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -61,6 +62,22 @@ export const Header = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        handleClose();
+      }
+    };
+
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [open]);
 
   return (
     <Box className={styles.header}>
@@ -80,7 +97,9 @@ export const Header = () => {
         {TokenService.isAuthenticated() && (
           <>
             <Box
+              ref={dropdownRef}
               sx={{
+                position: "relative",
                 display: "inline-flex",
                 alignItems: "center",
                 border: "1px solid #ececfd",
@@ -111,75 +130,97 @@ export const Header = () => {
                   }}
                 />
               )}
+              
+              {/* Custom dropdown positioned absolutely */}
+              {open && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "100%",
+                    right: 0,
+                    width: "200px",
+                    mt: 1.5,
+                    backgroundColor: "#ffffff",
+                    borderRadius: "5px",
+                    boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+                    border: "1px solid #e0e0e0",
+                    zIndex: 1400,
+                    overflow: "hidden",
+                  }}
+                >
+                  <Box
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      handleClose();
+                      setTimeout(() => {
+                        nav(routes.profile);
+                      }, 0);
+                    }}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 16px",
+                      cursor: "pointer",
+                      "&:hover": {
+                        backgroundColor: "#f5f5f5",
+                      },
+                    }}
+                  >
+                    <span>{t("profile.title")}</span>
+                    <Person sx={{ color: "#16205b", width: 25, height: 25 }} />
+                  </Box>
+                  <Box
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      if (isSuperAdmin()) {
+                        handleClose();
+                        nav(routes.manageUsers);
+                      }
+                    }}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 16px",
+                      cursor: isSuperAdmin() ? "pointer" : "not-allowed",
+                      opacity: isSuperAdmin() ? 1 : 0.5,
+                      "&:hover": {
+                        backgroundColor: isSuperAdmin() ? "#f5f5f5" : "transparent",
+                      },
+                    }}
+                  >
+                    <span>{t("profile.manage_users")}</span>
+                    <GroupsIcon sx={{ color: "#16205b", width: 25, height: 25 }} />
+                  </Box>
+                  <Box
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      handleClose();
+                      logout();
+                    }}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 16px",
+                      cursor: "pointer",
+                      "&:hover": {
+                        backgroundColor: "#f5f5f5",
+                      },
+                    }}
+                  >
+                    <span>{t("profile.logout")}</span>
+                    <LogoutOutlined sx={{ color: "#16205b", width: 25, height: 25 }} />
+                  </Box>
+                </Box>
+              )}
             </Box>
 
-            <Menu
-              anchorEl={anchorEl}
-              id="account-menu"
-              open={open}
-              onClick={handleClose}
-              onClose={handleClose}
-              PaperProps={{
-                elevation: 0,
-                sx: {
-                  width: "200px",
-                  overflow: "visible",
-                  filter: "drop-shadow(0px 4px 6px rgba(0,0,0,0.1))",
-                  mt: 1.5,
-                  borderRadius: "5px",
-                  backgroundColor: "#ffffff",
-                  color: "#333333",
-                  "& .MuiMenuItem-root": {
-                    "&:hover": {
-                      backgroundColor: "#f5f5f5",
-                    },
-                    "& .MuiListItemIcon-root": {
-                      minWidth: "40px",
-                    },
-                  },
-                  transition: "transform 0.2s ease",
-                },
-              }}
-              transformOrigin={{ horizontal: "right", vertical: "top" }}
-              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-            >
-              <MenuItem
-                onClick={(event) => {
-                  event.preventDefault();
-                  handleClose();
-                  setTimeout(() => {
-                    nav(routes.profile);
-                  }, 0);
-                }}
-                sx={{ display: "flex", justifyContent: "space-between" }}
-              >
-                {t("profile.title")}
-                <Person sx={{ color: "#16205b", width: 25, height: 25 }} />
-              </MenuItem>
-              <MenuItem
-                disabled={!isSuperAdmin()}
-                onClick={() => {
-                  handleClose();
-                  nav(routes.manageUsers);
-                }}
-                sx={{ display: "flex", justifyContent: "space-between" }}
-              >
-                {t("profile.manage_users")}
-                <GroupsIcon sx={{ color: "#16205b", width: 25, height: 25 }} />
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                  logout();
-                }}
-                sx={{ display: "flex", justifyContent: "space-between" }}
-              >
-                {t("profile.logout")}
-                <LogoutOutlined
-                  sx={{ color: "#16205b", width: 25, height: 25 }}
-                />
-              </MenuItem>
-            </Menu>
+
           </>
         )}
       </Box>

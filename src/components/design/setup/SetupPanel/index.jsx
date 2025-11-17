@@ -426,6 +426,16 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
       return <SkipLogic t={t} key={code + rule} code={code} />;
     case "relevance":
       return <Relevance t={t} key={code + rule} code={code} />;
+    case "prefill":
+      return (
+        <ToggleValue
+          key={code + rule}
+          t={t}
+          label={"prefill"}
+          rule={rule}
+          code={code}
+        />
+      );
     default:
       return "";
   }
