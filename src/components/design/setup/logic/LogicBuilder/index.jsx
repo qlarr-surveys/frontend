@@ -58,7 +58,6 @@ function LogicBuilder(props) {
   );
 
   const onChange = (immutableTree) => {
-    console.log("immutableTree:", immutableTree);
     setTree(immutableTree);
   };
 

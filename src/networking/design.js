@@ -1,13 +1,13 @@
-import { LANGUAGE_DEF } from "~/constants/language";
+
 import { defaultSurveyTheme } from "~/constants/theme";
 import DesignService from "~/services/DesignService";
 
 const importedService = new DesignService();
 
-export async function GetData(designService, setState, setError, langInfo) {
+export async function GetData(designService, setState, setError) {
   try {
     const response = await designService.getSurveyDesign();
-    return processResponse(response, setState, langInfo);
+    return processResponse(response, setState);
   } catch (err) {
     setError(err);
   }
@@ -20,31 +20,19 @@ export async function SetData(state, setState, setError, version, subVersion) {
       ["sub_version", subVersion],
     ]);
     const response = await importedService.setSurveyDesign(state, params);
-    processResponse(response, setState, state.langInfo);
+    processResponse(response, setState);
   } catch (err) {
     setError(err);
   }
 }
 
-const processResponse = (response, setState, langInfo) => {
+const processResponse = (response, setState) => {
   let state = response.designerInput.state;
 
   if (!state.Survey.theme) {
     state.Survey.theme = defaultSurveyTheme;
   }
-  const defaultLang =
-    response.designerInput.state.Survey.defaultLang || LANGUAGE_DEF.en;
-  const mainLang = defaultLang.code;
-  const lang = langInfo?.lang || defaultLang.code;
-  const languagesList = [defaultLang].concat(
-    response.designerInput.state.Survey.additionalLang || []
-  );
-  state.langInfo = {
-    languagesList,
-    mainLang,
-    lang,
-    onMainLang: lang == mainLang,
-  };
+
   state.versionDto = response.versionDto;
   state.componentIndex = response.designerInput.componentIndexList;
   setState(state);
