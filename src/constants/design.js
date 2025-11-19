@@ -9,17 +9,6 @@ export const surveySetup = {
   ],
 };
 
-export const reorderSetup = {
-  code: "globalSetup",
-  rules: [
-    {
-      title: "reorder_setup",
-      key: "reorder_setup",
-      rules: ["reorder_setup"],
-    },
-  ],
-};
-
 export const themeSetup = {
   code: "Survey",
   rules: [

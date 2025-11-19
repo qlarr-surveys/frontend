@@ -357,20 +357,6 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           code={code}
         />
       );
-    case "reorder_setup":
-      const reorderLabels = [t("collapse_groups"), t("collapse_questions")];
-      const reorderValues = ["collapse_groups", "collapse_questions"];
-      return (
-        <SelectValue
-          values={reorderValues}
-          key={code + rule}
-          labels={reorderLabels}
-          defaultValue="collapse_none"
-          label={"order_mode"}
-          rule={rule}
-          code={code}
-        />
-      );
     case "iconSize":
       const iconSizes = ["50", "100", "150", "200"];
       return (

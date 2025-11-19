@@ -60,7 +60,6 @@ function SurveyAppBar({ toggleDrawer, preview }) {
       )
       .then((response) => {
         routes.resumePreview;
-        console.log(window.location.href);
         navigator.clipboard.writeText(
           `${PROTOCOL}://${FRONT_END_HOST}${(preview
             ? routes.resumePreview

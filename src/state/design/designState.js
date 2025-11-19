@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import { firstIndexInArray, isEquivalent, nextId } from "~/utils/design/utils";
 import { createGroup } from "~/components/design/NewComponentsPanel";
 
@@ -11,12 +11,7 @@ import {
   reorder,
   buildReferenceInstruction,
 } from "./stateUtils";
-import {
-  languageSetup,
-  reorderSetup,
-  setupOptions,
-  themeSetup,
-} from "~/constants/design";
+import { languageSetup, setupOptions, themeSetup } from "~/constants/design";
 import {
   createQuestion,
   questionDesignError,
@@ -37,20 +32,62 @@ import {
   updateRandomByRule,
 } from "./addInstructions";
 
-const reservedKeys = ["setup", "reorder_refresh_code"];
+const reservedKeys = [
+  "setup",
+  "langInfo",
+  "reorder_refresh_code",
+  "state",
+  "globalSetup",
+  "designMode",
+  "isSaving",
+  "isUpdating",
+  "latest",
+  "lastAddedComponent",
+  "index",
+  "skipScroll",
+];
 
 export const designState = createSlice({
   name: "designState",
   initialState: { state: {} },
   reducers: {
     designStateReceived: (state, action) => {
-      let keys = Object.keys(state).filter((el) => !reservedKeys.includes(el));
-      let newState = action.payload;
-      keys = Object.keys(newState);
-      keys.forEach((key) => {
-        if (!isEquivalent(state[key], newState[key])) {
-          state[key] = newState[key];
-        }
+      const newState = action.payload;
+      console.log(newState);
+      const newKeys = Object.keys(newState).filter(
+        (el) => !reservedKeys.includes(el)
+      );
+      const toBeRemoved = Object.keys(state).filter(
+        (el) => !reservedKeys.includes(el) && !newKeys.includes(el)
+      );
+      console.log("toBeRemoved: ", toBeRemoved);
+      console.log("newKeys: ", newKeys);
+
+      if (!state.langInfo) {
+        const defaultLang = newState.Survey.defaultLang || LANGUAGE_DEF.en;
+        const mainLang = defaultLang.code;
+        const lang = defaultLang.code;
+        const languagesList = [defaultLang].concat(
+          newState.Survey.additionalLang || []
+        );
+        state.langInfo = {
+          languagesList,
+          mainLang,
+          lang,
+          onMainLang: lang == mainLang,
+        };
+      }
+
+      toBeRemoved.forEach((key) => {
+        delete state[key];
+      });
+      const inCurrentSetup = state["setup"]?.code;
+      if (!newKeys.includes(inCurrentSetup)) {
+        delete state["setup"];
+      }
+
+      newKeys.forEach((key) => {
+        state[key] = newState[key];
       });
       state["latest"] = structuredClone(newState);
       state.lastAddedComponent = null;
@@ -91,9 +128,9 @@ export const designState = createSlice({
       );
     },
     resetSetup(state) {
-      const currentLang = state.langInfo?.lang;
-      const isInTranslationMode = state.designMode === DESIGN_SURVEY_MODE.LANGUAGES;
-      
+      const isInTranslationMode =
+        state.designMode === DESIGN_SURVEY_MODE.LANGUAGES;
+
       if (state.langInfo && !isInTranslationMode) {
         state.langInfo.lang = state.langInfo.mainLang;
         state.langInfo.onMainLang = true;
@@ -101,9 +138,8 @@ export const designState = createSlice({
       if (!state.globalSetup) {
         state.globalSetup = {};
       }
-      state.globalSetup.reorder_setup = undefined;
       delete state["setup"];
-      
+
       if (!isInTranslationMode) {
         state.designMode = DESIGN_SURVEY_MODE.DESIGN;
       }
@@ -433,9 +469,6 @@ export const designState = createSlice({
       delete state[questionCode];
       cleanupRandomRules(group);
     },
-    onAddComponentsVisibilityChange: (state, action) => {
-      state.addComponentsVisibility = action.payload;
-    },
     changeContent: (state, action) => {
       let payload = action.payload;
       if (!state[payload.code].content) {
@@ -649,7 +682,6 @@ export const {
   onAdditionalLangAdded,
   onAdditionalLangRemoved,
   changeLang,
-  onAddComponentsVisibilityChange,
   changeAttribute,
   resetCollapse,
   changeTimeFormats,
@@ -723,7 +755,7 @@ const reparentQuestion = (state, survey, payload) => {
   }
   destinationGroup.children.splice(destinationQuestionIndex, 0, question);
   // cheap trick to notifiy Drop Areas of the update
-  state["reorder_refresh_code"] = Math.floor(Math.random() * 1000000);;
+  state["reorder_refresh_code"] = Math.floor(Math.random() * 1000000);
   cleanupRandomRules(destinationGroup);
   cleanupRandomRules(sourceGroup);
 };
