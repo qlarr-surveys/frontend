@@ -60,7 +60,6 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
               link={routes.designSurvey.replace(":surveyId", surveyId)}
               icon={<Edit sx={{ color: "#fff" }} />}
               onClick={() => {
-                console.log("what is happening here")
                 onPageChange(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
                 dispatch(setDesignModeToDesign());
               }}

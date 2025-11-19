@@ -1,5 +1,5 @@
-import { useSelector } from 'react-redux';
-import { useResponsive } from '~/hooks/use-responsive';
+import { useSelector } from "react-redux";
+import { useResponsive } from "~/hooks/use-responsive";
 
 export const isEquivalent = (a, b) => {
   if (typeof a === "function" || typeof b === "function") {
@@ -62,7 +62,9 @@ export const diff = (obj1, obj2) => {
 
     // Check if all items exist and are in the same order
     for (var i = 0; i < arr1.length; i++) {
-      if (arr1[i] !== arr2[i]) return false;
+      if (!isEquivalent(arr1[i], arr2[i])) {
+        return false;
+      }
     }
 
     // Otherwise, return true
@@ -166,8 +168,6 @@ export const nextId = (elements) => {
   return 1;
 };
 
-
-
 export const stripTags = (string) => {
   return string
     ? string
@@ -179,7 +179,7 @@ export const stripTags = (string) => {
 
 export function truncateWithEllipsis(text, maxLength) {
   if (text?.length > maxLength) {
-    return text.substring(0, maxLength) + '...';
+    return text.substring(0, maxLength) + "...";
   } else {
     return text;
   }
@@ -213,7 +213,8 @@ export const firstIndexInArray = (array, func) => {
   return -1;
 };
 
-export const isNotEmptyHtml = (value) => value && /[^<br><p><\/p>\s]/gm.test(value)
+export const isNotEmptyHtml = (value) =>
+  value && /[^<br><p><\/p>\s]/gm.test(value);
 
 export const columnMinWidth = (code, runComponent) => {
   const isDesktop = useResponsive("up", "lg");

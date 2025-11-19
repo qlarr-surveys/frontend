@@ -87,7 +87,6 @@ export default function OrderSetup({ t, rule, code }) {
 
   const relevantGroup = type
     ? randomGroups.filter((group) => {
-        console.log("group", group);
         return group.codes.some((code) => childrenCodes.indexOf(code) > -1);
       })?.[0]
     : randomGroups[0];

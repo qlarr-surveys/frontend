@@ -7,6 +7,7 @@ import { isEquivalent } from "~/utils/design/utils";
 let saveTimer;
 let buffer = [];
 let debounceTime = 500;
+let rollbackState = null;
 
 const saveDebounce = (store) => {
   if (saveTimer) {
@@ -17,10 +18,8 @@ const saveDebounce = (store) => {
     store.dispatch(setUpdating(true));
     const state = store.getState();
     const diff = getDiff(state.designState, state.designState.latest);
-    // Ensure langInfo is always included for proper language preservation
-    const stateWithLangInfo = { ...diff, langInfo: state.designState.langInfo };
     SetData(
-      stateWithLangInfo,
+      diff,
       (state) => {
         setState(store, state);
       },
@@ -39,6 +38,10 @@ export const dataSaver = (store) => (next) => (action) => {
   }
   if (MUTATING.includes(action.type) && !action.type.startsWith("editState/")) {
     if (!store.getState().designState.isUpdating) {
+      // Store rollback state before first mutation (for optimistic updates)
+      if (!rollbackState) {
+        rollbackState = store.getState().designState.latest;
+      }
       store.dispatch(setSaving(true));
       saveDebounce(store);
     } else {
@@ -49,7 +52,6 @@ export const dataSaver = (store) => (next) => (action) => {
 };
 
 const MUTATING = [
-  "designState/changeLang",
   "designState/onBaseLangChanged",
   "designState/onAdditionalLangAdded",
   "designState/onAdditionalLangRemoved",
@@ -80,6 +82,10 @@ const setState = (store, state) => {
   store.dispatch(setUpdating(false));
   store.dispatch(designStateReceived(state));
   store.dispatch(setSaving(false));
+
+  // Clear rollback state on successful save
+  rollbackState = null;
+
   buffer.forEach((action) => {
     store.dispatch(action);
   });
@@ -87,6 +93,16 @@ const setState = (store, state) => {
 };
 
 const setError = (store, error) => {
+  // Rollback optimistic updates on error
+  if (rollbackState) {
+    store.dispatch(designStateReceived({
+      ...rollbackState,
+      versionDto: store.getState().designState.versionDto,
+      componentIndex: store.getState().designState.componentIndex
+    }));
+    rollbackState = null;
+  }
+
   onApiError({
     error: error,
     globalErrorHandler: (processedError) => {
@@ -100,18 +116,23 @@ const setError = (store, error) => {
       store.dispatch(setUpdating(false));
     },
   });
+
+  // Clear buffer on error to prevent applying failed changes
+  buffer = [];
 };
 
 const reservedKeys = [
   "skipScroll",
+  "langInfo",
   "reorder_refresh_code",
   "setup",
   "latest",
   "lastAddedComponent",
   "isUpdating",
   "isSaving",
+  "index",
+  "focus",
   "state",
-  "addComponentsVisibility",
   "designMode",
   "globalSetup",
 ];
