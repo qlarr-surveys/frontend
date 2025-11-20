@@ -31,6 +31,7 @@ import {
   removeInstruction,
   updateRandomByRule,
 } from "./addInstructions";
+import { defaultSurveyTheme } from '~/constants/theme';
 
 const reservedKeys = [
   "setup",
@@ -52,16 +53,21 @@ export const designState = createSlice({
   initialState: { state: {} },
   reducers: {
     designStateReceived: (state, action) => {
-      const newState = action.payload;
-      console.log(newState);
+      const response = action.payload;
+      let newState = response.designerInput.state;
+
+      if (!newState.Survey.theme) {
+        newState.Survey.theme = defaultSurveyTheme;
+      }
+
+      newState.versionDto = response.versionDto;
+      newState.componentIndex = response.designerInput.componentIndexList;
       const newKeys = Object.keys(newState).filter(
         (el) => !reservedKeys.includes(el)
       );
       const toBeRemoved = Object.keys(state).filter(
         (el) => !reservedKeys.includes(el) && !newKeys.includes(el)
       );
-      console.log("toBeRemoved: ", toBeRemoved);
-      console.log("newKeys: ", newKeys);
 
       if (!state.langInfo) {
         const defaultLang = newState.Survey.defaultLang || LANGUAGE_DEF.en;
@@ -642,12 +648,6 @@ export const designState = createSlice({
           deafult: break;
       }
     },
-    collapseAllGroups: (state) => {
-      state.Survey.children.forEach(
-        (group) => (state[group.code].collapsed = true)
-      );
-    },
-
     addComponent: (state, action) => {
       const { type, questionType } = action.payload;
       const survey = state.Survey;
@@ -683,7 +683,6 @@ export const {
   onAdditionalLangRemoved,
   changeLang,
   changeAttribute,
-  resetCollapse,
   changeTimeFormats,
   changeContent,
   changeResources,
@@ -703,9 +702,7 @@ export const {
   resetSetup,
   changeValidationValue,
   updateRandom,
-  updatePriority,
   updateRandomByType,
-  updatePriorityByType,
   removeSkipDestination,
   editSkipDestination,
   editSkipToEnd,
@@ -713,7 +710,6 @@ export const {
   changeRelevance,
   onDrag,
   addComponent,
-  collapseAllGroups,
   setSaving,
   setUpdating,
 } = designState.actions;
