@@ -97,6 +97,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
   }
 
   switch (rule) {
+    case "changeCode":
+      return <EntityCodeEditor code={code} />
     case "theme":
       return <Theming t={t} key={code + rule} />;
     case "language":
@@ -520,11 +522,6 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
               : "background.paper",
         }}
       >
-        {rules[selectedTab]?.key === "general" && (
-          <div className={styles.setupContainer}>
-            <EntityCodeEditor />
-          </div>
-        )}
         {rules[selectedTab]?.rules?.map((el) => (
           <div className={styles.setupContainer} key={el}>
             <Box sx={rowSx(el)}>

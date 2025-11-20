@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -7,17 +7,17 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { changeEntityCode, setSaving } from "~/state/design/designState";
+import {
+  designStateReceived,
+  setSaving,
+  setup,
+} from "~/state/design/designState";
 import { useService } from "~/hooks/use-service";
 import { useTranslation } from "react-i18next";
 
 const ALLOWED_CODE_CHARS_REGEX = /[^a-zA-Z0-9_]/g;
 
 const computePrefixAndSuffix = (fullCode) => {
-  if (!fullCode) {
-    return { prefix: "", suffix: "" };
-  }
-
   if (fullCode.startsWith("Q") && fullCode.includes("A")) {
     const lastAIndex = fullCode.lastIndexOf("A");
     if (lastAIndex > 0 && lastAIndex < fullCode.length) {
@@ -48,30 +48,26 @@ const computePrefixAndSuffix = (fullCode) => {
   };
 };
 
-function EntityCodeEditor() {
+function EntityCodeEditor({ code }) {
   const dispatch = useDispatch();
   const designService = useService("design");
   const { t } = useTranslation("design");
 
-  const { code, entityCodeFromState, saving } = useSelector(
+  const { currentSetup, saving } = useSelector(
     (state) => ({
-      code: state.designState.setup?.code,
-      entityCodeFromState: state.designState.setup?.code
-        ? state.designState[state.designState.setup.code]?.entityCode ||
-          state.designState.setup.code
-        : "",
+      currentSetup: state.designState.setup,
       saving: state.designState.saving,
     }),
     shallowEqual
   );
 
   const [{ prefix, suffix }, setParts] = React.useState(() =>
-    computePrefixAndSuffix(entityCodeFromState)
+    computePrefixAndSuffix(code)
   );
 
-  React.useEffect(() => {
-    setParts(computePrefixAndSuffix(entityCodeFromState));
-  }, [entityCodeFromState]);
+  useEffect(() => {
+    setParts(computePrefixAndSuffix(code));
+  }, [code]);
 
   const handleEntityCodeChange = React.useCallback((value) => {
     const sanitized = (value || "").replace(ALLOWED_CODE_CHARS_REGEX, "");
@@ -79,8 +75,7 @@ function EntityCodeEditor() {
   }, []);
 
   const fullCode = `${prefix || ""}${suffix || ""}`.trim();
-  const originalFullCode = (entityCodeFromState || "").trim();
-  const isDirty = fullCode !== originalFullCode;
+  const isDirty = fullCode !== code;
 
   const handleEntityCodeSave = React.useCallback(() => {
     if (!code || !isDirty) return;
@@ -89,13 +84,9 @@ function EntityCodeEditor() {
 
     designService
       .changeCode(code, fullCode)
-      .then(() => {
-        dispatch(
-          changeEntityCode({
-            code,
-            value: fullCode,
-          })
-        );
+      .then((response) => {
+        dispatch(designStateReceived(response));
+        dispatch(setup({ ...currentSetup, code: fullCode }));
       })
       .catch((e) => {
         console.error("Failed to change element code", e);
@@ -130,7 +121,7 @@ function EntityCodeEditor() {
         onKeyDown={handleKeyDown}
         InputProps={{
           startAdornment: prefix && (
-            <InputAdornment position="start">
+            <InputAdornment position="start" sx={{ mr: 0.2 }}>
               <Typography
                 variant="body2"
                 color="text.secondary"

@@ -204,13 +204,6 @@ export const designState = createSlice({
         );
       }
     },
-    changeEntityCode: (state, action) => {
-      const { code, value } = action.payload || {};
-      if (!code || !state[code]) {
-        return;
-      }
-      state[code].entityCode = value || code;
-    },
     changeRelevance: (state, action) => {
       let payload = action.payload;
       state[payload.code].relevance = payload.value;
@@ -686,7 +679,6 @@ export const {
   changeTimeFormats,
   changeContent,
   changeResources,
-  changeEntityCode,
   deleteQuestion,
   cloneQuestion,
   deleteGroup,
