@@ -92,6 +92,7 @@
   "err_misplaced_end_group": "La Page de Fin doit toujours être la dernière page",
   "err_misplaced_welcome_group": "La Page de Bienvenue doit toujours être la première page",
   "err_no_end_group": "Il doit y avoir une page de fin valide",
+  "entity_code": "Code d’élément",
   "err_priority": "Erreur d'Instruction du Groupe de Priorité",
   "err_priority_group_item_not_child": "Ces éléments sont soit supprimés soit ont des erreurs et ne peuvent donc pas être dans le Groupe de Priorité : <strong>{{items}}</strong>",
   "err_priority_limit_mismatch": "Dans l'un des groupes de priorité, la limite est supérieure ou égale au nombre d'éléments",

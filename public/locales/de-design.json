@@ -87,6 +87,7 @@
   "err_misplaced_end_group": "Die Endseite muss immer die letzte Seite sein",
   "err_misplaced_welcome_group": "Willkommensseite muss immer die erste Seite sein",
   "err_no_end_group": "Es muss eine gültige Endseite vorhanden sein",
+  "entity_code": "Elementcode",
   "err_priority": "Prioritätsgruppenbefehlsfehler",
   "err_priority_group_item_not_child": "Diese Elemente sind entweder gelöscht oder haben Fehler und können daher nicht in der Prioritätsgruppe sein: <strong>{{items}}</strong>",
   "err_priority_limit_mismatch": "In einer der Prioritätsgruppen ist das Limit größer oder gleich der Anzahl der Artikel",

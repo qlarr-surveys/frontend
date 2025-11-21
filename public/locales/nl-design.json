@@ -92,6 +92,7 @@
   "err_misplaced_end_group": "Eindpagina moet altijd de laatste pagina zijn",
   "err_misplaced_welcome_group": "Welkomstpagina moet altijd de eerste pagina zijn",
   "err_no_end_group": "Er moet een geldige eindpagina zijn",
+  "entity_code": "Elementcode",
   "err_priority": "Prioriteitsgroep Instructie Fout",
   "err_priority_group_item_not_child": "Deze items zijn verwijderd of hebben fouten en kunnen daarom niet in de Prioriteitsgroep zijn: <strong>{{items}}</strong>",
   "err_priority_limit_mismatch": "In een van de prioriteitsgroepen is de limiet groter dan of gelijk aan het aantal items",

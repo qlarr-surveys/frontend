@@ -21,6 +21,7 @@ import { questionIconByType } from "~/components/Questions/utils";
 import OrderSetup from "../random/OrderSetup";
 import QuestionActions from "../QuestionActions";
 import DisabledToggle from "../Disabled";
+import EntityCodeEditor from "../EntityCodeEditor";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -96,6 +97,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
   }
 
   switch (rule) {
+    case "changeCode":
+      return <EntityCodeEditor code={code} />
     case "theme":
       return <Theming t={t} key={code + rule} />;
     case "language":
