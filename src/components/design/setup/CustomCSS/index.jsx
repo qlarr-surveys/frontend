@@ -15,35 +15,33 @@ function CustomCSS({ code }) {
   const { t } = useTranslation();
   const designService = useService("design");
   
-  console.log('🎯 CustomCSS component mounted with code:', code);
-  console.log('🎯 Component mount - current URL:', window.location.href);
-  console.log('🎯 Component mount - performance navigation type:', performance.navigation?.type);
-  console.log('🎯 Component mount - is page refresh?:', performance.navigation?.type === 1);
+  console.log('[CSS] CustomCSS component mounted with code:', code);
+  console.log('[CSS] Component mount - current URL:', window.location.href);
+  console.log('[CSS] Component mount - performance navigation type:', performance.navigation?.type);
+  console.log('[CSS] Component mount - is page refresh?:', performance.navigation?.type === 1);
   
-  // Get current custom CSS from Survey.theme.customCSS
+  // Get current custom CSS (Survey-level or question-level)
   const currentCSS = useSelector((state) => {
-    console.log('🔍 Redux state check for CSS persistence:');
-    console.log('Full designState keys:', Object.keys(state.designState || {}));
-    console.log('Looking for CSS in Survey.theme.customCSS');
+    const isQuestionLevel = code !== "Survey";
+    console.log('[CSS] Redux state check for CSS persistence:');
+    console.log('Component code:', code);
+    console.log('Is question level CSS:', isQuestionLevel);
     
-    // Get CSS from Survey.theme.customCSS
-    const surveyTheme = state.designState?.Survey?.theme;
-    console.log('Found Survey theme:', surveyTheme);
-    console.log('Theme keys:', Object.keys(surveyTheme || {}));
-    
-    const css = surveyTheme?.customCSS || "";
-    console.log('Extracted CSS text:', css);
-    console.log('CSS length:', css.length);
-    console.log('Is CSS empty?', !css.trim());
-    
-    // Debug: Check if versionDto exists (indicates data loaded from backend)
-    const versionDto = state.designState?.versionDto;
-    console.log('VersionDto exists (backend data loaded):', !!versionDto);
-    if (versionDto) {
-      console.log('VersionDto details:', versionDto);
+    if (isQuestionLevel) {
+      // Question-level CSS stored as customCSS node in question object
+      const questionState = state.designState?.[code];
+      console.log('Question state:', questionState);
+      const css = questionState?.customCSS || "";
+      console.log('Question CSS:', css);
+      return css;
+    } else {
+      // Survey-level CSS stored in Survey.theme.customCSS
+      const surveyTheme = state.designState?.Survey?.theme;
+      console.log('Survey theme:', surveyTheme);
+      const css = surveyTheme?.customCSS || "";
+      console.log('Survey CSS:', css);
+      return css;
     }
-    
-    return css;
   });
 
   const [cssValue, setCssValue] = useState(currentCSS);
@@ -55,19 +53,19 @@ function CustomCSS({ code }) {
 
   // Apply existing CSS on component mount (when navigating back to theme page or page refresh)
   useEffect(() => {
-    console.log('🚀 CSS Restoration Effect Triggered');
-    console.log('🚀 Trigger reason - currentCSS changed to:', currentCSS);
-    console.log('🚀 CSS length:', currentCSS.length);
-    console.log('🚀 CSS trimmed length:', currentCSS.trim().length);
-    console.log('🚀 Component code:', code);
-    console.log('🚀 Is page refresh?:', performance.navigation?.type === 1);
+    console.log('[CSS] CSS Restoration Effect Triggered');
+    console.log('[CSS] Trigger reason - currentCSS changed to:', currentCSS);
+    console.log('[CSS] CSS length:', currentCSS.length);
+    console.log('[CSS] CSS trimmed length:', currentCSS.trim().length);
+    console.log('[CSS] Component code:', code);
+    console.log('[CSS] Is page refresh?:', performance.navigation?.type === 1);
     
     if (currentCSS.trim()) {
-      console.log('✅ Found existing CSS in Redux, applying...');
-      console.log('✅ CSS content preview:', currentCSS.substring(0, 100) + '...');
+      console.log('[CSS] Found existing CSS in Redux, applying...');
+      console.log('[CSS] CSS content preview:', currentCSS.substring(0, 100) + '...');
       
       const persistentStyleId = `survey-custom-css-persistent-${code}`;
-      console.log('✅ Persistent style ID:', persistentStyleId);
+      console.log('[CSS] Persistent style ID:', persistentStyleId);
       
       // Always recreate persistent CSS on mount to ensure it's applied
       let persistentElement = document.getElementById(persistentStyleId);
@@ -78,7 +76,7 @@ function CustomCSS({ code }) {
       
       // Create fresh persistent CSS from Redux state
       const scopedCSS = scopeCSS(currentCSS);
-      console.log('✅ Scoped CSS generated:', scopedCSS.substring(0, 150) + '...');
+      console.log('[CSS] Scoped CSS generated:', scopedCSS.substring(0, 150) + '...');
       
       persistentElement = document.createElement('style');
       persistentElement.id = persistentStyleId;
@@ -91,13 +89,13 @@ function CustomCSS({ code }) {
       
       // Verify element was added
       const verifyElement = document.getElementById(persistentStyleId);
-      console.log('✅ Persistent CSS element added to DOM:', !!verifyElement);
-      console.log('✅ Element content length:', verifyElement?.textContent?.length || 0);
+      console.log('[CSS] Persistent CSS element added to DOM:', !!verifyElement);
+      console.log('[CSS] Element content length:', verifyElement?.textContent?.length || 0);
       
-      console.log('✅ Persistent CSS restored from Redux on mount');
+      console.log('[CSS] Persistent CSS restored from Redux on mount');
     } else {
-      console.log('❌ No existing CSS found in Redux');
-      console.log('❌ This could mean:');
+      console.log('[CSS] No existing CSS found in Redux');
+      console.log('[CSS] This could mean:');
       console.log('   - CSS was never saved');
       console.log('   - Backend didn\'t return the CSS');
       console.log('   - Redux state wasn\'t restored from backend');
@@ -109,54 +107,71 @@ function CustomCSS({ code }) {
 
   // Auto-save function - saves to Redux AND triggers backend save
   const autoSave = async () => {
-    console.log('🚀 Auto-save triggered!');
+    console.log('[CSS] Auto-save triggered!');
     console.log('CSS Value:', cssValue);
     console.log('CSS trimmed:', cssValue.trim());
     console.log('CSS is valid:', isValidCSS(cssValue));
     
     if (cssValue.trim() && isValidCSS(cssValue)) {
-      console.log('✅ Step 1: Saving CSS to Redux (guaranteed)...');
+      console.log('[CSS] Step 1: Saving CSS to Redux (guaranteed)...');
       
       // Step 1: Update Redux state first - save in Survey.theme.customCSS
       try {
-        console.log('Saving CSS to Survey.theme.customCSS:', cssValue);
+        const isQuestionLevel = code !== "Survey";
         
-        // Get current theme from Redux state
-        const currentDesignState = manageStore.getState().designState;
-        const currentTheme = currentDesignState?.Survey?.theme || {};
-        console.log('Current theme before update:', currentTheme);
-        
-        // Create updated theme with customCSS
-        const updatedTheme = {
-          ...currentTheme,
-          customCSS: cssValue
-        };
-        
-        console.log('Updated theme with customCSS:', updatedTheme);
-        
-        // Use changeAttribute to update Survey theme (same as Theming component)
-        dispatch(changeAttribute({
-          code: "Survey",
-          key: "theme", 
-          value: updatedTheme
-        }));
+        if (isQuestionLevel) {
+          console.log('Saving question-level CSS:', cssValue);
+          
+          // Save CSS as customCSS node in question object
+          dispatch(changeAttribute({
+            code: code,
+            key: "customCSS",
+            value: cssValue
+          }));
+          
+          console.log('[CSS] Question CSS saved to Redux:', code);
+        } else {
+          console.log('[CSS] Saving Survey-level CSS:', cssValue);
+          
+          // Get current theme from Redux state
+          const currentDesignState = manageStore.getState().designState;
+          const currentTheme = currentDesignState?.Survey?.theme || {};
+          console.log('Current theme before update:', currentTheme);
+          
+          // Create updated theme with customCSS
+          const updatedTheme = {
+            ...currentTheme,
+            customCSS: cssValue
+          };
+          
+          console.log('Updated theme with customCSS:', updatedTheme);
+          
+          // Use changeAttribute to update Survey theme (same as Theming component)
+          dispatch(changeAttribute({
+            code: "Survey",
+            key: "theme", 
+            value: updatedTheme
+          }));
+          
+          console.log('[CSS] Survey CSS saved to Redux');
+        }
         
         // Verify the dispatch worked
         setTimeout(() => {
           const freshState = manageStore.getState().designState;
-          console.log('Redux state after dispatch - custom_css node:', freshState.custom_css);
+          console.log('[CSS] Redux state after dispatch - custom_css node:', freshState.custom_css);
         }, 50);
         
-        console.log('✅ CSS saved to Redux successfully - will persist on page refresh');
+        console.log('[CSS] CSS saved to Redux successfully - will persist on page refresh');
       } catch (reduxError) {
-        console.error('❌ Redux save failed:', reduxError);
+        console.error('[ERROR] Redux save failed:', reduxError);
         return; // Don't proceed to backend if Redux fails
       }
       
       // Step 2: Attempt backend auto-save (optional - doesn't affect Redux persistence)
       setTimeout(async () => {
         try {
-          console.log('🔄 Step 2: Attempting backend auto-save...');
+          console.log('[CSS] Step 2: Attempting backend auto-save...');
           
           // Get fresh design state after Redux update
           const currentDesignState = manageStore.getState().designState;
@@ -164,17 +179,26 @@ function CustomCSS({ code }) {
           // Create a deep copy to avoid mutation issues
           const updatedState = JSON.parse(JSON.stringify(currentDesignState || designState));
           
-          // Ensure Survey and theme exist
-          if (!updatedState.Survey) {
-            updatedState.Survey = {};
-          }
-          if (!updatedState.Survey.theme) {
-            updatedState.Survey.theme = {};
-          }
+          const isQuestionLevel = code !== "Survey";
           
-          // Add custom CSS to Survey theme
-          updatedState.Survey.theme.customCSS = cssValue;
-          console.log('🔄 Updated Survey theme with customCSS:', updatedState.Survey.theme);
+          if (isQuestionLevel) {
+            // Save question-level CSS as customCSS node in question object
+            if (!updatedState[code]) {
+              updatedState[code] = {};
+            }
+            updatedState[code].customCSS = cssValue;
+            console.log('[CSS] Updated question with customCSS:', code, updatedState[code]);
+          } else {
+            // Save Survey-level CSS in theme
+            if (!updatedState.Survey) {
+              updatedState.Survey = {};
+            }
+            if (!updatedState.Survey.theme) {
+              updatedState.Survey.theme = {};
+            }
+            updatedState.Survey.theme.customCSS = cssValue;
+            console.log('[CSS] Updated Survey theme with customCSS:', updatedState.Survey.theme);
+          }
           
           // Get version info from current state
           const versionInfo = currentDesignState.versionDto || designState.versionDto;
@@ -184,55 +208,67 @@ function CustomCSS({ code }) {
           ]);
           
           // Save to backend with detailed logging
-          console.log('🔄 Saving to backend with params:', params.toString());
-          console.log('🔄 Updated state structure:', {
+          console.log('[CSS] Saving to backend with params:', params.toString());
+          console.log('[CSS] Updated state structure:', {
             keys: Object.keys(updatedState),
             custom_css_exists: !!updatedState.custom_css,
             custom_css_content: updatedState.custom_css
           });
           
           const backendResponse = await designService.setSurveyDesign(updatedState, params);
-          console.log('✅ Backend auto-save successful!');
-          console.log('✅ Backend response structure:', {
+          console.log('[CSS] Backend auto-save successful!');
+          console.log('[CSS] Backend response structure:', {
             hasDesignerInput: !!backendResponse?.designerInput,
             hasState: !!backendResponse?.designerInput?.state,
             stateKeys: Object.keys(backendResponse?.designerInput?.state || {}),
             hasCustomCSS: !!backendResponse?.designerInput?.state?.custom_css
           });
-          console.log('✅ Full backend response:', backendResponse);
+          console.log('[CSS] Full backend response:', backendResponse);
           
           // Verify the save by checking if we can read it back
           setTimeout(async () => {
             try {
-              console.log('🔍 Verifying backend save by fetching design state...');
+              console.log('[CSS] Verifying backend save by fetching design state...');
               const verificationState = await designService.getSurveyDesign();
-              const savedTheme = verificationState?.designerInput?.state?.Survey?.theme;
-              const savedCSS = savedTheme?.customCSS;
-              console.log('✅ Verification - Survey theme exists:', !!savedTheme);
-              console.log('✅ Verification - CSS exists in theme:', !!savedCSS);
-              console.log('✅ Verification - Saved CSS content:', savedCSS);
-              console.log('✅ Verification - Full theme:', savedTheme);
+              const isQuestionLevel = code !== "Survey";
+              let savedCSS;
+              
+              if (isQuestionLevel) {
+                const questionState = verificationState?.designerInput?.state?.[code];
+                savedCSS = questionState?.customCSS;
+                console.log('[CSS] Verification - Question state exists:', !!questionState);
+                console.log('[CSS] Verification - Question CSS exists:', !!savedCSS);
+                console.log('[CSS] Verification - Question state:', questionState);
+              } else {
+                const savedTheme = verificationState?.designerInput?.state?.Survey?.theme;
+                savedCSS = savedTheme?.customCSS;
+                console.log('[CSS] Verification - Survey theme exists:', !!savedTheme);
+                console.log('[CSS] Verification - CSS exists in theme:', !!savedCSS);
+                console.log('[CSS] Verification - Full theme:', savedTheme);
+              }
+              
+              console.log('[CSS] Verification - Saved CSS content:', savedCSS);
               
               if (!savedCSS || savedCSS !== cssValue) {
-                console.error('❌ Backend save verification failed!');
-                console.error('Expected CSS:', cssValue);
-                console.error('Actual CSS in backend:', savedCSS);
+                console.error('[ERROR] Backend save verification failed!');
+                console.error('[ERROR] Expected CSS:', cssValue);
+                console.error('[ERROR] Actual CSS in backend:', savedCSS);
               } else {
-                console.log('✅ Backend save verification successful!');
+                console.log('[CSS] Backend save verification successful!');
               }
             } catch (verifyError) {
-              console.error('❌ Backend save verification error:', verifyError);
+              console.error('[ERROR] Backend save verification error:', verifyError);
             }
           }, 1000);
           
         } catch (backendError) {
-          console.error('❌ Backend auto-save failed, but CSS is still saved in Redux:', backendError);
+          console.error('[ERROR] Backend auto-save failed, but CSS is still saved in Redux:', backendError);
           console.log('💡 CSS will be restored from Redux on page refresh');
         }
       }, 200);
       
     } else {
-      console.log('❌ CSS not saved - invalid or empty');
+      console.log('[CSS] CSS not saved - invalid or empty');
       if (!cssValue.trim()) {
         console.log('Reason: Empty CSS');
       }
@@ -263,12 +299,15 @@ function CustomCSS({ code }) {
     }
   };
 
-  // Function to scope CSS to survey only - DEBUG VERSION
+  // Function to scope CSS appropriately (Survey-wide or question-specific)
   const scopeCSS = (css) => {
+    const isQuestionLevel = code !== "Survey";
     console.log('==========================================');
     console.log('scopeCSS called with:', JSON.stringify(css));
     console.log('CSS length:', css.length);
     console.log('CSS trimmed:', css.trim());
+    console.log('Component code:', code);
+    console.log('Is question level:', isQuestionLevel);
     
     if (!css.trim()) {
       console.log('Empty CSS, returning empty string');
@@ -299,14 +338,28 @@ function CustomCSS({ code }) {
       console.log('Clean selector:', JSON.stringify(cleanSelector));
       console.log('Clean props:', JSON.stringify(cleanProps));
       
-      if (cleanSelector.includes('.content-panel') || cleanSelector.includes('.muiltr-uwwqev')) {
+      // Check if already scoped
+      const alreadyScoped = cleanSelector.includes('.content-panel') || 
+                           cleanSelector.includes('.muiltr-uwwqev') ||
+                           cleanSelector.includes(`[data-code="${code}"]`) ||
+                           cleanSelector.includes(`.question-${code}`);
+      
+      if (alreadyScoped) {
         console.log('Already scoped, returning as-is');
         return fullMatch;
       }
       
-      // Apply CSS to both content-panel and muiltr-uwwqev
-      const scoped = `.content-panel ${cleanSelector}, .muiltr-uwwqev ${cleanSelector} { ${cleanProps} }`;
-      console.log('Final scoped result:', scoped);
+      let scoped;
+      if (isQuestionLevel) {
+        // Question-level CSS: scope to specific question container
+        scoped = `[data-code="${code}"] ${cleanSelector}, .question-${code} ${cleanSelector} { ${cleanProps} }`;
+        console.log('Question-scoped result:', scoped);
+      } else {
+        // Survey-level CSS: scope to survey containers
+        scoped = `.content-panel ${cleanSelector}, .muiltr-uwwqev ${cleanSelector} { ${cleanProps} }`;
+        console.log('Survey-scoped result:', scoped);
+      }
+      
       return scoped;
     });
     
@@ -317,9 +370,11 @@ function CustomCSS({ code }) {
 
   // Inject CSS into document head (live preview) - persists across navigation
   useEffect(() => {
-    console.log('🎯 CSS EFFECT STARTING');
+    const isQuestionLevel = code !== "Survey";
+    console.log('[CSS] CSS EFFECT STARTING');
     console.log('cssValue:', JSON.stringify(cssValue));
     console.log('code:', code);
+    console.log('isQuestionLevel:', isQuestionLevel);
     
     const styleId = `survey-custom-css-${code}`;
     const persistentStyleId = `survey-custom-css-persistent-${code}`;
@@ -470,7 +525,7 @@ function CustomCSS({ code }) {
       console.log('CSS is empty, skipping');
     }
 
-    console.log('🎯 CSS EFFECT COMPLETE');
+    console.log('[CSS] CSS EFFECT COMPLETE');
 
     // Cleanup on unmount - only remove temporary elements, keep persistent ones
     return () => {
@@ -512,21 +567,32 @@ function CustomCSS({ code }) {
         textarea.selectionStart = textarea.selectionEnd = start + 2;
       }, 0);
       
-      // Update Redux with the new value in Survey.theme
-      const currentState = manageStore.getState().designState;
-      const currentTheme = currentState?.Survey?.theme || {};
+      // Update Redux with the new value
+      const isQuestionLevel = code !== "Survey";
       
-      const updatedTheme = {
-        ...currentTheme,
-        customCSS: newValue
-      };
-      
-      // Use changeAttribute like the Theming component does
-      dispatch(changeAttribute({
-        code: "Survey",
-        key: "theme",
-        value: updatedTheme
-      }));
+      if (isQuestionLevel) {
+        // Question-level CSS
+        dispatch(changeAttribute({
+          code: code,
+          key: "customCSS",
+          value: newValue
+        }));
+      } else {
+        // Survey-level CSS in theme
+        const currentState = manageStore.getState().designState;
+        const currentTheme = currentState?.Survey?.theme || {};
+        
+        const updatedTheme = {
+          ...currentTheme,
+          customCSS: newValue
+        };
+        
+        dispatch(changeAttribute({
+          code: "Survey",
+          key: "theme",
+          value: updatedTheme
+        }));
+      }
     }
   };
 

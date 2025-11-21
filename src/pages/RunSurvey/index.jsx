@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { shallowEqual, useDispatch } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import styles from "./RunSurvey.module.css";
 import { useTranslation } from "react-i18next";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -14,8 +14,7 @@ import { defualtTheme } from "~/constants/theme";
 import {
   previewModeChange,
   stateReceived,
-} from "~/state/runState";
-import { useSelector } from "react-redux";
+  } from "~/state/runState";
 import { Box, Button, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setFetching } from "~/state/templateState";
@@ -74,14 +73,127 @@ function RunSurvey({
     return state.runState.navigation;
   }, isEquivalent);
 
+  // Get survey state for custom CSS
+  const runSurveyState = useSelector((state) => {
+    return state.runState.data?.survey;
+  });
+
   const { t, i18n } = useTranslation("run");
   const dispatch = useDispatch();
+
+  // Function to apply custom CSS globally (Survey-level and all question-level CSS)
+  const applyGlobalCustomCSS = (surveyState) => {
+    if (!surveyState) return;
+    
+    console.log('[CSS] RunSurvey: Applying custom CSS for preview...');
+    
+    // Survey-level CSS
+    const surveyCSS = surveyState?.theme?.customCSS;
+    console.log('[CSS] Survey CSS found:', !!surveyCSS);
+    
+    // Question-level CSS - find all questions with customCSS from groups
+    const questionCSSList = [];
+    
+    // Look for questions inside groups
+    if (surveyState?.groups) {
+      surveyState.groups.forEach(group => {
+        if (group.questions) {
+          group.questions.forEach(question => {
+            if (question.customCSS?.trim()) {
+              questionCSSList.push({ code: question.code, css: question.customCSS });
+              console.log(`[CSS] Found question CSS for ${question.code}`);
+              console.log(`[CSS] CSS content: ${question.customCSS}`);
+            }
+          });
+        }
+      });
+    }
+    
+    console.log('[CSS] Questions with CSS found:', questionCSSList.length);
+    console.log('[CSS] Survey state structure check - has groups:', !!surveyState?.groups);
+    if (surveyState?.groups) {
+      console.log('[CSS] Number of groups:', surveyState.groups.length);
+      surveyState.groups.forEach((group, index) => {
+        console.log(`[CSS] Group ${index} has ${group.questions?.length || 0} questions`);
+      });
+    }
+    
+    // Scope CSS function
+    const scopeCSS = (css, questionCode = null) => {
+      if (!css.trim()) return '';
+      return css.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
+        const cleanSelector = selector.trim();
+        const cleanProps = props.trim();
+        
+        // Check if already scoped
+        const alreadyScoped = cleanSelector.includes('.content-panel') || 
+                             cleanSelector.includes('.muiltr-uwwqev') ||
+                             cleanSelector.includes('.survey-container') ||
+                             cleanSelector.includes(`[data-code=`) ||
+                             cleanSelector.includes('.question-');
+        
+        if (alreadyScoped) {
+          return fullMatch;
+        }
+        
+        if (questionCode) {
+          // Question-specific scoping for preview mode - use data-code attribute on QuestionWrapper
+          return `[data-code="${questionCode}"] ${cleanSelector}, .question-${questionCode} ${cleanSelector} { ${cleanProps} }`;
+        } else {
+          // Survey-wide scoping for both design and preview modes
+          return `.content-panel ${cleanSelector}, .muiltr-uwwqev ${cleanSelector}, .survey-container ${cleanSelector} { ${cleanProps} }`;
+        }
+      });
+    };
+    
+    // Remove existing global CSS elements
+    const existingElements = document.querySelectorAll('[id^="survey-preview-custom-css"]');
+    existingElements.forEach(el => document.head.removeChild(el));
+    
+    // Apply Survey-level CSS
+    if (surveyCSS?.trim()) {
+      const scopedCSS = scopeCSS(surveyCSS);
+      const styleElement = document.createElement('style');
+      styleElement.id = 'survey-preview-custom-css';
+      styleElement.type = 'text/css';
+      styleElement.setAttribute('data-source', 'preview-survey-css');
+      styleElement.textContent = scopedCSS;
+      document.head.appendChild(styleElement);
+      
+      console.log('[CSS] Preview Survey CSS applied');
+    }
+    
+    // Apply question-level CSS
+    questionCSSList.forEach(({ code, css }) => {
+      const scopedCSS = scopeCSS(css, code);
+      const styleElement = document.createElement('style');
+      styleElement.id = `survey-preview-custom-css-${code}`;
+      styleElement.type = 'text/css';
+      styleElement.setAttribute('data-source', 'preview-question-css');
+      styleElement.setAttribute('data-code', code);
+      styleElement.textContent = scopedCSS;
+      document.head.appendChild(styleElement);
+      
+      console.log(`[CSS] Preview question CSS applied for ${code}`);
+      console.log(`[CSS] Scoped CSS: ${scopedCSS}`);
+    });
+    
+    console.log('[CSS] All preview custom CSS applied');
+  };
 
   useEffect(() => {
     if (navigation) {
       continueNav(navigation, navResponseId);
     }
   }, [navigation]);
+
+  // Apply custom CSS when survey state changes (for preview)
+  useEffect(() => {
+    if (runSurveyState) {
+      console.log('[CSS] RunSurvey: Survey state changed, applying custom CSS...');
+      applyGlobalCustomCSS(runSurveyState);
+    }
+  }, [runSurveyState]);
 
   useEffect(() => {
     if (preview) {

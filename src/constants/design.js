@@ -53,7 +53,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["questionActions", "disabled", "showDescription", "custom_css"],
         },
         {
           title: "logic",
@@ -112,8 +112,9 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
-            "maxChars",
+            "decimal_separator",
             "hint",
+            "custom_css",
           ],
         },
         {
@@ -140,7 +141,7 @@ export const setupOptions = (type) => {
         {
           title: "",
           key: "",
-          rules: ["disabled", "relevance"],
+          rules: ["disabled", "relevance", "custom_css"],
         },
       ];
 
@@ -404,6 +405,7 @@ export const setupOptions = (type) => {
             "dateFormat",
             "maxDate",
             "minDate",
+            "custom_css",
           ],
         },
         {
@@ -428,6 +430,7 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "fullDayFormat",
+            "custom_css",
           ],
         },
         {
@@ -448,7 +451,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["questionActions", "disabled", "showDescription", "custom_css"],
         },
         {
           title: "logic",
@@ -521,7 +524,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["questionActions", "disabled", "showDescription", "custom_css"],
         },
         {
           title: "logic",

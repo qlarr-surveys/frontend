@@ -52,64 +52,103 @@ function ManageSurvey({ landingPage }) {
 
   const dispatch = useDispatch();
   
-  // Function to apply custom CSS globally
+  // Function to apply custom CSS globally (Survey-level and all question-level CSS)
   const applyGlobalCustomCSS = (state) => {
-    const customCSS = state?.Survey?.theme?.customCSS;
-    console.log('🎨 Applying global custom CSS:', customCSS);
+    console.log('[CSS] Applying global custom CSS...');
     
-    if (customCSS?.trim()) {
-      // Scope CSS function (same as in CustomCSS component)
-      const scopeCSS = (css) => {
-        if (!css.trim()) return '';
-        return css.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
-          const cleanSelector = selector.trim();
-          const cleanProps = props.trim();
-          
-          if (cleanSelector.includes('.content-panel') || cleanSelector.includes('.muiltr-uwwqev')) {
-            return fullMatch;
-          }
-          
-          return `.content-panel ${cleanSelector}, .muiltr-uwwqev ${cleanSelector} { ${cleanProps} }`;
-        });
-      };
-      
-      const globalStyleId = 'survey-global-custom-css';
-      
-      // Remove existing global CSS
-      const existingElement = document.getElementById(globalStyleId);
-      if (existingElement) {
-        document.head.removeChild(existingElement);
+    // Survey-level CSS
+    const surveyCSS = state?.Survey?.theme?.customCSS;
+    console.log('[CSS] Survey CSS found:', !!surveyCSS);
+    
+    // Question-level CSS - find all questions with customCSS
+    const questionCSSList = [];
+    Object.keys(state || {}).forEach(key => {
+      if (key !== 'Survey' && key !== 'langInfo' && key !== 'versionDto' && key !== 'componentIndex' && 
+          key !== 'latest' && key !== 'lastAddedComponent' && key !== 'index' && key !== 'setup' &&
+          key !== 'state' && key !== 'addComponentsVisibility' && key !== 'globalSetup' && key !== 'designMode') {
+        const questionState = state[key];
+        if (questionState?.customCSS?.trim()) {
+          questionCSSList.push({ code: key, css: questionState.customCSS });
+        }
       }
-      
-      // Apply new global CSS
-      const scopedCSS = scopeCSS(customCSS);
+    });
+    
+    console.log('Questions with CSS found:', questionCSSList.length);
+    
+    // Scope CSS function
+    const scopeCSS = (css, questionCode = null) => {
+      if (!css.trim()) return '';
+      return css.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
+        const cleanSelector = selector.trim();
+        const cleanProps = props.trim();
+        
+        // Check if already scoped
+        const alreadyScoped = cleanSelector.includes('.content-panel') || 
+                             cleanSelector.includes('.muiltr-uwwqev') ||
+                             cleanSelector.includes(`[data-code=`) ||
+                             cleanSelector.includes('.question-');
+        
+        if (alreadyScoped) {
+          return fullMatch;
+        }
+        
+        if (questionCode) {
+          // Question-specific scoping
+          return `[data-code="${questionCode}"] ${cleanSelector}, .question-${questionCode} ${cleanSelector} { ${cleanProps} }`;
+        } else {
+          // Survey-wide scoping
+          return `.content-panel ${cleanSelector}, .muiltr-uwwqev ${cleanSelector} { ${cleanProps} }`;
+        }
+      });
+    };
+    
+    // Remove existing global CSS elements
+    const existingElements = document.querySelectorAll('[id^="survey-global-custom-css"]');
+    existingElements.forEach(el => document.head.removeChild(el));
+    
+    // Apply Survey-level CSS
+    if (surveyCSS?.trim()) {
+      const scopedCSS = scopeCSS(surveyCSS);
       const styleElement = document.createElement('style');
-      styleElement.id = globalStyleId;
+      styleElement.id = 'survey-global-custom-css';
       styleElement.type = 'text/css';
-      styleElement.setAttribute('data-source', 'global-manager');
+      styleElement.setAttribute('data-source', 'global-survey-css');
       styleElement.textContent = scopedCSS;
       document.head.appendChild(styleElement);
       
-      console.log('✅ Global custom CSS applied successfully');
-      console.log('✅ Scoped CSS:', scopedCSS.substring(0, 150) + '...');
-    } else {
-      console.log('💭 No custom CSS to apply globally');
+      console.log('[CSS] Global Survey CSS applied');
     }
+    
+    // Apply question-level CSS
+    questionCSSList.forEach(({ code, css }) => {
+      const scopedCSS = scopeCSS(css, code);
+      const styleElement = document.createElement('style');
+      styleElement.id = `survey-global-custom-css-${code}`;
+      styleElement.type = 'text/css';
+      styleElement.setAttribute('data-source', 'global-question-css');
+      styleElement.setAttribute('data-code', code);
+      styleElement.textContent = scopedCSS;
+      document.head.appendChild(styleElement);
+      
+      console.log(`[CSS] Global question CSS applied for ${code}`);
+    });
+    
+    console.log('[CSS] All custom CSS applied globally');
   };
   
   // Apply custom CSS globally whenever it changes
   useEffect(() => {
     if (designState && customCSS) {
-      console.log('🎨 ManageSurvey: Custom CSS changed, applying globally...');
+      console.log('[CSS] ManageSurvey: Custom CSS changed, applying globally...');
       applyGlobalCustomCSS(designState);
     }
   }, [customCSS, designState]);
 
   const setState = (state) => {
-    console.log('🎯 ManageSurvey setState called with:');
-    console.log('🎯 State keys:', Object.keys(state || {}));
-    console.log('🎯 Survey theme:', state?.Survey?.theme);
-    console.log('🎯 Custom CSS in theme:', state?.Survey?.theme?.customCSS);
+    console.log('[STATE] ManageSurvey setState called with:');
+    console.log('[STATE] State keys:', Object.keys(state || {}));
+    console.log('[STATE] Survey theme:', state?.Survey?.theme);
+    console.log('[STATE] Custom CSS in theme:', state?.Survey?.theme?.customCSS);
     
     // Apply global custom CSS after state is loaded
     applyGlobalCustomCSS(state);
@@ -128,14 +167,14 @@ function ManageSurvey({ landingPage }) {
       return;
     }
     dispatch(setLoading(true));
-    console.log('🔄 ManageSurvey: Starting GetData call...');
+    console.log('[DATA] ManageSurvey: Starting GetData call...');
     GetData(designService, setState, processApirror, langInfo)
       .then((data) => {
-        console.log('✅ ManageSurvey: GetData completed successfully');
-        console.log('✅ Received data keys:', Object.keys(data || {}));
-        console.log('✅ Has custom_css in received data:', !!data?.custom_css);
+        console.log('[DATA] ManageSurvey: GetData completed successfully');
+        console.log('[DATA] Received data keys:', Object.keys(data || {}));
+        console.log('[DATA] Has custom_css in received data:', !!data?.custom_css);
         if (data?.custom_css) {
-          console.log('✅ custom_css content:', data.custom_css);
+          console.log('[DATA] custom_css content:', data.custom_css);
         }
         if (data) {
           setDesignAvailable(true);
@@ -143,7 +182,7 @@ function ManageSurvey({ landingPage }) {
         }
       })
       .catch((err) => {
-        console.error('❌ ManageSurvey: GetData failed:', err);
+        console.error('[ERROR] ManageSurvey: GetData failed:', err);
         dispatch(setLoading(false));
       });
     loadSurvey();

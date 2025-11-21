@@ -30,8 +30,8 @@ const processResponse = (response, setState, langInfo) => {
   let state = response.designerInput.state;
 
   // Debug: Check if custom_css exists in the backend response
-  console.log('🔍 Processing backend response...');
-  console.log('🔍 Response structure:', {
+  console.log('[CSS] Processing backend response...');
+  console.log('[CSS] Response structure:', {
     hasDesignerInput: !!response.designerInput,
     hasState: !!response.designerInput?.state,
     stateKeys: Object.keys(response.designerInput?.state || {}),
@@ -39,10 +39,10 @@ const processResponse = (response, setState, langInfo) => {
   });
   
   if (response.designerInput?.state?.custom_css) {
-    console.log('✅ custom_css found in backend response:', response.designerInput.state.custom_css);
+    console.log('[CSS] custom_css found in backend response:', response.designerInput.state.custom_css);
   } else {
-    console.log('❌ custom_css NOT found in backend response');
-    console.log('❌ Available root-level keys:', Object.keys(response.designerInput?.state || {}));
+    console.log('[CSS] custom_css NOT found in backend response');
+    console.log('[CSS] Available root-level keys:', Object.keys(response.designerInput?.state || {}));
   }
 
   if (!state.Survey.theme) {
@@ -65,16 +65,16 @@ const processResponse = (response, setState, langInfo) => {
   state.componentIndex = response.designerInput.componentIndexList;
   
   // Debug: Verify custom_css is preserved in final state
-  console.log('🔍 Final state before setState:', {
+  console.log('[CSS] Final state before setState:', {
     stateKeys: Object.keys(state),
     hasCustomCSS: !!state.custom_css,
     customCSSContent: state.custom_css
   });
   
   if (state.custom_css) {
-    console.log('✅ custom_css preserved in final state:', state.custom_css);
+    console.log('[CSS] custom_css preserved in final state:', state.custom_css);
   } else {
-    console.log('❌ custom_css lost during state processing');
+    console.log('[CSS] custom_css lost during state processing');
   }
   
   setState(state);
