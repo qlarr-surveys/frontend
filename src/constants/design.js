@@ -72,6 +72,7 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "imageWidth",
+            "custom_css",
           ],
         },
         {
@@ -92,6 +93,7 @@ export const setupOptions = (type) => {
             "showDescription",
             "audio_only",
             "loop",
+            "custom_css",
           ],
         },
         {
@@ -175,6 +177,7 @@ export const setupOptions = (type) => {
             "maxChars",
             "decimal_separator",
             "hint",
+            "custom_css",
           ],
         },
         {
@@ -210,6 +213,7 @@ export const setupOptions = (type) => {
             "showDescription",
             "maxChars",
             "hint",
+            "custom_css",
           ],
         },
         {
@@ -241,6 +245,7 @@ export const setupOptions = (type) => {
             "minRows",
             "showWordCount",
             "hint",
+            "custom_css",
           ],
         },
         {
@@ -266,7 +271,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["questionActions", "disabled", "showDescription", "custom_css"],
         },
         {
           title: "logic",
@@ -289,7 +294,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["questionActions", "disabled", "showDescription", "custom_css"],
         },
         {
           title: "logic",
@@ -308,7 +313,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription", "hint"],
+          rules: ["questionActions", "disabled", "showDescription", "hint", "custom_css"],
         },
         {
           title: "logic",
@@ -327,7 +332,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription", "hint"],
+          rules: ["questionActions", "disabled", "showDescription", "hint", "custom_css"],
         },
         {
           title: "logic",

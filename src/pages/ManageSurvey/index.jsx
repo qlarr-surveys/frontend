@@ -43,12 +43,77 @@ function ManageSurvey({ landingPage }) {
   );
   const refetchError = useSelector((state) => state.editState.error);
   const langInfo = useSelector((state) => state.designState.langInfo);
+  const designState = useSelector((state) => state.designState);
+  
+  // Watch for custom CSS changes and apply them globally
+  const customCSS = useSelector((state) => state.designState?.Survey?.theme?.customCSS);
 
   const [designAvailable, setDesignAvailable] = useState(false);
 
   const dispatch = useDispatch();
+  
+  // Function to apply custom CSS globally
+  const applyGlobalCustomCSS = (state) => {
+    const customCSS = state?.Survey?.theme?.customCSS;
+    console.log('🎨 Applying global custom CSS:', customCSS);
+    
+    if (customCSS?.trim()) {
+      // Scope CSS function (same as in CustomCSS component)
+      const scopeCSS = (css) => {
+        if (!css.trim()) return '';
+        return css.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
+          const cleanSelector = selector.trim();
+          const cleanProps = props.trim();
+          
+          if (cleanSelector.includes('.content-panel') || cleanSelector.includes('.muiltr-uwwqev')) {
+            return fullMatch;
+          }
+          
+          return `.content-panel ${cleanSelector}, .muiltr-uwwqev ${cleanSelector} { ${cleanProps} }`;
+        });
+      };
+      
+      const globalStyleId = 'survey-global-custom-css';
+      
+      // Remove existing global CSS
+      const existingElement = document.getElementById(globalStyleId);
+      if (existingElement) {
+        document.head.removeChild(existingElement);
+      }
+      
+      // Apply new global CSS
+      const scopedCSS = scopeCSS(customCSS);
+      const styleElement = document.createElement('style');
+      styleElement.id = globalStyleId;
+      styleElement.type = 'text/css';
+      styleElement.setAttribute('data-source', 'global-manager');
+      styleElement.textContent = scopedCSS;
+      document.head.appendChild(styleElement);
+      
+      console.log('✅ Global custom CSS applied successfully');
+      console.log('✅ Scoped CSS:', scopedCSS.substring(0, 150) + '...');
+    } else {
+      console.log('💭 No custom CSS to apply globally');
+    }
+  };
+  
+  // Apply custom CSS globally whenever it changes
+  useEffect(() => {
+    if (designState && customCSS) {
+      console.log('🎨 ManageSurvey: Custom CSS changed, applying globally...');
+      applyGlobalCustomCSS(designState);
+    }
+  }, [customCSS, designState]);
 
   const setState = (state) => {
+    console.log('🎯 ManageSurvey setState called with:');
+    console.log('🎯 State keys:', Object.keys(state || {}));
+    console.log('🎯 Survey theme:', state?.Survey?.theme);
+    console.log('🎯 Custom CSS in theme:', state?.Survey?.theme?.customCSS);
+    
+    // Apply global custom CSS after state is loaded
+    applyGlobalCustomCSS(state);
+    
     dispatch(designStateReceived(state));
   };
 
@@ -63,14 +128,22 @@ function ManageSurvey({ landingPage }) {
       return;
     }
     dispatch(setLoading(true));
+    console.log('🔄 ManageSurvey: Starting GetData call...');
     GetData(designService, setState, processApirror, langInfo)
       .then((data) => {
+        console.log('✅ ManageSurvey: GetData completed successfully');
+        console.log('✅ Received data keys:', Object.keys(data || {}));
+        console.log('✅ Has custom_css in received data:', !!data?.custom_css);
+        if (data?.custom_css) {
+          console.log('✅ custom_css content:', data.custom_css);
+        }
         if (data) {
           setDesignAvailable(true);
           dispatch(setLoading(false));
         }
       })
       .catch((err) => {
+        console.error('❌ ManageSurvey: GetData failed:', err);
         dispatch(setLoading(false));
       });
     loadSurvey();

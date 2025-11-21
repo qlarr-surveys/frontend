@@ -1,0 +1,606 @@
+import React, { useState, useEffect, useCallback } from "react";
+import { 
+  Typography, 
+  TextField, 
+  Box
+} from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { updateInstruction, updateRootNode, changeAttribute } from "../../../../state/design/designState";
+import { useService } from "../../../../hooks/use-service";
+import { manageStore } from "../../../../store";
+
+function CustomCSS({ code }) {
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
+  const designService = useService("design");
+  
+  console.log('🎯 CustomCSS component mounted with code:', code);
+  console.log('🎯 Component mount - current URL:', window.location.href);
+  console.log('🎯 Component mount - performance navigation type:', performance.navigation?.type);
+  console.log('🎯 Component mount - is page refresh?:', performance.navigation?.type === 1);
+  
+  // Get current custom CSS from Survey.theme.customCSS
+  const currentCSS = useSelector((state) => {
+    console.log('🔍 Redux state check for CSS persistence:');
+    console.log('Full designState keys:', Object.keys(state.designState || {}));
+    console.log('Looking for CSS in Survey.theme.customCSS');
+    
+    // Get CSS from Survey.theme.customCSS
+    const surveyTheme = state.designState?.Survey?.theme;
+    console.log('Found Survey theme:', surveyTheme);
+    console.log('Theme keys:', Object.keys(surveyTheme || {}));
+    
+    const css = surveyTheme?.customCSS || "";
+    console.log('Extracted CSS text:', css);
+    console.log('CSS length:', css.length);
+    console.log('Is CSS empty?', !css.trim());
+    
+    // Debug: Check if versionDto exists (indicates data loaded from backend)
+    const versionDto = state.designState?.versionDto;
+    console.log('VersionDto exists (backend data loaded):', !!versionDto);
+    if (versionDto) {
+      console.log('VersionDto details:', versionDto);
+    }
+    
+    return css;
+  });
+
+  const [cssValue, setCssValue] = useState(currentCSS);
+
+  // Update local state when Redux state changes
+  useEffect(() => {
+    setCssValue(currentCSS);
+  }, [currentCSS]);
+
+  // Apply existing CSS on component mount (when navigating back to theme page or page refresh)
+  useEffect(() => {
+    console.log('🚀 CSS Restoration Effect Triggered');
+    console.log('🚀 Trigger reason - currentCSS changed to:', currentCSS);
+    console.log('🚀 CSS length:', currentCSS.length);
+    console.log('🚀 CSS trimmed length:', currentCSS.trim().length);
+    console.log('🚀 Component code:', code);
+    console.log('🚀 Is page refresh?:', performance.navigation?.type === 1);
+    
+    if (currentCSS.trim()) {
+      console.log('✅ Found existing CSS in Redux, applying...');
+      console.log('✅ CSS content preview:', currentCSS.substring(0, 100) + '...');
+      
+      const persistentStyleId = `survey-custom-css-persistent-${code}`;
+      console.log('✅ Persistent style ID:', persistentStyleId);
+      
+      // Always recreate persistent CSS on mount to ensure it's applied
+      let persistentElement = document.getElementById(persistentStyleId);
+      if (persistentElement) {
+        console.log('🧹 Removing existing persistent element');
+        document.head.removeChild(persistentElement);
+      }
+      
+      // Create fresh persistent CSS from Redux state
+      const scopedCSS = scopeCSS(currentCSS);
+      console.log('✅ Scoped CSS generated:', scopedCSS.substring(0, 150) + '...');
+      
+      persistentElement = document.createElement('style');
+      persistentElement.id = persistentStyleId;
+      persistentElement.type = 'text/css';
+      persistentElement.setAttribute('data-persistent', 'true');
+      persistentElement.setAttribute('data-source', 'redux-restore');
+      persistentElement.setAttribute('data-timestamp', new Date().toISOString());
+      persistentElement.textContent = scopedCSS;
+      document.head.appendChild(persistentElement);
+      
+      // Verify element was added
+      const verifyElement = document.getElementById(persistentStyleId);
+      console.log('✅ Persistent CSS element added to DOM:', !!verifyElement);
+      console.log('✅ Element content length:', verifyElement?.textContent?.length || 0);
+      
+      console.log('✅ Persistent CSS restored from Redux on mount');
+    } else {
+      console.log('❌ No existing CSS found in Redux');
+      console.log('❌ This could mean:');
+      console.log('   - CSS was never saved');
+      console.log('   - Backend didn\'t return the CSS');
+      console.log('   - Redux state wasn\'t restored from backend');
+    }
+  }, [currentCSS]); // Depend on currentCSS so it updates when Redux state changes
+
+  // Get the full design state for backend saving
+  const designState = useSelector((state) => state.designState);
+
+  // Auto-save function - saves to Redux AND triggers backend save
+  const autoSave = async () => {
+    console.log('🚀 Auto-save triggered!');
+    console.log('CSS Value:', cssValue);
+    console.log('CSS trimmed:', cssValue.trim());
+    console.log('CSS is valid:', isValidCSS(cssValue));
+    
+    if (cssValue.trim() && isValidCSS(cssValue)) {
+      console.log('✅ Step 1: Saving CSS to Redux (guaranteed)...');
+      
+      // Step 1: Update Redux state first - save in Survey.theme.customCSS
+      try {
+        console.log('Saving CSS to Survey.theme.customCSS:', cssValue);
+        
+        // Get current theme from Redux state
+        const currentDesignState = manageStore.getState().designState;
+        const currentTheme = currentDesignState?.Survey?.theme || {};
+        console.log('Current theme before update:', currentTheme);
+        
+        // Create updated theme with customCSS
+        const updatedTheme = {
+          ...currentTheme,
+          customCSS: cssValue
+        };
+        
+        console.log('Updated theme with customCSS:', updatedTheme);
+        
+        // Use changeAttribute to update Survey theme (same as Theming component)
+        dispatch(changeAttribute({
+          code: "Survey",
+          key: "theme", 
+          value: updatedTheme
+        }));
+        
+        // Verify the dispatch worked
+        setTimeout(() => {
+          const freshState = manageStore.getState().designState;
+          console.log('Redux state after dispatch - custom_css node:', freshState.custom_css);
+        }, 50);
+        
+        console.log('✅ CSS saved to Redux successfully - will persist on page refresh');
+      } catch (reduxError) {
+        console.error('❌ Redux save failed:', reduxError);
+        return; // Don't proceed to backend if Redux fails
+      }
+      
+      // Step 2: Attempt backend auto-save (optional - doesn't affect Redux persistence)
+      setTimeout(async () => {
+        try {
+          console.log('🔄 Step 2: Attempting backend auto-save...');
+          
+          // Get fresh design state after Redux update
+          const currentDesignState = manageStore.getState().designState;
+          
+          // Create a deep copy to avoid mutation issues
+          const updatedState = JSON.parse(JSON.stringify(currentDesignState || designState));
+          
+          // Ensure Survey and theme exist
+          if (!updatedState.Survey) {
+            updatedState.Survey = {};
+          }
+          if (!updatedState.Survey.theme) {
+            updatedState.Survey.theme = {};
+          }
+          
+          // Add custom CSS to Survey theme
+          updatedState.Survey.theme.customCSS = cssValue;
+          console.log('🔄 Updated Survey theme with customCSS:', updatedState.Survey.theme);
+          
+          // Get version info from current state
+          const versionInfo = currentDesignState.versionDto || designState.versionDto;
+          const params = new URLSearchParams([
+            ["version", versionInfo?.version || 1],
+            ["sub_version", versionInfo?.subVersion || 0],
+          ]);
+          
+          // Save to backend with detailed logging
+          console.log('🔄 Saving to backend with params:', params.toString());
+          console.log('🔄 Updated state structure:', {
+            keys: Object.keys(updatedState),
+            custom_css_exists: !!updatedState.custom_css,
+            custom_css_content: updatedState.custom_css
+          });
+          
+          const backendResponse = await designService.setSurveyDesign(updatedState, params);
+          console.log('✅ Backend auto-save successful!');
+          console.log('✅ Backend response structure:', {
+            hasDesignerInput: !!backendResponse?.designerInput,
+            hasState: !!backendResponse?.designerInput?.state,
+            stateKeys: Object.keys(backendResponse?.designerInput?.state || {}),
+            hasCustomCSS: !!backendResponse?.designerInput?.state?.custom_css
+          });
+          console.log('✅ Full backend response:', backendResponse);
+          
+          // Verify the save by checking if we can read it back
+          setTimeout(async () => {
+            try {
+              console.log('🔍 Verifying backend save by fetching design state...');
+              const verificationState = await designService.getSurveyDesign();
+              const savedTheme = verificationState?.designerInput?.state?.Survey?.theme;
+              const savedCSS = savedTheme?.customCSS;
+              console.log('✅ Verification - Survey theme exists:', !!savedTheme);
+              console.log('✅ Verification - CSS exists in theme:', !!savedCSS);
+              console.log('✅ Verification - Saved CSS content:', savedCSS);
+              console.log('✅ Verification - Full theme:', savedTheme);
+              
+              if (!savedCSS || savedCSS !== cssValue) {
+                console.error('❌ Backend save verification failed!');
+                console.error('Expected CSS:', cssValue);
+                console.error('Actual CSS in backend:', savedCSS);
+              } else {
+                console.log('✅ Backend save verification successful!');
+              }
+            } catch (verifyError) {
+              console.error('❌ Backend save verification error:', verifyError);
+            }
+          }, 1000);
+          
+        } catch (backendError) {
+          console.error('❌ Backend auto-save failed, but CSS is still saved in Redux:', backendError);
+          console.log('💡 CSS will be restored from Redux on page refresh');
+        }
+      }, 200);
+      
+    } else {
+      console.log('❌ CSS not saved - invalid or empty');
+      if (!cssValue.trim()) {
+        console.log('Reason: Empty CSS');
+      }
+      if (!isValidCSS(cssValue)) {
+        console.log('Reason: Invalid CSS (unbalanced braces or no rules)');
+      }
+    }
+  };
+
+  // CSS validation function
+  const isValidCSS = (css) => {
+    try {
+      console.log('🔍 Validating CSS:', css);
+      // Check if braces are balanced
+      const openBraces = (css.match(/\{/g) || []).length;
+      const closeBraces = (css.match(/\}/g) || []).length;
+      
+      console.log('Open braces:', openBraces);
+      console.log('Close braces:', closeBraces);
+      
+      // Must have balanced braces and at least one complete rule
+      const isValid = openBraces === closeBraces && openBraces > 0;
+      console.log('CSS is valid:', isValid);
+      return isValid;
+    } catch (error) {
+      console.log('CSS validation error:', error);
+      return false;
+    }
+  };
+
+  // Function to scope CSS to survey only - DEBUG VERSION
+  const scopeCSS = (css) => {
+    console.log('==========================================');
+    console.log('scopeCSS called with:', JSON.stringify(css));
+    console.log('CSS length:', css.length);
+    console.log('CSS trimmed:', css.trim());
+    
+    if (!css.trim()) {
+      console.log('Empty CSS, returning empty string');
+      return '';
+    }
+    
+    // Test the regex with your exact input
+    const regex = /([^{}]*)\{([^{}]*)\}/g;
+    console.log('Testing regex:', regex);
+    
+    let matches = [];
+    let match;
+    while ((match = regex.exec(css)) !== null) {
+      matches.push(match);
+      console.log('Regex match found:', match);
+    }
+    console.log('Total matches found:', matches.length);
+    
+    // Reset regex for actual replacement
+    const result = css.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
+      console.log('Processing match:', fullMatch);
+      console.log('Raw selector:', JSON.stringify(selector));
+      console.log('Raw props:', JSON.stringify(props));
+      
+      const cleanSelector = selector.trim();
+      const cleanProps = props.trim();
+      
+      console.log('Clean selector:', JSON.stringify(cleanSelector));
+      console.log('Clean props:', JSON.stringify(cleanProps));
+      
+      if (cleanSelector.includes('.content-panel') || cleanSelector.includes('.muiltr-uwwqev')) {
+        console.log('Already scoped, returning as-is');
+        return fullMatch;
+      }
+      
+      // Apply CSS to both content-panel and muiltr-uwwqev
+      const scoped = `.content-panel ${cleanSelector}, .muiltr-uwwqev ${cleanSelector} { ${cleanProps} }`;
+      console.log('Final scoped result:', scoped);
+      return scoped;
+    });
+    
+    console.log('Final CSS result:', result);
+    console.log('==========================================');
+    return result;
+  };
+
+  // Inject CSS into document head (live preview) - persists across navigation
+  useEffect(() => {
+    console.log('🎯 CSS EFFECT STARTING');
+    console.log('cssValue:', JSON.stringify(cssValue));
+    console.log('code:', code);
+    
+    const styleId = `survey-custom-css-${code}`;
+    const persistentStyleId = `survey-custom-css-persistent-${code}`;
+    console.log('Style ID will be:', styleId);
+    console.log('Persistent Style ID will be:', persistentStyleId);
+    
+    // Remove existing temporary style element
+    const existingElement = document.getElementById(styleId);
+    console.log('Existing element found:', existingElement);
+    if (existingElement) {
+      console.log('Removing existing element');
+      document.head.removeChild(existingElement);
+    }
+
+    if (cssValue.trim()) {
+      console.log('CSS is not empty, processing...');
+      
+      // Create new style element
+      const styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      styleElement.type = 'text/css';
+      
+      // Scope and apply CSS
+      const scopedCSS = scopeCSS(cssValue);
+      console.log('Scoped CSS result:', JSON.stringify(scopedCSS));
+      
+      styleElement.textContent = scopedCSS;
+      document.head.appendChild(styleElement);
+      
+      // Also create/update persistent style element that won't be removed on unmount
+      let persistentElement = document.getElementById(persistentStyleId);
+      if (persistentElement) {
+        document.head.removeChild(persistentElement);
+      }
+      
+      persistentElement = document.createElement('style');
+      persistentElement.id = persistentStyleId;
+      persistentElement.type = 'text/css';
+      persistentElement.setAttribute('data-persistent', 'true');
+      persistentElement.textContent = scopedCSS;
+      document.head.appendChild(persistentElement);
+      
+      console.log('Created persistent CSS element for cross-page navigation');
+      
+      // Verify it's in the DOM
+      const verifyElement = document.getElementById(styleId);
+      console.log('Element added to DOM:', verifyElement);
+      console.log('Element content:', verifyElement?.textContent);
+      
+      // Check if content-panel or muiltr-uwwqev exists
+      const contentPanel = document.querySelector('.content-panel');
+      const muiBoxRoot = document.querySelector('.muiltr-uwwqev');
+      console.log('Content panel exists:', !!contentPanel);
+      console.log('muiltr-uwwqev exists:', !!muiBoxRoot);
+      console.log('Content panel element:', contentPanel);
+      console.log('muiltr-uwwqev element:', muiBoxRoot);
+      
+      // Debug: Look for any survey-related elements
+      const allSurveyElements = document.querySelectorAll('[class*="survey"], [id*="survey"], form');
+      console.log('Survey-related elements found:', allSurveyElements.length);
+      console.log('Survey-related elements:', allSurveyElements);
+      
+      // Look for design preview area or other containers
+      const previewArea = document.querySelector('[class*="preview"]') || 
+                         document.querySelector('[class*="Preview"]') ||
+                         document.querySelector('[class*="design"]') ||
+                         document.querySelector('[class*="Design"]');
+      console.log('Preview/Design area found:', !!previewArea);
+      console.log('Preview/Design area element:', previewArea);
+      
+      // Check current page URL/path to understand context
+      console.log('Current URL:', window.location.href);
+      console.log('Current pathname:', window.location.pathname);
+      
+      // Try to find the actual preview container or add CSS that works in design mode too
+      // Add fallback CSS that works without .content-panel or .muiltr-uwwqev for design preview
+      if (!contentPanel && !muiBoxRoot && cssValue.trim()) {
+        console.log('Adding fallback CSS for design mode...');
+        
+        // Create additional CSS that works in design preview without .survey-container
+        const fallbackCSS = cssValue.replace(/([^{}]*)\{([^{}]*)\}/g, (match, selector, props) => {
+          const cleanSelector = selector.trim();
+          const cleanProps = props.trim();
+          return `${cleanSelector} { ${cleanProps} }`;
+        });
+        
+        console.log('Fallback CSS:', fallbackCSS);
+        
+        // Add fallback style element for design mode
+        const fallbackStyleId = `survey-fallback-css-${code}`;
+        let fallbackStyleElement = document.getElementById(fallbackStyleId);
+        
+        if (fallbackStyleElement) {
+          document.head.removeChild(fallbackStyleElement);
+        }
+        
+        fallbackStyleElement = document.createElement('style');
+        fallbackStyleElement.id = fallbackStyleId;
+        fallbackStyleElement.type = 'text/css';
+        fallbackStyleElement.textContent = fallbackCSS;
+        document.head.appendChild(fallbackStyleElement);
+        
+        console.log('Fallback CSS injected for design mode');
+      }
+      
+      // Check for preview iframe (design mode might have survey in iframe)
+      const previewIframe = document.querySelector('iframe');
+      console.log('Preview iframe found:', !!previewIframe);
+      
+      if (previewIframe) {
+        try {
+          const iframeDoc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+          const iframeContentPanel = iframeDoc.querySelector('.content-panel');
+          const iframeMuiBoxRoot = iframeDoc.querySelector('.muiltr-uwwqev');
+          console.log('Content panel in iframe:', !!iframeContentPanel);
+          console.log('muiltr-uwwqev in iframe:', !!iframeMuiBoxRoot);
+          
+          if (iframeContentPanel || iframeMuiBoxRoot) {
+            // Inject CSS into iframe
+            let iframeStyleElement = iframeDoc.getElementById(styleId);
+            if (iframeStyleElement) {
+              iframeDoc.head.removeChild(iframeStyleElement);
+            }
+            
+            iframeStyleElement = iframeDoc.createElement('style');
+            iframeStyleElement.id = styleId;
+            iframeStyleElement.type = 'text/css';
+            iframeStyleElement.textContent = scopedCSS;
+            iframeDoc.head.appendChild(iframeStyleElement);
+            
+            console.log('CSS injected into iframe!');
+          }
+        } catch (e) {
+          console.log('Cannot access iframe (cross-origin):', e.message);
+        }
+      }
+      
+      // Check if our CSS rule would match any elements
+      if (scopedCSS.includes('.content-panel p') || scopedCSS.includes('.muiltr-uwwqev p')) {
+        const contentPanelPs = document.querySelectorAll('.content-panel p');
+        const muiBoxPs = document.querySelectorAll('.muiltr-uwwqev p');
+        console.log('Matching <p> in content-panel:', contentPanelPs.length);
+        console.log('Matching <p> in muiltr-uwwqev:', muiBoxPs.length);
+        console.log('Content panel elements:', contentPanelPs);
+        console.log('muiltr-uwwqev elements:', muiBoxPs);
+      }
+    } else {
+      console.log('CSS is empty, skipping');
+    }
+
+    console.log('🎯 CSS EFFECT COMPLETE');
+
+    // Cleanup on unmount - only remove temporary elements, keep persistent ones
+    return () => {
+      const element = document.getElementById(styleId);
+      if (element) {
+        document.head.removeChild(element);
+      }
+      
+      // Also cleanup fallback CSS
+      const fallbackElement = document.getElementById(`survey-fallback-css-${code}`);
+      if (fallbackElement) {
+        document.head.removeChild(fallbackElement);
+      }
+      
+      // Note: We DON'T remove the persistent element here so CSS works across pages
+    };
+  }, [cssValue, code]);
+
+  const handleCSSChange = (event) => {
+    const newCSS = event.target.value;
+    setCssValue(newCSS);
+    // Auto-save will be handled by the debounced useEffect above
+  };
+
+  // Handle tab key for proper indentation
+  const handleKeyDown = (event) => {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      const textarea = event.target;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      
+      // Insert 2 spaces for tab
+      const newValue = cssValue.substring(0, start) + '  ' + cssValue.substring(end);
+      setCssValue(newValue);
+      
+      // Set cursor position after the inserted spaces
+      setTimeout(() => {
+        textarea.selectionStart = textarea.selectionEnd = start + 2;
+      }, 0);
+      
+      // Update Redux with the new value in Survey.theme
+      const currentState = manageStore.getState().designState;
+      const currentTheme = currentState?.Survey?.theme || {};
+      
+      const updatedTheme = {
+        ...currentTheme,
+        customCSS: newValue
+      };
+      
+      // Use changeAttribute like the Theming component does
+      dispatch(changeAttribute({
+        code: "Survey",
+        key: "theme",
+        value: updatedTheme
+      }));
+    }
+  };
+
+
+
+
+  return (
+    <Box sx={{ marginBottom: 3 }}>
+      <Typography fontWeight={700} sx={{ mb: 2 }}>
+        {t("Custom CSS")}
+      </Typography>
+      
+
+
+
+      
+      <TextField
+        fullWidth
+        multiline
+        minRows={4}
+        maxRows={25}
+        value={cssValue}
+        onChange={handleCSSChange}
+        onKeyDown={handleKeyDown}
+        onBlur={autoSave}
+        placeholder={`/* Enter your CSS code here... */
+.button {
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.5;
+}`}
+        variant="outlined"
+        sx={{
+          mb: 2,
+          '& .MuiInputBase-root': {
+            fontFamily: '"Fira Code", "JetBrains Mono", "Monaco", "Consolas", "Courier New", monospace',
+            fontSize: '14px',
+            lineHeight: 1.6,
+            backgroundColor: '#f8f9fa',
+            border: '1px solid #e9ecef',
+            borderRadius: '8px',
+            padding: '12px',
+          },
+          '& .MuiInputBase-input': {
+            padding: '0 !important',
+            color: '#212529',
+            '&::placeholder': {
+              color: '#6c757d',
+              fontSize: '13px',
+              lineHeight: 1.5,
+              fontStyle: 'italic',
+            },
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            border: 'none',
+          },
+          '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+            border: '2px solid #007bff',
+            borderRadius: '8px',
+          },
+          '& .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline': {
+            border: '1px solid #adb5bd',
+          },
+        }}
+      />
+      
+
+    </Box>
+  );
+}
+
+export default CustomCSS;

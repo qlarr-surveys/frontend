@@ -20,6 +20,7 @@ import { ChromePicker } from "react-color";
 import { useBoolean } from "~/hooks/use-boolean";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useRef } from "react";
+import CustomCSS from "../CustomCSS";
 
 const listFont = [
   "Merriweather",
@@ -481,6 +482,10 @@ function Theming({ t }) {
           </IconButton>
         )}
       </Stack>
+      
+      <hr style={{ margin: "24px 0" }} />
+      
+      <CustomCSS code="Survey" />
     </div>
   );
 }

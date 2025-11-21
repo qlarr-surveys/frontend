@@ -21,6 +21,7 @@ import { questionIconByType } from "~/components/Questions/utils";
 import OrderSetup from "../random/OrderSetup";
 import QuestionActions from "../QuestionActions";
 import DisabledToggle from "../Disabled";
+import CustomCSS from "../CustomCSS";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -436,6 +437,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           code={code}
         />
       );
+    case "custom_css":
+      return <CustomCSS t={t} key={code + rule} code={code} />;
     default:
       return "";
   }
