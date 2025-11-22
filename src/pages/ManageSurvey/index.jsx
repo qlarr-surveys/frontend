@@ -9,7 +9,6 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import {
   designStateReceived,
-  onAddComponentsVisibilityChange,
   resetSetup,
 } from "~/state/design/designState";
 import { GetData } from "~/networking/design";
@@ -161,7 +160,6 @@ function ManageSurvey({ landingPage }) {
   };
 
   useEffect(() => {
-    dispatch(onAddComponentsVisibilityChange(true));
     dispatch(resetSetup());
     if (!isSurveyAdmin(user)) {
       return;
@@ -199,23 +197,6 @@ function ManageSurvey({ landingPage }) {
       .catch((err) => {});
   };
 
-  const refetchAll = useCallback(() => {
-    if (isSurveyAdmin(user)) {
-      dispatch(setLoading(true));
-      GetData(designService, setState, processApirror, langInfo)
-        .then((data) => {
-          if (data) setDesignAvailable(true);
-        })
-        .finally(() => dispatch(setLoading(false)));
-    }
-    loadSurvey();
-  }, [user, designService, dispatch, setState, processApirror, loadSurvey, langInfo]);
-
-  useEffect(() => {
-    if (refetchError?.name === "component_deleted" && refetchError?.seen) {
-      refetchAll();
-    }
-  }, [refetchError?.name, refetchError?.seen, refetchAll]);
 
   useEffect(() => {
     const handlePopState = () => {

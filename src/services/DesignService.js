@@ -29,6 +29,16 @@ class DesignService extends BaseService {
     );
     return response.data;
   }
+
+  async changeCode(from, to, surveyId = null) {
+    const id = surveyId || sessionStorage.getItem("surveyId");
+    const response = await this.handleRequest(() =>
+      authenticatedApi.post(`/survey/${id}/change_code`, null, {
+        params: { from, to },
+      })
+    );
+    return response.data;
+  }
   async uploadResource(file, surveyId = null) {
     if (!surveyId) {
       surveyId = sessionStorage.getItem("surveyId");

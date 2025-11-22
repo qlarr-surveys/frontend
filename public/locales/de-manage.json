@@ -144,7 +144,11 @@
   "language": {
     "ar": "Arabisch",
     "de": "Deutsch",
-    "en": "Englisch"
+    "en": "Englisch",
+    "es": "Spanisch",
+    "pt": "Portugiesisch",
+    "fr": "Französisch",
+    "nl": "Niederländisch"
   },
   "last_modified": "Zuletzt bearbeitet:",
   "lastname_required": "Nachname ist erforderlich",

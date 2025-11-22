@@ -1,13 +1,12 @@
-import { LANGUAGE_DEF } from "~/constants/language";
-import { defaultSurveyTheme } from "~/constants/theme";
 import DesignService from "~/services/DesignService";
 
 const importedService = new DesignService();
 
-export async function GetData(designService, setState, setError, langInfo) {
+export async function GetData(designService, setState, setError) {
   try {
     const response = await designService.getSurveyDesign();
-    return processResponse(response, setState, langInfo);
+    setState(response);
+    return response;
   } catch (err) {
     setError(err);
   }
@@ -20,7 +19,7 @@ export async function SetData(state, setState, setError, version, subVersion) {
       ["sub_version", subVersion],
     ]);
     const response = await importedService.setSurveyDesign(state, params);
-    processResponse(response, setState, state.langInfo);
+    setState(response);
   } catch (err) {
     setError(err);
   }
