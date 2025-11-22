@@ -22,6 +22,7 @@ import OrderSetup from "../random/OrderSetup";
 import ScqDefaultValue from "../ScqDefaultValue";
 import QuestionActions from "../QuestionActions";
 import DisabledToggle from "../Disabled";
+import EntityCodeEditor from "../EntityCodeEditor";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -97,6 +98,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
   }
 
   switch (rule) {
+    case "changeCode":
+      return <EntityCodeEditor code={code} />
     case "theme":
       return <Theming t={t} key={code + rule} />;
     case "language":
@@ -357,20 +360,6 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           key={code + rule}
           defaultValue="1:1"
           label="image_aspect_ratio"
-          rule={rule}
-          code={code}
-        />
-      );
-    case "reorder_setup":
-      const reorderLabels = [t("collapse_groups"), t("collapse_questions")];
-      const reorderValues = ["collapse_groups", "collapse_questions"];
-      return (
-        <SelectValue
-          values={reorderValues}
-          key={code + rule}
-          labels={reorderLabels}
-          defaultValue="collapse_none"
-          label={"order_mode"}
           rule={rule}
           code={code}
         />

@@ -6,7 +6,7 @@ import { defualtTheme } from "~/constants/theme";
 import { I18nextProvider, useTranslation } from "react-i18next";
 import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { CacheProvider } from "@emotion/react";
-import {  useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -14,6 +14,12 @@ import { isTouchDevice } from "~/utils/isTouchDevice";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { buildResourceUrl } from "~/networking/common";
 import LoadingDots from "~/components/common/LoadingDots";
+import {
+  setDesignModeToDesign,
+  setDesignModeToLang,
+  setDesignModeToTheme,
+} from "~/state/design/designState";
+import { DESIGN_SURVEY_MODE } from "~/routes";
 
 const ContentPanel = React.lazy(() =>
   import("~/components/design/ContentPanel")
@@ -24,6 +30,7 @@ function DesignSurvey() {
   const { t, i18n } = useTranslation(["design", "run"]);
   const childI18n = useMemo(() => i18n.cloneInstance(), []);
   const contentRef = useRef(null);
+  const dispatch = useDispatch();
 
   const containerRef = useRef();
 
@@ -61,6 +68,16 @@ function DesignSurvey() {
       changeLanguage(lang);
     }
   }, [lang, contentRef]);
+
+  useEffect(() => {
+    if (designMode == DESIGN_SURVEY_MODE.DESIGN) {
+      dispatch(setDesignModeToDesign());
+    } else if (designMode == DESIGN_SURVEY_MODE.LANGUAGES) {
+      dispatch(setDesignModeToLang());
+    } else if (designMode == DESIGN_SURVEY_MODE.THEME) {
+      dispatch(setDesignModeToTheme());
+    }
+  }, []);
 
   const cacheRtlMemo = useMemo(() => cacheRtl(lang), [lang]);
 
@@ -114,4 +131,3 @@ function DesignSurvey() {
 }
 
 export default React.memo(DesignSurvey);
-

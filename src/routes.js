@@ -9,7 +9,6 @@ export const DESIGN_SURVEY_MODE = {
   DESIGN: "design",
   THEME: "theme",
   LANGUAGES: "languages",
-  REORDER: "reorder",
 };
 
 export const inDesign = (mode) => {

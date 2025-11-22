@@ -146,7 +146,11 @@
   "language": {
     "ar": "Arabic",
     "de": "German",
-    "en": "English"
+    "en": "English",
+    "es": "Spanish",
+    "pt": "Portuguese",
+    "fr": "French",
+    "nl": "Dutch"
   },
   "last_modified": "Last Modified:",
   "lastname_required": "Last Name is Required",

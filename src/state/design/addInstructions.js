@@ -1127,8 +1127,6 @@ export const updateRandomByRule = (
       if (groupsWithRowAnswers.length == 0) {
         removeInstruction(componentState, "random_group");
       } else {
-        console.log("here");
-        console.log("groupsWithRowAnswers", groupsWithRowAnswers);
         changeInstruction(componentState, {
           code: "random_group",
           groups: groupsWithRowAnswers,

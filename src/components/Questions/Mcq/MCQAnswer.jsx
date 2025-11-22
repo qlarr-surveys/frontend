@@ -37,7 +37,6 @@ function McqAnswer(props) {
     } else {
       value = value.filter((el) => el !== props.Answer.code);
     }
-    console.log(value);
     dispatch(
       valueChange({
         componentCode: props.parentCode,

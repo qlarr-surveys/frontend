@@ -36,6 +36,7 @@ import { EditableSurveyTitle } from "./EditableSurveyTitle";
 import { EditableSurveyDescription } from "./EditableSurveyDescription";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import NumbersIcon from "@mui/icons-material/Numbers";
+import { resetSetup, setDesignModeToDesign } from '~/state/design/designState';
 
 export const STATUS = {
   DRAFT: "draft",
@@ -388,6 +389,7 @@ const Survey = ({
               aria-label="redirect"
               size="large"
               onClick={(e) => {
+                dispatch(setDesignModeToDesign());
                 e.stopPropagation();
                 isSurveyorOnly()
                   ? window.open(`/preview/${survey.id}`, "_blank")
