@@ -52,13 +52,9 @@ function ManageSurvey({ landingPage }) {
     if (!state.designState) return {};
     const questionCSS = {};
     Object.keys(state.designState).forEach(key => {
-      if (key !== 'Survey' && key !== 'langInfo' && key !== 'versionDto' && key !== 'componentIndex' && 
-          key !== 'latest' && key !== 'lastAddedComponent' && key !== 'index' && key !== 'setup' &&
-          key !== 'state' && key !== 'addComponentsVisibility' && key !== 'globalSetup' && key !== 'designMode') {
-        const questionState = state.designState[key];
-        if (questionState?.customCSS?.trim()) {
-          questionCSS[key] = questionState.customCSS;
-        }
+      const obj = state.designState[key];
+      if (isValidComponent(key, obj) && obj.customCSS?.trim()) {
+        questionCSS[key] = obj.customCSS;
       }
     });
     return questionCSS;
@@ -67,6 +63,14 @@ function ManageSurvey({ landingPage }) {
   const [designAvailable, setDesignAvailable] = useState(false);
 
   const dispatch = useDispatch();
+  
+  // Helper function to identify valid components (questions/groups) vs system metadata
+  const isValidComponent = (key, obj) => {
+    return obj && 
+           typeof obj === 'object' && 
+           key !== 'Survey' && // Survey is special case
+           (obj.type || obj.children || obj.instructionList || obj.content);
+  };
   
   // Function to apply custom CSS globally (Survey-level and all question-level CSS)
   const applyGlobalCustomCSS = (state) => {
@@ -79,13 +83,9 @@ function ManageSurvey({ landingPage }) {
     // Question-level CSS - find all questions with customCSS
     const questionCSSList = [];
     Object.keys(state || {}).forEach(key => {
-      if (key !== 'Survey' && key !== 'langInfo' && key !== 'versionDto' && key !== 'componentIndex' && 
-          key !== 'latest' && key !== 'lastAddedComponent' && key !== 'index' && key !== 'setup' &&
-          key !== 'state' && key !== 'addComponentsVisibility' && key !== 'globalSetup' && key !== 'designMode') {
-        const questionState = state[key];
-        if (questionState?.customCSS?.trim()) {
-          questionCSSList.push({ code: key, css: questionState.customCSS });
-        }
+      const obj = state[key];
+      if (isValidComponent(key, obj) && obj.customCSS?.trim()) {
+        questionCSSList.push({ code: key, css: obj.customCSS });
       }
     });
     
