@@ -1,11 +1,18 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useRef } from "react";
 import "./Toolbar.css";
+import { useService } from "~/hooks/use-service";
+import { buildResourceUrl } from "~/networking/common";
+import PhotoIcon from "@mui/icons-material/Photo";
+import LoadingDots from "~/components/common/LoadingDots";
 
-const Toolbar = ({ editor, extended }) => {
+const Toolbar = ({ editor, extended, code }) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showBgColorPicker, setShowBgColorPicker] = useState(false);
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const fileInputRef = useRef(null);
+  const designService = useService("design");
 
   // Font size options matching Quill
   const fontSizes = [
@@ -88,6 +95,52 @@ const Toolbar = ({ editor, extended }) => {
       setLinkUrl("");
       setShowLinkInput(true);
     }
+  }, [editor]);
+
+  const handleImageUpload = useCallback(
+    async (event) => {
+      const file = event.target.files?.[0];
+      if (!file || !file.type.startsWith("image/")) {
+        return;
+      }
+
+      setIsUploadingImage(true);
+      try {
+        const response = await designService.uploadResource(file);
+        const imageUrl = buildResourceUrl(response.name);
+        console.log("Image uploaded", { response, imageUrl });
+
+        editor
+          .chain()
+          .focus()
+          .setImage({
+            src: imageUrl,
+            alt: file.name,
+            resourceName: response.name,
+          })
+          .run();
+      } catch (error) {
+        console.error("Failed to upload image:", error);
+      } finally {
+        setIsUploadingImage(false);
+        // Reset file input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      }
+    },
+    [editor, designService]
+  );
+
+  const insertCollapsible = useCallback(() => {
+    editor
+      .chain()
+      .focus()
+      .setCollapsible({
+        open: false,
+        buttonText: "Show more details",
+      })
+      .run();
   }, [editor]);
 
   if (!editor) {
@@ -232,7 +285,9 @@ const Toolbar = ({ editor, extended }) => {
           {/* Decrease Indent */}
           <button
             onMouseDown={(e) => e.preventDefault()}
-            onClick={() => editor.chain().focus().liftListItem("listItem").run()}
+            onClick={() =>
+              editor.chain().focus().liftListItem("listItem").run()
+            }
             className="tiptap-toolbar-button"
             title="Decrease Indent"
             disabled={!editor.can().liftListItem("listItem")}
@@ -243,7 +298,9 @@ const Toolbar = ({ editor, extended }) => {
           {/* Increase Indent */}
           <button
             onMouseDown={(e) => e.preventDefault()}
-            onClick={() => editor.chain().focus().sinkListItem("listItem").run()}
+            onClick={() =>
+              editor.chain().focus().sinkListItem("listItem").run()
+            }
             className="tiptap-toolbar-button"
             title="Increase Indent"
             disabled={!editor.can().sinkListItem("listItem")}
@@ -355,10 +412,80 @@ const Toolbar = ({ editor, extended }) => {
         )}
       </div>
 
+      {/* Image Upload */}
+      <div
+        style={{ display: "inline-block" }}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
+        <label
+          style={{
+            display: "inline-block",
+            cursor: isUploadingImage ? "not-allowed" : "pointer",
+            margin: 0,
+            padding: 0,
+          }}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            style={{ display: "none" }}
+            disabled={isUploadingImage}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          />
+          <span
+            className="tiptap-toolbar-button"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              pointerEvents: isUploadingImage ? "none" : "auto",
+              opacity: isUploadingImage ? 0.6 : 1,
+            }}
+            title="Insert Image"
+          >
+            {isUploadingImage ? (
+              <LoadingDots />
+            ) : (
+              <PhotoIcon style={{ fontSize: "16px" }} />
+            )}
+          </span>
+        </label>
+      </div>
+
+      {/* Collapsible/Details */}
+      <button
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={insertCollapsible}
+        className="tiptap-toolbar-button"
+        title="Insert Collapsible Section"
+      >
+        <span style={{ fontSize: "12px" }}>▼</span>
+      </button>
+
       {/* Clear Formatting */}
       <button
         onMouseDown={(e) => e.preventDefault()}
-        onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()}
+        onClick={() =>
+          editor.chain().focus().clearNodes().unsetAllMarks().run()
+        }
         className="tiptap-toolbar-button"
         title="Clear Formatting"
       >

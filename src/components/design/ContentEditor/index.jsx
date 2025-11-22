@@ -72,49 +72,44 @@ function ContentEditor({
     return returnResult;
   }, [instructionList, index]);
 
-
-
   const value = content?.[lang]?.[contentKey] || "";
 
-  const fixedValue = useMemo(
-    () => {
-      if (!referenceInstruction || !Object.keys(referenceInstruction).length) {
-        return value;
-      }
-      let updated = cloneDeep(value);
+  const fixedValue = useMemo(() => {
+    if (!referenceInstruction || !Object.keys(referenceInstruction).length) {
+      return value;
+    }
+    let updated = cloneDeep(value);
 
-      // Create a temporary DOM element to parse and manipulate the HTML
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = updated;
+    // Create a temporary DOM element to parse and manipulate the HTML
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = updated;
 
-      Object.keys(referenceInstruction).forEach((key) => {
-        // Find all spans with data-id matching the key
-        const spans = tempDiv.querySelectorAll(`span[data-id="${key}"]`);
+    Object.keys(referenceInstruction).forEach((key) => {
+      // Find all spans with data-id matching the key
+      const spans = tempDiv.querySelectorAll(`span[data-id="${key}"]`);
 
-        spans.forEach((span) => {
-          // Get the data-value attribute
-          const dataValue = span.getAttribute("data-value");
-          if (dataValue) {
-            // Replace the key with referenceInstruction[key] in the data-value
-            const newDataValue = dataValue.replace(
-              new RegExp(`{{${key}:`, "g"),
-              `{{${referenceInstruction[key]}:`
-            );
-            // Find the nested span with contenteditable="false" and update its content
-            const nestedSpan = span.querySelector(
-              'span[contenteditable="false"]'
-            );
-            if (nestedSpan) {
-              nestedSpan.textContent = newDataValue;
-            }
+      spans.forEach((span) => {
+        // Get the data-value attribute
+        const dataValue = span.getAttribute("data-value");
+        if (dataValue) {
+          // Replace the key with referenceInstruction[key] in the data-value
+          const newDataValue = dataValue.replace(
+            new RegExp(`{{${key}:`, "g"),
+            `{{${referenceInstruction[key]}:`
+          );
+          // Find the nested span with contenteditable="false" and update its content
+          const nestedSpan = span.querySelector(
+            'span[contenteditable="false"]'
+          );
+          if (nestedSpan) {
+            nestedSpan.textContent = newDataValue;
           }
-        });
+        }
       });
+    });
 
-      return tempDiv.innerHTML;
-    },
-    [referenceInstruction, value]
-  );
+    return tempDiv.innerHTML;
+  }, [referenceInstruction, value]);
 
   const finalPlaceholder = onMainLang
     ? placeholder
@@ -148,6 +143,47 @@ function ContentEditor({
   };
 
   const isRtl = rtlLanguage.includes(lang);
+  const renderedContentRef = useRef(null);
+
+  // Handle collapsible button clicks in rendered view
+  useEffect(() => {
+    if (!isActive && renderedContentRef.current) {
+      const handleCollapsibleClick = (e) => {
+        const button = e.target.closest(".collapsible-button");
+        if (button) {
+          e.preventDefault();
+          e.stopPropagation();
+          const collapsible = button.closest(".tiptap-collapsible");
+          if (collapsible) {
+            const content = collapsible.querySelector(".collapsible-content");
+            const isOpen = collapsible.getAttribute("data-open") === "true";
+            const newState = !isOpen;
+            collapsible.setAttribute("data-open", newState ? "true" : "false");
+            if (newState) {
+              content.style.display = "";
+              content.classList.add("open");
+            } else {
+              content.style.display = "none";
+              content.classList.remove("open");
+            }
+          }
+        }
+      };
+
+      renderedContentRef.current.addEventListener(
+        "click",
+        handleCollapsibleClick
+      );
+      return () => {
+        if (renderedContentRef.current) {
+          renderedContentRef.current.removeEventListener(
+            "click",
+            handleCollapsibleClick
+          );
+        }
+      };
+    }
+  }, [isActive, fixedValue]);
 
   return (
     <Box
@@ -175,6 +211,7 @@ function ContentEditor({
         />
       ) : isNotEmptyHtml(value) ? (
         <div
+          ref={renderedContentRef}
           className={`${isRtl ? "rtl" : "ltr"} ql-editor ${styles.noPadding}`}
           dangerouslySetInnerHTML={{ __html: fixedValue }}
         />

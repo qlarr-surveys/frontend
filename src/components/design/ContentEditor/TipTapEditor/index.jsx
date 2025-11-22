@@ -9,9 +9,11 @@ import Highlight from "@tiptap/extension-highlight";
 import Mention from "@tiptap/extension-mention";
 import { manageStore } from "~/store";
 import { buildReferences } from "~/components/Questions/buildReferences";
-import { sanitizePastedText } from "../QuillEditor";
+import { sanitizePastedText } from "../sanitizePastedText";
 import Toolbar from "./Toolbar";
 import suggestion from "./suggestion";
+import ImageExtension from "./ImageExtension";
+import CollapsibleExtension from "./CollapsibleExtension";
 import "tippy.js/dist/tippy.css";
 import "./TipTapEditor.css";
 
@@ -34,7 +36,8 @@ const FontSize = Extension.create({
         attributes: {
           fontSize: {
             default: null,
-            parseHTML: (element) => element.style.fontSize?.replace(/['"]+/g, ""),
+            parseHTML: (element) =>
+              element.style.fontSize?.replace(/['"]+/g, ""),
             renderHTML: (attributes) => {
               if (!attributes.fontSize) {
                 return {};
@@ -58,9 +61,22 @@ const FontSize = Extension.create({
         },
       unsetFontSize:
         () =>
-        ({ chain }) => {
-          return chain().setMark("textStyle", { fontSize: null }).removeEmptyTextStyle()
-            .run();
+        ({ chain, state }) => {
+          // Get current textStyle attributes to preserve other styles (like color)
+          const textStyleMark = state.selection.$from
+            .marks()
+            .find((m) => m.type.name === "textStyle");
+          if (textStyleMark) {
+            const currentAttrs = textStyleMark.attrs || {};
+            const { fontSize, ...remainingAttrs } = currentAttrs;
+
+            if (Object.keys(remainingAttrs).length > 0) {
+              // Preserve other textStyle attributes (e.g., color)
+              return chain().setMark("textStyle", remainingAttrs).run();
+            }
+          }
+          // Remove textStyle mark entirely if no other attributes
+          return chain().unsetMark("textStyle").run();
         },
     };
   },
@@ -78,7 +94,6 @@ function DraftEditor({
   editorTheme = "snow",
   referenceInstruction = {},
 }) {
-
   const editorRef = useRef(null);
   const wrapperRef = useRef(null);
   const blurTimeoutRef = useRef(null);
@@ -135,6 +150,14 @@ function DraftEditor({
         },
         suggestion: suggestion(getMentionSuggestions, referenceInstruction),
       }),
+      ImageExtension.configure({
+        inline: false,
+        allowBase64: false,
+        HTMLAttributes: {
+          class: "tiptap-image",
+        },
+      }),
+      CollapsibleExtension,
     ];
   }, [getMentionSuggestions, referenceInstruction]);
 
@@ -158,7 +181,11 @@ function DraftEditor({
         // Insert first line at cursor
         const { state, dispatch } = view;
         const { selection } = state;
-        const transaction = state.tr.insertText(firstLine, selection.from, selection.to);
+        const transaction = state.tr.insertText(
+          firstLine,
+          selection.from,
+          selection.to
+        );
         dispatch(transaction);
 
         // Handle additional lines
@@ -175,7 +202,11 @@ function DraftEditor({
       // Handle new line in single-line mode
       if (!extended && onNewLine) {
         const currentValue = editorRef.current || "";
-        if (html !== "<p></p>" && html.endsWith("<p></p>") && !currentValue.endsWith("<p></p>")) {
+        if (
+          html !== "<p></p>" &&
+          html.endsWith("<p></p>") &&
+          !currentValue.endsWith("<p></p>")
+        ) {
           onNewLine(html);
           return;
         }
@@ -200,10 +231,20 @@ function DraftEditor({
           return;
         }
 
+        // Check if active element is a file input (which might be outside wrapper but is part of toolbar)
+        if (
+          activeElement &&
+          activeElement.tagName === "INPUT" &&
+          activeElement.type === "file"
+        ) {
+          // File input is being used, don't fire blur
+          return;
+        }
+
         // Focus moved outside the editor, fire the blur listener
         const currentHtml = editor?.getHTML() || "";
         onBlurListener(currentHtml, lang);
-      }, 0);
+      }, 100); // Increased timeout to allow file input to be handled
     },
   });
 
@@ -250,7 +291,9 @@ function DraftEditor({
       onClick={handleContainerClick}
     >
       <EditorContent editor={editor} />
-      {editorTheme === "snow" && <Toolbar editor={editor} extended={extended} />}
+      {editorTheme === "snow" && (
+        <Toolbar editor={editor} extended={extended} code={code} />
+      )}
     </div>
   );
 }
