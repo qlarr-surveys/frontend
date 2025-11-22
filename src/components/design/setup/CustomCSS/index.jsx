@@ -299,6 +299,26 @@ function CustomCSS({ code }) {
     }
   };
 
+  // Function to validate and fix CSS syntax
+  const validateAndFixCSS = (css) => {
+    if (!css.trim()) return '';
+    
+    let fixedCSS = css;
+    
+    // Count opening and closing braces
+    const openBraces = (css.match(/\{/g) || []).length;
+    const closeBraces = (css.match(/\}/g) || []).length;
+    
+    // If there are more opening braces than closing, add missing closing braces
+    if (openBraces > closeBraces) {
+      const missingBraces = openBraces - closeBraces;
+      fixedCSS += '}'.repeat(missingBraces);
+      console.log(`[CSS] Fixed ${missingBraces} missing closing brace(s)`);
+    }
+    
+    return fixedCSS;
+  };
+
   // Function to scope CSS appropriately (Survey-wide or question-specific)
   const scopeCSS = (css) => {
     const isQuestionLevel = code !== "Survey";
@@ -314,20 +334,25 @@ function CustomCSS({ code }) {
       return '';
     }
     
-    // Test the regex with your exact input
+    // First, validate and fix the CSS
+    const fixedCSS = validateAndFixCSS(css);
+    console.log('Fixed CSS:', JSON.stringify(fixedCSS));
+    
+    // Test the regex with the fixed CSS
     const regex = /([^{}]*)\{([^{}]*)\}/g;
     console.log('Testing regex:', regex);
     
     let matches = [];
     let match;
-    while ((match = regex.exec(css)) !== null) {
+    const testRegex = new RegExp(regex.source, regex.flags);
+    while ((match = testRegex.exec(fixedCSS)) !== null) {
       matches.push(match);
       console.log('Regex match found:', match);
     }
     console.log('Total matches found:', matches.length);
     
-    // Reset regex for actual replacement
-    const result = css.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
+    // Apply scoping to the fixed CSS
+    const result = fixedCSS.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
       console.log('Processing match:', fullMatch);
       console.log('Raw selector:', JSON.stringify(selector));
       console.log('Raw props:', JSON.stringify(props));

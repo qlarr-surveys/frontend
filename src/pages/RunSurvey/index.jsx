@@ -118,10 +118,34 @@ function RunSurvey({
       });
     }
     
+    // Function to validate and fix CSS syntax
+    const validateAndFixCSS = (css) => {
+      if (!css.trim()) return '';
+      
+      let fixedCSS = css;
+      
+      // Count opening and closing braces
+      const openBraces = (css.match(/\{/g) || []).length;
+      const closeBraces = (css.match(/\}/g) || []).length;
+      
+      // If there are more opening braces than closing, add missing closing braces
+      if (openBraces > closeBraces) {
+        const missingBraces = openBraces - closeBraces;
+        fixedCSS += '}'.repeat(missingBraces);
+        console.log(`[CSS] Preview: Fixed ${missingBraces} missing closing brace(s)`);
+      }
+      
+      return fixedCSS;
+    };
+    
     // Scope CSS function
     const scopeCSS = (css, questionCode = null) => {
       if (!css.trim()) return '';
-      return css.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
+      
+      // First, validate and fix the CSS
+      const fixedCSS = validateAndFixCSS(css);
+      
+      return fixedCSS.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
         const cleanSelector = selector.trim();
         const cleanProps = props.trim();
         
