@@ -25,6 +25,7 @@ import {
   addQuestionInstructions,
   addSkipInstructions,
   changeInstruction,
+  cleanupDefaultValue,
   conditionalRelevanceEquation,
   instructionByCode,
   processValidation,
@@ -209,6 +210,10 @@ export const designState = createSlice({
       state[payload.code].relevance = payload.value;
       addRelevanceInstructions(state, payload.code, payload.value);
     },
+    updateInstruction: (state, action) => {
+      const { code, instruction } = action.payload;
+      changeInstruction(state[code], instruction);
+    },
     cloneQuestion: (state, action) => {
       const code = action.payload;
       const survey = state.Survey;
@@ -257,6 +262,7 @@ export const designState = createSlice({
       state.index = buildCodeIndex(state);
       question.designErrors = questionDesignError(question);
       cleanupValidation(state, codes[0]);
+      cleanupDefaultValue(question);
       refreshEnumForSingleChoice(question, state);
       refreshListForMultipleChoice(question, state);
       addMaskedValuesInstructions(codes[0], question, state);
@@ -700,6 +706,7 @@ export const {
   editSkipToEnd,
   editDisqualifyToEnd,
   changeRelevance,
+  updateInstruction,
   onDrag,
   addComponent,
   setSaving,
@@ -797,6 +804,7 @@ const newQuestion = (state, payload) => {
     );
   });
   cleanupValidation(state, newCode);
+  cleanupDefaultValue(questionObject[newCode]);
   refreshEnumForSingleChoice(questionObject[newCode], state);
   refreshListForMultipleChoice(questionObject[newCode], state);
   addMaskedValuesInstructions(newCode, questionObject[newCode], state);
@@ -911,6 +919,7 @@ const addAnswer = (state, answer) => {
     state[qualifiedCode].type = answer.type;
   }
   addAnswerInstructions(state, state[qualifiedCode], parentCode, questionCode);
+  cleanupDefaultValue(state[questionCode]);
   refreshEnumForSingleChoice(state[questionCode], state);
   refreshListForMultipleChoice(state[questionCode], state);
   if (answer.focus) {

@@ -1,5 +1,42 @@
 import { current } from "@reduxjs/toolkit";
 
+export const cleanupDefaultValue = (component) => {
+  // Check if this is a single choice question type that supports default values
+  if (
+    !component.type ||
+    ![
+      "scq",
+      "icon_scq", 
+      "image_scq",
+      "select"
+    ].includes(component.type)
+  ) {
+    return;
+  }
+
+  // Find the value instruction that contains the default value
+  const valueInstruction = component.instructionList?.find(
+    (instruction) => instruction.code === "value"
+  );
+
+  if (!valueInstruction || !valueInstruction.text) {
+    return; // No default value set
+  }
+
+  // Get current answer codes
+  const currentAnswerCodes = component.children?.map(child => child.code) || [];
+
+  // Check if the current default value still exists in the answers
+  if (!currentAnswerCodes.includes(valueInstruction.text)) {
+    // Default value refers to a deleted answer - clear the text value
+    changeInstruction(component, { 
+      code: "value", 
+      text: "",
+      isActive: false 
+    });
+  }
+};
+
 export const addSkipInstructions = (state, code) => {
   const component = state[code];
   if (
@@ -30,6 +67,7 @@ export const refreshEnumForSingleChoice = (component, state) => {
   ) {
     return;
   }
+  
   switch (component.type) {
     case "image_scq":
     case "icon_scq":
@@ -421,195 +459,161 @@ export const addQuestionInstructions = (question) => {
   let type = question.type;
   switch (type) {
     case "text":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "string",
+        text: "",
+      });
       break;
     case "number":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "double",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "double",
+        text: "",
+      });
       break;
     case "email":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "string",
+        text: "",
+      });
       break;
     case "paragraph":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "string",
+        text: "",
+      });
       break;
     case "barcode":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-        {
-          code: "mode",
-          isActive: false,
-          returnType: "string",
-          text: "offline",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "string",
+        text: "",
+      });
+      changeInstruction(question, {
+        code: "mode",
+        isActive: false,
+        returnType: "string",
+        text: "offline",
+      });
       break;
     case "select":
     case "scq":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "string",
+        text: "",
+      });
       break;
     case "icon_mcq":
     case "image_mcq":
     case "mcq":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "list",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "list",
+        text: "",
+      });
       break;
     case "icon_scq":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "string",
+        text: "",
+      });
       break;
     case "image_scq":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "string",
+        text: "",
+      });
       break;
     case "nps":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "int",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "int",
+        text: "",
+      });
       break;
     case "file_upload":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "file",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "file",
+        text: "",
+      });
       break;
     case "signature":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "file",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "file",
+        text: "",
+      });
       break;
     case "photo_capture":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "file",
-          text: "",
-        },
-        {
-          code: "mode",
-          isActive: false,
-          returnType: "string",
-          text: "offline",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "file",
+        text: "",
+      });
+      changeInstruction(question, {
+        code: "mode",
+        isActive: false,
+        returnType: "string",
+        text: "offline",
+      });
       break;
     case "video_capture":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "file",
-          text: "",
-        },
-        {
-          code: "mode",
-          isActive: false,
-          returnType: "string",
-          text: "offline",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "file",
+        text: "",
+      });
+      changeInstruction(question, {
+        code: "mode",
+        isActive: false,
+        returnType: "string",
+        text: "offline",
+      });
       break;
     case "date":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "date",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "date",
+        text: "",
+      });
       break;
     case "date_time":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "date",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "date",
+        text: "",
+      });
       break;
     case "time":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "date",
-          text: "",
-        },
-      ];
+      changeInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "date",
+        text: "",
+      });
       break;
     case "text_display":
     case "video_display":
@@ -710,7 +714,11 @@ const editInstruction = (componentState, instruction) => {
   if (index < 0) {
     componentState.instructionList.push(instruction);
   } else {
-    componentState.instructionList[index] = instruction;
+    // Merge with existing instruction to preserve other properties
+    componentState.instructionList[index] = {
+      ...componentState.instructionList[index],
+      ...instruction
+    };
   }
 };
 
