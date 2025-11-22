@@ -118,10 +118,10 @@ export const loadScript = (runService, preview) =>
 export const previewUrlByFilename = (fileName) => {
   const surveyId = sessionStorage.getItem("surveyId");
   const responseId = sessionStorage.getItem("responseId");
-  
+
   return (
     BACKEND_BASE_URL +
-    `/survey/${surveyId}/response/${responseId}/attach/${fileName}`
+    `survey/${surveyId}/response/${responseId}/attach/${fileName}`
   );
 };
 
