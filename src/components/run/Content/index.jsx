@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import "react-quill/dist/quill.core.css";
+// Note: ql-editor class is used for styling rendered content, not the editor itself
+// The editor has been migrated to Tiptap
 import "./content.css";
 import { rtlLanguage } from "~/utils/common";
 
