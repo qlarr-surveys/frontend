@@ -46,6 +46,23 @@ function ManageSurvey({ landingPage }) {
   
   // Watch for custom CSS changes and apply them globally
   const customCSS = useSelector((state) => state.designState?.Survey?.theme?.customCSS);
+  
+  // Create a selector that tracks all question-level CSS changes
+  const allQuestionCSS = useSelector((state) => {
+    if (!state.designState) return {};
+    const questionCSS = {};
+    Object.keys(state.designState).forEach(key => {
+      if (key !== 'Survey' && key !== 'langInfo' && key !== 'versionDto' && key !== 'componentIndex' && 
+          key !== 'latest' && key !== 'lastAddedComponent' && key !== 'index' && key !== 'setup' &&
+          key !== 'state' && key !== 'addComponentsVisibility' && key !== 'globalSetup' && key !== 'designMode') {
+        const questionState = state.designState[key];
+        if (questionState?.customCSS?.trim()) {
+          questionCSS[key] = questionState.customCSS;
+        }
+      }
+    });
+    return questionCSS;
+  });
 
   const [designAvailable, setDesignAvailable] = useState(false);
 
@@ -137,11 +154,26 @@ function ManageSurvey({ landingPage }) {
   
   // Apply custom CSS globally whenever it changes
   useEffect(() => {
-    if (designState && customCSS) {
-      console.log('[CSS] ManageSurvey: Custom CSS changed, applying globally...');
-      applyGlobalCustomCSS(designState);
+    if (designState) {
+      const hasAnyCss = customCSS || Object.keys(allQuestionCSS).length > 0;
+      console.log('[CSS] ManageSurvey useEffect triggered:');
+      console.log('[CSS] - designState keys:', Object.keys(designState || {}));
+      console.log('[CSS] - Survey CSS exists:', !!customCSS);
+      console.log('[CSS] - Question CSS count:', Object.keys(allQuestionCSS).length);
+      console.log('[CSS] - Question codes with CSS:', Object.keys(allQuestionCSS));
+      console.log('[CSS] - Has any CSS to apply:', hasAnyCss);
+      
+      if (hasAnyCss) {
+        console.log('[CSS] Applying CSS...');
+        applyGlobalCustomCSS(designState);
+      } else {
+        console.log('[CSS] No CSS to apply, but removing any existing CSS');
+        // Remove any existing CSS elements even if no CSS to apply
+        const existingElements = document.querySelectorAll('[id^="survey-global-custom-css"]');
+        existingElements.forEach(el => document.head.removeChild(el));
+      }
     }
-  }, [customCSS, designState]);
+  }, [customCSS, allQuestionCSS, designState]);
 
   const setState = (state) => {
     console.log('[STATE] ManageSurvey setState called with:');
