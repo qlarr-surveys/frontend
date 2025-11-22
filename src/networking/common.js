@@ -8,7 +8,7 @@ export const buildResourceUrl = (fileName, surveyId = null) => {
   if (!surveyId) {
     surveyId = sessionStorage.getItem("surveyId");
   }
-  return `${BACKEND_BASE_URL}/survey/${surveyId}/resource/${fileName}`;
+  return `${BACKEND_BASE_URL}survey/${surveyId}/resource/${fileName}`;
 };
 
 export const sharingUrl = (surveyId, preview, lang) => {
