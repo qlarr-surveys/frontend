@@ -57,17 +57,17 @@ function ScqDefaultValue({ code }) {
   return (
     <div style={{ marginBottom: '16px' }}>
       <Typography fontWeight={700} style={{ marginBottom: '8px' }}>
-        {t("Default Value")}
+        {t("default_value")}
       </Typography>
       <FormControl fullWidth size="small">
-        <InputLabel>{t("Select default answer")}</InputLabel>
+        <InputLabel>{t("select_default_answer")}</InputLabel>
         <Select
           value={currentDefaultValue}
           onChange={handleDefaultValueChange}
-          label={t("Select default answer")}
+          label={t("select_default_answer")}
         >
           <MenuItem value="">
-            <em>{t("No default")}</em>
+            <em>{t("no_default")}</em>
           </MenuItem>
           {answers.map((answer) => (
             <MenuItem key={answer.code} value={answer.code}>
