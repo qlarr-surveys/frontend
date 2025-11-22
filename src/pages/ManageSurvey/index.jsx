@@ -42,6 +42,14 @@ function ManageSurvey({ landingPage }) {
   );
   const refetchError = useSelector((state) => state.editState.error);
   const langInfo = useSelector((state) => state.designState.langInfo);
+  // Helper function to identify valid components (questions/groups) vs system metadata
+  const isValidComponent = (key, obj) => {
+    return obj && 
+           typeof obj === 'object' && 
+           key !== 'Survey' && // Survey is special case
+           (obj.type || obj.children || obj.instructionList || obj.content);
+  };
+
   const designState = useSelector((state) => state.designState);
   
   // Watch for custom CSS changes and apply them globally
@@ -63,14 +71,6 @@ function ManageSurvey({ landingPage }) {
   const [designAvailable, setDesignAvailable] = useState(false);
 
   const dispatch = useDispatch();
-  
-  // Helper function to identify valid components (questions/groups) vs system metadata
-  const isValidComponent = (key, obj) => {
-    return obj && 
-           typeof obj === 'object' && 
-           key !== 'Survey' && // Survey is special case
-           (obj.type || obj.children || obj.instructionList || obj.content);
-  };
   
   // Function to apply custom CSS globally (Survey-level and all question-level CSS)
   const applyGlobalCustomCSS = (state) => {
