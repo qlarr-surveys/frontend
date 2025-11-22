@@ -28,7 +28,7 @@ function App() {
             order: ["localStorage", "navigator"],
             caches: ["localStorage"],
           },
-          supportedLngs: ["en","ar","de"]
+          supportedLngs: ["en","ar","de","es","pt","fr","nl"]
         });
       return (
         <I18nextProvider i18n={i18next}>
@@ -53,7 +53,7 @@ function App() {
             order: ["localStorage", "navigator"],
             caches: ["localStorage"],
           },
-          supportedLngs: ["en","ar","de"]
+          supportedLngs: ["en","ar","de","es","pt","fr","nl"]
         });
       return (
         <I18nextProvider i18n={i18next}>

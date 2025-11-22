@@ -9,22 +9,9 @@ export const surveySetup = {
   ],
 };
 
-export const reorderSetup = {
-  code: "globalSetup",
-  rules: [
-    {
-      title: "reorder_setup",
-      key: "reorder_setup",
-      rules: ["reorder_setup"],
-    },
-  ],
-};
-
 export const themeSetup = {
   code: "Survey",
-  rules: [
-    { title: "", rules: ["theme"] },
-  ],
+  rules: [{ title: "", rules: ["theme"] }],
 };
 export const languageSetup = {
   code: "Survey",
@@ -40,7 +27,12 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: [
+            "changeCode",
+            "questionActions",
+            "disabled",
+            "showDescription",
+          ],
         },
         {
           title: "logic",
@@ -53,7 +45,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["changeCode", "questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -68,6 +60,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -87,6 +80,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -107,6 +101,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -138,7 +133,7 @@ export const setupOptions = (type) => {
         {
           title: "",
           key: "",
-          rules: ["disabled", "relevance"],
+          rules: ["changeCode", "disabled", "relevance"],
         },
       ];
 
@@ -169,6 +164,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -205,6 +201,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -235,6 +232,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -266,7 +264,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["changeCode", "questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -289,7 +287,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["changeCode", "questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -308,7 +306,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription", "hint"],
+          rules: ["changeCode", "questionActions", "disabled", "showDescription", "hint"],
         },
         {
           title: "logic",
@@ -327,7 +325,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription", "hint"],
+          rules: ["changeCode", "questionActions", "disabled", "showDescription", "hint"],
         },
         {
           title: "logic",
@@ -346,7 +344,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription", "hint"],
+          rules: ["changeCode", "questionActions", "disabled", "showDescription", "hint"],
         },
         {
           title: "logic",
@@ -366,6 +364,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -393,6 +392,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -419,6 +419,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -463,6 +464,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -490,6 +492,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -516,7 +519,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["changeCode", "questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -539,7 +542,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["changeCode", "questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -558,7 +561,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["changeCode", "questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -582,6 +585,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -613,6 +617,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -644,6 +649,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",
@@ -673,7 +679,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription"],
+          rules: ["changeCode", "questionActions", "disabled", "showDescription"],
         },
         {
           title: "logic",
@@ -693,6 +699,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "showDescription",
             "disabled",
@@ -719,6 +726,7 @@ export const setupOptions = (type) => {
           title: "general",
           key: "general",
           rules: [
+            "changeCode", 
             "questionActions",
             "disabled",
             "showDescription",

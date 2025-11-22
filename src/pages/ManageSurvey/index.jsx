@@ -9,7 +9,6 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import {
   designStateReceived,
-  onAddComponentsVisibilityChange,
   resetSetup,
 } from "~/state/design/designState";
 import { GetData } from "~/networking/design";
@@ -41,8 +40,6 @@ function ManageSurvey({ landingPage }) {
   const [selectedPage, setSelectedTab] = useState(
     landingTab(landingPage, user)
   );
-  const refetchError = useSelector((state) => state.editState.error);
-  const langInfo = useSelector((state) => state.designState.langInfo);
 
   const [designAvailable, setDesignAvailable] = useState(false);
 
@@ -57,13 +54,12 @@ function ManageSurvey({ landingPage }) {
   };
 
   useEffect(() => {
-    dispatch(onAddComponentsVisibilityChange(true));
     dispatch(resetSetup());
     if (!isSurveyAdmin(user)) {
       return;
     }
     dispatch(setLoading(true));
-    GetData(designService, setState, processApirror, langInfo)
+    GetData(designService, setState, processApirror)
       .then((data) => {
         if (data) {
           setDesignAvailable(true);
@@ -87,23 +83,6 @@ function ManageSurvey({ landingPage }) {
       .catch((err) => {});
   };
 
-  const refetchAll = useCallback(() => {
-    if (isSurveyAdmin(user)) {
-      dispatch(setLoading(true));
-      GetData(designService, setState, processApirror, langInfo)
-        .then((data) => {
-          if (data) setDesignAvailable(true);
-        })
-        .finally(() => dispatch(setLoading(false)));
-    }
-    loadSurvey();
-  }, [user, designService, dispatch, setState, processApirror, loadSurvey, langInfo]);
-
-  useEffect(() => {
-    if (refetchError?.name === "component_deleted" && refetchError?.seen) {
-      refetchAll();
-    }
-  }, [refetchError?.name, refetchError?.seen, refetchAll]);
 
   useEffect(() => {
     const handlePopState = () => {

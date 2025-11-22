@@ -25,6 +25,10 @@ export const BaseLanguage = ({
         <MenuItem value={"en"}>{LANGUAGE_DEF["en"].name}</MenuItem>
         <MenuItem value={"de"}>{LANGUAGE_DEF["de"].name}</MenuItem>
         <MenuItem value={"ar"}>{LANGUAGE_DEF["ar"].name}</MenuItem>
+        <MenuItem value={"es"}>{LANGUAGE_DEF["es"].name}</MenuItem>
+        <MenuItem value={"pt"}>{LANGUAGE_DEF["pt"].name}</MenuItem>
+        <MenuItem value={"fr"}>{LANGUAGE_DEF["fr"].name}</MenuItem>
+        <MenuItem value={"nl"}>{LANGUAGE_DEF["nl"].name}</MenuItem>
       </Select>
     </FormControl>
   );

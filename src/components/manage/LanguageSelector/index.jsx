@@ -50,6 +50,18 @@ export const LanguageSelector = () => {
       <MenuItem value="ar" title="العربية">
         AR
       </MenuItem>
+      <MenuItem value="es" title="Español">
+        ES
+      </MenuItem>
+      <MenuItem value="pt" title="Português">
+        PT
+      </MenuItem>
+      <MenuItem value="fr" title="Français">
+        FR
+      </MenuItem>
+      <MenuItem value="nl" title="Nederlands">
+        NL
+      </MenuItem>
     </Select>
   );
 };

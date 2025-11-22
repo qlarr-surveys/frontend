@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import { firstIndexInArray, isEquivalent, nextId } from "~/utils/design/utils";
 import { createGroup } from "~/components/design/NewComponentsPanel";
 
@@ -11,12 +11,7 @@ import {
   reorder,
   buildReferenceInstruction,
 } from "./stateUtils";
-import {
-  languageSetup,
-  reorderSetup,
-  setupOptions,
-  themeSetup,
-} from "~/constants/design";
+import { languageSetup, setupOptions, themeSetup } from "~/constants/design";
 import {
   createQuestion,
   questionDesignError,
@@ -37,21 +32,69 @@ import {
   removeInstruction,
   updateRandomByRule,
 } from "./addInstructions";
+import { defaultSurveyTheme } from '~/constants/theme';
 
-const reservedKeys = ["setup", "reorder_refresh_code"];
+const reservedKeys = [
+  "setup",
+  "langInfo",
+  "reorder_refresh_code",
+  "state",
+  "globalSetup",
+  "designMode",
+  "isSaving",
+  "isUpdating",
+  "latest",
+  "lastAddedComponent",
+  "index",
+  "skipScroll",
+];
 
 export const designState = createSlice({
   name: "designState",
   initialState: { state: {} },
   reducers: {
     designStateReceived: (state, action) => {
-      let keys = Object.keys(state).filter((el) => !reservedKeys.includes(el));
-      let newState = action.payload;
-      keys = Object.keys(newState);
-      keys.forEach((key) => {
-        if (!isEquivalent(state[key], newState[key])) {
-          state[key] = newState[key];
-        }
+      const response = action.payload;
+      let newState = response.designerInput.state;
+
+      if (!newState.Survey.theme) {
+        newState.Survey.theme = defaultSurveyTheme;
+      }
+
+      newState.versionDto = response.versionDto;
+      newState.componentIndex = response.designerInput.componentIndexList;
+      const newKeys = Object.keys(newState).filter(
+        (el) => !reservedKeys.includes(el)
+      );
+      const toBeRemoved = Object.keys(state).filter(
+        (el) => !reservedKeys.includes(el) && !newKeys.includes(el)
+      );
+
+      if (!state.langInfo) {
+        const defaultLang = newState.Survey.defaultLang || LANGUAGE_DEF.en;
+        const mainLang = defaultLang.code;
+        const lang = defaultLang.code;
+        const languagesList = [defaultLang].concat(
+          newState.Survey.additionalLang || []
+        );
+        state.langInfo = {
+          languagesList,
+          mainLang,
+          lang,
+          onMainLang: lang == mainLang,
+        };
+      }
+
+      toBeRemoved.forEach((key) => {
+        delete state[key];
+      });
+      const inCurrentSetup = state["setup"]?.code;
+      if (!newKeys.includes(inCurrentSetup)) {
+        delete state["setup"];
+      }
+
+      newKeys.forEach((key) => {
+        state[key] = newState[key];
       });
       state["latest"] = structuredClone(newState);
       state.lastAddedComponent = null;
@@ -92,9 +135,9 @@ export const designState = createSlice({
       );
     },
     resetSetup(state) {
-      const currentLang = state.langInfo?.lang;
-      const isInTranslationMode = state.designMode === DESIGN_SURVEY_MODE.LANGUAGES;
-      
+      const isInTranslationMode =
+        state.designMode === DESIGN_SURVEY_MODE.LANGUAGES;
+
       if (state.langInfo && !isInTranslationMode) {
         state.langInfo.lang = state.langInfo.mainLang;
         state.langInfo.onMainLang = true;
@@ -102,12 +145,15 @@ export const designState = createSlice({
       if (!state.globalSetup) {
         state.globalSetup = {};
       }
-      state.globalSetup.reorder_setup = undefined;
       delete state["setup"];
-      
+
       if (!isInTranslationMode) {
         state.designMode = DESIGN_SURVEY_MODE.DESIGN;
       }
+    },
+    setDesignModeToDesign(state) {
+      designState.caseReducers.resetSetup(state);
+      state.designMode = DESIGN_SURVEY_MODE.DESIGN;
     },
     setDesignModeToLang(state) {
       designState.caseReducers.resetSetup(state);
@@ -118,15 +164,6 @@ export const designState = createSlice({
       designState.caseReducers.resetSetup(state);
       designState.caseReducers.setup(state, { payload: themeSetup });
       state.designMode = DESIGN_SURVEY_MODE.THEME;
-    },
-    setDesignModeToReorder(state) {
-      designState.caseReducers.resetSetup(state);
-      designState.caseReducers.setup(state, { payload: reorderSetup });
-      if (!state.globalSetup) {
-        state.globalSetup = {};
-      }
-      state.globalSetup.reorder_setup = "collapse_questions";
-      state.designMode = DESIGN_SURVEY_MODE.REORDER;
     },
     changeAttribute: (state, action) => {
       let payload = action.payload;
@@ -437,9 +474,6 @@ export const designState = createSlice({
       delete state[questionCode];
       cleanupRandomRules(group);
     },
-    onAddComponentsVisibilityChange: (state, action) => {
-      state.addComponentsVisibility = action.payload;
-    },
     changeContent: (state, action) => {
       let payload = action.payload;
       if (!state[payload.code].content) {
@@ -613,12 +647,6 @@ export const designState = createSlice({
           deafult: break;
       }
     },
-    collapseAllGroups: (state) => {
-      state.Survey.children.forEach(
-        (group) => (state[group.code].collapsed = true)
-      );
-    },
-
     addComponent: (state, action) => {
       const { type, questionType } = action.payload;
       const survey = state.Survey;
@@ -653,9 +681,7 @@ export const {
   onAdditionalLangAdded,
   onAdditionalLangRemoved,
   changeLang,
-  onAddComponentsVisibilityChange,
   changeAttribute,
-  resetCollapse,
   changeTimeFormats,
   changeContent,
   changeResources,
@@ -666,17 +692,15 @@ export const {
   resetFocus,
   addNewAnswer,
   addNewAnswers,
+  setDesignModeToDesign,
   setDesignModeToLang,
-  setDesignModeToReorder,
   setDesignModeToTheme,
   removeAnswer,
   setup,
   resetSetup,
   changeValidationValue,
   updateRandom,
-  updatePriority,
   updateRandomByType,
-  updatePriorityByType,
   removeSkipDestination,
   editSkipDestination,
   editSkipToEnd,
@@ -685,7 +709,6 @@ export const {
   updateInstruction,
   onDrag,
   addComponent,
-  collapseAllGroups,
   setSaving,
   setUpdating,
 } = designState.actions;
@@ -727,7 +750,7 @@ const reparentQuestion = (state, survey, payload) => {
   }
   destinationGroup.children.splice(destinationQuestionIndex, 0, question);
   // cheap trick to notifiy Drop Areas of the update
-  state["reorder_refresh_code"] = Math.floor(Math.random() * 1000000);;
+  state["reorder_refresh_code"] = Math.floor(Math.random() * 1000000);
   cleanupRandomRules(destinationGroup);
   cleanupRandomRules(sourceGroup);
 };
