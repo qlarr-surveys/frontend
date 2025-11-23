@@ -136,8 +136,14 @@
   content: "▼";
   font-size: 0.75em;
   margin-left: 0.5em;
+  margin-right: 0;
   transition: transform 0.2s;
   flex-shrink: 0;
+}
+
+.tiptap-editor.rtl .collapsible-button::after {
+  margin-left: 0;
+  margin-right: 0.5em;
 }
 
 .tiptap-collapsible[data-open="true"] .collapsible-button::after {

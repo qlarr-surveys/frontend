@@ -1,6 +1,5 @@
 import { Node, mergeAttributes } from "@tiptap/core";
 
-// Custom Collapsible/Details extension
 const CollapsibleExtension = Node.create({
   name: "collapsible",
 
@@ -95,27 +94,28 @@ const CollapsibleExtension = Node.create({
         content.style.display = "none";
       }
 
-      // Render the content
       const contentWrapper = document.createElement("div");
       content.appendChild(contentWrapper);
 
-      // Handle button click
       const handleClick = (e) => {
         e.preventDefault();
         e.stopPropagation();
         const currentPos = typeof getPos === "function" ? getPos() : null;
         if (currentPos !== null && currentPos !== undefined) {
           const isOpen = node.attrs.open;
-          editor.commands.command(({ tr }) => {
+          editor.commands.command(({ tr, dispatch }) => {
             const nodePos = currentPos;
             const nodeAtPos = tr.doc.nodeAt(nodePos);
             if (nodeAtPos && nodeAtPos.type.name === this.name) {
-              tr.setNodeMarkup(nodePos, undefined, {
-                ...nodeAtPos.attrs,
-                open: !isOpen,
-              });
+              if (dispatch) {
+                tr.setNodeMarkup(nodePos, undefined, {
+                  ...nodeAtPos.attrs,
+                  open: !isOpen,
+                });
+              }
+              return true;
             }
-            return true;
+            return false;
           });
         }
       };
@@ -133,13 +133,11 @@ const CollapsibleExtension = Node.create({
             return false;
           }
 
-          // Update button text
           const newButtonText =
             updatedNode.attrs.buttonText || "Show more details";
           button.textContent = newButtonText;
           button.setAttribute("data-button-text", newButtonText);
 
-          // Update content visibility
           const isOpen = updatedNode.attrs.open;
           dom.setAttribute("data-open", isOpen ? "true" : "false");
           if (isOpen) {
@@ -182,9 +180,7 @@ const CollapsibleExtension = Node.create({
           let node = $from.node();
           let pos = $from.pos;
 
-          // Try to find collapsible node in the selection
           if (node.type.name !== this.name) {
-            // Check parent
             for (let i = $from.depth; i > 0; i--) {
               const nodeAtDepth = $from.node(i);
               if (nodeAtDepth.type.name === this.name) {

@@ -17,7 +17,6 @@ import CollapsibleExtension from "./CollapsibleExtension";
 import "tippy.js/dist/tippy.css";
 import "./TipTapEditor.css";
 
-// Custom extension for font size
 import { Extension } from "@tiptap/core";
 
 const FontSize = Extension.create({
@@ -62,7 +61,6 @@ const FontSize = Extension.create({
       unsetFontSize:
         () =>
         ({ chain, state }) => {
-          // Get current textStyle attributes to preserve other styles (like color)
           const textStyleMark = state.selection.$from
             .marks()
             .find((m) => m.type.name === "textStyle");
@@ -71,11 +69,9 @@ const FontSize = Extension.create({
             const { fontSize, ...remainingAttrs } = currentAttrs;
 
             if (Object.keys(remainingAttrs).length > 0) {
-              // Preserve other textStyle attributes (e.g., color)
               return chain().setMark("textStyle", remainingAttrs).run();
             }
           }
-          // Remove textStyle mark entirely if no other attributes
           return chain().unsetMark("textStyle").run();
         },
     };
@@ -98,7 +94,6 @@ function DraftEditor({
   const wrapperRef = useRef(null);
   const blurTimeoutRef = useRef(null);
 
-  // Get references for mentions
   const getMentionSuggestions = useCallback(
     async (query) => {
       const designState = manageStore.getState().designState;
@@ -120,7 +115,6 @@ function DraftEditor({
     [code]
   );
 
-  // Configure TipTap extensions
   const extensions = useMemo(() => {
     return [
       StarterKit.configure({
@@ -129,7 +123,7 @@ function DraftEditor({
             style: "margin: 0;",
           },
         },
-        heading: false, // Disable headings since we're using font sizes
+        heading: false,
       }),
       Link.configure({
         openOnClick: false,
@@ -161,7 +155,6 @@ function DraftEditor({
     ];
   }, [getMentionSuggestions, referenceInstruction]);
 
-  // Initialize editor
   const editor = useEditor({
     extensions,
     content: value || "",
@@ -170,15 +163,16 @@ function DraftEditor({
         class: `tiptap-editor ${isRtl ? "rtl" : "ltr"}`,
       },
       handlePaste: (view, event) => {
-        event.preventDefault();
         const text = event.clipboardData?.getData("text/plain");
-        if (!text) return true;
+        if (!text) {
+          return false;
+        }
 
+        event.preventDefault();
         const sanitizedLines = sanitizePastedText(text);
         const firstLine = sanitizedLines[0] || "";
         const restLines = sanitizedLines.slice(1);
 
-        // Insert first line at cursor
         const { state, dispatch } = view;
         const { selection } = state;
         const transaction = state.tr.insertText(
@@ -188,7 +182,6 @@ function DraftEditor({
         );
         dispatch(transaction);
 
-        // Handle additional lines
         if (typeof onMoreLines === "function" && restLines.length > 0) {
           onMoreLines(restLines);
         }
@@ -199,7 +192,6 @@ function DraftEditor({
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
 
-      // Handle new line in single-line mode
       if (!extended && onNewLine) {
         const currentValue = editorRef.current || "";
         if (
@@ -221,49 +213,44 @@ function DraftEditor({
       }
     },
     onBlur: () => {
-      // Use a short timeout to check if focus moved to toolbar or stayed within editor
       blurTimeoutRef.current = setTimeout(() => {
         const activeElement = document.activeElement;
 
-        // Check if focus moved to an element within our wrapper (toolbar, color picker, etc.)
         if (wrapperRef.current && wrapperRef.current.contains(activeElement)) {
-          // Focus is still within the editor wrapper, don't fire blur listener
           return;
         }
 
-        // Check if active element is a file input (which might be outside wrapper but is part of toolbar)
         if (
           activeElement &&
           activeElement.tagName === "INPUT" &&
           activeElement.type === "file"
         ) {
-          // File input is being used, don't fire blur
           return;
         }
 
-        // Focus moved outside the editor, fire the blur listener
         const currentHtml = editor?.getHTML() || "";
         onBlurListener(currentHtml, lang);
-      }, 100); // Increased timeout to allow file input to be handled
+      }, 100);
     },
   });
 
-  // Set focus when editor is ready
   useEffect(() => {
-    if (editor) {
-      // Focus at end of content
-      editor.commands.focus("end");
+    if (editor && !editorRef.current) {
+      const currentContent = editor.getHTML();
+      if (!currentContent || currentContent === "<p></p>") {
+        editor.commands.focus("end");
+      }
     }
   }, [editor]);
 
-  // Update editor content when value changes externally
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value || "");
+      if (!editor.isFocused) {
+        editor.commands.setContent(value || "");
+      }
     }
   }, [value, editor]);
 
-  // Cleanup
   useEffect(() => {
     return () => {
       if (blurTimeoutRef.current) {

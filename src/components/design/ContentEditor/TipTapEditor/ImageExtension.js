@@ -1,6 +1,5 @@
 import Image from "@tiptap/extension-image";
 
-// Custom Image extension with upload support
 const ImageExtension = Image.extend({
   addAttributes() {
     return {
@@ -38,7 +37,6 @@ const ImageExtension = Image.extend({
           };
         },
       },
-      // Store the resource filename for internal use
       resourceName: {
         default: null,
         parseHTML: (element) => element.getAttribute("data-resource-name"),

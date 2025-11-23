@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from "react";
+import React, { useCallback, useState, useRef, useEffect } from "react";
 import "./Toolbar.css";
 import { useService } from "~/hooks/use-service";
 import { buildResourceUrl } from "~/networking/common";
@@ -12,9 +12,11 @@ const Toolbar = ({ editor, extended, code }) => {
   const [linkUrl, setLinkUrl] = useState("");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const fileInputRef = useRef(null);
+  const colorPickerRef = useRef(null);
+  const bgColorPickerRef = useRef(null);
+  const linkInputRef = useRef(null);
   const designService = useService("design");
 
-  // Font size options matching Quill
   const fontSizes = [
     { label: "Small", value: "0.75em" },
     { label: "Normal", value: "1em" },
@@ -22,7 +24,6 @@ const Toolbar = ({ editor, extended, code }) => {
     { label: "Huge", value: "2.5em" },
   ];
 
-  // Common colors (matching Quill's default palette)
   const colors = [
     "#000000",
     "#e60000",
@@ -73,12 +74,17 @@ const Toolbar = ({ editor, extended, code }) => {
   );
 
   const setLink = useCallback(() => {
-    if (linkUrl) {
+    const trimmedUrl = linkUrl.trim();
+    if (trimmedUrl) {
+      let finalUrl = trimmedUrl;
+      if (!trimmedUrl.match(/^https?:\/\//i)) {
+        finalUrl = `http://${trimmedUrl}`;
+      }
       editor
         .chain()
         .focus()
         .extendMarkRange("link")
-        .setLink({ href: linkUrl })
+        .setLink({ href: finalUrl })
         .run();
     } else {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
@@ -92,7 +98,8 @@ const Toolbar = ({ editor, extended, code }) => {
     if (previousUrl) {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
     } else {
-      setLinkUrl("");
+      const currentUrl = editor.getAttributes("link").href || "";
+      setLinkUrl(currentUrl);
       setShowLinkInput(true);
     }
   }, [editor]);
@@ -100,7 +107,16 @@ const Toolbar = ({ editor, extended, code }) => {
   const handleImageUpload = useCallback(
     async (event) => {
       const file = event.target.files?.[0];
-      if (!file || !file.type.startsWith("image/")) {
+      if (!file) {
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        return;
+      }
+
+      const maxSize = 10 * 1024 * 1024;
+      if (file.size > maxSize) {
         return;
       }
 
@@ -108,7 +124,6 @@ const Toolbar = ({ editor, extended, code }) => {
       try {
         const response = await designService.uploadResource(file);
         const imageUrl = buildResourceUrl(response.name);
-        console.log("Image uploaded", { response, imageUrl });
 
         editor
           .chain()
@@ -120,10 +135,8 @@ const Toolbar = ({ editor, extended, code }) => {
           })
           .run();
       } catch (error) {
-        console.error("Failed to upload image:", error);
       } finally {
         setIsUploadingImage(false);
-        // Reset file input
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -142,6 +155,48 @@ const Toolbar = ({ editor, extended, code }) => {
       })
       .run();
   }, [editor]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        colorPickerRef.current &&
+        !colorPickerRef.current.contains(event.target) &&
+        !event.target.closest(".tiptap-color-picker-wrapper")
+      ) {
+        setShowColorPicker(false);
+      }
+      if (
+        bgColorPickerRef.current &&
+        !bgColorPickerRef.current.contains(event.target) &&
+        !event.target.closest(".tiptap-color-picker-wrapper")
+      ) {
+        setShowBgColorPicker(false);
+      }
+      if (
+        linkInputRef.current &&
+        !linkInputRef.current.contains(event.target) &&
+        !event.target.closest('button[title="Link"]')
+      ) {
+        setShowLinkInput(false);
+      }
+    };
+
+    if (showColorPicker || showBgColorPicker || showLinkInput) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [showColorPicker, showBgColorPicker, showLinkInput]);
+
+  useEffect(() => {
+    if (showLinkInput) {
+      const currentUrl = editor.getAttributes("link").href || "";
+      if (currentUrl && !linkUrl) {
+        setLinkUrl(currentUrl);
+      }
+    }
+  }, [showLinkInput, editor, linkUrl]);
 
   if (!editor) {
     return null;
@@ -223,7 +278,7 @@ const Toolbar = ({ editor, extended, code }) => {
       </button>
 
       {showLinkInput && (
-        <div className="tiptap-link-input">
+        <div className="tiptap-link-input" ref={linkInputRef}>
           <input
             type="url"
             placeholder="Enter URL"
@@ -231,8 +286,10 @@ const Toolbar = ({ editor, extended, code }) => {
             onChange={(e) => setLinkUrl(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
+                e.preventDefault();
                 setLink();
               } else if (e.key === "Escape") {
+                e.preventDefault();
                 setShowLinkInput(false);
                 setLinkUrl("");
                 editor.commands.focus();
@@ -332,7 +389,7 @@ const Toolbar = ({ editor, extended, code }) => {
           </span>
         </button>
         {showColorPicker && (
-          <div className="tiptap-color-palette">
+          <div className="tiptap-color-palette" ref={colorPickerRef}>
             {colors.map((color) => (
               <button
                 key={color}
@@ -383,7 +440,7 @@ const Toolbar = ({ editor, extended, code }) => {
           </span>
         </button>
         {showBgColorPicker && (
-          <div className="tiptap-color-palette">
+          <div className="tiptap-color-palette" ref={bgColorPickerRef}>
             {colors.map((color) => (
               <button
                 key={color}

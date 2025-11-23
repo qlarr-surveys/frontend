@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-// Note: ql-editor class is used for styling rendered content, not the editor itself
-// The editor has been migrated to Tiptap
 import "./content.css";
 import { rtlLanguage } from "~/utils/common";
 
