@@ -11,6 +11,7 @@ const Toolbar = ({ editor, extended, code }) => {
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [currentFontSize, setCurrentFontSize] = useState("1em");
   const fileInputRef = useRef(null);
   const colorPickerRef = useRef(null);
   const bgColorPickerRef = useRef(null);
@@ -64,14 +65,40 @@ const Toolbar = ({ editor, extended, code }) => {
 
   const setFontSize = useCallback(
     (size) => {
-      if (size === "1em") {
-        editor.chain().focus().unsetFontSize().run();
-      } else {
-        editor.chain().focus().setFontSize(size).run();
-      }
+      editor.chain().focus().setFontSize(size).run();
     },
     [editor]
   );
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const updateFontSize = () => {
+      const attrs = editor.getAttributes("textStyle");
+      const fontSize = attrs?.fontSize;
+      if (fontSize && fontSizes.some((size) => size.value === fontSize)) {
+        setCurrentFontSize(fontSize);
+      } else {
+        setCurrentFontSize("1em");
+      }
+    };
+
+    updateFontSize();
+
+    const handleUpdate = () => {
+      requestAnimationFrame(updateFontSize);
+    };
+
+    editor.on("selectionUpdate", handleUpdate);
+    editor.on("update", handleUpdate);
+    editor.on("transaction", handleUpdate);
+
+    return () => {
+      editor.off("selectionUpdate", handleUpdate);
+      editor.off("update", handleUpdate);
+      editor.off("transaction", handleUpdate);
+    };
+  }, [editor]);
 
   const setLink = useCallback(() => {
     const trimmedUrl = linkUrl.trim();
@@ -208,7 +235,7 @@ const Toolbar = ({ editor, extended, code }) => {
       <select
         className="tiptap-toolbar-button"
         onChange={(e) => setFontSize(e.target.value)}
-        value={editor.getAttributes("textStyle").fontSize || "1em"}
+        value={currentFontSize}
       >
         {fontSizes.map((size) => (
           <option key={size.value} value={size.value}>
