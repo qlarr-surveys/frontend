@@ -69,10 +69,17 @@ const FontSize = Extension.create({
             const { fontSize, ...remainingAttrs } = currentAttrs;
 
             if (Object.keys(remainingAttrs).length > 0) {
-              return chain().setMark("textStyle", remainingAttrs).run();
+              return chain()
+                .extendMarkRange("textStyle")
+                .setMark("textStyle", remainingAttrs)
+                .run();
             }
           }
-          return chain().unsetMark("textStyle").run();
+
+          return chain()
+            .extendMarkRange("textStyle")
+            .unsetMark("textStyle")
+            .run();
         },
     };
   },
@@ -93,6 +100,7 @@ function DraftEditor({
   const editorRef = useRef(null);
   const wrapperRef = useRef(null);
   const blurTimeoutRef = useRef(null);
+  const [isFocused, setIsFocused] = React.useState(false);
 
   const getMentionSuggestions = useCallback(
     async (query) => {
@@ -211,12 +219,16 @@ function DraftEditor({
         clearTimeout(blurTimeoutRef.current);
         blurTimeoutRef.current = null;
       }
+      setIsFocused(true);
     },
     onBlur: () => {
       blurTimeoutRef.current = setTimeout(() => {
         const activeElement = document.activeElement;
 
         if (wrapperRef.current && wrapperRef.current.contains(activeElement)) {
+          if (editor?.isFocused) {
+            setIsFocused(true);
+          }
           return;
         }
 
@@ -228,6 +240,7 @@ function DraftEditor({
           return;
         }
 
+        setIsFocused(false);
         const currentHtml = editor?.getHTML() || "";
         onBlurListener(currentHtml, lang);
       }, 100);
@@ -278,7 +291,7 @@ function DraftEditor({
       onClick={handleContainerClick}
     >
       <EditorContent editor={editor} />
-      {editorTheme === "snow" && (
+      {editorTheme === "snow" && isFocused && (
         <Toolbar editor={editor} extended={extended} code={code} />
       )}
     </div>
