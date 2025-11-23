@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 // Note: ql-editor class is used for styling rendered content, not the editor itself
 // The editor has been migrated to Tiptap
@@ -6,6 +6,7 @@ import "./content.css";
 import { rtlLanguage } from "~/utils/common";
 
 function Content(props) {
+  const contentRef = useRef(null);
   const isComplex =
     props.content && props.content.search(/data-instruction/) >= 0;
   const state = useSelector((state) => {
@@ -30,11 +31,49 @@ function Content(props) {
 
   const isRtl = rtlLanguage.includes(lang);
 
+  // Handle collapsible button clicks in rendered view
+  useEffect(() => {
+    if (contentRef.current) {
+      const handleCollapsibleClick = (e) => {
+        const button = e.target.closest(".collapsible-button");
+        if (button) {
+          e.preventDefault();
+          e.stopPropagation();
+          const collapsible = button.closest(".tiptap-collapsible");
+          if (collapsible) {
+            const content = collapsible.querySelector(".collapsible-content");
+            const isOpen = collapsible.getAttribute("data-open") === "true";
+            const newState = !isOpen;
+            collapsible.setAttribute("data-open", newState ? "true" : "false");
+            if (newState) {
+              content.style.display = "";
+              content.classList.add("open");
+            } else {
+              content.style.display = "none";
+              content.classList.remove("open");
+            }
+          }
+        }
+      };
+
+      contentRef.current.addEventListener("click", handleCollapsibleClick);
+      return () => {
+        if (contentRef.current) {
+          contentRef.current.removeEventListener(
+            "click",
+            handleCollapsibleClick
+          );
+        }
+      };
+    }
+  }, [props.content]);
+
   if (!props.content) {
     return <span style={{ flex: 1 }} />;
   } else if (!isComplex) {
     return (
       <div
+        ref={contentRef}
         style={{
           ...props.style,
           fontFamily: props.fontFamily,
@@ -48,6 +87,7 @@ function Content(props) {
   } else {
     return (
       <div
+        ref={contentRef}
         style={{
           ...props.style,
           fontFamily: props.fontFamily,
