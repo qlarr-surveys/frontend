@@ -1,4 +1,4 @@
-import React, { Suspense, forwardRef } from "react";
+import React, { Suspense, forwardRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import { Box, Select, useTheme } from "@mui/material";
@@ -65,6 +65,62 @@ const Question = forwardRef((props, ref) => {
       questionState?.relevance
     );
   });
+
+  // Apply question-specific custom CSS
+  useEffect(() => {
+    const customCSS = props.component.customCSS;
+    const questionCode = props.component.code;
+    
+    if (customCSS?.trim()) {
+      const styleId = `question-css-${questionCode}`;
+      
+      // Remove existing style element
+      const existingElement = document.getElementById(styleId);
+      if (existingElement) {
+        document.head.removeChild(existingElement);
+      }
+      
+      // Scope CSS function - only scope to question's data-code
+      const scopeCSS = (css) => {
+        return css.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
+          const cleanSelector = selector.trim();
+          const cleanProps = props.trim();
+          
+          if (!cleanSelector) return fullMatch;
+          
+          // Check if already scoped
+          if (cleanSelector.includes(`[data-code="${questionCode}"]`)) {
+            return fullMatch;
+          }
+          
+          // Handle comma-separated selectors
+          const selectors = cleanSelector.split(',').map(s => s.trim()).filter(s => s);
+          const scopedSelectors = selectors.map(individualSelector => 
+            `[data-code="${questionCode}"] ${individualSelector}`
+          );
+          
+          return `${scopedSelectors.join(', ')} { ${cleanProps} }`;
+        });
+      };
+      
+      // Create and apply scoped CSS
+      const scopedCSS = scopeCSS(customCSS);
+      const styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      styleElement.type = 'text/css';
+      styleElement.textContent = scopedCSS;
+      document.head.appendChild(styleElement);
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      const styleId = `question-css-${questionCode}`;
+      const existingElement = document.getElementById(styleId);
+      if (existingElement) {
+        document.head.removeChild(existingElement);
+      }
+    };
+  }, [props.component.customCSS, props.component.code]);
 
   const theme = useTheme();
   const showDescription =

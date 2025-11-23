@@ -52,138 +52,15 @@ function ManageSurvey({ landingPage }) {
 
   const designState = useSelector((state) => state.designState);
   
-  // Watch for custom CSS changes and apply them globally
-  const customCSS = useSelector((state) => state.designState?.Survey?.theme?.customCSS);
-  
-  // Create a selector that tracks all question-level CSS changes
-  const allQuestionCSS = useSelector((state) => {
-    if (!state.designState) return {};
-    const questionCSS = {};
-    Object.keys(state.designState).forEach(key => {
-      const obj = state.designState[key];
-      if (isValidComponent(key, obj) && obj.customCSS?.trim()) {
-        questionCSS[key] = obj.customCSS;
-      }
-    });
-    return questionCSS;
-  });
+
 
   const [designAvailable, setDesignAvailable] = useState(false);
 
   const dispatch = useDispatch();
   
-  // Function to apply custom CSS globally (Survey-level and all question-level CSS)
-  const applyGlobalCustomCSS = (state) => {
-    console.log('[CSS] Applying global custom CSS...');
-    
-    // Survey-level CSS
-    const surveyCSS = state?.Survey?.theme?.customCSS;
-    console.log('[CSS] Survey CSS found:', !!surveyCSS);
-    
-    // Question-level CSS - find all questions with customCSS
-    const questionCSSList = [];
-    Object.keys(state || {}).forEach(key => {
-      const obj = state[key];
-      if (isValidComponent(key, obj) && obj.customCSS?.trim()) {
-        questionCSSList.push({ code: key, css: obj.customCSS });
-      }
-    });
-    
-    console.log('Questions with CSS found:', questionCSSList.length);
-    
-    // Scope CSS function
-    const scopeCSS = (css, questionCode = null) => {
-      if (!css.trim()) return '';
-      return css.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
-        const cleanSelector = selector.trim();
-        const cleanProps = props.trim();
-        
-        // Skip empty selectors
-        if (!cleanSelector) return fullMatch;
-        
-        // Check if already scoped
-        const alreadyScoped = cleanSelector.includes('.content-panel') || 
-                             cleanSelector.includes('.muiltr-uwwqev') ||
-                             cleanSelector.includes(`[data-code=`) ||
-                             cleanSelector.includes('.question-');
-        
-        if (alreadyScoped) {
-          return fullMatch;
-        }
-        
-        // Handle comma-separated selectors (e.g., "p, div, span")
-        const selectors = cleanSelector.split(',').map(s => s.trim()).filter(s => s);
-        
-        const scopedSelectors = selectors.map(individualSelector => {
-          if (questionCode) {
-            // Question-specific scoping
-            return `[data-code="${questionCode}"] ${individualSelector}, .question-${questionCode} ${individualSelector}`;
-          } else {
-            // Survey-wide scoping
-            return `.content-panel ${individualSelector}, .muiltr-uwwqev ${individualSelector}`;
-          }
-        });
-        
-        return `${scopedSelectors.join(', ')} { ${cleanProps} }`;
-      });
-    };
-    
-    // Remove existing global CSS elements
-    const existingElements = document.querySelectorAll('[id^="survey-global-custom-css"]');
-    existingElements.forEach(el => document.head.removeChild(el));
-    
-    // Apply Survey-level CSS
-    if (surveyCSS?.trim()) {
-      const scopedCSS = scopeCSS(surveyCSS);
-      const styleElement = document.createElement('style');
-      styleElement.id = 'survey-global-custom-css';
-      styleElement.type = 'text/css';
-      styleElement.setAttribute('data-source', 'global-survey-css');
-      styleElement.textContent = scopedCSS;
-      document.head.appendChild(styleElement);
-      
-      console.log('[CSS] Global Survey CSS applied');
-    }
-    
-    // Apply question-level CSS
-    questionCSSList.forEach(({ code, css }) => {
-      const scopedCSS = scopeCSS(css, code);
-      const styleElement = document.createElement('style');
-      styleElement.id = `survey-global-custom-css-${code}`;
-      styleElement.type = 'text/css';
-      styleElement.setAttribute('data-source', 'global-question-css');
-      styleElement.setAttribute('data-code', code);
-      styleElement.textContent = scopedCSS;
-      document.head.appendChild(styleElement);
-      
-      console.log(`[CSS] Global question CSS applied for ${code}`);
-    });
-    
-    console.log('[CSS] All custom CSS applied globally');
-  };
+
   
-  // Apply custom CSS globally whenever it changes
-  useEffect(() => {
-    if (designState) {
-      const hasAnyCss = customCSS || Object.keys(allQuestionCSS).length > 0;
-      console.log('[CSS] ManageSurvey useEffect triggered:');
-      console.log('[CSS] - designState keys:', Object.keys(designState || {}));
-      console.log('[CSS] - Survey CSS exists:', !!customCSS);
-      console.log('[CSS] - Question CSS count:', Object.keys(allQuestionCSS).length);
-      console.log('[CSS] - Question codes with CSS:', Object.keys(allQuestionCSS));
-      console.log('[CSS] - Has any CSS to apply:', hasAnyCss);
-      
-      if (hasAnyCss) {
-        console.log('[CSS] Applying CSS...');
-        applyGlobalCustomCSS(designState);
-      } else {
-        console.log('[CSS] No CSS to apply, but removing any existing CSS');
-        // Remove any existing CSS elements even if no CSS to apply
-        const existingElements = document.querySelectorAll('[id^="survey-global-custom-css"]');
-        existingElements.forEach(el => document.head.removeChild(el));
-      }
-    }
-  }, [customCSS, allQuestionCSS, designState]);
+
 
   const setState = (state) => {
     console.log('[STATE] ManageSurvey setState called with:');
@@ -191,8 +68,7 @@ function ManageSurvey({ landingPage }) {
     console.log('[STATE] Survey theme:', state?.Survey?.theme);
     console.log('[STATE] Custom CSS in theme:', state?.Survey?.theme?.customCSS);
     
-    // Apply global custom CSS after state is loaded
-    applyGlobalCustomCSS(state);
+
     
     dispatch(designStateReceived(state));
   };

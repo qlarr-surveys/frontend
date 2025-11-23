@@ -50,6 +50,68 @@ function QuestionDesign({
     return state.designState[code];
   });
 
+  // Apply question-specific custom CSS in design mode
+  useEffect(() => {
+    const customCSS = question?.customCSS;
+    
+    if (customCSS?.trim()) {
+      const styleId = `question-design-css-${code}`;
+      
+      // Remove existing style element
+      const existingElement = document.getElementById(styleId);
+      if (existingElement) {
+        document.head.removeChild(existingElement);
+      }
+      
+      // Scope CSS function - only scope to question's data-code
+      const scopeCSS = (css) => {
+        return css.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
+          const cleanSelector = selector.trim();
+          const cleanProps = props.trim();
+          
+          if (!cleanSelector) return fullMatch;
+          
+          // Check if already scoped
+          if (cleanSelector.includes(`[data-code="${code}"]`)) {
+            return fullMatch;
+          }
+          
+          // Handle comma-separated selectors
+          const selectors = cleanSelector.split(',').map(s => s.trim()).filter(s => s);
+          const scopedSelectors = selectors.map(individualSelector => 
+            `[data-code="${code}"] ${individualSelector}`
+          );
+          
+          return `${scopedSelectors.join(', ')} { ${cleanProps} }`;
+        });
+      };
+      
+      // Create and apply scoped CSS
+      const scopedCSS = scopeCSS(customCSS);
+      const styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      styleElement.type = 'text/css';
+      styleElement.textContent = scopedCSS;
+      document.head.appendChild(styleElement);
+    } else {
+      // Remove CSS if none exists
+      const styleId = `question-design-css-${code}`;
+      const existingElement = document.getElementById(styleId);
+      if (existingElement) {
+        document.head.removeChild(existingElement);
+      }
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      const styleId = `question-design-css-${code}`;
+      const existingElement = document.getElementById(styleId);
+      if (existingElement) {
+        document.head.removeChild(existingElement);
+      }
+    };
+  }, [question?.customCSS, code]);
+
   const [isDragging, drag, preview] = useDrag({
     type: "questions",
     item: {

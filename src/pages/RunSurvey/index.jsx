@@ -73,170 +73,12 @@ function RunSurvey({
     return state.runState.navigation;
   }, isEquivalent);
 
-  // Get survey state for custom CSS
-  const runSurveyState = useSelector((state) => {
-    return state.runState.data?.survey;
-  });
+
 
   const { t, i18n } = useTranslation("run");
   const dispatch = useDispatch();
 
-  // Function to apply custom CSS globally (Survey-level and all question-level CSS)
-  const applyGlobalCustomCSS = (surveyState) => {
-    if (!surveyState) return;
-    
-    console.log('[CSS] RunSurvey: Applying custom CSS for preview...');
-    console.log('[CSS] Survey state:', surveyState);
-    
-    // Survey-level CSS
-    const surveyCSS = surveyState?.theme?.customCSS;
-    console.log('[CSS] Survey CSS found:', !!surveyCSS);
-    if (surveyCSS) {
-      console.log('[CSS] Survey CSS content:', surveyCSS);
-    }
-    
-    // Question-level CSS - find all questions with customCSS from groups
-    const questionCSSList = [];
-    
-    // Look for questions inside groups
-    if (surveyState?.groups) {
-      surveyState.groups.forEach(group => {
-        if (group.questions) {
-          group.questions.forEach(question => {
-            if (question.customCSS?.trim()) {
-              questionCSSList.push({ code: question.code, css: question.customCSS });
-              console.log(`[CSS] Found question CSS for ${question.code}`);
-              console.log(`[CSS] CSS content: ${question.customCSS}`);
-            }
-          });
-        }
-      });
-    }
-    
-    console.log('[CSS] Questions with CSS found:', questionCSSList.length);
-    console.log('[CSS] Survey state structure check - has groups:', !!surveyState?.groups);
-    if (surveyState?.groups) {
-      console.log('[CSS] Number of groups:', surveyState.groups.length);
-      surveyState.groups.forEach((group, index) => {
-        console.log(`[CSS] Group ${index} has ${group.questions?.length || 0} questions`);
-      });
-    }
-    
-    // Function to validate and fix CSS syntax
-    const validateAndFixCSS = (css) => {
-      if (!css.trim()) return '';
-      
-      let fixedCSS = css;
-      
-      // Count opening and closing braces
-      const openBraces = (css.match(/\{/g) || []).length;
-      const closeBraces = (css.match(/\}/g) || []).length;
-      
-      // If there are more opening braces than closing, add missing closing braces
-      if (openBraces > closeBraces) {
-        const missingBraces = openBraces - closeBraces;
-        fixedCSS += '}'.repeat(missingBraces);
-        console.log(`[CSS] Preview: Fixed ${missingBraces} missing closing brace(s)`);
-      }
-      
-      return fixedCSS;
-    };
-    
-    // Scope CSS function
-    const scopeCSS = (css, questionCode = null) => {
-      if (!css.trim()) return '';
-      
-      console.log(`[CSS] Scoping CSS for ${questionCode ? `question ${questionCode}` : 'survey'}`);
-      console.log(`[CSS] Input CSS: ${css}`);
-      
-      // First, validate and fix the CSS
-      const fixedCSS = validateAndFixCSS(css);
-      console.log(`[CSS] Fixed CSS: ${fixedCSS}`);
-      
-      const result = fixedCSS.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
-        const cleanSelector = selector.trim();
-        const cleanProps = props.trim();
-        
-        console.log(`[CSS] Processing selector: "${cleanSelector}"`);
-        console.log(`[CSS] Full match: "${fullMatch}"`);
-        
-        // Skip empty selectors
-        if (!cleanSelector) return fullMatch;
-        
-        // Check if already scoped - be more flexible about spacing
-        const alreadyScoped = cleanSelector.includes('.survey-container') ||
-                             (questionCode && cleanSelector.includes(`[data-code="${questionCode}"]`));
-        
-        if (alreadyScoped) {
-          console.log(`[CSS] Selector already scoped: ${cleanSelector}`);
-          return fullMatch;
-        }
-        
-        // Handle comma-separated selectors (e.g., "p, div, span")
-        const selectors = cleanSelector.split(',').map(s => s.trim()).filter(s => s);
-        console.log(`[CSS] Individual selectors: ${JSON.stringify(selectors)}`);
-        console.log(`[CSS] Number of individual selectors: ${selectors.length}`);
-        
-        const scopedSelectors = selectors.map(individualSelector => {
-          if (questionCode) {
-            // Question-specific scoping - only apply to elements within the question container
-            const scoped = `[data-code="${questionCode}"] ${individualSelector}`;
-            console.log(`[CSS] Question scoped: ${scoped}`);
-            return scoped;
-          } else {
-            // Survey-wide scoping - only apply to elements within the main survey container
-            const scoped = `.survey-container ${individualSelector}`;
-            console.log(`[CSS] Survey scoped: ${scoped}`);
-            return scoped;
-          }
-        });
-        
-        const finalResult = `${scopedSelectors.join(', ')} { ${cleanProps} }`;
-        console.log(`[CSS] Final scoped rule: ${finalResult}`);
-        return finalResult;
-      });
-      
-      console.log(`[CSS] Final scoped CSS: ${result}`);
-      return result;
-    };
-    
-    // Remove existing global CSS elements
-    const existingElements = document.querySelectorAll('[id^="survey-preview-custom-css"]');
-    existingElements.forEach(el => document.head.removeChild(el));
-    
-    // Apply Survey-level CSS
-    if (surveyCSS?.trim()) {
-      const scopedCSS = scopeCSS(surveyCSS);
-      const styleElement = document.createElement('style');
-      styleElement.id = 'survey-preview-custom-css';
-      styleElement.type = 'text/css';
-      styleElement.setAttribute('data-source', 'preview-survey-css');
-      styleElement.textContent = scopedCSS;
-      document.head.appendChild(styleElement);
-      
-      console.log('[CSS] Preview Survey CSS applied');
-      console.log(`[CSS] Style element created with ID: ${styleElement.id}`);
-      console.log(`[CSS] Style element content: ${styleElement.textContent}`);
-    }
-    
-    // Apply question-level CSS
-    questionCSSList.forEach(({ code, css }) => {
-      const scopedCSS = scopeCSS(css, code);
-      const styleElement = document.createElement('style');
-      styleElement.id = `survey-preview-custom-css-${code}`;
-      styleElement.type = 'text/css';
-      styleElement.setAttribute('data-source', 'preview-question-css');
-      styleElement.setAttribute('data-code', code);
-      styleElement.textContent = scopedCSS;
-      document.head.appendChild(styleElement);
-      
-      console.log(`[CSS] Preview question CSS applied for ${code}`);
-      console.log(`[CSS] Style element created with ID: ${styleElement.id}`);
-      console.log(`[CSS] Scoped CSS: ${scopedCSS}`);
-    });
-    
-    console.log('[CSS] All preview custom CSS applied');
-  };
+
 
   useEffect(() => {
     if (navigation) {
@@ -244,13 +86,7 @@ function RunSurvey({
     }
   }, [navigation]);
 
-  // Apply custom CSS when survey state changes (for preview)
-  useEffect(() => {
-    if (runSurveyState) {
-      console.log('[CSS] RunSurvey: Survey state changed, applying custom CSS...');
-      applyGlobalCustomCSS(runSurveyState);
-    }
-  }, [runSurveyState]);
+
 
   useEffect(() => {
     if (preview) {

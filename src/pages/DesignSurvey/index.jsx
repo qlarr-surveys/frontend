@@ -48,6 +48,59 @@ function DesignSurvey() {
     return state.designState["Survey"]?.theme;
   });
 
+  // Apply survey-level custom CSS
+  useEffect(() => {
+    const surveyCSS = theme?.customCSS;
+    
+    if (surveyCSS?.trim()) {
+      const styleId = 'survey-design-css';
+      
+      // Remove existing style element
+      const existingElement = document.getElementById(styleId);
+      if (existingElement) {
+        document.head.removeChild(existingElement);
+      }
+      
+      // Scope CSS function
+      const scopeCSS = (css) => {
+        return css.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
+          const cleanSelector = selector.trim();
+          const cleanProps = props.trim();
+          
+          if (!cleanSelector) return fullMatch;
+          
+          // Check if already scoped
+          if (cleanSelector.includes('.content-panel') || 
+              cleanSelector.includes('.muiltr-uwwqev')) {
+            return fullMatch;
+          }
+          
+          // Handle comma-separated selectors
+          const selectors = cleanSelector.split(',').map(s => s.trim()).filter(s => s);
+          const scopedSelectors = selectors.map(individualSelector => 
+            `.content-panel ${individualSelector}, .muiltr-uwwqev ${individualSelector}`
+          );
+          
+          return `${scopedSelectors.join(', ')} { ${cleanProps} }`;
+        });
+      };
+      
+      // Create and apply scoped CSS
+      const scopedCSS = scopeCSS(surveyCSS);
+      const styleElement = document.createElement('style');
+      styleElement.id = styleId;
+      styleElement.type = 'text/css';
+      styleElement.textContent = scopedCSS;
+      document.head.appendChild(styleElement);
+    } else {
+      // Remove CSS if none exists
+      const existingElement = document.getElementById('survey-design-css');
+      if (existingElement) {
+        document.head.removeChild(existingElement);
+      }
+    }
+  }, [theme?.customCSS]);
+
   function changeLanguage(lang) {
     return new Promise((resolve, reject) => {
       const dir = rtlLanguage.includes(lang) ? "rtl" : "ltr";
