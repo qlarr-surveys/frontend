@@ -374,16 +374,22 @@ function CustomCSS({ code }) {
         return fullMatch;
       }
       
-      let scoped;
-      if (isQuestionLevel) {
-        // Question-level CSS: scope to specific question container
-        scoped = `[data-code="${code}"] ${cleanSelector}, .question-${code} ${cleanSelector} { ${cleanProps} }`;
-        console.log('Question-scoped result:', scoped);
-      } else {
-        // Survey-level CSS: scope to survey containers
-        scoped = `.content-panel ${cleanSelector}, .muiltr-uwwqev ${cleanSelector} { ${cleanProps} }`;
-        console.log('Survey-scoped result:', scoped);
-      }
+      // Handle comma-separated selectors (e.g., "p, div, span")
+      const selectors = cleanSelector.split(',').map(s => s.trim()).filter(s => s);
+      console.log('Individual selectors:', selectors);
+      
+      const scopedSelectors = selectors.map(individualSelector => {
+        if (isQuestionLevel) {
+          // Question-level CSS: scope to specific question container
+          return `[data-code="${code}"] ${individualSelector}, .question-${code} ${individualSelector}`;
+        } else {
+          // Survey-level CSS: scope to survey containers
+          return `.content-panel ${individualSelector}, .muiltr-uwwqev ${individualSelector}`;
+        }
+      });
+      
+      const scoped = `${scopedSelectors.join(', ')} { ${cleanProps} }`;
+      console.log('Final scoped result:', scoped);
       
       return scoped;
     });

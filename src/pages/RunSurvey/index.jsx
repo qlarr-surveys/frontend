@@ -86,10 +86,14 @@ function RunSurvey({
     if (!surveyState) return;
     
     console.log('[CSS] RunSurvey: Applying custom CSS for preview...');
+    console.log('[CSS] Survey state:', surveyState);
     
     // Survey-level CSS
     const surveyCSS = surveyState?.theme?.customCSS;
     console.log('[CSS] Survey CSS found:', !!surveyCSS);
+    if (surveyCSS) {
+      console.log('[CSS] Survey CSS content:', surveyCSS);
+    }
     
     // Question-level CSS - find all questions with customCSS from groups
     const questionCSSList = [];
@@ -142,32 +146,58 @@ function RunSurvey({
     const scopeCSS = (css, questionCode = null) => {
       if (!css.trim()) return '';
       
+      console.log(`[CSS] Scoping CSS for ${questionCode ? `question ${questionCode}` : 'survey'}`);
+      console.log(`[CSS] Input CSS: ${css}`);
+      
       // First, validate and fix the CSS
       const fixedCSS = validateAndFixCSS(css);
+      console.log(`[CSS] Fixed CSS: ${fixedCSS}`);
       
-      return fixedCSS.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
+      const result = fixedCSS.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
         const cleanSelector = selector.trim();
         const cleanProps = props.trim();
         
-        // Check if already scoped
-        const alreadyScoped = cleanSelector.includes('.content-panel') || 
-                             cleanSelector.includes('.muiltr-uwwqev') ||
-                             cleanSelector.includes('.survey-container') ||
-                             cleanSelector.includes(`[data-code=`) ||
-                             cleanSelector.includes('.question-');
+        console.log(`[CSS] Processing selector: "${cleanSelector}"`);
+        console.log(`[CSS] Full match: "${fullMatch}"`);
+        
+        // Skip empty selectors
+        if (!cleanSelector) return fullMatch;
+        
+        // Check if already scoped - be more flexible about spacing
+        const alreadyScoped = cleanSelector.includes('.survey-container') ||
+                             (questionCode && cleanSelector.includes(`[data-code="${questionCode}"]`));
         
         if (alreadyScoped) {
+          console.log(`[CSS] Selector already scoped: ${cleanSelector}`);
           return fullMatch;
         }
         
-        if (questionCode) {
-          // Question-specific scoping for preview mode - use data-code attribute on QuestionWrapper
-          return `[data-code="${questionCode}"] ${cleanSelector}, .question-${questionCode} ${cleanSelector} { ${cleanProps} }`;
-        } else {
-          // Survey-wide scoping for both design and preview modes
-          return `.content-panel ${cleanSelector}, .muiltr-uwwqev ${cleanSelector}, .survey-container ${cleanSelector} { ${cleanProps} }`;
-        }
+        // Handle comma-separated selectors (e.g., "p, div, span")
+        const selectors = cleanSelector.split(',').map(s => s.trim()).filter(s => s);
+        console.log(`[CSS] Individual selectors: ${JSON.stringify(selectors)}`);
+        console.log(`[CSS] Number of individual selectors: ${selectors.length}`);
+        
+        const scopedSelectors = selectors.map(individualSelector => {
+          if (questionCode) {
+            // Question-specific scoping - only apply to elements within the question container
+            const scoped = `[data-code="${questionCode}"] ${individualSelector}`;
+            console.log(`[CSS] Question scoped: ${scoped}`);
+            return scoped;
+          } else {
+            // Survey-wide scoping - only apply to elements within the main survey container
+            const scoped = `.survey-container ${individualSelector}`;
+            console.log(`[CSS] Survey scoped: ${scoped}`);
+            return scoped;
+          }
+        });
+        
+        const finalResult = `${scopedSelectors.join(', ')} { ${cleanProps} }`;
+        console.log(`[CSS] Final scoped rule: ${finalResult}`);
+        return finalResult;
       });
+      
+      console.log(`[CSS] Final scoped CSS: ${result}`);
+      return result;
     };
     
     // Remove existing global CSS elements
@@ -185,6 +215,8 @@ function RunSurvey({
       document.head.appendChild(styleElement);
       
       console.log('[CSS] Preview Survey CSS applied');
+      console.log(`[CSS] Style element created with ID: ${styleElement.id}`);
+      console.log(`[CSS] Style element content: ${styleElement.textContent}`);
     }
     
     // Apply question-level CSS
@@ -199,6 +231,7 @@ function RunSurvey({
       document.head.appendChild(styleElement);
       
       console.log(`[CSS] Preview question CSS applied for ${code}`);
+      console.log(`[CSS] Style element created with ID: ${styleElement.id}`);
       console.log(`[CSS] Scoped CSS: ${scopedCSS}`);
     });
     

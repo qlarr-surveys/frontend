@@ -98,6 +98,9 @@ function ManageSurvey({ landingPage }) {
         const cleanSelector = selector.trim();
         const cleanProps = props.trim();
         
+        // Skip empty selectors
+        if (!cleanSelector) return fullMatch;
+        
         // Check if already scoped
         const alreadyScoped = cleanSelector.includes('.content-panel') || 
                              cleanSelector.includes('.muiltr-uwwqev') ||
@@ -108,13 +111,20 @@ function ManageSurvey({ landingPage }) {
           return fullMatch;
         }
         
-        if (questionCode) {
-          // Question-specific scoping
-          return `[data-code="${questionCode}"] ${cleanSelector}, .question-${questionCode} ${cleanSelector} { ${cleanProps} }`;
-        } else {
-          // Survey-wide scoping
-          return `.content-panel ${cleanSelector}, .muiltr-uwwqev ${cleanSelector} { ${cleanProps} }`;
-        }
+        // Handle comma-separated selectors (e.g., "p, div, span")
+        const selectors = cleanSelector.split(',').map(s => s.trim()).filter(s => s);
+        
+        const scopedSelectors = selectors.map(individualSelector => {
+          if (questionCode) {
+            // Question-specific scoping
+            return `[data-code="${questionCode}"] ${individualSelector}, .question-${questionCode} ${individualSelector}`;
+          } else {
+            // Survey-wide scoping
+            return `.content-panel ${individualSelector}, .muiltr-uwwqev ${individualSelector}`;
+          }
+        });
+        
+        return `${scopedSelectors.join(', ')} { ${cleanProps} }`;
       });
     };
     
