@@ -17,19 +17,6 @@ export const addSkipInstructions = (state, code) => {
 };
 
 export const refreshEnumForSingleChoice = (component, state) => {
-  if (
-    !component.type ||
-    ![
-      "scq",
-      "icon_scq",
-      "image_scq",
-      "scq_icon_array",
-      "scq_array",
-      "select",
-    ].includes(component.type)
-  ) {
-    return;
-  }
   switch (component.type) {
     case "image_scq":
     case "icon_scq":
@@ -96,17 +83,6 @@ export const refreshEnumForSingleChoice = (component, state) => {
 };
 
 export const refreshListForMultipleChoice = (component, state) => {
-  if (
-    !component.type ||
-    ![
-      "mcq",
-      "icon_mcq",
-      "image_mcq",
-      "mcq_array",
-    ].includes(component.type)
-  ) {
-    return;
-  }
   switch (component.type) {
     case "image_mcq":
     case "icon_mcq":
@@ -175,27 +151,6 @@ export const addMaskedValuesInstructions = (
   component,
   state
 ) => {
-  if (
-    !component.type ||
-    ![
-      "mcq",
-      "image_mcq",
-      "icon_mcq",
-      "scq",
-      "select",
-      "icon_scq",
-      "number",
-      "image_scq",
-      "scq_icon_array",
-      "scq_array",
-      "mcq_array",
-      "date",
-      "date_time",
-      "time",
-    ].includes(component.type)
-  ) {
-    return;
-  }
   switch (component.type) {
     case "date":
       if (component.dateFormat) {
@@ -1086,6 +1041,8 @@ export const updateRandomByRule = (
       if (groupsWithRowAnswers.length == 0) {
         removeInstruction(componentState, "random_group");
       } else {
+        console.log("here");
+        console.log("groupsWithRowAnswers", groupsWithRowAnswers);
         changeInstruction(componentState, {
           code: "random_group",
           groups: groupsWithRowAnswers,

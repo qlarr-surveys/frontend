@@ -665,6 +665,17 @@ export const designState = createSlice({
       }
       state.index = buildCodeIndex(state);
     },
+    updateInstruction: (state, action) => {
+      const { code, instruction } = action.payload;
+      if (!state[code]) {
+        state[code] = {};
+      }
+      changeInstruction(state[code], instruction);
+    },
+    updateRootNode: (state, action) => {
+      const { key, value } = action.payload;
+      state[key] = value;
+    },
   },
 });
 
@@ -704,6 +715,8 @@ export const {
   addComponent,
   setSaving,
   setUpdating,
+  updateInstruction,
+  updateRootNode,
 } = designState.actions;
 
 export default designState.reducer;

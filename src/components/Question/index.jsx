@@ -278,7 +278,7 @@ const Question = forwardRef((props, ref) => {
   };
 
   return relevance ? (
-    <QuestionWrapper qualifiedCode={props.component.qualifiedCode} ref={ref}>
+    <QuestionWrapper questionCode={props.component.code} ref={ref}>
       {showHeader && (
         <>
           {showTitle && (
@@ -331,9 +331,9 @@ export const QuestionValidation = React.memo(({ component }) => {
 
 const QuestionWrapper = React.memo((props) => {
   const invalid = useSelector((state) => {
-    let questionState = state.runState.values[props.qualifiedCode];
+    let questionState = state.runState.values[props.qualifiedCode || props.questionCode];
     let show_errors = state.runState.values.Survey.show_errors;
-    let isDirty = state.templateState[props.qualifiedCode];
+    let isDirty = state.templateState[props.qualifiedCode || props.questionCode];
     let validity = questionState?.validity;
     return (show_errors || isDirty) && validity === false;
   });
@@ -344,6 +344,7 @@ const QuestionWrapper = React.memo((props) => {
         borderColor: invalid ? "error.main" : "grey.500",
       }}
       className={`${styles.groupQuestion} ${invalid ? "invalidQuestion" : ""}`}
+      data-code={props.questionCode}
     >
       {props.children}
     </Box>
