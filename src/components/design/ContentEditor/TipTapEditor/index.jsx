@@ -273,23 +273,12 @@ function DraftEditor({
     };
   }, [editor]);
 
-  const handleContainerClick = (e) => {
-    if (e.target.tagName === "A" && e.target.className === "tiptap-link") {
-      e.preventDefault();
-      window.open(e.target.href, "_blank");
-    }
-  };
-
   if (!editor) {
     return null;
   }
 
   return (
-    <div
-      ref={wrapperRef}
-      className={`tiptap-wrapper ${editorTheme}`}
-      onClick={handleContainerClick}
-    >
+    <div ref={wrapperRef} className={`tiptap-wrapper ${editorTheme}`}>
       <EditorContent editor={editor} />
       {editorTheme === "snow" && isFocused && (
         <Toolbar editor={editor} extended={extended} code={code} />
