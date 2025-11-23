@@ -567,9 +567,11 @@ const Toolbar = ({ editor, extended, code }) => {
       {/* Clear Formatting */}
       <button
         onMouseDown={(e) => e.preventDefault()}
-        onClick={() =>
-          editor.chain().focus().clearNodes().unsetAllMarks().run()
-        }
+        onClick={() => {
+          editor.chain().focus().clearNodes().unsetAllMarks().unsetLink().run();
+          setShowLinkInput(false);
+          setLinkUrl("");
+        }}
         className="tiptap-toolbar-button"
         title="Clear Formatting"
       >
