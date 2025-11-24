@@ -25,6 +25,12 @@ export default defineConfig(({ mode }) => {
           polyfillModulePreload: true,
           target: "es2018",
         },
+        css: {
+          modules: {
+            generateScopedName: "[name]__[local]__[hash:base64:5]",
+            hashPrefix: "qlarr"
+          }
+        },
         resolve: {
           alias: {
             "~": path.resolve(__dirname, "src"),
@@ -49,6 +55,12 @@ export default defineConfig(({ mode }) => {
         build: {
           outDir: "build",
         },
+        css: {
+          modules: {
+            generateScopedName: "[name]__[local]__[hash:base64:5]",
+            hashPrefix: "qlarr"
+          }
+        },
         resolve: {
           alias: {
             "~": path.resolve(__dirname, "src"),
@@ -72,6 +84,12 @@ export default defineConfig(({ mode }) => {
           },
           target: 'es2015',
           polyfillDynamicImport: false,
+        },
+        css: {
+          modules: {
+            generateScopedName: "[name]__[local]__[hash:base64:5]",
+            hashPrefix: "qlarr"
+          }
         },
         resolve: {
           alias: {

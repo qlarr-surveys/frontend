@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { DndProvider } from "react-dnd";
+import { applySurveyCSS } from "~/utils/cssScoping";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useTheme } from "@mui/material";
 import { FORM_ID } from "~/constants/run";
@@ -26,55 +27,7 @@ function Survey() {
   // Apply survey-level custom CSS in preview mode
   useEffect(() => {
     const surveyCSS = survey?.theme?.customCSS;
-    
-    if (surveyCSS?.trim()) {
-      const styleId = 'survey-preview-css';
-      
-      // Remove existing style element
-      const existingElement = document.getElementById(styleId);
-      if (existingElement) {
-        document.head.removeChild(existingElement);
-      }
-      
-      // Scope CSS function - use same scoping as design mode for consistency
-      const scopeCSS = (css) => {
-        return css.replace(/([^{}]*)\{([^{}]*)\}/g, (fullMatch, selector, props) => {
-          const cleanSelector = selector.trim();
-          const cleanProps = props.trim();
-          
-          if (!cleanSelector) return fullMatch;
-          
-          // Check if already scoped
-          if (cleanSelector.includes('.survey-container') || 
-              cleanSelector.includes('.content-panel') ||
-              cleanSelector.includes('.muiltr-uwwqev')) {
-            return fullMatch;
-          }
-          
-          // Handle comma-separated selectors
-          const selectors = cleanSelector.split(',').map(s => s.trim()).filter(s => s);
-          const scopedSelectors = selectors.map(individualSelector => 
-            `.survey-container ${individualSelector}, .content-panel ${individualSelector}, .muiltr-uwwqev ${individualSelector}`
-          );
-          
-          return `${scopedSelectors.join(', ')} { ${cleanProps} }`;
-        });
-      };
-      
-      // Create and apply scoped CSS
-      const scopedCSS = scopeCSS(surveyCSS);
-      const styleElement = document.createElement('style');
-      styleElement.id = styleId;
-      styleElement.type = 'text/css';
-      styleElement.textContent = scopedCSS;
-      document.head.appendChild(styleElement);
-    } else {
-      // Remove CSS if none exists
-      const existingElement = document.getElementById('survey-preview-css');
-      if (existingElement) {
-        document.head.removeChild(existingElement);
-      }
-    }
+    applySurveyCSS(surveyCSS, 'preview');
   }, [survey?.theme?.customCSS]);
 
 

@@ -1,5 +1,6 @@
 import React, {  useEffect, useRef, useState } from "react";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
+import { applyQuestionCSS, removeCSS } from "~/utils/cssScoping";
 
 import styles from "./QuestionDesign.module.css";
 import ContentEditor from "~/components/design/ContentEditor";

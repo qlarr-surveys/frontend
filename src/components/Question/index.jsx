@@ -1,5 +1,6 @@
 import React, { Suspense, forwardRef, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { applyQuestionCSS, removeCSS } from "~/utils/cssScoping";
 
 import { Box, Select, useTheme } from "@mui/material";
 import styles from "./Question.module.css";
