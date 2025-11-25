@@ -1,4 +1,35 @@
-import { current } from "@reduxjs/toolkit";
+export const cleanupDefaultValue = (component) => {
+  // Check if this is a single choice question type that supports default values
+  if (
+    !component.type ||
+    !["scq", "icon_scq", "image_scq", "select"].includes(component.type)
+  ) {
+    return;
+  }
+
+  // Find the value instruction that contains the default value
+  const valueInstruction = component.instructionList?.find(
+    (instruction) => instruction.code === "value"
+  );
+
+  if (!valueInstruction || !valueInstruction.text) {
+    return; // No default value set
+  }
+
+  // Get current answer codes
+  const currentAnswerCodes =
+    component.children?.map((child) => child.code) || [];
+
+  // Check if the current default value still exists in the answers
+  if (!currentAnswerCodes.includes(valueInstruction.text)) {
+    // Default value refers to a deleted answer - clear the text value
+    changeInstruction(component, {
+      ...valueInstruction,
+      text: "",
+      isActive: false,
+    });
+  }
+};
 
 export const addSkipInstructions = (state, code) => {
   const component = state[code];
