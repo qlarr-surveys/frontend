@@ -70,7 +70,11 @@ function AutoCompleteQuestion(props) {
   };
 
   const handleInputChange = (event, newInputValue) => {
-    if (options.includes(newInputValue)) {
+    setInputValue(newInputValue);
+    if(!newInputValue){
+      setOptions([])
+    }
+    if (!options.includes(newInputValue)) {
       dispatch(
         valueChange({
           componentCode: props.component.qualifiedCode,
@@ -78,7 +82,7 @@ function AutoCompleteQuestion(props) {
         })
       );
     }
-    setInputValue(newInputValue);
+    
     if (newInputValue) {
       fetchOptions(newInputValue);
     }
