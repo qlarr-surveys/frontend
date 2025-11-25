@@ -32,7 +32,7 @@ import {
   removeInstruction,
   updateRandomByRule,
 } from "./addInstructions";
-import { defaultSurveyTheme } from '~/constants/theme';
+import { defaultSurveyTheme } from "~/constants/theme";
 
 const reservedKeys = [
   "setup",
@@ -210,9 +210,19 @@ export const designState = createSlice({
       state[payload.code].relevance = payload.value;
       addRelevanceInstructions(state, payload.code, payload.value);
     },
-    updateInstruction: (state, action) => {
-      const { code, instruction } = action.payload;
-      changeInstruction(state[code], instruction);
+    setDefaultValue: (state, action) => {
+      const { code, selectedValue } = action.payload;
+      const component = state[code];
+      const valueInstruction = component.instructionList?.find(
+        (instruction) => instruction.code == "value"
+      );
+      if (valueInstruction) {
+        changeInstruction(component, {
+          ...valueInstruction,
+          text: selectedValue,
+          isActive: false,
+        });
+      }
     },
     cloneQuestion: (state, action) => {
       const code = action.payload;
@@ -706,7 +716,7 @@ export const {
   editSkipToEnd,
   editDisqualifyToEnd,
   changeRelevance,
-  updateInstruction,
+  setDefaultValue,
   onDrag,
   addComponent,
   setSaving,

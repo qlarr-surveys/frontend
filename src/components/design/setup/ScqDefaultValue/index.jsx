@@ -2,7 +2,7 @@ import React from "react";
 import { MenuItem, Typography, FormControl, InputLabel, Select } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { updateInstruction } from "../../../../state/design/designState";
+import { setDefaultValue } from '~/state/design/designState';
 
 function ScqDefaultValue({ code }) {
   const dispatch = useDispatch();
@@ -39,15 +39,7 @@ function ScqDefaultValue({ code }) {
 
   const handleDefaultValueChange = (event) => {
     const selectedValue = event.target.value;
-    
-    // Only modify the text field, preserve all other properties
-    const instruction = {
-      ...currentInstruction,
-      code: "value",
-      text: selectedValue
-    };
-    
-    dispatch(updateInstruction({ code, instruction }));
+    dispatch(setDefaultValue({ code, selectedValue }));
   };
 
   if (!answers.length) {

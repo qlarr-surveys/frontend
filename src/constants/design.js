@@ -444,7 +444,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["questionActions", "disabled", "showDescription", "scq_default_value"],
+          rules: ["changeCode", "questionActions", "disabled", "showDescription", "scq_default_value"],
         },
         {
           title: "logic",

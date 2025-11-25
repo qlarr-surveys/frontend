@@ -74,7 +74,7 @@ const MUTATING = [
   "designState/changeRelevance",
   "designState/addComponent",
   "designState/onDrag",
-  "designState/updateInstruction",
+  "designState/setDefaultValue",
 ];
 
 const setState = (store, state) => {
@@ -94,11 +94,13 @@ const setState = (store, state) => {
 const setError = (store, error) => {
   // Rollback optimistic updates on error
   if (rollbackState) {
-    store.dispatch(designStateReceived({
-      ...rollbackState,
-      versionDto: store.getState().designState.versionDto,
-      componentIndex: store.getState().designState.componentIndex
-    }));
+    store.dispatch(
+      designStateReceived({
+        ...rollbackState,
+        versionDto: store.getState().designState.versionDto,
+        componentIndex: store.getState().designState.componentIndex,
+      })
+    );
     rollbackState = null;
   }
 
