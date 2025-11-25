@@ -92,15 +92,14 @@
 /* Image styles */
 .tiptap-image {
   max-width: 100%;
-  height: auto;
   display: block;
   margin: 1em 0;
 }
 
-.tiptap-image img {
-  max-width: 100%;
+/* Only apply height: auto if no height attribute is set */
+/* This allows the height attribute to control the image height when set */
+.tiptap-image:not([height]) {
   height: auto;
-  display: block;
 }
 
 /* Collapsible styles */
