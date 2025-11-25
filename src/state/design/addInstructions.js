@@ -440,7 +440,17 @@ export const addQuestionInstructions = (question) => {
         },
       ];
       break;
-    case "email":
+    case "autocomplete":
+      question.instructionList = [
+        {
+          code: "value",
+          isActive: false,
+          returnType: "string",
+          text: "",
+        },
+      ];
+      break;
+    case "paragraph":
       question.instructionList = [
         {
           code: "value",

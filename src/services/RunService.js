@@ -3,12 +3,7 @@ import authenticatedApi from "./authenticatedApi";
 import BaseService from "./BaseService";
 
 class RunService extends BaseService {
-  async start(
-    lang,
-    preview = false,
-    mode = "online",
-    navigationMode
-  ) {
+  async start(lang, preview = false, mode = "online", navigationMode) {
     const surveyId = sessionStorage.getItem("surveyId");
     if (preview) {
       const response = await this.handleRequest(() =>
@@ -75,6 +70,13 @@ class RunService extends BaseService {
         "Content-Type": "multipart/form-data",
       },
     });
+    return response.data;
+  }
+
+  async searchAutoComplete(uuid, query) {
+    const response = await this.handleRequest(() =>
+      publicApi.get(`/autocomplete/${uuid}?q=${query}`)
+    );
     return response.data;
   }
 

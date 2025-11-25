@@ -21,6 +21,19 @@ export const startNavigation = (runService, lang, preview, mode, navigationMode)
   }
 };
 
+export const autoCompleteSearch = (runService, uuid, query) => {
+  if (window["Android"]) {
+    return new Promise((resolve, reject) => {
+      window["Android"].searchAutoComplete(uuid, query);
+      window["searchAutoComplete"] = (res) => {
+        resolve(res);
+      };
+    });
+  } else {
+    return runService.searchAutoComplete(uuid, query);
+  }
+};
+
 export const continueNavigation = (
   runService,
   payload,

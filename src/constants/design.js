@@ -226,6 +226,33 @@ export const setupOptions = (type) => {
         },
       ];
 
+    case "autocomplete":
+      return [
+        {
+          title: "general",
+          key: "general",
+          rules: [
+            "changeCode", 
+            "questionActions",
+            "disabled",
+            "showDescription",
+            "hint",
+          ],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "prefill"],
+        },
+        {
+          title: "validation",
+          key: "validation",
+          rules: [
+            "validation_required",
+          ],
+        },
+      ];
+
     case "paragraph":
       return [
         {
