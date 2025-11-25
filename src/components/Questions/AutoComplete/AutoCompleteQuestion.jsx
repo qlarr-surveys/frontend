@@ -99,7 +99,7 @@ function AutoCompleteQuestion(props) {
         loading={loading}
         inputValue={inputValue}
         onInputChange={handleInputChange}
-        getOptionLabel={(option) => option.key || ""} // adjust to your data
+        getOptionLabel={(option) => option || ""} // adjust to your data
         isOptionEqualToValue={(option, value) => option === value} // adjust to your data
         renderInput={(params) => (
           <TextField
