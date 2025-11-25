@@ -1,6 +1,7 @@
 import BaseService from "./BaseService";
 import authenticatedApi from "./authenticatedApi";
 class DesignService extends BaseService {
+
   async getSurveyDesign() {
     const surveyId = sessionStorage.getItem("surveyId");
     const response = await this.handleRequest(() =>
@@ -49,6 +50,25 @@ class DesignService extends BaseService {
 
     const response = await this.handleRequest(() =>
       authenticatedApi.post(`/survey/${surveyId}/resource`, formData, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      })
+    );
+    return response.data;
+  }
+
+  async uploadAutoCompleteResource(file, componentId, surveyId = null) {
+    if (!surveyId) {
+      surveyId = sessionStorage.getItem("surveyId");
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await this.handleRequest(() =>
+      authenticatedApi.post(`/autocomplete/${surveyId}/${componentId}`, formData, {
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",

@@ -6,13 +6,16 @@ import styles from "./Question.module.css";
 import { stripTags } from "~/utils/design/utils";
 import LoadingDots from "../common/LoadingDots";
 import Validation from "../run/Validation";
-import MultipleText from '../Questions/MultipleText/MultipleText';
+import MultipleText from "../Questions/MultipleText/MultipleText";
+import AutoCompleteQuestion from '../Questions/AutoComplete/AutoCompleteQuestion';
 
 const DateTimeQuestion = React.lazy(() =>
   import("../Questions/DateTime/DateTimeQuestion")
 );
 const SCQ = React.lazy(() => import("../Questions/Scq/Scq"));
-const SelectQuestion = React.lazy(() => import("../Questions/SelectQuestion/SelectQuestion"));
+const SelectQuestion = React.lazy(() =>
+  import("../Questions/SelectQuestion/SelectQuestion")
+);
 const Array = React.lazy(() => import("../Questions/SCQArray/Array"));
 const Signature = React.lazy(() => import("../Questions/Signature/Signature"));
 const PhotoCapture = React.lazy(() =>
@@ -99,21 +102,16 @@ const Question = forwardRef((props, ref) => {
             component={props.component}
           />
         );
-        case "scq":
-          return (
-            <SCQ
-              lang={props.lang}
-              key={props.component.qualifiedCode}
-              component={props.component}
-            />
-          );
-      case "select":
+      case "scq":
         return (
-          <SelectQuestion
+          <SCQ
             lang={props.lang}
+            key={props.component.qualifiedCode}
             component={props.component}
           />
         );
+      case "select":
+        return <SelectQuestion lang={props.lang} component={props.component} />;
       case "multiple_text":
         return (
           <MultipleText
@@ -204,6 +202,13 @@ const Question = forwardRef((props, ref) => {
       case "image_ranking":
         return (
           <ImageRanking
+            key={props.component.qualifiedCode}
+            component={props.component}
+          />
+        );
+      case "autocomplete":
+        return (
+          <AutoCompleteQuestion
             key={props.component.qualifiedCode}
             component={props.component}
           />

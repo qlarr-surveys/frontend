@@ -74,6 +74,10 @@ const buildReference = (code, component, state, mainLang) => {
       instruction = `${code}.value`;
       type = "Long Text";
       break;
+    case "autocomplete":
+      instruction = `${code}.value`;
+      type = "Autocomplete";
+      break;
     case "number":
       type = "Number";
       instruction = `${code}.value`;

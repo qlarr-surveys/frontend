@@ -24,6 +24,8 @@ export const questionIconByType = (type, size = "1.25em", color) => {
       return <SurveyIcon name="multipleText" size={size} color={color} />;
     case "paragraph":
       return <SurveyIcon name="longText" size={size} color={color} />;
+    case "autocomplete":
+      return <SurveyIcon name="autocomplete" size={size} color={color} />;
     case "barcode":
       return <SurveyIcon name="qrCode" size={size} color={color} />;
     case "number":
@@ -198,6 +200,10 @@ export const QUESTION_TYPES = [
       {
         type: "multiple_text",
         icon: questionIconByType("multiple_text"),
+      },
+      {
+        type: "autocomplete",
+        icon: questionIconByType("autocomplete"),
       },
     ],
   },
@@ -714,12 +720,10 @@ export const createQuestion = (type, qId, lang) => {
       break;
     case "time":
       state.fullDayFormat = false;
-
       break;
+    case "autocomplete":
     case "text_display":
-      break;
     case "video_display":
-      break;
     case "image_display":
       break;
     default:

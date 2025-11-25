@@ -132,6 +132,7 @@ const buildField = (code, component, state, mainLang) => {
           ],
         },
       };
+    case "autocomplete":
     case "file_upload":
     case "signature":
     case "photo_capture":

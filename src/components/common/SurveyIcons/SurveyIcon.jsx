@@ -34,6 +34,91 @@ const iconPaths = {
     </svg>
   ),
 
+  autocomplete: (props) => (
+    <svg
+      {...props}
+      viewBox="0 0 16 16"
+      version="1.1"
+    >
+      <title>102</title>
+      <defs></defs>
+      <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+        <g fill="#434343">
+          <rect
+            x="0"
+            y="0"
+            width="13.931"
+            height="0.983"
+            className="si-glyph-fill"
+          ></rect>
+          <rect
+            x="0"
+            y="2"
+            width="13.931"
+            height="0.942"
+            className="si-glyph-fill"
+          ></rect>
+          <rect
+            x="0"
+            y="14"
+            width="10.958"
+            height="0.951"
+            className="si-glyph-fill"
+          ></rect>
+          <g transform="translate(4.000000, 4.000000)">
+            <path
+              d="M4.49,0.054 C2.01,0.054 0,2.047 0,4.506 C0,6.965 2.01,8.958 4.49,8.958 C6.97,8.958 8.979,6.965 8.979,4.506 C8.979,2.047 6.971,0.054 4.49,0.054 L4.49,0.054 Z M4.49,8.018 C2.533,8.018 0.947,6.434 0.947,4.479 C0.947,2.525 2.533,0.938 4.49,0.938 C6.446,0.938 8.031,2.525 8.031,4.479 C8.031,6.434 6.446,8.018 4.49,8.018 L4.49,8.018 Z"
+              className="si-glyph-fill"
+            ></path>
+            <path
+              d="M11.938,10.611 L10.577,11.972 L7.581,8.976 C7.581,8.976 8.151,8.903 8.512,8.542 C8.873,8.18 8.943,7.614 8.943,7.614 L11.938,10.611 L11.938,10.611 Z"
+              className="si-glyph-fill"
+            ></path>
+            <path
+              d="M4.677,2.43 C5.203,2.43 5.006,2.03 4.274,2.03 C3.014,2.03 1.995,3.04 1.995,4.286 C1.995,5.011 2.399,5.207 2.399,4.686 C2.398,3.44 3.418,2.43 4.677,2.43 L4.677,2.43 Z"
+              className="si-glyph-fill"
+            ></path>
+          </g>
+          <rect
+            x="0"
+            y="4"
+            width="3.973"
+            height="0.962"
+            className="si-glyph-fill"
+          ></rect>
+          <rect
+            x="0"
+            y="6"
+            width="3"
+            height="0.973"
+            className="si-glyph-fill"
+          ></rect>
+          <rect
+            x="0"
+            y="8"
+            width="2.98"
+            height="0.993"
+            className="si-glyph-fill"
+          ></rect>
+          <rect
+            x="0"
+            y="10"
+            width="3.02"
+            height="0.973"
+            className="si-glyph-fill"
+          ></rect>
+          <rect
+            x="0"
+            y="12"
+            width="4"
+            height="0.931"
+            className="si-glyph-fill"
+          ></rect>
+        </g>
+      </g>
+    </svg>
+  ),
+
   captureVideo: (props) => (
     <svg
       {...props}
@@ -638,26 +723,11 @@ const iconPaths = {
             className="cls-1"
             d="M12.24,10.09c-1.18,0-2.15.96-2.15,2.15s.96,2.15,2.15,2.15,2.15-.96,2.15-2.15-.96-2.15-2.15-2.15ZM12.24,12.99c-.42,0-.76-.34-.76-.76s.34-.76.76-.76.76.34.76.76c0,.42-.34.76-.76.76Z"
           />
-          <path
-            className="cls-1"
-            d="M1.58,2.18l1.14,1.14,1.14-1.14"
-          />
-          <path
-            className="cls-1"
-            d="M6.62,7.19l1.14,1.14,1.14-1.14"
-          />
-          <path
-            className="cls-1"
-            d="M11.66,12.2l1.14,1.14,1.14-1.14"
-          />
-          <path
-            className="cls-1"
-            d="M1.58,12.2l1.14,1.14,1.14-1.14"
-          />
-          <path
-            className="cls-1"
-            d="M11.66,2.18l1.14,1.14,1.14-1.14"
-          />
+          <path className="cls-1" d="M1.58,2.18l1.14,1.14,1.14-1.14" />
+          <path className="cls-1" d="M6.62,7.19l1.14,1.14,1.14-1.14" />
+          <path className="cls-1" d="M11.66,12.2l1.14,1.14,1.14-1.14" />
+          <path className="cls-1" d="M1.58,12.2l1.14,1.14,1.14-1.14" />
+          <path className="cls-1" d="M11.66,2.18l1.14,1.14,1.14-1.14" />
         </g>
       </g>
     </svg>

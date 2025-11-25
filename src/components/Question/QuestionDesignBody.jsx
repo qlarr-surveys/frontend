@@ -19,6 +19,7 @@ import ImageChoiceQuestion from "../Questions/Imagechoice/ImageChoiceDesign";
 import SCQIconArrayDesign from "../Questions/SCQArray/SCQIconArrayDesign";
 import { RHFSelect } from "../hook-form";
 import ArrayDesign from '~/components/Questions/SCQArray/ArrayDesign';
+import AutoCompleteDesign from '../Questions/AutoComplete/AutoCompleteDesign';
 
 function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
   switch (type) {
@@ -167,6 +168,8 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
       return <TextQuestionDesign key={code} code={code} />;
     case "paragraph":
       return <ParagraphQuestionDesign t={t} key={code} code={code} />;
+    case "autocomplete":
+      return <AutoCompleteDesign t={t} key={code} code={code} onMainLang={onMainLang} />;
     case "barcode":
       return <BarcodeDesign t={t} key={code} code={code} />;
     case "email":
