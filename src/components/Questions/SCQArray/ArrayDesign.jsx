@@ -31,7 +31,7 @@ import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
 import { contentEditable, inDesign } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
-import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
+import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
 
 function ArrayDesign(props) {
   const theme = useTheme();
