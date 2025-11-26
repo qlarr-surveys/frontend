@@ -271,13 +271,14 @@ export default React.memo(DraftEditor);
 export function sanitizePastedText(text) {
   // Split text around newlines
   const lines = text.split(/\r?\n/);
+  const moreThanOneLine = lines.length > 1
 
   // Process each line to remove bullet points and dashes
   const sanitizedLines = lines.map((line) => {
     // Remove leading/trailing whitespace
     let cleanLine = line;
-
-    // Remove common bullet point patterns
+    if(moreThanOneLine){
+// Remove common bullet point patterns
     cleanLine = cleanLine
       // Remove bullet points: •, ◦, ▪, ▫, ‣
       .replace(/^[•◦▪▫‣]\s*/, "")
@@ -293,6 +294,9 @@ export function sanitizePastedText(text) {
       .replace(/^\([a-zA-Z]\)\s*/, "")
       // Remove multiple spaces/tabs at the beginning
       .replace(/^\s+/, "");
+    }
+
+    
 
     return cleanLine;
   });
