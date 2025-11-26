@@ -112,6 +112,7 @@ function AddEditUser({ userId, open, onClose }) {
     { value: ROLES.SURVEY_ADMIN, label: t("label.survey_admin") },
     { value: ROLES.ANALYST, label: t("label.analyst") },
     { value: ROLES.SURVEYOR, label: t("label.surveyor") },
+    { value: ROLES.SUPERVISOR, label: t("label.supervisor") },
   ];
 
   const isDisabled = (role, selectedRoles) => {

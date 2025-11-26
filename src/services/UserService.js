@@ -2,12 +2,6 @@ import BaseService from "./BaseService";
 import authenticatedApi from "./authenticatedApi";
 
 class UserService extends BaseService {
-  async getCountByRole() {
-    const response = await this.handleRequest(() =>
-      authenticatedApi.get(`/user/count_by_role`)
-    );
-    return response.data;
-  }
 
   async getAllUsers() {
     const response = await this.handleRequest(() =>
