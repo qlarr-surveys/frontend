@@ -16,12 +16,19 @@ const Toolbar = ({ editor, extended, code }) => {
   const [imageWidth, setImageWidth] = useState("");
   const [imageHeight, setImageHeight] = useState("");
   const [maintainAspectRatio, setMaintainAspectRatio] = useState(true);
+  const [showCollapsibleInput, setShowCollapsibleInput] = useState(false);
+  const [collapsibleTitle, setCollapsibleTitle] = useState("");
+  const [collapsibleBgColor, setCollapsibleBgColor] = useState("");
   const aspectRatioRef = useRef(null);
   const fileInputRef = useRef(null);
   const colorPickerRef = useRef(null);
   const bgColorPickerRef = useRef(null);
   const linkInputRef = useRef(null);
   const imageSizeInputRef = useRef(null);
+  const collapsibleInputRef = useRef(null);
+  const collapsibleColorPickerRef = useRef(null);
+  const [showCollapsibleColorPicker, setShowCollapsibleColorPicker] =
+    useState(false);
   const designService = useService("design");
 
   const fontSizes = [
@@ -190,13 +197,31 @@ const Toolbar = ({ editor, extended, code }) => {
       }
     };
 
+    const updateCollapsibleState = () => {
+      if (editor.isActive("collapsible")) {
+        const attrs = editor.getAttributes("collapsible");
+        if (!showCollapsibleInput) {
+          setCollapsibleTitle(attrs.buttonText || "Show more details");
+          setCollapsibleBgColor(attrs.backgroundColor || "");
+        }
+      } else {
+        if (showCollapsibleInput) {
+          setShowCollapsibleInput(false);
+        }
+        setCollapsibleTitle("");
+        setCollapsibleBgColor("");
+      }
+    };
+
     updateFontSize();
     updateImageSize();
+    updateCollapsibleState();
 
     const handleUpdate = () => {
       requestAnimationFrame(() => {
         updateFontSize();
         updateImageSize();
+        updateCollapsibleState();
       });
     };
 
@@ -209,7 +234,7 @@ const Toolbar = ({ editor, extended, code }) => {
       editor.off("update", handleUpdate);
       editor.off("transaction", handleUpdate);
     };
-  }, [editor, showImageSizeInput]);
+  }, [editor, showImageSizeInput, showCollapsibleInput]);
 
   const setLink = useCallback(() => {
     const trimmedUrl = linkUrl.trim();
@@ -290,9 +315,33 @@ const Toolbar = ({ editor, extended, code }) => {
       .setCollapsible({
         open: false,
         buttonText: "Show more details",
+        backgroundColor: null,
       })
       .run();
   }, [editor]);
+
+  const updateCollapsible = useCallback(() => {
+    if (!editor.isActive("collapsible")) {
+      return;
+    }
+
+    const attrs = {};
+    if (collapsibleTitle.trim()) {
+      attrs.buttonText = collapsibleTitle.trim();
+    }
+    attrs.backgroundColor = collapsibleBgColor.trim() || null;
+
+    editor.chain().focus().updateCollapsible(attrs).run();
+  }, [editor, collapsibleTitle, collapsibleBgColor]);
+
+  const toggleCollapsibleInput = useCallback(() => {
+    if (editor.isActive("collapsible")) {
+      const attrs = editor.getAttributes("collapsible");
+      setCollapsibleTitle(attrs.buttonText || "Show more details");
+      setCollapsibleBgColor(attrs.backgroundColor || "");
+      setShowCollapsibleInput(!showCollapsibleInput);
+    }
+  }, [editor, showCollapsibleInput]);
 
   const updateImageSize = useCallback(() => {
     if (!editor.isActive("image")) {
@@ -525,20 +574,43 @@ const Toolbar = ({ editor, extended, code }) => {
       ) {
         setShowImageSizeInput(false);
       }
+      if (
+        collapsibleInputRef.current &&
+        !collapsibleInputRef.current.contains(event.target) &&
+        !event.target.closest('button[title="Collapsible Settings"]')
+      ) {
+        setShowCollapsibleInput(false);
+      }
+      if (
+        collapsibleColorPickerRef.current &&
+        !collapsibleColorPickerRef.current.contains(event.target) &&
+        !event.target.closest(".tiptap-collapsible-color-picker-wrapper")
+      ) {
+        setShowCollapsibleColorPicker(false);
+      }
     };
 
     if (
       showColorPicker ||
       showBgColorPicker ||
       showLinkInput ||
-      showImageSizeInput
+      showImageSizeInput ||
+      showCollapsibleInput ||
+      showCollapsibleColorPicker
     ) {
       document.addEventListener("mousedown", handleClickOutside);
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }
-  }, [showColorPicker, showBgColorPicker, showLinkInput, showImageSizeInput]);
+  }, [
+    showColorPicker,
+    showBgColorPicker,
+    showLinkInput,
+    showImageSizeInput,
+    showCollapsibleInput,
+    showCollapsibleColorPicker,
+  ]);
 
   useEffect(() => {
     if (showLinkInput) {
@@ -1011,6 +1083,161 @@ const Toolbar = ({ editor, extended, code }) => {
       >
         <span style={{ fontSize: "12px" }}>▼</span>
       </button>
+
+      {/* Collapsible Settings - Only show when collapsible is selected */}
+      {editor.isActive("collapsible") && (
+        <div className="tiptap-color-picker-wrapper">
+          <button
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={toggleCollapsibleInput}
+            className={`tiptap-toolbar-button ${
+              showCollapsibleInput ? "is-active" : ""
+            }`}
+            title="Collapsible Settings"
+          >
+            ⚙️
+          </button>
+          {showCollapsibleInput && (
+            <div className="tiptap-collapsible-input" ref={collapsibleInputRef}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem",
+                }}
+              >
+                {/* Title Input */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.25rem",
+                  }}
+                >
+                  <label style={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
+                    Title:
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Show more details"
+                    value={collapsibleTitle}
+                    onChange={(e) => setCollapsibleTitle(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        updateCollapsible();
+                        setShowCollapsibleInput(false);
+                      } else if (e.key === "Escape") {
+                        e.preventDefault();
+                        setShowCollapsibleInput(false);
+                        editor.commands.focus();
+                      }
+                    }}
+                  />
+                </div>
+
+                {/* Background Color Picker */}
+                <div className="tiptap-collapsible-color-picker-wrapper">
+                  <label style={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
+                    Background Color:
+                  </label>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "0.25rem",
+                      alignItems: "center",
+                      position: "relative",
+                    }}
+                  >
+                    <button
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() =>
+                        setShowCollapsibleColorPicker(
+                          !showCollapsibleColorPicker
+                        )
+                      }
+                      className="tiptap-toolbar-button"
+                      style={{
+                        backgroundColor: collapsibleBgColor || "#7b1fa2",
+                        color: "white",
+                        minWidth: "80px",
+                      }}
+                      title="Background Color"
+                    >
+                      {collapsibleBgColor ? "✓" : "Default"}
+                    </button>
+                    {showCollapsibleColorPicker && (
+                      <div
+                        className="tiptap-color-palette"
+                        ref={collapsibleColorPickerRef}
+                        style={{
+                          position: "absolute",
+                          top: "100%",
+                          left: 0,
+                          marginTop: "0.25rem",
+                        }}
+                      >
+                        {colors.map((color) => (
+                          <button
+                            key={color}
+                            className="tiptap-color-option"
+                            style={{ backgroundColor: color }}
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => {
+                              setCollapsibleBgColor(color);
+                              setShowCollapsibleColorPicker(false);
+                            }}
+                            title={color}
+                          />
+                        ))}
+                        <button
+                          className="tiptap-color-option tiptap-color-remove"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => {
+                            setCollapsibleBgColor("");
+                            setShowCollapsibleColorPicker(false);
+                          }}
+                          title="Remove color"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "0.25rem",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <button
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => {
+                      updateCollapsible();
+                      setShowCollapsibleInput(false);
+                    }}
+                  >
+                    OK
+                  </button>
+                  <button
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => {
+                      setShowCollapsibleInput(false);
+                      editor.commands.focus();
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Clear Formatting */}
       <button

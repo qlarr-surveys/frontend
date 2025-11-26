@@ -240,3 +240,61 @@
   left: auto;
   right: 0;
 }
+
+/* Collapsible input */
+.tiptap-collapsible-input {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 250px;
+}
+
+.tiptap-collapsible-input > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tiptap-collapsible-input label {
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.tiptap-collapsible-input input[type="text"] {
+  width: 100%;
+  padding: 0.25rem 0.375rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.tiptap-collapsible-input input[type="text"]:focus {
+  outline: none;
+  border-color: #2196f3;
+}
+
+.tiptap-collapsible-color-picker-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tiptap-collapsible-color-picker-wrapper > div {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  position: relative;
+}
+
+/* Adjust collapsible input position for RTL */
+.tiptap-toolbar[dir="rtl"] .tiptap-collapsible-input {
+  left: auto;
+  right: 0;
+}

@@ -30,6 +30,16 @@ const CollapsibleExtension = Node.create({
           return {};
         },
       },
+      backgroundColor: {
+        default: null,
+        parseHTML: (element) => {
+          const button = element.querySelector(".collapsible-button");
+          return button?.style?.backgroundColor || null;
+        },
+        renderHTML: (attributes) => {
+          return {};
+        },
+      },
     };
   },
 
@@ -44,6 +54,11 @@ const CollapsibleExtension = Node.create({
   renderHTML({ HTMLAttributes, node }) {
     const isOpen = node.attrs.open;
     const buttonText = node.attrs.buttonText || "Show more details";
+    const backgroundColor = node.attrs.backgroundColor;
+
+    const buttonStyle = backgroundColor
+      ? { style: `background-color: ${backgroundColor};` }
+      : {};
 
     return [
       "div",
@@ -54,12 +69,15 @@ const CollapsibleExtension = Node.create({
       }),
       [
         "button",
-        {
-          class: "collapsible-button",
-          type: "button",
-          "data-button-text": buttonText,
-          contenteditable: "false",
-        },
+        mergeAttributes(
+          {
+            class: "collapsible-button",
+            type: "button",
+            "data-button-text": buttonText,
+            contenteditable: "false",
+          },
+          buttonStyle
+        ),
         buttonText,
       ],
       [
@@ -85,6 +103,9 @@ const CollapsibleExtension = Node.create({
       button.type = "button";
       button.setAttribute("contenteditable", "false");
       button.textContent = node.attrs.buttonText || "Show more details";
+      if (node.attrs.backgroundColor) {
+        button.style.backgroundColor = node.attrs.backgroundColor;
+      }
 
       const content = document.createElement("div");
       content.className = "collapsible-content";
@@ -138,6 +159,13 @@ const CollapsibleExtension = Node.create({
           button.textContent = newButtonText;
           button.setAttribute("data-button-text", newButtonText);
 
+          // Update background color
+          if (updatedNode.attrs.backgroundColor) {
+            button.style.backgroundColor = updatedNode.attrs.backgroundColor;
+          } else {
+            button.style.backgroundColor = "";
+          }
+
           const isOpen = updatedNode.attrs.open;
           dom.setAttribute("data-open", isOpen ? "true" : "false");
           if (isOpen) {
@@ -164,6 +192,7 @@ const CollapsibleExtension = Node.create({
             attrs: {
               open: options?.open ?? false,
               buttonText: options?.buttonText || "Show more details",
+              backgroundColor: options?.backgroundColor || null,
             },
             content: options?.content || [
               {
@@ -171,6 +200,36 @@ const CollapsibleExtension = Node.create({
               },
             ],
           });
+        },
+      updateCollapsible:
+        (options) =>
+        ({ tr, state, dispatch }) => {
+          const { selection } = state;
+          const { $from } = selection;
+          let node = $from.node();
+          let pos = $from.pos;
+
+          if (node.type.name !== this.name) {
+            for (let i = $from.depth; i > 0; i--) {
+              const nodeAtDepth = $from.node(i);
+              if (nodeAtDepth.type.name === this.name) {
+                node = nodeAtDepth;
+                pos = $from.before(i);
+                break;
+              }
+            }
+          }
+
+          if (node && node.type.name === this.name) {
+            if (dispatch) {
+              tr.setNodeMarkup(pos, undefined, {
+                ...node.attrs,
+                ...options,
+              });
+            }
+            return true;
+          }
+          return false;
         },
       toggleCollapsible:
         () =>
