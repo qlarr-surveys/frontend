@@ -55,12 +55,11 @@ function AutoCompleteQuestion(props) {
     []
   );
 
-  const handleChange = (event) => {
-    console.log("handleChange", event.target.value);
+  const handleChange = (event, value) => {
     dispatch(
       valueChange({
         componentCode: props.component.qualifiedCode,
-        value: options[event.target.value],
+        value: value,
       })
     );
   };
