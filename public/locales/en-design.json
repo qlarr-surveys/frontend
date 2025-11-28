@@ -15,6 +15,7 @@
   "add_random_rule": "Add Random Rule",
   "add_row": "Add Row",
   "all_in_one": "All In One",
+  "response_review_required" : "Response review required",
   "allow_incomplete": "Allow Incomplete/Resume",
   "allow_jump": "Allow Jump/Show survey Index",
   "allow_previous": "Allow Previous",
@@ -388,6 +389,7 @@
     "allow_previous": "Allow respondents to navigate back to previous pages to review or change their answers.",
     "allow_jump": "Enable a survey index so respondents can jump to any page in the survey.",
     "allow_incomplete": "Let respondents save their progress and return later to complete the survey.",
+    "response_review_required" : "Require collected responses to be reviewed by supervisors before synced",
     "skip_invalid": "Allow respondents to proceed even if some answers are invalid, enforcing validation only when they submit the survey."
   }
 }

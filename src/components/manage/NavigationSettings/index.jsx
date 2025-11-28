@@ -90,7 +90,10 @@ const NavigationSettings = () => {
     allowIncomplete: Boolean(survey?.surveyNavigationData?.allowIncomplete),
     allowJump: Boolean(survey?.surveyNavigationData?.allowJump),
     skipInvalid: Boolean(survey?.surveyNavigationData?.skipInvalid),
+    responseReviewRequired: Boolean(survey?.responseReviewRequired),
   });
+
+  console.log(toggles)
 
   const [resumePresetKey, setResumePresetKey] = useState(
     findPresetByMs(survey?.surveyNavigationData?.resumeExpiryMillis)?.key ??
@@ -177,6 +180,20 @@ const NavigationSettings = () => {
           />
         </Box>
       ))}
+      <Box key="responseRequired" className={styles.boxContainer}>
+          <Box display="flex" alignItems="center" gap=".5rem">
+            <CustomTooltip body={t("tooltip.response_review_required")} />
+            <Typography color="#1a2052" fontWeight="500">
+              {t("response_review_required")}
+            </Typography>
+          </Box>
+
+          <RHFSwitch
+            disabled={isDisabled}
+            checked={toggles["responseReviewRequired"]}
+            onChange={handleToggleChange("responseReviewRequired")}
+          />
+        </Box>
     </Box>
   );
 };

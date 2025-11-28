@@ -15,6 +15,7 @@
   "add_random_rule": "Ajouter une Règle Aléatoire",
   "add_row": "Ajouter une Ligne",
   "all_in_one": "Tout en Un",
+  "response_review_required": "Révision de la réponse requise",
   "allow_incomplete": "Autoriser Incomplet/Reprendre",
   "allow_jump": "Autoriser Saut/Afficher l'Index du Sondage",
   "allow_previous": "Autoriser Précédent",
@@ -387,6 +388,7 @@
     "allow_previous": "Permettre aux répondants de naviguer en arrière vers les pages précédentes pour examiner ou modifier leurs réponses.",
     "allow_jump": "Activer un index de sondage pour que les répondants puissent sauter à n'importe quelle page du sondage.",
     "allow_incomplete": "Permettre aux répondants de sauvegarder leur progression et de revenir plus tard pour compléter le sondage.",
+    "response_review_required": "Exiger que les réponses collectées soient examinées par des superviseurs avant la synchronisation",
     "skip_invalid": "Permettre aux répondants de continuer même si certaines réponses sont invalides, en appliquant la validation uniquement lorsqu'ils soumettent le sondage."
   }
 }

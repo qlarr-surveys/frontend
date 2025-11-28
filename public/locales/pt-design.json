@@ -15,6 +15,7 @@
   "add_random_rule": "Adicionar Regra Aleatória",
   "add_row": "Adicionar Linha",
   "all_in_one": "Tudo em Um",
+  "response_review_required": "Revisão de resposta necessária",
   "allow_incomplete": "Permitir Incompleto/Retomar",
   "allow_jump": "Permitir Salto/Mostrar Índice da Pesquisa",
   "allow_previous": "Permitir Anterior",
@@ -387,6 +388,7 @@
     "allow_previous": "Permitir que os respondentes naveguem de volta para páginas anteriores para revisar ou alterar suas respostas.",
     "allow_jump": "Habilitar um índice de pesquisa para que os respondentes possam saltar para qualquer página na pesquisa.",
     "allow_incomplete": "Permitir que os respondentes salvem seu progresso e retornem mais tarde para completar a pesquisa.",
+    "response_review_required": "Exigir que as respostas coletadas sejam revisadas por supervisores antes de serem sincronizadas",
     "skip_invalid": "Permitir que os respondentes continuem mesmo se algumas respostas forem inválidas, aplicando validação apenas quando enviarem a pesquisa."
   }
 }

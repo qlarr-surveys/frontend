@@ -15,6 +15,7 @@
   "add_random_rule": "Agregar Regla Aleatoria",
   "add_row": "Agregar Fila",
   "all_in_one": "Todo en Uno",
+  "response_review_required": "Revisión de respuesta requerida",
   "allow_incomplete": "Permitir Incompleto/Reanudar",
   "allow_jump": "Permitir Salto/Mostrar Índice de Encuesta",
   "allow_previous": "Permitir Anterior",
@@ -387,6 +388,7 @@
     "allow_previous": "Permitir a los encuestados navegar hacia atrás a páginas anteriores para revisar o cambiar sus respuestas.",
     "allow_jump": "Habilitar un índice de encuesta para que los encuestados puedan saltar a cualquier página en la encuesta.",
     "allow_incomplete": "Permitir a los encuestados guardar su progreso y regresar más tarde para completar la encuesta.",
+    "response_review_required": "Requerir que las respuestas recopiladas sean revisadas por supervisores antes de sincronizarlas",
     "skip_invalid": "Permitir a los encuestados continuar incluso si algunas respuestas son inválidas, aplicando validación solo cuando envíen la encuesta."
   }
 }

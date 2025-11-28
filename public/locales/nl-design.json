@@ -15,6 +15,7 @@
   "add_random_rule": "Willekeurige Regel Toevoegen",
   "add_row": "Rij Toevoegen",
   "all_in_one": "Alles in Een",
+  "response_review_required": "Beoordeling van reacties vereist",
   "allow_incomplete": "Onvolledig/Hervatten Toestaan",
   "allow_jump": "Springen/Enquête Index Tonen Toestaan",
   "allow_previous": "Vorige Toestaan",
@@ -387,6 +388,7 @@
     "allow_previous": "Sta respondenten toe om terug te navigeren naar vorige pagina's om hun antwoorden te bekijken of te wijzigen.",
     "allow_jump": "Schakel een enquête index in zodat respondenten naar elke pagina in de enquête kunnen springen.",
     "allow_incomplete": "Laat respondenten hun voortgang opslaan en later terugkeren om de enquête te voltooien.",
+    "response_review_required": "Vereisen dat verzamelde reacties worden beoordeeld door supervisors voordat ze worden gesynchroniseerd",
     "skip_invalid": "Sta respondenten toe om door te gaan zelfs als sommige antwoorden ongeldig zijn, waarbij validatie alleen wordt afgedwongen wanneer ze de enquête verzenden."
   }
 }
