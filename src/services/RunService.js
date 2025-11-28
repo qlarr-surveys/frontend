@@ -74,8 +74,9 @@ class RunService extends BaseService {
   }
 
   async searchAutoComplete(uuid, query) {
+    const surveyId = sessionStorage.getItem("surveyId");
     const response = await this.handleRequest(() =>
-      publicApi.get(`/autocomplete/${uuid}?q=${query}`)
+      publicApi.get(`/survey/${surveyId}/autocomplete/${uuid}?q=${query}`)
     );
     return response.data;
   }
