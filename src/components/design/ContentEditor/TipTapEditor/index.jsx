@@ -17,8 +17,9 @@ import CollapsibleExtension from "./CollapsibleExtension";
 import FontSize from "./FontSizeExtension";
 import "tippy.js/dist/tippy.css";
 import "./TipTapEditor.css";
+import { EDITOR_CONSTANTS } from "~/constants/editor";
 
-const BLUR_TIMEOUT_MS = 100;
+const { BLUR_TIMEOUT_MS } = EDITOR_CONSTANTS;
 
 function DraftEditor({
   value,
