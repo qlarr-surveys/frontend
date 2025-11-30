@@ -388,6 +388,7 @@
   "tiptap_strikethrough": "Tachado",
   "tiptap_link": "Link",
   "tiptap_link_placeholder": "Inserir URL",
+  "tiptap_link_text_placeholder": "Texto do link",
   "tiptap_ordered_list": "Lista Numerada",
   "tiptap_bullet_list": "Lista com Marcadores",
   "tiptap_decrease_indent": "Diminuir Recuo",

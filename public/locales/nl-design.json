@@ -388,6 +388,7 @@
   "tiptap_strikethrough": "Doorhalen",
   "tiptap_link": "Link",
   "tiptap_link_placeholder": "URL invoeren",
+  "tiptap_link_text_placeholder": "Linktekst",
   "tiptap_ordered_list": "Genummerde Lijst",
   "tiptap_bullet_list": "Opsommingsteken Lijst",
   "tiptap_decrease_indent": "Inspringing Verkleinen",

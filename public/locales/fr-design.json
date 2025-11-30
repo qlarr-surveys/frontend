@@ -388,6 +388,7 @@
   "tiptap_strikethrough": "Barré",
   "tiptap_link": "Lien",
   "tiptap_link_placeholder": "Entrer l'URL",
+  "tiptap_link_text_placeholder": "Texte du lien",
   "tiptap_ordered_list": "Liste Numérotée",
   "tiptap_bullet_list": "Liste à Puces",
   "tiptap_decrease_indent": "Diminuer le Retrait",

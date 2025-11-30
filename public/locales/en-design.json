@@ -388,6 +388,7 @@
   "tiptap_strikethrough": "Strikethrough",
   "tiptap_link": "Link",
   "tiptap_link_placeholder": "Enter URL",
+  "tiptap_link_text_placeholder": "Link text",
   "tiptap_ordered_list": "Ordered List",
   "tiptap_bullet_list": "Bullet List",
   "tiptap_decrease_indent": "Decrease Indent",

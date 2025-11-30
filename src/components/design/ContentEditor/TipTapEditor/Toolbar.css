@@ -100,8 +100,13 @@
   font-size: 0.875rem;
 }
 
-.tiptap-link-input button:hover {
+.tiptap-link-input button:hover:not(:disabled) {
   background-color: #f0f0f0;
+}
+
+.tiptap-link-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Color picker */

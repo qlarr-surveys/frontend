@@ -381,6 +381,7 @@
   "tiptap_strikethrough": "خط في الوسط",
   "tiptap_link": "رابط",
   "tiptap_link_placeholder": "أدخل الرابط",
+  "tiptap_link_text_placeholder": "نص الرابط",
   "tiptap_ordered_list": "قائمة مرقمة",
   "tiptap_bullet_list": "قائمة نقطية",
   "tiptap_decrease_indent": "تقليل المسافة البادئة",

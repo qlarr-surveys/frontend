@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useCallback } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
+import LinkExtension from "./LinkExtension";
 import Underline from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
@@ -66,11 +66,12 @@ function DraftEditor({
         },
         heading: false,
       }),
-      Link.configure({
+      LinkExtension.configure({
         openOnClick: false,
         HTMLAttributes: {
           class: "tiptap-link",
         },
+        autolink: false,
       }),
       Underline,
       TextStyle,

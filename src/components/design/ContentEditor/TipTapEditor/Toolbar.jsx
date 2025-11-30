@@ -12,6 +12,7 @@ const Toolbar = ({ editor, extended, code }) => {
   const [showBgColorPicker, setShowBgColorPicker] = useState(false);
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
+  const [linkText, setLinkText] = useState("");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [currentFontSize, setCurrentFontSize] = useState("1em");
   const [showImageSizeInput, setShowImageSizeInput] = useState(false);
@@ -248,31 +249,72 @@ const Toolbar = ({ editor, extended, code }) => {
 
   const setLink = useCallback(() => {
     const trimmedUrl = linkUrl.trim();
+    const trimmedText = linkText.trim();
+
     if (trimmedUrl) {
       let finalUrl = trimmedUrl;
       if (!trimmedUrl.match(/^https?:\/\//i)) {
         finalUrl = `http://${trimmedUrl}`;
       }
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href: finalUrl })
-        .run();
+
+      const { from, to } = editor.state.selection;
+      const selectedText = editor.state.doc.textBetween(from, to);
+
+      // Determine the text to use for the link
+      const linkDisplayText = trimmedText || selectedText || finalUrl;
+
+      // If there's selected text, replace it with the link
+      if (selectedText && selectedText.trim().length > 0) {
+        editor
+          .chain()
+          .focus()
+          .deleteSelection()
+          .insertContent(`<a href="${finalUrl}">${linkDisplayText}</a>`)
+          .run();
+      } else if (trimmedText) {
+        // If no selection but text is provided, insert the link at cursor
+        editor
+          .chain()
+          .focus()
+          .insertContent(`<a href="${finalUrl}">${linkDisplayText}</a>`)
+          .run();
+      } else {
+        // Just set link on existing selection or mark
+        editor
+          .chain()
+          .focus()
+          .extendMarkRange("link")
+          .setLink({ href: finalUrl })
+          .run();
+      }
     } else {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
     }
     setShowLinkInput(false);
     setLinkUrl("");
-  }, [editor, linkUrl]);
+    setLinkText("");
+  }, [editor, linkUrl, linkText]);
 
   const toggleLink = useCallback(() => {
     const previousUrl = editor.getAttributes("link").href;
     if (previousUrl) {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      // Remove link and ensure cursor is positioned outside link mark
+      const { from, to } = editor.state.selection;
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .unsetLink()
+        .removeMark("link")
+        .setTextSelection({ from: to, to: to })
+        .run();
     } else {
+      const { from, to } = editor.state.selection;
+      const selectedText = editor.state.doc.textBetween(from, to);
+
       const currentUrl = editor.getAttributes("link").href || "";
       setLinkUrl(currentUrl);
+      setLinkText(selectedText || "");
       setShowLinkInput(true);
     }
   }, [editor]);
@@ -653,6 +695,10 @@ const Toolbar = ({ editor, extended, code }) => {
       if (currentUrl && !linkUrl) {
         setLinkUrl(currentUrl);
       }
+    } else {
+      // Clear inputs when closing
+      setLinkUrl("");
+      setLinkText("");
     }
   }, [showLinkInput, editor, linkUrl]);
 
@@ -738,6 +784,31 @@ const Toolbar = ({ editor, extended, code }) => {
       {showLinkInput && (
         <div className="tiptap-link-input" ref={linkInputRef}>
           <input
+            type="text"
+            placeholder={t("tiptap_link_text_placeholder")}
+            value={linkText}
+            onChange={(e) => setLinkText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                if (linkText.trim() && linkUrl.trim()) {
+                  setLink();
+                } else {
+                  document
+                    .querySelector('.tiptap-link-input input[type="url"]')
+                    ?.focus();
+                }
+              } else if (e.key === "Escape") {
+                e.preventDefault();
+                setShowLinkInput(false);
+                setLinkUrl("");
+                setLinkText("");
+                editor.commands.focus();
+              }
+            }}
+            autoFocus
+          />
+          <input
             type="url"
             placeholder={t("tiptap_link_placeholder")}
             value={linkUrl}
@@ -745,17 +816,23 @@ const Toolbar = ({ editor, extended, code }) => {
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                setLink();
+                if (linkText.trim() && linkUrl.trim()) {
+                  setLink();
+                }
               } else if (e.key === "Escape") {
                 e.preventDefault();
                 setShowLinkInput(false);
                 setLinkUrl("");
+                setLinkText("");
                 editor.commands.focus();
               }
             }}
-            autoFocus
           />
-          <button onMouseDown={(e) => e.preventDefault()} onClick={setLink}>
+          <button
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={setLink}
+            disabled={!linkText.trim() || !linkUrl.trim()}
+          >
             {t("ok")}
           </button>
           <button
@@ -763,6 +840,7 @@ const Toolbar = ({ editor, extended, code }) => {
             onClick={() => {
               setShowLinkInput(false);
               setLinkUrl("");
+              setLinkText("");
               editor.commands.focus();
             }}
           >

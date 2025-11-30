@@ -377,6 +377,7 @@
   "tiptap_strikethrough": "Durchgestrichen",
   "tiptap_link": "Link",
   "tiptap_link_placeholder": "URL eingeben",
+  "tiptap_link_text_placeholder": "Linktext",
   "tiptap_ordered_list": "Nummerierte Liste",
   "tiptap_bullet_list": "Aufzählungsliste",
   "tiptap_decrease_indent": "Einzug verringern",

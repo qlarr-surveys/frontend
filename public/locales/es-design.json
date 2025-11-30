@@ -388,6 +388,7 @@
   "tiptap_strikethrough": "Tachado",
   "tiptap_link": "Enlace",
   "tiptap_link_placeholder": "Ingresar URL",
+  "tiptap_link_text_placeholder": "Texto del enlace",
   "tiptap_ordered_list": "Lista Ordenada",
   "tiptap_bullet_list": "Lista con Viñetas",
   "tiptap_decrease_indent": "Disminuir Sangría",
