@@ -1,10 +1,56 @@
-import React, { useCallback, useState, useRef, useEffect } from "react";
+import React, {
+  useCallback,
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+} from "react";
 import "./Toolbar.css";
 import { useService } from "~/hooks/use-service";
 import { buildResourceUrl } from "~/networking/common";
 import PhotoIcon from "@mui/icons-material/Photo";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useTranslation } from "react-i18next";
+
+const COLOR_PALETTE = [
+  "#000000",
+  "#e60000",
+  "#ff9900",
+  "#ffff00",
+  "#008a00",
+  "#0066cc",
+  "#9933ff",
+  "#ffffff",
+  "#facccc",
+  "#ffebcc",
+  "#ffffcc",
+  "#cce8cc",
+  "#cce0f5",
+  "#ebd6ff",
+  "#bbbbbb",
+  "#f06666",
+  "#ffc266",
+  "#ffff66",
+  "#66b966",
+  "#66a3e0",
+  "#c285ff",
+  "#888888",
+  "#a10000",
+  "#b26b00",
+  "#b2b200",
+  "#006100",
+  "#0047b2",
+  "#6b24b2",
+  "#444444",
+  "#5c0000",
+  "#663d00",
+  "#666600",
+  "#003700",
+  "#002966",
+  "#3d1466",
+];
+
+const FONT_SIZE_VALUES = ["0.75em", "1em", "1.5em", "2.5em"];
 
 const Toolbar = ({ editor, extended, code }) => {
   const { t } = useTranslation("design");
@@ -38,50 +84,17 @@ const Toolbar = ({ editor, extended, code }) => {
     useState(false);
   const designService = useService("design");
 
-  const fontSizes = [
-    { label: t("tiptap_font_size_small"), value: "0.75em" },
-    { label: t("tiptap_font_size_normal"), value: "1em" },
-    { label: t("tiptap_font_size_large"), value: "1.5em" },
-    { label: t("tiptap_font_size_huge"), value: "2.5em" },
-  ];
+  const fontSizes = useMemo(
+    () => [
+      { label: t("tiptap_font_size_small"), value: FONT_SIZE_VALUES[0] },
+      { label: t("tiptap_font_size_normal"), value: FONT_SIZE_VALUES[1] },
+      { label: t("tiptap_font_size_large"), value: FONT_SIZE_VALUES[2] },
+      { label: t("tiptap_font_size_huge"), value: FONT_SIZE_VALUES[3] },
+    ],
+    [t]
+  );
 
-  const colors = [
-    "#000000",
-    "#e60000",
-    "#ff9900",
-    "#ffff00",
-    "#008a00",
-    "#0066cc",
-    "#9933ff",
-    "#ffffff",
-    "#facccc",
-    "#ffebcc",
-    "#ffffcc",
-    "#cce8cc",
-    "#cce0f5",
-    "#ebd6ff",
-    "#bbbbbb",
-    "#f06666",
-    "#ffc266",
-    "#ffff66",
-    "#66b966",
-    "#66a3e0",
-    "#c285ff",
-    "#888888",
-    "#a10000",
-    "#b26b00",
-    "#b2b200",
-    "#006100",
-    "#0047b2",
-    "#6b24b2",
-    "#444444",
-    "#5c0000",
-    "#663d00",
-    "#666600",
-    "#003700",
-    "#002966",
-    "#3d1466",
-  ];
+  const colors = useMemo(() => COLOR_PALETTE, []);
 
   const setFontSize = useCallback(
     (size) => {
@@ -245,7 +258,7 @@ const Toolbar = ({ editor, extended, code }) => {
       editor.off("update", handleUpdate);
       editor.off("transaction", handleUpdate);
     };
-  }, [editor, showImageSizeInput, showCollapsibleInput]);
+  }, [editor, showImageSizeInput, showCollapsibleInput, fontSizes, t]);
 
   const setLink = useCallback(() => {
     const trimmedUrl = linkUrl.trim();
@@ -433,9 +446,9 @@ const Toolbar = ({ editor, extended, code }) => {
       );
       setCollapsibleBgColor(attrs.backgroundColor || "");
       setCollapsibleTextColor(attrs.textColor || "");
-      setShowCollapsibleInput(!showCollapsibleInput);
+      setShowCollapsibleInput((prev) => !prev);
     }
-  }, [editor, showCollapsibleInput]);
+  }, [editor, t]);
 
   const updateImageSize = useCallback(() => {
     if (!editor.isActive("image")) {
@@ -553,10 +566,9 @@ const Toolbar = ({ editor, extended, code }) => {
       setImageWidth(width);
       setImageHeight(height);
 
-      // Aspect ratio is already calculated in getImageDimensions from natural dimensions
-      setShowImageSizeInput(!showImageSizeInput);
+      setShowImageSizeInput((prev) => !prev);
     }
-  }, [editor, showImageSizeInput, getImageDimensions]);
+  }, [editor, getImageDimensions]);
 
   const handleWidthChange = useCallback(
     (newWidth) => {
