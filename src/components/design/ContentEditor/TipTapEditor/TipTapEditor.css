@@ -52,23 +52,6 @@
   color: #004499;
 }
 
-/* Mention styles */
-.mention {
-  background-color: #f0f0f0;
-  border-radius: 0.25rem;
-  padding: 0.125rem 0.25rem;
-  color: #333;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.mention span[contenteditable="false"] {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}
-
 /* List styles */
 .tiptap-editor ul,
 .tiptap-editor ol {

@@ -6,16 +6,11 @@ import Underline from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
-import Mention from "@tiptap/extension-mention";
-import { manageStore } from "~/store";
-import { buildReferences } from "~/components/Questions/buildReferences";
 import { sanitizePastedText } from "../sanitizePastedText";
 import Toolbar from "./Toolbar";
-import suggestion from "./suggestion";
 import ImageExtension from "./ImageExtension";
 import CollapsibleExtension from "./CollapsibleExtension";
 import FontSize from "./FontSizeExtension";
-import "tippy.js/dist/tippy.css";
 import "./TipTapEditor.css";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
 
@@ -31,39 +26,12 @@ function DraftEditor({
   onMoreLines,
   code,
   editorTheme = "snow",
-  referenceInstruction = {},
 }) {
   const editorRef = useRef(null);
   const wrapperRef = useRef(null);
   const blurTimeoutRef = useRef(null);
   const isMountedRef = useRef(true);
   const [isFocused, setIsFocused] = React.useState(false);
-
-  const getMentionSuggestions = useCallback(
-    async (query) => {
-      try {
-        const designState = manageStore.getState().designState;
-        const values = buildReferences(
-          designState.componentIndex,
-          code,
-          designState,
-          designState.langInfo.mainLang
-        );
-
-        if (query.length === 0) {
-          return values;
-        }
-
-        return values.filter((item) =>
-          item.value.toLowerCase().includes(query.toLowerCase())
-        );
-      } catch (error) {
-        console.error("Error getting mention suggestions:", error);
-        return [];
-      }
-    },
-    [code]
-  );
 
   const extensions = useMemo(() => {
     return [
@@ -89,12 +57,6 @@ function DraftEditor({
       Highlight.configure({
         multicolor: true,
       }),
-      Mention.configure({
-        HTMLAttributes: {
-          class: "mention",
-        },
-        suggestion: suggestion(getMentionSuggestions, referenceInstruction),
-      }),
       ImageExtension.configure({
         inline: false,
         allowBase64: false,
@@ -104,7 +66,7 @@ function DraftEditor({
       }),
       CollapsibleExtension,
     ];
-  }, [getMentionSuggestions, referenceInstruction]);
+  }, []);
 
   const editor = useEditor({
     extensions,
@@ -236,7 +198,7 @@ function DraftEditor({
     <div ref={wrapperRef} className={`tiptap-wrapper ${editorTheme}`}>
       <EditorContent editor={editor} />
       {editorTheme === "snow" && isFocused && (
-        <Toolbar editor={editor} extended={extended} code={code} />
+        <Toolbar editor={editor} extended={extended} />
       )}
     </div>
   );

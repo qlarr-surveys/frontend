@@ -10,7 +10,7 @@ import { useService } from "~/hooks/use-service";
 import { buildResourceUrl } from "~/networking/common";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
 
-export const useToolbar = ({ editor, code }) => {
+export const useToolbar = ({ editor }) => {
   const { t } = useTranslation("design");
   const designService = useService("design");
 

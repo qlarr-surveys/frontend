@@ -11,7 +11,7 @@ import ImageUploadButton from "./Toolbar/ImageUploadButton";
 import ListControls from "./Toolbar/ListControls";
 import { useToolbar } from "./Toolbar/useToolbar";
 
-const Toolbar = ({ editor, extended, code }) => {
+const Toolbar = ({ editor, extended }) => {
   const { t } = useTranslation("design");
 
   const {
@@ -49,7 +49,6 @@ const Toolbar = ({ editor, extended, code }) => {
     colorPickerRef,
     bgColorPickerRef,
     // Memoized
-    fontSizes,
     colors,
     // Methods
     setFontSize,
@@ -64,7 +63,7 @@ const Toolbar = ({ editor, extended, code }) => {
     handleWidthChange,
     handleHeightChange,
     handleAspectRatioToggle,
-  } = useToolbar({ editor, code });
+  } = useToolbar({ editor });
 
   if (!editor) {
     return null;
@@ -144,7 +143,6 @@ const Toolbar = ({ editor, extended, code }) => {
       <ColorPickerButton
         show={showColorPicker}
         onToggle={setShowColorPicker}
-        currentColor={editor.getAttributes("textStyle").color || "#000000"}
         onColorSelect={(color) => {
           editor.chain().focus().setColor(color).run();
         }}
@@ -170,7 +168,6 @@ const Toolbar = ({ editor, extended, code }) => {
       <ColorPickerButton
         show={showBgColorPicker}
         onToggle={setShowBgColorPicker}
-        currentColor={editor.getAttributes("highlight").color || "transparent"}
         onColorSelect={(color) => {
           editor.chain().focus().toggleHighlight({ color }).run();
         }}

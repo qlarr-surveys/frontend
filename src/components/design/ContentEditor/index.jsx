@@ -199,7 +199,6 @@ function ContentEditor({
       {isActive ? (
         <DraftEditor
           lang={lang}
-          referenceInstruction={referenceInstruction}
           isRtl={isRtl}
           onMoreLines={onMoreLines}
           onNewLine={onNewLine}

@@ -4,7 +4,6 @@ import ColorPicker from "./ColorPicker";
 const ColorPickerButton = ({
   show,
   onToggle,
-  currentColor,
   onColorSelect,
   onRemove,
   removeLabel,
@@ -38,4 +37,3 @@ const ColorPickerButton = ({
 };
 
 export default React.memo(ColorPickerButton);
-

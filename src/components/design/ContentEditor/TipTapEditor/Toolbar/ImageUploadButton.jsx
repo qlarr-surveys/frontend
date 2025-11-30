@@ -1,11 +1,10 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import PhotoIcon from "@mui/icons-material/Photo";
 import LoadingDots from "~/components/common/LoadingDots";
 
 const ImageUploadButton = ({ onImageUpload, isUploading }) => {
   const { t } = useTranslation("design");
-  const fileInputRef = useRef(null);
 
   return (
     <div
@@ -35,7 +34,6 @@ const ImageUploadButton = ({ onImageUpload, isUploading }) => {
         }}
       >
         <input
-          ref={fileInputRef}
           type="file"
           accept="image/*"
           onChange={onImageUpload}
