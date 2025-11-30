@@ -31,12 +31,7 @@ export default defineConfig(({ mode }) => {
           },
         },
         plugins: [
-          react({
-            jsxImportSource: "@emotion/react",
-            babel: {
-              plugins: ["@emotion/babel-plugin"],
-            },
-          }),
+          react(),
           legacy({
             targets: ["Chrome >= 50"],
           }),
@@ -91,12 +86,7 @@ export default defineConfig(({ mode }) => {
           },
         },
         plugins: [
-          react({
-            jsxImportSource: "@emotion/react",
-            babel: {
-              plugins: ["@emotion/babel-plugin"],
-            },
-          }),
+          react(),
           legacy({
             targets: ["Chrome >= 50"],
           }),
