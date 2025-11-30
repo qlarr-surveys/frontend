@@ -214,9 +214,6 @@ function IconChoiceItemDesign({
         }}
       >
         <IconButton
-          sx={{
-            color: theme.textStyles.text.color,
-          }}
           className={styles.addAnswerIcon}
           onClick={() => {
             addAnswer();
@@ -251,7 +248,6 @@ function IconChoiceItemDesign({
           {inDesign(designMode) && (
             <div className={styles.buttonContainers}>
               <IconButton
-                sx={{ color: theme.textStyles.text.color }}
                 className={styles.imageHoverIconButton}
                 onClick={() => {
                   onDelete();
@@ -261,9 +257,6 @@ function IconChoiceItemDesign({
               </IconButton>
 
               <IconButton
-                sx={{
-                  color: theme.textStyles.text.color,
-                }}
                 className={styles.imageHoverIconButton}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -278,7 +271,6 @@ function IconChoiceItemDesign({
                 <Build />
               </IconButton>
               <IconButton
-                sx={{ color: theme.textStyles.text.color }}
                 component="label"
                 className={styles.imageHoverIconButton}
                 onClick={() => setIconSelectorOpen(true)}
@@ -286,11 +278,10 @@ function IconChoiceItemDesign({
                 <PhotoCamera />
               </IconButton>
               <IconButton
-                sx={{ color: theme.textStyles.text.color }}
                 ref={drag}
                 className={styles.imageIconButton}
               >
-                <DragIndicatorIcon />
+                <DragIndicatorIcon color="action" />
               </IconButton>
             </div>
           )}
@@ -329,13 +320,6 @@ function IconChoiceItemDesign({
                   : mainContent || t("content_editor_placeholder_option")
               }
               inputProps={{ style: { textAlign: "center" } }}
-              InputProps={{
-                sx: {
-                  fontFamily: theme.textStyles.text.font,
-                  color: theme.textStyles.text.color,
-                  fontSize: theme.textStyles.text.size,
-                },
-              }}
             />
           )}
         </div>

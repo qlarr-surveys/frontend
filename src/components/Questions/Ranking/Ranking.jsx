@@ -16,7 +16,7 @@ function Ranking(props) {
   const visibleAnswers = useSelector(
     (state) =>
       props.component.answers.filter((ans) => {
-          return state.runState.values[ans.qualifiedCode]?.relevance ?? true;
+        return state.runState.values[ans.qualifiedCode]?.relevance ?? true;
       }),
     shallowEqual
   );
@@ -33,8 +33,6 @@ function Ranking(props) {
   const itemTypeByCode = (code) => {
     return isNaN(state[code]) ? "unsorted" : "sorted";
   };
-
-
 
   const order = useSelector((state) => {
     let valuesMap = {};
@@ -340,9 +338,9 @@ function RankingOption({
       >
         <Content
           elementCode={option.code}
-          fontFamily={theme.textStyles.text.font}
-          color={theme.textStyles.text.color}
-          fontSize={theme.textStyles.text.size}
+          customStyle={`
+        font-size: ${theme.textStyles.text.size}px;
+        `}
           name="label"
           lang={lang}
           content={option.content?.label}

@@ -105,11 +105,9 @@ function IconMcqChoice({
         <Box
           sx={{
             textAlign: "center",
-            fontFamily: theme.textStyles.text.font,
             color: checked
               ? theme.palette.primary.main
               : theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
           }}
         >
           {component.content?.label}

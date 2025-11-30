@@ -29,13 +29,6 @@ function NumberQuestionDesign({ code }) {
         sx={{
           pointerEvents: 'none',
         }}
-        InputProps={{
-          sx: {
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          },
-        }}
       />
     </div>
   );

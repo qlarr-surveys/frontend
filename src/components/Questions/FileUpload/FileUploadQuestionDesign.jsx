@@ -27,13 +27,6 @@ function FileUploadQuestionDesign({ code }) {
             ? state.content[lang].hint
             : "" || ""
         }
-        InputProps={{
-          sx: {
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          },
-        }}
         value={""}
         type="file"
         disabled

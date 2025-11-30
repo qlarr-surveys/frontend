@@ -82,7 +82,6 @@ function ImageScq(props) {
                   size="large"
                   sx={{
                     m:'5px',
-                    color: theme.textStyles.text.color,
                   }}
                 />
               </div>
@@ -90,9 +89,6 @@ function ImageScq(props) {
             {!props.component.hideText && (
               <Box
                 sx={{
-                  fontFamily: theme.textStyles.text.font,
-                  color: theme.textStyles.text.color,
-                  fontSize: theme.textStyles.text.size,
                   textAlign: "center",
                   marginTop: "8px",
                 }}

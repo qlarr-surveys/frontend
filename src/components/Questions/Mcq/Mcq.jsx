@@ -139,9 +139,6 @@ function McqAnswerOther(props) {
             disabled={props.disabled}
             onChange={onButtonClick}
             name={props.Answer.qualifiedCode}
-            sx={{
-              color: theme.textStyles.text.color,
-            }}
           />
         }
         label={
@@ -159,17 +156,7 @@ function McqAnswerOther(props) {
               onChange={handleChange}
               onFocus={handleFocus}
               onBlur={lostFocus}
-              sx={{
-                label: { color: theme.textStyles.text.color },
-              }}
               value={state.textValue}
-              InputProps={{
-                sx: {
-                  fontFamily: theme.textStyles.text.font,
-                  color: theme.textStyles.text.color,
-                  fontSize: theme.textStyles.text.size,
-                },
-              }}
               helperText={
                 state.childInvalid ? (
                   <Validation component={nestedTextChild} limit={1} />

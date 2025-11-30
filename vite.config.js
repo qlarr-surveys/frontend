@@ -31,11 +31,16 @@ export default defineConfig(({ mode }) => {
           },
         },
         plugins: [
-          react(),
+          react({
+            jsxImportSource: "@emotion/react",
+            babel: {
+              plugins: ["@emotion/babel-plugin"],
+            },
+          }),
           legacy({
             targets: ["Chrome >= 50"],
           }),
-        ]
+        ],
       };
     case "development":
       return {
@@ -54,7 +59,14 @@ export default defineConfig(({ mode }) => {
             "~": path.resolve(__dirname, "src"),
           },
         },
-        plugins: [react()],
+        plugins: [
+          react({
+            jsxImportSource: "@emotion/react",
+            babel: {
+              plugins: ["@emotion/babel-plugin"],
+            },
+          }),
+        ],
       };
     case "android":
     default:
@@ -70,7 +82,7 @@ export default defineConfig(({ mode }) => {
           output: {
             manualChunks: undefined, // Disable automatic chunk splitting
           },
-          target: 'es2015',
+          target: "es2015",
           polyfillDynamicImport: false,
         },
         resolve: {
@@ -79,7 +91,12 @@ export default defineConfig(({ mode }) => {
           },
         },
         plugins: [
-          react(),
+          react({
+            jsxImportSource: "@emotion/react",
+            babel: {
+              plugins: ["@emotion/babel-plugin"],
+            },
+          }),
           legacy({
             targets: ["Chrome >= 50"],
           }),

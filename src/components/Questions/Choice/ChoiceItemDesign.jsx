@@ -174,6 +174,7 @@ function ChoiceItemDesign(props) {
         {inDesign(props.designMode) && (
           <div ref={drag} className={styles.answerIcon}>
             <DragIndicatorIcon
+              color="action"
               ref={drag}
               sx={{
                 fontSize: 18,
@@ -220,6 +221,7 @@ function ChoiceItemDesign(props) {
               endAdornment: (
                 <BuildIcon
                   key="setup"
+                  color="action"
                   sx={{ fontSize: 18 }}
                   className={styles.answerIconOther}
                   onClick={(e) => {
@@ -271,22 +273,16 @@ function ChoiceItemDesign(props) {
             multiline
             sx={{
               flex: 1,
-              fontFamily: theme.textStyles.text.font,
-              color: theme.textStyles.text.color,
-              fontSize: theme.textStyles.text.size,
             }}
             InputProps={{
               disableUnderline: true,
-              fontFamily: theme.textStyles.text.font,
-              color: theme.textStyles.text.color,
-              fontSize: theme.textStyles.text.size,
             }}
           />
         )}
         {props.type === "text" && (
           <>
             <TextField
-              sx={{ flex: 2, pointerEvents: 'none', }}
+              sx={{ flex: 2, pointerEvents: "none" }}
               size="small"
               disabled
               variant="outlined"
@@ -296,6 +292,7 @@ function ChoiceItemDesign(props) {
         <span style={{ margin: "8px" }} />
         <BuildIcon
           key="setup"
+          color = "action"
           sx={{ fontSize: 18 }}
           className={styles.answerIconSettings}
           onClick={(e) => {
@@ -312,8 +309,9 @@ function ChoiceItemDesign(props) {
         {inDesign(props.designMode) && (
           <CloseIcon
             key="close"
+            color="action"
             sx={{ fontSize: 18 }}
-            className={styles.answerIcon}
+            className={styles.answerIconSettings}
             onClick={(e) => dispatch(removeAnswer(props.qualifiedCode))}
           />
         )}

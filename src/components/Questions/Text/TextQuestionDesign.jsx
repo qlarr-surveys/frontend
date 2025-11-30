@@ -21,7 +21,6 @@ function TextQuestionDesign({ code }) {
       <TextField
         variant="outlined"
         size="small"
-        disabled
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
@@ -29,13 +28,6 @@ function TextQuestionDesign({ code }) {
         value={""}
         sx={{
           pointerEvents: 'none', 
-        }}
-        InputProps={{
-          sx: {
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          },
         }}
       />
     </div>

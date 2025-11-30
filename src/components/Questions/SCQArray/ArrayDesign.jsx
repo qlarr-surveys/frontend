@@ -61,11 +61,6 @@ function ArrayDesign(props) {
       {inDesign(props.designMode) && (
         <div className={styles.addColumn}>
           <Button
-            sx={{
-              fontFamily: theme.textStyles.text.font,
-              fontSize: theme.textStyles.text.size,
-              color: theme.textStyles.question.color,
-            }}
             size="small"
             onClick={(e) =>
               dispatch(
@@ -145,11 +140,6 @@ function ArrayDesign(props) {
       {props.onMainLang && (
         <div className={styles.addRow}>
           <Button
-            sx={{
-              fontFamily: theme.textStyles.text.font,
-              fontSize: theme.textStyles.text.size,
-              color: theme.textStyles.question.color,
-            }}
             size="small"
             onClick={(e) =>
               dispatch(addNewAnswer({ questionCode: props.code, type: "row" }))
@@ -274,16 +264,13 @@ function ArrayRowDesign({
     >
       <TableCell
         sx={{
-          fontFamily: theme.textStyles.text.font,
-          color: theme.textStyles.text.color,
-          fontSize: theme.textStyles.text.size,
           padding: "2px",
         }}
       >
         <Box display="flex" alignItems="center">
           {inDesign(designMode) && (
             <div ref={drag}>
-              <DragIndicatorIcon />
+              <DragIndicatorIcon color="action" />
             </div>
           )}
           <TextField
@@ -333,11 +320,6 @@ function ArrayRowDesign({
             multiline
             InputProps={{
               disableUnderline: true,
-              sx: {
-                fontFamily: theme.textStyles.text.font,
-                color: theme.textStyles.text.color,
-                fontSize: theme.textStyles.text.size,
-              },
             }}
           />
         </Box>
@@ -372,10 +354,9 @@ function ArrayRowDesign({
           sx={{
             width: "30px",
             padding: "0",
-            color: theme.textStyles.text.color,
           }}
         >
-          <CloseIcon />
+          <CloseIcon color="action" />
         </TableCell>
       )}
     </TableRow>
@@ -479,9 +460,6 @@ function ArrayHeaderDesign({
       align="center"
       sx={{
         opacity: isDragging ? "0.2" : "1",
-        fontFamily: theme.textStyles.text.font,
-        color: theme.textStyles.text.color,
-        fontSize: theme.textStyles.text.size,
         padding: "2px",
         width: width + "px",
       }}
@@ -497,7 +475,7 @@ function ArrayHeaderDesign({
               padding: "0",
             }}
           >
-            <DragIndicatorIcon />
+            <DragIndicatorIcon color="action" />
           </div>
           <div
             sx={{
@@ -505,7 +483,7 @@ function ArrayHeaderDesign({
             }}
             onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
           >
-            <CloseIcon />
+            <CloseIcon color="action" />
           </div>
         </div>
       )}
@@ -533,11 +511,6 @@ function ArrayHeaderDesign({
         inputProps={{ style: { textAlign: "center" } }}
         InputProps={{
           disableUnderline: true,
-          sx: {
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          },
         }}
       />
     </TableCell>

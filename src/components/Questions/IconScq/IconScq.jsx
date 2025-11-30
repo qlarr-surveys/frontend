@@ -78,11 +78,9 @@ function IconScq(props) {
               <Box
                 sx={{
                   textAlign: "center",
-                  fontFamily: theme.textStyles.text.font,
                   color: isSelected
                     ? theme.palette.primary.main
                     : theme.textStyles.text.color,
-                  fontSize: theme.textStyles.text.size,
                 }}
               >
                 {option.content?.label}

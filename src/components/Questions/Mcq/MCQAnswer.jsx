@@ -23,7 +23,6 @@ function McqAnswer(props) {
     );
   }, shallowEqual);
 
-
   const handleChange = (event) => {
     let value = [...props.parentValue];
     if (event.target.checked && props.Answer.code === "Aall") {
@@ -58,17 +57,15 @@ function McqAnswer(props) {
           onChange={handleChange}
           disabled={disabled}
           name={props.Answer.qualifiedCode}
-          sx={{
-            color: theme.textStyles.text.color,
-          }}
         />
       }
       label={
         <Content
           elementCode={props.Answer.code}
-          fontFamily={theme.textStyles.text.font}
-          color={alpha(theme.textStyles.text.color, disabled ? 0.5 : 1)}
-          fontSize={theme.textStyles.text.size}
+          customStyle={`
+        opacity: ${disabled ? 0.5 : 1};
+        font-size: ${theme.textStyles.text.size}px;
+        `}
           name="label"
           lang={props.lang}
           content={props.Answer.content?.label}

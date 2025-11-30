@@ -67,9 +67,10 @@ function ScqChoice(props) {
       label={
         <Content
           elementCode={props.Choice.code}
-          fontFamily={theme.textStyles.text.font}
-          color={theme.textStyles.text.color}
-          fontSize={theme.textStyles.text.size}
+          customStyle={`
+        font-size: ${theme.textStyles.text.size}px;
+        `}
+          
           name="label"
           lang={props.lang}
           content={props.Choice.content?.label}
@@ -133,9 +134,6 @@ function ScqChoiceOther(props) {
           key={props.Choice.qualifiedCode}
           control={
             <Radio
-              sx={{
-                color: theme.textStyles.text.color,
-              }}
             />
           }
           label={
@@ -146,9 +144,6 @@ function ScqChoiceOther(props) {
                 state.textChild?.relevance &&
                 nestedTextChild.validation?.required
               }
-              sx={{
-                label: { color: theme.textStyles.text.color },
-              }}
               inputRef={textInput}
               id={nestedTextChild.qualifiedCode}
               name={nestedTextChild.qualifiedCode}
@@ -157,13 +152,6 @@ function ScqChoiceOther(props) {
               onFocus={handleFocus}
               onBlur={lostFocus}
               value={state.value}
-              InputProps={{
-                sx: {
-                  fontFamily: theme.textStyles.text.font,
-                  color: theme.textStyles.text.color,
-                  fontSize: theme.textStyles.text.size,
-                },
-              }}
               helperText={
                 state.childInvalid ? (
                   <Validation component={nestedTextChild} limit={1} />

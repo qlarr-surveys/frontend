@@ -117,13 +117,7 @@ function ImageMcqItem(props) {
         </div>
       </Box>
       {!props.hideText && (
-        <Box
-          sx={{
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          }}
-        >
+        <Box>
           {props.option.content?.label}
         </Box>
       )}

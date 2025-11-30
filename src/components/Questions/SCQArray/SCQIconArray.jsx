@@ -46,9 +46,6 @@ function SCQIconArray(props) {
               return (
                 <TableCell
                   sx={{
-                    fontFamily: theme.textStyles.text.font,
-                    color: theme.textStyles.text.color,
-                    fontSize: theme.textStyles.text.size,
                     textAlign: "center",
                     width: width,
                   }}
@@ -113,9 +110,6 @@ function SCQArrayRow(props) {
       <TableRow key={props.answer.code}>
         <TableCell
           sx={{
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
             borderBottom: invalid ? "0" : "",
             padding: "2px",
           }}

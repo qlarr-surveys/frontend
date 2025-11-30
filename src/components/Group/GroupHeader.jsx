@@ -1,14 +1,14 @@
 import React, { useCallback } from "react";
 import styles from "./GroupDesign.module.css";
 import ContentEditor from "~/components/design/ContentEditor";
-import { Box } from "@mui/material";
+import { Box, css } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import { useSelector } from "react-redux";
 import ActionToolbar from "../design/ActionToolbar";
 import { useDispatch } from "react-redux";
 import { deleteGroup } from "~/state/design/designState";
-import { DESIGN_SURVEY_MODE } from '~/routes';
+import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function GroupHeader({ t, code, children, designMode }) {
   console.debug("Group Header: " + code);
@@ -26,32 +26,30 @@ function GroupHeader({ t, code, children, designMode }) {
 
   const theme = useTheme();
 
-  const inDesgin = designMode == DESIGN_SURVEY_MODE.DESIGN
+  const inDesgin = designMode == DESIGN_SURVEY_MODE.DESIGN;
 
   const onDelete = useCallback(() => dispatch(deleteGroup(code)), [code]);
 
   return (
     <Box className={styles.headerContent}>
-      <Box className={styles.groupHeader} data-code={code}>
+      <Box className={styles.groupHeader}>
         <Box className={styles.contentContainer}>
           {inDesgin && onMainLang && (
             <div className={styles.actionToolbarVisible}>
-              <ActionToolbar
-                code={code}
-                isGroup={true}
-              />
+              <ActionToolbar code={code} isGroup={true} />
             </div>
           )}
         </Box>
         <div
-          style={{
-            fontFamily: theme.textStyles.group.font,
-            color: theme.textStyles.group.color,
-            fontSize: theme.textStyles.group.size,
-          }}
+          css={css`
+            font-size: ${theme.textStyles.group.size}px;
+          `}
         >
           <ContentEditor
-            editable={designMode == DESIGN_SURVEY_MODE.DESIGN || designMode == DESIGN_SURVEY_MODE.LANGUAGES}
+            editable={
+              designMode == DESIGN_SURVEY_MODE.DESIGN ||
+              designMode == DESIGN_SURVEY_MODE.LANGUAGES
+            }
             code={code}
             extended={false}
             contentKey="label"
@@ -59,9 +57,17 @@ function GroupHeader({ t, code, children, designMode }) {
           />
         </div>
         {group.showDescription && (
-          <Box className={styles.textDescription}>
+          <Box
+            css={css`
+              font-size: ${theme.textStyles.text.size}px;
+            `}
+            className={styles.textDescription}
+          >
             <ContentEditor
-              editable={designMode == DESIGN_SURVEY_MODE.DESIGN || designMode == DESIGN_SURVEY_MODE.LANGUAGES}
+              editable={
+                designMode == DESIGN_SURVEY_MODE.DESIGN ||
+                designMode == DESIGN_SURVEY_MODE.LANGUAGES
+              }
               code={code}
               extended={true}
               contentKey="description"
