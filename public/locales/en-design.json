@@ -408,5 +408,9 @@
   "tiptap_collapsible_title_placeholder": "Show more details",
   "tiptap_title_color": "Title Color",
   "tiptap_default": "Default",
-  "tiptap_clear_formatting": "Clear Formatting"
+  "tiptap_clear_formatting": "Clear Formatting",
+  "tiptap_invalid_file_type": "Invalid file type. Please select an image file.",
+  "tiptap_file_too_large": "File is too large. Maximum size is 10MB.",
+  "tiptap_upload_error": "Failed to upload image. Please try again.",
+  "tiptap_invalid_link": "Invalid link URL. Please enter a valid URL."
 }

@@ -408,7 +408,11 @@
   "tiptap_collapsible_title_placeholder": "Mostrar más detalles",
   "tiptap_title_color": "Color del Título",
   "tiptap_default": "Predeterminado",
-  "tiptap_clear_formatting": "Limpiar Formato"
+  "tiptap_clear_formatting": "Limpiar Formato",
+  "tiptap_invalid_file_type": "Tipo de archivo no válido. Por favor seleccione un archivo de imagen.",
+  "tiptap_file_too_large": "El archivo es demasiado grande. El tamaño máximo es 10 MB.",
+  "tiptap_upload_error": "Error al cargar la imagen. Por favor intente nuevamente.",
+  "tiptap_invalid_link": "URL de enlace no válida. Por favor ingrese una URL válida."
 }
 
 

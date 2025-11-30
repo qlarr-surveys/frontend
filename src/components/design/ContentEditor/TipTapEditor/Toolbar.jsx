@@ -253,17 +253,33 @@ const Toolbar = ({ editor, extended, code }) => {
 
     if (trimmedUrl) {
       let finalUrl = trimmedUrl;
+      if (trimmedUrl.match(/^(javascript|data):/i)) {
+        alert(
+          t("tiptap_invalid_link") ||
+            "Invalid link URL. Please use http:// or https:// URLs only."
+        );
+        return;
+      }
+
       if (!trimmedUrl.match(/^https?:\/\//i)) {
         finalUrl = `http://${trimmedUrl}`;
+      }
+
+      try {
+        new URL(finalUrl);
+      } catch (e) {
+        alert(
+          t("tiptap_invalid_link") ||
+            "Invalid link URL. Please enter a valid URL."
+        );
+        return;
       }
 
       const { from, to } = editor.state.selection;
       const selectedText = editor.state.doc.textBetween(from, to);
 
-      // Determine the text to use for the link
       const linkDisplayText = trimmedText || selectedText || finalUrl;
 
-      // If there's selected text, replace it with the link
       if (selectedText && selectedText.trim().length > 0) {
         editor
           .chain()
@@ -272,14 +288,12 @@ const Toolbar = ({ editor, extended, code }) => {
           .insertContent(`<a href="${finalUrl}">${linkDisplayText}</a>`)
           .run();
       } else if (trimmedText) {
-        // If no selection but text is provided, insert the link at cursor
         editor
           .chain()
           .focus()
           .insertContent(`<a href="${finalUrl}">${linkDisplayText}</a>`)
           .run();
       } else {
-        // Just set link on existing selection or mark
         editor
           .chain()
           .focus()
@@ -293,7 +307,7 @@ const Toolbar = ({ editor, extended, code }) => {
     setShowLinkInput(false);
     setLinkUrl("");
     setLinkText("");
-  }, [editor, linkUrl, linkText]);
+  }, [editor, linkUrl, linkText, t]);
 
   const toggleLink = useCallback(() => {
     const previousUrl = editor.getAttributes("link").href;
@@ -327,11 +341,25 @@ const Toolbar = ({ editor, extended, code }) => {
       }
 
       if (!file.type.startsWith("image/")) {
+        alert(
+          t("tiptap_invalid_file_type") ||
+            "Invalid file type. Please select an image file."
+        );
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
         return;
       }
 
       const maxSize = 10 * 1024 * 1024;
       if (file.size > maxSize) {
+        alert(
+          t("tiptap_file_too_large") ||
+            "File is too large. Maximum size is 10MB."
+        );
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
         return;
       }
 
@@ -350,6 +378,11 @@ const Toolbar = ({ editor, extended, code }) => {
           })
           .run();
       } catch (error) {
+        console.error("Image upload failed:", error);
+        alert(
+          t("tiptap_upload_error") ||
+            "Failed to upload image. Please try again."
+        );
       } finally {
         setIsUploadingImage(false);
         if (fileInputRef.current) {
@@ -357,7 +390,7 @@ const Toolbar = ({ editor, extended, code }) => {
         }
       }
     },
-    [editor, designService]
+    [editor, designService, t]
   );
 
   const insertCollapsible = useCallback(() => {

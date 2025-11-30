@@ -33,25 +33,31 @@ function DraftEditor({
   const editorRef = useRef(null);
   const wrapperRef = useRef(null);
   const blurTimeoutRef = useRef(null);
+  const isMountedRef = useRef(true);
   const [isFocused, setIsFocused] = React.useState(false);
 
   const getMentionSuggestions = useCallback(
     async (query) => {
-      const designState = manageStore.getState().designState;
-      const values = buildReferences(
-        designState.componentIndex,
-        code,
-        designState,
-        designState.langInfo.mainLang
-      );
+      try {
+        const designState = manageStore.getState().designState;
+        const values = buildReferences(
+          designState.componentIndex,
+          code,
+          designState,
+          designState.langInfo.mainLang
+        );
 
-      if (query.length === 0) {
-        return values;
+        if (query.length === 0) {
+          return values;
+        }
+
+        return values.filter((item) =>
+          item.value.toLowerCase().includes(query.toLowerCase())
+        );
+      } catch (error) {
+        console.error("Error getting mention suggestions:", error);
+        return [];
       }
-
-      return values.filter((item) =>
-        item.value.toLowerCase().includes(query.toLowerCase())
-      );
     },
     [code]
   );
@@ -157,6 +163,10 @@ function DraftEditor({
     },
     onBlur: () => {
       blurTimeoutRef.current = setTimeout(() => {
+        if (!isMountedRef.current) {
+          return;
+        }
+
         const activeElement = document.activeElement;
 
         if (wrapperRef.current && wrapperRef.current.contains(activeElement)) {
@@ -193,15 +203,23 @@ function DraftEditor({
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
       if (!editor.isFocused) {
-        editor.commands.setContent(value || "");
+        const timeoutId = setTimeout(() => {
+          if (editor && !editor.isDestroyed && value !== editor.getHTML()) {
+            editor.commands.setContent(value || "");
+          }
+        }, 0);
+        return () => clearTimeout(timeoutId);
       }
     }
   }, [value, editor]);
 
   useEffect(() => {
+    isMountedRef.current = true;
     return () => {
+      isMountedRef.current = false;
       if (blurTimeoutRef.current) {
         clearTimeout(blurTimeoutRef.current);
+        blurTimeoutRef.current = null;
       }
       editor?.destroy();
     };
