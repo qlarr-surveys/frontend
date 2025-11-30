@@ -1,4 +1,5 @@
 import { Node, mergeAttributes } from "@tiptap/core";
+import { Plugin, PluginKey } from "prosemirror-state";
 
 const CollapsibleExtension = Node.create({
   name: "collapsible",
@@ -218,6 +219,45 @@ const CollapsibleExtension = Node.create({
         },
       };
     };
+  },
+
+  addProseMirrorPlugins() {
+    return [
+      new Plugin({
+        key: new PluginKey("removeButtonTextFromContent"),
+        appendTransaction: (transactions, oldState, newState) => {
+          // Remove button text from content if it appears as a paragraph
+          const tr = newState.tr;
+          let modified = false;
+
+          newState.doc.descendants((node, pos) => {
+            if (node.type.name === "collapsible") {
+              const buttonText = node.attrs.buttonText || "Show more details";
+
+              // Walk through the direct children of this collapsible
+              node.forEach((childNode, offset) => {
+                if (childNode.type.name === "paragraph") {
+                  // Check if paragraph content matches button text
+                  const paragraphText = childNode.textContent?.trim();
+                  if (paragraphText === buttonText) {
+                    // Remove paragraph that matches button text
+                    const paraPos = pos + offset + 1;
+                    try {
+                      tr.delete(paraPos, paraPos + childNode.nodeSize);
+                      modified = true;
+                    } catch (e) {
+                      // Ignore if deletion fails
+                    }
+                  }
+                }
+              });
+            }
+          });
+
+          return modified ? tr : null;
+        },
+      }),
+    ];
   },
 
   addCommands() {
