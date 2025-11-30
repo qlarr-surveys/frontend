@@ -153,15 +153,17 @@ const CollapsibleExtension = Node.create({
         e.stopPropagation();
         const currentPos = typeof getPos === "function" ? getPos() : null;
         if (currentPos !== null && currentPos !== undefined) {
-          const isOpen = node.attrs.open;
-          editor.commands.command(({ tr, dispatch }) => {
+          // Read current state from the editor state, not from the closure
+          editor.commands.command(({ tr, state, dispatch }) => {
             const nodePos = currentPos;
             const nodeAtPos = tr.doc.nodeAt(nodePos);
             if (nodeAtPos && nodeAtPos.type.name === this.name) {
+              // Get current open state from the node in the transaction
+              const currentOpen = nodeAtPos.attrs.open;
               if (dispatch) {
                 tr.setNodeMarkup(nodePos, undefined, {
                   ...nodeAtPos.attrs,
-                  open: !isOpen,
+                  open: !currentOpen,
                 });
               }
               return true;
