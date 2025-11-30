@@ -40,6 +40,16 @@ const CollapsibleExtension = Node.create({
           return {};
         },
       },
+      textColor: {
+        default: null,
+        parseHTML: (element) => {
+          const button = element.querySelector(".collapsible-button");
+          return button?.style?.color || null;
+        },
+        renderHTML: (attributes) => {
+          return {};
+        },
+      },
     };
   },
 
@@ -47,6 +57,9 @@ const CollapsibleExtension = Node.create({
     return [
       {
         tag: 'div[data-type="collapsible"]',
+        // Use content selector to only parse from .collapsible-content
+        // This tells Tiptap to ignore the button and only parse the content div
+        content: ".collapsible-content",
       },
     ];
   },
@@ -55,10 +68,13 @@ const CollapsibleExtension = Node.create({
     const isOpen = node.attrs.open;
     const buttonText = node.attrs.buttonText || "Show more details";
     const backgroundColor = node.attrs.backgroundColor;
+    const textColor = node.attrs.textColor;
 
-    const buttonStyle = backgroundColor
-      ? { style: `background-color: ${backgroundColor};` }
-      : {};
+    // Always apply styles: use custom colors if set, otherwise use theme defaults
+    const styles = [];
+    styles.push(`background-color: ${backgroundColor || "#16205b"}`); // theme.palette.primary.main
+    styles.push(`color: ${textColor || "#ffffff"}`); // theme.palette.primary.contrastText
+    const buttonStyle = { style: styles.join("; ") };
 
     return [
       "div",
@@ -103,8 +119,21 @@ const CollapsibleExtension = Node.create({
       button.type = "button";
       button.setAttribute("contenteditable", "false");
       button.textContent = node.attrs.buttonText || "Show more details";
+
+      // Apply background color: custom or theme default
       if (node.attrs.backgroundColor) {
         button.style.backgroundColor = node.attrs.backgroundColor;
+      } else {
+        // Use theme primary color as default
+        button.style.backgroundColor = "#16205b";
+      }
+
+      // Apply text color: custom or theme contrast text default
+      if (node.attrs.textColor) {
+        button.style.color = node.attrs.textColor;
+      } else {
+        // Use theme contrast text as default
+        button.style.color = "#ffffff";
       }
 
       const content = document.createElement("div");
@@ -159,11 +188,20 @@ const CollapsibleExtension = Node.create({
           button.textContent = newButtonText;
           button.setAttribute("data-button-text", newButtonText);
 
-          // Update background color
+          // Update background color: custom or theme default
           if (updatedNode.attrs.backgroundColor) {
             button.style.backgroundColor = updatedNode.attrs.backgroundColor;
           } else {
-            button.style.backgroundColor = "";
+            // Use theme primary color as default
+            button.style.backgroundColor = "#16205b";
+          }
+
+          // Update text color: custom or theme contrast text default
+          if (updatedNode.attrs.textColor) {
+            button.style.color = updatedNode.attrs.textColor;
+          } else {
+            // Use theme contrast text as default
+            button.style.color = "#ffffff";
           }
 
           const isOpen = updatedNode.attrs.open;
@@ -186,19 +224,48 @@ const CollapsibleExtension = Node.create({
     return {
       setCollapsible:
         (options) =>
-        ({ commands }) => {
+        ({ commands, state }) => {
+          // Get the current selection to see if there's selected text
+          const { selection } = state;
+          const { $from, $to } = selection;
+          const selectedText = state.doc.textBetween($from.pos, $to.pos);
+          const buttonText = options?.buttonText || "Show more details";
+
+          // If there's selected text, use it as content, but exclude if it matches buttonText
+          let content = options?.content;
+          if (!content) {
+            if (selectedText.trim() && selectedText.trim() !== buttonText) {
+              // Use selected text as content only if it's different from buttonText
+              content = [
+                {
+                  type: "paragraph",
+                  content: [
+                    {
+                      type: "text",
+                      text: selectedText,
+                    },
+                  ],
+                },
+              ];
+            } else {
+              // Empty paragraph
+              content = [
+                {
+                  type: "paragraph",
+                },
+              ];
+            }
+          }
+
           return commands.insertContent({
             type: this.name,
             attrs: {
               open: options?.open ?? false,
-              buttonText: options?.buttonText || "Show more details",
+              buttonText: buttonText,
               backgroundColor: options?.backgroundColor || null,
+              textColor: options?.textColor || null,
             },
-            content: options?.content || [
-              {
-                type: "paragraph",
-              },
-            ],
+            content: content,
           });
         },
       updateCollapsible:

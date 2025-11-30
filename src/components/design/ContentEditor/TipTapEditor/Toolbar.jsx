@@ -19,6 +19,7 @@ const Toolbar = ({ editor, extended, code }) => {
   const [showCollapsibleInput, setShowCollapsibleInput] = useState(false);
   const [collapsibleTitle, setCollapsibleTitle] = useState("");
   const [collapsibleBgColor, setCollapsibleBgColor] = useState("");
+  const [collapsibleTextColor, setCollapsibleTextColor] = useState("");
   const aspectRatioRef = useRef(null);
   const fileInputRef = useRef(null);
   const colorPickerRef = useRef(null);
@@ -27,7 +28,10 @@ const Toolbar = ({ editor, extended, code }) => {
   const imageSizeInputRef = useRef(null);
   const collapsibleInputRef = useRef(null);
   const collapsibleColorPickerRef = useRef(null);
+  const collapsibleTextColorPickerRef = useRef(null);
   const [showCollapsibleColorPicker, setShowCollapsibleColorPicker] =
+    useState(false);
+  const [showCollapsibleTextColorPicker, setShowCollapsibleTextColorPicker] =
     useState(false);
   const designService = useService("design");
 
@@ -203,6 +207,7 @@ const Toolbar = ({ editor, extended, code }) => {
         if (!showCollapsibleInput) {
           setCollapsibleTitle(attrs.buttonText || "Show more details");
           setCollapsibleBgColor(attrs.backgroundColor || "");
+          setCollapsibleTextColor(attrs.textColor || "");
         }
       } else {
         if (showCollapsibleInput) {
@@ -210,6 +215,7 @@ const Toolbar = ({ editor, extended, code }) => {
         }
         setCollapsibleTitle("");
         setCollapsibleBgColor("");
+        setCollapsibleTextColor("");
       }
     };
 
@@ -309,6 +315,7 @@ const Toolbar = ({ editor, extended, code }) => {
   );
 
   const insertCollapsible = useCallback(() => {
+    // Clear any selection to ensure buttonText doesn't get inserted into content
     editor
       .chain()
       .focus()
@@ -316,6 +323,12 @@ const Toolbar = ({ editor, extended, code }) => {
         open: false,
         buttonText: "Show more details",
         backgroundColor: null,
+        textColor: null,
+        content: [
+          {
+            type: "paragraph",
+          },
+        ],
       })
       .run();
   }, [editor]);
@@ -330,15 +343,17 @@ const Toolbar = ({ editor, extended, code }) => {
       attrs.buttonText = collapsibleTitle.trim();
     }
     attrs.backgroundColor = collapsibleBgColor.trim() || null;
+    attrs.textColor = collapsibleTextColor.trim() || null;
 
     editor.chain().focus().updateCollapsible(attrs).run();
-  }, [editor, collapsibleTitle, collapsibleBgColor]);
+  }, [editor, collapsibleTitle, collapsibleBgColor, collapsibleTextColor]);
 
   const toggleCollapsibleInput = useCallback(() => {
     if (editor.isActive("collapsible")) {
       const attrs = editor.getAttributes("collapsible");
       setCollapsibleTitle(attrs.buttonText || "Show more details");
       setCollapsibleBgColor(attrs.backgroundColor || "");
+      setCollapsibleTextColor(attrs.textColor || "");
       setShowCollapsibleInput(!showCollapsibleInput);
     }
   }, [editor, showCollapsibleInput]);
@@ -588,6 +603,13 @@ const Toolbar = ({ editor, extended, code }) => {
       ) {
         setShowCollapsibleColorPicker(false);
       }
+      if (
+        collapsibleTextColorPickerRef.current &&
+        !collapsibleTextColorPickerRef.current.contains(event.target) &&
+        !event.target.closest(".tiptap-collapsible-text-color-picker-wrapper")
+      ) {
+        setShowCollapsibleTextColorPicker(false);
+      }
     };
 
     if (
@@ -596,7 +618,8 @@ const Toolbar = ({ editor, extended, code }) => {
       showLinkInput ||
       showImageSizeInput ||
       showCollapsibleInput ||
-      showCollapsibleColorPicker
+      showCollapsibleColorPicker ||
+      showCollapsibleTextColorPicker
     ) {
       document.addEventListener("mousedown", handleClickOutside);
       return () => {
@@ -610,6 +633,7 @@ const Toolbar = ({ editor, extended, code }) => {
     showImageSizeInput,
     showCollapsibleInput,
     showCollapsibleColorPicker,
+    showCollapsibleTextColorPicker,
   ]);
 
   useEffect(() => {
@@ -1158,7 +1182,7 @@ const Toolbar = ({ editor, extended, code }) => {
                       }
                       className="tiptap-toolbar-button"
                       style={{
-                        backgroundColor: collapsibleBgColor || "#7b1fa2",
+                        backgroundColor: collapsibleBgColor || "#16205b",
                         color: "white",
                         minWidth: "80px",
                       }}
@@ -1196,6 +1220,77 @@ const Toolbar = ({ editor, extended, code }) => {
                           onClick={() => {
                             setCollapsibleBgColor("");
                             setShowCollapsibleColorPicker(false);
+                          }}
+                          title="Remove color"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Text Color Picker */}
+                <div className="tiptap-collapsible-text-color-picker-wrapper">
+                  <label style={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
+                    Title Color:
+                  </label>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "0.25rem",
+                      alignItems: "center",
+                      position: "relative",
+                    }}
+                  >
+                    <button
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() =>
+                        setShowCollapsibleTextColorPicker(
+                          !showCollapsibleTextColorPicker
+                        )
+                      }
+                      className="tiptap-toolbar-button"
+                      style={{
+                        backgroundColor: collapsibleTextColor || "white",
+                        color: collapsibleTextColor || "#000",
+                        border: `2px solid ${collapsibleTextColor || "#ddd"}`,
+                        minWidth: "80px",
+                      }}
+                      title="Title Color"
+                    >
+                      {collapsibleTextColor ? "✓" : "Default"}
+                    </button>
+                    {showCollapsibleTextColorPicker && (
+                      <div
+                        className="tiptap-color-palette"
+                        ref={collapsibleTextColorPickerRef}
+                        style={{
+                          position: "absolute",
+                          top: "100%",
+                          left: 0,
+                          marginTop: "0.25rem",
+                        }}
+                      >
+                        {colors.map((color) => (
+                          <button
+                            key={color}
+                            className="tiptap-color-option"
+                            style={{ backgroundColor: color }}
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => {
+                              setCollapsibleTextColor(color);
+                              setShowCollapsibleTextColorPicker(false);
+                            }}
+                            title={color}
+                          />
+                        ))}
+                        <button
+                          className="tiptap-color-option tiptap-color-remove"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => {
+                            setCollapsibleTextColor("");
+                            setShowCollapsibleTextColorPicker(false);
                           }}
                           title="Remove color"
                         >

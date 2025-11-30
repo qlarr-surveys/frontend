@@ -113,14 +113,14 @@
 .collapsible-button {
   width: 100%;
   padding: 0.75em 1em;
-  background-color: #7b1fa2; /* Purple color */
-  color: white;
+  background-color: #16205b; /* theme.palette.primary.main */
+  color: #ffffff; /* theme.palette.primary.contrastText */
   border: none;
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
   text-align: left;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, color 0.2s;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -128,7 +128,7 @@
 }
 
 .collapsible-button:hover {
-  background-color: #6a1b9a;
+  background-color: #091133; /* theme.palette.primary.dark */
 }
 
 .collapsible-button::after {
