@@ -15,6 +15,7 @@ import { changeContent, resetFocus } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { isNotEmptyHtml } from "~/utils/design/utils";
 import cloneDeep from "lodash.clonedeep";
+import { useCollapsibleHandler } from "~/hooks/useCollapsibleHandler";
 
 function ContentEditor({
   placeholder,
@@ -145,44 +146,7 @@ function ContentEditor({
   const isRtl = rtlLanguage.includes(lang);
   const renderedContentRef = useRef(null);
 
-  useEffect(() => {
-    if (!isActive && renderedContentRef.current) {
-      const handleCollapsibleClick = (e) => {
-        const button = e.target.closest(".collapsible-button");
-        if (button) {
-          e.preventDefault();
-          e.stopPropagation();
-          const collapsible = button.closest(".tiptap-collapsible");
-          if (collapsible) {
-            const content = collapsible.querySelector(".collapsible-content");
-            const isOpen = collapsible.getAttribute("data-open") === "true";
-            const newState = !isOpen;
-            collapsible.setAttribute("data-open", newState ? "true" : "false");
-            if (newState) {
-              content.style.display = "";
-              content.classList.add("open");
-            } else {
-              content.style.display = "none";
-              content.classList.remove("open");
-            }
-          }
-        }
-      };
-
-      renderedContentRef.current.addEventListener(
-        "click",
-        handleCollapsibleClick
-      );
-      return () => {
-        if (renderedContentRef.current) {
-          renderedContentRef.current.removeEventListener(
-            "click",
-            handleCollapsibleClick
-          );
-        }
-      };
-    }
-  }, [isActive, fixedValue]);
+  useCollapsibleHandler(renderedContentRef, !isActive ? fixedValue : null);
 
   return (
     <Box
@@ -206,6 +170,7 @@ function ContentEditor({
           editorTheme={editorTheme}
           onBlurListener={OnEditorBlurred}
           value={value}
+          referenceInstruction={referenceInstruction}
         />
       ) : isNotEmptyHtml(value) ? (
         <div

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useCallback } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import Mention from "@tiptap/extension-mention";
 import LinkExtension from "./LinkExtension";
 import Underline from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
@@ -11,6 +12,9 @@ import Toolbar from "./Toolbar";
 import ImageExtension from "./ImageExtension";
 import CollapsibleExtension from "./CollapsibleExtension";
 import FontSize from "./FontSizeExtension";
+import suggestion from "./suggestion";
+import { buildReferences } from "~/components/Questions/buildReferences";
+import { manageStore } from "~/store";
 import "./TipTapEditor.css";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
 
@@ -26,12 +30,38 @@ function DraftEditor({
   onMoreLines,
   code,
   editorTheme = "snow",
+  referenceInstruction = {},
 }) {
   const editorRef = useRef(null);
   const wrapperRef = useRef(null);
   const blurTimeoutRef = useRef(null);
   const isMountedRef = useRef(true);
   const [isFocused, setIsFocused] = React.useState(false);
+
+  const getMentionSuggestions = useCallback(
+    (query) => {
+      const designState = manageStore.getState().designState;
+      const values = buildReferences(
+        designState.componentIndex,
+        code,
+        designState,
+        designState.langInfo.mainLang
+      );
+
+      if (query.length === 0) {
+        return values;
+      }
+
+      const matches = [];
+      for (let i = 0; i < values.length; i++) {
+        if (values[i].value.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+          matches.push(values[i]);
+        }
+      }
+      return matches;
+    },
+    [code]
+  );
 
   const extensions = useMemo(() => {
     return [
@@ -65,8 +95,81 @@ function DraftEditor({
         },
       }),
       CollapsibleExtension,
+      Mention.extend({
+        addAttributes() {
+          return {
+            ...this.parent?.(),
+            id: {
+              default: null,
+              parseHTML: (element) => element.getAttribute("data-id"),
+              renderHTML: (attributes) => {
+                if (!attributes.id) {
+                  return {};
+                }
+                return {
+                  "data-id": attributes.id,
+                };
+              },
+            },
+            instruction: {
+              default: null,
+              parseHTML: (element) => element.getAttribute("data-instruction"),
+              renderHTML: (attributes) => {
+                if (!attributes.instruction) {
+                  return {};
+                }
+                return {
+                  "data-instruction": attributes.instruction,
+                };
+              },
+            },
+            type: {
+              default: null,
+              parseHTML: (element) => element.getAttribute("data-type"),
+              renderHTML: (attributes) => {
+                if (!attributes.type) {
+                  return {};
+                }
+                return {
+                  "data-type": attributes.type,
+                };
+              },
+            },
+          };
+        },
+        renderHTML({ node, HTMLAttributes }) {
+          const displayId =
+            referenceInstruction && referenceInstruction[node.attrs.id]
+              ? referenceInstruction[node.attrs.id]
+              : node.attrs.id;
+          const displayText = `{{${displayId}:${node.attrs.type}}}`;
+
+          return [
+            "span",
+            {
+              ...HTMLAttributes,
+              class: "mention",
+              "data-id": node.attrs.id,
+              "data-instruction": node.attrs.instruction,
+              "data-type": node.attrs.type,
+            },
+            [
+              "span",
+              {
+                contenteditable: "false",
+              },
+              displayText,
+            ],
+          ];
+        },
+      }).configure({
+        HTMLAttributes: {
+          class: "mention",
+        },
+        suggestion: suggestion(getMentionSuggestions),
+      }),
     ];
-  }, []);
+  }, [getMentionSuggestions, referenceInstruction]);
 
   const editor = useEditor({
     extensions,
