@@ -80,24 +80,19 @@ function ContentEditor({
     }
     let updated = cloneDeep(value);
 
-    // Create a temporary DOM element to parse and manipulate the HTML
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = updated;
 
     Object.keys(referenceInstruction).forEach((key) => {
-      // Find all spans with data-id matching the key
       const spans = tempDiv.querySelectorAll(`span[data-id="${key}"]`);
 
       spans.forEach((span) => {
-        // Get the data-value attribute
         const dataValue = span.getAttribute("data-value");
         if (dataValue) {
-          // Replace the key with referenceInstruction[key] in the data-value
           const newDataValue = dataValue.replace(
             new RegExp(`{{${key}:`, "g"),
             `{{${referenceInstruction[key]}:`
           );
-          // Find the nested span with contenteditable="false" and update its content
           const nestedSpan = span.querySelector(
             'span[contenteditable="false"]'
           );
@@ -145,7 +140,6 @@ function ContentEditor({
   const isRtl = rtlLanguage.includes(lang);
   const renderedContentRef = useRef(null);
 
-  // Handle collapsible button clicks in rendered view
   useEffect(() => {
     if (!isActive && renderedContentRef.current) {
       const handleCollapsibleClick = (e) => {
@@ -211,12 +205,16 @@ function ContentEditor({
       ) : isNotEmptyHtml(value) ? (
         <div
           ref={renderedContentRef}
-          className={`${isRtl ? "rtl" : "ltr"} content-editor ${styles.noPadding}`}
+          className={`${isRtl ? "rtl" : "ltr"} content-editor ${
+            styles.noPadding
+          }`}
           dangerouslySetInnerHTML={{ __html: fixedValue }}
         />
       ) : (
         <div
-          className={`${isRtl ? "rtl" : "ltr"} content-editor ${styles.placeholder}`}
+          className={`${isRtl ? "rtl" : "ltr"} content-editor ${
+            styles.placeholder
+          }`}
           dangerouslySetInnerHTML={{ __html: finalPlaceholder }}
         />
       )}
