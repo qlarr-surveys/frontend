@@ -594,13 +594,11 @@ const Toolbar = ({ editor, extended, code }) => {
     (enabled) => {
       setMaintainAspectRatio(enabled);
 
-      // When enabling aspect ratio, calculate it from natural image dimensions
       if (enabled) {
         const naturalRatio = getNaturalAspectRatio();
         if (naturalRatio) {
           aspectRatioRef.current = naturalRatio;
         } else {
-          // Fallback: try to calculate from current dimensions
           let width = imageWidth;
           let height = imageHeight;
 
@@ -664,7 +662,9 @@ const Toolbar = ({ editor, extended, code }) => {
       if (
         imageSizeInputRef.current &&
         !imageSizeInputRef.current.contains(event.target) &&
-        !event.target.closest('button[title="Image Size"]')
+        !event.target.closest('button[title="Image Size"]') &&
+        !event.target.closest('input[type="checkbox"]') &&
+        event.target.type !== "checkbox"
       ) {
         setShowImageSizeInput(false);
       }
@@ -1120,11 +1120,23 @@ const Toolbar = ({ editor, extended, code }) => {
                     fontSize: "0.75rem",
                     cursor: "pointer",
                   }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
                 >
                   <input
                     type="checkbox"
                     checked={maintainAspectRatio}
-                    onChange={(e) => handleAspectRatioToggle(e.target.checked)}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      handleAspectRatioToggle(e.target.checked);
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                    onMouseDown={(e) => {
+                      e.stopPropagation();
+                    }}
                     style={{ cursor: "pointer" }}
                   />
                   <span>{t("tiptap_maintain_aspect_ratio")}</span>
