@@ -61,8 +61,7 @@ export const designState = createSlice({
         newState.Survey.theme = defaultSurveyTheme;
       }
 
-      newState.versionDto = response.versionDto;
-      newState.componentIndex = response.designerInput.componentIndexList;
+      
       const newKeys = Object.keys(newState).filter(
         (el) => !reservedKeys.includes(el)
       );
@@ -96,6 +95,8 @@ export const designState = createSlice({
       newKeys.forEach((key) => {
         state[key] = newState[key];
       });
+      state.versionDto = response.versionDto;
+      state.componentIndex = response.designerInput.componentIndexList;
       state["latest"] = structuredClone(newState);
       state.lastAddedComponent = null;
       state.index = buildCodeIndex(state);
