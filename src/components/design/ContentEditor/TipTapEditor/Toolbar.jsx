@@ -315,6 +315,11 @@ const Toolbar = ({ editor, extended, code }) => {
   );
 
   const insertCollapsible = useCallback(() => {
+    // Don't allow inserting collapsible inside another collapsible
+    if (editor.isActive("collapsible")) {
+      return;
+    }
+
     // Clear any selection to ensure buttonText doesn't get inserted into content
     editor
       .chain()
@@ -1104,6 +1109,7 @@ const Toolbar = ({ editor, extended, code }) => {
         onClick={insertCollapsible}
         className="tiptap-toolbar-button"
         title="Insert Collapsible Section"
+        disabled={editor.isActive("collapsible")}
       >
         <span style={{ fontSize: "12px" }}>▼</span>
       </button>
