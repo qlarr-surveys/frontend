@@ -1,5 +1,6 @@
 export const EDITOR_CONSTANTS = {
   BLUR_TIMEOUT_MS: 100,
+  CONTENT_SYNC_TIMEOUT_MS: 0, // Use 0 for immediate sync when editor is not focused
   MAX_IMAGE_SIZE: 10 * 1024 * 1024,
   FONT_SIZE_VALUES: ["0.75em", "1em", "1.5em", "2.5em"],
   COLOR_PALETTE: [
