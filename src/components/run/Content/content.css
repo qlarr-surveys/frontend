@@ -15,31 +15,29 @@
   margin-top: 0;
 }
 
-/* TipTap rendered content styles */
-.ql-editor .tiptap-image {
+/* TipTap rendered content styles - shared with design view */
+.content-editor .tiptap-image,
+.content-editor .tiptap-image img {
   max-width: 100%;
   height: auto;
   display: block;
+}
+
+.content-editor .tiptap-image {
   margin: 1em 0;
 }
 
-.ql-editor .tiptap-image img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-.ql-editor .tiptap-collapsible {
+.content-editor .tiptap-collapsible {
   margin: 1em 0;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   overflow: hidden;
 }
 
-.ql-editor .collapsible-button {
+.content-editor .collapsible-button {
   width: 100%;
   padding: 0.75em 1em;
-  background-color: #7b1fa2; /* Purple color */
+  background-color: #7b1fa2; /* Fallback color for legacy content */
   color: white;
   border: none;
   cursor: pointer;
@@ -53,15 +51,11 @@
   position: relative;
 }
 
-.ql-editor.rtl .collapsible-button {
-  text-align: right;
-}
-
-.ql-editor .collapsible-button:hover {
+.content-editor .collapsible-button:hover {
   background-color: #6a1b9a;
 }
 
-.ql-editor .collapsible-button::after {
+.content-editor .collapsible-button::after {
   content: "▼";
   font-size: 0.75em;
   margin-left: 0.5em;
@@ -69,24 +63,30 @@
   flex-shrink: 0;
 }
 
-.ql-editor.rtl .collapsible-button::after {
+.content-editor.rtl .collapsible-button {
+  text-align: right;
+}
+
+.content-editor.rtl .collapsible-button::after {
   margin-left: 0;
   margin-right: 0.5em;
 }
 
-.ql-editor .tiptap-collapsible[data-open="true"] .collapsible-button::after {
+.content-editor
+  .tiptap-collapsible[data-open="true"]
+  .collapsible-button::after {
   transform: rotate(180deg);
 }
 
-.ql-editor .collapsible-content {
+.content-editor .collapsible-content {
   padding: 1em;
   background-color: #fafafa;
 }
 
-.ql-editor .collapsible-content.open {
+.content-editor .collapsible-content.open {
   display: block !important;
 }
 
-.ql-editor .collapsible-content:not(.open) {
+.content-editor .collapsible-content:not(.open) {
   display: none !important;
 }

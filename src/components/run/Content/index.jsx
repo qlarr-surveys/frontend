@@ -45,7 +45,7 @@ function Content(props) {
           color: props.color,
           fontSize: props.fontSize + "px",
         }}
-        className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
+        className={`${isRtl ? "rtl" : "ltr"} content-editor no-padding`}
         dangerouslySetInnerHTML={{ __html: props.content }}
       />
     );
@@ -59,7 +59,7 @@ function Content(props) {
           color: props.color,
           fontSize: props.fontSize + "px",
         }}
-        className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
+        className={`${isRtl ? "rtl" : "ltr"} content-editor no-padding`}
         dangerouslySetInnerHTML={{
           __html: replaceMentions(props.content, state),
         }}

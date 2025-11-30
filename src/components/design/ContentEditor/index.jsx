@@ -211,12 +211,12 @@ function ContentEditor({
       ) : isNotEmptyHtml(value) ? (
         <div
           ref={renderedContentRef}
-          className={`${isRtl ? "rtl" : "ltr"} ql-editor ${styles.noPadding}`}
+          className={`${isRtl ? "rtl" : "ltr"} content-editor ${styles.noPadding}`}
           dangerouslySetInnerHTML={{ __html: fixedValue }}
         />
       ) : (
         <div
-          className={`${isRtl ? "rtl" : "ltr"} ql-editor ${styles.placeholder}`}
+          className={`${isRtl ? "rtl" : "ltr"} content-editor ${styles.placeholder}`}
           dangerouslySetInnerHTML={{ __html: finalPlaceholder }}
         />
       )}
