@@ -411,7 +411,6 @@
   "tiptap_clear_formatting": "Effacer le Formatage",
   "tiptap_invalid_file_type": "Type de fichier invalide. Veuillez sélectionner un fichier image.",
   "tiptap_file_too_large": "Le fichier est trop volumineux. La taille maximale est de 10 Mo.",
-  "tiptap_upload_error": "Échec du téléchargement de l'image. Veuillez réessayer.",
   "tiptap_invalid_link": "URL de lien invalide. Veuillez entrer une URL valide."
 }
 

@@ -404,6 +404,5 @@
   "tiptap_clear_formatting": "مسح التنسيق",
   "tiptap_invalid_file_type": "نوع الملف غير صالح. يرجى اختيار ملف صورة.",
   "tiptap_file_too_large": "الملف كبير جداً. الحد الأقصى للحجم هو 10 ميجابايت.",
-  "tiptap_upload_error": "فشل تحميل الصورة. يرجى المحاولة مرة أخرى.",
   "tiptap_invalid_link": "رابط غير صالح. يرجى إدخال رابط صالح."
 }

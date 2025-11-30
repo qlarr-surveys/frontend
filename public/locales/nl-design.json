@@ -411,7 +411,6 @@
   "tiptap_clear_formatting": "Opmaak Wissen",
   "tiptap_invalid_file_type": "Ongeldig bestandstype. Selecteer alstublieft een afbeeldingsbestand.",
   "tiptap_file_too_large": "Bestand is te groot. De maximale grootte is 10 MB.",
-  "tiptap_upload_error": "Afbeelding uploaden mislukt. Probeer het opnieuw.",
   "tiptap_invalid_link": "Ongeldige link-URL. Voer alstublieft een geldige URL in."
 }
 

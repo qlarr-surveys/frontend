@@ -254,10 +254,7 @@ const Toolbar = ({ editor, extended, code }) => {
     if (trimmedUrl) {
       let finalUrl = trimmedUrl;
       if (trimmedUrl.match(/^(javascript|data):/i)) {
-        alert(
-          t("tiptap_invalid_link") ||
-            "Invalid link URL. Please use http:// or https:// URLs only."
-        );
+        alert(t("tiptap_invalid_link"));
         return;
       }
 
@@ -268,10 +265,7 @@ const Toolbar = ({ editor, extended, code }) => {
       try {
         new URL(finalUrl);
       } catch (e) {
-        alert(
-          t("tiptap_invalid_link") ||
-            "Invalid link URL. Please enter a valid URL."
-        );
+        alert(t("tiptap_invalid_link"));
         return;
       }
 
@@ -341,10 +335,7 @@ const Toolbar = ({ editor, extended, code }) => {
       }
 
       if (!file.type.startsWith("image/")) {
-        alert(
-          t("tiptap_invalid_file_type") ||
-            "Invalid file type. Please select an image file."
-        );
+        alert(t("tiptap_invalid_file_type"));
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -353,10 +344,16 @@ const Toolbar = ({ editor, extended, code }) => {
 
       const maxSize = 10 * 1024 * 1024;
       if (file.size > maxSize) {
-        alert(
-          t("tiptap_file_too_large") ||
-            "File is too large. Maximum size is 10MB."
-        );
+        alert(t("tiptap_file_too_large"));
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        return;
+      }
+
+      const surveyId = sessionStorage.getItem("surveyId");
+      if (!surveyId) {
+        alert("No survey selected. Please select a survey first.");
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -379,10 +376,6 @@ const Toolbar = ({ editor, extended, code }) => {
           .run();
       } catch (error) {
         console.error("Image upload failed:", error);
-        alert(
-          t("tiptap_upload_error") ||
-            "Failed to upload image. Please try again."
-        );
       } finally {
         setIsUploadingImage(false);
         if (fileInputRef.current) {
