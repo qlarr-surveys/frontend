@@ -18,6 +18,8 @@ import FontSize from "./FontSizeExtension";
 import "tippy.js/dist/tippy.css";
 import "./TipTapEditor.css";
 
+const BLUR_TIMEOUT_MS = 100;
+
 function DraftEditor({
   value,
   onBlurListener,
@@ -187,7 +189,7 @@ function DraftEditor({
         setIsFocused(false);
         const currentHtml = editor?.getHTML() || "";
         onBlurListener(currentHtml, lang);
-      }, 100);
+      }, BLUR_TIMEOUT_MS);
     },
   });
 

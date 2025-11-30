@@ -1,5 +1,6 @@
 import { Node, mergeAttributes } from "@tiptap/core";
 import { Plugin, PluginKey } from "prosemirror-state";
+import { primary } from "~/theme/palette";
 
 const CollapsibleExtension = Node.create({
   name: "collapsible",
@@ -73,8 +74,8 @@ const CollapsibleExtension = Node.create({
 
     // Always apply styles: use custom colors if set, otherwise use theme defaults
     const styles = [];
-    styles.push(`background-color: ${backgroundColor || "#16205b"}`); // theme.palette.primary.main
-    styles.push(`color: ${textColor || "#ffffff"}`); // theme.palette.primary.contrastText
+    styles.push(`background-color: ${backgroundColor || primary.main}`);
+    styles.push(`color: ${textColor || primary.contrastText}`);
     const buttonStyle = { style: styles.join("; ") };
 
     return [
