@@ -4,8 +4,10 @@ import { useService } from "~/hooks/use-service";
 import { buildResourceUrl } from "~/networking/common";
 import PhotoIcon from "@mui/icons-material/Photo";
 import LoadingDots from "~/components/common/LoadingDots";
+import { useTranslation } from "react-i18next";
 
 const Toolbar = ({ editor, extended, code }) => {
+  const { t } = useTranslation("design");
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showBgColorPicker, setShowBgColorPicker] = useState(false);
   const [showLinkInput, setShowLinkInput] = useState(false);
@@ -36,10 +38,10 @@ const Toolbar = ({ editor, extended, code }) => {
   const designService = useService("design");
 
   const fontSizes = [
-    { label: "Small", value: "0.75em" },
-    { label: "Normal", value: "1em" },
-    { label: "Large", value: "1.5em" },
-    { label: "Huge", value: "2.5em" },
+    { label: t("tiptap_font_size_small"), value: "0.75em" },
+    { label: t("tiptap_font_size_normal"), value: "1em" },
+    { label: t("tiptap_font_size_large"), value: "1.5em" },
+    { label: t("tiptap_font_size_huge"), value: "2.5em" },
   ];
 
   const colors = [
@@ -205,7 +207,9 @@ const Toolbar = ({ editor, extended, code }) => {
       if (editor.isActive("collapsible")) {
         const attrs = editor.getAttributes("collapsible");
         if (!showCollapsibleInput) {
-          setCollapsibleTitle(attrs.buttonText || "Show more details");
+          setCollapsibleTitle(
+            attrs.buttonText || t("tiptap_collapsible_title_placeholder")
+          );
           setCollapsibleBgColor(attrs.backgroundColor || "");
           setCollapsibleTextColor(attrs.textColor || "");
         }
@@ -326,7 +330,7 @@ const Toolbar = ({ editor, extended, code }) => {
       .focus()
       .setCollapsible({
         open: false,
-        buttonText: "Show more details",
+        buttonText: t("tiptap_collapsible_title_placeholder"),
         backgroundColor: null,
         textColor: null,
         content: [
@@ -356,7 +360,9 @@ const Toolbar = ({ editor, extended, code }) => {
   const toggleCollapsibleInput = useCallback(() => {
     if (editor.isActive("collapsible")) {
       const attrs = editor.getAttributes("collapsible");
-      setCollapsibleTitle(attrs.buttonText || "Show more details");
+      setCollapsibleTitle(
+        attrs.buttonText || t("tiptap_collapsible_title_placeholder")
+      );
       setCollapsibleBgColor(attrs.backgroundColor || "");
       setCollapsibleTextColor(attrs.textColor || "");
       setShowCollapsibleInput(!showCollapsibleInput);
@@ -676,7 +682,7 @@ const Toolbar = ({ editor, extended, code }) => {
         className={`tiptap-toolbar-button ${
           editor.isActive("bold") ? "is-active" : ""
         }`}
-        title="Bold"
+        title={t("tiptap_bold")}
       >
         <strong>B</strong>
       </button>
@@ -688,7 +694,7 @@ const Toolbar = ({ editor, extended, code }) => {
         className={`tiptap-toolbar-button ${
           editor.isActive("italic") ? "is-active" : ""
         }`}
-        title="Italic"
+        title={t("tiptap_italic")}
       >
         <em>I</em>
       </button>
@@ -700,7 +706,7 @@ const Toolbar = ({ editor, extended, code }) => {
         className={`tiptap-toolbar-button ${
           editor.isActive("underline") ? "is-active" : ""
         }`}
-        title="Underline"
+        title={t("tiptap_underline")}
       >
         <u>U</u>
       </button>
@@ -712,7 +718,7 @@ const Toolbar = ({ editor, extended, code }) => {
         className={`tiptap-toolbar-button ${
           editor.isActive("strike") ? "is-active" : ""
         }`}
-        title="Strikethrough"
+        title={t("tiptap_strikethrough")}
       >
         <s>S</s>
       </button>
@@ -724,7 +730,7 @@ const Toolbar = ({ editor, extended, code }) => {
         className={`tiptap-toolbar-button ${
           editor.isActive("link") ? "is-active" : ""
         }`}
-        title="Link"
+        title={t("tiptap_link")}
       >
         🔗
       </button>
@@ -733,7 +739,7 @@ const Toolbar = ({ editor, extended, code }) => {
         <div className="tiptap-link-input" ref={linkInputRef}>
           <input
             type="url"
-            placeholder="Enter URL"
+            placeholder={t("tiptap_link_placeholder")}
             value={linkUrl}
             onChange={(e) => setLinkUrl(e.target.value)}
             onKeyDown={(e) => {
@@ -750,7 +756,7 @@ const Toolbar = ({ editor, extended, code }) => {
             autoFocus
           />
           <button onMouseDown={(e) => e.preventDefault()} onClick={setLink}>
-            OK
+            {t("ok")}
           </button>
           <button
             onMouseDown={(e) => e.preventDefault()}
@@ -760,7 +766,7 @@ const Toolbar = ({ editor, extended, code }) => {
               editor.commands.focus();
             }}
           >
-            Cancel
+            {t("cancel")}
           </button>
         </div>
       )}
@@ -774,7 +780,7 @@ const Toolbar = ({ editor, extended, code }) => {
             className={`tiptap-toolbar-button ${
               editor.isActive("orderedList") ? "is-active" : ""
             }`}
-            title="Ordered List"
+            title={t("tiptap_ordered_list")}
           >
             1.
           </button>
@@ -786,7 +792,7 @@ const Toolbar = ({ editor, extended, code }) => {
             className={`tiptap-toolbar-button ${
               editor.isActive("bulletList") ? "is-active" : ""
             }`}
-            title="Bullet List"
+            title={t("tiptap_bullet_list")}
           >
             •
           </button>
@@ -798,7 +804,7 @@ const Toolbar = ({ editor, extended, code }) => {
               editor.chain().focus().liftListItem("listItem").run()
             }
             className="tiptap-toolbar-button"
-            title="Decrease Indent"
+            title={t("tiptap_decrease_indent")}
             disabled={!editor.can().liftListItem("listItem")}
           >
             ◂
@@ -811,7 +817,7 @@ const Toolbar = ({ editor, extended, code }) => {
               editor.chain().focus().sinkListItem("listItem").run()
             }
             className="tiptap-toolbar-button"
-            title="Increase Indent"
+            title={t("tiptap_increase_indent")}
             disabled={!editor.can().sinkListItem("listItem")}
           >
             ▸
@@ -825,7 +831,7 @@ const Toolbar = ({ editor, extended, code }) => {
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => setShowColorPicker(!showColorPicker)}
           className="tiptap-toolbar-button"
-          title="Text Color"
+          title={t("tiptap_text_color")}
         >
           <span
             style={{
@@ -862,7 +868,7 @@ const Toolbar = ({ editor, extended, code }) => {
                 editor.chain().focus().unsetColor().run();
                 setShowColorPicker(false);
               }}
-              title="Remove color"
+              title={t("tiptap_remove_color")}
             >
               ✕
             </button>
@@ -876,7 +882,7 @@ const Toolbar = ({ editor, extended, code }) => {
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => setShowBgColorPicker(!showBgColorPicker)}
           className="tiptap-toolbar-button"
-          title="Background Color"
+          title={t("tiptap_background_color")}
         >
           <span
             style={{
@@ -913,7 +919,7 @@ const Toolbar = ({ editor, extended, code }) => {
                 editor.chain().focus().unsetHighlight().run();
                 setShowBgColorPicker(false);
               }}
-              title="Remove background"
+              title={t("tiptap_remove_background")}
             >
               ✕
             </button>
@@ -968,7 +974,7 @@ const Toolbar = ({ editor, extended, code }) => {
               pointerEvents: isUploadingImage ? "none" : "auto",
               opacity: isUploadingImage ? 0.6 : 1,
             }}
-            title="Insert Image"
+            title={t("tiptap_insert_image")}
           >
             {isUploadingImage ? (
               <LoadingDots />
@@ -988,7 +994,7 @@ const Toolbar = ({ editor, extended, code }) => {
             className={`tiptap-toolbar-button ${
               showImageSizeInput ? "is-active" : ""
             }`}
-            title="Image Size"
+            title={t("tiptap_image_size")}
           >
             📐
           </button>
@@ -1017,7 +1023,7 @@ const Toolbar = ({ editor, extended, code }) => {
                     onChange={(e) => handleAspectRatioToggle(e.target.checked)}
                     style={{ cursor: "pointer" }}
                   />
-                  <span>Maintain aspect ratio</span>
+                  <span>{t("tiptap_maintain_aspect_ratio")}</span>
                 </label>
 
                 {/* Width and Height Inputs */}
@@ -1029,11 +1035,11 @@ const Toolbar = ({ editor, extended, code }) => {
                   }}
                 >
                   <label style={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
-                    W:
+                    {t("tiptap_width")}:
                   </label>
                   <input
                     type="text"
-                    placeholder="Width"
+                    placeholder={t("tiptap_width")}
                     value={imageWidth}
                     onChange={(e) => handleWidthChange(e.target.value)}
                     onKeyDown={(e) => {
@@ -1049,11 +1055,11 @@ const Toolbar = ({ editor, extended, code }) => {
                     }}
                   />
                   <label style={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
-                    H:
+                    {t("tiptap_height")}:
                   </label>
                   <input
                     type="text"
-                    placeholder="Height"
+                    placeholder={t("tiptap_height")}
                     value={imageHeight}
                     onChange={(e) => handleHeightChange(e.target.value)}
                     onKeyDown={(e) => {
@@ -1085,7 +1091,7 @@ const Toolbar = ({ editor, extended, code }) => {
                       setShowImageSizeInput(false);
                     }}
                   >
-                    OK
+                    {t("ok")}
                   </button>
                   <button
                     onMouseDown={(e) => e.preventDefault()}
@@ -1094,7 +1100,7 @@ const Toolbar = ({ editor, extended, code }) => {
                       editor.commands.focus();
                     }}
                   >
-                    Cancel
+                    {t("cancel")}
                   </button>
                 </div>
               </div>
@@ -1108,7 +1114,7 @@ const Toolbar = ({ editor, extended, code }) => {
         onMouseDown={(e) => e.preventDefault()}
         onClick={insertCollapsible}
         className="tiptap-toolbar-button"
-        title="Insert Collapsible Section"
+        title={t("tiptap_insert_collapsible")}
         disabled={editor.isActive("collapsible")}
       >
         <span style={{ fontSize: "12px" }}>▼</span>
@@ -1123,7 +1129,7 @@ const Toolbar = ({ editor, extended, code }) => {
             className={`tiptap-toolbar-button ${
               showCollapsibleInput ? "is-active" : ""
             }`}
-            title="Collapsible Settings"
+            title={t("tiptap_collapsible_settings")}
           >
             ⚙️
           </button>
@@ -1145,11 +1151,11 @@ const Toolbar = ({ editor, extended, code }) => {
                   }}
                 >
                   <label style={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
-                    Title:
+                    {t("tiptap_title")}:
                   </label>
                   <input
                     type="text"
-                    placeholder="Show more details"
+                    placeholder={t("tiptap_collapsible_title_placeholder")}
                     value={collapsibleTitle}
                     onChange={(e) => setCollapsibleTitle(e.target.value)}
                     onKeyDown={(e) => {
@@ -1169,7 +1175,7 @@ const Toolbar = ({ editor, extended, code }) => {
                 {/* Background Color Picker */}
                 <div className="tiptap-collapsible-color-picker-wrapper">
                   <label style={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
-                    Background Color:
+                    {t("tiptap_background_color")}:
                   </label>
                   <div
                     style={{
@@ -1192,9 +1198,9 @@ const Toolbar = ({ editor, extended, code }) => {
                         color: "white",
                         minWidth: "80px",
                       }}
-                      title="Background Color"
+                      title={t("tiptap_background_color")}
                     >
-                      {collapsibleBgColor ? "✓" : "Default"}
+                      {collapsibleBgColor ? "✓" : t("tiptap_default")}
                     </button>
                     {showCollapsibleColorPicker && (
                       <div
@@ -1227,7 +1233,7 @@ const Toolbar = ({ editor, extended, code }) => {
                             setCollapsibleBgColor("");
                             setShowCollapsibleColorPicker(false);
                           }}
-                          title="Remove color"
+                          title={t("tiptap_remove_color")}
                         >
                           ✕
                         </button>
@@ -1239,7 +1245,7 @@ const Toolbar = ({ editor, extended, code }) => {
                 {/* Text Color Picker */}
                 <div className="tiptap-collapsible-text-color-picker-wrapper">
                   <label style={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
-                    Title Color:
+                    {t("tiptap_title_color")}:
                   </label>
                   <div
                     style={{
@@ -1263,9 +1269,9 @@ const Toolbar = ({ editor, extended, code }) => {
                         border: `2px solid ${collapsibleTextColor || "#ddd"}`,
                         minWidth: "80px",
                       }}
-                      title="Title Color"
+                      title={t("tiptap_title_color")}
                     >
-                      {collapsibleTextColor ? "✓" : "Default"}
+                      {collapsibleTextColor ? "✓" : t("tiptap_default")}
                     </button>
                     {showCollapsibleTextColorPicker && (
                       <div
@@ -1298,7 +1304,7 @@ const Toolbar = ({ editor, extended, code }) => {
                             setCollapsibleTextColor("");
                             setShowCollapsibleTextColorPicker(false);
                           }}
-                          title="Remove color"
+                          title={t("tiptap_remove_color")}
                         >
                           ✕
                         </button>
@@ -1322,7 +1328,7 @@ const Toolbar = ({ editor, extended, code }) => {
                       setShowCollapsibleInput(false);
                     }}
                   >
-                    OK
+                    {t("ok")}
                   </button>
                   <button
                     onMouseDown={(e) => e.preventDefault()}
@@ -1331,7 +1337,7 @@ const Toolbar = ({ editor, extended, code }) => {
                       editor.commands.focus();
                     }}
                   >
-                    Cancel
+                    {t("cancel")}
                   </button>
                 </div>
               </div>
@@ -1349,7 +1355,7 @@ const Toolbar = ({ editor, extended, code }) => {
           setLinkUrl("");
         }}
         className="tiptap-toolbar-button"
-        title="Clear Formatting"
+        title={t("tiptap_clear_formatting")}
       >
         🗑
       </button>

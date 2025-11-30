@@ -377,7 +377,37 @@
     "allow_jump": "Schakel een enquête index in zodat respondenten naar elke pagina in de enquête kunnen springen.",
     "allow_incomplete": "Laat respondenten hun voortgang opslaan en later terugkeren om de enquête te voltooien.",
     "skip_invalid": "Sta respondenten toe om door te gaan zelfs als sommige antwoorden ongeldig zijn, waarbij validatie alleen wordt afgedwongen wanneer ze de enquête verzenden."
-  }
+  },
+  "tiptap_font_size_small": "Klein",
+  "tiptap_font_size_normal": "Normaal",
+  "tiptap_font_size_large": "Groot",
+  "tiptap_font_size_huge": "Zeer groot",
+  "tiptap_bold": "Vet",
+  "tiptap_italic": "Cursief",
+  "tiptap_underline": "Onderstrepen",
+  "tiptap_strikethrough": "Doorhalen",
+  "tiptap_link": "Link",
+  "tiptap_link_placeholder": "URL invoeren",
+  "tiptap_ordered_list": "Genummerde Lijst",
+  "tiptap_bullet_list": "Opsommingsteken Lijst",
+  "tiptap_decrease_indent": "Inspringing Verkleinen",
+  "tiptap_increase_indent": "Inspringing Vergroten",
+  "tiptap_text_color": "Tekstkleur",
+  "tiptap_remove_color": "Kleur verwijderen",
+  "tiptap_background_color": "Achtergrondkleur",
+  "tiptap_remove_background": "Achtergrond verwijderen",
+  "tiptap_insert_image": "Afbeelding Invoegen",
+  "tiptap_image_size": "Afbeelding Grootte",
+  "tiptap_maintain_aspect_ratio": "Behoud aspectverhouding",
+  "tiptap_width": "Breedte",
+  "tiptap_height": "Hoogte",
+  "tiptap_insert_collapsible": "Inklapbare Sectie Invoegen",
+  "tiptap_collapsible_settings": "Inklapbare Sectie Instellingen",
+  "tiptap_title": "Titel",
+  "tiptap_collapsible_title_placeholder": "Meer details tonen",
+  "tiptap_title_color": "Titelkleur",
+  "tiptap_default": "Standaard",
+  "tiptap_clear_formatting": "Opmaak Wissen"
 }
 
 

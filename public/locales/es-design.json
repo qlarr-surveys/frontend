@@ -377,7 +377,37 @@
     "allow_jump": "Habilitar un índice de encuesta para que los encuestados puedan saltar a cualquier página en la encuesta.",
     "allow_incomplete": "Permitir a los encuestados guardar su progreso y regresar más tarde para completar la encuesta.",
     "skip_invalid": "Permitir a los encuestados continuar incluso si algunas respuestas son inválidas, aplicando validación solo cuando envíen la encuesta."
-  }
+  },
+  "tiptap_font_size_small": "Pequeño",
+  "tiptap_font_size_normal": "Normal",
+  "tiptap_font_size_large": "Grande",
+  "tiptap_font_size_huge": "Enorme",
+  "tiptap_bold": "Negrita",
+  "tiptap_italic": "Cursiva",
+  "tiptap_underline": "Subrayado",
+  "tiptap_strikethrough": "Tachado",
+  "tiptap_link": "Enlace",
+  "tiptap_link_placeholder": "Ingresar URL",
+  "tiptap_ordered_list": "Lista Ordenada",
+  "tiptap_bullet_list": "Lista con Viñetas",
+  "tiptap_decrease_indent": "Disminuir Sangría",
+  "tiptap_increase_indent": "Aumentar Sangría",
+  "tiptap_text_color": "Color de Texto",
+  "tiptap_remove_color": "Quitar color",
+  "tiptap_background_color": "Color de Fondo",
+  "tiptap_remove_background": "Quitar fondo",
+  "tiptap_insert_image": "Insertar Imagen",
+  "tiptap_image_size": "Tamaño de Imagen",
+  "tiptap_maintain_aspect_ratio": "Mantener relación de aspecto",
+  "tiptap_width": "Ancho",
+  "tiptap_height": "Alto",
+  "tiptap_insert_collapsible": "Insertar Sección Colapsable",
+  "tiptap_collapsible_settings": "Configuración de Sección Colapsable",
+  "tiptap_title": "Título",
+  "tiptap_collapsible_title_placeholder": "Mostrar más detalles",
+  "tiptap_title_color": "Color del Título",
+  "tiptap_default": "Predeterminado",
+  "tiptap_clear_formatting": "Limpiar Formato"
 }
 
 
