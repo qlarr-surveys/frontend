@@ -1,7 +1,7 @@
 import React, { Suspense, forwardRef } from "react";
 import { useSelector } from "react-redux";
 
-import { Box, css, Select, useTheme } from "@mui/material";
+import { Box, css, useTheme } from "@mui/material";
 import styles from "./Question.module.css";
 import { stripTags } from "~/utils/design/utils";
 import LoadingDots from "../common/LoadingDots";
@@ -350,7 +350,7 @@ const QuestionWrapper = React.memo((props) => {
 
   return (
     <Box
-      data-code={props.qualifiedCode}
+      data-code={props.code}
       css={css`${props.customCss}`}
       sx={{
         borderColor: invalid ? "error.main" : "grey.500",

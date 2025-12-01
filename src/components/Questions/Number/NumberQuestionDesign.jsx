@@ -18,7 +18,6 @@ function NumberQuestionDesign({ code }) {
   return (
     <div className={styles.questionItem}>
       <TextField
-        disabled
         size="small"
         variant="outlined"
         required={

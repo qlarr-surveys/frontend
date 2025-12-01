@@ -111,6 +111,7 @@ function ImageRankingItem(props) {
 
   return (
     <Box
+      data-code={props.option.code}
       key={props.option.code}
       sx={{
         flex: `0 1 calc(${100 / props.columns}% - ${props.spacing}px)`,
@@ -149,7 +150,11 @@ function ImageRankingItem(props) {
           >
             <span
               className={styles.rankValue}
-              css={css`{color: ${theme.textStyles.text.color};}`}
+              css={css`
+                 {
+                  color: ${theme.textStyles.text.color};
+                }
+              `}
             >
               {state.value}
             </span>

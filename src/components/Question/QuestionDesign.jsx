@@ -163,7 +163,7 @@ function QuestionDesign({
       : `opacity: ${isDragging ? "0.2" : "1"};border: ${
           isDragging ? "dotted 1px " + contrastColor : "0"
         };`;
-  }, [hovered, isDragging]);
+  }, [hovered, isDragging, isInSetup]);
 
   return (
     <div

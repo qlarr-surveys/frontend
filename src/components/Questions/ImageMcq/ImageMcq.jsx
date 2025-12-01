@@ -83,6 +83,7 @@ function ImageMcqItem(props) {
   return (
     <Box
       key={props.option.code}
+      data-code={props.option.code}
       sx={{
         flex: `0 1 calc(${100 / props.columns}% - ${props.spacing}px)`,
         cursor: "pointer",
@@ -110,17 +111,11 @@ function ImageMcqItem(props) {
               m: "5px",
             }}
             className={styles.radioCheck}
-            checked={
-              props.parentValue.indexOf(props.option.code) > -1 
-            }
+            checked={props.parentValue.indexOf(props.option.code) > -1}
           />
         </div>
       </Box>
-      {!props.hideText && (
-        <Box>
-          {props.option.content?.label}
-        </Box>
-      )}
+      {!props.hideText && <Box>{props.option.content?.label}</Box>}
     </Box>
   );
 }

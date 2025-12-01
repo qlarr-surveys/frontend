@@ -163,6 +163,7 @@ function ChoiceItemDesign(props) {
   return (
     <div ref={ref} style={getStyles(isDragging)} data-handler-id={handlerId}>
       <Box
+        data-code={props.code}
         sx={{ backgroundColor: isInSetup ? contrastColor : "inherit" }}
         className={styles.answerItem}
         style={{
@@ -183,9 +184,9 @@ function ChoiceItemDesign(props) {
           </div>
         )}
         {props.type === "checkbox" ? (
-          <Checkbox disabled />
+          <Checkbox />
         ) : props.type === "radio" ? (
-          <Radio disabled />
+          <Radio />
         ) : null}{" "}
         {answer.type === "other" ? (
           <TextField
@@ -200,18 +201,19 @@ function ChoiceItemDesign(props) {
                 backgroundColor: isInSetupText ? contrastColor : "inherit",
               },
             }}
-            disabled={!contentEditable(props.designMode)}
             value={content || ""}
-            onChange={(e) =>
-              dispatch(
-                changeContent({
-                  code: props.qualifiedCode,
-                  key: "label",
-                  lang: lang,
-                  value: e.target.value,
-                })
-              )
-            }
+            onChange={(e) => {
+              if (contentEditable(props.designMode)) {
+                dispatch(
+                  changeContent({
+                    code: props.qualifiedCode,
+                    key: "label",
+                    lang: lang,
+                    value: e.target.value,
+                  })
+                );
+              }
+            }}
             placeholder={
               onMainLang
                 ? props.t("content_editor_placeholder_option")
@@ -242,9 +244,11 @@ function ChoiceItemDesign(props) {
           <TextField
             inputRef={inputRef}
             variant="standard"
-            disabled={!contentEditable(props.designMode)}
             value={content || ""}
             onChange={(e) => {
+              if (!contentEditable(props.designMode)) {
+                return;
+              }
               const value = e.target.value;
               if (value.endsWith("\n")) {
                 props.onNewLine();
@@ -284,7 +288,7 @@ function ChoiceItemDesign(props) {
             <TextField
               sx={{ flex: 2, pointerEvents: "none" }}
               size="small"
-              disabled
+              value=""
               variant="outlined"
             />
           </>
@@ -292,7 +296,7 @@ function ChoiceItemDesign(props) {
         <span style={{ margin: "8px" }} />
         <BuildIcon
           key="setup"
-          color = "action"
+          color="action"
           sx={{ fontSize: 18 }}
           className={styles.answerIconSettings}
           onClick={(e) => {

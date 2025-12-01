@@ -255,6 +255,7 @@ function ArrayRowDesign({
   drop(preview(ref));
   return (
     <TableRow
+      data-code={item.code}
       style={{
         opacity: isDragging ? "0.2" : "1",
       }}
@@ -277,8 +278,10 @@ function ArrayRowDesign({
             inputRef={inputRef}
             variant="standard"
             value={content || ""}
-            disabled={!contentEditable(designMode)}
             onChange={(e) => {
+              if (!contentEditable(designMode)) {
+                return;
+              }
               const value = e.target.value;
               if (value.endsWith("\n")) {
                 dispatch(
@@ -335,15 +338,7 @@ function ArrayRowDesign({
               padding: "0px",
             }}
           >
-            {type === "scq_array" ? (
-              <Radio
-              disabled={true}
-            />
-            ) : (
-              <Checkbox
-                disabled={true}
-              />
-            )}
+            {type === "scq_array" ? <Radio /> : <Checkbox />}
           </TableCell>
         );
       })}
@@ -492,8 +487,10 @@ function ArrayHeaderDesign({
         variant="standard"
         value={content || ""}
         multiline
-        disabled={!contentEditable(designMode)}
         onChange={(e) => {
+          if (!contentEditable(designMode)) {
+            return;
+          }
           dispatch(
             changeContent({
               code: item.qualifiedCode,

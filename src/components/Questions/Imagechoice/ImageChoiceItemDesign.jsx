@@ -29,6 +29,7 @@ function ImageChoiceItemDesign({
   index,
   qualifiedCode,
   type,
+  code,
   columnNumber,
   imageAspectRatio,
   designMode,
@@ -237,6 +238,7 @@ function ImageChoiceItemDesign({
           opacity: isDragging ? "0.2" : "1",
         }}
         item
+        data-code={code}
         position="relative"
         xs={12 / columnNumber}
         key={qualifiedCode}
@@ -297,10 +299,7 @@ function ImageChoiceItemDesign({
                 />
               </IconButton>
 
-              <IconButton
-                ref={drag}
-                className={styles.imageIconButton}
-              >
+              <IconButton ref={drag} className={styles.imageIconButton}>
                 <DragIndicatorIcon color="action" />
               </IconButton>
             </div>
@@ -317,8 +316,10 @@ function ImageChoiceItemDesign({
             dir={isRtl ? "rtl" : "ltr"}
             variant="standard"
             value={content || ""}
-            disabled={!contentEditable(designMode)}
-            onChange={(e) =>
+            onChange={(e) => {
+              if (!contentEditable(designMode)) {
+                return;
+              }
               dispatch(
                 changeContent({
                   code: qualifiedCode,
@@ -326,8 +327,8 @@ function ImageChoiceItemDesign({
                   lang: lang,
                   value: e.target.value,
                 })
-              )
-            }
+              );
+            }}
             placeholder={
               onMainLang
                 ? t("content_editor_placeholder_option")

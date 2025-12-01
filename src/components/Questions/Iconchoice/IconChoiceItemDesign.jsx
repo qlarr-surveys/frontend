@@ -30,6 +30,7 @@ function IconChoiceItemDesign({
   index,
   qualifiedCode,
   type,
+  code,
   columnNumber,
   designMode,
   imageHeight,
@@ -230,6 +231,7 @@ function IconChoiceItemDesign({
           opacity: isDragging ? "0.2" : "1",
         }}
         item
+        data-code={code}
         position="relative"
         xs={12 / columnNumber}
         key={qualifiedCode}
@@ -277,10 +279,7 @@ function IconChoiceItemDesign({
               >
                 <PhotoCamera />
               </IconButton>
-              <IconButton
-                ref={drag}
-                className={styles.imageIconButton}
-              >
+              <IconButton ref={drag} className={styles.imageIconButton}>
                 <DragIndicatorIcon color="action" />
               </IconButton>
             </div>
@@ -302,9 +301,11 @@ function IconChoiceItemDesign({
             <TextField
               dir={isRtl ? "rtl" : "ltr"}
               variant="standard"
-              disabled={!contentEditable(designMode)}
               value={content || ""}
-              onChange={(e) =>
+              onChange={(e) => {
+                if (!contentEditable(designMode)) {
+                  return;
+                }
                 dispatch(
                   changeContent({
                     code: qualifiedCode,
@@ -312,8 +313,8 @@ function IconChoiceItemDesign({
                     lang: lang,
                     value: e.target.value,
                   })
-                )
-              }
+                );
+              }}
               placeholder={
                 onMainLang
                   ? t("content_editor_placeholder_option")

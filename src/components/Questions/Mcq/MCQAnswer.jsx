@@ -48,6 +48,7 @@ function McqAnswer(props) {
 
   return relevance ? (
     <FormControlLabel
+      data-code={props.Answer.code}s
       control={
         <Checkbox
           checked={

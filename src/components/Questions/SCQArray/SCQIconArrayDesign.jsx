@@ -34,7 +34,7 @@ import { buildResourceUrl } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
-import { sanitizePastedText } from '~/components/design/ContentEditor/QuillEditor';
+import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
 
 function SCQIconArrayDesign(props) {
   const theme = useTheme();
@@ -257,6 +257,7 @@ function SCQArrayRowDesign({
   drop(preview(ref));
   return (
     <TableRow
+      data-code={item.code}
       style={{
         opacity: isDragging ? "0.2" : "1",
       }}
@@ -279,9 +280,11 @@ function SCQArrayRowDesign({
           <TextField
             variant="standard"
             inputRef={inputRef}
-            disabled={!inDesign}
             value={content || ""}
             onChange={(e) => {
+              if (!inDesign) {
+                return;
+              }
               const value = e.target.value;
               if (value.endsWith("\n")) {
                 dispatch(
@@ -527,8 +530,10 @@ function SCQArrayHeaderDesign({
         <TextField
           variant="standard"
           value={content || ""}
-          disabled={!inDesign}
           onChange={(e) => {
+            if (!inDesign) {
+              return;
+            }
             dispatch(
               changeContent({
                 code: item.qualifiedCode,

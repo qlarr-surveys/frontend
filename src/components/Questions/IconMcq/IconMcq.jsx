@@ -14,12 +14,9 @@ function IconMcq(props) {
     return state.runState.values[props.component.qualifiedCode].value || [];
   }, shallowEqual);
 
-
-
   const hideText = props.component?.hideText || false;
 
   const runValues = useSelector((s) => s.runState.values);
-
 
   return (
     <Box
@@ -65,6 +62,7 @@ function IconMcqChoice({
   const checked = parentValue.indexOf(component.code) > -1;
   return (
     <Box
+      data-code={component.code}
       key={key}
       sx={{
         flex: `0 1 calc(${100 / columns}% - ${spacing || 8}px)`,
@@ -80,14 +78,16 @@ function IconMcqChoice({
         }}
       >
         <DynamicSvg
-          onIconClick={() =>{
+          onIconClick={() => {
             let parentValue2 = [...parentValue];
             if (checked) {
               parentValue2 = parentValue2.filter((el) => el !== component.code);
             } else {
               parentValue2.push(component.code);
             }
-            dispatch(valueChange({ componentCode: parentCode, value: parentValue2 }));
+            dispatch(
+              valueChange({ componentCode: parentCode, value: parentValue2 })
+            );
           }}
           imageHeight="100%"
           maxHeight={iconSize + "px"}

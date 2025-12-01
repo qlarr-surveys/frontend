@@ -74,7 +74,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
           <TextField
             {...params}
             sx={{ width: "50%" }}
-            disabled
+            value=""
             label={state.showHint && (state.content?.[lang]?.hint || "")}
             variant="outlined"
           />

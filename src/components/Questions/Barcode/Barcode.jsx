@@ -65,7 +65,6 @@ function Barcode(props) {
             ? true
             : false
         }
-        disabled={true}
         value={state.value}
         size="small"
       />

@@ -107,7 +107,7 @@ function SCQArrayRow(props) {
 
   return typeof relevance === "undefined" || relevance ? (
     <React.Fragment>
-      <TableRow key={props.answer.code}>
+      <TableRow key={props.answer.code} data-code={props.answer.code}>
         <TableCell
           sx={{
             borderBottom: invalid ? "0" : "",

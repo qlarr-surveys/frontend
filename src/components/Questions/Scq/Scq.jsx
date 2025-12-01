@@ -60,8 +60,11 @@ function ScqChoice(props) {
     return state.runState.values[props.Choice.qualifiedCode]?.relevance ?? true;
   });
 
-  return !relevance ? <></> : (
+  return !relevance ? (
+    <></>
+  ) : (
     <FormControlLabel
+      data-code={props.Choice.code}
       key={props.Choice.qualifiedCode}
       control={<Radio />}
       label={
@@ -70,7 +73,6 @@ function ScqChoice(props) {
           customStyle={`
         font-size: ${theme.textStyles.text.size}px;
         `}
-          
           name="label"
           lang={props.lang}
           content={props.Choice.content?.label}
@@ -131,11 +133,9 @@ function ScqChoiceOther(props) {
     return (
       <div className="text-left d-flex">
         <FormControlLabel
+          data-code={props.Choice.code}
           key={props.Choice.qualifiedCode}
-          control={
-            <Radio
-            />
-          }
+          control={<Radio />}
           label={
             <TextField
               variant="standard"

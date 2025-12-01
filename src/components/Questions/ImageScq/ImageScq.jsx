@@ -49,9 +49,12 @@ function ImageScq(props) {
         if (!relevance) return null;
         return (
           <Box
+            data-code={option.code}
             key={option.code}
             sx={{
-              flex: `0 1 calc(${100 / props.component.columns}% - ${props.component.spacing}px)`,
+              flex: `0 1 calc(${100 / props.component.columns}% - ${
+                props.component.spacing
+              }px)`,
               cursor: "pointer",
             }}
             onClick={() =>
@@ -81,7 +84,7 @@ function ImageScq(props) {
                   name={props.component.qualifiedCode}
                   size="large"
                   sx={{
-                    m:'5px',
+                    m: "5px",
                   }}
                 />
               </div>

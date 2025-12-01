@@ -56,6 +56,7 @@ function MultipleTextItem({ lang, item }) {
   };
   return (
     <Box
+      data-code={item.code}
       sx={{
         gap: "10px",
         display: "flex",

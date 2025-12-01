@@ -19,7 +19,7 @@ function EmailQuestionDesign({ code }) {
   return (
     <div className={styles.questionItem}>
       <TextField
-        disabled
+        type="email"
         variant="outlined"
         size="small"
         required={
@@ -27,7 +27,7 @@ function EmailQuestionDesign({ code }) {
         }
         label={state.showHint && (state.content?.[lang]?.hint || "")}
         sx={{
-          pointerEvents: 'none',
+          pointerEvents: "none",
         }}
         value={""}
       />

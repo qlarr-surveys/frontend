@@ -327,6 +327,7 @@ function RankingOption({
   return (
     <div ref={drag}>
       <Box
+        data-code={option.code}
         ref={containerRef}
         data-handler-id={handlerId}
         style={{
