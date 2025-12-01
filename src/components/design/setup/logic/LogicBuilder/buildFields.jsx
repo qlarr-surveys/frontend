@@ -61,6 +61,7 @@ const buildField = (code, component, state, mainLang) => {
     };
   }
   switch (component.type) {
+    case "autocomplete":
     case "text":
     case "barcode":
     case "email":

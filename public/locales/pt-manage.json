@@ -80,6 +80,7 @@
     "title": "Editar Usuário"
   },
   "email_required": "O E-mail é Obrigatório",
+  "error_title": "Erro",
   "error": {
     "invalid_email": "E-mail Inválido",
     "invalid_first_name": "Nome Inválido",
@@ -180,6 +181,7 @@
     "backend_down": "O Servidor não está Acessível... Por favor Tente novamente mais tarde",
     "duplicate_email": "O endereço de e-mail já está registrado.",
     "duplicate_survey_name": "Nome de Pesquisa Duplicado",
+    "autocomplete_malformed_input": "Entrada Malformada: O arquivo deve ser um array JSON contendo apenas strings",
     "expired_confirmation_token": "Token de Confirmação Expirado, Por favor Registre-se Mais Uma Vez",
     "expired_reset_token": "Token de Confirmação Expirado, Por favor Clique em Esqueci minha Senha Mais Uma Vez",
     "invalid_survey_dates": "A Data de Início deve ser anterior à data de finalização",

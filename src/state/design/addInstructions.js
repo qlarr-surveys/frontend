@@ -129,12 +129,7 @@ export const refreshEnumForSingleChoice = (component, state) => {
 export const refreshListForMultipleChoice = (component, state) => {
   if (
     !component.type ||
-    ![
-      "mcq",
-      "icon_mcq",
-      "image_mcq",
-      "mcq_array",
-    ].includes(component.type)
+    !["mcq", "icon_mcq", "image_mcq", "mcq_array"].includes(component.type)
   ) {
     return;
   }
@@ -452,6 +447,9 @@ export const addQuestionInstructions = (question) => {
   let type = question.type;
   switch (type) {
     case "text":
+    case "paragraph":
+    case "email":
+    case "autocomplete":
       question.instructionList = [
         {
           code: "value",
@@ -467,36 +465,6 @@ export const addQuestionInstructions = (question) => {
           code: "value",
           isActive: false,
           returnType: "double",
-          text: "",
-        },
-      ];
-      break;
-    case "autocomplete":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
-      break;
-    case "paragraph":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
-      break;
-    case "paragraph":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
           text: "",
         },
       ];

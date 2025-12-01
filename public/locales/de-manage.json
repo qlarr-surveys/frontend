@@ -78,6 +78,7 @@
     "title": "Benutzer bearbeiten"
   },
   "email_required": "E-Mail ist erforderlich",
+  "error_title": "Fehler",
   "error": {
     "invalid_email": "Ungültige E-Mail",
     "invalid_first_name": "Ungültiger Vorname",
@@ -178,6 +179,7 @@
     "backend_down": "Backend ist nicht erreichbar... Bitte versuchen Sie es später erneut",
     "duplicate_email": "E-Mail-Adresse ist bereits registriert.",
     "duplicate_survey_name": "Doppelter Umfragename",
+    "autocomplete_malformed_input": "Fehlerhaft formatierte Eingabe: Datei muss ein JSON-Array sein, das nur Zeichenketten enthält",
     "expired_confirmation_token": "Abgelaufenes Bestätigungstoken, bitte erneut registrieren",
     "expired_reset_token": "Abgelaufenes Bestätigungstoken, bitte klicken Sie noch einmal auf Passwort vergessen",
     "invalid_survey_dates": "Startdatum muss vor Enddatum liegen",

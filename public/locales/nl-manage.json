@@ -80,6 +80,7 @@
     "title": "Gebruiker Bewerken"
   },
   "email_required": "E-mail is Verplicht",
+  "error_title": "Fout",
   "error": {
     "invalid_email": "Ongeldige E-mail",
     "invalid_first_name": "Ongeldige Voornaam",
@@ -180,6 +181,7 @@
     "backend_down": "Backend is Onbereikbaar... Probeer het later opnieuw",
     "duplicate_email": "E-mailadres is al geregistreerd.",
     "duplicate_survey_name": "Dubbele Enquête Naam",
+    "autocomplete_malformed_input": "Onjuist Geformatteerde Invoer: Bestand moet een JSON-array zijn die alleen tekenreeksen bevat",
     "expired_confirmation_token": "Bevestiging Token Verlopen, Registreer Opnieuw",
     "expired_reset_token": "Bevestiging Token Verlopen, Klik Opnieuw op Wachtwoord Vergeten",
     "invalid_survey_dates": "Startdatum moet voor de einddatum zijn",
