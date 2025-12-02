@@ -34,8 +34,6 @@ export const questionIconByType = (type, size = "1.25em", color) => {
       return <SurveyIcon name="email" size={size} color={color} />;
     case "scq":
       return <SurveyIcon name="singleChoice" size={size} color={color} />;
-    case "select":
-      return <SurveyIcon name="select" size={size} color={color} />;
     case "icon_scq":
       return <SurveyIcon name="singleIconChoice" size={size} color={color} />;
     case "image_scq":
@@ -200,11 +198,7 @@ export const QUESTION_TYPES = [
       {
         type: "multiple_text",
         icon: questionIconByType("multiple_text"),
-      },
-      {
-        type: "autocomplete",
-        icon: questionIconByType("autocomplete"),
-      },
+      }
     ],
   },
   {
@@ -220,8 +214,8 @@ export const QUESTION_TYPES = [
         icon: questionIconByType("mcq"),
       },
       {
-        type: "select",
-        icon: questionIconByType("select"),
+        type: "autocomplete",
+        icon: questionIconByType("autocomplete"),
       },
       {
         type: "scq_array",
@@ -385,7 +379,6 @@ export const createQuestion = (type, qId, lang) => {
       state.showHint = true;
 
       break;
-    case "select":
     case "scq":
       returnObj[`Q${qId}A1`] = {};
       returnObj[`Q${qId}A2`] = {};
@@ -760,7 +753,6 @@ export const questionDesignError = (question) => {
     case "image_ranking":
     case "ranking":
     case "image_scq":
-    case "select":
     case "scq":
     case "icon_scq":
       if (!question.children || question.children.length < 2) {

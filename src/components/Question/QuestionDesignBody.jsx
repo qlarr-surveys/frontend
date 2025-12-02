@@ -64,20 +64,6 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
           type="radio"
         />
       );
-    case "select":
-      return (
-        <>
-          <RHFSelect sx={{ width: "50%" }} disabled={true} />
-          <ChoiceQuestion
-            key={code}
-            t={t}
-            designMode={designMode}
-            onMainLang={onMainLang}
-            code={code}
-            type="select"
-          />
-        </>
-      );
     case "image_mcq":
     case "image_scq":
     case "image_ranking":

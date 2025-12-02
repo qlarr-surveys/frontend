@@ -110,8 +110,6 @@ const Question = forwardRef((props, ref) => {
             component={props.component}
           />
         );
-      case "select":
-        return <SelectQuestion lang={props.lang} component={props.component} />;
       case "multiple_text":
         return (
           <MultipleText

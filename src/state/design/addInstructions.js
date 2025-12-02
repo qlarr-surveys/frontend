@@ -2,7 +2,7 @@ export const cleanupDefaultValue = (component) => {
   // Check if this is a single choice question type that supports default values
   if (
     !component.type ||
-    !["scq", "icon_scq", "image_scq", "select"].includes(component.type)
+    !["scq", "icon_scq", "image_scq"].includes(component.type)
   ) {
     return;
   }
@@ -35,7 +35,6 @@ export const addSkipInstructions = (state, code) => {
   const component = state[code];
   if (
     component.type != "scq" &&
-    component.type != "select" &&
     component.type != "image_scq" &&
     component.type != "icon_scq"
   ) {
@@ -56,7 +55,6 @@ export const refreshEnumForSingleChoice = (component, state) => {
       "image_scq",
       "scq_icon_array",
       "scq_array",
-      "select",
     ].includes(component.type)
   ) {
     return;
@@ -65,7 +63,6 @@ export const refreshEnumForSingleChoice = (component, state) => {
     case "image_scq":
     case "icon_scq":
     case "scq":
-    case "select":
       let valueInstruction = component.instructionList.find(
         (it) => it.code == "value"
       );
@@ -208,7 +205,6 @@ export const addMaskedValuesInstructions = (
       "image_mcq",
       "icon_mcq",
       "scq",
-      "select",
       "icon_scq",
       "number",
       "image_scq",
@@ -277,7 +273,6 @@ export const addMaskedValuesInstructions = (
     case "image_scq":
     case "icon_scq":
     case "scq":
-    case "select":
       if (component.children && component.children.length) {
         let objText =
           "{" +
@@ -485,7 +480,6 @@ export const addQuestionInstructions = (question) => {
         },
       ];
       break;
-    case "select":
     case "scq":
       question.instructionList = [
         {
@@ -688,7 +682,6 @@ export const addAnswerInstructions = (
           "scq",
           "icon_scq",
           "image_scq",
-          "select",
           "mcq",
           "icon_mcq",
           "image_mcq",

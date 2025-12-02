@@ -464,8 +464,6 @@ export const setupOptions = (type) => {
           rules: ["validation_required"],
         },
       ];
-
-    case "select":
     case "scq":
       return [
         {
