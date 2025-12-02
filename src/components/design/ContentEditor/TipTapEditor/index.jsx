@@ -157,6 +157,13 @@ function DraftEditor({
     }
   }, [editor]);
 
+
+  useEffect(() => {
+    if (editor) {
+      editor.commands.focus("end");
+    }
+  }, [editor]);
+
   useEffect(() => {
     if (!editor) {
       return;

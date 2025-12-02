@@ -122,13 +122,13 @@ function ContentEditor({
   useEffect(() => {
     if (focus && !isActive && editable) {
       setActive(true);
-      dispatch(resetFocus());
     }
   }, [focus, isActive, editable]);
 
   const OnEditorBlurred = useCallback(
     (text, editorLang) => {
       setActive(false);
+      dispatch(resetFocus());
       if (lang != editorLang) {
         return;
       } else if (text != value) {

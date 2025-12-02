@@ -1,4 +1,5 @@
 .fullWidth {
+  min-height: 24px;
   width: 100%;
   cursor: text;
 }
