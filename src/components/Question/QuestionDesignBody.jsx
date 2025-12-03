@@ -20,6 +20,7 @@ import SCQIconArrayDesign from "../Questions/SCQArray/SCQIconArrayDesign";
 import { RHFSelect } from "../hook-form";
 import ArrayDesign from '~/components/Questions/SCQArray/ArrayDesign';
 import AutoCompleteDesign from '../Questions/AutoComplete/AutoCompleteDesign';
+import MapDesign from '../Questions/Map/MapDesign';
 
 function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
   switch (type) {
@@ -160,6 +161,8 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
       return <BarcodeDesign t={t} key={code} code={code} />;
     case "email":
       return <EmailQuestionDesign key={code} code={code} />;
+    case "map":
+      return <MapDesign key={code} code={code} t={t} />;
     default:
       return "";
   }

@@ -29,6 +29,7 @@
     "i18next-browser-languagedetector": "^8.0.5",
     "i18next-http-backend": "^3.0.2",
     "js-cookie": "^3.0.5",
+    "leaflet": "^1.9.4",
     "lodash.clonedeep": "^4.5.0",
     "lodash.merge": "^4.6.2",
     "mui-one-time-password-input": "^2.0.3",

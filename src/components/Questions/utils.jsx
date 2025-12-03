@@ -78,6 +78,8 @@ export const questionIconByType = (type, size = "1.25em", color) => {
       return <SurveyIcon name="imageDisplay" size={size} color={color} />;
     case "video_display":
       return <SurveyIcon name="videoDisplay" size={size} color={color} />;
+    case "map":
+      return <SurveyIcon name="location" size={size} color={color} />;
   }
 };
 
@@ -336,6 +338,10 @@ export const QUESTION_TYPES = [
       {
         type: "signature",
         icon: questionIconByType("signature"),
+      },
+      {
+        type: "map",
+        icon: questionIconByType("map"),
       },
     ],
   },
@@ -718,6 +724,7 @@ export const createQuestion = (type, qId, lang) => {
     case "text_display":
     case "video_display":
     case "image_display":
+    case "map":
       break;
     default:
       break;
