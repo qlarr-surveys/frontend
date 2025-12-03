@@ -1,15 +1,16 @@
+
 import React, { useEffect, useMemo, useRef } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { Box } from "@mui/material";
+import { Box, css } from "@mui/material";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
 import { GroupDropArea } from "~/components/design/DropArea/DropArea";
 import { Virtuoso } from "react-virtuoso";
 import useDragNearViewportEdge from "~/utils/useDragEdgeDetection";
-import { resetSetup } from '~/state/design/designState';
-import { DESIGN_SURVEY_MODE } from '~/routes';
+import { resetSetup } from "~/state/design/designState";
+import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function ContentPanel({ designMode }, ref) {
   const { t } = useTranslation(["design", "run"]);
@@ -126,11 +127,12 @@ function ContentPanel({ designMode }, ref) {
           dispatch(resetSetup());
         }
       }}
+      css={css`
+        color: ${theme.textStyles.text.color};
+        font-family: ${theme.textStyles.text.font};
+      `}
       style={{
         backgroundColor: theme.palette.background.default,
-        fontFamily: theme.textStyles.text.font,
-        color: theme.textStyles.text.color,
-        fontSize: theme.textStyles.text.size,
       }}
     >
       <Box ref={virtuosoWrapperRef} width="100%" height="100%">

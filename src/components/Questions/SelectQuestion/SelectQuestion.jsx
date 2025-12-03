@@ -45,9 +45,9 @@ function SelectQuestion({ lang, component }) {
             <option key={option.code} value={option.code}>
               <Content
                 elementCode={option.code}
-                fontFamily={theme.textStyles.text.font}
-                color={theme.textStyles.text.color}
-                fontSize={theme.textStyles.text.size}
+                customStyle={`
+        font-size: ${theme.textStyles.text.size}px;
+        `}
                 name="label"
                 lang={lang}
                 content={option.content?.label}

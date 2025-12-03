@@ -4,8 +4,8 @@ import styles from "./IconScq.module.css";
 import { valueChange } from "~/state/runState";
 import { useTheme } from "@emotion/react";
 import { Box, Grid } from "@mui/material";
-import DynamicSvg from '~/components/DynamicSvg';
-import { buildResourceUrl } from '~/networking/common';
+import DynamicSvg from "~/components/DynamicSvg";
+import { buildResourceUrl } from "~/networking/common";
 
 function IconScq(props) {
   const theme = useTheme();
@@ -42,6 +42,7 @@ function IconScq(props) {
         if (!relevance) return null;
         return (
           <Box
+            data-code={option.code}
             key={option.code}
             sx={{
               flex: `0 1 calc(${100 / props.component.columns}% - ${
@@ -55,7 +56,7 @@ function IconScq(props) {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                width: "100%"
+                width: "100%",
               }}
             >
               <DynamicSvg
@@ -78,11 +79,9 @@ function IconScq(props) {
               <Box
                 sx={{
                   textAlign: "center",
-                  fontFamily: theme.textStyles.text.font,
                   color: isSelected
                     ? theme.palette.primary.main
                     : theme.textStyles.text.color,
-                  fontSize: theme.textStyles.text.size,
                 }}
               >
                 {option.content?.label}

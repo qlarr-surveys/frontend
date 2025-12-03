@@ -145,6 +145,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
       style={getStyles(isDragging)}
     >
       <div
+        data-code={code}
         style={{
           backgroundColor: isInSetup ? contrastColor : undefined,
           padding: "0rem 0rem 2rem 0rem",

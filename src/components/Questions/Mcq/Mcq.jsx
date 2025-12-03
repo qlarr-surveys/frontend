@@ -17,8 +17,7 @@ function MCQ(props) {
   const parentValue = useSelector((state) => {
     return state.runState.values[props.component.qualifiedCode].value || [];
   }, shallowEqual);
-  const hasAll = props.component.answers
-  .some((answer) => answer.type == "all");
+  const hasAll = props.component.answers.some((answer) => answer.type == "all");
   const allCodes = props.component.answers
     .filter(
       (answer) =>
@@ -27,7 +26,8 @@ function MCQ(props) {
         answer.type !== "other"
     )
     .map((answer) => answer.code);
-  const allSelected = hasAll && allCodes.every((code) => parentValue.indexOf(code) > -1);
+  const allSelected =
+    hasAll && allCodes.every((code) => parentValue.indexOf(code) > -1);
   const noneSelected = parentValue.indexOf("Anone") > -1;
 
   return (
@@ -133,19 +133,17 @@ function McqAnswerOther(props) {
   const showAnswer = () => {
     return (
       <FormControlLabel
+        data-code={props.Answer.code}
         control={
           <Checkbox
             checked={isSelected}
             disabled={props.disabled}
             onChange={onButtonClick}
             name={props.Answer.qualifiedCode}
-            sx={{
-              color: theme.textStyles.text.color,
-            }}
           />
         }
         label={
-          <div >
+          <div>
             <TextField
               variant="standard"
               required={
@@ -159,17 +157,7 @@ function McqAnswerOther(props) {
               onChange={handleChange}
               onFocus={handleFocus}
               onBlur={lostFocus}
-              sx={{
-                label: { color: theme.textStyles.text.color },
-              }}
               value={state.textValue}
-              InputProps={{
-                sx: {
-                  fontFamily: theme.textStyles.text.font,
-                  color: theme.textStyles.text.color,
-                  fontSize: theme.textStyles.text.size,
-                },
-              }}
               helperText={
                 state.childInvalid ? (
                   <Validation component={nestedTextChild} limit={1} />

@@ -51,17 +51,7 @@ function ImageMcqItem(props) {
           checked={state.checked}
         />
       </Box>
-      {!props.hideText && (
-        <Box
-          sx={{
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          }}
-        >
-          {props.option.content?.label}
-        </Box>
-      )}
+      {!props.hideText && <Box>{props.option.content?.label}</Box>}
     </Grid>
   );
 }

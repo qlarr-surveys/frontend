@@ -55,6 +55,7 @@ function ImageChoiceQuestion(props) {
               >
                 <IconChoiceItemDesign
                   key={item.code}
+                  code={item.code}
                   parentCode={props.code}
                   index={index}
                   columnNumber={columnNumber}
@@ -79,6 +80,7 @@ function ImageChoiceQuestion(props) {
               >
                 <ImageChoiceItemDesign
                   key={item.code}
+                  code={item.code}
                   parentCode={props.code}
                   index={index}
                   imageAspectRatio={imageAspectRatio}

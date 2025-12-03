@@ -46,10 +46,7 @@ function Array(props) {
               return (
                 <TableCell
                   sx={{
-                    fontFamily: theme.textStyles.text.font,
-                    color: theme.textStyles.text.color,
                     padding: "2px",
-                    fontSize: theme.textStyles.text.size,
                     width: header + "px",
                   }}
                   key={option.qualifiedCode}
@@ -121,12 +118,9 @@ function ArrayRow(props) {
 
   return typeof state.relevance === "undefined" || state.relevance ? (
     <React.Fragment>
-      <TableRow key={props.answer.code}>
+      <TableRow key={props.answer.code} data-code={props.answer.code}>
         <TableCell
           sx={{
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
             borderBottom: invalid ? "0" : "",
             padding: "2px",
             wordWrap: "break-word",

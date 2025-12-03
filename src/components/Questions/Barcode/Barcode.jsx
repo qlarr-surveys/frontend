@@ -65,16 +65,8 @@ function Barcode(props) {
             ? true
             : false
         }
-        disabled={true}
         value={state.value}
         size="small"
-        InputProps={{
-          sx: {
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          },
-        }}
       />
     </Box>
   );

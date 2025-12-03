@@ -29,6 +29,7 @@ function ImageChoiceItemDesign({
   index,
   qualifiedCode,
   type,
+  code,
   columnNumber,
   imageAspectRatio,
   designMode,
@@ -221,9 +222,6 @@ function ImageChoiceItemDesign({
         }}
       >
         <IconButton
-          sx={{
-            color: theme.textStyles.text.color,
-          }}
           className={styles.addAnswerIcon}
           onClick={() => {
             addAnswer();
@@ -240,6 +238,7 @@ function ImageChoiceItemDesign({
           opacity: isDragging ? "0.2" : "1",
         }}
         item
+        data-code={code}
         position="relative"
         xs={12 / columnNumber}
         key={qualifiedCode}
@@ -262,9 +261,6 @@ function ImageChoiceItemDesign({
           {inDesign(designMode) && (
             <div className={styles.buttonContainers}>
               <IconButton
-                sx={{
-                  color: theme.textStyles.text.color,
-                }}
                 className={styles.imageHoverIconButton}
                 onClick={() => {
                   onDelete();
@@ -273,9 +269,6 @@ function ImageChoiceItemDesign({
                 <DeleteOutlineIcon />
               </IconButton>
               <IconButton
-                sx={{
-                  color: theme.textStyles.text.color,
-                }}
                 className={styles.imageHoverIconButton}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -290,9 +283,6 @@ function ImageChoiceItemDesign({
                 <Build />
               </IconButton>
               <IconButton
-                sx={{
-                  color: theme.textStyles.text.color,
-                }}
                 component="label"
                 className={styles.imageHoverIconButton}
                 onClick={(e) => {
@@ -309,14 +299,8 @@ function ImageChoiceItemDesign({
                 />
               </IconButton>
 
-              <IconButton
-                sx={{
-                  color: theme.textStyles.text.color,
-                }}
-                ref={drag}
-                className={styles.imageIconButton}
-              >
-                <DragIndicatorIcon />
+              <IconButton ref={drag} className={styles.imageIconButton}>
+                <DragIndicatorIcon color="action" />
               </IconButton>
             </div>
           )}
@@ -332,8 +316,10 @@ function ImageChoiceItemDesign({
             dir={isRtl ? "rtl" : "ltr"}
             variant="standard"
             value={content || ""}
-            disabled={!contentEditable(designMode)}
-            onChange={(e) =>
+            onChange={(e) => {
+              if (!contentEditable(designMode)) {
+                return;
+              }
               dispatch(
                 changeContent({
                   code: qualifiedCode,
@@ -341,21 +327,14 @@ function ImageChoiceItemDesign({
                   lang: lang,
                   value: e.target.value,
                 })
-              )
-            }
+              );
+            }}
             placeholder={
               onMainLang
                 ? t("content_editor_placeholder_option")
                 : mainContent || t("content_editor_placeholder_option")
             }
             inputProps={{ style: { textAlign: "center" } }}
-            InputProps={{
-              sx: {
-                fontFamily: theme.textStyles.text.font,
-                color: theme.textStyles.text.color,
-                fontSize: theme.textStyles.text.size,
-              },
-            }}
           />
         )}
       </Grid>

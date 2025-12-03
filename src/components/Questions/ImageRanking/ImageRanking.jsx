@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./ImageRanking.module.css";
-import { useTheme } from "@emotion/react";
+import { css, useTheme } from "@emotion/react";
 import { Box, Grid } from "@mui/material";
 import { shallowEqual, useDispatch } from "react-redux";
 import { valueChange } from "~/state/runState";
@@ -111,13 +111,13 @@ function ImageRankingItem(props) {
 
   return (
     <Box
+      data-code={props.option.code}
       key={props.option.code}
       sx={{
         flex: `0 1 calc(${100 / props.columns}% - ${props.spacing}px)`,
         cursor: "pointer",
       }}
     >
-
       <Box
         className={styles.imageContainer}
         onClick={() => props.onClick()}
@@ -145,32 +145,23 @@ function ImageRankingItem(props) {
               fontSize:
                 Math.min(props.imageHeight, props.imageWidth) / 2 + "px",
               background: theme.palette.primary.main,
-
             }}
             className={styles.rankContainer}
           >
             <span
               className={styles.rankValue}
-              style={{
-                color: theme.textStyles.text.color,
-              }}
+              css={css`
+                 {
+                  color: ${theme.textStyles.text.color};
+                }
+              `}
             >
               {state.value}
             </span>
           </div>
         )}
       </Box>
-      {!props.hideText && (
-        <Box
-          sx={{
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          }}
-        >
-          {props.option.content?.label}
-        </Box>
-      )}
+      {!props.hideText && <Box>{props.option.content?.label}</Box>}
     </Box>
   );
 }

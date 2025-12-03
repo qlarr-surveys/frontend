@@ -34,7 +34,7 @@ import { buildResourceUrl } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
-import { sanitizePastedText } from '~/components/design/ContentEditor/QuillEditor';
+import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
 
 function SCQIconArrayDesign(props) {
   const theme = useTheme();
@@ -64,11 +64,6 @@ function SCQIconArrayDesign(props) {
       {inDesign && (
         <div className={styles.addColumn}>
           <Button
-            sx={{
-              fontFamily: theme.textStyles.text.font,
-              fontSize: theme.textStyles.text.size,
-              color: theme.textStyles.question.color,
-            }}
             size="small"
             onClick={(e) =>
               dispatch(addNewAnswer({ code: props.code, type: "column" }))
@@ -146,11 +141,6 @@ function SCQIconArrayDesign(props) {
       {inDesign && (
         <div className={styles.addRow}>
           <Button
-            sx={{
-              fontFamily: theme.textStyles.text.font,
-              fontSize: theme.textStyles.text.size,
-              color: theme.textStyles.question.color,
-            }}
             size="small"
             onClick={(e) =>
               dispatch(addNewAnswer({ questionCode: props.code, type: "row" }))
@@ -267,6 +257,7 @@ function SCQArrayRowDesign({
   drop(preview(ref));
   return (
     <TableRow
+      data-code={item.code}
       style={{
         opacity: isDragging ? "0.2" : "1",
       }}
@@ -276,9 +267,6 @@ function SCQArrayRowDesign({
     >
       <TableCell
         sx={{
-          fontFamily: theme.textStyles.text.font,
-          color: theme.textStyles.text.color,
-          fontSize: theme.textStyles.text.size,
           padding: "2px",
           width: width,
         }}
@@ -286,15 +274,17 @@ function SCQArrayRowDesign({
         <Box display="flex" alignItems="center">
           {inDesign && (
             <div ref={drag}>
-              <DragIndicatorIcon />
+              <DragIndicatorIcon color="action" />
             </div>
           )}
           <TextField
             variant="standard"
             inputRef={inputRef}
-            disabled={!inDesign}
             value={content || ""}
             onChange={(e) => {
+              if (!inDesign) {
+                return;
+              }
               const value = e.target.value;
               if (value.endsWith("\n")) {
                 dispatch(
@@ -335,11 +325,6 @@ function SCQArrayRowDesign({
             }
             InputProps={{
               disableUnderline: true,
-              sx: {
-                fontFamily: theme.textStyles.text.font,
-                color: theme.textStyles.text.color,
-                fontSize: theme.textStyles.text.size,
-              },
             }}
             multiline
           />
@@ -357,7 +342,6 @@ function SCQArrayRowDesign({
           >
             <DynamicSvg
               opacity={0.2}
-              iconColor={theme.textStyles.text.color}
               theme={theme}
               onIconClick={() => {}}
               imageHeight="64px"
@@ -373,10 +357,9 @@ function SCQArrayRowDesign({
           sx={{
             width: "30px",
             padding: "0",
-            color: theme.textStyles.text.color,
           }}
         >
-          <CloseIcon />
+          <CloseIcon color="action" />
         </TableCell>
       )}
     </TableRow>
@@ -507,9 +490,6 @@ function SCQArrayHeaderDesign({
         align="center"
         sx={{
           opacity: isDragging ? "0.2" : "1",
-          fontFamily: theme.textStyles.text.font,
-          color: theme.textStyles.text.color,
-          fontSize: theme.textStyles.text.size,
           padding: "2px",
         }}
         key={item.qualifiedCode}
@@ -523,16 +503,15 @@ function SCQArrayHeaderDesign({
                 padding: "0",
               }}
             >
-              <DragIndicatorIcon />
+              <DragIndicatorIcon color="action" />
             </div>
             <div
               sx={{
                 padding: "0",
-                color: theme.textStyles.text.color,
               }}
               onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
             >
-              <CloseIcon />
+              <CloseIcon color="action" />
             </div>
           </div>
         )}
@@ -551,8 +530,10 @@ function SCQArrayHeaderDesign({
         <TextField
           variant="standard"
           value={content || ""}
-          disabled={!inDesign}
           onChange={(e) => {
+            if (!inDesign) {
+              return;
+            }
             dispatch(
               changeContent({
                 code: item.qualifiedCode,
@@ -571,11 +552,6 @@ function SCQArrayHeaderDesign({
           inputProps={{ style: { textAlign: "center" } }}
           InputProps={{
             disableUnderline: true,
-            sx: {
-              fontFamily: theme.textStyles.text.font,
-              color: theme.textStyles.text.color,
-              fontSize: theme.textStyles.text.size,
-            },
           }}
         />
       </TableCell>

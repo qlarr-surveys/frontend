@@ -1,16 +1,13 @@
-import React, {  useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 
 import styles from "./QuestionDesign.module.css";
 import ContentEditor from "~/components/design/ContentEditor";
-import { alpha, Box } from "@mui/material";
+import { alpha, Box, css } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import { useSelector } from "react-redux";
-import {
-  onDrag,
-  setup,
-} from "~/state/design/designState";
+import { onDrag, setup } from "~/state/design/designState";
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 
@@ -127,7 +124,7 @@ function QuestionDesign({
   const contrastColor = alpha(theme.textStyles.question.color, 0.2);
   const hoverColor = alpha(theme.textStyles.question.color, 0.05);
   const textColor = theme.textStyles.question.color;
-  const primaryColor = theme.palette.primary.main;
+  const action = theme.palette.action.active;
 
   useEffect(() => {
     const element = containerRef.current;
@@ -158,6 +155,16 @@ function QuestionDesign({
     }
   }, [lastAddedComponent, parentIndex, index]);
 
+  const customStyle = useMemo(() => {
+    return isInSetup
+      ? `background-color: ${contrastColor};color: ${textColor};`
+      : hovered
+      ? `background-color: ${hoverColor};color: ${textColor};`
+      : `opacity: ${isDragging ? "0.2" : "1"};border: ${
+          isDragging ? "dotted 1px " + contrastColor : "0"
+        };`;
+  }, [hovered, isDragging, isInSetup]);
+
   return (
     <div
       onClick={(event) => {
@@ -176,22 +183,9 @@ function QuestionDesign({
       onMouseLeave={() => {
         setHovered(false);
       }}
-      style={
-        isInSetup
-          ? {
-              backgroundColor: contrastColor,
-              color: textColor,
-            }
-          : hovered
-          ? {
-              backgroundColor: hoverColor,
-              color: textColor,
-            }
-          : {
-              opacity: isDragging ? "0.2" : "1",
-              border: isDragging ? "dotted 1px " + contrastColor : "0",
-            }
-      }
+      css={css`
+        ${customStyle} ${question.customCss}
+      `}
       className={`question ${styles.groupQuestion}`}
       data-code={code}
     >
@@ -207,20 +201,18 @@ function QuestionDesign({
         )}
         {designMode == DESIGN_SURVEY_MODE.DESIGN && (
           <div className={styles.moveBox} ref={drag}>
-            <ViewCompactIcon style={{ color: primaryColor }} />
+            <ViewCompactIcon color="action" />
           </div>
         )}
       </Box>
 
       <Box
         className={styles.titleContainer}
-        style={{
-          fontFamily: theme.textStyles.question.font,
-          color: theme.textStyles.question.color,
-          fontSize: theme.textStyles.question.size,
-        }}
+        css={css`
+          font-size: ${theme.textStyles.question.size}px;
+        `}
       >
-        <span style={{ width: "max-content", color: primaryColor }}>
+        <span style={{ width: "max-content", fontWeight: "bolder" }}>
           {order}.
         </span>
         <div className={styles.titleQuestion}>

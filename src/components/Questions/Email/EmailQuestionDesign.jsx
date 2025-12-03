@@ -19,7 +19,7 @@ function EmailQuestionDesign({ code }) {
   return (
     <div className={styles.questionItem}>
       <TextField
-        disabled
+        type="email"
         variant="outlined"
         size="small"
         required={
@@ -27,14 +27,7 @@ function EmailQuestionDesign({ code }) {
         }
         label={state.showHint && (state.content?.[lang]?.hint || "")}
         sx={{
-          pointerEvents: 'none',
-        }}
-        InputProps={{
-          sx: {
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          },
+          pointerEvents: "none",
         }}
         value={""}
       />

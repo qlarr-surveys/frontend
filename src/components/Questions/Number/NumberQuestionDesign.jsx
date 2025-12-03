@@ -18,7 +18,6 @@ function NumberQuestionDesign({ code }) {
   return (
     <div className={styles.questionItem}>
       <TextField
-        disabled
         size="small"
         variant="outlined"
         required={
@@ -28,13 +27,6 @@ function NumberQuestionDesign({ code }) {
         value={""}
         sx={{
           pointerEvents: 'none',
-        }}
-        InputProps={{
-          sx: {
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          },
         }}
       />
     </div>

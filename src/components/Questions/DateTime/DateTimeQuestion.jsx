@@ -99,13 +99,6 @@ function DateTimeQuestion(props) {
               }
               error={state.invalid}
               onChange={handleDateChange}
-              InputProps={{
-                sx: {
-                  fontFamily: theme.textStyles.text.font,
-                  fontSize: theme.textStyles.text.size,
-                  color: theme.textStyles.text.color,
-                },
-              }}
             />
           </>
         ) : props.component.type == "time" ? (
@@ -130,14 +123,6 @@ function DateTimeQuestion(props) {
                 "& .MuiPickersDay-root": {
                   backgroundColor: 'white',
                 },
-              },
-            }}
-
-            InputProps={{
-              sx: {
-                fontFamily: theme.textStyles.text.font,
-                color: theme.textStyles.text.color,
-                fontSize: theme.textStyles.text.size
               },
             }}
           />
@@ -179,12 +164,6 @@ function DateTimeQuestion(props) {
             }
             error={state.invalid}
             onChange={handleDateChange}
-            InputProps={{
-              sx: {
-                fontFamily: theme.textStyles.text.font,
-                fontSize: theme.textStyles.text.size,
-              },
-            }}
           />
         )}
       </LocalizationProvider>
