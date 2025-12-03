@@ -1,13 +1,14 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import React, { forwardRef } from "react";
+import React, { useRef } from "react";
 import { useSelector } from "react-redux";
-import "react-quill/dist/quill.core.css";
 import "./content.css";
 import { rtlLanguage } from "~/utils/common";
+import { useCollapsibleHandler } from "~/hooks/useCollapsibleHandler";
+import { css } from '@emotion/react';
 
-const Content = ({ content, customStyle, name, elementCode, lang }) => {
-  const isComplex = content && content.search(/data-instruction/) >= 0;
+function Content(props) {
+  const contentRef = useRef(null);
+  const isComplex =
+    props.content && props.content.search(/data-instruction/) >= 0;
   const state = useSelector((state) => {
     if (
       !content ||
@@ -28,21 +29,29 @@ const Content = ({ content, customStyle, name, elementCode, lang }) => {
 
   const isRtl = rtlLanguage.includes(surveyLang);
 
-  if (!content) {
+  // Handle collapsible button clicks in rendered view
+  useCollapsibleHandler(contentRef, props.content);
+
+  if (!props.content) {
     return <span style={{ flex: 1 }} />;
   } else if (!isComplex) {
     return (
       <div
-        css={css`
-          ${customStyle}
-        `}
-        className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
-        dangerouslySetInnerHTML={{ __html: content }}
+        ref={contentRef}
+        style={{
+          ...props.style,
+          fontFamily: props.fontFamily,
+          color: props.color,
+          fontSize: props.fontSize + "px",
+        }}
+        className={`${isRtl ? "rtl" : "ltr"} content-editor no-padding`}
+        dangerouslySetInnerHTML={{ __html: props.content }}
       />
     );
   } else {
     return (
       <div
+      ref={contentRef}
         css={css`
           ${customStyle}
         `}

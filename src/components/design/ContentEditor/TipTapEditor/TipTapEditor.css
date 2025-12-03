@@ -1,0 +1,159 @@
+/* TipTap Editor Wrapper */
+.tiptap-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TipTap Editor Content */
+.tiptap-editor {
+  padding: 0 !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  outline: none;
+}
+
+.tiptap-editor:focus {
+  outline: none;
+}
+
+/* Paragraph styles */
+.tiptap-editor p {
+  margin: 0;
+}
+
+.tiptap-editor > :first-child {
+  margin-top: 0;
+}
+
+.tiptap-editor > :last-child {
+  margin-bottom: 0;
+}
+
+/* RTL Support */
+.tiptap-editor.rtl {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.tiptap-editor.ltr {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* Link styles */
+.tiptap-link {
+  color: #0066cc;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.tiptap-link:hover {
+  color: #004499;
+}
+
+/* List styles */
+.tiptap-editor ul,
+.tiptap-editor ol {
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.tiptap-editor li {
+  margin: 0;
+}
+
+/* Placeholder */
+.tiptap-editor.ProseMirror p.is-editor-empty:first-child::before {
+  color: #aaa;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Image styles */
+.tiptap-image {
+  max-width: 100%;
+  display: block;
+  margin: 1em 0;
+}
+
+/* Only apply height: auto if no height attribute is set */
+/* This allows the height attribute to control the image height when set */
+.tiptap-image:not([height]) {
+  height: auto;
+}
+
+/* Collapsible styles */
+.tiptap-collapsible {
+  margin: 1em 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.collapsible-button {
+  width: 100%;
+  padding: 0.75em 1em;
+  background-color: #16205b; /* theme.palette.primary.main */
+  color: #ffffff; /* theme.palette.primary.contrastText */
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: left;
+  transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.collapsible-button:hover {
+  background-color: #091133; /* theme.palette.primary.dark */
+}
+
+.collapsible-button::after {
+  content: "▼";
+  font-size: 0.75em;
+  margin-left: 0.5em;
+  margin-right: 0;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.tiptap-editor.rtl .collapsible-button::after {
+  margin-left: 0;
+  margin-right: 0.5em;
+}
+
+.tiptap-collapsible[data-open="true"] .collapsible-button::after {
+  transform: rotate(180deg);
+}
+
+.collapsible-content {
+  padding: 1em;
+  background-color: #fafafa;
+}
+
+.collapsible-content.open {
+  display: block !important;
+}
+
+.collapsible-content:not(.open) {
+  display: none !important;
+}
+
+/* Mention styles */
+.mention {
+  background-color: #e3f2fd;
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.mention span[contenteditable="false"] {
+  pointer-events: none;
+}

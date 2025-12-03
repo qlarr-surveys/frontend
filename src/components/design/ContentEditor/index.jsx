@@ -8,13 +8,14 @@ import React, {
 import styles from "./ContentEditor.module.css";
 import "./ContentEditor.css";
 import { Box } from "@mui/material";
-import DraftEditor from "./QuillEditor";
+import DraftEditor from "./TipTapEditor";
 import { rtlLanguage } from "~/utils/common";
 import { useDispatch } from "react-redux";
 import { changeContent, resetFocus } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { isNotEmptyHtml } from "~/utils/design/utils";
 import cloneDeep from "lodash.clonedeep";
+import { useCollapsibleHandler } from "~/hooks/useCollapsibleHandler";
 
 function ContentEditor({
   placeholder,
@@ -72,49 +73,44 @@ function ContentEditor({
     return returnResult;
   }, [instructionList, index]);
 
-
-
   const value = content?.[lang]?.[contentKey] || "";
 
-  const fixedValue = useMemo(
-    () => {
-      if (!referenceInstruction || !Object.keys(referenceInstruction).length) {
-        return value;
-      }
-      let updated = cloneDeep(value);
+  const fixedValue = useMemo(() => {
+    if (!referenceInstruction || !Object.keys(referenceInstruction).length) {
+      return value;
+    }
+    let updated = cloneDeep(value);
 
-      // Create a temporary DOM element to parse and manipulate the HTML
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = updated;
+    // Create a temporary DOM element to parse and manipulate the HTML
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = updated;
 
-      Object.keys(referenceInstruction).forEach((key) => {
-        // Find all spans with data-id matching the key
-        const spans = tempDiv.querySelectorAll(`span[data-id="${key}"]`);
+    Object.keys(referenceInstruction).forEach((key) => {
+      // Find all spans with data-id matching the key
+      const spans = tempDiv.querySelectorAll(`span[data-id="${key}"]`);
 
-        spans.forEach((span) => {
-          // Get the data-value attribute
-          const dataValue = span.getAttribute("data-value");
-          if (dataValue) {
-            // Replace the key with referenceInstruction[key] in the data-value
-            const newDataValue = dataValue.replace(
-              new RegExp(`{{${key}:`, "g"),
-              `{{${referenceInstruction[key]}:`
-            );
-            // Find the nested span with contenteditable="false" and update its content
-            const nestedSpan = span.querySelector(
-              'span[contenteditable="false"]'
-            );
-            if (nestedSpan) {
-              nestedSpan.textContent = newDataValue;
-            }
+      spans.forEach((span) => {
+        // Get the data-value attribute
+        const dataValue = span.getAttribute("data-value");
+        if (dataValue) {
+          // Replace the key with referenceInstruction[key] in the data-value
+          const newDataValue = dataValue.replace(
+            new RegExp(`{{${key}:`, "g"),
+            `{{${referenceInstruction[key]}:`
+          );
+          // Find the nested span with contenteditable="false" and update its content
+          const nestedSpan = span.querySelector(
+            'span[contenteditable="false"]'
+          );
+          if (nestedSpan) {
+            nestedSpan.textContent = newDataValue;
           }
-        });
+        }
       });
+    });
 
-      return tempDiv.innerHTML;
-    },
-    [referenceInstruction, value]
-  );
+    return tempDiv.innerHTML;
+  }, [referenceInstruction, value]);
 
   const finalPlaceholder = onMainLang
     ? placeholder
@@ -126,13 +122,13 @@ function ContentEditor({
   useEffect(() => {
     if (focus && !isActive && editable) {
       setActive(true);
-      dispatch(resetFocus());
     }
   }, [focus, isActive, editable]);
 
   const OnEditorBlurred = useCallback(
     (text, editorLang) => {
       setActive(false);
+      dispatch(resetFocus());
       if (lang != editorLang) {
         return;
       } else if (text != value) {
@@ -148,6 +144,9 @@ function ContentEditor({
   };
 
   const isRtl = rtlLanguage.includes(lang);
+  const renderedContentRef = useRef(null);
+
+  useCollapsibleHandler(renderedContentRef, !isActive ? fixedValue : null);
 
   return (
     <Box
@@ -163,7 +162,6 @@ function ContentEditor({
       {isActive ? (
         <DraftEditor
           lang={lang}
-          referenceInstruction={referenceInstruction}
           isRtl={isRtl}
           onMoreLines={onMoreLines}
           onNewLine={onNewLine}
@@ -172,15 +170,21 @@ function ContentEditor({
           editorTheme={editorTheme}
           onBlurListener={OnEditorBlurred}
           value={value}
+          referenceInstruction={referenceInstruction}
         />
       ) : isNotEmptyHtml(value) ? (
         <div
-          className={`${isRtl ? "rtl" : "ltr"} ql-editor ${styles.noPadding}`}
+          ref={renderedContentRef}
+          className={`${isRtl ? "rtl" : "ltr"} content-editor ${
+            styles.noPadding
+          }`}
           dangerouslySetInnerHTML={{ __html: fixedValue }}
         />
       ) : (
         <div
-          className={`${isRtl ? "rtl" : "ltr"} ql-editor ${styles.placeholder}`}
+          className={`${isRtl ? "rtl" : "ltr"} content-editor ${
+            styles.placeholder
+          }`}
           dangerouslySetInnerHTML={{ __html: finalPlaceholder }}
         />
       )}

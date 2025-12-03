@@ -18,7 +18,7 @@ import { useDrag, useDrop } from "react-dnd";
 import { useEffect, useRef } from "react";
 import { contentEditable, inDesign } from "~/routes";
 import { useTheme } from "@emotion/react";
-import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
+import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
 
 function ChoiceItemDesign(props) {
   const dispatch = useDispatch();

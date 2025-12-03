@@ -34,7 +34,7 @@ import { buildResourceUrl } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
-import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
+import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
 
 function SCQIconArrayDesign(props) {
   const theme = useTheme();

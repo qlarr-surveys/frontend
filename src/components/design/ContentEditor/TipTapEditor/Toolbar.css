@@ -1,0 +1,305 @@
+/* Toolbar */
+.tiptap-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  align-items: center;
+}
+
+/* Toolbar Buttons */
+.tiptap-toolbar-button {
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #ddd;
+  background-color: white;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  transition: all 0.15s;
+}
+
+.tiptap-toolbar-button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.tiptap-toolbar-button:active:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.tiptap-toolbar-button.is-active {
+  background-color: #e3f2fd;
+  border-color: #2196f3;
+  color: #1976d2;
+}
+
+.tiptap-toolbar-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Font size select */
+.tiptap-toolbar select.tiptap-toolbar-button,
+.tiptap-toolbar select {
+  padding: 0.375rem 0.5rem;
+  padding-right: 1.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  background-color: white;
+  cursor: pointer;
+  font-size: 0.875rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 2rem;
+  height: auto;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+}
+
+.tiptap-toolbar select.tiptap-toolbar-button:hover,
+.tiptap-toolbar select:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+/* Link input */
+.tiptap-link-input {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  padding: 0.25rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+}
+
+.tiptap-link-input input {
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  min-width: 200px;
+}
+
+.tiptap-link-input button {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #ddd;
+  background-color: white;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.tiptap-link-input button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.tiptap-link-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Color picker */
+.tiptap-color-picker-wrapper {
+  position: relative;
+}
+
+.tiptap-color-palette {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.25rem;
+  width: 200px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Adjust color picker position for RTL */
+.tiptap-toolbar[dir="rtl"] .tiptap-color-palette {
+  left: auto;
+  right: 0;
+}
+
+.tiptap-color-option {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ddd;
+  border-radius: 0.125rem;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s;
+}
+
+.tiptap-color-option:hover {
+  transform: scale(1.2);
+  border-color: #999;
+}
+
+.tiptap-color-option.tiptap-color-remove {
+  background: linear-gradient(
+    to bottom right,
+    transparent 0%,
+    transparent calc(50% - 1px),
+    #f00 calc(50% - 1px),
+    #f00 calc(50% + 1px),
+    transparent calc(50% + 1px),
+    transparent 100%
+  );
+  grid-column: span 2;
+  width: auto;
+}
+
+/* Image size input */
+.tiptap-image-size-input {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 250px;
+}
+
+.tiptap-image-size-input > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tiptap-image-size-input > div > div:first-of-type {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.tiptap-image-size-input > div > div:last-of-type {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.tiptap-image-size-input label {
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.tiptap-image-size-input input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.tiptap-image-size-input input {
+  width: 60px;
+  padding: 0.25rem 0.375rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.tiptap-image-size-input input:focus {
+  outline: none;
+  border-color: #2196f3;
+}
+
+.tiptap-image-size-input button {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ddd;
+  background-color: white;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.15s;
+}
+
+.tiptap-image-size-input button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Adjust image size input position for RTL */
+.tiptap-toolbar[dir="rtl"] .tiptap-image-size-input {
+  left: auto;
+  right: 0;
+}
+
+/* Collapsible input */
+.tiptap-collapsible-input {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 250px;
+}
+
+.tiptap-collapsible-input > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tiptap-collapsible-input label {
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.tiptap-collapsible-input input[type="text"] {
+  width: 100%;
+  padding: 0.25rem 0.375rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.tiptap-collapsible-input input[type="text"]:focus {
+  outline: none;
+  border-color: #2196f3;
+}
+
+.tiptap-collapsible-color-picker-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tiptap-collapsible-color-picker-wrapper > div {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  position: relative;
+}
+
+/* Adjust collapsible input position for RTL */
+.tiptap-toolbar[dir="rtl"] .tiptap-collapsible-input {
+  left: auto;
+  right: 0;
+}
