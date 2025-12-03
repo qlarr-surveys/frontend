@@ -158,6 +158,31 @@ function ChoiceItemDesign(props) {
     }
   }, [inFocus, inputRef.current]);
 
+  const onInput = (e) => {
+    if (!contentEditable(props.designMode)) {
+      return;
+    }
+    const value = e.target.value;
+    if (value.endsWith("\n")) {
+      props.onNewLine();
+    } else {
+      const sanitizedText = sanitizePastedText(e.target.value);
+      const text = sanitizedText[0];
+      const rest = sanitizedText.slice(1);
+      if (rest.length > 0) {
+        props.onMoreLines(rest);
+      }
+      dispatch(
+        changeContent({
+          code: props.qualifiedCode,
+          key: "label",
+          lang: langInfo.lang,
+          value: text,
+        })
+      );
+    }
+  };
+
   const contrastColor = alpha(theme.textStyles.question.color, 0.2);
 
   return (
@@ -245,30 +270,7 @@ function ChoiceItemDesign(props) {
             inputRef={inputRef}
             variant="standard"
             value={content || ""}
-            onChange={(e) => {
-              if (!contentEditable(props.designMode)) {
-                return;
-              }
-              const value = e.target.value;
-              if (value.endsWith("\n")) {
-                props.onNewLine();
-              } else {
-                const sanitizedText = sanitizePastedText(e.target.value);
-                const text = sanitizedText[0];
-                const rest = sanitizedText.slice(1);
-                if (rest.length > 0) {
-                  props.onMoreLines(rest);
-                }
-                dispatch(
-                  changeContent({
-                    code: props.qualifiedCode,
-                    key: "label",
-                    lang: langInfo.lang,
-                    value: text,
-                  })
-                );
-              }
-            }}
+            onChange={onInput}
             placeholder={
               onMainLang
                 ? props.t("content_editor_placeholder_option")

@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 
 import Checkbox from "@mui/material/Checkbox";
 import Validation from "~/components/run/Validation";
-import { useTheme } from "@mui/material/styles";
+import { css, useTheme } from "@mui/material/styles";
 import { valueChange } from "~/state/runState";
 import { setDirty } from "~/state/templateState";
 import MCQAnswer from "./MCQAnswer";
@@ -133,6 +133,11 @@ function McqAnswerOther(props) {
   const showAnswer = () => {
     return (
       <FormControlLabel
+        css={css`
+          .MuiTypography-root {
+            width: 100%;
+          }
+        `}
         data-code={props.Answer.code}
         control={
           <Checkbox
@@ -143,30 +148,28 @@ function McqAnswerOther(props) {
           />
         }
         label={
-          <div>
-            <TextField
-              variant="standard"
-              required={
-                state.textRelevance && nestedTextChild.validation?.required
-              }
-              inputRef={textInput}
-              id={nestedTextChild.qualifiedCode}
-              name={nestedTextChild.qualifiedCode}
-              disabled={props.disabled}
-              label={props.Answer.content?.label}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={lostFocus}
-              value={state.textValue}
-              helperText={
-                state.childInvalid ? (
-                  <Validation component={nestedTextChild} limit={1} />
-                ) : (
-                  ""
-                )
-              }
-            />
-          </div>
+          <TextField
+            variant="outlined"
+            required={
+              state.textRelevance && nestedTextChild.validation?.required
+            }
+            inputRef={textInput}
+            id={nestedTextChild.qualifiedCode}
+            name={nestedTextChild.qualifiedCode}
+            disabled={props.disabled}
+            label={props.Answer.content?.label}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={lostFocus}
+            value={state.textValue}
+            helperText={
+              state.childInvalid ? (
+                <Validation component={nestedTextChild} limit={1} />
+              ) : (
+                ""
+              )
+            }
+          />
         }
       />
     );
