@@ -3,12 +3,17 @@ import { useSelector } from "react-redux";
 import "./content.css";
 import { rtlLanguage } from "~/utils/common";
 import { useCollapsibleHandler } from "~/hooks/useCollapsibleHandler";
-import { css } from '@emotion/react';
+import { css } from "@emotion/react";
 
 function Content(props) {
   const contentRef = useRef(null);
   const isComplex =
     props.content && props.content.search(/data-instruction/) >= 0;
+  const content = props.content;
+  const name = props.name
+  const lang = props.lang
+  const elementCode = props.elementCode
+  const customStyle = props.customStyle
   const state = useSelector((state) => {
     if (
       !content ||
@@ -38,12 +43,9 @@ function Content(props) {
     return (
       <div
         ref={contentRef}
-        style={{
-          ...props.style,
-          fontFamily: props.fontFamily,
-          color: props.color,
-          fontSize: props.fontSize + "px",
-        }}
+         css={css`
+          ${customStyle}
+        `}
         className={`${isRtl ? "rtl" : "ltr"} content-editor no-padding`}
         dangerouslySetInnerHTML={{ __html: props.content }}
       />
@@ -51,7 +53,7 @@ function Content(props) {
   } else {
     return (
       <div
-      ref={contentRef}
+        ref={contentRef}
         css={css`
           ${customStyle}
         `}
@@ -62,7 +64,7 @@ function Content(props) {
       />
     );
   }
-};
+}
 
 export default React.memo(Content);
 
