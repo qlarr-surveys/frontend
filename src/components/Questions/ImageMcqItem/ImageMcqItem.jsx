@@ -6,6 +6,7 @@ import { useTheme } from "@emotion/react";
 import { Box, Card, Checkbox, Grid } from "@mui/material";
 import { buildResourceUrl } from "~/networking/common";
 import { setDirty } from "~/state/templateState";
+import Content from "~/components/run/Content";
 
 function ImageMcqItem(props) {
   const theme = useTheme();
@@ -51,7 +52,18 @@ function ImageMcqItem(props) {
           checked={state.checked}
         />
       </Box>
-      {!props.hideText && <Box>{props.option.content?.label}</Box>}
+
+      {!props.hideText && (
+        <Box>
+          <Content
+            customStyle={`
+                  text-align: center;
+                  margin-top: 8px;
+                `}
+            content={props.component.content?.label}
+          />
+        </Box>
+      )}
     </Grid>
   );
 }

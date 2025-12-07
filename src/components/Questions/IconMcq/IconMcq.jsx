@@ -6,6 +6,7 @@ import { useTheme } from "@emotion/react";
 import { Box } from "@mui/material";
 import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
+import Content from '~/components/run/Content';
 
 function IconMcq(props) {
   const theme = useTheme();
@@ -29,6 +30,7 @@ function IconMcq(props) {
         const relevance = runValues[option.qualifiedCode]?.relevance ?? true;
         if (!relevance) return null;
 
+        console.log(option.code);
         return (
           <IconMcqChoice
             key={option.code}
@@ -48,7 +50,6 @@ function IconMcq(props) {
 }
 
 function IconMcqChoice({
-  key,
   component,
   parentValue,
   parentCode,
@@ -63,7 +64,7 @@ function IconMcqChoice({
   return (
     <Box
       data-code={component.code}
-      key={key}
+      key={component.code}
       sx={{
         flex: `0 1 calc(${100 / columns}% - ${spacing || 8}px)`,
         textAlign: "center",
@@ -102,16 +103,18 @@ function IconMcqChoice({
       </div>
 
       {!hideText && (
-        <Box
-          sx={{
-            textAlign: "center",
-            color: checked
-              ? theme.palette.primary.main
-              : theme.textStyles.text.color,
-          }}
-        >
-          {component.content?.label}
-        </Box>
+        <Content
+          customStyle={`
+                                text-align: center;
+                                margin-top: 8px;
+                                color: ${
+                                  checked
+                                    ? theme.palette.primary.main
+                                    : theme.textStyles.text.color
+                                },
+                              `}
+          content={component.content?.label}
+        />
       )}
     </Box>
   );

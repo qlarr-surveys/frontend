@@ -46,7 +46,7 @@ function NPS(props) {
               sx={{
                 color: isSelected
                   ? highlightContrast
-                  : theme.textStyles.text.color,
+                  : "inherit",
                 backgroundColor: isSelected
                   ? "primary.main"
                   : "background.paper",

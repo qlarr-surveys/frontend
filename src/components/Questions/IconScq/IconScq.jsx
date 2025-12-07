@@ -6,6 +6,7 @@ import { useTheme } from "@emotion/react";
 import { Box, Grid } from "@mui/material";
 import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
+import Content from '~/components/run/Content';
 
 function IconScq(props) {
   const theme = useTheme();
@@ -76,16 +77,18 @@ function IconScq(props) {
             </div>
 
             {!hideText && (
-              <Box
-                sx={{
-                  textAlign: "center",
-                  color: isSelected
-                    ? theme.palette.primary.main
-                    : theme.textStyles.text.color,
-                }}
-              >
-                {option.content?.label}
-              </Box>
+              <Content
+                customStyle={`
+                                text-align: center;
+                                margin-top: 8px;
+                                color: ${
+                                  isSelected
+                                    ? theme.palette.primary.main
+                                    : theme.textStyles.text.color
+                                },
+                              `}
+                content={option.content?.label}
+              />
             )}
           </Box>
         );

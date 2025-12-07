@@ -16,9 +16,10 @@ import {
 import { setupOptions } from "~/constants/design";
 import { useDrag, useDrop } from "react-dnd";
 import { useEffect, useRef } from "react";
-import { contentEditable, inDesign } from "~/routes";
+import { contentEditable, DESIGN_SURVEY_MODE, inDesign } from "~/routes";
 import { useTheme } from "@emotion/react";
 import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
+import ContentEditor from "~/components/design/ContentEditor";
 
 function ChoiceItemDesign(props) {
   const dispatch = useDispatch();
@@ -266,23 +267,20 @@ function ChoiceItemDesign(props) {
             }}
           />
         ) : (
-          <TextField
-            inputRef={inputRef}
-            variant="standard"
-            value={content || ""}
-            onChange={onInput}
+          <ContentEditor
+            code={props.qualifiedCode}
+            showToolbar={false}
+            editable={
+              props.designMode == DESIGN_SURVEY_MODE.DESIGN ||
+              props.designMode == DESIGN_SURVEY_MODE.LANGUAGES
+            }
+            extended={false}
             placeholder={
               onMainLang
                 ? props.t("content_editor_placeholder_option")
                 : mainContent || props.t("content_editor_placeholder_option")
             }
-            multiline
-            sx={{
-              flex: 1,
-            }}
-            InputProps={{
-              disableUnderline: true,
-            }}
+            contentKey="label"
           />
         )}
         {props.type === "text" && (

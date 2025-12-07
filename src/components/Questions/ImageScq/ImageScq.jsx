@@ -6,6 +6,7 @@ import { useTheme } from "@emotion/react";
 import { Box, Card, Grid, Radio } from "@mui/material";
 import { buildResourceUrl } from "~/networking/common";
 import { rtlLanguage } from "~/utils/common";
+import Content from '~/components/run/Content';
 
 function ImageScq(props) {
   const theme = useTheme();
@@ -90,14 +91,13 @@ function ImageScq(props) {
               </div>
             </Box>
             {!props.component.hideText && (
-              <Box
-                sx={{
-                  textAlign: "center",
-                  marginTop: "8px",
-                }}
-              >
-                {option.content?.label}
-              </Box>
+              <Content
+                customStyle={`
+                  text-align: center;
+                  margin-top: 8px;
+                `}
+                content={option.content?.label}
+              />
             )}
           </Box>
         );

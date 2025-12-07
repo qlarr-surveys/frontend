@@ -7,8 +7,8 @@ import React, {
 } from "react";
 import styles from "./ContentEditor.module.css";
 import "./ContentEditor.css";
-import { Box } from "@mui/material";
-import DraftEditor from "./TipTapEditor";
+import { Box, css } from "@mui/material";
+import TipTapEditor from "./TipTapEditor";
 import { rtlLanguage } from "~/utils/common";
 import { useDispatch } from "react-redux";
 import { changeContent, resetFocus } from "~/state/design/designState";
@@ -25,9 +25,8 @@ function ContentEditor({
   code,
   onMoreLines,
   editable,
-  editorTheme = "snow",
-  style,
-  sx,
+  customStyle,
+  showToolbar = true,
 }) {
   const dispatch = useDispatch();
 
@@ -150,9 +149,10 @@ function ContentEditor({
 
   return (
     <Box
-      style={style}
-      sx={sx}
       className={styles.fullWidth}
+      css={css`
+        ${customStyle}
+      `}
       onClick={(e) => {
         if (editable) {
           onContainerClicked(e);
@@ -160,14 +160,14 @@ function ContentEditor({
       }}
     >
       {isActive ? (
-        <DraftEditor
+        <TipTapEditor
           lang={lang}
           isRtl={isRtl}
           onMoreLines={onMoreLines}
           onNewLine={onNewLine}
           code={code}
           extended={extended}
-          editorTheme={editorTheme}
+          showToolbar={showToolbar}
           onBlurListener={OnEditorBlurred}
           value={value}
           referenceInstruction={referenceInstruction}
@@ -175,16 +175,14 @@ function ContentEditor({
       ) : isNotEmptyHtml(value) ? (
         <div
           ref={renderedContentRef}
-          className={`${isRtl ? "rtl" : "ltr"} content-editor ${
-            styles.noPadding
-          }`}
+          className={`${isRtl ? "rtl" : "ltr"} 
+          
+          ${styles.noPadding}`}
           dangerouslySetInnerHTML={{ __html: fixedValue }}
         />
       ) : (
         <div
-          className={`${isRtl ? "rtl" : "ltr"} content-editor ${
-            styles.placeholder
-          }`}
+          className={`${isRtl ? "rtl" : "ltr"}  ${styles.placeholder}`}
           dangerouslySetInnerHTML={{ __html: finalPlaceholder }}
         />
       )}

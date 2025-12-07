@@ -1,5 +1,5 @@
 import styles from "./ImageChoiceItemDesign.module.css";
-import { alpha, Box, Grid, IconButton, TextField } from "@mui/material";
+import { alpha, Box, css, Grid, IconButton, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -23,6 +23,7 @@ import { useService } from "~/hooks/use-service";
 import { contentEditable, inDesign } from "~/routes";
 import { Build } from "@mui/icons-material";
 import { setupOptions } from "~/constants/design";
+import ContentEditor from "~/components/design/ContentEditor";
 
 function ImageChoiceItemDesign({
   parentCode,
@@ -312,29 +313,20 @@ function ImageChoiceItemDesign({
           )}
         </div>
         {!hideText && (
-          <TextField
-            dir={isRtl ? "rtl" : "ltr"}
-            variant="standard"
-            value={content || ""}
-            onChange={(e) => {
-              if (!contentEditable(designMode)) {
-                return;
-              }
-              dispatch(
-                changeContent({
-                  code: qualifiedCode,
-                  key: "label",
-                  lang: lang,
-                  value: e.target.value,
-                })
-              );
-            }}
+          <ContentEditor
+            customStyle={`
+              text-align: center;
+            `}
+            code={qualifiedCode}
+            showToolbar={false}
+            editable={contentEditable(designMode)}
+            extended={false}
             placeholder={
               onMainLang
                 ? t("content_editor_placeholder_option")
                 : mainContent || t("content_editor_placeholder_option")
             }
-            inputProps={{ style: { textAlign: "center" } }}
+            contentKey="label"
           />
         )}
       </Grid>

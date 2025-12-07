@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo, useRef } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
@@ -128,6 +127,7 @@ function ContentPanel({ designMode }, ref) {
         }
       }}
       css={css`
+        font-size: ${theme.textStyles.text.size}px;
         color: ${theme.textStyles.text.color};
         font-family: ${theme.textStyles.text.font};
       `}

@@ -32,9 +32,10 @@ import IconSelector from "~/components/design/IconSelector";
 import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
-import { DESIGN_SURVEY_MODE } from "~/routes";
+import { contentEditable, DESIGN_SURVEY_MODE } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
 import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
+import ContentEditor from "~/components/design/ContentEditor";
 
 function SCQIconArrayDesign(props) {
   const theme = useTheme();
@@ -98,6 +99,7 @@ function SCQIconArrayDesign(props) {
                     parentQualifiedCode={props.code}
                     langInfo={langInfo}
                     t={props.t}
+                    designMode={props.designMode}
                     key={item.qualifiedCode}
                     item={item}
                     inDesign={inDesign}
@@ -127,6 +129,7 @@ function SCQIconArrayDesign(props) {
                   t={props.t}
                   key={item.qualifiedCode}
                   item={item}
+                  designMode={props.designMode}
                   inDesign={inDesign}
                   width={width}
                   columns={columns}
@@ -161,6 +164,7 @@ function SCQArrayRowDesign({
   index,
   columns,
   icons,
+  designMode,
   width,
   inDesign,
   t,
@@ -268,6 +272,7 @@ function SCQArrayRowDesign({
       <TableCell
         sx={{
           padding: "2px",
+          color:"inherit",
           width: width,
         }}
       >
@@ -277,56 +282,17 @@ function SCQArrayRowDesign({
               <DragIndicatorIcon color="action" />
             </div>
           )}
-          <TextField
-            variant="standard"
-            inputRef={inputRef}
-            value={content || ""}
-            onChange={(e) => {
-              if (!inDesign) {
-                return;
-              }
-              const value = e.target.value;
-              if (value.endsWith("\n")) {
-                dispatch(
-                  onNewLine({
-                    questionCode: parentQualifiedCode,
-                    index,
-                    type: "row",
-                  })
-                );
-              } else {
-                const sanitizedText = sanitizePastedText(e.target.value);
-                const text = sanitizedText[0];
-                const rest = sanitizedText.slice(1);
-                if (rest.length > 0) {
-                  dispatch(
-                    addNewAnswers({
-                      questionCode: parentQualifiedCode,
-                      index,
-                      type: "row",
-                      data: rest,
-                    })
-                  );
-                }
-                dispatch(
-                  changeContent({
-                    code: item.qualifiedCode,
-                    key: "label",
-                    lang: langInfo.lang,
-                    value: text,
-                  })
-                );
-              }
-            }}
+          <ContentEditor
+            code={item.qualifiedCode}
+            showToolbar={false}
+            editable={contentEditable(designMode)}
+            extended={false}
             placeholder={
               onMainLang
                 ? t("content_editor_placeholder_option")
                 : mainContent || t("content_editor_placeholder_option")
             }
-            InputProps={{
-              disableUnderline: true,
-            }}
-            multiline
+            contentKey="label"
           />
         </Box>
       </TableCell>
@@ -369,6 +335,7 @@ function SCQArrayRowDesign({
 function SCQArrayHeaderDesign({
   item,
   index,
+  designMode,
   icons,
   inDesign,
   t,
@@ -383,12 +350,6 @@ function SCQArrayHeaderDesign({
   const ref = useRef();
 
   const onMainLang = langInfo.lang === langInfo.mainLang;
-
-  const content = useSelector((state) => {
-    return state.designState[item.qualifiedCode].content?.[langInfo.lang]?.[
-      "label"
-    ];
-  });
 
   const mainContent = useSelector((state) => {
     return state.designState[item.qualifiedCode].content?.[langInfo.mainLang]?.[
@@ -489,6 +450,7 @@ function SCQArrayHeaderDesign({
         data-handler-id={handlerId}
         align="center"
         sx={{
+          color: "inherit",
           opacity: isDragging ? "0.2" : "1",
           padding: "2px",
         }}
@@ -522,37 +484,17 @@ function SCQArrayHeaderDesign({
           imageHeight="64px"
           svgUrl={icon ? buildResourceUrl(icon) : undefined}
         />
-        {/* {!icon && (
-          <span onClick={() => setIconSelectorOpen(true)}>
-            Click to add icon
-          </span>
-        )} */}
-        <TextField
-          variant="standard"
-          value={content || ""}
-          onChange={(e) => {
-            if (!inDesign) {
-              return;
-            }
-            dispatch(
-              changeContent({
-                code: item.qualifiedCode,
-                key: "label",
-                lang: langInfo.lang,
-                value: e.target.value,
-              })
-            );
-          }}
+        <ContentEditor
+          code={item.qualifiedCode}
+          showToolbar={false}
+          editable={contentEditable(designMode)}
+          extended={false}
           placeholder={
             onMainLang
               ? t("content_editor_placeholder_option")
               : mainContent || t("content_editor_placeholder_option")
           }
-          multiline
-          inputProps={{ style: { textAlign: "center" } }}
-          InputProps={{
-            disableUnderline: true,
-          }}
+          contentKey="label"
         />
       </TableCell>
       {iconSelectoOpen && (

@@ -10,7 +10,7 @@ import { createAllExtensions } from "./extensions";
 
 const { BLUR_TIMEOUT_MS, CONTENT_SYNC_TIMEOUT_MS } = EDITOR_CONSTANTS;
 
-function DraftEditor({
+function TipTapEditor({
   value,
   onBlurListener,
   extended,
@@ -19,7 +19,7 @@ function DraftEditor({
   onNewLine,
   onMoreLines,
   code,
-  editorTheme = "snow",
+  showToolbar = true,
   referenceInstruction = {},
 }) {
   const editorRef = useRef(null);
@@ -157,7 +157,6 @@ function DraftEditor({
     }
   }, [editor]);
 
-
   useEffect(() => {
     if (editor) {
       editor.commands.focus("end");
@@ -222,13 +221,15 @@ function DraftEditor({
   }
 
   return (
-    <div ref={wrapperRef} className={`tiptap-wrapper ${editorTheme}`}>
-      <EditorContent editor={editor} />
-      {editorTheme === "snow" && isFocused && (
+    <div ref={wrapperRef} className={`tiptap-wrapper`}>
+      <EditorContent
+        editor={editor}
+      />
+      {showToolbar && isFocused && (
         <Toolbar editor={editor} extended={extended} />
       )}
     </div>
   );
 }
 
-export default React.memo(DraftEditor);
+export default React.memo(TipTapEditor);

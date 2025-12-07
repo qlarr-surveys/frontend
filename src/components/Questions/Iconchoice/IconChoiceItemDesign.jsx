@@ -24,6 +24,7 @@ import DynamicSvg from "~/components/DynamicSvg";
 import { contentEditable, inDesign } from "~/routes";
 import { setupOptions } from "~/constants/design";
 import { Build } from "@mui/icons-material";
+import ContentEditor from '~/components/design/ContentEditor';
 
 function IconChoiceItemDesign({
   parentCode,
@@ -298,29 +299,20 @@ function IconChoiceItemDesign({
             />
           </div>
           {!hideText && (
-            <TextField
-              dir={isRtl ? "rtl" : "ltr"}
-              variant="standard"
-              value={content || ""}
-              onChange={(e) => {
-                if (!contentEditable(designMode)) {
-                  return;
-                }
-                dispatch(
-                  changeContent({
-                    code: qualifiedCode,
-                    key: "label",
-                    lang: lang,
-                    value: e.target.value,
-                  })
-                );
-              }}
+            <ContentEditor
+              customStyle={`
+                          text-align: center;
+                        `}
+              code={qualifiedCode}
+              showToolbar={false}
+              editable={contentEditable(designMode)}
+              extended={false}
               placeholder={
                 onMainLang
                   ? t("content_editor_placeholder_option")
                   : mainContent || t("content_editor_placeholder_option")
               }
-              inputProps={{ style: { textAlign: "center" } }}
+              contentKey="label"
             />
           )}
         </div>

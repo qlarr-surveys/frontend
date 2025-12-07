@@ -32,6 +32,7 @@ import { rtlLanguage } from "~/utils/common";
 import { contentEditable, inDesign } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
 import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
+import ContentEditor from "~/components/design/ContentEditor";
 
 function ArrayDesign(props) {
   const theme = useTheme();
@@ -265,6 +266,7 @@ function ArrayRowDesign({
     >
       <TableCell
         sx={{
+          color: "inherit",
           padding: "2px",
         }}
       >
@@ -274,56 +276,17 @@ function ArrayRowDesign({
               <DragIndicatorIcon color="action" />
             </div>
           )}
-          <TextField
-            inputRef={inputRef}
-            variant="standard"
-            value={content || ""}
-            onChange={(e) => {
-              if (!contentEditable(designMode)) {
-                return;
-              }
-              const value = e.target.value;
-              if (value.endsWith("\n")) {
-                dispatch(
-                  onNewLine({
-                    questionCode: parentQualifiedCode,
-                    index,
-                    type: "row",
-                  })
-                );
-              } else {
-                const sanitizedText = sanitizePastedText(e.target.value);
-                const text = sanitizedText[0];
-                const rest = sanitizedText.slice(1);
-                if (rest.length > 0) {
-                  dispatch(
-                    addNewAnswers({
-                      questionCode: parentQualifiedCode,
-                      index,
-                      type: "row",
-                      data: rest,
-                    })
-                  );
-                }
-                dispatch(
-                  changeContent({
-                    code: item.qualifiedCode,
-                    key: "label",
-                    lang: langInfo.lang,
-                    value: text,
-                  })
-                );
-              }
-            }}
+          <ContentEditor
+            code={item.qualifiedCode}
+            showToolbar={false}
+            editable={contentEditable(designMode)}
+            extended={false}
             placeholder={
               onMainLang
                 ? t("content_editor_placeholder_option")
                 : mainContent || t("content_editor_placeholder_option")
             }
-            multiline
-            InputProps={{
-              disableUnderline: true,
-            }}
+            contentKey="label"
           />
         </Box>
       </TableCell>
@@ -454,6 +417,7 @@ function ArrayHeaderDesign({
       data-handler-id={handlerId}
       align="center"
       sx={{
+        color: "inherit",
         opacity: isDragging ? "0.2" : "1",
         padding: "2px",
         width: width + "px",
@@ -482,33 +446,20 @@ function ArrayHeaderDesign({
           </div>
         </div>
       )}
-
-      <TextField
-        variant="standard"
-        value={content || ""}
-        multiline
-        onChange={(e) => {
-          if (!contentEditable(designMode)) {
-            return;
-          }
-          dispatch(
-            changeContent({
-              code: item.qualifiedCode,
-              key: "label",
-              lang: langInfo.lang,
-              value: e.target.value,
-            })
-          );
-        }}
+      <ContentEditor
+        customStyle={`
+              text-align: center;
+            `}
+        code={item.qualifiedCode}
+        showToolbar={false}
+        editable={contentEditable(designMode)}
+        extended={false}
         placeholder={
           onMainLang
             ? t("content_editor_placeholder_option")
             : mainContent || t("content_editor_placeholder_option")
         }
-        inputProps={{ style: { textAlign: "center" } }}
-        InputProps={{
-          disableUnderline: true,
-        }}
+        contentKey="label"
       />
     </TableCell>
   );
