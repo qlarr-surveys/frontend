@@ -175,10 +175,12 @@
   "password_required": "Password is Required",
   "component_deleted_title": "Deletion not allowed",
   "ok": "OK",
+  "error_title": "Error",
   "processed_errors": {
     "invalid_file_for_survey_export": "This ZIP file doesn't contain a valid Qlarr Survey. Please check that you exported the survey correctly.",
     "backend_down": "Backend is Unreachable... Please Try again later",
     "duplicate_email": "Email address is already registered.",
+    "autocomplete_malformed_input": "Malformed Input: File must be a JSON array containing only strings",
     "duplicate_survey_name": "Duplicate Survey Name",
     "expired_confirmation_token": "Expired Confirmation Token, Please Register Once more",
     "expired_reset_token": "Expired Confirmation Token, Please Click on Forgot password once more",

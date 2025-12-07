@@ -42,7 +42,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         );
       })
       .catch((err) => {
-        console.error(err);
+        setUploading(false);
       });
   };
 

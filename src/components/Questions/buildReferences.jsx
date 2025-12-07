@@ -16,7 +16,8 @@ export const buildReferences = (componentIndices, code, state, mainLang) => {
 };
 
 const buildReference = (code, component, state, mainLang) => {
-  const label = state.index[code] + ". " + stripTags(component.content?.[mainLang]?.label);
+  const label =
+    state.index[code] + ". " + stripTags(component.content?.[mainLang]?.label);
   let instruction = "";
   let type = component.type;
   switch (component.type) {
@@ -41,17 +42,14 @@ const buildReference = (code, component, state, mainLang) => {
           };
         });
     case "multiple_text":
-      return component.children
-      .map((element) => {
+      return component.children.map((element) => {
         return {
           value:
             label +
             " - " +
             code +
             "." +
-            stripTags(
-              state[element.qualifiedCode].content?.[mainLang]?.label
-            ),
+            stripTags(state[element.qualifiedCode].content?.[mainLang]?.label),
           id: code + element.code,
           type: "Multiple Text",
           instruction: code + element.code + ".value",
@@ -70,13 +68,13 @@ const buildReference = (code, component, state, mainLang) => {
       type = "Email";
       instruction = `${code}.value`;
       break;
+    case "autocomplete":
+      type = "Autocomplete";
+      instruction = `${code}.value`;
+      break;
     case "paragraph":
       instruction = `${code}.value`;
       type = "Long Text";
-      break;
-    case "autocomplete":
-      instruction = `${code}.value`;
-      type = "Autocomplete";
       break;
     case "number":
       type = "Number";
@@ -96,10 +94,6 @@ const buildReference = (code, component, state, mainLang) => {
       break;
     case "scq":
       type = "SCQ";
-      instruction = `${code}.masked_value`;
-      break;
-    case "select":
-      type = "Select";
       instruction = `${code}.masked_value`;
       break;
     case "icon_scq":

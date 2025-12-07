@@ -36,7 +36,7 @@ export const dataSaver = (store) => (next) => (action) => {
   if (!action || !action.type) {
     return;
   }
-  if (MUTATING.includes(action.type) && !action.type.startsWith("editState/")) {
+  if (MUTATING.includes(action.type)) {
     if (!store.getState().designState.isUpdating) {
       // Store rollback state before first mutation (for optimistic updates)
       if (!rollbackState) {
@@ -96,9 +96,11 @@ const setError = (store, error) => {
   if (rollbackState) {
     store.dispatch(
       designStateReceived({
-        ...rollbackState,
+        designerInput: {
+          componentIndexList: store.getState().designState.componentIndex,
+          state: {...rollbackState},
+        },
         versionDto: store.getState().designState.versionDto,
-        componentIndex: store.getState().designState.componentIndex,
       })
     );
     rollbackState = null;

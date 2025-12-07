@@ -61,6 +61,7 @@ const buildField = (code, component, state, mainLang) => {
     };
   }
   switch (component.type) {
+    case "autocomplete":
     case "text":
     case "barcode":
     case "email":
@@ -132,7 +133,6 @@ const buildField = (code, component, state, mainLang) => {
           ],
         },
       };
-    case "autocomplete":
     case "file_upload":
     case "signature":
     case "photo_capture":
@@ -215,7 +215,6 @@ const buildField = (code, component, state, mainLang) => {
       };
     case "image_scq":
     case "icon_scq":
-    case "select":
     case "scq":
       let scqReturnList = {};
       let scqListValues = {};

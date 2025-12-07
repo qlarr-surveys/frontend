@@ -1,4 +1,4 @@
-import {HourglassEmpty } from "@mui/icons-material";
+import { HourglassEmpty } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -16,7 +16,7 @@ import CompactLayout from "~/layouts/compact";
 import { useNavigate } from "react-router-dom";
 import { palette } from "~/theme/palette";
 
-function ErrorLayout({ setErrorSeen, error, onRetry }) {
+function ErrorLayout({ setErrorSeen, error }) {
   const { t } = useTranslation("manage");
   const navigate = useNavigate();
   const theme = createTheme({
@@ -24,21 +24,14 @@ function ErrorLayout({ setErrorSeen, error, onRetry }) {
   });
   if (error.name === "component_deleted") {
     return (
-      <Dialog 
-      open={true}>
-        <DialogTitle>
-          {t("component_deleted_title")}
-        </DialogTitle>
+      <Dialog open={true}>
+        <DialogTitle>{t("component_deleted_title")}</DialogTitle>
         <DialogContent>
-          <Typography>
-            {t(
-              "processed_errors.component_deleted",
-            )}
-          </Typography>
+          <Typography>{t("processed_errors.component_deleted")}</Typography>
         </DialogContent>
         <DialogActions>
           <Button
-          onClick={() => setErrorSeen()}
+            onClick={() => setErrorSeen()}
             variant="contained"
             style={{
               backgroundColor: theme.palette.primary.main,
@@ -90,36 +83,25 @@ function ErrorLayout({ setErrorSeen, error, onRetry }) {
   }
 
   return (
-    <CompactLayout>
-      <Typography variant="h3" paragraph>
-        Error
-      </Typography>
-      <Typography sx={{ color: "text.secondary" }}>
-        {t("processed_errors." + error.name)}
-      </Typography>
-      <Image
-        alt="500"
-        src="/illustration_500.svg"
-        sx={{
-          mx: "auto",
-          maxWidth: 320,
-          my: { xs: 5, sm: 8 },
-        }}
-      />
-      <Box display="flex" gap={2}>
-        <Button
-          fullWidth
-          size="large"
-          color="inherit"
-          variant="contained"
-          onClick={onRetry}
-          style={{
-            backgroundColor: theme.palette.primary.main,
-            color: theme.palette.primary.contrastText,
+    <Dialog open={true} onClose={() => setErrorSeen()} maxWidth="sm" fullWidth>
+      <DialogContent sx={{ textAlign: "center", py: 4 }}>
+        <Typography variant="h3" paragraph>
+           {t("error_title")}
+        </Typography>
+        <Typography sx={{ color: "text.secondary" }}>
+          {t("processed_errors." + error.name)}
+        </Typography>
+        <Image
+          alt="500"
+          src="/illustration_500.svg"
+          sx={{
+            mx: "auto",
+            maxWidth: 320,
+            my: { xs: 5, sm: 8 },
           }}
-        >
-          {t("retry")}
-        </Button>
+        />
+      </DialogContent>
+      <DialogActions sx={{ px: 3, pb: 3 }}>
         <Button
           fullWidth
           size="large"
@@ -131,10 +113,10 @@ function ErrorLayout({ setErrorSeen, error, onRetry }) {
             color: theme.palette.primary.contrastText,
           }}
         >
-          OK
+         {t("ok")}
         </Button>
-      </Box>
-    </CompactLayout>
+      </DialogActions>
+    </Dialog>
   );
 }
 
