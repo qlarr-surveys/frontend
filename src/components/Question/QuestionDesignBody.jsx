@@ -17,10 +17,9 @@ import BarcodeDesign from "../Questions/Barcode/BarcodeDesign";
 import ChoiceQuestion from "../Questions/Choice/ChoiceDesign";
 import ImageChoiceQuestion from "../Questions/Imagechoice/ImageChoiceDesign";
 import SCQIconArrayDesign from "../Questions/SCQArray/SCQIconArrayDesign";
-import { RHFSelect } from "../hook-form";
-import ArrayDesign from '~/components/Questions/SCQArray/ArrayDesign';
-import AutoCompleteDesign from '../Questions/AutoComplete/AutoCompleteDesign';
-import MapDesign from '../Questions/Map/MapDesign';
+import ArrayDesign from "~/components/Questions/SCQArray/ArrayDesign";
+import AutoCompleteDesign from "../Questions/AutoComplete/AutoCompleteDesign";
+import MapDesign from "../Questions/Map/MapDesign";
 
 function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
   switch (type) {
@@ -156,13 +155,32 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
     case "paragraph":
       return <ParagraphQuestionDesign t={t} key={code} code={code} />;
     case "autocomplete":
-      return <AutoCompleteDesign t={t} key={code} code={code} onMainLang={onMainLang} />;
+      return (
+        <AutoCompleteDesign
+          t={t}
+          key={code}
+          code={code}
+          onMainLang={onMainLang}
+        />
+      );
     case "barcode":
       return <BarcodeDesign t={t} key={code} code={code} />;
     case "email":
       return <EmailQuestionDesign key={code} code={code} />;
     case "map":
-      return <MapDesign key={code} code={code} t={t} />;
+      return (
+        <>
+          <MapDesign key={code} code={code} t={t} />
+          <ChoiceQuestion
+            key={code + "location"}
+            designMode={designMode}
+            code={code}
+            onMainLang={onMainLang}
+            t={t}
+            type="location"
+          />
+        </>
+      );
     default:
       return "";
   }

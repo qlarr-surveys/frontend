@@ -42,7 +42,9 @@ export const questionIconByType = (type, size = "1.25em", color) => {
     case "scq_array":
       return <SurveyIcon name="singleChoiceArray" size={size} color={color} />;
     case "mcq_array":
-      return <SurveyIcon name="multipleChoiceArray" size={size} color={color} />;
+      return (
+        <SurveyIcon name="multipleChoiceArray" size={size} color={color} />
+      );
     case "mcq":
       return <SurveyIcon name="multipleChoice" size={size} color={color} />;
     case "icon_mcq":
@@ -200,7 +202,7 @@ export const QUESTION_TYPES = [
       {
         type: "multiple_text",
         icon: questionIconByType("multiple_text"),
-      }
+      },
     ],
   },
   {
@@ -450,6 +452,15 @@ export const createQuestion = (type, qId, lang) => {
         },
       ];
 
+      break;
+    case "map":
+      returnObj[`Q${qId}A1`] = {};
+      state.children = [
+        {
+          code: "A1",
+          qualifiedCode: `Q${qId}A1`,
+        },
+      ];
       break;
     case "multiple_text":
       returnObj[`Q${qId}A1`] = {};
@@ -724,7 +735,6 @@ export const createQuestion = (type, qId, lang) => {
     case "text_display":
     case "video_display":
     case "image_display":
-    case "map":
       break;
     default:
       break;

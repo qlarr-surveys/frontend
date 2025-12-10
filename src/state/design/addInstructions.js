@@ -49,13 +49,9 @@ export const addSkipInstructions = (state, code) => {
 export const refreshEnumForSingleChoice = (component, state) => {
   if (
     !component.type ||
-    ![
-      "scq",
-      "icon_scq",
-      "image_scq",
-      "scq_icon_array",
-      "scq_array",
-    ].includes(component.type)
+    !["scq", "icon_scq", "image_scq", "scq_icon_array", "scq_array"].includes(
+      component.type
+    )
   ) {
     return;
   }
@@ -638,12 +634,14 @@ export const addAnswerInstructions = (
   const valueInstruction = {
     code: "value",
     isActive: false,
+    values:
+      questionType == "mcq_array" || questionType == "map" ? [] : undefined,
     returnType:
       questionType == "ranking" ||
       questionType == "nps" ||
       questionType == "image_ranking"
         ? "int"
-        : questionType == "mcq_array"
+        : questionType == "mcq_array" || questionType == "map"
         ? "list"
         : "string",
     text: "",
@@ -937,7 +935,7 @@ const requiredText = (qualifiedCode, component) => {
       ` < ` +
       rows.length
     );
-  } else if (component.type == "multiple_text") {
+  } else if (component.type == "multiple_text" || component.type == "map") {
     const rows = component.children;
     return (
       `[${rows.map(

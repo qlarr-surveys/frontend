@@ -418,6 +418,30 @@ const buildField = (code, component, state, mainLang) => {
           };
         });
       return arrayReturnList;
+          case "map":
+      let mapReturnList = {};
+      component.children.forEach((element) => {
+        mapReturnList[code + element.code] = {
+          label:
+            label +
+            " - " +
+            stripTags(
+              state[element.qualifiedCode].content?.[mainLang]?.label || ""
+            ),
+          type: "text",
+          valueSources: ["value"],
+          defaultOperator: "equal",
+          operators: [
+            "is_relevant",
+            "is_not_relevant",
+            "is_valid",
+            "is_not_valid",
+            "is_empty",
+            "is_not_empty",
+          ],
+        };
+      })
+      return mapReturnList;
     case "multiple_text":
       let multipleTextReturnList = {};
       component.children.forEach((element) => {
