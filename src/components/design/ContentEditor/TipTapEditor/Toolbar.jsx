@@ -3,7 +3,6 @@ import "./Toolbar.css";
 import { useTranslation } from "react-i18next";
 import FontSizeSelector from "./Toolbar/FontSizeSelector";
 import LinkInput from "./Toolbar/LinkInput";
-import ImageSizeInput from "./Toolbar/ImageSizeInput";
 import CollapsibleInput from "./Toolbar/CollapsibleInput";
 import FormatButton from "./Toolbar/FormatButton";
 import ColorPickerButton from "./Toolbar/ColorPickerButton";
@@ -28,11 +27,6 @@ const Toolbar = ({ editor, extended }) => {
     setLinkText,
     isUploadingImage,
     currentFontSize,
-    showImageSizeInput,
-    setShowImageSizeInput,
-    imageWidth,
-    imageHeight,
-    maintainAspectRatio,
     showCollapsibleInput,
     setShowCollapsibleInput,
     collapsibleTitle,
@@ -58,11 +52,6 @@ const Toolbar = ({ editor, extended }) => {
     insertCollapsible,
     updateCollapsible,
     toggleCollapsibleInput,
-    updateImageSize,
-    toggleImageSizeInput,
-    handleWidthChange,
-    handleHeightChange,
-    handleAspectRatioToggle,
   } = useToolbar({ editor });
 
   if (!editor) {
@@ -194,34 +183,6 @@ const Toolbar = ({ editor, extended }) => {
         onImageUpload={handleImageUpload}
         isUploading={isUploadingImage}
       />
-
-      {/* Image Size - Only show when image is selected */}
-      {editor.isActive("image") && (
-        <div className="tiptap-color-picker-wrapper">
-          <button
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={toggleImageSizeInput}
-            className={`tiptap-toolbar-button ${
-              showImageSizeInput ? "is-active" : ""
-            }`}
-            title={t("tiptap_image_size")}
-          >
-            📐
-          </button>
-          <ImageSizeInput
-            show={showImageSizeInput}
-            imageWidth={imageWidth}
-            imageHeight={imageHeight}
-            maintainAspectRatio={maintainAspectRatio}
-            onWidthChange={handleWidthChange}
-            onHeightChange={handleHeightChange}
-            onAspectRatioToggle={handleAspectRatioToggle}
-            onUpdate={updateImageSize}
-            onClose={() => setShowImageSizeInput(false)}
-            editor={editor}
-          />
-        </div>
-      )}
 
       {/* Collapsible/Details */}
       <button

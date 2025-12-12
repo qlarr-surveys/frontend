@@ -79,10 +79,68 @@
   margin: 1em 0;
 }
 
-/* Only apply height: auto if no height attribute is set */
-/* This allows the height attribute to control the image height when set */
 .tiptap-image:not([height]) {
   height: auto;
+}
+
+.tiptap-image-wrapper {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  margin: 1em 0;
+}
+
+.tiptap-image-wrapper img {
+  display: block;
+  max-width: 100%;
+}
+
+.tiptap-image-wrapper img:not([height]) {
+  height: auto;
+}
+
+.tiptap-image-resize-button {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0 2px;
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 1;
+  z-index: 10;
+  transition: background-color 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tiptap-image-resize-button:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.tiptap-image-resize-button:active {
+  background-color: #e0e0e0;
+}
+
+.tiptap-image-size-input-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+  width: fit-content;
+  z-index: 1000;
+}
+
+.tiptap-image-size-input-wrapper .tiptap-image-size-input {
+  position: static;
+  top: auto;
+  left: auto;
+  margin-top: 0;
 }
 
 /* Collapsible styles */

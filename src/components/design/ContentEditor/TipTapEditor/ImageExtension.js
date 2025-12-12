@@ -1,4 +1,6 @@
 import Image from "@tiptap/extension-image";
+import { ReactNodeViewRenderer } from "@tiptap/react";
+import ImageWithResizeButton from "./ImageWithResizeButton";
 
 const ImageExtension = Image.extend({
   addAttributes() {
@@ -50,6 +52,10 @@ const ImageExtension = Image.extend({
         },
       },
     };
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(ImageWithResizeButton);
   },
 
   addCommands() {

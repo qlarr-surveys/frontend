@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-} from "react";
+import { useCallback, useState, useRef, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useService } from "~/hooks/use-service";
 import { buildResourceUrl } from "~/networking/common";
@@ -22,10 +16,6 @@ export const useToolbar = ({ editor }) => {
   const [linkText, setLinkText] = useState("");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [currentFontSize, setCurrentFontSize] = useState("1em");
-  const [showImageSizeInput, setShowImageSizeInput] = useState(false);
-  const [imageWidth, setImageWidth] = useState("");
-  const [imageHeight, setImageHeight] = useState("");
-  const [maintainAspectRatio, setMaintainAspectRatio] = useState(true);
   const [showCollapsibleInput, setShowCollapsibleInput] = useState(false);
   const [collapsibleTitle, setCollapsibleTitle] = useState("");
   const [collapsibleBgColor, setCollapsibleBgColor] = useState("");
@@ -36,7 +26,6 @@ export const useToolbar = ({ editor }) => {
     useState(false);
 
   // Refs
-  const aspectRatioRef = useRef(null);
   const colorPickerRef = useRef(null);
   const bgColorPickerRef = useRef(null);
 
@@ -206,7 +195,8 @@ export const useToolbar = ({ editor }) => {
         } else if (error?.response?.status >= 500) {
           errorMessage = "Server error. Please try again later.";
         } else if (error.code === "ERR_NETWORK") {
-          errorMessage = "Network error. Please check your internet connection.";
+          errorMessage =
+            "Network error. Please check your internet connection.";
         }
 
         alert(errorMessage);
@@ -266,186 +256,6 @@ export const useToolbar = ({ editor }) => {
     }
   }, [editor, t]);
 
-  const getImageElement = useCallback(() => {
-    try {
-      const { from } = editor.state.selection;
-      const node = editor.state.doc.nodeAt(from);
-      if (node && node.type.name === "image") {
-        const domAtPos = editor.view.domAtPos(from);
-        let imageElement = null;
-
-        if (domAtPos.node) {
-          if (domAtPos.node.tagName) {
-            if (domAtPos.node.tagName === "IMG") {
-              imageElement = domAtPos.node;
-            } else {
-              imageElement = domAtPos.node.querySelector?.("img");
-              if (!imageElement && domAtPos.node.parentElement) {
-                imageElement =
-                  domAtPos.node.parentElement.querySelector?.("img");
-              }
-            }
-          }
-        }
-
-        if (!imageElement && editor.view.dom) {
-          const editorDom = editor.view.dom;
-          const images = editorDom.querySelectorAll("img");
-          const attrs = editor.getAttributes("image");
-          if (images.length > 0 && attrs.src) {
-            imageElement = Array.from(images).find(
-              (img) =>
-                img.src === attrs.src || img.getAttribute("src") === attrs.src
-            );
-          }
-          if (!imageElement && images.length > 0) {
-            imageElement = images[0];
-          }
-        }
-
-        return imageElement;
-      }
-    } catch (error) {
-      // Fallback
-    }
-    return null;
-  }, [editor]);
-
-  const getNaturalAspectRatio = useCallback(() => {
-    const imageElement = getImageElement();
-    if (imageElement) {
-      const naturalWidth = imageElement.naturalWidth || 0;
-      const naturalHeight = imageElement.naturalHeight || 0;
-      if (naturalWidth > 0 && naturalHeight > 0) {
-        return naturalWidth / naturalHeight;
-      }
-    }
-    return null;
-  }, [getImageElement]);
-
-  const getImageDimensions = useCallback(() => {
-    const attrs = editor.getAttributes("image");
-    let width = attrs.width || "";
-    let height = attrs.height || "";
-
-    if (!width || !height) {
-      const imageElement = getImageElement();
-      if (imageElement) {
-        if (!width) {
-          const renderedWidth =
-            imageElement.offsetWidth || imageElement.naturalWidth || 0;
-          width = renderedWidth > 0 ? renderedWidth.toString() : "";
-        }
-        if (!height) {
-          const renderedHeight =
-            imageElement.offsetHeight || imageElement.naturalHeight || 0;
-          height = renderedHeight > 0 ? renderedHeight.toString() : "";
-        }
-      }
-    }
-
-    const naturalRatio = getNaturalAspectRatio();
-    if (naturalRatio) {
-      aspectRatioRef.current = naturalRatio;
-    } else if (width && height) {
-      const widthNum = parseFloat(width);
-      const heightNum = parseFloat(height);
-      if (widthNum > 0 && heightNum > 0) {
-        aspectRatioRef.current = widthNum / heightNum;
-      }
-    }
-
-    return { width, height };
-  }, [editor, getImageElement, getNaturalAspectRatio]);
-
-  const updateImageSize = useCallback(() => {
-    if (!editor.isActive("image")) {
-      return;
-    }
-
-    const attrs = {};
-    attrs.width = imageWidth.trim() || null;
-    attrs.height = imageHeight.trim() || null;
-
-    editor.chain().focus().updateAttributes("image", attrs).run();
-  }, [editor, imageWidth, imageHeight]);
-
-  const toggleImageSizeInput = useCallback(() => {
-    if (editor.isActive("image")) {
-      const { width, height } = getImageDimensions();
-      setImageWidth(width);
-      setImageHeight(height);
-
-      setShowImageSizeInput((prev) => !prev);
-    }
-  }, [editor, getImageDimensions]);
-
-  const handleWidthChange = useCallback(
-    (newWidth) => {
-      setImageWidth(newWidth);
-
-      if (maintainAspectRatio && aspectRatioRef.current && newWidth.trim()) {
-        const widthNum = parseFloat(newWidth);
-        if (!isNaN(widthNum) && widthNum > 0) {
-          const newHeight = Math.round(widthNum / aspectRatioRef.current);
-          setImageHeight(newHeight.toString());
-        }
-      }
-    },
-    [maintainAspectRatio]
-  );
-
-  const handleHeightChange = useCallback(
-    (newHeight) => {
-      setImageHeight(newHeight);
-
-      if (maintainAspectRatio && aspectRatioRef.current && newHeight.trim()) {
-        const heightNum = parseFloat(newHeight);
-        if (!isNaN(heightNum) && heightNum > 0) {
-          const newWidth = Math.round(heightNum * aspectRatioRef.current);
-          setImageWidth(newWidth.toString());
-        }
-      }
-    },
-    [maintainAspectRatio]
-  );
-
-  const handleAspectRatioToggle = useCallback(
-    (enabled) => {
-      setMaintainAspectRatio(enabled);
-
-      if (enabled) {
-        const naturalRatio = getNaturalAspectRatio();
-        if (naturalRatio) {
-          aspectRatioRef.current = naturalRatio;
-        } else {
-          let width = imageWidth;
-          let height = imageHeight;
-
-          if (!width || !height) {
-            const attrs = editor.getAttributes("image");
-            width = attrs.width || "";
-            height = attrs.height || "";
-          }
-
-          if (width && height) {
-            const widthNum = parseFloat(width);
-            const heightNum = parseFloat(height);
-            if (
-              !isNaN(widthNum) &&
-              !isNaN(heightNum) &&
-              widthNum > 0 &&
-              heightNum > 0
-            ) {
-              aspectRatioRef.current = widthNum / heightNum;
-            }
-          }
-        }
-      }
-    },
-    [imageWidth, imageHeight, editor, getNaturalAspectRatio]
-  );
-
   // Sync editor state with component state
   useEffect(() => {
     if (!editor) return;
@@ -457,94 +267,6 @@ export const useToolbar = ({ editor }) => {
         setCurrentFontSize(fontSize);
       } else {
         setCurrentFontSize("1em");
-      }
-    };
-
-    const updateImageSize = () => {
-      if (editor.isActive("image")) {
-        const attrs = editor.getAttributes("image");
-        if (!showImageSizeInput) {
-          let width = attrs.width || "";
-          let height = attrs.height || "";
-
-          if (!width || !height) {
-            try {
-              const { from } = editor.state.selection;
-              const node = editor.state.doc.nodeAt(from);
-              if (node && node.type.name === "image") {
-                const domAtPos = editor.view.domAtPos(from);
-                let imageElement = null;
-
-                if (domAtPos.node) {
-                  if (domAtPos.node.tagName) {
-                    if (domAtPos.node.tagName === "IMG") {
-                      imageElement = domAtPos.node;
-                    } else {
-                      imageElement = domAtPos.node.querySelector?.("img");
-                      if (!imageElement && domAtPos.node.parentElement) {
-                        imageElement =
-                          domAtPos.node.parentElement.querySelector?.("img");
-                      }
-                    }
-                  }
-                }
-
-                if (!imageElement && editor.view.dom) {
-                  const editorDom = editor.view.dom;
-                  const images = editorDom.querySelectorAll("img");
-                  if (images.length > 0 && attrs.src) {
-                    imageElement = Array.from(images).find(
-                      (img) =>
-                        img.src === attrs.src ||
-                        img.getAttribute("src") === attrs.src
-                    );
-                  }
-                  if (!imageElement && images.length > 0) {
-                    imageElement = images[0];
-                  }
-                }
-
-                if (imageElement) {
-                  if (!width) {
-                    const renderedWidth =
-                      imageElement.offsetWidth ||
-                      imageElement.naturalWidth ||
-                      0;
-                    width = renderedWidth > 0 ? renderedWidth.toString() : "";
-                  }
-                  if (!height) {
-                    const renderedHeight =
-                      imageElement.offsetHeight ||
-                      imageElement.naturalHeight ||
-                      0;
-                    height =
-                      renderedHeight > 0 ? renderedHeight.toString() : "";
-                  }
-                }
-              }
-            } catch (error) {
-              // Fallback to attributes if DOM access fails
-            }
-          }
-
-          setImageWidth(width);
-          setImageHeight(height);
-
-          if (width && height) {
-            const widthNum = parseFloat(width);
-            const heightNum = parseFloat(height);
-            if (widthNum > 0 && heightNum > 0) {
-              aspectRatioRef.current = widthNum / heightNum;
-            }
-          }
-        }
-      } else {
-        if (showImageSizeInput) {
-          setShowImageSizeInput(false);
-        }
-        setImageWidth("");
-        setImageHeight("");
-        aspectRatioRef.current = null;
       }
     };
 
@@ -569,13 +291,11 @@ export const useToolbar = ({ editor }) => {
     };
 
     updateFontSize();
-    updateImageSize();
     updateCollapsibleState();
 
     const handleUpdate = () => {
       requestAnimationFrame(() => {
         updateFontSize();
-        updateImageSize();
         updateCollapsibleState();
       });
     };
@@ -589,17 +309,7 @@ export const useToolbar = ({ editor }) => {
       editor.off("update", handleUpdate);
       editor.off("transaction", handleUpdate);
     };
-  }, [editor, showImageSizeInput, showCollapsibleInput, fontSizes, t]);
-
-  // Ensure aspect ratio is set from natural dimensions when toggle is enabled
-  useEffect(() => {
-    if (maintainAspectRatio && editor?.isActive("image")) {
-      const naturalRatio = getNaturalAspectRatio();
-      if (naturalRatio) {
-        aspectRatioRef.current = naturalRatio;
-      }
-    }
-  }, [maintainAspectRatio, editor, getNaturalAspectRatio]);
+  }, [editor, showCollapsibleInput, fontSizes, t]);
 
   // Handle click outside for popups
   useEffect(() => {
@@ -642,11 +352,6 @@ export const useToolbar = ({ editor }) => {
     setLinkText,
     isUploadingImage,
     currentFontSize,
-    showImageSizeInput,
-    setShowImageSizeInput,
-    imageWidth,
-    imageHeight,
-    maintainAspectRatio,
     showCollapsibleInput,
     setShowCollapsibleInput,
     collapsibleTitle,
@@ -673,11 +378,5 @@ export const useToolbar = ({ editor }) => {
     insertCollapsible,
     updateCollapsible,
     toggleCollapsibleInput,
-    updateImageSize,
-    toggleImageSizeInput,
-    handleWidthChange,
-    handleHeightChange,
-    handleAspectRatioToggle,
   };
 };
-
