@@ -128,13 +128,17 @@ function ContentEditor({
     (text, editorLang) => {
       setActive(false);
       dispatch(resetFocus());
-      if (lang != editorLang) {
+      if (lang !== editorLang) {
         return;
-      } else if (text != value) {
-        dispatch(changeContent({ code, key: contentKey, lang, value: text }));
+      }
+      const normalizedText = isNotEmptyHtml(text) ? text : "";
+      if (normalizedText !== value) {
+        dispatch(
+          changeContent({ code, key: contentKey, lang, value: normalizedText })
+        );
       }
     },
-    [value]
+    [value, lang, code, contentKey, dispatch]
   );
 
   const onContainerClicked = (event) => {
@@ -175,14 +179,12 @@ function ContentEditor({
       ) : isNotEmptyHtml(value) ? (
         <div
           ref={renderedContentRef}
-          className={`${isRtl ? "rtl" : "ltr"} 
-          
-          ${styles.noPadding}`}
+          className={`${isRtl ? "rtl" : "ltr"} ${styles.noPadding}`}
           dangerouslySetInnerHTML={{ __html: fixedValue }}
         />
       ) : (
         <div
-          className={`${isRtl ? "rtl" : "ltr"}  ${styles.placeholder}`}
+          className={`${isRtl ? "rtl" : "ltr"} ${styles.placeholder}`}
           dangerouslySetInnerHTML={{ __html: finalPlaceholder }}
         />
       )}
