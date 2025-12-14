@@ -156,6 +156,7 @@
 
 /* Collapsible styles */
 .tiptap-collapsible {
+  width: fit-content;
   margin: 1em 0;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
