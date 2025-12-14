@@ -16,7 +16,7 @@ const ImageUploadButton = ({ onImageUpload, isUploading }) => {
 
   return (
     <div
-      style={{ display: "inline-block" }}
+      style={{ display: "inline-flex" }}
       onMouseDown={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -28,7 +28,7 @@ const ImageUploadButton = ({ onImageUpload, isUploading }) => {
     >
       <label
         style={{
-          display: "inline-block",
+          display: "inline-flex",
           cursor: isUploading ? "not-allowed" : "pointer",
           margin: 0,
           padding: 0,

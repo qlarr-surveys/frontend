@@ -112,6 +112,7 @@
 /* Color picker */
 .tiptap-color-picker-wrapper {
   position: relative;
+  display: inline-flex;
 }
 
 .tiptap-color-palette {
