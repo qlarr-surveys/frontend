@@ -133,10 +133,17 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
       sx={
         isInSetup
           ? {
-              border: `0.1px solid ${textColor}`,
-              backgroundColor: "background.paper",
+              padding: "0rem 0rem 2rem 0rem",
+              border: `0.1px solid transparent`,
+              borderRadius: "12px",
+              boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
+              backgroundColor: contrastColor,
             }
           : {
+              border: `0.1px solid transparent`,
+              padding: "0rem 0rem 2rem 0rem",
+              boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
+              borderRadius: "12px",
               backgroundColor: "background.paper",
             }
       }
@@ -144,68 +151,61 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
       ref={containerRef}
       style={getStyles(isDragging)}
     >
-      <div
-        style={{
-          backgroundColor: isInSetup ? contrastColor : undefined,
-          padding: "0rem 0rem 2rem 0rem",
-        }}
-      >
-        <GroupHeader
-          t={t}
-          code={code}
-          index={index}
-          designMode={designMode}
-          children={children}
-        />
+      <GroupHeader
+        t={t}
+        code={code}
+        index={index}
+        designMode={designMode}
+        children={children}
+      />
 
-        <>
-          {children && children.length > 0 && (
-            <QuestionDropArea
-              index={0}
-              parentCode={code}
-              parentType={type}
-              parentIndex={index}
-              t={t}
-            />
-          )}
-          {children?.map((quest, childIndex) => {
-            return (
-              <React.Fragment key={quest.code}>
-                <QuestionDesign
-                  t={t}
-                  key={quest.code}
-                  parentCode={code}
-                  parentIndex={index}
-                  index={childIndex}
-                  isLast={children.length == childIndex + 1}
-                  type={quest.type}
-                  code={quest.code}
-                  designMode={designMode}
-                  onMainLang={inDesign}
-                  lastAddedComponent={lastAddedComponent}
-                />
-                <QuestionDropArea
-                  isLast={children.length == childIndex + 1}
-                  index={childIndex + 1}
-                  parentIndex={index}
-                  parentCode={code}
-                  parentType={type}
-                  t={t}
-                />
-              </React.Fragment>
-            );
-          })}
-          {(!children || !children.length) && (
-            <QuestionDropArea
-              t={t}
-              index={0}
-              parentCode={code}
-              parentType={type}
-              emptyGroup={true}
-            />
-          )}
-        </>
-      </div>
+      <>
+        {children && children.length > 0 && (
+          <QuestionDropArea
+            index={0}
+            parentCode={code}
+            parentType={type}
+            parentIndex={index}
+            t={t}
+          />
+        )}
+        {children?.map((quest, childIndex) => {
+          return (
+            <React.Fragment key={quest.code}>
+              <QuestionDesign
+                t={t}
+                key={quest.code}
+                parentCode={code}
+                parentIndex={index}
+                index={childIndex}
+                isLast={children.length == childIndex + 1}
+                type={quest.type}
+                code={quest.code}
+                designMode={designMode}
+                onMainLang={inDesign}
+                lastAddedComponent={lastAddedComponent}
+              />
+              <QuestionDropArea
+                isLast={children.length == childIndex + 1}
+                index={childIndex + 1}
+                parentIndex={index}
+                parentCode={code}
+                parentType={type}
+                t={t}
+              />
+            </React.Fragment>
+          );
+        })}
+        {(!children || !children.length) && (
+          <QuestionDropArea
+            t={t}
+            index={0}
+            parentCode={code}
+            parentType={type}
+            emptyGroup={true}
+          />
+        )}
+      </>
     </Box>
   );
 }

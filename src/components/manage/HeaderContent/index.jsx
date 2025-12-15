@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, css, Stack, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { STATUS } from "../Survey";
 import { RHFSelect } from "~/components/hook-form";
@@ -35,10 +35,9 @@ export const HeaderContent = ({
       gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
     >
       <Typography
-        variant="h5"
+        variant="h3"
         flex="1"
         textTransform="uppercase"
-        fontWeight="600"
       >
         {t("my_surveys")}
       </Typography>
@@ -53,6 +52,7 @@ export const HeaderContent = ({
           onChange={onSortSelected}
           native
           value={sort}
+          backgroundColor="white"
           name="Status"
           label={t("label.sort_by")}
         >
@@ -66,6 +66,7 @@ export const HeaderContent = ({
           onChange={onFilterSelected}
           native
           value={filter}
+          backgroundColor="white"
           name="Status"
           label={t("edit_survey.status")}
         >

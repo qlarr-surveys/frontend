@@ -24,44 +24,46 @@ function Group(props) {
         <Box
           className={styles.topLevel}
           sx={{
-            borderRadius: "4px",
-
+            border: `0.1px solid transparent`,
+            borderRadius: "12px",
+            boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
             backgroundColor: theme.palette.background.paper,
           }}
         >
           <div className={styles.groupHeader}>
-              <Content
-                elementCode={props.group.code}
-                name="label"
-                lang={props.lang}
-                fontFamily={theme.textStyles.group.font}
-                color={theme.textStyles.group.color}
-                fontSize={theme.textStyles.group.size}
-                content={props.group.content?.label}
-              />
+            <Content
+              elementCode={props.group.code}
+              name="label"
+              lang={props.lang}
+              fontFamily={theme.textStyles.group.font}
+              color={theme.textStyles.group.color}
+              fontSize={theme.textStyles.group.size}
+              content={props.group.content?.label}
+            />
 
-            {props.group.showDescription && props.group.content?.description && (
-              <Box className={styles.textDescription}>
-                <Content
-                  elementCode={props.group.code}
-                  name="description"
-                  lang={props.lang}
-                  content={props.group.content?.description}
-                />
-              </Box>
-            )}
+            {props.group.showDescription &&
+              props.group.content?.description && (
+                <Box className={styles.textDescription}>
+                  <Content
+                    elementCode={props.group.code}
+                    name="description"
+                    lang={props.lang}
+                    content={props.group.content?.description}
+                  />
+                </Box>
+              )}
           </div>
 
           {props.group && props.group.questions
             ? props.group.questions
-              .filter((quest) => quest.inCurrentNavigation)
-              .map((quest) => (
-                <Question
-                  key={quest.code}
-                  component={quest}
-                  lang={props.lang}
-                />
-              ))
+                .filter((quest) => quest.inCurrentNavigation)
+                .map((quest) => (
+                  <Question
+                    key={quest.code}
+                    component={quest}
+                    lang={props.lang}
+                  />
+                ))
             : ""}
         </Box>
       </>
