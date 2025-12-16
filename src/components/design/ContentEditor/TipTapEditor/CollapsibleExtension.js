@@ -120,7 +120,22 @@ const CollapsibleExtension = Node.create({
       button.className = "collapsible-button";
       button.type = "button";
       button.setAttribute("contenteditable", "false");
-      button.textContent = node.attrs.buttonText || "Show more details";
+
+      // Create text span for button text
+      const buttonTextSpan = document.createElement("span");
+      buttonTextSpan.className = "collapsible-button-text";
+      buttonTextSpan.textContent = node.attrs.buttonText || "Show more details";
+
+      // Create settings button (placed after arrow which is CSS ::after)
+      const settingsButton = document.createElement("button");
+      settingsButton.className = "collapsible-settings-button";
+      settingsButton.type = "button";
+      settingsButton.setAttribute("contenteditable", "false");
+      settingsButton.innerHTML = "⚙️";
+      settingsButton.title = "Collapsible Settings";
+
+      button.appendChild(buttonTextSpan);
+      button.appendChild(settingsButton);
 
       // Apply background color: custom or theme default
       if (node.attrs.backgroundColor) {
@@ -150,6 +165,9 @@ const CollapsibleExtension = Node.create({
       content.appendChild(contentWrapper);
 
       const handleClick = (e) => {
+        if (e.target.closest(".collapsible-settings-button")) {
+          return;
+        }
         e.preventDefault();
         e.stopPropagation();
         const currentPos = typeof getPos === "function" ? getPos() : null;
@@ -174,7 +192,37 @@ const CollapsibleExtension = Node.create({
         }
       };
 
+      const handleSettingsClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentPos = typeof getPos === "function" ? getPos() : null;
+        if (currentPos !== null && currentPos !== undefined) {
+          const nodeAtPos = editor.state.doc.nodeAt(currentPos);
+          if (nodeAtPos && nodeAtPos.type.name === this.name) {
+            // Dispatch custom event with collapsible info
+            const rect = settingsButton.getBoundingClientRect();
+            const event = new CustomEvent("collapsible-settings-click", {
+              detail: {
+                pos: currentPos,
+                attrs: nodeAtPos.attrs,
+                buttonRect: {
+                  top: rect.top,
+                  left: rect.left,
+                  right: rect.right,
+                  bottom: rect.bottom,
+                  width: rect.width,
+                  height: rect.height,
+                },
+              },
+              bubbles: true,
+            });
+            settingsButton.dispatchEvent(event);
+          }
+        }
+      };
+
       button.addEventListener("click", handleClick);
+      settingsButton.addEventListener("click", handleSettingsClick);
 
       dom.appendChild(button);
       dom.appendChild(content);
@@ -189,7 +237,7 @@ const CollapsibleExtension = Node.create({
 
           const newButtonText =
             updatedNode.attrs.buttonText || "Show more details";
-          button.textContent = newButtonText;
+          buttonTextSpan.textContent = newButtonText;
           button.setAttribute("data-button-text", newButtonText);
 
           // Update background color: custom or theme default

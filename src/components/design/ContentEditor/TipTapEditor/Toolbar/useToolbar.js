@@ -16,14 +16,6 @@ export const useToolbar = ({ editor }) => {
   const [linkText, setLinkText] = useState("");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [currentFontSize, setCurrentFontSize] = useState("1em");
-  const [showCollapsibleInput, setShowCollapsibleInput] = useState(false);
-  const [collapsibleTitle, setCollapsibleTitle] = useState("");
-  const [collapsibleBgColor, setCollapsibleBgColor] = useState("");
-  const [collapsibleTextColor, setCollapsibleTextColor] = useState("");
-  const [showCollapsibleColorPicker, setShowCollapsibleColorPicker] =
-    useState(false);
-  const [showCollapsibleTextColorPicker, setShowCollapsibleTextColorPicker] =
-    useState(false);
 
   // Refs
   const colorPickerRef = useRef(null);
@@ -229,33 +221,6 @@ export const useToolbar = ({ editor }) => {
       .run();
   }, [editor, t]);
 
-  const updateCollapsible = useCallback(() => {
-    if (!editor.isActive("collapsible")) {
-      return;
-    }
-
-    const attrs = {};
-    if (collapsibleTitle.trim()) {
-      attrs.buttonText = collapsibleTitle.trim();
-    }
-    attrs.backgroundColor = collapsibleBgColor.trim() || null;
-    attrs.textColor = collapsibleTextColor.trim() || null;
-
-    editor.chain().focus().updateCollapsible(attrs).run();
-  }, [editor, collapsibleTitle, collapsibleBgColor, collapsibleTextColor]);
-
-  const toggleCollapsibleInput = useCallback(() => {
-    if (editor.isActive("collapsible")) {
-      const attrs = editor.getAttributes("collapsible");
-      setCollapsibleTitle(
-        attrs.buttonText || t("tiptap_collapsible_title_placeholder")
-      );
-      setCollapsibleBgColor(attrs.backgroundColor || "");
-      setCollapsibleTextColor(attrs.textColor || "");
-      setShowCollapsibleInput((prev) => !prev);
-    }
-  }, [editor, t]);
-
   // Sync editor state with component state
   useEffect(() => {
     if (!editor) return;
@@ -270,33 +235,11 @@ export const useToolbar = ({ editor }) => {
       }
     };
 
-    const updateCollapsibleState = () => {
-      if (editor.isActive("collapsible")) {
-        const attrs = editor.getAttributes("collapsible");
-        if (!showCollapsibleInput) {
-          setCollapsibleTitle(
-            attrs.buttonText || t("tiptap_collapsible_title_placeholder")
-          );
-          setCollapsibleBgColor(attrs.backgroundColor || "");
-          setCollapsibleTextColor(attrs.textColor || "");
-        }
-      } else {
-        if (showCollapsibleInput) {
-          setShowCollapsibleInput(false);
-        }
-        setCollapsibleTitle("");
-        setCollapsibleBgColor("");
-        setCollapsibleTextColor("");
-      }
-    };
-
     updateFontSize();
-    updateCollapsibleState();
 
     const handleUpdate = () => {
       requestAnimationFrame(() => {
         updateFontSize();
-        updateCollapsibleState();
       });
     };
 
@@ -309,7 +252,7 @@ export const useToolbar = ({ editor }) => {
       editor.off("update", handleUpdate);
       editor.off("transaction", handleUpdate);
     };
-  }, [editor, showCollapsibleInput, fontSizes, t]);
+  }, [editor, fontSizes]);
 
   // Handle click outside for popups
   useEffect(() => {
@@ -352,18 +295,6 @@ export const useToolbar = ({ editor }) => {
     setLinkText,
     isUploadingImage,
     currentFontSize,
-    showCollapsibleInput,
-    setShowCollapsibleInput,
-    collapsibleTitle,
-    setCollapsibleTitle,
-    collapsibleBgColor,
-    setCollapsibleBgColor,
-    collapsibleTextColor,
-    setCollapsibleTextColor,
-    showCollapsibleColorPicker,
-    setShowCollapsibleColorPicker,
-    showCollapsibleTextColorPicker,
-    setShowCollapsibleTextColorPicker,
     // Refs
     colorPickerRef,
     bgColorPickerRef,
@@ -376,7 +307,5 @@ export const useToolbar = ({ editor }) => {
     toggleLink,
     handleImageUpload,
     insertCollapsible,
-    updateCollapsible,
-    toggleCollapsibleInput,
   };
 };

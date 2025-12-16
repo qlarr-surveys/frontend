@@ -3,7 +3,6 @@ import "./Toolbar.css";
 import { useTranslation } from "react-i18next";
 import FontSizeSelector from "./Toolbar/FontSizeSelector";
 import LinkInput from "./Toolbar/LinkInput";
-import CollapsibleInput from "./Toolbar/CollapsibleInput";
 import FormatButton from "./Toolbar/FormatButton";
 import ColorPickerButton from "./Toolbar/ColorPickerButton";
 import ImageUploadButton from "./Toolbar/ImageUploadButton";
@@ -27,18 +26,6 @@ const Toolbar = ({ editor, extended }) => {
     setLinkText,
     isUploadingImage,
     currentFontSize,
-    showCollapsibleInput,
-    setShowCollapsibleInput,
-    collapsibleTitle,
-    setCollapsibleTitle,
-    collapsibleBgColor,
-    setCollapsibleBgColor,
-    collapsibleTextColor,
-    setCollapsibleTextColor,
-    showCollapsibleColorPicker,
-    setShowCollapsibleColorPicker,
-    showCollapsibleTextColorPicker,
-    setShowCollapsibleTextColorPicker,
     // Refs
     colorPickerRef,
     bgColorPickerRef,
@@ -50,8 +37,6 @@ const Toolbar = ({ editor, extended }) => {
     toggleLink,
     handleImageUpload,
     insertCollapsible,
-    updateCollapsible,
-    toggleCollapsibleInput,
   } = useToolbar({ editor });
 
   if (!editor) {
@@ -194,41 +179,6 @@ const Toolbar = ({ editor, extended }) => {
       >
         <span style={{ fontSize: "12px" }}>▼</span>
       </button>
-
-      {/* Collapsible Settings - Only show when collapsible is selected */}
-      {editor.isActive("collapsible") && (
-        <div className="tiptap-color-picker-wrapper">
-          <button
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={toggleCollapsibleInput}
-            className={`tiptap-toolbar-button ${
-              showCollapsibleInput ? "is-active" : ""
-            }`}
-            title={t("tiptap_collapsible_settings")}
-          >
-            ⚙️
-          </button>
-          <CollapsibleInput
-            show={showCollapsibleInput}
-            collapsibleTitle={collapsibleTitle}
-            collapsibleBgColor={collapsibleBgColor}
-            collapsibleTextColor={collapsibleTextColor}
-            showCollapsibleColorPicker={showCollapsibleColorPicker}
-            showCollapsibleTextColorPicker={showCollapsibleTextColorPicker}
-            setCollapsibleTitle={setCollapsibleTitle}
-            setCollapsibleBgColor={setCollapsibleBgColor}
-            setCollapsibleTextColor={setCollapsibleTextColor}
-            setShowCollapsibleColorPicker={setShowCollapsibleColorPicker}
-            setShowCollapsibleTextColorPicker={
-              setShowCollapsibleTextColorPicker
-            }
-            onUpdate={updateCollapsible}
-            onClose={() => setShowCollapsibleInput(false)}
-            editor={editor}
-            colors={colors}
-          />
-        </div>
-      )}
 
       {/* Clear Formatting */}
       <button

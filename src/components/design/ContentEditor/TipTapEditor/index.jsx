@@ -1,7 +1,14 @@
-import React, { useEffect, useMemo, useRef, useCallback } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+  useState,
+} from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { sanitizePastedText } from "../sanitizePastedText";
 import Toolbar from "./Toolbar";
+import CollapsibleSettings from "./CollapsibleSettings";
 import { buildReferences } from "~/components/Questions/buildReferences";
 import { manageStore } from "~/store";
 import "./TipTapEditor.css";
@@ -26,7 +33,14 @@ function TipTapEditor({
   const wrapperRef = useRef(null);
   const blurTimeoutRef = useRef(null);
   const isMountedRef = useRef(true);
-  const [isFocused, setIsFocused] = React.useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const [showCollapsibleSettings, setShowCollapsibleSettings] = useState(false);
+  const [collapsibleSettingsPosition, setCollapsibleSettingsPosition] =
+    useState(null);
+  const [collapsibleSettingsAttrs, setCollapsibleSettingsAttrs] =
+    useState(null);
+  const [collapsibleSettingsPos, setCollapsibleSettingsPos] = useState(null);
 
   const getMentionSuggestions = useCallback(
     (query) => {
@@ -149,6 +163,59 @@ function TipTapEditor({
   });
 
   useEffect(() => {
+    const handleCollapsibleSettingsClick = (e) => {
+      const { pos, attrs, buttonRect } = e.detail;
+      setCollapsibleSettingsPos(pos);
+      setCollapsibleSettingsAttrs(attrs);
+      setCollapsibleSettingsPosition(buttonRect);
+      setShowCollapsibleSettings(true);
+    };
+
+    const wrapper = wrapperRef.current;
+    if (wrapper) {
+      wrapper.addEventListener(
+        "collapsible-settings-click",
+        handleCollapsibleSettingsClick
+      );
+      return () => {
+        wrapper.removeEventListener(
+          "collapsible-settings-click",
+          handleCollapsibleSettingsClick
+        );
+      };
+    }
+  }, []);
+
+  // Handle collapsible settings update
+  const handleCollapsibleUpdate = useCallback(
+    (attrs) => {
+      if (editor && collapsibleSettingsPos !== null) {
+        editor.commands.command(({ tr, dispatch }) => {
+          const nodeAtPos = tr.doc.nodeAt(collapsibleSettingsPos);
+          if (nodeAtPos && nodeAtPos.type.name === "collapsible") {
+            if (dispatch) {
+              tr.setNodeMarkup(collapsibleSettingsPos, undefined, {
+                ...nodeAtPos.attrs,
+                ...attrs,
+              });
+            }
+            return true;
+          }
+          return false;
+        });
+      }
+    },
+    [editor, collapsibleSettingsPos]
+  );
+
+  const handleCloseCollapsibleSettings = useCallback(() => {
+    setShowCollapsibleSettings(false);
+    setCollapsibleSettingsPosition(null);
+    setCollapsibleSettingsAttrs(null);
+    setCollapsibleSettingsPos(null);
+  }, []);
+
+  useEffect(() => {
     if (editor && !editorRef.current) {
       const currentContent = editor.getHTML();
       if (!currentContent || currentContent === "<p></p>") {
@@ -221,13 +288,22 @@ function TipTapEditor({
   }
 
   return (
-    <div ref={wrapperRef} className={`tiptap-wrapper`}>
-      <EditorContent
-        editor={editor}
-      />
+    <div
+      ref={wrapperRef}
+      className={`tiptap-wrapper ${isFocused ? "tiptap-focused" : ""}`}
+    >
+      <EditorContent editor={editor} />
       {showToolbar && isFocused && (
         <Toolbar editor={editor} extended={extended} />
       )}
+      <CollapsibleSettings
+        show={showCollapsibleSettings && isFocused}
+        position={collapsibleSettingsPosition}
+        collapsibleAttrs={collapsibleSettingsAttrs}
+        onUpdate={handleCollapsibleUpdate}
+        onClose={handleCloseCollapsibleSettings}
+        editor={editor}
+      />
     </div>
   );
 }
