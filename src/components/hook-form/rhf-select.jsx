@@ -23,6 +23,7 @@ export function RHFSelect({
   label,
   onChange,
   value,
+  backgroundColor,
   ...other
 }) {
   const context = useFormContext();
@@ -33,6 +34,7 @@ export function RHFSelect({
         <Select
           value={value ?? ""}
           sx={{
+            backgroundColor,
             borderRadius: "12px",
             "& .MuiOutlinedInput-notchedOutline": {
               border: "1px solid #d7d7d7",

@@ -7,10 +7,7 @@ import React, {
 } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import {
-  designStateReceived,
-  resetSetup,
-} from "~/state/design/designState";
+import { designStateReceived, resetSetup } from "~/state/design/designState";
 import { GetData } from "~/networking/design";
 import { setLoading, surveyReceived } from "~/state/edit/editState";
 import SavingSurvey from "~/components/design/SavingSurvey";
@@ -83,7 +80,6 @@ function ManageSurvey({ landingPage }) {
       .catch((err) => {});
   };
 
-
   useEffect(() => {
     const handlePopState = () => {
       const currentPath = window.location.pathname;
@@ -115,7 +111,7 @@ function ManageSurvey({ landingPage }) {
 
   return (
     <>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex"}}>
         {availablePagesMemo.length > 0 && (
           <SideTabs
             availablePages={availablePagesMemo}
