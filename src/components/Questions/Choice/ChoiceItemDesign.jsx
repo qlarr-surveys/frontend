@@ -17,9 +17,10 @@ import {
 import { setupOptions } from "~/constants/design";
 import { useDrag, useDrop } from "react-dnd";
 import { useEffect, useRef } from "react";
-import { contentEditable, inDesign } from "~/routes";
+import { contentEditable, DESIGN_SURVEY_MODE, inDesign } from "~/routes";
 import { useTheme } from "@emotion/react";
-import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
+import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
+import ContentEditor from "~/components/design/ContentEditor";
 
 function ChoiceItemDesign(props) {
   const dispatch = useDispatch();
@@ -159,6 +160,31 @@ function ChoiceItemDesign(props) {
     }
   }, [inFocus, inputRef.current]);
 
+  const onInput = (e) => {
+    if (!contentEditable(props.designMode)) {
+      return;
+    }
+    const value = e.target.value;
+    if (value.endsWith("\n")) {
+      props.onNewLine();
+    } else {
+      const sanitizedText = sanitizePastedText(e.target.value);
+      const text = sanitizedText[0];
+      const rest = sanitizedText.slice(1);
+      if (rest.length > 0) {
+        props.onMoreLines(rest);
+      }
+      dispatch(
+        changeContent({
+          code: props.qualifiedCode,
+          key: "label",
+          lang: langInfo.lang,
+          value: text,
+        })
+      );
+    }
+  };
+
   const contrastColor = alpha(theme.textStyles.question.color, 0.2);
 
   const placeholder = props.type == "location" ? props.t("content_editor_placeholder_location_marker_name")  :props.t("content_editor_placeholder_option") 
@@ -166,6 +192,7 @@ function ChoiceItemDesign(props) {
   return (
     <div ref={ref} style={getStyles(isDragging)} data-handler-id={handlerId}>
       <Box
+        data-code={props.code}
         sx={{ backgroundColor: isInSetup ? contrastColor : "inherit" }}
         className={styles.answerItem}
         style={{
@@ -177,6 +204,7 @@ function ChoiceItemDesign(props) {
         {inDesign(props.designMode) && (
           <div ref={drag} className={styles.answerIcon}>
             <DragIndicatorIcon
+              color="action"
               ref={drag}
               sx={{
                 fontSize: 18,
@@ -185,7 +213,7 @@ function ChoiceItemDesign(props) {
           </div>
         )}
         {props.type === "checkbox" ? (
-          <Checkbox disabled />
+          <Checkbox />
         ) : props.type === "radio" ? (
           <Radio disabled />
         ) : props.type === "location" ? (
@@ -204,18 +232,19 @@ function ChoiceItemDesign(props) {
                 backgroundColor: isInSetupText ? contrastColor : "inherit",
               },
             }}
-            disabled={!contentEditable(props.designMode)}
             value={content || ""}
-            onChange={(e) =>
-              dispatch(
-                changeContent({
-                  code: props.qualifiedCode,
-                  key: "label",
-                  lang: lang,
-                  value: e.target.value,
-                })
-              )
-            }
+            onChange={(e) => {
+              if (contentEditable(props.designMode)) {
+                dispatch(
+                  changeContent({
+                    code: props.qualifiedCode,
+                    key: "label",
+                    lang: lang,
+                    value: e.target.value,
+                  })
+                );
+              }
+            }}
             placeholder={
               onMainLang
                 ? placeholder
@@ -225,6 +254,7 @@ function ChoiceItemDesign(props) {
               endAdornment: (
                 <BuildIcon
                   key="setup"
+                  color="action"
                   sx={{ fontSize: 18 }}
                   className={styles.answerIconOther}
                   onClick={(e) => {
@@ -242,58 +272,28 @@ function ChoiceItemDesign(props) {
             }}
           />
         ) : (
-          <TextField
-            inputRef={inputRef}
-            variant="standard"
-            disabled={!contentEditable(props.designMode)}
-            value={content || ""}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value.endsWith("\n")) {
-                props.onNewLine();
-              } else {
-                const sanitizedText = sanitizePastedText(e.target.value);
-                const text = sanitizedText[0];
-                const rest = sanitizedText.slice(1);
-                if (rest.length > 0) {
-                  props.onMoreLines(rest);
-                }
-                dispatch(
-                  changeContent({
-                    code: props.qualifiedCode,
-                    key: "label",
-                    lang: langInfo.lang,
-                    value: text,
-                  })
-                );
-              }
-            }}
+          <ContentEditor
+            code={props.qualifiedCode}
+            showToolbar={false}
+            editable={
+              props.designMode == DESIGN_SURVEY_MODE.DESIGN ||
+              props.designMode == DESIGN_SURVEY_MODE.LANGUAGES
+            }
+            extended={false}
             placeholder={
               onMainLang
                 ? placeholder
                 : mainContent || placeholder
             }
-            multiline
-            sx={{
-              flex: 1,
-              fontFamily: theme.textStyles.text.font,
-              color: theme.textStyles.text.color,
-              fontSize: theme.textStyles.text.size,
-            }}
-            InputProps={{
-              disableUnderline: true,
-              fontFamily: theme.textStyles.text.font,
-              color: theme.textStyles.text.color,
-              fontSize: theme.textStyles.text.size,
-            }}
+            contentKey="label"
           />
         )}
         {props.type === "text" && (
           <>
             <TextField
-              sx={{ flex: 2, pointerEvents: 'none', }}
+              sx={{ flex: 2, pointerEvents: "none" }}
               size="small"
-              disabled
+              value=""
               variant="outlined"
             />
           </>
@@ -301,6 +301,7 @@ function ChoiceItemDesign(props) {
         <span style={{ margin: "8px" }} />
         <BuildIcon
           key="setup"
+          color="action"
           sx={{ fontSize: 18 }}
           className={styles.answerIconSettings}
           onClick={(e) => {
@@ -317,8 +318,9 @@ function ChoiceItemDesign(props) {
         {inDesign(props.designMode) && (
           <CloseIcon
             key="close"
+            color="action"
             sx={{ fontSize: 18 }}
-            className={styles.answerIcon}
+            className={styles.answerIconSettings}
             onClick={(e) => dispatch(removeAnswer(props.qualifiedCode))}
           />
         )}

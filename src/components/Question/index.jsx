@@ -1,13 +1,13 @@
 import React, { Suspense, forwardRef } from "react";
 import { useSelector } from "react-redux";
 
-import { Box, Select, useTheme } from "@mui/material";
+import { Box, css, useTheme } from "@mui/material";
 import styles from "./Question.module.css";
 import { stripTags } from "~/utils/design/utils";
 import LoadingDots from "../common/LoadingDots";
 import Validation from "../run/Validation";
 import MultipleText from "../Questions/MultipleText/MultipleText";
-import AutoCompleteQuestion from '../Questions/AutoComplete/AutoCompleteQuestion';
+import AutoCompleteQuestion from "../Questions/AutoComplete/AutoCompleteQuestion";
 
 const DateTimeQuestion = React.lazy(() =>
   import("../Questions/DateTime/DateTimeQuestion")
@@ -288,8 +288,10 @@ const Question = forwardRef((props, ref) => {
     }
   };
 
+  console.log("customCss", props.component.customCss)
+
   return relevance ? (
-    <QuestionWrapper qualifiedCode={props.component.qualifiedCode} ref={ref}>
+    <QuestionWrapper customCss={props.component.customCss} qualifiedCode={props.component.qualifiedCode} ref={ref}>
       {showHeader && (
         <>
           {showTitle && (
@@ -297,9 +299,9 @@ const Question = forwardRef((props, ref) => {
               className={`${styles.content} ${styles.question}`}
               name="label"
               lang={props.lang}
-              fontFamily={theme.textStyles.question.font}
-              color={theme.textStyles.text.color}
-              fontSize={theme.textStyles.question.size}
+              customStyle={`
+        font-size: ${theme.textStyles.question.size}px;
+        `}
               elementCode={props.component.qualifiedCode}
               content={props.component.content?.label}
             />
@@ -309,6 +311,9 @@ const Question = forwardRef((props, ref) => {
               <Content
                 elementCode={props.component.code}
                 name="description"
+                customStyle={`
+        font-size: ${theme.textStyles.text.size}px;
+        `}
                 lang={props.lang}
                 content={props.component.content.description}
               />
@@ -351,6 +356,8 @@ const QuestionWrapper = React.memo((props) => {
 
   return (
     <Box
+      data-code={props.code}
+      css={css`${props.customCss}`}
       sx={{
         borderColor: invalid ? "error.main" : "grey.500",
       }}

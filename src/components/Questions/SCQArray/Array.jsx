@@ -12,6 +12,7 @@ import { Checkbox, Radio } from "@mui/material";
 import { valueChange } from "~/state/runState";
 import Validation from "~/components/run/Validation";
 import { columnMinWidth } from "~/utils/design/utils";
+import Content from "~/components/run/Content";
 
 function Array(props) {
   const theme = useTheme();
@@ -46,15 +47,17 @@ function Array(props) {
               return (
                 <TableCell
                   sx={{
-                    fontFamily: theme.textStyles.text.font,
-                    color: theme.textStyles.text.color,
+                    color: "inherit",
                     padding: "2px",
-                    fontSize: theme.textStyles.text.size,
                     width: header + "px",
                   }}
                   key={option.qualifiedCode}
                 >
-                  {option.content?.label}
+                  <Content
+                    elementCode={option.qualifiedCode}
+                    name="label"
+                    content={option.content?.label}
+                  />
                 </TableCell>
               );
             })}
@@ -93,14 +96,14 @@ function ArrayRow(props) {
 
   const handleChange = (event) => {
     if (props.type === "scq_array") {
-    dispatch(
-      valueChange({
-        componentCode: event.target.name,
+      dispatch(
+        valueChange({
+          componentCode: event.target.name,
           value: event.target.value,
         })
       );
     } else if (props.type === "mcq_array") {
-      let currentValue = state.value || []
+      let currentValue = state.value || [];
       let value = [...currentValue];
       if (event.target.checked) {
         value.push(event.target.value);
@@ -121,18 +124,20 @@ function ArrayRow(props) {
 
   return typeof state.relevance === "undefined" || state.relevance ? (
     <React.Fragment>
-      <TableRow key={props.answer.code}>
+      <TableRow key={props.answer.code} data-code={props.answer.code}>
         <TableCell
           sx={{
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
             borderBottom: invalid ? "0" : "",
             padding: "2px",
+            color: "inherit",
             wordWrap: "break-word",
           }}
         >
-          {props.answer.content?.label}
+          <Content
+            elementCode={props.answer.qualifiedCode}
+            name="label"
+            content={props.answer.content?.label}
+          />
         </TableCell>
         {props.choices.map((option) => {
           return (
@@ -147,11 +152,11 @@ function ArrayRow(props) {
             >
               {props.type === "scq_array" ? (
                 <Radio
-                name={props.answer.qualifiedCode}
-                onChange={handleChange}
-                checked={state.value === option.code}
-                value={option.code}
-              />
+                  name={props.answer.qualifiedCode}
+                  onChange={handleChange}
+                  checked={state.value === option.code}
+                  value={option.code}
+                />
               ) : (
                 <Checkbox
                   name={props.answer.qualifiedCode}

@@ -213,8 +213,18 @@ export const firstIndexInArray = (array, func) => {
   return -1;
 };
 
-export const isNotEmptyHtml = (value) =>
-  value && /[^<br><p><\/p>\s]/gm.test(value);
+export const isNotEmptyHtml = (value) => {
+  if (!value) return false;
+
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = value;
+
+  const textContent = tempDiv.textContent || tempDiv.innerText || "";
+
+  const hasImages = tempDiv.querySelectorAll("img").length > 0;
+
+  return textContent.trim().length > 0 || hasImages;
+};
 
 export const columnMinWidth = (code, runComponent) => {
   const isDesktop = useResponsive("up", "lg");

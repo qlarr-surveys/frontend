@@ -1,0 +1,337 @@
+/* TipTap Editor Wrapper */
+.tiptap-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TipTap Editor Content */
+.tiptap-editor {
+  padding: 0 !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  outline: none;
+}
+
+.tiptap-editor:focus {
+  outline: none;
+}
+
+/* Paragraph styles */
+.tiptap-editor p {
+  margin: 0;
+}
+
+.tiptap-editor > :first-child {
+  margin-top: 0;
+}
+
+.tiptap-editor > :last-child {
+  margin-bottom: 0;
+}
+
+/* RTL Support */
+.tiptap-editor.rtl {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.tiptap-editor.ltr {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* Link styles */
+.tiptap-link {
+  color: #0066cc;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.tiptap-link:hover {
+  color: #004499;
+}
+
+/* List styles */
+.tiptap-editor ul,
+.tiptap-editor ol {
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.tiptap-editor li {
+  margin: 0;
+}
+
+/* Placeholder */
+.tiptap-editor.ProseMirror p.is-editor-empty:first-child::before {
+  color: #aaa;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Image styles */
+.tiptap-image {
+  max-width: 100%;
+  display: block;
+  margin: 1em 0;
+}
+
+.tiptap-image:not([height]) {
+  height: auto;
+}
+
+.tiptap-image-wrapper {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  margin: 1em 0;
+}
+
+.tiptap-image-wrapper img {
+  display: block;
+  max-width: 100%;
+}
+
+.tiptap-image-wrapper img:not([height]) {
+  height: auto;
+}
+
+/* Highlight selected image to indicate it can be deleted with backspace */
+.tiptap-image-wrapper[data-selected="true"] {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.tiptap-image-wrapper[data-selected="true"] img {
+  opacity: 0.9;
+}
+
+.tiptap-image-resize-button {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0 2px;
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 1;
+  z-index: 10;
+  transition: background-color 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tiptap-image-resize-button:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.tiptap-image-resize-button:active {
+  background-color: #e0e0e0;
+}
+
+.tiptap-image-size-input-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+  width: fit-content;
+  z-index: 1000;
+}
+
+.tiptap-image-size-input-wrapper .tiptap-image-size-input {
+  position: static;
+  top: auto;
+  left: auto;
+  margin-top: 0;
+}
+
+/* Collapsible styles */
+.tiptap-collapsible {
+  width: fit-content;
+  margin: 1em 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.collapsible-button {
+  width: 100%;
+  padding: 0.75em 1em;
+  background-color: #16205b; /* theme.palette.primary.main */
+  color: #ffffff; /* theme.palette.primary.contrastText */
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: left;
+  transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  position: relative;
+}
+
+.collapsible-button:hover {
+  background-color: #091133; /* theme.palette.primary.dark */
+}
+
+.collapsible-button-text {
+  flex: 1;
+  order: 1;
+  text-align: start;
+}
+
+/* Arrow via CSS ::after - always visible */
+.collapsible-button::after {
+  content: "▼";
+  font-size: 0.75em;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  order: 2;
+}
+
+.tiptap-collapsible[data-open="true"] .collapsible-button::after {
+  transform: rotate(180deg);
+}
+
+/* Settings button on collapsible - hidden by default, shown when focused */
+.collapsible-settings-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 3px;
+  padding: 0.2em 0.4em;
+  cursor: pointer;
+  font-size: 0.85em;
+  line-height: 1;
+  transition: background-color 0.15s, opacity 0.15s;
+  flex-shrink: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  order: 3;
+}
+
+.tiptap-wrapper.tiptap-focused .collapsible-settings-button {
+  display: inline-flex;
+}
+
+.collapsible-settings-button:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.collapsible-settings-button:active {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.collapsible-content {
+  padding: 1em;
+  background-color: #fafafa;
+}
+
+.collapsible-content.open {
+  display: block !important;
+}
+
+.collapsible-content:not(.open) {
+  display: none !important;
+}
+
+/* Collapsible Settings Popup */
+.tiptap-collapsible-settings-popup {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 0.75rem;
+  min-width: 250px;
+}
+
+.tiptap-collapsible-settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tiptap-collapsible-settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tiptap-collapsible-settings-field label {
+  font-size: 0.75rem;
+  white-space: nowrap;
+  color: #555;
+}
+
+.tiptap-collapsible-settings-field input[type="text"] {
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.tiptap-collapsible-settings-field input[type="text"]:focus {
+  outline: none;
+  border-color: #2196f3;
+}
+
+.tiptap-collapsible-settings-color-row {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  position: relative;
+}
+
+.tiptap-collapsible-settings-color-picker {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  z-index: 10001;
+}
+
+.tiptap-collapsible-settings-actions {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+  margin-top: 0.25rem;
+}
+
+.tiptap-collapsible-settings-actions button {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #ddd;
+  background-color: white;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.15s;
+}
+
+.tiptap-collapsible-settings-actions button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Mention styles */
+.mention {
+  background-color: #e3f2fd;
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.mention span[contenteditable="false"] {
+  pointer-events: none;
+}

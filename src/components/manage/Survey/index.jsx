@@ -219,7 +219,7 @@ const Survey = ({
                     image={
                       survey.image
                         ? buildResourceUrl(survey.image, survey.id)
-                        : "/qlarr.png"
+                        : "/placehoder-logo.png"
                     }
                     height="150"
                   />

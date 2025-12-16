@@ -18,7 +18,6 @@ function TimeQuestionDesign({ code }) {
   return (
     <div className={styles.questionItem}>
       <TextField
-        disabled
         variant="standard"
         size="small"
         required={

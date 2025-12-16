@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 
 import Checkbox from "@mui/material/Checkbox";
 import Validation from "~/components/run/Validation";
-import { useTheme } from "@mui/material/styles";
+import { css, useTheme } from "@mui/material/styles";
 import { valueChange } from "~/state/runState";
 import { setDirty } from "~/state/templateState";
 import MCQAnswer from "./MCQAnswer";
@@ -17,8 +17,7 @@ function MCQ(props) {
   const parentValue = useSelector((state) => {
     return state.runState.values[props.component.qualifiedCode].value || [];
   }, shallowEqual);
-  const hasAll = props.component.answers
-  .some((answer) => answer.type == "all");
+  const hasAll = props.component.answers.some((answer) => answer.type == "all");
   const allCodes = props.component.answers
     .filter(
       (answer) =>
@@ -27,7 +26,8 @@ function MCQ(props) {
         answer.type !== "other"
     )
     .map((answer) => answer.code);
-  const allSelected = hasAll && allCodes.every((code) => parentValue.indexOf(code) > -1);
+  const allSelected =
+    hasAll && allCodes.every((code) => parentValue.indexOf(code) > -1);
   const noneSelected = parentValue.indexOf("Anone") > -1;
 
   return (
@@ -133,52 +133,43 @@ function McqAnswerOther(props) {
   const showAnswer = () => {
     return (
       <FormControlLabel
+        css={css`
+          .MuiTypography-root {
+            width: 100%;
+          }
+        `}
+        data-code={props.Answer.code}
         control={
           <Checkbox
             checked={isSelected}
             disabled={props.disabled}
             onChange={onButtonClick}
             name={props.Answer.qualifiedCode}
-            sx={{
-              color: theme.textStyles.text.color,
-            }}
           />
         }
         label={
-          <div >
-            <TextField
-              variant="standard"
-              required={
-                state.textRelevance && nestedTextChild.validation?.required
-              }
-              inputRef={textInput}
-              id={nestedTextChild.qualifiedCode}
-              name={nestedTextChild.qualifiedCode}
-              disabled={props.disabled}
-              label={props.Answer.content?.label}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={lostFocus}
-              sx={{
-                label: { color: theme.textStyles.text.color },
-              }}
-              value={state.textValue}
-              InputProps={{
-                sx: {
-                  fontFamily: theme.textStyles.text.font,
-                  color: theme.textStyles.text.color,
-                  fontSize: theme.textStyles.text.size,
-                },
-              }}
-              helperText={
-                state.childInvalid ? (
-                  <Validation component={nestedTextChild} limit={1} />
-                ) : (
-                  ""
-                )
-              }
-            />
-          </div>
+          <TextField
+            variant="outlined"
+            required={
+              state.textRelevance && nestedTextChild.validation?.required
+            }
+            inputRef={textInput}
+            id={nestedTextChild.qualifiedCode}
+            name={nestedTextChild.qualifiedCode}
+            disabled={props.disabled}
+            label={props.Answer.content?.label}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={lostFocus}
+            value={state.textValue}
+            helperText={
+              state.childInvalid ? (
+                <Validation component={nestedTextChild} limit={1} />
+              ) : (
+                ""
+              )
+            }
+          />
         }
       />
     );

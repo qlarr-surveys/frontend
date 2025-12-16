@@ -23,7 +23,7 @@ export function responsiveFontSizes({ sm, md, lg }) {
 }
 
 export const primaryFont = 'Rubik, sans-serif';
-export const secondaryFont = 'Barlow, sans-serif';
+export const secondaryFont = 'Rubik, sans-serif';
 
 // ----------------------------------------------------------------------
 

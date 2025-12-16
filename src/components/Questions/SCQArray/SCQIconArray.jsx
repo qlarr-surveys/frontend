@@ -12,11 +12,12 @@ import Validation from "~/components/run/Validation";
 import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 import { TableHead } from "@mui/material";
-import { columnMinWidth } from '~/utils/design/utils';
+import { columnMinWidth } from "~/utils/design/utils";
+import Content from "~/components/run/Content";
 
 function SCQIconArray(props) {
   const theme = useTheme();
-  const width = columnMinWidth()
+  const width = columnMinWidth();
 
   let columns = props.component.answers.filter(
     (answer) => answer.type == "column"
@@ -46,15 +47,17 @@ function SCQIconArray(props) {
               return (
                 <TableCell
                   sx={{
-                    fontFamily: theme.textStyles.text.font,
-                    color: theme.textStyles.text.color,
-                    fontSize: theme.textStyles.text.size,
+                    color: "inherit",
                     textAlign: "center",
                     width: width,
                   }}
                   key={option.qualifiedCode}
                 >
-                  {option.content?.label}
+                  <Content
+                    elementCode={option.qualifiedCode}
+                    name="label"
+                    content={option.content?.label}
+                  />
                 </TableCell>
               );
             })}
@@ -110,17 +113,19 @@ function SCQArrayRow(props) {
 
   return typeof relevance === "undefined" || relevance ? (
     <React.Fragment>
-      <TableRow key={props.answer.code}>
+      <TableRow key={props.answer.code} data-code={props.answer.code}>
         <TableCell
           sx={{
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
+            color: "inherit",
             borderBottom: invalid ? "0" : "",
             padding: "2px",
           }}
         >
-          {props.answer.content?.label}
+          <Content
+            elementCode={props.answer.qualifiedCode}
+            name="label"
+            content={props.answer.content?.label}
+          />
         </TableCell>
         {props.choices.map((option) => {
           return (

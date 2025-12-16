@@ -32,6 +32,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "customCss",
           ],
         },
         {
@@ -50,6 +51,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "customCss",
           ],
         },
         {
@@ -70,6 +72,7 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "imageWidth",
+            "customCss",
           ],
         },
         {
@@ -91,6 +94,7 @@ export const setupOptions = (type) => {
             "showDescription",
             "audio_only",
             "loop",
+            "customCss",
           ],
         },
         {
@@ -112,6 +116,7 @@ export const setupOptions = (type) => {
             "showDescription",
             "maxChars",
             "hint",
+            "customCss",
           ],
         },
         {
@@ -176,6 +181,7 @@ export const setupOptions = (type) => {
             "maxChars",
             "decimal_separator",
             "hint",
+            "customCss",
           ],
         },
         {
@@ -212,6 +218,7 @@ export const setupOptions = (type) => {
             "showDescription",
             "maxChars",
             "hint",
+            "customCss",
           ],
         },
         {
@@ -242,6 +249,7 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "hint",
+            "customCss",
           ],
         },
         {
@@ -269,6 +277,7 @@ export const setupOptions = (type) => {
             "minRows",
             "showWordCount",
             "hint",
+            "customCss",
           ],
         },
         {
@@ -299,6 +308,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "customCss",
           ],
         },
         {
@@ -327,6 +337,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "customCss",
           ],
         },
         {
@@ -352,6 +363,7 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "hint",
+            "customCss",
           ],
         },
         {
@@ -377,6 +389,7 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "hint",
+            "customCss",
           ],
         },
         {
@@ -402,6 +415,7 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "hint",
+            "customCss",
           ],
         },
         {
@@ -430,6 +444,7 @@ export const setupOptions = (type) => {
             "fullDayFormat",
             "maxDate",
             "minDate",
+            "customCss",
           ],
         },
         {
@@ -457,6 +472,7 @@ export const setupOptions = (type) => {
             "dateFormat",
             "maxDate",
             "minDate",
+            "customCss",
           ],
         },
         {
@@ -506,6 +522,7 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "scq_default_value",
+            "customCss",
           ],
         },
         {
@@ -534,6 +551,7 @@ export const setupOptions = (type) => {
             "columns",
             "iconSize",
             "spacing",
+            "customCss",
           ],
         },
         {
@@ -562,6 +580,7 @@ export const setupOptions = (type) => {
             "columns",
             "imageAspectRatio",
             "spacing",
+            "customCss",
           ],
         },
         {
@@ -586,6 +605,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "customCss",
           ],
         },
         {
@@ -637,6 +657,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "customCss",
           ],
         },
         {
@@ -661,6 +682,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "customCss",
           ],
         },
         {
@@ -693,6 +715,7 @@ export const setupOptions = (type) => {
             "columns",
             "imageAspectRatio",
             "spacing",
+            "customCss",
           ],
         },
         {
@@ -725,6 +748,7 @@ export const setupOptions = (type) => {
             "columns",
             "iconSize",
             "spacing",
+            "customCss",
           ],
         },
         {
@@ -757,6 +781,7 @@ export const setupOptions = (type) => {
             "columns",
             "imageAspectRatio",
             "spacing",
+            "customCss",
           ],
         },
         {
@@ -784,6 +809,7 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+            "customCss",
           ],
         },
         {
@@ -812,6 +838,7 @@ export const setupOptions = (type) => {
             "minHeaderDesktop",
             "minRowLabelMobile",
             "minRowLabelDesktop",
+            "customCss",
           ],
         },
         {
@@ -837,6 +864,7 @@ export const setupOptions = (type) => {
             "showDescription",
             "lower_bound_hint",
             "higher_bound_hint",
+            "customCss",
           ],
         },
         {

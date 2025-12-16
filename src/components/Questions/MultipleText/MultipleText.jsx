@@ -1,4 +1,3 @@
-import React from "react";
 import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useTheme } from "@mui/material/styles";
@@ -57,19 +56,18 @@ function MultipleTextItem({ lang, item }) {
   };
   return (
     <Box
+      data-code={item.code}
       sx={{
         gap: "10px",
         display: "flex",
       }}
     >
       <Content
-        style={{
-          flex: 1,
-        }}
+        customStyle={`
+        flex: 1 !important;
+        font-size: ${theme.textStyles.text.size}px;
+        `}
         elementCode={item.code}
-        fontFamily={theme.textStyles.text.font}
-        color={theme.textStyles.text.color}
-        fontSize={theme.textStyles.text.size}
         name="label"
         lang={lang}
         content={item.content?.label}
@@ -79,13 +77,6 @@ function MultipleTextItem({ lang, item }) {
         size="small"
         name={key}
         value={state.value}
-        InputProps={{
-          sx: {
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          },
-        }}
         error={state.invalid}
         onBlur={lostFocus}
         fullWidth

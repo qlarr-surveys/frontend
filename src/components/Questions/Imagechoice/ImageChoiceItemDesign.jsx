@@ -1,5 +1,5 @@
 import styles from "./ImageChoiceItemDesign.module.css";
-import { alpha, Box, Grid, IconButton, TextField } from "@mui/material";
+import { alpha, Box, css, Grid, IconButton, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -23,12 +23,14 @@ import { useService } from "~/hooks/use-service";
 import { contentEditable, inDesign } from "~/routes";
 import { Build } from "@mui/icons-material";
 import { setupOptions } from "~/constants/design";
+import ContentEditor from "~/components/design/ContentEditor";
 
 function ImageChoiceItemDesign({
   parentCode,
   index,
   qualifiedCode,
   type,
+  code,
   columnNumber,
   imageAspectRatio,
   designMode,
@@ -221,9 +223,6 @@ function ImageChoiceItemDesign({
         }}
       >
         <IconButton
-          sx={{
-            color: theme.textStyles.text.color,
-          }}
           className={styles.addAnswerIcon}
           onClick={() => {
             addAnswer();
@@ -240,6 +239,7 @@ function ImageChoiceItemDesign({
           opacity: isDragging ? "0.2" : "1",
         }}
         item
+        data-code={code}
         position="relative"
         xs={12 / columnNumber}
         key={qualifiedCode}
@@ -262,9 +262,6 @@ function ImageChoiceItemDesign({
           {inDesign(designMode) && (
             <div className={styles.buttonContainers}>
               <IconButton
-                sx={{
-                  color: theme.textStyles.text.color,
-                }}
                 className={styles.imageHoverIconButton}
                 onClick={() => {
                   onDelete();
@@ -273,9 +270,6 @@ function ImageChoiceItemDesign({
                 <DeleteOutlineIcon />
               </IconButton>
               <IconButton
-                sx={{
-                  color: theme.textStyles.text.color,
-                }}
                 className={styles.imageHoverIconButton}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -290,9 +284,6 @@ function ImageChoiceItemDesign({
                 <Build />
               </IconButton>
               <IconButton
-                sx={{
-                  color: theme.textStyles.text.color,
-                }}
                 component="label"
                 className={styles.imageHoverIconButton}
                 onClick={(e) => {
@@ -309,14 +300,8 @@ function ImageChoiceItemDesign({
                 />
               </IconButton>
 
-              <IconButton
-                sx={{
-                  color: theme.textStyles.text.color,
-                }}
-                ref={drag}
-                className={styles.imageIconButton}
-              >
-                <DragIndicatorIcon />
+              <IconButton ref={drag} className={styles.imageIconButton}>
+                <DragIndicatorIcon color="action" />
               </IconButton>
             </div>
           )}
@@ -328,34 +313,20 @@ function ImageChoiceItemDesign({
           )}
         </div>
         {!hideText && (
-          <TextField
-            dir={isRtl ? "rtl" : "ltr"}
-            variant="standard"
-            value={content || ""}
-            disabled={!contentEditable(designMode)}
-            onChange={(e) =>
-              dispatch(
-                changeContent({
-                  code: qualifiedCode,
-                  key: "label",
-                  lang: lang,
-                  value: e.target.value,
-                })
-              )
-            }
+          <ContentEditor
+            customStyle={`
+              text-align: center;
+            `}
+            code={qualifiedCode}
+            showToolbar={false}
+            editable={contentEditable(designMode)}
+            extended={false}
             placeholder={
               onMainLang
                 ? t("content_editor_placeholder_option")
                 : mainContent || t("content_editor_placeholder_option")
             }
-            inputProps={{ style: { textAlign: "center" } }}
-            InputProps={{
-              sx: {
-                fontFamily: theme.textStyles.text.font,
-                color: theme.textStyles.text.color,
-                fontSize: theme.textStyles.text.size,
-              },
-            }}
+            contentKey="label"
           />
         )}
       </Grid>

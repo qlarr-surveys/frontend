@@ -3,7 +3,7 @@ import { shallowEqual, useDispatch } from "react-redux";
 import styles from "./RunSurvey.module.css";
 import { useTranslation } from "react-i18next";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { CacheProvider } from "@emotion/react";
+import { CacheProvider, css } from "@emotion/react";
 import {
   loadScript,
   startNavigation,
@@ -11,10 +11,7 @@ import {
 } from "~/networking/run";
 import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { defualtTheme } from "~/constants/theme";
-import {
-  previewModeChange,
-  stateReceived,
-} from "~/state/runState";
+import { previewModeChange, stateReceived } from "~/state/runState";
 import { useSelector } from "react-redux";
 import { Box, Button, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -32,6 +29,7 @@ import RunLoadingDots from "~/components/common/RunLoadingDots";
 import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
 import SurveyAppBar from "~/components/run/SurveyAppBar";
 import { routes } from "~/routes";
+import { Css } from '@mui/icons-material';
 
 function RunSurvey({
   preview,
@@ -231,6 +229,10 @@ function RunSurvey({
   );
 
   const cacheRtlMemo = useMemo(() => cacheRtl(i18n.language), [i18n.language]);
+  const backgroundImageUrl = useMemo(
+    () => `url(${buildResourceUrl(backgroundImage)})`,
+    [backgroundImage]
+  );
 
   const navigate = useNavigate();
 
@@ -262,26 +264,27 @@ function RunSurvey({
                 <div
                   aria-hidden
                   className={styles.fixedBg}
-                  style={{
-                    backgroundImage: `url(${buildResourceUrl(
-                      backgroundImage
-                    )})`,
-                  }}
+                  css={css`
+                    background-image: ${backgroundImageUrl};
+                  `}
                 />
               )}
               <div
                 className={styles.mainContainer}
                 ref={containerRef}
+                css={css`color: ${theme.textStyles.text.color};
+                    font-family: ${theme.textStyles.text.font};`}
                 style={{
                   backgroundColor: theme.palette.background.default,
-                  fontFamily: theme.textStyles.text.font,
-                  color: theme.textStyles.text.color,
-                  fontSize: theme.textStyles.text.size,
                   height: "calc(100vh - 48px)",
                 }}
               >
-                {!SURVEY_ENDED && <SurveyAppBar preview={preview} toggleDrawer={toggleDrawer} />}
-                <SurveyMemo key="Survey" />
+                {!SURVEY_ENDED && (
+                  <SurveyAppBar preview={preview} toggleDrawer={toggleDrawer} />
+                )}
+                <SurveyMemo
+                  key="Survey"
+                />
                 <SurveyDrawer
                   expanded={expanded}
                   toggleDrawer={toggleDrawer}

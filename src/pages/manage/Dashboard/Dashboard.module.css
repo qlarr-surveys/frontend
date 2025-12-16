@@ -3,6 +3,7 @@
   min-width: 300px;
   height: calc(100vh - 64px);
   overflow: auto;
+  background: linear-gradient(135deg, #F7F8FC 0%, #EFF1FC 100%);
 }
 
 .newSurveysButton {
@@ -43,9 +44,7 @@
 .surveyCardsContainer {
   margin-top: 24px;
   padding: 16px;
-  border: 2px dashed #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+
 }
 
 .noSurveys {

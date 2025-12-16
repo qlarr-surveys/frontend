@@ -6,6 +6,7 @@ import { useTheme } from "@emotion/react";
 import { Box } from "@mui/material";
 import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
+import Content from '~/components/run/Content';
 
 function IconMcq(props) {
   const theme = useTheme();
@@ -14,12 +15,9 @@ function IconMcq(props) {
     return state.runState.values[props.component.qualifiedCode].value || [];
   }, shallowEqual);
 
-
-
   const hideText = props.component?.hideText || false;
 
   const runValues = useSelector((s) => s.runState.values);
-
 
   return (
     <Box
@@ -32,6 +30,7 @@ function IconMcq(props) {
         const relevance = runValues[option.qualifiedCode]?.relevance ?? true;
         if (!relevance) return null;
 
+        console.log(option.code);
         return (
           <IconMcqChoice
             key={option.code}
@@ -51,7 +50,6 @@ function IconMcq(props) {
 }
 
 function IconMcqChoice({
-  key,
   component,
   parentValue,
   parentCode,
@@ -65,7 +63,8 @@ function IconMcqChoice({
   const checked = parentValue.indexOf(component.code) > -1;
   return (
     <Box
-      key={key}
+      data-code={component.code}
+      key={component.code}
       sx={{
         flex: `0 1 calc(${100 / columns}% - ${spacing || 8}px)`,
         textAlign: "center",
@@ -80,14 +79,16 @@ function IconMcqChoice({
         }}
       >
         <DynamicSvg
-          onIconClick={() =>{
+          onIconClick={() => {
             let parentValue2 = [...parentValue];
             if (checked) {
               parentValue2 = parentValue2.filter((el) => el !== component.code);
             } else {
               parentValue2.push(component.code);
             }
-            dispatch(valueChange({ componentCode: parentCode, value: parentValue2 }));
+            dispatch(
+              valueChange({ componentCode: parentCode, value: parentValue2 })
+            );
           }}
           imageHeight="100%"
           maxHeight={iconSize + "px"}
@@ -102,18 +103,18 @@ function IconMcqChoice({
       </div>
 
       {!hideText && (
-        <Box
-          sx={{
-            textAlign: "center",
-            fontFamily: theme.textStyles.text.font,
-            color: checked
-              ? theme.palette.primary.main
-              : theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          }}
-        >
-          {component.content?.label}
-        </Box>
+        <Content
+          customStyle={`
+                                text-align: center;
+                                margin-top: 8px;
+                                color: ${
+                                  checked
+                                    ? theme.palette.primary.main
+                                    : theme.textStyles.text.color
+                                },
+                              `}
+          content={component.content?.label}
+        />
       )}
     </Box>
   );
