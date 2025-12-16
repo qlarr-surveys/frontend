@@ -188,6 +188,7 @@
 .collapsible-button-text {
   flex: 1;
   order: 1;
+  text-align: start;
 }
 
 /* Arrow via CSS ::after - always visible */
