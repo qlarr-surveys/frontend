@@ -31,7 +31,8 @@ import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
 import { contentEditable, inDesign } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
-import { sanitizePastedText } from "~/components/design/ContentEditor/QuillEditor";
+import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
+import ContentEditor from "~/components/design/ContentEditor";
 
 function ArrayDesign(props) {
   const theme = useTheme();
@@ -61,11 +62,6 @@ function ArrayDesign(props) {
       {inDesign(props.designMode) && (
         <div className={styles.addColumn}>
           <Button
-            sx={{
-              fontFamily: theme.textStyles.text.font,
-              fontSize: theme.textStyles.text.size,
-              color: theme.textStyles.question.color,
-            }}
             size="small"
             onClick={(e) =>
               dispatch(
@@ -145,11 +141,6 @@ function ArrayDesign(props) {
       {props.onMainLang && (
         <div className={styles.addRow}>
           <Button
-            sx={{
-              fontFamily: theme.textStyles.text.font,
-              fontSize: theme.textStyles.text.size,
-              color: theme.textStyles.question.color,
-            }}
             size="small"
             onClick={(e) =>
               dispatch(addNewAnswer({ questionCode: props.code, type: "row" }))
@@ -265,6 +256,7 @@ function ArrayRowDesign({
   drop(preview(ref));
   return (
     <TableRow
+      data-code={item.code}
       style={{
         opacity: isDragging ? "0.2" : "1",
       }}
@@ -274,71 +266,27 @@ function ArrayRowDesign({
     >
       <TableCell
         sx={{
-          fontFamily: theme.textStyles.text.font,
-          color: theme.textStyles.text.color,
-          fontSize: theme.textStyles.text.size,
+          color: "inherit",
           padding: "2px",
         }}
       >
         <Box display="flex" alignItems="center">
           {inDesign(designMode) && (
             <div ref={drag}>
-              <DragIndicatorIcon />
+              <DragIndicatorIcon color="action" />
             </div>
           )}
-          <TextField
-            inputRef={inputRef}
-            variant="standard"
-            value={content || ""}
-            disabled={!contentEditable(designMode)}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value.endsWith("\n")) {
-                dispatch(
-                  onNewLine({
-                    questionCode: parentQualifiedCode,
-                    index,
-                    type: "row",
-                  })
-                );
-              } else {
-                const sanitizedText = sanitizePastedText(e.target.value);
-                const text = sanitizedText[0];
-                const rest = sanitizedText.slice(1);
-                if (rest.length > 0) {
-                  dispatch(
-                    addNewAnswers({
-                      questionCode: parentQualifiedCode,
-                      index,
-                      type: "row",
-                      data: rest,
-                    })
-                  );
-                }
-                dispatch(
-                  changeContent({
-                    code: item.qualifiedCode,
-                    key: "label",
-                    lang: langInfo.lang,
-                    value: text,
-                  })
-                );
-              }
-            }}
+          <ContentEditor
+            code={item.qualifiedCode}
+            showToolbar={false}
+            editable={contentEditable(designMode)}
+            extended={false}
             placeholder={
               onMainLang
                 ? t("content_editor_placeholder_option")
                 : mainContent || t("content_editor_placeholder_option")
             }
-            multiline
-            InputProps={{
-              disableUnderline: true,
-              sx: {
-                fontFamily: theme.textStyles.text.font,
-                color: theme.textStyles.text.color,
-                fontSize: theme.textStyles.text.size,
-              },
-            }}
+            contentKey="label"
           />
         </Box>
       </TableCell>
@@ -353,15 +301,7 @@ function ArrayRowDesign({
               padding: "0px",
             }}
           >
-            {type === "scq_array" ? (
-              <Radio
-              disabled={true}
-            />
-            ) : (
-              <Checkbox
-                disabled={true}
-              />
-            )}
+            {type === "scq_array" ? <Radio /> : <Checkbox />}
           </TableCell>
         );
       })}
@@ -372,10 +312,9 @@ function ArrayRowDesign({
           sx={{
             width: "30px",
             padding: "0",
-            color: theme.textStyles.text.color,
           }}
         >
-          <CloseIcon />
+          <CloseIcon color="action" />
         </TableCell>
       )}
     </TableRow>
@@ -478,10 +417,8 @@ function ArrayHeaderDesign({
       data-handler-id={handlerId}
       align="center"
       sx={{
+        color: "inherit",
         opacity: isDragging ? "0.2" : "1",
-        fontFamily: theme.textStyles.text.font,
-        color: theme.textStyles.text.color,
-        fontSize: theme.textStyles.text.size,
         padding: "2px",
         width: width + "px",
       }}
@@ -497,7 +434,7 @@ function ArrayHeaderDesign({
               padding: "0",
             }}
           >
-            <DragIndicatorIcon />
+            <DragIndicatorIcon color="action" />
           </div>
           <div
             sx={{
@@ -505,40 +442,24 @@ function ArrayHeaderDesign({
             }}
             onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
           >
-            <CloseIcon />
+            <CloseIcon color="action" />
           </div>
         </div>
       )}
-
-      <TextField
-        variant="standard"
-        value={content || ""}
-        multiline
-        disabled={!contentEditable(designMode)}
-        onChange={(e) => {
-          dispatch(
-            changeContent({
-              code: item.qualifiedCode,
-              key: "label",
-              lang: langInfo.lang,
-              value: e.target.value,
-            })
-          );
-        }}
+      <ContentEditor
+        customStyle={`
+              text-align: center;
+            `}
+        code={item.qualifiedCode}
+        showToolbar={false}
+        editable={contentEditable(designMode)}
+        extended={false}
         placeholder={
           onMainLang
             ? t("content_editor_placeholder_option")
             : mainContent || t("content_editor_placeholder_option")
         }
-        inputProps={{ style: { textAlign: "center" } }}
-        InputProps={{
-          disableUnderline: true,
-          sx: {
-            fontFamily: theme.textStyles.text.font,
-            color: theme.textStyles.text.color,
-            fontSize: theme.textStyles.text.size,
-          },
-        }}
+        contentKey="label"
       />
     </TableCell>
   );

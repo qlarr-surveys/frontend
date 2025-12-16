@@ -160,10 +160,6 @@ function FileUpload(props) {
 
           <Button
             disabled={isUploading}
-            sx={{
-              fontFamily: theme.textStyles.text.font,
-              fontSize: theme.textStyles.text.size,
-            }}
             variant="text"
             onClick={resetSelectedFile}
           >

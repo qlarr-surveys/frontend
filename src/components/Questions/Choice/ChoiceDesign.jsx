@@ -72,22 +72,12 @@ function ChoiceQuestion(props) {
         <div className={styles.answerAdd}>
           <Button
             size="small"
-            style={{
-              fontFamily: theme.textStyles.text.font,
-              fontSize: theme.textStyles.text.size,
-              color: theme.textStyles.question.color,
-            }}
             onClick={() => dispatch(addNewAnswer({ questionCode: props.code }))}
           >
             {t("add_option")}
           </Button>
           {canHaveOther && (
             <Button
-              style={{
-                fontFamily: theme.textStyles.text.font,
-                fontSize: theme.textStyles.text.size,
-                color: theme.textStyles.question.color,
-              }}
               size="small"
               className={styles.answerIcon}
               onClick={() =>
@@ -101,11 +91,6 @@ function ChoiceQuestion(props) {
           )}
           {canHaveAll && (
             <Button
-              style={{
-                fontFamily: theme.textStyles.text.font,
-                fontSize: theme.textStyles.text.size,
-                color: theme.textStyles.question.color,
-              }}
               size="small"
               className={styles.answerIcon}
               onClick={() =>
@@ -119,11 +104,6 @@ function ChoiceQuestion(props) {
           )}
           {canHaveNone && (
             <Button
-              style={{
-                fontFamily: theme.textStyles.text.font,
-                fontSize: theme.textStyles.text.size,
-                color: theme.textStyles.question.color,
-              }}
               size="small"
               className={styles.answerIcon}
               onClick={() =>

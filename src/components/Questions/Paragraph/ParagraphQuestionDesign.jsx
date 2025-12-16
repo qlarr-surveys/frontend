@@ -16,7 +16,6 @@ function ParagraphQuestionDesign({ code, t }) {
   return (
     <div className={styles.questionItem}>
       <TextField
-        disabled
         multiline
         className={styles.paragraph}
         required={

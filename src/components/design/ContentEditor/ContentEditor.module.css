@@ -1,4 +1,5 @@
 .fullWidth {
+  min-height: 24px;
   width: 100%;
   cursor: text;
 }
@@ -23,7 +24,8 @@ p {
 }
 
 .placeholder {
-  color: #aaa;
+opacity: 0.5;
+color: #aaa;
 }
 
 .placeholder > :first-child {

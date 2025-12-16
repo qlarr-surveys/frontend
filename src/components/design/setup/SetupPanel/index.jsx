@@ -23,6 +23,7 @@ import ScqDefaultValue from "../ScqDefaultValue";
 import QuestionActions from "../QuestionActions";
 import DisabledToggle from "../Disabled";
 import EntityCodeEditor from "../EntityCodeEditor";
+import CustomCSS from '../CustomCss';
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -99,7 +100,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
 
   switch (rule) {
     case "changeCode":
-      return <EntityCodeEditor code={code} />
+      return <EntityCodeEditor code={code} />;
     case "theme":
       return <Theming t={t} key={code + rule} />;
     case "language":
@@ -157,9 +158,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
         <QuestionActions key={code + rule} t={t} rule={rule} code={code} />
       );
     case "scq_default_value":
-      return (
-        <ScqDefaultValue key={code + rule} code={code} />
-      );
+      return <ScqDefaultValue key={code + rule} code={code} />;
     case "showWordCount":
       return (
         <ToggleValue
@@ -236,6 +235,16 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           key={code + rule}
           label={"max_date"}
           rule={rule}
+          t={t}
+        />
+      );
+    case "customCss":
+      return (
+        <CustomCSS
+          key={code + rule}
+          label={"min_date"}
+          rule={rule}
+          code={code}
           t={t}
         />
       );

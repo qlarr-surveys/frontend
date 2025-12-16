@@ -3,7 +3,6 @@ import styles from "./ActionToolbar.module.css";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import React from "react";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
-import LowPriorityIcon from "@mui/icons-material/LowPriority";
 import MoveDownIcon from "@mui/icons-material/MoveDown";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -113,13 +112,15 @@ function ActionToolbar({ code, isGroup, parentCode }) {
   });
 
   const randomRule = useSelector((state) => {
-    return (
-      state.designState[code].randomize_questions ? "randomize_questions" :
-      state.designState[code].randomize_options ? "randomize_options" :
-      state.designState[code].randomize_rows ? "randomize_rows" :
-      state.designState[code].randomize_columns ? "randomize_columns" :
-      undefined
-    );
+    return state.designState[code].randomize_questions
+      ? "randomize_questions"
+      : state.designState[code].randomize_options
+      ? "randomize_options"
+      : state.designState[code].randomize_rows
+      ? "randomize_rows"
+      : state.designState[code].randomize_columns
+      ? "randomize_columns"
+      : undefined;
   });
 
   return (
@@ -138,7 +139,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
             className={styles.statusIcon}
             onClick={() => expandRelevance()}
           >
-            <RuleOutlined style={{ color: textColor }} />
+            <RuleOutlined />
           </IconButton>
         </CustomTooltip>
       )}
@@ -149,7 +150,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
             className={styles.statusIcon}
             onClick={() => expandDisabled()}
           >
-            <VisibilityOff style={{ color: textColor }} />
+            <VisibilityOff />
           </IconButton>
         </CustomTooltip>
       )}
@@ -160,7 +161,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
             className={styles.statusIcon}
             onClick={() => expandValidation()}
           >
-            <VerifiedIcon style={{ color: textColor }} />
+            <VerifiedIcon />
           </IconButton>
         </CustomTooltip>
       )}
@@ -170,7 +171,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
             className={styles.statusIcon}
             onClick={() => expandRandom(randomRule)}
           >
-            <ShuffleIcon style={{ color: textColor }} />
+            <ShuffleIcon />
           </IconButton>
         </CustomTooltip>
       )}
@@ -180,7 +181,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
             className={styles.statusIcon}
             onClick={() => expandSkipLogic()}
           >
-            <MoveDownIcon style={{ color: textColor }} />
+            <MoveDownIcon />
           </IconButton>
         </CustomTooltip>
       )}

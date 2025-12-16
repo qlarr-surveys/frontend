@@ -22,6 +22,7 @@ function Group(props) {
     return (
       <>
         <Box
+          data-code={props.group.code}
           className={styles.topLevel}
           sx={{
             border: `0.1px solid transparent`,
@@ -35,9 +36,9 @@ function Group(props) {
               elementCode={props.group.code}
               name="label"
               lang={props.lang}
-              fontFamily={theme.textStyles.group.font}
-              color={theme.textStyles.group.color}
-              fontSize={theme.textStyles.group.size}
+              customStyle={`
+        font-size: ${theme.textStyles.group.size}px;
+        `}
               content={props.group.content?.label}
             />
 
@@ -47,6 +48,9 @@ function Group(props) {
                   <Content
                     elementCode={props.group.code}
                     name="description"
+                    customStyle={`
+        font-size: ${theme.textStyles.text.size}px;
+        `}
                     lang={props.lang}
                     content={props.group.content?.description}
                   />

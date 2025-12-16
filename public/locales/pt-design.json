@@ -386,8 +386,39 @@
     "allow_jump": "Habilitar um índice de pesquisa para que os respondentes possam saltar para qualquer página na pesquisa.",
     "allow_incomplete": "Permitir que os respondentes salvem seu progresso e retornem mais tarde para completar a pesquisa.",
     "skip_invalid": "Permitir que os respondentes continuem mesmo se algumas respostas forem inválidas, aplicando validação apenas quando enviarem a pesquisa."
-  }
+  },
+  "tiptap_font_size_small": "Pequeno",
+  "tiptap_font_size_normal": "Normal",
+  "tiptap_font_size_large": "Grande",
+  "tiptap_font_size_huge": "Muito Grande",
+  "tiptap_bold": "Negrito",
+  "tiptap_italic": "Itálico",
+  "tiptap_underline": "Sublinhado",
+  "tiptap_strikethrough": "Tachado",
+  "tiptap_link": "Link",
+  "tiptap_link_placeholder": "Inserir URL",
+  "tiptap_link_text_placeholder": "Texto do link",
+  "tiptap_ordered_list": "Lista Numerada",
+  "tiptap_bullet_list": "Lista com Marcadores",
+  "tiptap_decrease_indent": "Diminuir Recuo",
+  "tiptap_increase_indent": "Aumentar Recuo",
+  "tiptap_text_color": "Cor do Texto",
+  "tiptap_remove_color": "Remover cor",
+  "tiptap_background_color": "Cor de Fundo",
+  "tiptap_remove_background": "Remover fundo",
+  "tiptap_insert_image": "Inserir Imagem",
+  "tiptap_image_size": "Tamanho da Imagem",
+  "tiptap_maintain_aspect_ratio": "Manter proporção",
+  "tiptap_width": "Largura",
+  "tiptap_height": "Altura",
+  "tiptap_insert_collapsible": "Inserir Seção Recolhível",
+  "tiptap_collapsible_settings": "Configurações da Seção Recolhível",
+  "tiptap_title": "Título",
+  "tiptap_collapsible_title_placeholder": "Mostrar mais detalhes",
+  "tiptap_title_color": "Cor do Título",
+  "tiptap_default": "Padrão",
+  "tiptap_clear_formatting": "Limpar Formatação",
+  "tiptap_invalid_file_type": "Tipo de arquivo inválido. Por favor, selecione um arquivo de imagem.",
+  "tiptap_file_too_large": "Arquivo muito grande. O tamanho máximo é 10 MB.",
+  "tiptap_invalid_link": "URL de link inválida. Por favor, insira uma URL válida."
 }
-
-
-

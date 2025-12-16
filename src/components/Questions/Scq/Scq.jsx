@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { useTheme } from "@mui/material/styles";
+import { css, useTheme } from "@mui/material/styles";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Validation from "~/components/run/Validation";
 import Radio from "@mui/material/Radio";
@@ -60,16 +60,19 @@ function ScqChoice(props) {
     return state.runState.values[props.Choice.qualifiedCode]?.relevance ?? true;
   });
 
-  return !relevance ? <></> : (
+  return !relevance ? (
+    <></>
+  ) : (
     <FormControlLabel
+      data-code={props.Choice.code}
       key={props.Choice.qualifiedCode}
       control={<Radio />}
       label={
         <Content
           elementCode={props.Choice.code}
-          fontFamily={theme.textStyles.text.font}
-          color={theme.textStyles.text.color}
-          fontSize={theme.textStyles.text.size}
+          customStyle={`
+        font-size: ${theme.textStyles.text.size}px;
+        `}
           name="label"
           lang={props.lang}
           content={props.Choice.content?.label}
@@ -81,7 +84,6 @@ function ScqChoice(props) {
 }
 
 function ScqChoiceOther(props) {
-  const theme = useTheme();
   const nestedTextChild = props.Choice.answers[0];
   const state = useSelector((state) => {
     let choiceState = state.runState.values[props.Choice.qualifiedCode];
@@ -128,56 +130,42 @@ function ScqChoiceOther(props) {
 
   const showChoice = () => {
     return (
-      <div className="text-left d-flex">
-        <FormControlLabel
-          key={props.Choice.qualifiedCode}
-          control={
-            <Radio
-              sx={{
-                color: theme.textStyles.text.color,
-              }}
-            />
+      <FormControlLabel
+        data-code={props.Choice.code}
+        key={props.Choice.qualifiedCode}
+        css={css`
+          .MuiTypography-root {
+            width: 100%;
           }
-          label={
-            <TextField
-              variant="standard"
-              fullWidth
-              required={
-                state.textChild?.relevance &&
-                nestedTextChild.validation?.required
-              }
-              sx={{
-                label: { color: theme.textStyles.text.color },
-              }}
-              inputRef={textInput}
-              id={nestedTextChild.qualifiedCode}
-              name={nestedTextChild.qualifiedCode}
-              label={props.Choice.content?.label}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={lostFocus}
-              value={state.value}
-              InputProps={{
-                sx: {
-                  fontFamily: theme.textStyles.text.font,
-                  color: theme.textStyles.text.color,
-                  fontSize: theme.textStyles.text.size,
-                },
-              }}
-              helperText={
-                state.childInvalid ? (
-                  <Validation component={nestedTextChild} limit={1} />
-                ) : (
-                  ""
-                )
-              }
-            />
-          }
-          onChange={onButtonClick}
-          value={props.Choice.code}
-        />
-        <p />
-      </div>
+        `}
+        control={<Radio />}
+        label={
+          <TextField
+            variant="outlined"
+            fullWidth
+            required={
+              state.textChild?.relevance && nestedTextChild.validation?.required
+            }
+            inputRef={textInput}
+            id={nestedTextChild.qualifiedCode}
+            name={nestedTextChild.qualifiedCode}
+            label={props.Choice.content?.label}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={lostFocus}
+            value={state.value}
+            helperText={
+              state.childInvalid ? (
+                <Validation component={nestedTextChild} limit={1} />
+              ) : (
+                ""
+              )
+            }
+          />
+        }
+        onChange={onButtonClick}
+        value={props.Choice.code}
+      />
     );
   };
 

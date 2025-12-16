@@ -29,9 +29,6 @@ function Survey() {
       <form
         id={FORM_ID}
         style={{
-          fontFamily: theme.textStyles.text.font,
-          color: theme.textStyles.text.color,
-          fontSize: theme.textStyles.text.size,
           marginTop: "4rem",
         }}
       >

@@ -14,3 +14,79 @@
 .no-padding > :first-child {
   margin-top: 0;
 }
+
+/* TipTap rendered content styles - shared with design view */
+.content-editor .tiptap-image,
+.content-editor .tiptap-image img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.content-editor .tiptap-image {
+  margin: 1em 0;
+}
+
+.content-editor .tiptap-collapsible {
+  margin: 1em 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.content-editor .collapsible-button {
+  width: 100%;
+  padding: 0.75em 1em;
+  background-color: #7b1fa2; /* Fallback color for legacy content */
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: left;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.content-editor .collapsible-button:hover {
+  background-color: #6a1b9a;
+}
+
+.content-editor .collapsible-button::after {
+  content: "▼";
+  font-size: 0.75em;
+  margin-left: 0.5em;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.content-editor.rtl .collapsible-button {
+  text-align: right;
+}
+
+.content-editor.rtl .collapsible-button::after {
+  margin-left: 0;
+  margin-right: 0.5em;
+}
+
+.content-editor
+  .tiptap-collapsible[data-open="true"]
+  .collapsible-button::after {
+  transform: rotate(180deg);
+}
+
+.content-editor .collapsible-content {
+  padding: 1em;
+  background-color: #fafafa;
+}
+
+.content-editor .collapsible-content.open {
+  display: block !important;
+}
+
+.content-editor .collapsible-content:not(.open) {
+  display: none !important;
+}

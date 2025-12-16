@@ -6,6 +6,7 @@ import { useTheme } from "@emotion/react";
 import { Box, Card, Grid, Radio } from "@mui/material";
 import { buildResourceUrl } from "~/networking/common";
 import { rtlLanguage } from "~/utils/common";
+import Content from '~/components/run/Content';
 
 function ImageScq(props) {
   const theme = useTheme();
@@ -49,9 +50,12 @@ function ImageScq(props) {
         if (!relevance) return null;
         return (
           <Box
+            data-code={option.code}
             key={option.code}
             sx={{
-              flex: `0 1 calc(${100 / props.component.columns}% - ${props.component.spacing}px)`,
+              flex: `0 1 calc(${100 / props.component.columns}% - ${
+                props.component.spacing
+              }px)`,
               cursor: "pointer",
             }}
             onClick={() =>
@@ -81,24 +85,19 @@ function ImageScq(props) {
                   name={props.component.qualifiedCode}
                   size="large"
                   sx={{
-                    m:'5px',
-                    color: theme.textStyles.text.color,
+                    m: "5px",
                   }}
                 />
               </div>
             </Box>
             {!props.component.hideText && (
-              <Box
-                sx={{
-                  fontFamily: theme.textStyles.text.font,
-                  color: theme.textStyles.text.color,
-                  fontSize: theme.textStyles.text.size,
-                  textAlign: "center",
-                  marginTop: "8px",
-                }}
-              >
-                {option.content?.label}
-              </Box>
+              <Content
+                customStyle={`
+                  text-align: center;
+                  margin-top: 8px;
+                `}
+                content={option.content?.label}
+              />
             )}
           </Box>
         );
