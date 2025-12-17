@@ -22,7 +22,8 @@ import { useTranslation } from "react-i18next";
 import { getValues } from "~/state/runState";
 import { useService } from "~/hooks/use-service";
 import { routes } from "~/routes";
-import { FRONT_END_HOST, PROTOCOL } from '~/constants/networking';
+import { FRONT_END_HOST, PROTOCOL } from "~/constants/networking";
+import { isAndroid } from "~/utils/common";
 
 function SurveyAppBar({ toggleDrawer, preview }) {
   const lang = useSelector((state) => {
@@ -98,18 +99,20 @@ function SurveyAppBar({ toggleDrawer, preview }) {
         >
           <MenuIcon />
         </IconButton>
-        <Box display="flex" gap={2}>
-          {canSave && (
-            <Button
-              variant="contained"
-              size="small"
-              onClick={() => setSaveOpen(true)}
-            >
-              {t("save")}
-            </Button>
-          )}
-          <ChangeLang lang={lang} additionalLang={additionalLang} />
-        </Box>
+        {!isAndroid && (
+          <Box display="flex" gap={2}>
+            {canSave && (
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => setSaveOpen(true)}
+              >
+                {t("save")}
+              </Button>
+            )}
+            <ChangeLang lang={lang} additionalLang={additionalLang} />
+          </Box>
+        )}
       </Toolbar>
 
       <Dialog

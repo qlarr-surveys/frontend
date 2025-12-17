@@ -4,7 +4,7 @@ import { I18nextProvider } from "react-i18next";
 import HttpBackend from "i18next-http-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 import LoadingDots from "./components/common/LoadingDots";
-const isAndroid = import.meta.env.MODE == "android-debuggable" || import.meta.env.MODE == "android";
+import { isAndroid } from './utils/common';
 
 const Web = isAndroid ? null : lazy(() => import("./Web"));
 const Android = isAndroid ? lazy(() => import("./Android")) : null;

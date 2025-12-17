@@ -270,6 +270,9 @@ function ChoiceItemDesign(props) {
           <ContentEditor
             code={props.qualifiedCode}
             showToolbar={false}
+            customStyle={props.type=="text" 
+              ? `flex: 1` : undefined
+            }
             editable={
               props.designMode == DESIGN_SURVEY_MODE.DESIGN ||
               props.designMode == DESIGN_SURVEY_MODE.LANGUAGES

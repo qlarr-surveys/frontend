@@ -49,13 +49,9 @@ export const addSkipInstructions = (state, code) => {
 export const refreshEnumForSingleChoice = (component, state) => {
   if (
     !component.type ||
-    ![
-      "scq",
-      "icon_scq",
-      "image_scq",
-      "scq_icon_array",
-      "scq_array",
-    ].includes(component.type)
+    !["scq", "icon_scq", "image_scq", "scq_icon_array", "scq_array"].includes(
+      component.type
+    )
   ) {
     return;
   }
@@ -915,7 +911,7 @@ const requiredText = (qualifiedCode, component) => {
     component.type == "photo_capture" ||
     component.type == "video_capture"
   ) {
-    return `QlarrScripts.isVoid(${qualifiedCode}.value) || !${qualifiedCode}.value.size || !${qualifiedCode}.value.stored_filename`;
+    return `QlarrScripts.isVoid(${qualifiedCode}.value) || !QlarrScripts.safeAccess(${qualifiedCode}.value,"size") || !QlarrScripts.safeAccess(${qualifiedCode}.value,"stored_filename")`;
   } else if (
     component.type == "scq_array" ||
     component.type == "scq_icon_array"

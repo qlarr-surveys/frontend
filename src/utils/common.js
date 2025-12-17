@@ -4,6 +4,8 @@ import rtlPlugin from "stylis-plugin-rtl";
 
 export const rtlLanguage = ["ar"];
 
+export const isAndroid = import.meta.env.MODE == "android-debuggable" || import.meta.env.MODE == "android";
+
 export const setLangFromSession = (i18n) => {
   const lang = localStorage.getItem("lang");
   if (!lang) {
