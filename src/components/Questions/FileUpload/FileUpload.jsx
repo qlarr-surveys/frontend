@@ -220,7 +220,7 @@ function FileUpload(props) {
               dispatch(
                 valueChange({
                   componentCode: props.component.qualifiedCode,
-                  value: undefined,
+                  value: {},
                 })
               )
             }
