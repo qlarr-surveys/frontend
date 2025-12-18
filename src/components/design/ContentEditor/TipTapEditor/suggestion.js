@@ -21,7 +21,6 @@ export default (getMentionSuggestions) => ({
       onStart: (props) => {
         component = new ReactRenderer(MentionList, {
           props,
-          editor: props.editor,
         });
 
         if (!props.clientRect) {

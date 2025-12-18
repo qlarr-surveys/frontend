@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useState,
+  useCallback,
 } from "react";
 import "./MentionList.css";
 
@@ -37,15 +38,16 @@ const MentionList = forwardRef(({ items, command }, ref) => {
     return () => {
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [selectedIndex, items]);
-
-  const selectItem = (index) => {
-    const item = items[index];
-    if (item) {
-      command(item);
-    }
-  };
-
+  }, [selectedIndex, items, selectItem]);
+  const selectItem = useCallback(
+    (index) => {
+      const item = items[index];
+      if (item) {
+        command(item);
+      }
+    },
+    [items, command]
+  );
   useImperativeHandle(ref, () => ({
     onKeyDown: ({ event }) => {
       if (event.key === "ArrowUp") {
