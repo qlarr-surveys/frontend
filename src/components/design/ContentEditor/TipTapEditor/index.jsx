@@ -11,7 +11,7 @@ import Toolbar from "./Toolbar";
 import CollapsibleSettings from "./CollapsibleSettings";
 import { buildReferences } from "~/components/Questions/buildReferences";
 import { manageStore } from "~/store";
-import "./TipTapEditor.css";
+import "~/styles/tiptap-editor.css";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
 import { createAllExtensions } from "./extensions";
 
