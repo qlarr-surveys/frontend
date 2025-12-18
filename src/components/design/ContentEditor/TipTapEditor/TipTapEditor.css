@@ -161,15 +161,13 @@
 
 /* Collapsible styles */
 .tiptap-collapsible {
-  width: fit-content;
+  width: 100%;
   margin: 1em 0;
-  border: 1px solid #e0e0e0;
   border-radius: 4px;
-  overflow: hidden;
 }
 
 .collapsible-button {
-  width: 100%;
+  width: fit-content;
   padding: 0.75em 1em;
   background-color: #16205b; /* theme.palette.primary.main */
   color: #ffffff; /* theme.palette.primary.contrastText */
@@ -181,7 +179,6 @@
   transition: background-color 0.2s, color 0.2s;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 0.5em;
   position: relative;
 }
@@ -240,7 +237,15 @@
 
 .collapsible-content {
   padding: 1em;
-  background-color: #fafafa;
+  border: 1px solid transparent;
+}
+
+.tiptap-wrapper.tiptap-focused .collapsible-content {
+  border-color: #e0e0e0;
+}
+
+.collapsible-content p {
+  word-break: break-all;
 }
 
 .collapsible-content.open {
