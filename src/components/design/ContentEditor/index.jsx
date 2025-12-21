@@ -57,7 +57,7 @@ function ContentEditor({
   const referenceInstruction = useMemo(() => {
     let returnResult = {};
     const referenceInstruction = instructionList?.find(
-      (instruction) => instruction.code === `reference_${contentKey}_${lang}`
+      (instruction) => instruction.code === `format_${contentKey}_${lang}`
     );
     const references = referenceInstruction?.references;
 

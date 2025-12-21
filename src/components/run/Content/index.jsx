@@ -7,13 +7,12 @@ import { css } from "@emotion/react";
 
 function Content(props) {
   const contentRef = useRef(null);
-  const isComplex =
-    props.content && props.content.search(/data-instruction/) >= 0;
+  const isComplex = props.content && props.content.includes("{{");
   const content = props.content;
-  const name = props.name
-  const lang = props.lang
-  const elementCode = props.elementCode
-  const customStyle = props.customStyle
+  const name = props.name;
+  const lang = props.lang;
+  const elementCode = props.elementCode;
+  const customStyle = props.customStyle;
   const state = useSelector((state) => {
     if (
       !content ||
@@ -24,7 +23,7 @@ function Content(props) {
     ) {
       return undefined;
     } else {
-      return state.runState.values[elementCode][`reference_${name}_${lang}`];
+      return state.runState.values[elementCode];
     }
   });
 
@@ -43,7 +42,7 @@ function Content(props) {
     return (
       <div
         ref={contentRef}
-         css={css`
+        css={css`
           ${customStyle}
         `}
         className={`${isRtl ? "rtl" : "ltr"} content-editor no-padding`}
@@ -59,7 +58,7 @@ function Content(props) {
         `}
         className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
         dangerouslySetInnerHTML={{
-          __html: replaceMentions(content, state),
+          __html: replaceMentions(content, state, name, lang),
         }}
       />
     );
@@ -68,26 +67,16 @@ function Content(props) {
 
 export default React.memo(Content);
 
-function replaceMentions(html, referenceValue) {
-  let doc = document.createElement("div");
-  doc.innerHTML = html;
-  doc.querySelectorAll("span[data-instruction]").forEach(function (el) {
-    let attribute = el.getAttribute("data-instruction");
-    if (attribute && referenceValue) {
-      let attrArray = attribute.split(".");
-      if (
-        attrArray &&
-        attrArray.length == 2 &&
-        referenceValue[attrArray[0]] &&
-        referenceValue[attrArray[0]][attrArray[1]]
-      ) {
-        el.replaceWith(referenceValue[attrArray[0]][attrArray[1]]);
-      } else {
-        el.replaceWith("");
-      }
-    } else {
-      el.replaceWith("");
-    }
+function replaceMentions(html, state, name, lang) {
+  const allMatches = getAllMatches(html);
+  console.log(allMatches)
+  allMatches.forEach((match, index) => {
+    html = html.replace(match, state[`format_${name}_${lang}_${index + 1}`]);
   });
-  return doc.innerHTML;
+  return html;
 }
+
+const getAllMatches = (inputString) => {
+  const regex = /\{\{(.*?)\}\}/g;
+  return Array.from(inputString.matchAll(regex), (m) => m[0]);
+};

@@ -1,3 +1,5 @@
+import { all } from 'axios';
+
 export const buildValidationDefaultData = (rule) => {
   switch (rule) {
     case "validation_required":
@@ -159,31 +161,17 @@ export const nextQuestionId = (state, groups) => {
 
 export const buildReferenceInstruction = (content, name, key) => {
   const allMatches = getAllMatches(content);
-  if (allMatches.length) {
+  return allMatches.map((match, index) =>{
     return {
-      code: `reference_${name}_${key}`,
+      code: `format_${name}_${key}_${index + 1}`,
       contentPath: ["content", key, name],
-      references: allMatches,
+      text: match,
       lang: key,
     };
-  } else {
-    return {
-      code: `reference_${name}_${key}`,
-      remove: true,
-    };
-  }
+  })
 };
 
 const getAllMatches = (inputString) => {
-  const regex = /data-instruction=(\"|\')([\w\.!\"!\']+)(\"|\')/g;
-  var m;
-  var returnList = [];
-
-  do {
-    m = regex.exec(inputString);
-    if (m) {
-      returnList.push(m[2]);
-    }
-  } while (m);
-  return returnList;
+  const regex = /\{\{(.*?)\}\}/g;
+  return Array.from(inputString.matchAll(regex), m => m[1].trim());
 };

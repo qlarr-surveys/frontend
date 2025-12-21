@@ -61,7 +61,6 @@ export const designState = createSlice({
         newState.Survey.theme = defaultSurveyTheme;
       }
 
-      
       const newKeys = Object.keys(newState).filter(
         (el) => !reservedKeys.includes(el)
       );
@@ -493,12 +492,32 @@ export const designState = createSlice({
       } else if (!state[payload.code].content[payload.lang]) {
         state[payload.code].content[payload.lang] = {};
       }
-      const referenceInstruction = buildReferenceInstruction(
+      const prefixToRemove = `format_${payload.key}_${payload.lang}`;
+      const toRemove = state[payload.code].instructionList.filter(
+        (instruction) => instruction.code.startsWith(prefixToRemove)
+      );
+      toRemove.forEach((instruction) => {
+        console.log(instruction.code)
+        changeInstruction(state[payload.code], {
+          code: instruction.code,
+          remove: true,
+        });
+      });
+
+      state[payload.code].instructionList = state[
+        payload.code
+      ].instructionList.filter(
+        (instruction) => !instruction.code.startsWith(prefixToRemove)
+      );
+      const referenceInstructions = buildReferenceInstruction(
         payload.value,
         payload.key,
         payload.lang
       );
-      changeInstruction(state[payload.code], referenceInstruction);
+      referenceInstructions.forEach((instruction) =>
+        changeInstruction(state[payload.code], instruction)
+      );
+
       state[payload.code].content[payload.lang][payload.key] = payload.value;
     },
     changeResources: (state, action) => {
