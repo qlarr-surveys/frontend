@@ -18,7 +18,6 @@ const Input = styled("input")({
 
 function FileUpload(props) {
   const runService = useService("run");
-  const theme = useTheme();
 
   const { t } = useTranslation("run");
 
@@ -130,8 +129,6 @@ function FileUpload(props) {
     }
   };
 
-  let shouldUpload = selectedFile && !invalidSelectedFile && !invalidSize;
-
   return (
     <div>
       <label htmlFor="contained-button-file">
@@ -220,7 +217,7 @@ function FileUpload(props) {
               dispatch(
                 valueChange({
                   componentCode: props.component.qualifiedCode,
-                  value: undefined,
+                  value: {},
                 })
               )
             }

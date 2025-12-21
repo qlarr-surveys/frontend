@@ -19,8 +19,6 @@ function CustomCSS({ code, t }) {
     );
   };
 
-  console.log(inputValue);
-
   return (
     <>
       <div>

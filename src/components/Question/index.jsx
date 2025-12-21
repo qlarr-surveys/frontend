@@ -280,8 +280,6 @@ const Question = forwardRef((props, ref) => {
     }
   };
 
-  console.log("customCss", props.component.customCss)
-
   return relevance ? (
     <QuestionWrapper customCss={props.component.customCss} qualifiedCode={props.component.qualifiedCode} ref={ref}>
       {showHeader && (
