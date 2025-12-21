@@ -190,6 +190,7 @@
     "wrong_credentials": "البريد الإلكتروني أو كلمة المرور خاطئة",
     "wrong_password": " كلمة مرور خاطئة",
     "component_deleted": "لا يمكن حذف عناصر الاستطلاع بعد نشر الاستطلاع",
+    "duplicate_to_code": "هذا الرمز ينتمي إلى مجموعة أو سؤال آخر",
     "design_out_of_sync": "يقوم شخص آخر بتحرير تصميم الاستطلاع",
     "wrong_reset_token": "رمز إعادة التعيين هذا غير صحيح.",
     "code_invalid": "الرمز غير صالح. يرجى المحاولة مرة أخرى.",
@@ -262,8 +263,8 @@
     "no": "لا",
     "disqualified": "مستبعد",
     "preview_not_exportable": "لا يمكن تصدير الردود التجريبية",
-    "question":"السؤال",
-    "answer":"الإجابة"
+    "question": "السؤال",
+    "answer": "الإجابة"
   },
   "responses_count": "الردود",
   "roles_required": "الأدوار مطلوبة",
