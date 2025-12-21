@@ -100,9 +100,12 @@ const MapQuestion = React.memo(({ component }) => {
     { code: "test_3", text: "Test 3" },
   ];
 
+  // Define componentId at component level for access across all effects
+  const componentId = component.qualifiedCode;
+
   // Global functions for popup buttons with access to component variables
   useEffect(() => {
-    window.editMarker = (markerKey, event) => {
+    window[`editMarker_${componentId}`] = (markerKey, event) => {
       console.log("editMarker called with:", markerKey);
       console.log("Available marker keys:", Object.keys(markersRef.current));
       if (event) {
@@ -126,15 +129,15 @@ const MapQuestion = React.memo(({ component }) => {
           <div><strong>${markerData.markerName}</strong></div>
           <div style="margin: 8px 0;">
             <label>Lat: </label>
-            <input type="number" id="edit-lat-${markerKey}" value="${pos.lat.toFixed(6)}" step="0.000001" style="width: 100px;">
+            <input type="number" id="edit-lat-${componentId}-${markerKey}" value="${pos.lat.toFixed(6)}" step="0.000001" style="width: 100px;">
           </div>
           <div style="margin: 8px 0;">
             <label>Lng: </label>
-            <input type="number" id="edit-lng-${markerKey}" value="${pos.lng.toFixed(6)}" step="0.000001" style="width: 100px;">
+            <input type="number" id="edit-lng-${componentId}-${markerKey}" value="${pos.lng.toFixed(6)}" step="0.000001" style="width: 100px;">
           </div>
           <div style="margin-top: 8px;">
-            <button onclick="saveEdit('${markerKey}', event)" style="margin-right: 4px; padding: 4px 8px;">Save</button>
-            <button onclick="cancelEdit('${markerKey}', event)" style="padding: 4px 8px;">Cancel</button>
+            <button onclick="saveEdit_${componentId}('${markerKey}', event)" style="margin-right: 4px; padding: 4px 8px;">Save</button>
+            <button onclick="cancelEdit_${componentId}('${markerKey}', event)" style="padding: 4px 8px;">Cancel</button>
           </div>
         </div>
       `;
@@ -142,7 +145,7 @@ const MapQuestion = React.memo(({ component }) => {
       marker.setPopupContent(editContent);
     };
 
-    window.removeMarker = (markerKey, event) => {
+    window[`removeMarker_${componentId}`] = (markerKey, event) => {
       console.log("removeMarker called with:", markerKey);
       console.log("Available marker keys:", Object.keys(markersRef.current));
       if (event) {
@@ -166,12 +169,16 @@ const MapQuestion = React.memo(({ component }) => {
 
       // Clear the value from Redux
       if (matchingAnswer) {
+        console.log(`Removing marker from answer ${matchingAnswer.qualifiedCode}, setting to null`);
         dispatch(
           valueChange({
             componentCode: matchingAnswer.qualifiedCode,
             value: null,
           })
         );
+        console.log("Dispatch completed for marker removal");
+      } else {
+        console.log("No matching answer found for marker removal");
       }
 
       // Remove from map and ref
@@ -183,14 +190,14 @@ const MapQuestion = React.memo(({ component }) => {
       // Force update buttons to hide removed marker (not needed with direct React rendering)
     };
 
-    window.saveEdit = (markerKey, event) => {
+    window[`saveEdit_${componentId}`] = (markerKey, event) => {
       if (event) {
         event.preventDefault();
         event.stopPropagation();
       }
 
-      const newLat = parseFloat(document.getElementById(`edit-lat-${markerKey}`).value);
-      const newLng = parseFloat(document.getElementById(`edit-lng-${markerKey}`).value);
+      const newLat = parseFloat(document.getElementById(`edit-lat-${componentId}-${markerKey}`).value);
+      const newLng = parseFloat(document.getElementById(`edit-lng-${componentId}-${markerKey}`).value);
 
       if (isNaN(newLat) || isNaN(newLng)) {
         alert("Please enter valid coordinates");
@@ -224,7 +231,11 @@ const MapQuestion = React.memo(({ component }) => {
         // Update marker key in ref
         delete markersRef.current[markerKey];
         const newKey = `${newLat},${newLng}`;
-        markersRef.current[newKey] = { marker, markerName: markerData.markerName };
+        markersRef.current[newKey] = { 
+          marker, 
+          markerName: markerData.markerName,
+          answerCode: markerData.answerCode 
+        };
 
       // Reset popup to view mode
       const viewContent = `
@@ -232,8 +243,8 @@ const MapQuestion = React.memo(({ component }) => {
           <div><strong>${markerData.markerName}</strong></div>
           <div>Lat: ${newLat.toFixed(6)}<br>Lng: ${newLng.toFixed(6)}</div>
           <div style="margin-top: 8px;">
-            <button onclick="editMarker('${newKey}', event)" style="margin-right: 4px; padding: 4px 8px;">Edit</button>
-            <button onclick="removeMarker('${newKey}', event)" style="padding: 4px 8px;">Remove</button>
+            <button onclick="editMarker_${componentId}('${newKey}', event)" style="margin-right: 4px; padding: 4px 8px;">Edit</button>
+            <button onclick="removeMarker_${componentId}('${newKey}', event)" style="padding: 4px 8px;">Remove</button>
           </div>
         </div>
       `;
@@ -241,7 +252,7 @@ const MapQuestion = React.memo(({ component }) => {
       marker.setPopupContent(viewContent);
     };
 
-    window.cancelEdit = (markerKey, event) => {
+    window[`cancelEdit_${componentId}`] = (markerKey, event) => {
       if (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -258,8 +269,8 @@ const MapQuestion = React.memo(({ component }) => {
           <div><strong>${markerData.markerName}</strong></div>
           <div>Lat: ${pos.lat.toFixed(6)}<br>Lng: ${pos.lng.toFixed(6)}</div>
           <div style="margin-top: 8px;">
-            <button onclick="editMarker('${markerKey}', event)" style="margin-right: 4px; padding: 4px 8px;">Edit</button>
-            <button onclick="removeMarker('${markerKey}', event)" style="padding: 4px 8px;">Remove</button>
+            <button onclick="editMarker_${componentId}('${markerKey}', event)" style="margin-right: 4px; padding: 4px 8px;">Edit</button>
+            <button onclick="removeMarker_${componentId}('${markerKey}', event)" style="padding: 4px 8px;">Remove</button>
           </div>
         </div>
       `;
@@ -326,20 +337,37 @@ const MapQuestion = React.memo(({ component }) => {
               '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           }).addTo(map);
 
-          // Click handler with Test 1, 2, 3 naming - no React state
+          // Click handler - place markers in available slots
           map.on("click", (e) => {
             const { lat, lng } = e.latlng;
 
-            // Count existing markers to determine name
-            const currentMarkerCount = Object.keys(markersRef.current).length;
+            // Find first available answer (one without a saved value and no existing marker)
+            const availableAnswer = visibleAnswers.find(answer => {
+              const storedValue = state[answer.qualifiedCode];
+              console.log(`Checking answer ${answer.qualifiedCode}, storedValue:`, storedValue);
+              
+              // Check if already has a value in Redux
+              const hasReduxValue = storedValue && Array.isArray(storedValue) && storedValue.length === 2;
+              
+              // Check if already has a marker in ref (to prevent rapid clicks)
+              const hasMarkerInRef = Object.values(markersRef.current).some(markerData => 
+                markerData.answerCode === answer.qualifiedCode
+              );
+              
+              const isAvailable = !hasReduxValue && !hasMarkerInRef;
+              console.log(`Answer ${answer.qualifiedCode} - hasReduxValue: ${hasReduxValue}, hasMarkerInRef: ${hasMarkerInRef}, isAvailable: ${isAvailable}`);
+              return isAvailable;
+            });
 
-            if (currentMarkerCount >= visibleAnswers.length) {
+            console.log("Available answer found:", availableAnswer);
+            if (!availableAnswer) {
+              console.log("No available answers, current state:", state);
               alert(`Maximum ${visibleAnswers.length} markers allowed!`);
               return;
             }
 
-            // Get marker name from question design
-            const markerLabel = visibleAnswers[currentMarkerCount].content?.label || visibleAnswers[currentMarkerCount].code;
+            // Get marker name from the available answer
+            const markerLabel = availableAnswer.content?.label || availableAnswer.code;
             const markerName = typeof markerLabel === 'string' && markerLabel.includes('<') 
               ? markerLabel.replace(/<[^>]*>/g, '') // Remove HTML tags
               : markerLabel;
@@ -350,16 +378,20 @@ const MapQuestion = React.memo(({ component }) => {
             // Save marker location to Redux store
             dispatch(
               valueChange({
-                componentCode: visibleAnswers[currentMarkerCount].qualifiedCode,
+                componentCode: availableAnswer.qualifiedCode,
                 value: [lat, lng],
               })
             );
 
             // Force update buttons to show new marker (not needed with direct React rendering)
 
-            // Store in ref for counting
+            // Store in ref for counting and tracking
             const markerKey = `${lat},${lng}`;
-            markersRef.current[markerKey] = { marker, markerName };
+            markersRef.current[markerKey] = { 
+              marker, 
+              markerName,
+              answerCode: availableAnswer.qualifiedCode 
+            };
             
             console.log("Stored marker with key:", markerKey);
             console.log("markersRef.current now contains:", Object.keys(markersRef.current));
@@ -370,8 +402,8 @@ const MapQuestion = React.memo(({ component }) => {
                 <div><strong>${markerName}</strong></div>
                 <div>Lat: ${lat.toFixed(6)}<br>Lng: ${lng.toFixed(6)}</div>
                 <div style="margin-top: 8px;">
-                  <button onclick="editMarker('${markerKey}', event)" style="margin-right: 4px; padding: 4px 8px;">Edit</button>
-                  <button onclick="removeMarker('${markerKey}', event)" style="padding: 4px 8px;">Remove</button>
+                  <button onclick="editMarker_${componentId}('${markerKey}', event)" style="margin-right: 4px; padding: 4px 8px;">Edit</button>
+                  <button onclick="removeMarker_${componentId}('${markerKey}', event)" style="padding: 4px 8px;">Remove</button>
                 </div>
               </div>
             `;
@@ -396,7 +428,11 @@ const MapQuestion = React.memo(({ component }) => {
               
               // Store in ref
               const markerKey = `${lat},${lng}`;
-              markersRef.current[markerKey] = { marker, markerName };
+              markersRef.current[markerKey] = { 
+                marker, 
+                markerName,
+                answerCode: answer.qualifiedCode 
+              };
 
               // Create popup with edit/remove buttons
               const popupContent = `
@@ -404,8 +440,8 @@ const MapQuestion = React.memo(({ component }) => {
                   <div><strong>${markerName}</strong></div>
                   <div>Lat: ${lat.toFixed(6)}<br>Lng: ${lng.toFixed(6)}</div>
                   <div style="margin-top: 8px;">
-                    <button onclick="editMarker('${markerKey}', event)" style="margin-right: 4px; padding: 4px 8px;">Edit</button>
-                    <button onclick="removeMarker('${markerKey}', event)" style="padding: 4px 8px;">Remove</button>
+                    <button onclick="editMarker_${componentId}('${markerKey}', event)" style="margin-right: 4px; padding: 4px 8px;">Edit</button>
+                    <button onclick="removeMarker_${componentId}('${markerKey}', event)" style="padding: 4px 8px;">Remove</button>
                   </div>
                 </div>
               `;
