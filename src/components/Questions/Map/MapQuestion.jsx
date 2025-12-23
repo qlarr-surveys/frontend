@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from "react";
 import { Box, Typography } from "@mui/material";
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import { valueChange } from "~/state/runState";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { MarkerDisplayPopup } from './MarkerPopupComponents';
 import { createMapPopupFunctions } from './MapPopupFunctions';
 
@@ -53,26 +55,8 @@ const MapQuestion = React.memo(({ component }) => {
       return;
     }
 
-    const initMap = async () => {
+    const initMap = () => {
       try {
-        const L = (await import("leaflet")).default;
-
-        if (!document.querySelector('link[href*="leaflet.css"]')) {
-          const link = document.createElement("link");
-          link.rel = "stylesheet";
-          link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-          link.integrity =
-            "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
-          link.crossOrigin = "";
-          document.head.appendChild(link);
-
-          await new Promise((resolve) => {
-            link.onload = resolve;
-            link.onerror = resolve;
-            setTimeout(resolve, 2000);
-          });
-        }
-
         delete L.Icon.Default.prototype._getIconUrl;
         L.Icon.Default.mergeOptions({
           iconUrl:
