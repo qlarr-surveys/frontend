@@ -47,3 +47,26 @@ export function useCollapsibleHandler(contentRef, content) {
     };
   }, [contentRef, content]);
 }
+
+export function ensureCollapsiblesClosed(html) {
+  if (!html || typeof html !== "string") {
+    return html;
+  }
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+
+  const collapsibles = doc.querySelectorAll(".tiptap-collapsible");
+
+  collapsibles.forEach((collapsible) => {
+    collapsible.setAttribute("data-open", "false");
+
+    const contentElement = collapsible.querySelector(".collapsible-content");
+    if (contentElement) {
+      contentElement.classList.remove("open");
+      contentElement.style.display = "none";
+    }
+  });
+
+  return doc.body.innerHTML;
+}
