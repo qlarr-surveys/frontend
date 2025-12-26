@@ -22,7 +22,10 @@ export const PROCESSED_ERRORS = {
     handleGlobally: false,
   },
   DUPLICATE_EMAIL: { name: "duplicate_email", handleGlobally: false },
-  AUTOCOMPLETE_MALFORMED_INPUT: { name: "autocomplete_malformed_input", handleGlobally: true },
+  AUTOCOMPLETE_MALFORMED_INPUT: {
+    name: "autocomplete_malformed_input",
+    handleGlobally: true,
+  },
   DUPLICATE_SURVEY_NAME: {
     name: "duplicate_survey_name",
     handleGlobally: false,
@@ -42,6 +45,7 @@ export const PROCESSED_ERRORS = {
   SURVEY_EXPIRED: { name: "survey_expired", handleGlobally: false },
   INVALID_SURVEY_DATES: { name: "invalid_survey_dates", handleGlobally: false },
   SURVEY_QUOTA: { name: "survey_quota", handleGlobally: false },
+  DUPLICATE_TO_CODE: { name: "duplicate_to_code", handleGlobally: false },
 };
 
 export const onApiError = ({
@@ -129,6 +133,8 @@ export const processError = (e) => {
         return PROCESSED_ERRORS.WRONG_PIN;
       case "SurveyQuotaExceeded":
         return PROCESSED_ERRORS.SURVEY_QUOTA;
+      case "DuplicateToCodeException":
+        return PROCESSED_ERRORS.DUPLICATE_TO_CODE;
       default:
         return PROCESSED_ERRORS.UNIDENTIFIED_ERROR;
     }

@@ -192,6 +192,7 @@
     "wrong_credentials": "Wrong email or password",
     "wrong_password": "Wrong password",
     "component_deleted": "Cannot delete survey elements after survey was published",
+    "duplicate_to_code": "This code belongs to another group or question",
     "design_out_of_sync": "Someone else is editing the survey design",
     "wrong_reset_token": "This Reset Token is incorrect.",
     "wrong_confirmation_token": "This Confirmation Token is incorrect, Please Register Once more",
@@ -264,8 +265,8 @@
     "no": "No",
     "disqualified": "Disqualified",
     "preview_not_exportable": "Preview responses cannot be exported",
-    "question":"Question",
-    "answer":"Answer"
+    "question": "Question",
+    "answer": "Answer"
   },
   "responses_count": "Responses",
   "roles_required": "Roles is Required",
