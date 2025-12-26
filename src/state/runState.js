@@ -1,4 +1,4 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 let qlarrDependents = {};
 
@@ -52,9 +52,7 @@ export const runState = createSlice({
       next(state);
     },
     navigatePrevious: (state) => {
-      state.navigation = {
-        navigationDirection: { name: "PREV" },
-      };
+      previous(state);
     },
     jump: (state, action) => {
       state.navigation = {
@@ -131,6 +129,18 @@ function next(state) {
       navigationDirection: { name: "NEXT" },
     };
   }
+}
+
+function previous(state) {
+  if (!state.values.Survey.validity) {
+    state.values.Survey.show_errors = true;
+  } else {
+    state.values.Survey.show_errors = false;
+  }
+  state.navigation = {
+    values: getValues(state.values),
+    navigationDirection: { name: "PREV" },
+  };
 }
 
 export function getValues(values) {
