@@ -132,11 +132,6 @@ function next(state) {
 }
 
 function previous(state) {
-  if (!state.values.Survey.validity) {
-    state.values.Survey.show_errors = true;
-  } else {
-    state.values.Survey.show_errors = false;
-  }
   state.navigation = {
     values: getValues(state.values),
     navigationDirection: { name: "PREV" },
