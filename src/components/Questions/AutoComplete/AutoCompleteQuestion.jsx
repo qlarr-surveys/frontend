@@ -43,7 +43,6 @@ function AutoCompleteQuestion(props) {
       try {
         const response = autoCompleteSearch(runService, uuid, query);
         const data = await response;
-        console.log("data", data);
         setOptions(data);
       } catch (error) {
         console.error("Failed to fetch options:", error);

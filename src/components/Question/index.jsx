@@ -58,6 +58,7 @@ const IconMcq = React.lazy(() => import("../Questions/IconMcq/IconMcq"));
 const SCQIconArray = React.lazy(() =>
   import("../Questions/SCQArray/SCQIconArray")
 );
+const MapQuestion = React.lazy(() => import("../Questions/Map/MapQuestion"));
 
 const Question = forwardRef((props, ref) => {
   console.debug("rendering: " + props.component.code);
@@ -271,6 +272,13 @@ const Question = forwardRef((props, ref) => {
       case "nps":
         return (
           <NPS
+            key={props.component.qualifiedCode}
+            component={props.component}
+          />
+        );
+      case "map":
+        return (
+          <MapQuestion
             key={props.component.qualifiedCode}
             component={props.component}
           />

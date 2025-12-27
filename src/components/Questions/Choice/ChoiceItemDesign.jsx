@@ -5,6 +5,7 @@ import BuildIcon from "@mui/icons-material/Build";
 import { alpha, Box, Checkbox, Radio, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import PlaceIcon from '@mui/icons-material/Place';
 import {
   addNewAnswers,
   changeContent,
@@ -186,6 +187,8 @@ function ChoiceItemDesign(props) {
 
   const contrastColor = alpha(theme.textStyles.question.color, 0.2);
 
+  const placeholder = props.type == "location" ? props.t("content_editor_placeholder_location_marker_name")  :props.t("content_editor_placeholder_option") 
+
   return (
     <div ref={ref} style={getStyles(isDragging)} data-handler-id={handlerId}>
       <Box
@@ -212,7 +215,9 @@ function ChoiceItemDesign(props) {
         {props.type === "checkbox" ? (
           <Checkbox />
         ) : props.type === "radio" ? (
-          <Radio />
+          <Radio disabled />
+        ) : props.type === "location" ? (
+          <PlaceIcon />
         ) : null}{" "}
         {answer.type === "other" ? (
           <TextField
@@ -242,8 +247,8 @@ function ChoiceItemDesign(props) {
             }}
             placeholder={
               onMainLang
-                ? props.t("content_editor_placeholder_option")
-                : mainContent || props.t("content_editor_placeholder_option")
+                ? placeholder
+                : mainContent || placeholder
             }
             InputProps={{
               endAdornment: (
@@ -280,8 +285,8 @@ function ChoiceItemDesign(props) {
             extended={false}
             placeholder={
               onMainLang
-                ? props.t("content_editor_placeholder_option")
-                : mainContent || props.t("content_editor_placeholder_option")
+                ? placeholder
+                : mainContent || placeholder
             }
             contentKey="label"
           />

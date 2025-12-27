@@ -1,0 +1,20 @@
+/* Ensure Leaflet CSS is properly applied */
+.leaflet-container {
+  height: 100% !important;
+  width: 100% !important;
+  background: #f8f8f8;
+}
+
+.leaflet-control-zoom {
+  margin: 10px !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Fix for marker icons if they don't load */
+.leaflet-marker-icon {
+  margin-left: -12px !important;
+  margin-top: -41px !important;
+}

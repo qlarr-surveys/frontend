@@ -74,7 +74,7 @@ function ChoiceQuestion(props) {
             size="small"
             onClick={() => dispatch(addNewAnswer({ questionCode: props.code }))}
           >
-            {t("add_option")}
+            {props.type=="location" ? t("add_location_marker") :  t("add_option")}
           </Button>
           {canHaveOther && (
             <Button

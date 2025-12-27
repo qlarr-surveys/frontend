@@ -42,7 +42,9 @@ export const questionIconByType = (type, size = "1.25em", color) => {
     case "scq_array":
       return <SurveyIcon name="singleChoiceArray" size={size} color={color} />;
     case "mcq_array":
-      return <SurveyIcon name="multipleChoiceArray" size={size} color={color} />;
+      return (
+        <SurveyIcon name="multipleChoiceArray" size={size} color={color} />
+      );
     case "mcq":
       return <SurveyIcon name="multipleChoice" size={size} color={color} />;
     case "icon_mcq":
@@ -78,6 +80,8 @@ export const questionIconByType = (type, size = "1.25em", color) => {
       return <SurveyIcon name="imageDisplay" size={size} color={color} />;
     case "video_display":
       return <SurveyIcon name="videoDisplay" size={size} color={color} />;
+    case "map":
+      return <SurveyIcon name="location" size={size} color={color} />;
   }
 };
 
@@ -198,7 +202,7 @@ export const QUESTION_TYPES = [
       {
         type: "multiple_text",
         icon: questionIconByType("multiple_text"),
-      }
+      },
     ],
   },
   {
@@ -337,6 +341,10 @@ export const QUESTION_TYPES = [
         type: "signature",
         icon: questionIconByType("signature"),
       },
+      {
+        type: "map",
+        icon: questionIconByType("map"),
+      },
     ],
   },
 ];
@@ -444,6 +452,15 @@ export const createQuestion = (type, qId, lang) => {
         },
       ];
 
+      break;
+    case "map":
+      returnObj[`Q${qId}A1`] = {};
+      state.children = [
+        {
+          code: "A1",
+          qualifiedCode: `Q${qId}A1`,
+        },
+      ];
       break;
     case "multiple_text":
       returnObj[`Q${qId}A1`] = {};

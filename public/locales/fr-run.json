@@ -49,7 +49,10 @@
     "saveAndContinueLaterTitle" : "Enregistrer et continuer plus tard",
     "saveAndContinueLaterDesc":"Nous enregistrerons votre progression actuelle. Vous pouvez revenir à ce sondage plus tard.",
     "saveForLater":"Enregistrer pour plus tard",
-    "linkCopied":"Lien copié dans le presse-papiers !"
+    "linkCopied":"Lien copié dans le presse-papiers !",
+    "remove": "Supprimer",
+    "current_loc": "Position Actuelle",
+    "drop_pin": "Cliquez sur la carte pour placer une épingle"
 }
 
 

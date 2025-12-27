@@ -634,6 +634,29 @@ export const setupOptions = (type) => {
             "questionActions",
             "disabled",
             "showDescription",
+          ],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance", "prefill", "randomize_options"],
+        },
+        {
+          title: "validation",
+          key: "validation",
+          rules: ["validation_required"],
+        },
+      ];
+    case "map":
+      return [
+        {
+          title: "general",
+          key: "general",
+          rules: [
+            "changeCode",
+            "questionActions",
+            "disabled",
+            "showDescription",
             "customCss",
           ],
         },
