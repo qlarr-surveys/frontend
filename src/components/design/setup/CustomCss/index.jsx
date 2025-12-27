@@ -23,8 +23,8 @@ function CustomCSS({ code, t }) {
     <>
       <div>
         <div>
-          <CustomTooltip body={t("tooltips.show_question_hint")} />
-          <Typography fontWeight={700}>{t("show_question_hint")}</Typography>
+          <CustomTooltip body={t("tooltips.custom_css")} />
+          <Typography fontWeight={700}>{t("custom_css")}</Typography>
         </div>
         <TextField
           fullWidth
