@@ -27,7 +27,11 @@ function ScqDefaultValue({ code }) {
     answers.forEach(answer => {
       if (answer && answer.qualifiedCode) {
         const answerData = state.designState[answer.qualifiedCode];
-        labels[answer.code] = answerData?.content?.en?.label || answer.code;
+        // Only use plain text properties
+        const rawLabel = answerData?.content?.en?.text || 
+                        answerData?.content?.en?.title || 
+                        answer.code;
+        labels[answer.code] = rawLabel;
       }
     });
     return labels;
@@ -52,11 +56,12 @@ function ScqDefaultValue({ code }) {
         {t("default_value")}
       </Typography>
       <FormControl fullWidth size="small">
-        <InputLabel>{t("select_default_answer")}</InputLabel>
+        <InputLabel>{currentDefaultValue ? t("select_default_answer") : t("no_default")}</InputLabel>
         <Select
           value={currentDefaultValue}
           onChange={handleDefaultValueChange}
-          label={t("select_default_answer")}
+          label={currentDefaultValue ? t("select_default_answer") : t("no_default")}
+          displayEmpty
         >
           <MenuItem value="">
             <em>{t("no_default")}</em>
