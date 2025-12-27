@@ -49,7 +49,10 @@
     "saveAndContinueLaterTitle" : "Salvar e continuar mais tarde",
     "saveAndContinueLaterDesc":"Salvaremos seu progresso atual. Você pode retornar a esta pesquisa mais tarde.",
     "saveForLater":"Salvar para mais tarde",
-    "linkCopied":"Link copiado para a área de transferência!"
+    "linkCopied":"Link copiado para a área de transferência!",
+    "remove": "Remover",
+    "current_loc": "Localização Atual",
+    "drop_pin": "Clique no mapa para colocar um marcador"
 }
 
 

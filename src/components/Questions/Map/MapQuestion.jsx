@@ -1,25 +1,32 @@
-import React, { useEffect, useRef } from "react";
-import { Box, Typography } from "@mui/material";
-import { shallowEqual, useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useRef, useState } from "react";
+import { Box, FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { shallowEqual, useSelector, useDispatch } from "react-redux";
 import { valueChange } from "~/state/runState";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { MarkerDisplayPopup } from './MarkerPopupComponents';
-import { createMapPopupFunctions } from './MapPopupFunctions';
+import {
+  isValidLocation,
+  MARKER_OPTIONS,
+  markerPopupContent,
+} from "./MapConstants";
+import { useTranslation } from "react-i18next";
 
 const MapQuestion = React.memo(({ component }) => {
   const mapRef = useRef(null);
   const leafletMapRef = useRef(null);
-  const markersRef = useRef({});
-  const mapInitialized = useRef(false);
 
-  const visibleAnswers  = useSelector(
+  const { t } = useTranslation("run");
+
+  const visibleAnswers = useSelector(
     (state) =>
       component?.answers?.filter((ans) => {
         return state.runState.values[ans.qualifiedCode]?.relevance ?? true;
       }) || [],
     shallowEqual
   );
+
+  const [current, setCurrent] = useState(visibleAnswers[0]?.qualifiedCode);
+  const currentRef = useRef(current);
 
   const dispatch = useDispatch();
 
@@ -31,167 +38,114 @@ const MapQuestion = React.memo(({ component }) => {
     });
     return valuesMap;
   }, shallowEqual);
-  console.log("component", component);
-  console.log("visibleAnswers", visibleAnswers);
-  console.log("state", state);
-
-  const componentId = component.qualifiedCode;
 
   useEffect(() => {
-    const cleanupFunctions = createMapPopupFunctions(componentId, {
-      markersRef,
-      leafletMapRef,
-      visibleAnswers,
-      state,
-      dispatch,
-      valueChange
-    });
-
-    return cleanupFunctions;
-  }, [dispatch, state, visibleAnswers]);
-
-  useEffect(() => {
-    if (mapInitialized.current) {
+    if (!mapRef.current || leafletMapRef.current) {
       return;
     }
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions(MARKER_OPTIONS);
 
-    const initMap = () => {
-      try {
-        delete L.Icon.Default.prototype._getIconUrl;
-        L.Icon.Default.mergeOptions({
-          iconUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-          iconRetinaUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-          shadowUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          popupAnchor: [1, -34],
-          tooltipAnchor: [16, -28],
-          shadowSize: [41, 41],
+    const map = L.map(mapRef.current).setView([51.505, -0.09], 15);
+    map.on("click", (e) => {
+      const { lat, lng } = e.latlng;
+      dispatch(
+        valueChange({
+          componentCode: currentRef.current,
+          value: [lat, lng],
+        })
+      );
+    });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+    leafletMapRef.current = map;
+
+    // if (navigator.geolocation) {
+    //   navigator.geolocation.getCurrentPosition(
+    //     (position) => {
+    //       const { latitude, longitude } = position.coords;
+    //       map.setView([latitude, longitude], 15);
+    //     },
+    //     (error) => {
+    //       console.warn("Geolocation error:", error.message);
+    //       // Map stays at default location if geolocation fails
+    //     }
+    //   );
+    // }
+  }, [mapRef.current, leafletMapRef.current]);
+
+  useEffect(() => {
+    if (leafletMapRef.current && currentRef.current != current) {
+      const value = state[current];
+      if (isValidLocation(value)) {
+        const currentZoom = leafletMapRef.current.getZoom() || 15;
+        leafletMapRef.current.setView([value[0], value[1]], currentZoom, {
+          animate: true,
+          duration: 1, // duration in seconds
+        });
+      }
+    }
+    currentRef.current = current;
+  }, [current, leafletMapRef.current]);
+
+  useEffect(() => {
+    if (!leafletMapRef.current) {
+      return;
+    }
+    // Clear existing markers
+    leafletMapRef.current.eachLayer((layer) => {
+      if (layer instanceof L.Marker) {
+        leafletMapRef.current.removeLayer(layer);
+      }
+    });
+
+    visibleAnswers.forEach((answer) => {
+      const storedValue = state[answer.qualifiedCode];
+      if (isValidLocation(storedValue)) {
+        const [lat, lng] = storedValue;
+
+        const popup = L.popup().setContent(
+          markerPopupContent(answer, lat, lng, t("remove"))
+        );
+
+        const marker = L.marker([lat, lng])
+          .addTo(leafletMapRef.current)
+          .bindPopup(popup);
+
+        // Store the handler so we can remove it later
+        const handleRemoveClick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dispatch(
+            valueChange({
+              componentCode: answer.qualifiedCode,
+              value: [],
+            })
+          );
+        };
+
+        marker.on("popupopen", () => {
+          const removeBtn = document.getElementById(
+            `remove-marker-${answer.qualifiedCode}`
+          );
+          if (removeBtn) {
+            removeBtn.onclick = handleRemoveClick;
+          }
         });
 
-        if (mapRef.current && !leafletMapRef.current) {
-          const map = L.map(mapRef.current).setView([51.505, -0.09], 13);
-
-          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          }).addTo(map);
-
-          map.on("click", (e) => {
-            const { lat, lng } = e.latlng;
-
-            const availableAnswer = visibleAnswers.find(answer => {
-              const storedValue = state[answer.qualifiedCode];
-              console.log(`Checking answer ${answer.qualifiedCode}, storedValue:`, storedValue);
-              
-              const hasReduxValue = storedValue && Array.isArray(storedValue) && storedValue.length === 2;
-              
-              const hasMarkerInRef = Object.values(markersRef.current).some(markerData => 
-                markerData.answerCode === answer.qualifiedCode
-              );
-              
-              const isAvailable = !hasReduxValue && !hasMarkerInRef;
-              console.log(`Answer ${answer.qualifiedCode} - hasReduxValue: ${hasReduxValue}, hasMarkerInRef: ${hasMarkerInRef}, isAvailable: ${isAvailable}`);
-              return isAvailable;
-            });
-
-            console.log("Available answer found:", availableAnswer);
-            if (!availableAnswer) {
-              console.log("No available answers, current state:", state);
-              alert(`Maximum ${visibleAnswers.length} markers allowed!`);
-              return;
-            }
-
-            const markerLabel = availableAnswer.content?.label || availableAnswer.code;
-            const markerName = typeof markerLabel === 'string' && markerLabel.includes('<') 
-              ? markerLabel.replace(/<[^>]*>/g, '')
-              : markerLabel;
-
-            const marker = L.marker([lat, lng]).addTo(map);
-
-            dispatch(
-              valueChange({
-                componentCode: availableAnswer.qualifiedCode,
-                value: [lat, lng],
-              })
-            );
-
-            const markerKey = `${lat},${lng}`;
-            markersRef.current[markerKey] = { 
-              marker, 
-              markerName,
-              answerCode: availableAnswer.qualifiedCode 
-            };
-            
-            console.log("Stored marker with key:", markerKey);
-            console.log("markersRef.current now contains:", Object.keys(markersRef.current));
-
-            const popupContent = MarkerDisplayPopup({
-              markerName,
-              lat,
-              lng,
-              markerKey,
-              componentId
-            });
-
-            marker.bindPopup(popupContent).openPopup();
-          });
-
-          leafletMapRef.current = map;
-
-          visibleAnswers.forEach((answer) => {
-            const storedValue = state[answer.qualifiedCode];
-            if (storedValue && Array.isArray(storedValue) && storedValue.length === 2) {
-              const [lat, lng] = storedValue;
-              const markerLabel = answer.content?.label || answer.code;
-              const markerName = typeof markerLabel === 'string' && markerLabel.includes('<') 
-                ? markerLabel.replace(/<[^>]*>/g, '') // Remove HTML tags
-                : markerLabel;
-              
-              const marker = L.marker([lat, lng]).addTo(map);
-              
-              const markerKey = `${lat},${lng}`;
-              markersRef.current[markerKey] = { 
-                marker, 
-                markerName,
-                answerCode: answer.qualifiedCode 
-              };
-
-              const popupContent = MarkerDisplayPopup({
-                markerName,
-                lat,
-                lng,
-                markerKey,
-                componentId
-              });
-
-              marker.bindPopup(popupContent);
-            }
-          });
-
-          mapInitialized.current = true;
-          console.log("Map reference set:", !!leafletMapRef.current);
-
-        }
-      } catch (error) {
-        console.error("Error loading map:", error);
+        marker.on("popupclose", () => {
+          const removeBtn = document.getElementById(
+            `remove-marker-${answer.qualifiedCode}`
+          );
+          if (removeBtn) {
+            removeBtn.onclick = null;
+          }
+        });
       }
-    };
-
-    initMap();
-
-    return () => {
-      if (leafletMapRef.current) {
-        leafletMapRef.current.remove();
-        leafletMapRef.current = null;
-      }
-      markersRef.current = {};
-      mapInitialized.current = false;
-    };
-  }, []);
+    });
+  }, [state, visibleAnswers]);
 
   return (
     <Box
@@ -199,7 +153,6 @@ const MapQuestion = React.memo(({ component }) => {
         width: "100%",
         height: "400px",
         mt: 2,
-        border: "1px solid #007bff",
         borderRadius: 1,
         overflow: "hidden",
         position: "relative",
@@ -210,79 +163,72 @@ const MapQuestion = React.memo(({ component }) => {
         style={{
           height: "100%",
           width: "100%",
-          backgroundColor: "#f8f9fa",
         }}
       />
-
       <Box
         sx={{
           position: "absolute",
           top: 10,
-          right: 10,
-          display: "flex",
-          flexDirection: "column",
-          gap: 1,
-          zIndex: 1000,
-        }}
-      >
-        {visibleAnswers.map((answer) => {
-          const answerLabel = answer.content?.label || answer.code;
-          const answerText = typeof answerLabel === 'string' && answerLabel.includes('<') 
-            ? answerLabel.replace(/<[^>]*>/g, '')
-            : answerLabel;
-          
-          const storedValue = state[answer.qualifiedCode];
-          
-          if (!storedValue || !Array.isArray(storedValue) || storedValue.length !== 2) {
-            return null;
-          }
-          
-          return (
-            <button
-              key={answer.qualifiedCode}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (leafletMapRef.current) {
-                  leafletMapRef.current.flyTo([storedValue[0], storedValue[1]], 15, { duration: 1 });
-                }
-              }}
-              style={{
-                backgroundColor: '#4CAF50',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                padding: '8px 12px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-                minWidth: '120px',
-              }}
-            >
-              {answerText}
-            </button>
-          );
-        })}
-      </Box>
-
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: 10,
-          left: 10,
-          backgroundColor: "rgba(0, 0, 0, 0.7)",
-          color: "white",
-          padding: 1,
+          left: "50%",
+          transform: "translateX(-50%)",
+          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          px: 2,
+          py: 1,
           borderRadius: 1,
-          fontSize: "12px",
+          zIndex: 1000,
+          boxShadow: 1,
         }}
       >
-        <Typography variant="caption" fontWeight="bold">
-          Click on map to add markers
-        </Typography>
+        {t("drop_pin")}
       </Box>
+      {visibleAnswers && visibleAnswers.length > 1 && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            backgroundColor: "rgba(255, 255, 255, 0.4)",
+            borderRadius: 1,
+            boxShadow: 2,
+            p: 1,
+            zIndex: 1000,
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: "rgba(255, 255, 255, 0.95)",
+              fontWeight: 600,
+              fontSize: "0.875rem",
+              p: 1,
+              mb: 1,
+            }}
+          >
+            {t("current_loc")}
+          </Box>
 
+          <RadioGroup
+            value={current}
+            onChange={(e) => setCurrent(e.target.value)}
+          >
+            {visibleAnswers.map((answer) => {
+              const answerLabel = answer.content?.label || answer.code;
+              const answerText =
+                typeof answerLabel === "string" && answerLabel.includes("<")
+                  ? answerLabel.replace(/<[^>]*>/g, "")
+                  : answerLabel;
+
+              return (
+                <FormControlLabel
+                  key={answer.qualifiedCode}
+                  value={answer.qualifiedCode}
+                  control={<Radio />}
+                  label={answerText}
+                />
+              );
+            })}
+          </RadioGroup>
+        </Box>
+      )}
     </Box>
   );
 });

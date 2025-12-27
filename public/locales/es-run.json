@@ -49,7 +49,10 @@
     "saveAndContinueLaterTitle" : "Guardar y continuar más tarde",
     "saveAndContinueLaterDesc":"Guardaremos tu progreso actual. Puedes regresar a esta encuesta más tarde.",
     "saveForLater":"Guardar para más tarde",
-    "linkCopied":"¡Enlace copiado al portapapeles!"
+    "linkCopied":"¡Enlace copiado al portapapeles!",
+    "remove": "Eliminar",
+    "current_loc": "Ubicación Actual",
+    "drop_pin": "Haz clic en el mapa para colocar un marcador"
 }
 
 

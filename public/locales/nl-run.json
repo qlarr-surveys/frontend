@@ -49,7 +49,10 @@
     "saveAndContinueLaterTitle" : "Opslaan en later doorgaan",
     "saveAndContinueLaterDesc":"We slaan je huidige voortgang op. Je kunt later terugkeren naar deze enquête.",
     "saveForLater":"Opslaan voor later",
-    "linkCopied":"Link gekopieerd naar klembord!"
+    "linkCopied":"Link gekopieerd naar klembord!",
+    "remove": "Verwijderen",
+    "current_loc": "Huidige Locatie",
+    "drop_pin": "Klik op de kaart om een pin te plaatsen"
 }
 
 

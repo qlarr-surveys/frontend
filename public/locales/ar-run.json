@@ -49,5 +49,8 @@
   "saveAndContinueLaterTitle": "احفظ وتابع لاحقًا",
   "saveAndContinueLaterDesc": "سنحفظ تقدمك الحالي. يمكنك العودة إلى هذا الاستبيان لاحقًا.",
   "saveForLater": "احفظ لوقت لاحق",
-  "linkCopied": "تم نسخ الرابط إلى الحافظة!"
+  "linkCopied": "تم نسخ الرابط إلى الحافظة!",
+  "remove": "إزالة",
+  "current_loc": "الموقع الحالي",
+  "drop_pin": "انقر على الخريطة لوضع دبوس"
 }
