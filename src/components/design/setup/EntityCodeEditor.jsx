@@ -48,10 +48,21 @@ const computePrefixAndSuffix = (fullCode) => {
   };
 };
 
+const getErrorMessage = (error, t) => {
+  const translationKey = `processed_errors.${error.name}`;
+  const message = t(translationKey, { ns: "manage" });
+
+  if (message === translationKey) {
+    return t("processed_errors.unidentified_error", { ns: "manage" });
+  }
+
+  return message;
+};
+
 function EntityCodeEditor({ code }) {
   const dispatch = useDispatch();
   const designService = useService("design");
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(["design", "manage"]);
 
   const { currentSetup, saving } = useSelector(
     (state) => ({
@@ -65,13 +76,17 @@ function EntityCodeEditor({ code }) {
     computePrefixAndSuffix(code)
   );
 
+  const [error, setError] = React.useState(null);
+
   useEffect(() => {
     setParts(computePrefixAndSuffix(code));
+    setError(null);
   }, [code]);
 
   const handleEntityCodeChange = React.useCallback((value) => {
     const sanitized = (value || "").replace(ALLOWED_CODE_CHARS_REGEX, "");
     setParts((prev) => ({ ...prev, suffix: sanitized }));
+    setError(null);
   }, []);
 
   const fullCode = `${prefix || ""}${suffix || ""}`.trim();
@@ -81,6 +96,7 @@ function EntityCodeEditor({ code }) {
     if (!code || !isDirty) return;
 
     dispatch(setSaving(true));
+    setError(null);
 
     designService
       .changeCode(code, fullCode)
@@ -89,12 +105,12 @@ function EntityCodeEditor({ code }) {
         dispatch(setup({ ...currentSetup, code: fullCode }));
       })
       .catch((e) => {
-        console.error("Failed to change element code", e);
+        setError(e);
       })
       .finally(() => {
         dispatch(setSaving(false));
       });
-  }, [code, dispatch, designService, fullCode, isDirty]);
+  }, [code, dispatch, designService, fullCode, isDirty, currentSetup]);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -119,6 +135,8 @@ function EntityCodeEditor({ code }) {
         value={suffix}
         onChange={(e) => handleEntityCodeChange(e.target.value)}
         onKeyDown={handleKeyDown}
+        error={!!error}
+        helperText={getErrorMessage(error, t)}
         InputProps={{
           startAdornment: prefix && (
             <InputAdornment position="start" sx={{ mr: 0.2 }}>
