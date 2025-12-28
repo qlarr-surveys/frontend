@@ -51,21 +51,16 @@ function ImageMcq(props) {
 
 function ImageMcqItem(props) {
   const theme = useTheme();
-  const state = useSelector((state) => {
-    let answerState = state.runState.values[props.option.qualifiedCode];
-    return {
-      showAnswer:
-        typeof answerState?.relevance == "undefined" || answerState.relevance,
-    };
-  }, shallowEqual);
 
   const dispatch = useDispatch();
-  const handleChange = (componentCode, value) => {
+  const checked = props.parentValue.indexOf(props.option.code) > -1;
+
+  const handleChange = () => {
     let parentValue = [...props.parentValue];
-    if (value) {
-      parentValue.push(props.option.code);
-    } else {
+    if (checked) {
       parentValue = parentValue.filter((el) => el !== props.option.code);
+    } else {
+      parentValue.push(props.option.code);
     }
     dispatch(
       valueChange({
@@ -73,7 +68,7 @@ function ImageMcqItem(props) {
         value: parentValue,
       })
     );
-    dispatch(setDirty(componentCode));
+    dispatch(setDirty(props.option.qualifiedCode));
     dispatch(setDirty(props.parentCode));
   };
   const backgroundImage = props.option.resources?.image
@@ -91,27 +86,25 @@ function ImageMcqItem(props) {
     >
       <Box
         className={styles.imageContainer}
-        onClick={() => handleChange(props.option.qualifiedCode, !state.checked)}
+        onClick={handleChange}
         style={{
           paddingTop: 100 / props.aspectRatio + "%",
           backgroundImage: backgroundImage,
           borderRadius: "4px",
-          border: state.checked
+          border: checked
             ? `4px solid ${theme.palette.primary.main}`
             : "4px solid transparent",
         }}
       >
         <div className={styles.selection}>
           <Checkbox
-            onChange={(event) =>
-              handleChange(props.option.qualifiedCode, !state.checked)
-            }
+            onChange={handleChange}
             size="large"
             sx={{
               m: "5px",
             }}
             className={styles.radioCheck}
-            checked={props.parentValue.indexOf(props.option.code) > -1}
+            checked={checked}
           />
         </div>
       </Box>
