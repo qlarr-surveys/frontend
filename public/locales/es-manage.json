@@ -192,6 +192,8 @@
     "wrong_credentials": "Correo electrónico o contraseña incorrectos",
     "wrong_password": "Contraseña incorrecta",
     "component_deleted": "No se pueden eliminar elementos de la encuesta después de que la encuesta fue publicada",
+    "code_changed_after_publish": "No se puede cambiar el código del componente después de que fue publicado",
+    "duplicate_to_code": "Este código pertenece a otro grupo o pregunta",
     "design_out_of_sync": "Alguien más está editando el diseño de la encuesta",
     "wrong_reset_token": "Este Token de Restablecimiento es incorrecto.",
     "wrong_confirmation_token": "Este Token de Confirmación es incorrecto, Por favor Regístrate Una Vez Más",

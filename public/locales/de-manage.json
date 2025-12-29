@@ -190,6 +190,8 @@
     "wrong_credentials": "Falsche E-Mail oder Passwort",
     "wrong_password": "Falsches Passwort",
     "component_deleted": "Umfrageelemente können nicht gelöscht werden, nachdem die Umfrage veröffentlicht wurde",
+    "code_changed_after_publish": "Komponentencode kann nach Veröffentlichung nicht geändert werden",
+    "duplicate_to_code": "Dieser Code gehört zu einer anderen Gruppe oder Frage",
     "design_out_of_sync": "Jemand anderes bearbeitet das Umfragedesign",
     "wrong_reset_token": "Dieses Reset-Token ist falsch.",
     "code_invalid": "Ungültiger Code. Bitte versuchen Sie es erneut.",
@@ -262,8 +264,8 @@
     "no": "Nein",
     "disqualified": "Disqualifiziert",
     "preview_not_exportable": "Vorschauantworten können nicht exportiert werden",
-    "question":"Frage",
-    "answer":"Antwort"
+    "question": "Frage",
+    "answer": "Antwort"
   },
   "responses_count": "Antworten",
   "roles_required": "Roles ist erforderlich",
