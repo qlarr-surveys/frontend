@@ -14,6 +14,7 @@ export const PROCESSED_ERRORS = {
   SURVEY_CLOSED: { name: "survey_closed", handleGlobally: false },
   WRONG_RESET_TOKEN: { name: "wrong_reset_token", handleGlobally: false },
   COMPONENT_DELETED: { name: "component_deleted", handleGlobally: false },
+  CODE_CHANGED_AFTER_PUBLISH: { name: "code_changed_after_publish", handleGlobally: false },
   DESIGN_OUT_OF_SYNC: { name: "design_out_of_sync", handleGlobally: false },
   WRONG_CREDENTIALS: { name: "wrong_credentials", handleGlobally: false },
   WRONG_PIN: { name: "code_invalid", handleGlobally: false },
@@ -95,6 +96,8 @@ export const processError = (e) => {
       case "ComponentDeleted":
       case "ComponentDeletedException":
         return PROCESSED_ERRORS.COMPONENT_DELETED;
+      case "CodeChangeAfterPublishException":
+        return PROCESSED_ERRORS.CODE_CHANGED_AFTER_PUBLISH;
       case "DesignOutOfSyncException":
         return PROCESSED_ERRORS.DESIGN_OUT_OF_SYNC;
       case "ExpiredResetTokenException":

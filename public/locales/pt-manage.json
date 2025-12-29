@@ -192,6 +192,7 @@
     "wrong_credentials": "E-mail ou senha incorretos",
     "wrong_password": "Senha incorreta",
     "component_deleted": "Não é possível excluir elementos da pesquisa após a pesquisa ser publicada",
+    "code_changed_after_publish": "Não é possível alterar o código do componente após ser publicado",
     "duplicate_to_code": "Este código pertence a outro grupo ou pergunta",
     "design_out_of_sync": "Alguém mais está editando o design da pesquisa",
     "wrong_reset_token": "Este Token de Redefinição está incorreto.",

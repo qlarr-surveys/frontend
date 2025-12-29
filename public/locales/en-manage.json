@@ -192,6 +192,7 @@
     "wrong_credentials": "Wrong email or password",
     "wrong_password": "Wrong password",
     "component_deleted": "Cannot delete survey elements after survey was published",
+    "code_changed_after_publish": "Cannot change component code after it was published",
     "duplicate_to_code": "This code belongs to another group or question",
     "design_out_of_sync": "Someone else is editing the survey design",
     "wrong_reset_token": "This Reset Token is incorrect.",

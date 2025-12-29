@@ -192,6 +192,7 @@
     "wrong_credentials": "Verkeerd e-mailadres of wachtwoord",
     "wrong_password": "Verkeerd wachtwoord",
     "component_deleted": "Kan enquête elementen niet verwijderen nadat enquête is gepubliceerd",
+    "code_changed_after_publish": "Kan componentcode niet wijzigen nadat deze is gepubliceerd",
     "duplicate_to_code": "Deze code behoort tot een andere groep of vraag",
     "design_out_of_sync": "Iemand anders bewerkt het enquête ontwerp",
     "wrong_reset_token": "Deze Reset Token is onjuist.",

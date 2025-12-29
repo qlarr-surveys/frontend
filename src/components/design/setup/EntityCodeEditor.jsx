@@ -49,6 +49,9 @@ const computePrefixAndSuffix = (fullCode) => {
 };
 
 const getErrorMessage = (error, t) => {
+  if (!error) {
+    return "";
+  }
   const translationKey = `processed_errors.${error.name}`;
   const message = t(translationKey, { ns: "manage" });
 
@@ -115,7 +118,9 @@ function EntityCodeEditor({ code }) {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      handleEntityCodeSave();
+      if (suffix) {
+        handleEntityCodeSave();
+      }
     }
   };
 

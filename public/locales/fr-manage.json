@@ -192,6 +192,7 @@
     "wrong_credentials": "E-mail ou mot de passe incorrect",
     "wrong_password": "Mot de passe incorrect",
     "component_deleted": "Impossible de supprimer les éléments du sondage après la publication du sondage",
+    "code_changed_after_publish": "Impossible de modifier le code du composant après sa publication",
     "duplicate_to_code": "Ce code appartient à un autre groupe ou question",
     "design_out_of_sync": "Quelqu'un d'autre modifie la conception du sondage",
     "wrong_reset_token": "Ce Jeton de Réinitialisation est incorrect.",
