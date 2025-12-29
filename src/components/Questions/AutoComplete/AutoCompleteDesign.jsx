@@ -33,7 +33,6 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
       .uploadAutoCompleteResource(file, code)
       .then((response) => {
         setUploading(false);
-        console.log(response);
         dispatch(
           changeResources({ code, key: "autoComplete", value: response.name })
         );
