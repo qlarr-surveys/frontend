@@ -28,62 +28,19 @@ const InstructionHighlightExtension = Extension.create({
               lastReferenceInstructionStr: JSON.stringify(referenceInstruction),
             };
           },
-          apply(tr, oldState, oldEditorState, newEditorState) {
-            const currentReferenceInstruction = referenceInstruction;
-            const currentReferenceInstructionStr = JSON.stringify(
-              currentReferenceInstruction
-            );
+          apply(tr, oldState, newEditorState) {
+            const currentRefStr = JSON.stringify(referenceInstruction);
+            const refChanged =
+              currentRefStr !== oldState.lastReferenceInstructionStr;
 
-            const referenceInstructionChanged =
-              currentReferenceInstructionStr !==
-              oldState.lastReferenceInstructionStr;
-
-            if (referenceInstructionChanged) {
+            if (refChanged || tr.docChanged) {
               return {
                 decorations: findInstructionPatterns(
                   newEditorState.doc,
-                  currentReferenceInstruction
+                  referenceInstruction
                 ),
-                lastReferenceInstructionStr: currentReferenceInstructionStr,
+                lastReferenceInstructionStr: currentRefStr,
               };
-            }
-
-            if (tr.docChanged) {
-              const hasLargeChange = tr.steps.some((step) => {
-                if (step.slice) {
-                  const size = step.slice.size;
-                  return size > 100;
-                }
-                return false;
-              });
-
-              if (hasLargeChange) {
-                return {
-                  decorations: findInstructionPatterns(
-                    newEditorState.doc,
-                    currentReferenceInstruction
-                  ),
-                  lastReferenceInstructionStr: currentReferenceInstructionStr,
-                };
-              }
-
-              try {
-                return {
-                  decorations: oldState.decorations.map(
-                    tr.mapping,
-                    newEditorState.doc
-                  ),
-                  lastReferenceInstructionStr: currentReferenceInstructionStr,
-                };
-              } catch (e) {
-                return {
-                  decorations: findInstructionPatterns(
-                    newEditorState.doc,
-                    currentReferenceInstruction
-                  ),
-                  lastReferenceInstructionStr: currentReferenceInstructionStr,
-                };
-              }
             }
 
             return {
@@ -91,7 +48,7 @@ const InstructionHighlightExtension = Extension.create({
                 tr.mapping,
                 newEditorState.doc
               ),
-              lastReferenceInstructionStr: currentReferenceInstructionStr,
+              lastReferenceInstructionStr: currentRefStr,
             };
           },
         },

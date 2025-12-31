@@ -13,15 +13,6 @@ export function createQuestionCodePattern(questionCode) {
   return new RegExp(`\\{\\{${escapedCode}([:.\\}])`, "g");
 }
 
-const patternCache = new Map();
-
-export function getCachedPattern(questionCode) {
-  if (!patternCache.has(questionCode)) {
-    patternCache.set(questionCode, createQuestionCodePattern(questionCode));
-  }
-  return patternCache.get(questionCode);
-}
-
 export function transformInstructionText(
   instructionText,
   referenceInstruction
@@ -40,7 +31,7 @@ export function transformInstructionText(
     const ref = referenceInstruction[questionCode];
 
     if (ref && typeof ref === "object" && ref.index) {
-      const pattern = getCachedPattern(questionCode);
+      const pattern = createQuestionCodePattern(questionCode);
 
       if (pattern.test(transformedText)) {
         pattern.lastIndex = 0;
@@ -63,7 +54,7 @@ export function parseUsedInstructions(content, index, designState, mainLang) {
   }
 
   Object.keys(index).forEach((questionCode) => {
-    const pattern = getCachedPattern(questionCode);
+    const pattern = createQuestionCodePattern(questionCode);
 
     if (pattern.test(content)) {
       const questionIndex = index[questionCode];
@@ -97,20 +88,22 @@ export function highlightInstructionsInStaticContent(
     const existingHighlights = element.querySelectorAll(
       ".instruction-highlight"
     );
-    if (existingHighlights.length > 0) {
-      existingHighlights.forEach((span) => {
-        const text = span.textContent.trim();
-        const match = text.match(/\{\{([^:}]+):/);
-        if (match && match[1]) {
-          const questionCode = match[1];
-          const ref = referenceInstruction[questionCode];
-          if (ref && ref.text) {
-            if (span.getAttribute("title") !== ref.text) {
-              span.setAttribute("title", ref.text);
-            }
+
+    existingHighlights.forEach((span) => {
+      const text = span.textContent.trim();
+      const match = text.match(/\{\{([^:}]+):/);
+      if (match && match[1]) {
+        const questionCode = match[1];
+        const ref = referenceInstruction[questionCode];
+        if (ref && ref.text) {
+          if (span.getAttribute("title") !== ref.text) {
+            span.setAttribute("title", ref.text);
           }
         }
-      });
+      }
+    });
+
+    if (existingHighlights.length > 0) {
       return;
     }
 

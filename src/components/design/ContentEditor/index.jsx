@@ -67,10 +67,6 @@ function ContentEditor({
     return parseUsedInstructions(value, index, designState, mainLang);
   }, [value, index, designState, mainLang]);
 
-  const referenceInstructionStr = useMemo(() => {
-    return JSON.stringify(referenceInstruction);
-  }, [referenceInstruction]);
-
   const fixedValue = useMemo(() => {
     if (!referenceInstruction || !Object.keys(referenceInstruction).length) {
       return value;
@@ -147,26 +143,28 @@ function ContentEditor({
   useCollapsibleHandler(renderedContentRef, !isActive ? fixedValue : null);
 
   const highlightedContentRef = useRef(null);
+  const lastReferenceInstructionRef = useRef(null);
 
   useEffect(() => {
     if (!isActive && renderedContentRef.current) {
       const currentContent = fixedValue;
-      if (highlightedContentRef.current !== currentContent) {
+      const contentChanged = highlightedContentRef.current !== currentContent;
+      const refChanged =
+        lastReferenceInstructionRef.current !== referenceInstruction;
+
+      if (contentChanged || refChanged) {
         highlightInstructionsInStaticContent(
           renderedContentRef.current,
           referenceInstruction
         );
         highlightedContentRef.current = currentContent;
-      } else {
-        highlightInstructionsInStaticContent(
-          renderedContentRef.current,
-          referenceInstruction
-        );
+        lastReferenceInstructionRef.current = referenceInstruction;
       }
     } else if (isActive) {
       highlightedContentRef.current = null;
+      lastReferenceInstructionRef.current = null;
     }
-  }, [isActive, fixedValue, referenceInstructionStr]);
+  }, [isActive, fixedValue, referenceInstruction]);
 
   return (
     <Box
