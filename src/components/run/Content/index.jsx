@@ -1,8 +1,11 @@
 import React, { useRef } from "react";
 import { useSelector } from "react-redux";
-import "./content.css";
+import "~/styles/tiptap-editor.css";
 import { rtlLanguage } from "~/utils/common";
-import { useCollapsibleHandler } from "~/hooks/useCollapsibleHandler";
+import {
+  useCollapsibleHandler,
+  ensureCollapsiblesClosed,
+} from "~/hooks/useCollapsibleHandler";
 import { css } from "@emotion/react";
 
 function Content(props) {
@@ -46,7 +49,9 @@ function Content(props) {
           ${customStyle}
         `}
         className={`${isRtl ? "rtl" : "ltr"} content-editor no-padding`}
-        dangerouslySetInnerHTML={{ __html: props.content }}
+        dangerouslySetInnerHTML={{
+          __html: ensureCollapsiblesClosed(props.content),
+        }}
       />
     );
   } else {
@@ -58,7 +63,7 @@ function Content(props) {
         `}
         className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
         dangerouslySetInnerHTML={{
-          __html: replaceMentions(content, state, name, lang),
+          __html: ensureCollapsiblesClosed(replaceMentions(content, state)),
         }}
       />
     );

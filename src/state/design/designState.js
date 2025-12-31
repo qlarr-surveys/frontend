@@ -493,10 +493,10 @@ export const designState = createSlice({
         state[payload.code].content[payload.lang] = {};
       }
       const prefixToRemove = `format_${payload.key}_${payload.lang}`;
-      const toRemove = state[payload.code].instructionList.filter(
+      const toRemove = state[payload.code].instructionList?.filter(
         (instruction) => instruction.code.startsWith(prefixToRemove)
       );
-      toRemove.forEach((instruction) => {
+      toRemove?.forEach((instruction) => {
         console.log(instruction.code)
         changeInstruction(state[payload.code], {
           code: instruction.code,
@@ -506,7 +506,7 @@ export const designState = createSlice({
 
       state[payload.code].instructionList = state[
         payload.code
-      ].instructionList.filter(
+      ].instructionList?.filter(
         (instruction) => !instruction.code.startsWith(prefixToRemove)
       );
       const referenceInstructions = buildReferenceInstruction(
@@ -514,7 +514,7 @@ export const designState = createSlice({
         payload.key,
         payload.lang
       );
-      referenceInstructions.forEach((instruction) =>
+      referenceInstructions?.forEach((instruction) =>
         changeInstruction(state[payload.code], instruction)
       );
 

@@ -192,6 +192,8 @@
     "wrong_credentials": "E-mail ou senha incorretos",
     "wrong_password": "Senha incorreta",
     "component_deleted": "Não é possível excluir elementos da pesquisa após a pesquisa ser publicada",
+    "code_changed_after_publish": "Não é possível alterar o código do componente após ser publicado",
+    "duplicate_to_code": "Este código pertence a outro grupo ou pergunta",
     "design_out_of_sync": "Alguém mais está editando o design da pesquisa",
     "wrong_reset_token": "Este Token de Redefinição está incorreto.",
     "wrong_confirmation_token": "Este Token de Confirmação está incorreto, Por favor Registre-se Mais Uma Vez",
@@ -264,8 +266,8 @@
     "no": "Não",
     "disqualified": "Desqualificado",
     "preview_not_exportable": "Respostas de pré-visualização não podem ser exportadas",
-    "question":"Pergunta",
-    "answer":"Resposta"
+    "question": "Pergunta",
+    "answer": "Resposta"
   },
   "responses_count": "Respostas",
   "roles_required": "As Funções são Obrigatórias",
@@ -342,6 +344,3 @@
     "survey_description": "Descrição interna usada por sua equipe para fornecer contexto sobre a pesquisa. Esta descrição não é mostrada aos respondentes."
   }
 }
-
-
-

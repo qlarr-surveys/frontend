@@ -119,6 +119,7 @@ const CollapsibleSettings = ({
               style={{
                 backgroundColor: bgColor || "#16205b",
                 color: "white",
+                border: "1px solid #ccc",
                 minWidth: "80px",
               }}
               title={t("tiptap_background_color")}
@@ -150,8 +151,8 @@ const CollapsibleSettings = ({
               className="tiptap-toolbar-button"
               style={{
                 backgroundColor: textColor || "white",
-                color: textColor || "#000",
-                border: `2px solid ${textColor || "#ddd"}`,
+                color: "#000",
+                border: "1px solid #ccc",
                 minWidth: "80px",
               }}
               title={t("tiptap_title_color")}
@@ -202,4 +203,3 @@ const CollapsibleSettings = ({
 };
 
 export default React.memo(CollapsibleSettings);
-

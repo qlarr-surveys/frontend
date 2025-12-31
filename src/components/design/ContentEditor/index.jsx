@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from "react";
 import styles from "./ContentEditor.module.css";
-import "./ContentEditor.css";
+import "~/styles/tiptap-editor.css";
 import { Box, css } from "@mui/material";
 import TipTapEditor from "./TipTapEditor";
 import { rtlLanguage } from "~/utils/common";
@@ -15,7 +15,7 @@ import { changeContent, resetFocus } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { isNotEmptyHtml } from "~/utils/design/utils";
 import cloneDeep from "lodash.clonedeep";
-import { useCollapsibleHandler } from "~/hooks/useCollapsibleHandler";
+import { useCollapsibleHandler, ensureCollapsiblesClosed } from "~/hooks/useCollapsibleHandler";
 import {
   parseUsedInstructions,
   transformInstructionText,
@@ -246,8 +246,12 @@ function ContentEditor({
       ) : isNotEmptyHtml(value) ? (
         <div
           ref={renderedContentRef}
-          className={`${isRtl ? "rtl" : "ltr"} ${styles.noPadding}`}
-          dangerouslySetInnerHTML={{ __html: fixedValue }}
+          className={`content-editor ${isRtl ? "rtl" : "ltr"} ${
+            styles.noPadding
+          }`}
+          dangerouslySetInnerHTML={{
+            __html: ensureCollapsiblesClosed(fixedValue),
+          }}
         />
       ) : (
         <div
