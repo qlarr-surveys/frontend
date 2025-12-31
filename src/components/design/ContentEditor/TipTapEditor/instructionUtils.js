@@ -110,12 +110,12 @@ export function highlightInstructionsInStaticContent(
     }
 
     const filterNode = (node) => {
-      const parent = node.parentElement;
-      if (
-        parent?.classList.contains("mention") ||
-        parent?.classList.contains("instruction-highlight")
-      ) {
-        return NodeFilter.FILTER_REJECT;
+      let current = node.parentElement;
+      while (current) {
+        if (current.classList.contains("instruction-highlight")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        current = current.parentElement;
       }
       return NodeFilter.FILTER_ACCEPT;
     };

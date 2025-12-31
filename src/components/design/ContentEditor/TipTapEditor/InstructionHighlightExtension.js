@@ -63,10 +63,6 @@ function findInstructionPatterns(doc, referenceInstruction) {
   const regex = getInstructionRegex();
 
   doc.descendants((node, pos) => {
-    if (node.type.name === "mention") {
-      return false;
-    }
-
     if (node.isText) {
       let match;
       regex.lastIndex = 0;

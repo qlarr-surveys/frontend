@@ -69,7 +69,6 @@ export function createMentionExtension({
         "span",
         {
           ...HTMLAttributes,
-          class: "mention",
           "data-id": node.attrs.id,
           "data-instruction": node.attrs.instruction,
           "data-type": node.attrs.type,
@@ -85,9 +84,6 @@ export function createMentionExtension({
       ];
     },
   }).configure({
-    HTMLAttributes: {
-      class: "mention",
-    },
     suggestion: suggestion(getMentionSuggestions),
   });
 }
