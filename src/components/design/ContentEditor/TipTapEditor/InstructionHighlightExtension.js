@@ -23,21 +23,81 @@ const InstructionHighlightExtension = Extension.create({
         key: new PluginKey("instructionHighlight"),
         state: {
           init(_, { doc }) {
-            return findInstructionPatterns(doc, referenceInstruction);
+            return {
+              decorations: findInstructionPatterns(doc, referenceInstruction),
+              lastReferenceInstructionStr: JSON.stringify(referenceInstruction),
+            };
           },
-          apply(tr, oldSet, oldState, newState) {
-            if (tr.docChanged) {
-              return findInstructionPatterns(
-                newState.doc,
-                referenceInstruction
-              );
+          apply(tr, oldState, oldEditorState, newEditorState) {
+            const currentReferenceInstruction = referenceInstruction;
+            const currentReferenceInstructionStr = JSON.stringify(
+              currentReferenceInstruction
+            );
+
+            const referenceInstructionChanged =
+              currentReferenceInstructionStr !==
+              oldState.lastReferenceInstructionStr;
+
+            if (referenceInstructionChanged) {
+              return {
+                decorations: findInstructionPatterns(
+                  newEditorState.doc,
+                  currentReferenceInstruction
+                ),
+                lastReferenceInstructionStr: currentReferenceInstructionStr,
+              };
             }
-            return oldSet.map(tr.mapping, tr.doc);
+
+            if (tr.docChanged) {
+              const hasLargeChange = tr.steps.some((step) => {
+                if (step.slice) {
+                  const size = step.slice.size;
+                  return size > 100;
+                }
+                return false;
+              });
+
+              if (hasLargeChange) {
+                return {
+                  decorations: findInstructionPatterns(
+                    newEditorState.doc,
+                    currentReferenceInstruction
+                  ),
+                  lastReferenceInstructionStr: currentReferenceInstructionStr,
+                };
+              }
+
+              try {
+                return {
+                  decorations: oldState.decorations.map(
+                    tr.mapping,
+                    newEditorState.doc
+                  ),
+                  lastReferenceInstructionStr: currentReferenceInstructionStr,
+                };
+              } catch (e) {
+                return {
+                  decorations: findInstructionPatterns(
+                    newEditorState.doc,
+                    currentReferenceInstruction
+                  ),
+                  lastReferenceInstructionStr: currentReferenceInstructionStr,
+                };
+              }
+            }
+
+            return {
+              decorations: oldState.decorations.map(
+                tr.mapping,
+                newEditorState.doc
+              ),
+              lastReferenceInstructionStr: currentReferenceInstructionStr,
+            };
           },
         },
         props: {
           decorations(state) {
-            return this.getState(state);
+            return this.getState(state).decorations;
           },
         },
       }),

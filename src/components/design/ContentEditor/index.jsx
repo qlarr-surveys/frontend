@@ -15,11 +15,13 @@ import { changeContent, resetFocus } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { isNotEmptyHtml } from "~/utils/design/utils";
 import cloneDeep from "lodash.clonedeep";
-import { useCollapsibleHandler, ensureCollapsiblesClosed } from "~/hooks/useCollapsibleHandler";
+import {
+  useCollapsibleHandler,
+  ensureCollapsiblesClosed,
+} from "~/hooks/useCollapsibleHandler";
 import {
   parseUsedInstructions,
-  transformInstructionText,
-  INSTRUCTION_PATTERN,
+  highlightInstructionsInStaticContent,
 } from "./TipTapEditor/instructionUtils";
 
 function ContentEditor({
@@ -59,15 +61,15 @@ function ContentEditor({
   const mainLang = langInfo.mainLang;
   const onMainLang = langInfo.onMainLang;
 
-  const instructionList = useSelector(
-    (state) => state.designState[code]?.instructionList
-  );
-
   const value = content?.[lang]?.[contentKey] || "";
 
   const referenceInstruction = useMemo(() => {
     return parseUsedInstructions(value, index, designState, mainLang);
   }, [value, index, designState, mainLang]);
+
+  const referenceInstructionStr = useMemo(() => {
+    return JSON.stringify(referenceInstruction);
+  }, [referenceInstruction]);
 
   const fixedValue = useMemo(() => {
     if (!referenceInstruction || !Object.keys(referenceInstruction).length) {
@@ -144,79 +146,27 @@ function ContentEditor({
 
   useCollapsibleHandler(renderedContentRef, !isActive ? fixedValue : null);
 
+  const highlightedContentRef = useRef(null);
+
   useEffect(() => {
     if (!isActive && renderedContentRef.current) {
-      highlightInstructionsInStaticContent(renderedContentRef.current);
-    }
-  }, [isActive, fixedValue, referenceInstruction]);
-
-  function highlightInstructionsInStaticContent(element) {
-    const filterNode = (node) => {
-      const parent = node.parentElement;
-      if (
-        parent?.classList.contains("mention") ||
-        parent?.classList.contains("instruction-highlight")
-      ) {
-        return NodeFilter.FILTER_REJECT;
-      }
-      return NodeFilter.FILTER_ACCEPT;
-    };
-
-    const walker = document.createTreeWalker(
-      element,
-      NodeFilter.SHOW_TEXT,
-      filterNode
-    );
-
-    const nodesToProcess = [];
-    let node;
-    const regex = new RegExp(INSTRUCTION_PATTERN.source, "g");
-
-    while ((node = walker.nextNode())) {
-      regex.lastIndex = 0;
-      if (regex.test(node.textContent)) {
-        nodesToProcess.push(node);
-      }
-    }
-
-    nodesToProcess.forEach((textNode) => {
-      const parent = textNode.parentNode;
-      const text = textNode.textContent;
-      const fragment = document.createDocumentFragment();
-      let lastIndex = 0;
-      let match;
-
-      const matchRegex = new RegExp(INSTRUCTION_PATTERN.source, "g");
-      while ((match = matchRegex.exec(text)) !== null) {
-        if (match.index > lastIndex) {
-          fragment.appendChild(
-            document.createTextNode(text.slice(lastIndex, match.index))
-          );
-        }
-
-        const { transformedText, tooltip } = transformInstructionText(
-          match[0],
+      const currentContent = fixedValue;
+      if (highlightedContentRef.current !== currentContent) {
+        highlightInstructionsInStaticContent(
+          renderedContentRef.current,
           referenceInstruction
         );
-
-        const span = document.createElement("span");
-        span.className = "instruction-highlight";
-        span.textContent = transformedText;
-        if (tooltip) {
-          span.title = tooltip;
-        }
-        fragment.appendChild(span);
-
-        lastIndex = match.index + match[0].length;
+        highlightedContentRef.current = currentContent;
+      } else {
+        highlightInstructionsInStaticContent(
+          renderedContentRef.current,
+          referenceInstruction
+        );
       }
-
-      if (lastIndex < text.length) {
-        fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
-      }
-
-      parent.replaceChild(fragment, textNode);
-    });
-  }
+    } else if (isActive) {
+      highlightedContentRef.current = null;
+    }
+  }, [isActive, fixedValue, referenceInstructionStr]);
 
   return (
     <Box
