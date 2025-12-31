@@ -65,10 +65,12 @@ export function createMentionExtension({
 
       const displayText = `{{${displayId}:${node.attrs.type}}}`;
 
+      const { class: _, ...restHTMLAttributes } = HTMLAttributes || {};
+
       return [
         "span",
         {
-          ...HTMLAttributes,
+          ...restHTMLAttributes,
           "data-id": node.attrs.id,
           "data-instruction": node.attrs.instruction,
           "data-type": node.attrs.type,
