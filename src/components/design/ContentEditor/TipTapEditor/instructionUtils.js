@@ -1,5 +1,9 @@
 export const INSTRUCTION_PATTERN = /\{\{[^}]*\}\}/g;
 
+export const getInstructionRegex = () => {
+  return new RegExp(INSTRUCTION_PATTERN.source, "g");
+};
+
 export function stripHtml(html) {
   if (!html) return "";
 
@@ -90,10 +94,8 @@ export function highlightInstructionsInStaticContent(
     );
 
     existingHighlights.forEach((span) => {
-      const text = span.textContent.trim();
-      const match = text.match(/\{\{([^:}]+):/);
-      if (match && match[1]) {
-        const questionCode = match[1];
+      const questionCode = span.getAttribute("data-question-code");
+      if (questionCode) {
         const ref = referenceInstruction[questionCode];
         if (ref && ref.text) {
           if (span.getAttribute("title") !== ref.text) {
@@ -126,7 +128,7 @@ export function highlightInstructionsInStaticContent(
 
     const nodesToProcess = [];
     let node;
-    const regex = new RegExp(INSTRUCTION_PATTERN.source, "g");
+    const regex = getInstructionRegex();
 
     while ((node = walker.nextNode())) {
       regex.lastIndex = 0;
@@ -144,7 +146,7 @@ export function highlightInstructionsInStaticContent(
       let lastIndex = 0;
       let match;
 
-      const matchRegex = new RegExp(INSTRUCTION_PATTERN.source, "g");
+      const matchRegex = getInstructionRegex();
       while ((match = matchRegex.exec(text)) !== null) {
         if (match.index > lastIndex) {
           fragment.appendChild(
@@ -152,14 +154,21 @@ export function highlightInstructionsInStaticContent(
           );
         }
 
+        const originalPattern = match[0];
+        const originalMatch = originalPattern.match(/\{\{([^:}]+):/);
+        const originalQuestionCode = originalMatch ? originalMatch[1] : null;
+
         const { transformedText, tooltip } = transformInstructionText(
-          match[0],
+          originalPattern,
           referenceInstruction
         );
 
         const span = document.createElement("span");
         span.className = "instruction-highlight";
         span.textContent = transformedText;
+        if (originalQuestionCode) {
+          span.setAttribute("data-question-code", originalQuestionCode);
+        }
         if (tooltip) {
           span.setAttribute("title", tooltip);
         }

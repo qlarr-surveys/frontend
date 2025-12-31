@@ -3,7 +3,7 @@ import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import {
   transformInstructionText,
-  INSTRUCTION_PATTERN,
+  getInstructionRegex,
 } from "./instructionUtils";
 
 const InstructionHighlightExtension = Extension.create({
@@ -34,22 +34,18 @@ const InstructionHighlightExtension = Extension.create({
               currentRefStr !== oldState.lastReferenceInstructionStr;
 
             if (refChanged || tr.docChanged) {
+              const newDecorations = findInstructionPatterns(
+                newEditorState.doc,
+                referenceInstruction
+              );
+
               return {
-                decorations: findInstructionPatterns(
-                  newEditorState.doc,
-                  referenceInstruction
-                ),
+                decorations: newDecorations,
                 lastReferenceInstructionStr: currentRefStr,
               };
             }
 
-            return {
-              decorations: oldState.decorations.map(
-                tr.mapping,
-                newEditorState.doc
-              ),
-              lastReferenceInstructionStr: currentRefStr,
-            };
+            return oldState;
           },
         },
         props: {
@@ -64,7 +60,7 @@ const InstructionHighlightExtension = Extension.create({
 
 function findInstructionPatterns(doc, referenceInstruction) {
   const decorations = [];
-  const regex = new RegExp(INSTRUCTION_PATTERN.source, "g");
+  const regex = getInstructionRegex();
 
   doc.descendants((node, pos) => {
     if (node.type.name === "mention") {
@@ -74,18 +70,20 @@ function findInstructionPatterns(doc, referenceInstruction) {
     if (node.isText) {
       let match;
       regex.lastIndex = 0;
+      const text = node.text;
 
-      while ((match = regex.exec(node.text)) !== null) {
-        const from = pos + match.index;
-        const to = from + match[0].length;
+      while ((match = regex.exec(text)) !== null) {
+        const fullMatch = match[0];
+        const matchStart = pos + match.index;
+        const matchEnd = matchStart + fullMatch.length;
 
         const { tooltip } = transformInstructionText(
-          match[0],
+          fullMatch,
           referenceInstruction
         );
 
         decorations.push(
-          Decoration.inline(from, to, {
+          Decoration.inline(matchStart, matchEnd, {
             class: "instruction-highlight",
             ...(tooltip && { title: tooltip }),
           })
