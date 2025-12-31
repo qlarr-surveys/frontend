@@ -107,7 +107,7 @@ function AutoCompleteQuestion(props) {
         renderInput={(params) => (
           <TextField
             {...params}
-            label={state.showHint ? state.content?.[lang]?.hint || "" : ""}
+            label={state.showHint ? state.content?.hint || "" : ""}
             variant="outlined"
             InputProps={{
               ...params.InputProps,

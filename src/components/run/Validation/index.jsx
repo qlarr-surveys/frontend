@@ -36,6 +36,8 @@ function Validation(props) {
           <ValidationItem
             key={index}
             name={key}
+            componentCode={props.component.qualifiedCode}
+            content={props.component.content?.[key]}
             validation={props.component.validation[key]}
           />
         );

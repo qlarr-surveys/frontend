@@ -68,7 +68,6 @@ function McqAnswer(props) {
         font-size: ${theme.textStyles.text.size}px;
         `}
           name="label"
-          lang={props.lang}
           content={props.Answer.content?.label}
         />
       }

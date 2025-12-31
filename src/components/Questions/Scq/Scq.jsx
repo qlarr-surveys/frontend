@@ -39,7 +39,6 @@ function SCQ(props) {
           if (option.type === "other") {
             return (
               <ScqChoiceOther
-                lang={props.lang}
                 parentCode={props.component.qualifiedCode}
                 key={option.qualifiedCode}
                 Choice={option}
@@ -74,7 +73,6 @@ function ScqChoice(props) {
         font-size: ${theme.textStyles.text.size}px;
         `}
           name="label"
-          lang={props.lang}
           content={props.Choice.content?.label}
         />
       }

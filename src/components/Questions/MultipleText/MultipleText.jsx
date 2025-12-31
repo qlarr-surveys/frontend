@@ -18,7 +18,6 @@ function MultipleText(props) {
       {props.component.answers.map((option) => {
         return (
           <MultipleTextItem
-            lang={props.lang}
             key={option.qualifiedCode}
             item={option}
           />
@@ -28,7 +27,7 @@ function MultipleText(props) {
   );
 }
 
-function MultipleTextItem({ lang, item }) {
+function MultipleTextItem({ item }) {
   const key = item.qualifiedCode;
   const theme = useTheme();
   const state = useSelector((state) => {
@@ -69,7 +68,6 @@ function MultipleTextItem({ lang, item }) {
         `}
         elementCode={item.code}
         name="label"
-        lang={lang}
         content={item.content?.label}
       />
       <TextField
