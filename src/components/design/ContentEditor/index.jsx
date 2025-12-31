@@ -16,6 +16,11 @@ import { useSelector } from "react-redux";
 import { isNotEmptyHtml } from "~/utils/design/utils";
 import cloneDeep from "lodash.clonedeep";
 import { useCollapsibleHandler } from "~/hooks/useCollapsibleHandler";
+import {
+  parseUsedInstructions,
+  transformInstructionText,
+  INSTRUCTION_PATTERN,
+} from "./TipTapEditor/instructionUtils";
 
 function ContentEditor({
   placeholder,
@@ -46,6 +51,10 @@ function ContentEditor({
     return state.designState.index;
   });
 
+  const designState = useSelector((state) => {
+    return state.designState;
+  });
+
   const lang = langInfo.lang;
   const mainLang = langInfo.mainLang;
   const onMainLang = langInfo.onMainLang;
@@ -54,25 +63,11 @@ function ContentEditor({
     (state) => state.designState[code]?.instructionList
   );
 
-  const referenceInstruction = useMemo(() => {
-    let returnResult = {};
-    const referenceInstruction = instructionList?.find(
-      (instruction) => instruction.code === `format_${contentKey}_${lang}`
-    );
-    const references = referenceInstruction?.references;
-
-    if (!references || !Array.isArray(references)) {
-      return [];
-    }
-
-    references.forEach((reference) => {
-      const uniqueCode = reference.split(".")[0];
-      returnResult[uniqueCode] = index[uniqueCode];
-    });
-    return returnResult;
-  }, [instructionList, index]);
-
   const value = content?.[lang]?.[contentKey] || "";
+
+  const referenceInstruction = useMemo(() => {
+    return parseUsedInstructions(value, index, designState, mainLang);
+  }, [value, index, designState, mainLang]);
 
   const fixedValue = useMemo(() => {
     if (!referenceInstruction || !Object.keys(referenceInstruction).length) {
@@ -80,30 +75,28 @@ function ContentEditor({
     }
     let updated = cloneDeep(value);
 
-    // Create a temporary DOM element to parse and manipulate the HTML
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = updated;
 
     Object.keys(referenceInstruction).forEach((key) => {
-      // Find all spans with data-id matching the key
       const spans = tempDiv.querySelectorAll(`span[data-id="${key}"]`);
 
       spans.forEach((span) => {
-        // Get the data-value attribute
         const dataValue = span.getAttribute("data-value");
         if (dataValue) {
-          // Replace the key with referenceInstruction[key] in the data-value
           const newDataValue = dataValue.replace(
             new RegExp(`{{${key}:`, "g"),
-            `{{${referenceInstruction[key]}:`
+            `{{${referenceInstruction[key].index}:`
           );
-          // Find the nested span with contenteditable="false" and update its content
           const nestedSpan = span.querySelector(
             'span[contenteditable="false"]'
           );
           if (nestedSpan) {
             nestedSpan.textContent = newDataValue;
           }
+        }
+        if (referenceInstruction[key].text) {
+          span.setAttribute("title", referenceInstruction[key].text);
         }
       });
     });
@@ -150,6 +143,80 @@ function ContentEditor({
   const renderedContentRef = useRef(null);
 
   useCollapsibleHandler(renderedContentRef, !isActive ? fixedValue : null);
+
+  useEffect(() => {
+    if (!isActive && renderedContentRef.current) {
+      highlightInstructionsInStaticContent(renderedContentRef.current);
+    }
+  }, [isActive, fixedValue, referenceInstruction]);
+
+  function highlightInstructionsInStaticContent(element) {
+    const filterNode = (node) => {
+      const parent = node.parentElement;
+      if (
+        parent?.classList.contains("mention") ||
+        parent?.classList.contains("instruction-highlight")
+      ) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    };
+
+    const walker = document.createTreeWalker(
+      element,
+      NodeFilter.SHOW_TEXT,
+      filterNode
+    );
+
+    const nodesToProcess = [];
+    let node;
+    const regex = new RegExp(INSTRUCTION_PATTERN.source, "g");
+
+    while ((node = walker.nextNode())) {
+      regex.lastIndex = 0;
+      if (regex.test(node.textContent)) {
+        nodesToProcess.push(node);
+      }
+    }
+
+    nodesToProcess.forEach((textNode) => {
+      const parent = textNode.parentNode;
+      const text = textNode.textContent;
+      const fragment = document.createDocumentFragment();
+      let lastIndex = 0;
+      let match;
+
+      const matchRegex = new RegExp(INSTRUCTION_PATTERN.source, "g");
+      while ((match = matchRegex.exec(text)) !== null) {
+        if (match.index > lastIndex) {
+          fragment.appendChild(
+            document.createTextNode(text.slice(lastIndex, match.index))
+          );
+        }
+
+        const { transformedText, tooltip } = transformInstructionText(
+          match[0],
+          referenceInstruction
+        );
+
+        const span = document.createElement("span");
+        span.className = "instruction-highlight";
+        span.textContent = transformedText;
+        if (tooltip) {
+          span.title = tooltip;
+        }
+        fragment.appendChild(span);
+
+        lastIndex = match.index + match[0].length;
+      }
+
+      if (lastIndex < text.length) {
+        fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+      }
+
+      parent.replaceChild(fragment, textNode);
+    });
+  }
 
   return (
     <Box

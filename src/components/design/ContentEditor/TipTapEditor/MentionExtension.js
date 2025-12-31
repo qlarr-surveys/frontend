@@ -1,7 +1,10 @@
 import Mention from "@tiptap/extension-mention";
 import suggestion from "./suggestion";
 
-export function createMentionExtension({ getMentionSuggestions, referenceInstruction = {} }) {
+export function createMentionExtension({
+  getMentionSuggestions,
+  referenceInstruction = {},
+}) {
   return Mention.extend({
     addAttributes() {
       return {
@@ -46,11 +49,20 @@ export function createMentionExtension({ getMentionSuggestions, referenceInstruc
     },
 
     renderHTML({ node, HTMLAttributes }) {
-      const displayId =
-        referenceInstruction && referenceInstruction[node.attrs.id]
-          ? referenceInstruction[node.attrs.id]
-          : node.attrs.id;
-      
+      let displayId = node.attrs.id;
+      let questionText = "";
+
+      if (referenceInstruction && referenceInstruction[node.attrs.id]) {
+        const ref = referenceInstruction[node.attrs.id];
+
+        if (ref !== null && typeof ref === "object" && ref.index) {
+          displayId = ref.index;
+          questionText = ref.text || "";
+        } else if (typeof ref === "string") {
+          displayId = ref;
+        }
+      }
+
       const displayText = `{{${displayId}:${node.attrs.type}}}`;
 
       return [
@@ -61,6 +73,7 @@ export function createMentionExtension({ getMentionSuggestions, referenceInstruc
           "data-id": node.attrs.id,
           "data-instruction": node.attrs.instruction,
           "data-type": node.attrs.type,
+          ...(questionText && { title: questionText }),
         },
         [
           "span",
@@ -78,4 +91,3 @@ export function createMentionExtension({ getMentionSuggestions, referenceInstruc
     suggestion: suggestion(getMentionSuggestions),
   });
 }
-
