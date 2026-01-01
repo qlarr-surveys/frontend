@@ -574,6 +574,11 @@ export const setupOptions = (type) => {
           key: "validation",
           rules: ["validation_required"],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        }
       ];
     case "scq":
       return [

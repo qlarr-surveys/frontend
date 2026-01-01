@@ -73,7 +73,7 @@
   "content_editor_placeholder_description": "Description",
   "content_editor_placeholder_option": "Option",
   "content_editor_placeholder_title": "Title",
-  "custom_css": "Add custom CSS styles to modify the appearance and behavior of this question. Use standard CSS properties to customize colors, fonts, spacing, and layout.",
+  "custom_css": "Custom Style",
   "custom_error": "Custom Error",
   "custom_random": "Custom",
   "date_format": "Date Format",
