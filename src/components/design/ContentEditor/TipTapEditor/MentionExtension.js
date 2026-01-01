@@ -63,27 +63,7 @@ export function createMentionExtension({
         }
       }
 
-      const displayText = `{{${displayId}:${node.attrs.type}}}`;
-
-      const { class: _, ...restHTMLAttributes } = HTMLAttributes || {};
-
-      return [
-        "span",
-        {
-          ...restHTMLAttributes,
-          "data-id": node.attrs.id,
-          "data-instruction": node.attrs.instruction,
-          "data-type": node.attrs.type,
-          ...(questionText && { title: questionText }),
-        },
-        [
-          "span",
-          {
-            contenteditable: "false",
-          },
-          displayText,
-        ],
-      ];
+      return ["span", {}, `{{${node.attrs.instruction}}}`];
     },
   }).configure({
     suggestion: suggestion(getMentionSuggestions),
