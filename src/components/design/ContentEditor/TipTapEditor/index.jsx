@@ -99,30 +99,59 @@ function TipTapEditor({
         class: `${EDITOR_CLASS} ${isRtl ? RTL_CLASS : LTR_CLASS}`,
       },
       handlePaste: (view, event) => {
-        const text = event.clipboardData?.getData("text/plain");
-        if (!text) {
+        try {
+          const text = event.clipboardData?.getData("text/plain");
+          if (!text) {
+            return false;
+          }
+
+          const isChoiceOption = typeof onMoreLines === "function";
+          const isExtended = extended;
+
+          if (isExtended) {
+            return false;
+          }
+
+          event.preventDefault();
+          const sanitizedLines = sanitizePastedText(text);
+          const nonEmptyLines = sanitizedLines.filter(line => line.trim().length > 0);
+
+          if (nonEmptyLines.length === 0) {
+            return true;
+          }
+
+          const { state, dispatch } = view;
+          const { selection } = state;
+
+          if (isChoiceOption) {
+            const firstLine = nonEmptyLines[0];
+            const restLines = nonEmptyLines.slice(1);
+
+            const transaction = state.tr.insertText(
+              firstLine,
+              selection.from,
+              selection.to
+            );
+            dispatch(transaction);
+
+            if (restLines.length > 0) {
+              onMoreLines(restLines);
+            }
+          } else {
+            const singleLine = nonEmptyLines.join(" ");
+            const transaction = state.tr.insertText(
+              singleLine,
+              selection.from,
+              selection.to
+            );
+            dispatch(transaction);
+          }
+
+          return true;
+        } catch (error) {
+          console.error("[TipTapEditor] Error handling paste:", error);
           return false;
         }
-
-        event.preventDefault();
-        const sanitizedLines = sanitizePastedText(text);
-        const firstLine = sanitizedLines[0] || "";
-        const restLines = sanitizedLines.slice(1);
-
-        const { state, dispatch } = view;
-        const { selection } = state;
-        const transaction = state.tr.insertText(
-          firstLine,
-          selection.from,
-          selection.to
-        );
-        dispatch(transaction);
-
-        if (typeof onMoreLines === "function" && restLines.length > 0) {
-          onMoreLines(restLines);
-        }
-
-        return true;
       },
     },
     onUpdate: ({ editor }) => {
