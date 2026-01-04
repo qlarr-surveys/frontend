@@ -71,8 +71,19 @@ function TipTapEditor({
     return createAllExtensions({
       getMentionSuggestions,
       referenceInstruction,
+      extended,
+      onNewLine,
+      onBlurListener,
+      lang,
     });
-  }, [getMentionSuggestions, referenceInstruction]);
+  }, [
+    getMentionSuggestions,
+    referenceInstruction,
+    extended,
+    onNewLine,
+    onBlurListener,
+    lang,
+  ]);
 
   const editor = useEditor({
     extensions,
@@ -110,19 +121,6 @@ function TipTapEditor({
     },
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
-
-      if (!extended && onNewLine) {
-        const currentValue = editorRef.current || "";
-        if (
-          html !== "<p></p>" &&
-          html.endsWith("<p></p>") &&
-          !currentValue.endsWith("<p></p>")
-        ) {
-          onNewLine(html);
-          return;
-        }
-      }
-
       editorRef.current = html;
     },
     onFocus: () => {
@@ -161,6 +159,12 @@ function TipTapEditor({
       }, BLUR_TIMEOUT_MS);
     },
   });
+
+  useEffect(() => {
+    if (editor) {
+      editor.commands.focus("end");
+    }
+  }, [editor]);
 
   useEffect(() => {
     const handleCollapsibleSettingsClick = (e) => {
@@ -221,12 +225,6 @@ function TipTapEditor({
       if (!currentContent || currentContent === "<p></p>") {
         editor.commands.focus("end");
       }
-    }
-  }, [editor]);
-
-  useEffect(() => {
-    if (editor) {
-      editor.commands.focus("end");
     }
   }, [editor]);
 

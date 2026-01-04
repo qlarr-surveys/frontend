@@ -270,14 +270,14 @@ function ChoiceItemDesign(props) {
           <ContentEditor
             code={props.qualifiedCode}
             showToolbar={false}
-            customStyle={props.type=="text" 
-              ? `flex: 1` : undefined
-            }
+            customStyle={props.type == "text" ? `flex: 1` : undefined}
             editable={
               props.designMode == DESIGN_SURVEY_MODE.DESIGN ||
               props.designMode == DESIGN_SURVEY_MODE.LANGUAGES
             }
             extended={false}
+            onNewLine={props.onNewLine}
+            onMoreLines={props.onMoreLines}
             placeholder={
               onMainLang
                 ? props.t("content_editor_placeholder_option")

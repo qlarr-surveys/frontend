@@ -8,8 +8,14 @@ import ImageExtension from "./ImageExtension";
 import CollapsibleExtension from "./CollapsibleExtension";
 import FontSize from "./FontSizeExtension";
 import { createMentionExtension } from "./MentionExtension";
+import { PreventEnterExtension } from "./PreventEnterExtension";
 
-export function createBaseExtensions() {
+export function createBaseExtensions(
+  extended = true,
+  onNewLine = null,
+  onBlurListener = null,
+  lang = null
+) {
   return [
     StarterKit.configure({
       paragraph: {
@@ -41,14 +47,29 @@ export function createBaseExtensions() {
       },
     }),
     CollapsibleExtension,
+    PreventEnterExtension.configure({
+      extended,
+      onNewLine,
+      onBlurListener,
+      lang,
+    }),
   ];
 }
 
 export function createAllExtensions({
   getMentionSuggestions,
   referenceInstruction,
+  extended = true,
+  onNewLine = null,
+  onBlurListener = null,
+  lang = null,
 }) {
-  const baseExtensions = createBaseExtensions();
+  const baseExtensions = createBaseExtensions(
+    extended,
+    onNewLine,
+    onBlurListener,
+    lang
+  );
   const mentionExtension = createMentionExtension({
     getMentionSuggestions,
     referenceInstruction,
