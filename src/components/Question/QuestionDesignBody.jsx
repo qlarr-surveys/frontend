@@ -18,10 +18,11 @@ import ChoiceQuestion from "../Questions/Choice/ChoiceDesign";
 import ImageChoiceQuestion from "../Questions/Imagechoice/ImageChoiceDesign";
 import SCQIconArrayDesign from "../Questions/SCQArray/SCQIconArrayDesign";
 import { RHFSelect } from "../hook-form";
-import ArrayDesign from '~/components/Questions/SCQArray/ArrayDesign';
-import AutoCompleteDesign from '../Questions/AutoComplete/AutoCompleteDesign';
+import ArrayDesign from "~/components/Questions/SCQArray/ArrayDesign";
+import AutoCompleteDesign from "../Questions/AutoComplete/AutoCompleteDesign";
 
-function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
+function QuestionDesignBody({ code, type, t, langInfo, designMode }) {
+  const onMainLang = langInfo.onMainLang;
   switch (type) {
     case "video_display":
       return (
@@ -59,7 +60,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
           key={code}
           t={t}
           designMode={designMode}
-          onMainLang={onMainLang}
+          langInfo={langInfo}
           code={code}
           type="radio"
         />
@@ -71,7 +72,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
         <ImageChoiceQuestion
           key={code}
           t={t}
-          onMainLang={onMainLang}
+          langInfo={langInfo}
           designMode={designMode}
           code={code}
         />
@@ -83,7 +84,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
           icon={true}
           key={code}
           t={t}
-          onMainLang={onMainLang}
+          langInfo={langInfo}
           designMode={designMode}
           code={code}
         />
@@ -91,7 +92,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
     case "scq_icon_array":
       return (
         <SCQIconArrayDesign
-          onMainLang={onMainLang}
+          langInfo={langInfo}
           key={code}
           type={type}
           designMode={designMode}
@@ -103,7 +104,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
     case "mcq_array":
       return (
         <ArrayDesign
-          onMainLang={onMainLang}
+          langInfo={langInfo}
           key={code}
           type={type}
           designMode={designMode}
@@ -119,7 +120,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
           key={code}
           designMode={designMode}
           code={code}
-          onMainLang={onMainLang}
+          langInfo={langInfo}
           t={t}
           type="checkbox"
         />
@@ -130,7 +131,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
           key={code}
           designMode={designMode}
           code={code}
-          onMainLang={onMainLang}
+          langInfo={langInfo}
           t={t}
           type="text"
         />
@@ -140,7 +141,7 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
         <ChoiceQuestion
           key={code}
           designMode={designMode}
-          onMainLang={onMainLang}
+          langInfo={langInfo}
           code={code}
           t={t}
           type="ranking"
@@ -155,7 +156,14 @@ function QuestionDesignBody({ code, type, t, onMainLang, designMode }) {
     case "paragraph":
       return <ParagraphQuestionDesign t={t} key={code} code={code} />;
     case "autocomplete":
-      return <AutoCompleteDesign t={t} key={code} code={code} onMainLang={onMainLang} />;
+      return (
+        <AutoCompleteDesign
+          t={t}
+          key={code}
+          code={code}
+          onMainLang={onMainLang}
+        />
+      );
     case "barcode":
       return <BarcodeDesign t={t} key={code} code={code} />;
     case "email":

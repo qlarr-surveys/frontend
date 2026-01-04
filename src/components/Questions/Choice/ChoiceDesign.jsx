@@ -63,6 +63,7 @@ function ChoiceQuestion(props) {
               key={item.code}
               qualifiedCode={item.qualifiedCode}
               index={index}
+              langInfo={props.langInfo}
               type={props.type}
               droppableId={`option-${props.code}`}
             />

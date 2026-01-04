@@ -34,6 +34,7 @@ function ImageChoiceItemDesign({
   columnNumber,
   imageAspectRatio,
   designMode,
+  langInfo,
   hideText,
   t,
   addAnswer,
@@ -43,10 +44,6 @@ function ImageChoiceItemDesign({
   const theme = useTheme();
   const ref = useRef();
   const [isUploading, setUploading] = useState(false);
-
-  const langInfo = useSelector((state) => {
-    return state.designState.langInfo;
-  });
 
   const answer = useSelector((state) => {
     return type == "add" ? undefined : state.designState[qualifiedCode];
@@ -323,8 +320,13 @@ function ImageChoiceItemDesign({
             extended={false}
             placeholder={
               onMainLang
-                ? t("content_editor_placeholder_option")
-                : mainContent || t("content_editor_placeholder_option")
+                ? t("content_editor_placeholder_option", {
+                    lng: langInfo.mainLang,
+                  })
+                : mainContent ||
+                  t("content_editor_placeholder_option", {
+                    lng: langInfo.mainLang,
+                  })
             }
             contentKey="label"
           />

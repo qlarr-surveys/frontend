@@ -12,7 +12,7 @@ import { resetSetup } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function ContentPanel({ designMode }, ref) {
-  const { t } = useTranslation(["design", "run"]);
+  const { t } = useTranslation(["design"]);
   const theme = useTheme();
 
   const groups = useSelector((state) => {

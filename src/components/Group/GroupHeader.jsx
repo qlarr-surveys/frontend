@@ -6,17 +6,10 @@ import { useTheme } from "@mui/material/styles";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import { useSelector } from "react-redux";
 import ActionToolbar from "../design/ActionToolbar";
-import { useDispatch } from "react-redux";
-import { deleteGroup } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 
-function GroupHeader({ t, code, children, designMode }) {
+function GroupHeader({ t, code, designMode, langInfo }) {
   console.debug("Group Header: " + code);
-
-  const dispatch = useDispatch();
-  const langInfo = useSelector((state) => {
-    return state.designState.langInfo;
-  });
 
   const onMainLang = langInfo.onMainLang;
 
@@ -27,8 +20,6 @@ function GroupHeader({ t, code, children, designMode }) {
   const theme = useTheme();
 
   const inDesgin = designMode == DESIGN_SURVEY_MODE.DESIGN;
-
-  const onDelete = useCallback(() => dispatch(deleteGroup(code)), [code]);
 
   return (
     <Box className={styles.headerContent}>
@@ -53,7 +44,9 @@ function GroupHeader({ t, code, children, designMode }) {
             code={code}
             extended={false}
             contentKey="label"
-            placeholder={t("content_editor_placeholder_title")}
+            placeholder={t("content_editor_placeholder_title", {
+              lng: langInfo.mainLang,
+            })}
           />
         </div>
         {group.showDescription && (
@@ -71,7 +64,9 @@ function GroupHeader({ t, code, children, designMode }) {
               code={code}
               extended={true}
               contentKey="description"
-              placeholder={t("content_editor_placeholder_description")}
+              placeholder={t("content_editor_placeholder_description", {
+                lng: langInfo.mainLang,
+              })}
             />
           </Box>
         )}

@@ -272,7 +272,7 @@ function SCQArrayRowDesign({
       <TableCell
         sx={{
           padding: "2px",
-          color:"inherit",
+          color: "inherit",
           width: width,
         }}
       >
@@ -289,8 +289,13 @@ function SCQArrayRowDesign({
             extended={false}
             placeholder={
               onMainLang
-                ? t("content_editor_placeholder_option")
-                : mainContent || t("content_editor_placeholder_option")
+                ? t("content_editor_placeholder_option", {
+                    lng: langInfo.mainLang,
+                  })
+                : mainContent ||
+                  t("content_editor_placeholder_option", {
+                    lng: langInfo.mainLang,
+                  })
             }
             contentKey="label"
           />
@@ -491,8 +496,13 @@ function SCQArrayHeaderDesign({
           extended={false}
           placeholder={
             onMainLang
-              ? t("content_editor_placeholder_option")
-              : mainContent || t("content_editor_placeholder_option")
+              ? t("content_editor_placeholder_option", {
+                  lng: langInfo.mainLang,
+                })
+              : mainContent ||
+                t("content_editor_placeholder_option", {
+                  lng: langInfo.mainLang,
+                })
           }
           contentKey="label"
         />
