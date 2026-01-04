@@ -19,6 +19,9 @@ import {
   useCollapsibleHandler,
   ensureCollapsiblesClosed,
 } from "~/hooks/useCollapsibleHandler";
+import { EDITOR_CONSTANTS } from "~/constants/editor";
+
+const { CONTENT_EDITOR_CLASS, RTL_CLASS, LTR_CLASS } = EDITOR_CONSTANTS;
 
 function ContentEditor({
   placeholder,
@@ -182,7 +185,7 @@ function ContentEditor({
       ) : isNotEmptyHtml(value) ? (
         <div
           ref={renderedContentRef}
-          className={`content-editor ${isRtl ? "rtl" : "ltr"} ${
+          className={`${CONTENT_EDITOR_CLASS} ${isRtl ? RTL_CLASS : LTR_CLASS} ${
             styles.noPadding
           }`}
           dangerouslySetInnerHTML={{
@@ -191,7 +194,7 @@ function ContentEditor({
         />
       ) : (
         <div
-          className={`${isRtl ? "rtl" : "ltr"} ${styles.placeholder}`}
+          className={`${isRtl ? RTL_CLASS : LTR_CLASS} ${styles.placeholder}`}
           dangerouslySetInnerHTML={{ __html: finalPlaceholder }}
         />
       )}

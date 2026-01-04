@@ -1,6 +1,9 @@
 import { Node, mergeAttributes } from "@tiptap/core";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { primary } from "~/theme/palette";
+import { EDITOR_CONSTANTS } from "~/constants/editor";
+
+const { COLLAPSIBLE_CLASS } = EDITOR_CONSTANTS;
 
 const CollapsibleExtension = Node.create({
   name: "collapsible",
@@ -83,7 +86,7 @@ const CollapsibleExtension = Node.create({
       mergeAttributes(HTMLAttributes, {
         "data-type": "collapsible",
         "data-open": isOpen ? "true" : "false",
-        class: "tiptap-collapsible",
+        class: COLLAPSIBLE_CLASS,
       }),
       [
         "button",
@@ -113,7 +116,7 @@ const CollapsibleExtension = Node.create({
     return ({ node, getPos, editor }) => {
       const dom = document.createElement("div");
       dom.setAttribute("data-type", "collapsible");
-      dom.className = "tiptap-collapsible";
+      dom.className = COLLAPSIBLE_CLASS;
       dom.setAttribute("data-open", node.attrs.open ? "true" : "false");
 
       const button = document.createElement("button");

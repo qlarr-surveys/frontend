@@ -9,6 +9,9 @@ import CollapsibleExtension from "./CollapsibleExtension";
 import FontSize from "./FontSizeExtension";
 import { createMentionExtension } from "./MentionExtension";
 import { PreventEnterExtension } from "./PreventEnterExtension";
+import { EDITOR_CONSTANTS } from "~/constants/editor";
+
+const { PARAGRAPH_MARGIN_STYLE, LINK_CLASS, IMAGE_CLASS } = EDITOR_CONSTANTS;
 
 export function createBaseExtensions(
   extended = true,
@@ -20,7 +23,7 @@ export function createBaseExtensions(
     StarterKit.configure({
       paragraph: {
         HTMLAttributes: {
-          style: "margin: 0;",
+          style: PARAGRAPH_MARGIN_STYLE,
         },
       },
       heading: false,
@@ -28,7 +31,7 @@ export function createBaseExtensions(
     LinkExtension.configure({
       openOnClick: false,
       HTMLAttributes: {
-        class: "tiptap-link",
+        class: LINK_CLASS,
       },
       autolink: false,
     }),
@@ -43,7 +46,7 @@ export function createBaseExtensions(
       inline: false,
       allowBase64: false,
       HTMLAttributes: {
-        class: "tiptap-image",
+        class: IMAGE_CLASS,
       },
     }),
     CollapsibleExtension,

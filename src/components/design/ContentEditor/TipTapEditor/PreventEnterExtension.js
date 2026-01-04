@@ -1,7 +1,10 @@
 import { Extension } from "@tiptap/core";
+import { PREVENT_ENTER_EXTENSION } from "~/constants/editor";
+
+const { NAME, LOG_PREFIX, ERROR_MESSAGES } = PREVENT_ENTER_EXTENSION;
 
 export const PreventEnterExtension = Extension.create({
-  name: "preventEnter",
+  name: NAME,
 
   addOptions() {
     return {
@@ -15,49 +18,45 @@ export const PreventEnterExtension = Extension.create({
   addKeyboardShortcuts() {
     const shortcuts = {};
 
-    // Only register Enter handler when extended is false (for options)
-    if (!this.options.extended) {
-      shortcuts.Enter = async () => {
-        const html = this.editor.getHTML();
-        const isEmpty =
-          !html || html.trim() === "" || html.trim() === "<p></p>";
+    const isChoiceOption =
+      !this.options.extended && typeof this.options.onNewLine === "function";
 
-        // Save content before moving to next option
-        if (
-          !isEmpty &&
-          typeof this.options.onBlurListener === "function" &&
-          this.options.lang
-        ) {
-          try {
-            const result = this.options.onBlurListener(html, this.options.lang);
-            if (result instanceof Promise) {
-              await result;
+    if (isChoiceOption) {
+      const handleEnterKey = async () => {
+        if (!this.editor.isEmpty) {
+          const html = this.editor.getHTML();
+          if (
+            typeof this.options.onBlurListener === "function" &&
+            this.options.lang
+          ) {
+            try {
+              const result = this.options.onBlurListener(
+                html,
+                this.options.lang
+              );
+              if (result instanceof Promise) {
+                await result;
+              }
+            } catch (error) {
+              console.error(LOG_PREFIX, ERROR_MESSAGES.SAVING_CONTENT, error);
             }
-          } catch (error) {
-            console.error(
-              "[PreventEnterExtension] Error saving content:",
-              error
-            );
           }
-        }
 
-        // Move to next option (even if empty)
-        if (typeof this.options.onNewLine === "function") {
           try {
             this.options.onNewLine();
           } catch (error) {
-            console.error(
-              "[PreventEnterExtension] Error in onNewLine callback:",
-              error
-            );
+            console.error(LOG_PREFIX, ERROR_MESSAGES.NEW_LINE_CALLBACK, error);
           }
         }
+
         return true;
       };
 
-      shortcuts["Shift-Enter"] = () => {
-        return true; // Prevent Shift-Enter in non-extended mode
-      };
+      shortcuts.Enter = handleEnterKey;
+      shortcuts["Shift-Enter"] = handleEnterKey;
+    } else if (!this.options.extended) {
+      shortcuts.Enter = () => true;
+      shortcuts["Shift-Enter"] = () => true;
     }
 
     return shortcuts;

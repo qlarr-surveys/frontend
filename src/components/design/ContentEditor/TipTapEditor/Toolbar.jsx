@@ -8,6 +8,9 @@ import ColorPickerButton from "./Toolbar/ColorPickerButton";
 import ImageUploadButton from "./Toolbar/ImageUploadButton";
 import ListControls from "./Toolbar/ListControls";
 import { useToolbar } from "./Toolbar/useToolbar";
+import { EDITOR_CONSTANTS } from "~/constants/editor";
+
+const { TOOLBAR_CLASS, TOOLBAR_BUTTON_CLASS } = EDITOR_CONSTANTS;
 
 const Toolbar = ({ editor, extended }) => {
   const { t } = useTranslation("design");
@@ -44,7 +47,7 @@ const Toolbar = ({ editor, extended }) => {
   }
 
   return (
-    <div className="tiptap-toolbar">
+    <div className={TOOLBAR_CLASS}>
       {/* Font Size */}
       <FontSizeSelector
         currentFontSize={currentFontSize}
@@ -173,7 +176,7 @@ const Toolbar = ({ editor, extended }) => {
       <button
         onMouseDown={(e) => e.preventDefault()}
         onClick={insertCollapsible}
-        className="tiptap-toolbar-button"
+        className={TOOLBAR_BUTTON_CLASS}
         title={t("tiptap_insert_collapsible")}
         disabled={editor.isActive("collapsible")}
       >
@@ -188,7 +191,7 @@ const Toolbar = ({ editor, extended }) => {
           setShowLinkInput(false);
           setLinkUrl("");
         }}
-        className="tiptap-toolbar-button"
+        className={TOOLBAR_BUTTON_CLASS}
         title={t("tiptap_clear_formatting")}
       >
         🗑
