@@ -56,6 +56,7 @@ function ImageChoiceQuestion(props) {
                 <IconChoiceItemDesign
                   key={item.code}
                   code={item.code}
+                  langInfo={props.langInfo}
                   parentCode={props.code}
                   index={index}
                   columnNumber={columnNumber}
@@ -81,6 +82,7 @@ function ImageChoiceQuestion(props) {
                 <ImageChoiceItemDesign
                   key={item.code}
                   code={item.code}
+                  langInfo={props.langInfo}
                   parentCode={props.code}
                   index={index}
                   imageAspectRatio={imageAspectRatio}
@@ -90,9 +92,7 @@ function ImageChoiceQuestion(props) {
                   imageHeight={imageHeight}
                   t={props.t}
                   addAnswer={() =>
-                    dispatch(
-                      addNewAnswer({ questionCode: props.code })
-                    )
+                    dispatch(addNewAnswer({ questionCode: props.code }))
                   }
                   type={item.type}
                   qualifiedCode={item.qualifiedCode}

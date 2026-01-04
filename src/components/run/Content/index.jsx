@@ -13,7 +13,6 @@ function Content(props) {
   const isComplex = props.content && props.content.includes("{{");
   const content = props.content;
   const name = props.name;
-  const lang = props.lang;
   const elementCode = props.elementCode;
   const customStyle = props.customStyle;
   const state = useSelector((state) => {
@@ -21,8 +20,7 @@ function Content(props) {
       !content ||
       !isComplex ||
       !state.runState.values[elementCode] ||
-      !name ||
-      !lang
+      !name
     ) {
       return undefined;
     } else {
@@ -63,7 +61,7 @@ function Content(props) {
         `}
         className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
         dangerouslySetInnerHTML={{
-          __html: ensureCollapsiblesClosed(replaceMentions(content, state)),
+          __html: ensureCollapsiblesClosed(replaceMentions(content, state, name, surveyLang)),
         }}
       />
     );

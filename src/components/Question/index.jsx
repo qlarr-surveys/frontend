@@ -13,9 +13,6 @@ const DateTimeQuestion = React.lazy(() =>
   import("../Questions/DateTime/DateTimeQuestion")
 );
 const SCQ = React.lazy(() => import("../Questions/Scq/Scq"));
-const SelectQuestion = React.lazy(() =>
-  import("../Questions/SelectQuestion/SelectQuestion")
-);
 const Array = React.lazy(() => import("../Questions/SCQArray/Array"));
 const Signature = React.lazy(() => import("../Questions/Signature/Signature"));
 const PhotoCapture = React.lazy(() =>
@@ -105,7 +102,6 @@ const Question = forwardRef((props, ref) => {
       case "scq":
         return (
           <SCQ
-            lang={props.lang}
             key={props.component.qualifiedCode}
             component={props.component}
           />
@@ -113,7 +109,6 @@ const Question = forwardRef((props, ref) => {
       case "multiple_text":
         return (
           <MultipleText
-            lang={props.lang}
             key={props.component.qualifiedCode}
             component={props.component}
           />
@@ -164,7 +159,6 @@ const Question = forwardRef((props, ref) => {
       case "mcq":
         return (
           <MCQ
-            lang={props.lang}
             key={props.component.qualifiedCode}
             component={props.component}
           />
@@ -263,7 +257,6 @@ const Question = forwardRef((props, ref) => {
       case "ranking":
         return (
           <Ranking
-            lang={props.lang}
             key={props.component.qualifiedCode}
             component={props.component}
           />
@@ -281,14 +274,17 @@ const Question = forwardRef((props, ref) => {
   };
 
   return relevance ? (
-    <QuestionWrapper customCss={props.component.customCss} qualifiedCode={props.component.qualifiedCode} ref={ref}>
+    <QuestionWrapper
+      customCss={props.component.customCss}
+      qualifiedCode={props.component.qualifiedCode}
+      ref={ref}
+    >
       {showHeader && (
         <>
           {showTitle && (
             <Content
               className={`${styles.content} ${styles.question}`}
               name="label"
-              lang={props.lang}
               customStyle={`
         font-size: ${theme.textStyles.question.size}px;
         `}
@@ -304,7 +300,6 @@ const Question = forwardRef((props, ref) => {
                 customStyle={`
         font-size: ${theme.textStyles.text.size}px;
         `}
-                lang={props.lang}
                 content={props.component.content.description}
               />
             </Box>
@@ -347,7 +342,9 @@ const QuestionWrapper = React.memo((props) => {
   return (
     <Box
       data-code={props.code}
-      css={css`${props.customCss}`}
+      css={css`
+        ${props.customCss}
+      `}
       sx={{
         borderColor: invalid ? "error.main" : "grey.500",
       }}

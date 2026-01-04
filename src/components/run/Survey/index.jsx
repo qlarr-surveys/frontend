@@ -19,11 +19,6 @@ function Survey() {
     return state.runState.data?.survey;
   }, shallowEqual);
 
-  const lang = useSelector((state) => {
-    return state.runState.data?.lang;
-  }, shallowEqual);
-
-
   return (
     <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
       <form
@@ -42,7 +37,7 @@ function Survey() {
                     id={`group-${index}`}
                     data-index={index}
                   >
-                    <Group group={group} lang={lang.code} groupIndex={index} />
+                    <Group group={group} groupIndex={index} />
                   </div>
                 ))
             : ""}

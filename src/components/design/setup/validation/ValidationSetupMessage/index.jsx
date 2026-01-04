@@ -4,7 +4,7 @@ import { TextField, Typography } from "@mui/material";
 import styles from "./ValidationSetupMessage.module.css";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { changeValidationValue } from "~/state/design/designState";
+import { changeContent, changeValidationValue } from "~/state/design/designState";
 
 function ValidationSetupMessage({ validationRule, code, rule, t }) {
   const dispatch = useDispatch();
@@ -15,7 +15,9 @@ function ValidationSetupMessage({ validationRule, code, rule, t }) {
     return state.designState.langInfo.languagesList;
   });
 
-  let content = validationRule.content || {};
+  const componentContent = useSelector((state) => {
+    return state.designState[code].content;
+  });
 
   const checkedCustomError = (checked) => {
     dispatch(
@@ -28,15 +30,9 @@ function ValidationSetupMessage({ validationRule, code, rule, t }) {
     );
   };
 
-  const onContentUpdate = (key, value) => {
-    const newContent = { ...content, [key]: value };
+  const onContentUpdate = (lang, value) => {
     dispatch(
-      changeValidationValue({
-        code,
-        rule: rule,
-        key: "content",
-        value: newContent,
-      })
+      changeContent({ code, key: rule, lang, value })
     );
   };
 
@@ -64,7 +60,9 @@ function ValidationSetupMessage({ validationRule, code, rule, t }) {
         </div>
       </div>
       <div className={styles.title}>
-        <Typography fontWeight={700} className={styles.mt10}>{t("custom_error")}</Typography>
+        <Typography fontWeight={700} className={styles.mt10}>
+          {t("custom_error")}
+        </Typography>
         <Switch
           {...label}
           checked={isCustomErrorActive}
@@ -89,7 +87,7 @@ function ValidationSetupMessage({ validationRule, code, rule, t }) {
                 <TextField
                   size="small"
                   variant="standard"
-                  value={content[l.code] || ""}
+                  value={componentContent[l.code]?.[rule] || ""}
                   onChange={(event) =>
                     onContentUpdate(l.code, event.target.value)
                   }

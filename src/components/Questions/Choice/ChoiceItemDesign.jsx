@@ -35,9 +35,7 @@ function ChoiceItemDesign(props) {
     return state.designState[props.qualifiedCode];
   });
 
-  const langInfo = useSelector((state) => {
-    return state.designState.langInfo;
-  });
+  const langInfo = props.langInfo;
 
   const onMainLang = langInfo.lang === langInfo.mainLang;
   const lang = langInfo.lang;
@@ -270,9 +268,7 @@ function ChoiceItemDesign(props) {
           <ContentEditor
             code={props.qualifiedCode}
             showToolbar={false}
-            customStyle={props.type=="text" 
-              ? `flex: 1` : undefined
-            }
+            customStyle={props.type == "text" ? `flex: 1` : undefined}
             editable={
               props.designMode == DESIGN_SURVEY_MODE.DESIGN ||
               props.designMode == DESIGN_SURVEY_MODE.LANGUAGES
@@ -280,7 +276,9 @@ function ChoiceItemDesign(props) {
             extended={false}
             placeholder={
               onMainLang
-                ? props.t("content_editor_placeholder_option")
+                ? props.t("content_editor_placeholder_option", {
+                    lng: langInfo.mainLang,
+                  })
                 : mainContent || props.t("content_editor_placeholder_option")
             }
             contentKey="label"

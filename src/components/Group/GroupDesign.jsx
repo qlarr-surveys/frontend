@@ -9,13 +9,16 @@ import { useDrag, useDrop } from "react-dnd";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
 import { onDrag, setup } from "~/state/design/designState";
-import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { setupOptions } from "~/constants/design";
 function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
   const dispatch = useDispatch();
   const group = useSelector((state) => {
     return state.designState[code];
+  });
+
+  const langInfo = useSelector((state) => {
+    return  state.designState.langInfo;
   });
 
   const inDesign = designMode == DESIGN_SURVEY_MODE.DESIGN;
@@ -159,6 +162,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
         t={t}
         code={code}
         index={index}
+        langInfo={langInfo}
         designMode={designMode}
         children={children}
       />
@@ -182,6 +186,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
                 parentCode={code}
                 parentIndex={index}
                 index={childIndex}
+                langInfo={langInfo}
                 isLast={children.length == childIndex + 1}
                 type={quest.type}
                 code={quest.code}

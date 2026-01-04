@@ -35,7 +35,6 @@ function Group(props) {
             <Content
               elementCode={props.group.code}
               name="label"
-              lang={props.lang}
               customStyle={`
         font-size: ${theme.textStyles.group.size}px;
         `}
@@ -51,7 +50,6 @@ function Group(props) {
                     customStyle={`
         font-size: ${theme.textStyles.text.size}px;
         `}
-                    lang={props.lang}
                     content={props.group.content?.description}
                   />
                 </Box>
@@ -65,7 +63,6 @@ function Group(props) {
                   <Question
                     key={quest.code}
                     component={quest}
-                    lang={props.lang}
                   />
                 ))
             : ""}

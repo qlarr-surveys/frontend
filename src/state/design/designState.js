@@ -68,7 +68,7 @@ export const designState = createSlice({
         (el) => !reservedKeys.includes(el) && !newKeys.includes(el)
       );
 
-      if (!state.langInfo) {
+      if (!state.langInfo || response.overWriteLang) {
         const defaultLang = newState.Survey.defaultLang || LANGUAGE_DEF.en;
         const mainLang = defaultLang.code;
         const lang = defaultLang.code;
@@ -497,7 +497,7 @@ export const designState = createSlice({
         (instruction) => instruction.code.startsWith(prefixToRemove)
       );
       toRemove?.forEach((instruction) => {
-        console.log(instruction.code)
+        console.log(instruction.code);
         changeInstruction(state[payload.code], {
           code: instruction.code,
           remove: true,

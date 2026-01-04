@@ -43,7 +43,7 @@ function ManageSurvey({ landingPage }) {
   const dispatch = useDispatch();
 
   const setState = (state) => {
-    dispatch(designStateReceived(state));
+    dispatch(designStateReceived({ ...state, overWriteLang: true }));
   };
 
   const processApirror = (e) => {
@@ -111,7 +111,7 @@ function ManageSurvey({ landingPage }) {
 
   return (
     <>
-      <Box sx={{ display: "flex"}}>
+      <Box sx={{ display: "flex" }}>
         {availablePagesMemo.length > 0 && (
           <SideTabs
             availablePages={availablePagesMemo}

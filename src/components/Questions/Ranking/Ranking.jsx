@@ -11,7 +11,6 @@ import { useTheme } from "@emotion/react";
 function Ranking(props) {
   const dispatch = useDispatch();
   const theme = useTheme();
-  const lang = props.lang;
 
   const visibleAnswers = useSelector(
     (state) =>
@@ -186,7 +185,6 @@ function Ranking(props) {
     >
       <RankingContainer
         styles={styles}
-        lang={lang}
         theme={theme}
         ordererLength={withOrder.length}
         unordererLength={withoutOrder.length}
@@ -199,7 +197,6 @@ function Ranking(props) {
       />
       <RankingContainer
         styles={styles}
-        lang={lang}
         theme={theme}
         onHover={onHover}
         onItemTransfer={onItemTransfer}
@@ -217,7 +214,6 @@ function Ranking(props) {
 function RankingContainer({
   styles,
   itemType,
-  lang,
   theme,
   options,
   onItemTransfer,
@@ -241,7 +237,6 @@ function RankingContainer({
               onItemTransfer={onItemTransfer}
             />
             <RankingOption
-              lang={lang}
               theme={theme}
               index={index}
               key={option.code}
@@ -266,7 +261,6 @@ function RankingContainer({
 }
 
 function RankingOption({
-  lang,
   theme,
   option,
   onDoubleClick,
@@ -343,7 +337,6 @@ function RankingOption({
         font-size: ${theme.textStyles.text.size}px;
         `}
           name="label"
-          lang={lang}
           content={option.content?.label}
         />
       </Box>

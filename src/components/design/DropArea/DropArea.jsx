@@ -49,7 +49,7 @@ export function GroupDropArea({ index, groupsCount, t, emptySurvey }) {
       ref={drop}
       style={{
         backgroundColor: isDraggingGroup && contrastColor,
-        color : theme.palette.text.primary
+        color: theme.palette.text.primary,
       }}
       className={
         "" +
@@ -65,10 +65,10 @@ export function GroupDropArea({ index, groupsCount, t, emptySurvey }) {
     >
       {isDraggingGroup && !emptySurvey && (
         <>
-          <span className={styles.dropText}>{t("empty_survey_hint")}</span>
+          <span className={styles.dropText}>{t("drop_page_here")}</span>
         </>
       )}
-      {emptySurvey && <span>{t("empty_survey_hint")}</span>}
+      {emptySurvey && <span>{t("drop_page_here")}</span>}
     </div>
   );
 }
@@ -168,7 +168,13 @@ export function QuestionDropArea({
   }
 
   return (
-    <div ref={ref}>
+    <div
+      ref={ref}
+      style={{
+        marginRight: "1.5em",
+        marginLeft: "1.5em",
+      }}
+    >
       {" "}
       <div
         ref={drop}
@@ -202,7 +208,7 @@ export function QuestionDropArea({
                 color: textContrast,
               }}
             >
-              {t("empty_group_hint")}
+              {t("drop_question_here")}
             </span>
           </Box>
         )}
@@ -215,7 +221,7 @@ export function QuestionDropArea({
                 color: textContrast,
               }}
             >
-              {t("empty_group_hint")}
+              {t("drop_question_here")}
             </span>
           </Box>
         )}
