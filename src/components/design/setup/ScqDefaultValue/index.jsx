@@ -1,15 +1,18 @@
 import React from "react";
-import { MenuItem, Typography, FormControl, InputLabel, Select } from "@mui/material";
+import { MenuItem, Typography, FormControl, Select } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { setDefaultValue } from '~/state/design/designState';
+import { setDefaultValue } from "~/state/design/designState";
+import { stripTags } from "~/utils/design/utils";
 
 function ScqDefaultValue({ code }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
   // Get the question data and its children (answers)
-  const answers = useSelector((state) => state.designState[code]?.children || []);
+  const answers = useSelector(
+    (state) => state.designState[code]?.children || []
+  );
 
   // Get the current "value" instruction
   const currentInstruction = useSelector((state) => {
@@ -18,19 +21,23 @@ function ScqDefaultValue({ code }) {
     );
   });
 
+  const langInfo = useSelector((state) => {
+    return state.designState.langInfo;
+  });
+
   // Get current default value from the instruction
   const currentDefaultValue = currentInstruction?.text || "";
 
   // Get answer labels for display
   const answerLabels = useSelector((state) => {
     const labels = {};
-    answers.forEach(answer => {
+    answers.forEach((answer) => {
       if (answer && answer.qualifiedCode) {
         const answerData = state.designState[answer.qualifiedCode];
         // Only use plain text properties
-        const rawLabel = answerData?.content?.en?.text || 
-                        answerData?.content?.en?.title || 
-                        answer.code;
+        const rawLabel =
+          stripTags(answerData?.content?.[langInfo.mainLang]?.label) ||
+          answer.code;
         labels[answer.code] = rawLabel;
       }
     });
@@ -51,28 +58,31 @@ function ScqDefaultValue({ code }) {
   }
 
   return (
-    <div style={{ marginBottom: '16px' }}>
-      <Typography fontWeight={700} style={{ marginBottom: '8px' }}>
+    <div style={{ marginBottom: "16px" }}>
+      <Typography fontWeight={700} style={{ marginBottom: "8px" }}>
         {t("default_value")}
       </Typography>
-      <FormControl fullWidth size="small">
-        <InputLabel>{currentDefaultValue ? t("select_default_answer") : t("no_default")}</InputLabel>
-        <Select
-          value={currentDefaultValue}
-          onChange={handleDefaultValueChange}
-          label={currentDefaultValue ? t("select_default_answer") : t("no_default")}
-          displayEmpty
-        >
-          <MenuItem value="">
-            <em>{t("no_default")}</em>
+      <Select
+        fullWidth
+        value={currentDefaultValue}
+        onChange={handleDefaultValueChange}
+        displayEmpty
+        renderValue={(selected) => {
+          if (!selected) {
+            return t("no_default");
+          }
+          return getAnswerLabel(selected);
+        }}
+      >
+        <MenuItem value="">
+          <em>{t("no_default")}</em>
+        </MenuItem>
+        {answers.map((answer) => (
+          <MenuItem key={answer.code} value={answer.code}>
+            {getAnswerLabel(answer.code)}
           </MenuItem>
-          {answers.map((answer) => (
-            <MenuItem key={answer.code} value={answer.code}>
-              {getAnswerLabel(answer.code)}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+        ))}
+      </Select>
     </div>
   );
 }
