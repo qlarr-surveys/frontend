@@ -35,9 +35,7 @@ function ChoiceItemDesign(props) {
     return state.designState[props.qualifiedCode];
   });
 
-  const langInfo = useSelector((state) => {
-    return state.designState.langInfo;
-  });
+  const langInfo = props.langInfo;
 
   const onMainLang = langInfo.lang === langInfo.mainLang;
   const lang = langInfo.lang;
@@ -280,7 +278,9 @@ function ChoiceItemDesign(props) {
             onMoreLines={props.onMoreLines}
             placeholder={
               onMainLang
-                ? props.t("content_editor_placeholder_option")
+                ? props.t("content_editor_placeholder_option", {
+                    lng: langInfo.mainLang,
+                  })
                 : mainContent || props.t("content_editor_placeholder_option")
             }
             contentKey="label"

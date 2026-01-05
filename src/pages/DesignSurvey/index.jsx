@@ -20,6 +20,7 @@ import {
   setDesignModeToTheme,
 } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
+import i18next from 'i18next';
 
 const ContentPanel = React.lazy(() =>
   import("~/components/design/ContentPanel")
@@ -27,10 +28,15 @@ const ContentPanel = React.lazy(() =>
 const LeftPanel = React.lazy(() => import("~/components/design/LeftPanel"));
 
 function DesignSurvey() {
-  const { t, i18n } = useTranslation(["design", "run"]);
-  const childI18n = useMemo(() => i18n.cloneInstance(), []);
-  const contentRef = useRef(null);
+  const { t, i18n } = useTranslation(["design"]);
+  const [contentElement, setContentElement] = React.useState(null);
   const dispatch = useDispatch();
+
+  const contentRef = React.useCallback((node) => {
+    if (node) {
+      setContentElement(node);
+    }
+  }, []);
 
   const containerRef = useRef();
 
@@ -43,31 +49,28 @@ function DesignSurvey() {
   });
 
   const lang = langInfo?.lang;
+  const mainLang = langInfo?.mainLang;
 
   const theme = useSelector((state) => {
     return state.designState["Survey"]?.theme;
   });
 
-  function changeLanguage(lang) {
-    return new Promise((resolve, reject) => {
+  useEffect(() => {
+    if (contentElement && lang) {
       const dir = rtlLanguage.includes(lang) ? "rtl" : "ltr";
-      const contentPanel = contentRef.current;
+      const contentPanel = contentElement;
       if (contentPanel.dir != dir) {
         contentPanel.dir = dir;
       }
       contentPanel.scrollTop = 0;
-      if (lang && childI18n && lang != childI18n.language) {
-        childI18n.changeLanguage(lang);
-      }
-      resolve();
-    });
-  }
+    }
+  }, [lang, contentElement]);
 
   useEffect(() => {
-    if (contentRef.current) {
-      changeLanguage(lang);
+    if (mainLang) {
+     i18n.loadLanguages(mainLang)
     }
-  }, [lang, contentRef]);
+  }, [mainLang]);
 
   useEffect(() => {
     if (designMode == DESIGN_SURVEY_MODE.DESIGN) {
@@ -114,15 +117,13 @@ function DesignSurvey() {
         </Suspense>
         <CacheProvider value={cacheRtlMemo}>
           <ThemeProvider theme={surveyTheme}>
-            <I18nextProvider i18n={childI18n}>
-              <Suspense fallback={<LoadingDots fullHeight />}>
-                <ContentPanel
-                  designMode={designMode}
-                  ref={contentRef}
-                  className={styles.contentPanel}
-                />
-              </Suspense>
-            </I18nextProvider>
+            <Suspense fallback={<LoadingDots fullHeight />}>
+              <ContentPanel
+                designMode={designMode}
+                ref={contentRef}
+                className={styles.contentPanel}
+              />
+            </Suspense>
           </ThemeProvider>
         </CacheProvider>
       </DndProvider>
