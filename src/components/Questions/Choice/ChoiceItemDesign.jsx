@@ -274,6 +274,8 @@ function ChoiceItemDesign(props) {
               props.designMode == DESIGN_SURVEY_MODE.LANGUAGES
             }
             extended={false}
+            onNewLine={props.onNewLine}
+            onMoreLines={props.onMoreLines}
             placeholder={
               onMainLang
                 ? props.t("content_editor_placeholder_option", {

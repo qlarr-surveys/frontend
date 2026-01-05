@@ -123,6 +123,25 @@ function ArrayDesign(props) {
                   parentQualifiedCode={props.code}
                   type={props.type}
                   langInfo={langInfo}
+                  onMoreLines={(data) => {
+                    dispatch(
+                      addNewAnswers({
+                        questionCode: props.code,
+                        index,
+                        data,
+                        type: "row",
+                      })
+                    );
+                  }}
+                  onNewLine={() => {
+                    dispatch(
+                      onNewLine({
+                        questionCode: props.code,
+                        index,
+                        type: "row",
+                      })
+                    );
+                  }}
                   t={props.t}
                   designMode={props.designMode}
                   key={item.qualifiedCode}
@@ -160,6 +179,8 @@ function ArrayRowDesign({
   designMode,
   type,
   t,
+  onNewLine,
+  onMoreLines,
   langInfo,
   parentQualifiedCode,
 }) {
@@ -277,6 +298,8 @@ function ArrayRowDesign({
             showToolbar={false}
             editable={contentEditable(designMode)}
             extended={false}
+            onNewLine={onNewLine}
+            onMoreLines={onMoreLines}
             placeholder={
               onMainLang
                 ? t("content_editor_placeholder_option", {
