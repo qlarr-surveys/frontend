@@ -7,7 +7,7 @@ import {
   CardMedia,
   Badge,
 } from "@mui/material";
-import { Stop } from "@mui/icons-material";
+import { Cancel } from "@mui/icons-material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ArticleIcon from "@mui/icons-material/Article";
 import styles from "./Survey.module.css";
@@ -342,7 +342,7 @@ const Survey = ({
               iconOnly
               onClick={() => onClose(survey.id)}
             >
-              <Stop sx={ICON_SIZE_ACTION} />
+              <Cancel sx={ICON_SIZE_ACTION} />
             </ActionButton>
           )}
 
