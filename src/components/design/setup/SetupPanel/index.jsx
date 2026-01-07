@@ -23,6 +23,7 @@ import ScqDefaultValue from "../ScqDefaultValue";
 import DisabledToggle from "../Disabled";
 import EntityCodeEditor from "../EntityCodeEditor";
 import CustomCSS from '../CustomCss';
+import PageActions from "../PageActions";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -40,7 +41,9 @@ function SetupPanel({ t }) {
   const { code, highlighted, rules } = useSelector(selectSetupData);
 
   const type = useSelector((state) => {
-    return state.designState[code]?.type;
+    if (code === "Survey") return "Survey";
+    const item = state.designState[code];
+    return item?.type || item?.groupType?.toLowerCase();
   });
 
   const order = useSelector((state) => {
@@ -424,6 +427,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
       );
     case "disabled":
       return <DisabledToggle t={t} key={code + rule} code={code} />;
+    case "pageActions":
+      return <PageActions key={code + rule} t={t} code={code} />;
     case "skip_logic":
       return <SkipLogic t={t} key={code + rule} code={code} />;
     case "relevance":

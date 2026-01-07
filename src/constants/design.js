@@ -29,6 +29,7 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
+            "pageActions",
             "disabled",
             "showDescription",
           ],
