@@ -20,7 +20,6 @@ import { useTheme } from "@emotion/react";
 import { questionIconByType } from "~/components/Questions/utils";
 import OrderSetup from "../random/OrderSetup";
 import ScqDefaultValue from "../ScqDefaultValue";
-import QuestionActions from "../QuestionActions";
 import DisabledToggle from "../Disabled";
 import EntityCodeEditor from "../EntityCodeEditor";
 import CustomCSS from '../CustomCss';
@@ -41,12 +40,16 @@ function SetupPanel({ t }) {
   const { code, highlighted, rules } = useSelector(selectSetupData);
 
   const type = useSelector((state) => {
-    return state.designState[code].type;
+    return state.designState[code]?.type;
   });
 
   const order = useSelector((state) => {
-    return state.designState.index[code];
+    return state.designState.index?.[code];
   });
+
+  if (!code || !type) {
+    return null;
+  }
 
   return (
     <div
@@ -152,10 +155,6 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           rule={rule}
           code={code}
         />
-      );
-    case "questionActions":
-      return (
-        <QuestionActions key={code + rule} t={t} rule={rule} code={code} />
       );
     case "scq_default_value":
       return <ScqDefaultValue key={code + rule} code={code} />;

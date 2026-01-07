@@ -29,7 +29,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
           ],
@@ -52,7 +51,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
           ],
@@ -76,7 +74,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "imageWidth",
@@ -101,7 +98,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "audio_only",
@@ -127,7 +123,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "maxChars",
@@ -195,7 +190,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "maxChars",
@@ -237,7 +231,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "maxChars",
@@ -273,7 +266,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hint",
@@ -303,7 +295,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "minRows",
@@ -341,7 +332,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
           ],
@@ -374,7 +364,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
           ],
@@ -403,7 +392,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hint",
@@ -433,7 +421,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hint",
@@ -463,7 +450,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hint",
@@ -493,7 +479,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "dateFormat",
@@ -526,7 +511,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "dateFormat",
@@ -558,7 +542,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "fullDayFormat",
@@ -587,7 +570,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "scq_default_value",
@@ -617,7 +599,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hideText",
@@ -650,7 +631,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hideText",
@@ -683,7 +663,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
           ],
@@ -716,7 +695,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
           ],
@@ -745,7 +723,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
           ],
@@ -778,7 +755,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hideText",
@@ -815,7 +791,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hideText",
@@ -852,7 +827,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hideText",
@@ -888,7 +862,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
           ],
@@ -917,7 +890,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "showDescription",
             "disabled",
             "minHeaderMobile",
@@ -949,7 +921,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "lower_bound_hint",

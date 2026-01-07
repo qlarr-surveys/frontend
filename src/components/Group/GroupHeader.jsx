@@ -1,15 +1,20 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import styles from "./GroupDesign.module.css";
 import ContentEditor from "~/components/design/ContentEditor";
-import { Box, css } from "@mui/material";
+import { Box, Button, css } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ActionToolbar from "../design/ActionToolbar";
 import { DESIGN_SURVEY_MODE } from "~/routes";
+import { deleteGroup, resetSetup } from "~/state/design/designState";
+import DeleteModal from "~/components/common/DeleteModal";
+import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 
 function GroupHeader({ t, code, designMode, langInfo }) {
   console.debug("Group Header: " + code);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const onMainLang = langInfo.onMainLang;
 
@@ -19,16 +24,37 @@ function GroupHeader({ t, code, designMode, langInfo }) {
 
   const theme = useTheme();
 
-  const inDesgin = designMode == DESIGN_SURVEY_MODE.DESIGN;
+  const inDesign = designMode == DESIGN_SURVEY_MODE.DESIGN;
+
+  const onDelete = useCallback(() => {
+    dispatch(resetSetup());
+    dispatch(deleteGroup(code));
+  }, [dispatch, code]);
 
   return (
     <Box className={styles.headerContent}>
       <Box className={styles.groupHeader}>
         <Box className={styles.contentContainer}>
-          {inDesgin && onMainLang && (
-            <div className={styles.actionToolbarVisible}>
-              <ActionToolbar code={code} isGroup={true} />
-            </div>
+          {inDesign && onMainLang && (
+            <>
+              <div className={styles.actionToolbarVisible}>
+                <ActionToolbar code={code} isGroup={true} />
+              </div>
+              <div className={styles.actionButtons}>
+                <Button
+                  variant="contained"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteModalOpen(true);
+                  }}
+                  size="small"
+                  color="primary"
+                  startIcon={<SurveyIcon name="delete" size=".9em" color="white" />}
+                >
+                  {t("delete")}
+                </Button>
+              </div>
+            </>
           )}
         </Box>
         <div
@@ -72,6 +98,15 @@ function GroupHeader({ t, code, designMode, langInfo }) {
         )}
         {onMainLang && <ErrorDisplay type="group" code={code} />}
       </Box>
+      <DeleteModal
+        open={deleteModalOpen}
+        description={t("delete_page")}
+        handleClose={() => setDeleteModalOpen(false)}
+        handleDelete={() => {
+          setDeleteModalOpen(false);
+          onDelete();
+        }}
+      />
     </Box>
   );
 }

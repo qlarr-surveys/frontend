@@ -105,7 +105,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  justify-content: end;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  margin-inline-end: 8px;
 }
 
 .headerContent {
