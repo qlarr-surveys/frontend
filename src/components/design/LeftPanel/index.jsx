@@ -7,8 +7,7 @@ import SetupPanel from "../setup/SetupPanel";
 function LeftPanel({ t }) {
   const show = useSelector((state) => {
     return (
-      (state.designState?.designMode || DESIGN_SURVEY_MODE.DESIGN) ==
-        DESIGN_SURVEY_MODE.DESIGN &&
+      (state.designState?.designMode == DESIGN_SURVEY_MODE.DESIGN) &&
       (!state.designState.setup || Object.keys(state.designState.setup) == 0)
     );
   });

@@ -51,7 +51,11 @@ const DeleteModal = ({
             }}
             size="medium"
             variant="contained"
-            onClick={handleClose}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleClose();
+            }}
           >
             {t("cancel")}
           </Button>
@@ -60,7 +64,11 @@ const DeleteModal = ({
             size="medium"
             type="submit"
             variant="secondary"
-            onClick={handleDelete}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleDelete();
+            }}
           >
             {t("confirm")}
           </Button>
