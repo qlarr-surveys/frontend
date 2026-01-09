@@ -9,7 +9,6 @@
 }
 
 .actionBtn {
-  margin-top: 30px;
   display: flex;
   justify-content: space-between;
 }
@@ -426,7 +425,7 @@
   justify-content: space-between;
   font-size: 0.8rem;
   color: var(--color-gray-light, #B3B7CB);
-  margin-bottom: 1.25rem;
+  margin-bottom: 25px;
   padding: 0 var(--spacing-card, 1.5rem);
 }
 
