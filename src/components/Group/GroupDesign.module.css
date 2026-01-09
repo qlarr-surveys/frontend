@@ -94,7 +94,6 @@
 }
 
 .actionToolbarVisible {
-  width: 100%;
   animation: fadeInMoveRight 0.75s ease-out forwards;
 }
 
@@ -106,13 +105,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.actionButtons {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-  margin-inline-end: 8px;
+  justify-content: end;
 }
 
 .headerContent {
