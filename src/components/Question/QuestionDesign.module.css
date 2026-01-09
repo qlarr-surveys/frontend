@@ -61,9 +61,7 @@
 }
 
 .actionToolbarVisible {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  width: 100%;
   animation: fadeInMoveRight 0.75s ease-out forwards;
 }
 
@@ -75,21 +73,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-  pointer-events: none;
-}
-
-.contentContainer.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.actionButtons {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-  margin-inline-end: 8px;
 }
 
 .highlight {

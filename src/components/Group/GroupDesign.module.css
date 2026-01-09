@@ -94,6 +94,7 @@
 }
 
 .actionToolbarVisible {
+  width: 100%;
   animation: fadeInMoveRight 0.75s ease-out forwards;
 }
 

@@ -1,22 +1,38 @@
 import { IconButton } from "@mui/material";
 import styles from "./ActionToolbar.module.css";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import MoveDownIcon from "@mui/icons-material/MoveDown";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setupOptions } from "~/constants/design";
-import { setup } from "~/state/design/designState";
+import { setup, cloneQuestion, deleteQuestion, deleteGroup, resetSetup } from "~/state/design/designState";
 import { useTheme } from "@emotion/react";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { RuleOutlined, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import DeleteModal from "~/components/common/DeleteModal";
+import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 
 function ActionToolbar({ code, isGroup, parentCode }) {
   const dispatch = useDispatch();
   const theme = useTheme();
   const { t } = useTranslation(["design"]);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const onDelete = useCallback(() => {
+    dispatch(resetSetup());
+    if (isGroup) {
+      dispatch(deleteGroup(code));
+    } else {
+      dispatch(deleteQuestion(code));
+    }
+  }, [dispatch, code, isGroup]);
+
+  const onClone = useCallback(() => {
+    dispatch(cloneQuestion(code));
+  }, [dispatch, code]);
 
   const type = useSelector((state) => {
     return isGroup
@@ -185,6 +201,41 @@ function ActionToolbar({ code, isGroup, parentCode }) {
           </IconButton>
         </CustomTooltip>
       )}
+      {!isGroup && (
+        <CustomTooltip title={t("duplicate")} showIcon={false}>
+          <IconButton
+            className={styles.statusIcon}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClone();
+            }}
+          >
+            <SurveyIcon name="duplicate" size="1em" color="currentColor" />
+          </IconButton>
+        </CustomTooltip>
+      )}
+        <>
+          <CustomTooltip title={t("delete")} showIcon={false}>
+            <IconButton
+              className={styles.statusIcon}
+              onClick={(e) => {
+                e.stopPropagation();
+                setDeleteModalOpen(true);
+              }}
+            >
+              <SurveyIcon name="delete" size="1em" color="currentColor" />
+            </IconButton>
+          </CustomTooltip>
+          <DeleteModal
+            open={deleteModalOpen}
+            description={t(isGroup ? "delete_page" : "delete_question")}
+            handleClose={() => setDeleteModalOpen(false)}
+            handleDelete={() => {
+              setDeleteModalOpen(false);
+              onDelete();
+            }}
+          />
+        </>
     </div>
   );
 }

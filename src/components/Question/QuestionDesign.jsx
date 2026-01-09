@@ -1,15 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 
 import styles from "./QuestionDesign.module.css";
 import ContentEditor from "~/components/design/ContentEditor";
-import { alpha, Box, Button, css } from "@mui/material";
-import DeleteModal from "~/components/common/DeleteModal";
-import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
+import { alpha, Box, css } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import { useSelector } from "react-redux";
-import { onDrag, setup, cloneQuestion, deleteQuestion, resetSetup } from "~/state/design/designState";
+import { onDrag, setup } from "~/state/design/designState";
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 
@@ -32,7 +30,6 @@ function QuestionDesign({
 }) {
   console.debug(code + ": " + index);
   const [hovered, setHovered] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const containerRef = useRef();
   const dispatch = useDispatch();
@@ -49,15 +46,6 @@ function QuestionDesign({
   const question = useSelector((state) => {
     return state.designState[code];
   });
-
-  const onDelete = useCallback(() => {
-    dispatch(resetSetup());
-    dispatch(deleteQuestion(code));
-  }, [dispatch, code]);
-
-  const onClone = useCallback(() => {
-    dispatch(cloneQuestion(code));
-  }, [dispatch, code]);
 
   const [isDragging, drag, preview] = useDrag({
     type: "questions",
@@ -201,46 +189,20 @@ function QuestionDesign({
       className={`question ${styles.groupQuestion}`}
       data-code={code}
     >
-      <Box className={`${styles.contentContainer}${hovered || isInSetup ? ` ${styles.visible}` : ''}`}>
+      <Box className={styles.contentContainer}>
         {designMode == DESIGN_SURVEY_MODE.DESIGN && (
-          <>
-            <div className={styles.actionToolbarVisible}>
-              <ActionToolbar
-                isGroup={false}
-                code={code}
-                parentCode={parentCode}
-              />
-            </div>
-            <div className={styles.moveBox} ref={drag}>
-              <ViewCompactIcon color="action" />
-            </div>
-            <div className={styles.actionButtons}>
-              <Button
-                variant="contained"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClone();
-                }}
-                size="small"
-                color="primary"
-                startIcon={<SurveyIcon name="duplicate" size=".9em" color="white" />}
-              >
-                {t("duplicate")}
-              </Button>
-              <Button
-                variant="contained"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setDeleteModalOpen(true);
-                }}
-                size="small"
-                color="primary"
-                startIcon={<SurveyIcon name="delete" size=".9em" color="white" />}
-              >
-                {t("delete")}
-              </Button>
-            </div>
-          </>
+          <div className={styles.actionToolbarVisible}>
+            <ActionToolbar
+              isGroup={false}
+              code={code}
+              parentCode={parentCode}
+            />
+          </div>
+        )}
+        {designMode == DESIGN_SURVEY_MODE.DESIGN && (
+          <div className={styles.moveBox} ref={drag}>
+            <ViewCompactIcon color="action" />
+          </div>
         )}
       </Box>
 
@@ -294,15 +256,6 @@ function QuestionDesign({
         langInfo={langInfo}
       />
       <ErrorDisplay code={code} />
-      <DeleteModal
-        open={deleteModalOpen}
-        description={t("delete_question")}
-        handleClose={() => setDeleteModalOpen(false)}
-        handleDelete={() => {
-          setDeleteModalOpen(false);
-          onDelete();
-        }}
-      />
     </div>
   );
 }
