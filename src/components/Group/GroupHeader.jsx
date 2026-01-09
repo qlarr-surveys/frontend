@@ -9,6 +9,8 @@ import ActionToolbar from "../design/ActionToolbar";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function GroupHeader({ t, code, designMode, langInfo }) {
+  console.debug("Group Header: " + code);
+
   const onMainLang = langInfo.onMainLang;
 
   const group = useSelector((state) => {
@@ -17,13 +19,13 @@ function GroupHeader({ t, code, designMode, langInfo }) {
 
   const theme = useTheme();
 
-  const inDesign = designMode == DESIGN_SURVEY_MODE.DESIGN;
+  const inDesgin = designMode == DESIGN_SURVEY_MODE.DESIGN;
 
   return (
     <Box className={styles.headerContent}>
       <Box className={styles.groupHeader}>
         <Box className={styles.contentContainer}>
-          {inDesign && onMainLang && (
+          {inDesgin && onMainLang && (
             <div className={styles.actionToolbarVisible}>
               <ActionToolbar code={code} isGroup={true} />
             </div>

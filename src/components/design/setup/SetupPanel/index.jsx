@@ -41,18 +41,12 @@ function SetupPanel({ t }) {
   const { code, highlighted, rules } = useSelector(selectSetupData);
 
   const type = useSelector((state) => {
-    if (code === "Survey") return "Survey";
-    const item = state.designState[code];
-    return item?.type || item?.groupType?.toLowerCase();
+    return state.designState[code].type;
   });
 
   const order = useSelector((state) => {
-    return state.designState.index?.[code];
+    return state.designState.index[code];
   });
-
-  if (!code || !type) {
-    return null;
-  }
 
   return (
     <div
