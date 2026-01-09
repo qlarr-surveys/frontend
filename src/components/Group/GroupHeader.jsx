@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import styles from "./GroupDesign.module.css";
 import ContentEditor from "~/components/design/ContentEditor";
 import { Box, css } from "@mui/material";

@@ -7,6 +7,9 @@
   max-width: 800px;
   min-width: 300px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .cardImage {
