@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 import DeleteModal from "~/components/common/DeleteModal";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 
-function ActionToolbar({ code, isGroup, parentCode }) {
+function ActionToolbar({ code, isGroup, parentCode, showActions }) {
   const dispatch = useDispatch();
   const theme = useTheme();
   const { t } = useTranslation(["design"]);
@@ -201,7 +201,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
           </IconButton>
         </CustomTooltip>
       )}
-      {!isGroup && (
+      {!isGroup && showActions && (
         <CustomTooltip title={t("duplicate")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
@@ -214,6 +214,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
           </IconButton>
         </CustomTooltip>
       )}
+      {(isGroup || showActions) && (
         <>
           <CustomTooltip title={t("delete")} showIcon={false}>
             <IconButton
@@ -236,6 +237,7 @@ function ActionToolbar({ code, isGroup, parentCode }) {
             }}
           />
         </>
+      )}
     </div>
   );
 }

@@ -196,6 +196,7 @@ function QuestionDesign({
               isGroup={false}
               code={code}
               parentCode={parentCode}
+              showActions={hovered || isInSetup}
             />
           </div>
         )}
