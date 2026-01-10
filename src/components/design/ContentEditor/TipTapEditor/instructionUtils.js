@@ -19,6 +19,10 @@ function createInstructionTooltip(element, tippyInstances) {
   }
 }
 
+function formatTooltipContent(ref) {
+  return ref.index && ref.text ? `${ref.index} - ${ref.text}` : ref.text || "";
+}
+
 export function stripHtml(html) {
   if (!html) return "";
 
@@ -55,7 +59,7 @@ export function transformInstructionText(
       if (pattern.test(transformedText)) {
         pattern.lastIndex = 0;
         transformedText = transformedText.replace(pattern, `{{${ref.index}$1`);
-        tooltip = ref.text || "";
+        tooltip = formatTooltipContent(ref);
       }
 
       pattern.lastIndex = 0;
@@ -115,7 +119,7 @@ export function highlightInstructionsInStaticContent(
       if (questionCode) {
         const ref = referenceInstruction[questionCode];
         if (ref && ref.text) {
-          span.setAttribute("data-tooltip", ref.text);
+          span.setAttribute("data-tooltip", formatTooltipContent(ref));
           createInstructionTooltip(span, tippyInstances);
         }
       }
