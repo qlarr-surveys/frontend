@@ -5,6 +5,7 @@ import {
   transformInstructionText,
   getInstructionRegex,
 } from "./instructionUtils";
+import InstructionTooltipManager from "./InstructionTooltipManager";
 
 const InstructionHighlightExtension = Extension.create({
   name: "instructionHighlight",
@@ -17,6 +18,7 @@ const InstructionHighlightExtension = Extension.create({
 
   addProseMirrorPlugins() {
     const referenceInstruction = this.options.referenceInstruction;
+    const tooltipManager = new InstructionTooltipManager();
 
     return [
       new Plugin({
@@ -53,6 +55,18 @@ const InstructionHighlightExtension = Extension.create({
             return this.getState(state).decorations;
           },
         },
+        view() {
+          return {
+            update(view) {
+              requestAnimationFrame(() => {
+                tooltipManager.updateTooltips(view.dom);
+              });
+            },
+            destroy() {
+              tooltipManager.destroy();
+            },
+          };
+        },
       }),
     ];
   },
@@ -81,7 +95,7 @@ function findInstructionPatterns(doc, referenceInstruction) {
         decorations.push(
           Decoration.inline(matchStart, matchEnd, {
             class: "instruction-highlight",
-            ...(tooltip && { title: tooltip }),
+            ...(tooltip && { "data-tooltip": tooltip }),
           })
         );
       }

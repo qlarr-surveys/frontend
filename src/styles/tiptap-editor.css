@@ -333,6 +333,26 @@
   color: #1976d2;
 }
 
+.tippy-box[data-theme~="instruction"] {
+  background-color: #1a2052;
+  color: #ffffff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+
+.tippy-box[data-theme~="instruction"] .tippy-content {
+  padding: 0;
+}
+
+.tippy-box[data-theme~="instruction"] .tippy-arrow {
+  color: #1a2052;
+}
+
 .content-editor {
   padding: 0 !important;
 }

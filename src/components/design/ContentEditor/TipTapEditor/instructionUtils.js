@@ -1,8 +1,23 @@
-export const INSTRUCTION_PATTERN = /\{\{[^}]*\}\}/g;
+import tippy from "tippy.js";
+import { INSTRUCTION_EDITOR_CONFIG } from "~/constants/editor";
+
+export const INSTRUCTION_PATTERN = INSTRUCTION_EDITOR_CONFIG.PATTERN;
+export const TIPPY_INSTRUCTION_CONFIG = INSTRUCTION_EDITOR_CONFIG.TOOLTIP;
 
 export const getInstructionRegex = () => {
   return new RegExp(INSTRUCTION_PATTERN.source, "g");
 };
+
+function createInstructionTooltip(element, tippyInstances) {
+  const tooltipContent = element.getAttribute("data-tooltip");
+  if (tooltipContent && !element._tippy) {
+    const instance = tippy(element, {
+      content: tooltipContent,
+      ...TIPPY_INSTRUCTION_CONFIG,
+    });
+    tippyInstances.push(instance);
+  }
+}
 
 export function stripHtml(html) {
   if (!html) return "";
@@ -85,8 +100,10 @@ export function highlightInstructionsInStaticContent(
   referenceInstruction
 ) {
   if (!element || !(element instanceof HTMLElement)) {
-    return;
+    return () => {};
   }
+
+  const tippyInstances = [];
 
   try {
     const existingHighlights = element.querySelectorAll(
@@ -98,15 +115,16 @@ export function highlightInstructionsInStaticContent(
       if (questionCode) {
         const ref = referenceInstruction[questionCode];
         if (ref && ref.text) {
-          if (span.getAttribute("title") !== ref.text) {
-            span.setAttribute("title", ref.text);
-          }
+          span.setAttribute("data-tooltip", ref.text);
+          createInstructionTooltip(span, tippyInstances);
         }
       }
     });
 
     if (existingHighlights.length > 0) {
-      return;
+      return () => {
+        tippyInstances.forEach((instance) => instance.destroy());
+      };
     }
 
     const filterNode = (node) => {
@@ -170,7 +188,7 @@ export function highlightInstructionsInStaticContent(
           span.setAttribute("data-question-code", originalQuestionCode);
         }
         if (tooltip) {
-          span.setAttribute("title", tooltip);
+          span.setAttribute("data-tooltip", tooltip);
         }
         fragment.appendChild(span);
 
@@ -183,7 +201,16 @@ export function highlightInstructionsInStaticContent(
 
       parent.replaceChild(fragment, textNode);
     });
+
+    const newHighlights = element.querySelectorAll(".instruction-highlight");
+    newHighlights.forEach((span) => {
+      createInstructionTooltip(span, tippyInstances);
+    });
   } catch (error) {
     console.error("Error highlighting instructions in static content:", error);
   }
+
+  return () => {
+    tippyInstances.forEach((instance) => instance.destroy());
+  };
 }
