@@ -1,6 +1,6 @@
 export const EDITOR_CONSTANTS = {
   BLUR_TIMEOUT_MS: 100,
-  CONTENT_SYNC_TIMEOUT_MS: 0, // Use 0 for immediate sync when editor is not focused
+  CONTENT_SYNC_TIMEOUT_MS: 0,
   MAX_IMAGE_SIZE: 10 * 1024 * 1024,
   FONT_SIZE_VALUES: ["0.75em", "1em", "1.5em", "2.5em"],
   COLOR_PALETTE: [
@@ -40,4 +40,29 @@ export const EDITOR_CONSTANTS = {
     "#002966",
     "#3d1466",
   ],
+
+  EMPTY_PARAGRAPH_HTML: "<p></p>",
+  PARAGRAPH_MARGIN_STYLE: "margin: 0;",
+
+  EDITOR_CLASS: "tiptap-editor",
+  EDITOR_WRAPPER_CLASS: "tiptap-wrapper",
+  EDITOR_FOCUSED_CLASS: "tiptap-focused",
+  LINK_CLASS: "tiptap-link",
+  IMAGE_CLASS: "tiptap-image",
+  CONTENT_EDITOR_CLASS: "content-editor",
+  RTL_CLASS: "rtl",
+  LTR_CLASS: "ltr",
+
+  TOOLBAR_CLASS: "tiptap-toolbar",
+  TOOLBAR_BUTTON_CLASS: "tiptap-toolbar-button",
+  COLLAPSIBLE_CLASS: "tiptap-collapsible",
+};
+
+export const PREVENT_ENTER_EXTENSION = {
+  NAME: "preventEnter",
+  LOG_PREFIX: "[PreventEnterExtension]",
+  ERROR_MESSAGES: {
+    SAVING_CONTENT: "Error saving content:",
+    NEW_LINE_CALLBACK: "Error in onNewLine callback:",
+  },
 };

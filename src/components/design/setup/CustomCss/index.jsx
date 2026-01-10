@@ -21,32 +21,23 @@ function CustomCSS({ code, t }) {
 
   return (
     <>
-      <div>
-        <div>
-          <CustomTooltip body={t("tooltips.show_question_hint")} />
-          <Typography fontWeight={700}>{t("show_question_hint")}</Typography>
-        </div>
-        <TextField
-          fullWidth
-          multiline
-          minRows={4}
-          maxRows={25}
-          value={inputValue}
-          onChange={setCss}
-          placeholder={`/* Enter your CSS code here... */
-.button {
+      <div style={{display:'flex'}}>
+        <CustomTooltip body={t("tooltips.custom_css")} />
+        <Typography fontWeight={700}>{t("custom_css")}</Typography>
+      </div>
+      <TextField
+        fullWidth
+        multiline
+        minRows={4}
+        maxRows={25}
+        value={inputValue}
+        onChange={setCss}
+        placeholder={`/* Enter your CSS code here... */
   background-color: #007bff;
   color: white;
-  border-radius: 4px;
-}
-
-p {
-  font-size: 16px;
-  line-height: 1.5;
-}`}
-          variant="outlined"
-        />
-      </div>
+`}
+        variant="outlined"
+      />
     </>
   );
 }

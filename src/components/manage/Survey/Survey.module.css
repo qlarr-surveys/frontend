@@ -9,7 +9,6 @@
 }
 
 .actionBtn {
-  margin-top: 30px;
   display: flex;
   justify-content: space-between;
 }
@@ -314,4 +313,200 @@
       0.2
     ); /* Fade to even more transparent beige */
   }
+}
+
+/* ==============================================
+   CSS Variables for Survey Card
+   ============================================== */
+.surveyCardVars {
+  --color-navy: #16205b;
+  --color-navy-dark: #091133;
+  --color-blue: #2d3cb1;
+  --color-cyan: #04bdf3;
+  --color-orange: #d13e17;
+  --color-gray-light: #B3B7CB;
+  --color-gray-lightest: #EFF1FC;
+  --spacing-card: 1.5rem;
+  --transition-default: all 0.3s ease;
+}
+
+/* ==============================================
+   Survey Meta Section
+   ============================================== */
+.surveyMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 0 var(--spacing-card, 1.5rem) 1.25rem;
+  border-bottom: 2px solid var(--color-gray-lightest, #EFF1FC);
+}
+
+/* Status Badge */
+.statusPill {
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* Status Variants */
+.draft {
+  background: linear-gradient(135deg, #FEE33F 0%, #F0A12F 100%);
+  color: var(--color-navy-dark, #091133);
+}
+
+.active {
+  background: linear-gradient(135deg, #69ac3b 0%, #56A034 100%);
+  color: white;
+}
+
+.closed {
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  color: white;
+}
+
+.expired {
+  background: linear-gradient(135deg, #9d4435 0%, #7f3b2e 100%);
+  color: white;
+}
+
+.scheduled {
+  background: linear-gradient(135deg, #607d8b 0%, #455a64 100%);
+  color: white;
+}
+
+/* ==============================================
+   Survey Icons
+   ============================================== */
+.surveyIconsContainer {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.surveyIcon {
+  width: 32px;
+  height: 32px;
+  background: var(--color-gray-lightest, #EFF1FC);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-navy, #16205b);
+  transition: var(--transition-default, all 0.3s ease);
+  cursor: pointer;
+  position: relative;
+}
+
+.surveyIcon:hover {
+  background: var(--color-cyan, #04bdf3);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* ==============================================
+   Survey Dates
+   ============================================== */
+.surveyDates {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--color-gray-light, #B3B7CB);
+  margin-bottom: 25px;
+  padding: 0 var(--spacing-card, 1.5rem);
+}
+
+.dateItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dateLabel {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.7rem;
+}
+
+.dateValue {
+  font-weight: 500;
+  color: var(--color-navy, #16205b);
+}
+
+/* ==============================================
+   Survey Actions
+   ============================================== */
+.surveyActionsNew {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0 var(--spacing-card, 1.5rem) var(--spacing-card, 1.5rem);
+}
+
+.actionBtn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-default, all 0.3s ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.actionBtnPrimary {
+  background: linear-gradient(135deg, var(--color-blue, #2d3cb1) 0%, var(--color-navy, #16205b) 100%);
+  color: white;
+}
+
+.actionBtnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 60, 177, 0.3);
+}
+
+.actionBtnSecondary {
+  background: white;
+  color: var(--color-navy, #16205b);
+  border: 2px solid var(--color-gray-lightest, #EFF1FC);
+}
+
+.actionBtnSecondary:hover {
+  border-color: var(--color-cyan, #04bdf3);
+  color: var(--color-cyan, #04bdf3);
+}
+
+.actionBtnDanger {
+  background: white;
+  color: var(--color-orange, #d13e17);
+  border: 2px solid var(--color-gray-lightest, #EFF1FC);
+}
+
+.actionBtnDanger:hover {
+  background: var(--color-orange, #d13e17);
+  color: white;
+  border-color: var(--color-orange, #d13e17);
+}
+
+.actionBtnIconOnly {
+  flex: 0 0 auto;
+  width: 48px;
+  padding: 0.75rem;
 }

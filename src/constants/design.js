@@ -29,16 +29,19 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
-            "customCss",
           ],
         },
         {
           title: "logic",
           key: "logic",
           rules: ["relevance", "randomize_questions"],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
     case "text_display":
@@ -48,16 +51,19 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
-            "customCss",
           ],
         },
         {
           title: "logic",
           key: "logic",
           rules: ["relevance"],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
 
@@ -68,17 +74,20 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "imageWidth",
-            "customCss",
           ],
         },
         {
           title: "logic",
           key: "logic",
           rules: ["relevance"],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
 
@@ -89,18 +98,21 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "audio_only",
             "loop",
-            "customCss",
           ],
         },
         {
           title: "logic",
           key: "logic",
           rules: ["relevance"],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
 
@@ -111,12 +123,10 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "maxChars",
             "hint",
-            "customCss",
           ],
         },
         {
@@ -135,6 +145,11 @@ export const setupOptions = (type) => {
             "validation_contains",
             "validation_not_contains",
           ],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
 
@@ -175,13 +190,11 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "maxChars",
             "decimal_separator",
             "hint",
-            "customCss",
           ],
         },
         {
@@ -204,6 +217,11 @@ export const setupOptions = (type) => {
             "validation_not_equal",
           ],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
 
     case "email":
@@ -213,12 +231,10 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "maxChars",
             "hint",
-            "customCss",
           ],
         },
         {
@@ -236,6 +252,11 @@ export const setupOptions = (type) => {
             "validation_min_char_length",
           ],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
 
     case "autocomplete":
@@ -245,11 +266,9 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hint",
-            "customCss",
           ],
         },
         {
@@ -262,6 +281,11 @@ export const setupOptions = (type) => {
           key: "validation",
           rules: ["validation_required"],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
 
     case "paragraph":
@@ -271,13 +295,11 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "minRows",
             "showWordCount",
             "hint",
-            "customCss",
           ],
         },
         {
@@ -296,6 +318,11 @@ export const setupOptions = (type) => {
             "validation_not_contains",
           ],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
 
     case "file_upload":
@@ -305,10 +332,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
-            "customCss",
           ],
         },
         {
@@ -325,6 +350,11 @@ export const setupOptions = (type) => {
             "validation_max_file_size",
           ],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
 
     case "signature":
@@ -334,10 +364,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
-            "customCss",
           ],
         },
         {
@@ -349,6 +377,11 @@ export const setupOptions = (type) => {
           title: "validation",
           key: "validation",
           rules: ["validation_required"],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
 
@@ -359,11 +392,9 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hint",
-            "customCss",
           ],
         },
         {
@@ -375,6 +406,11 @@ export const setupOptions = (type) => {
           title: "validation",
           key: "validation",
           rules: ["validation_required", "validation_max_file_size"],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
 
@@ -385,11 +421,9 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hint",
-            "customCss",
           ],
         },
         {
@@ -402,6 +436,11 @@ export const setupOptions = (type) => {
           key: "validation",
           rules: ["validation_required"],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
 
     case "video_capture":
@@ -411,11 +450,9 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hint",
-            "customCss",
           ],
         },
         {
@@ -428,6 +465,11 @@ export const setupOptions = (type) => {
           key: "validation",
           rules: ["validation_required", "validation_max_file_size"],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
 
     case "date_time":
@@ -437,14 +479,12 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "dateFormat",
             "fullDayFormat",
             "maxDate",
             "minDate",
-            "customCss",
           ],
         },
         {
@@ -456,6 +496,11 @@ export const setupOptions = (type) => {
           title: "validation",
           key: "validation",
           rules: ["validation_required"],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
 
@@ -466,13 +511,11 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "dateFormat",
             "maxDate",
             "minDate",
-            "customCss",
           ],
         },
         {
@@ -485,6 +528,11 @@ export const setupOptions = (type) => {
           key: "validation",
           rules: ["validation_required"],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
 
     case "time":
@@ -494,7 +542,6 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "fullDayFormat",
@@ -510,6 +557,11 @@ export const setupOptions = (type) => {
           key: "validation",
           rules: ["validation_required"],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        }
       ];
     case "scq":
       return [
@@ -518,11 +570,9 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "scq_default_value",
-            "customCss",
           ],
         },
         {
@@ -534,6 +584,11 @@ export const setupOptions = (type) => {
           title: "validation",
           key: "validation",
           rules: ["validation_required"],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
 
@@ -544,14 +599,12 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hideText",
             "columns",
             "iconSize",
             "spacing",
-            "customCss",
           ],
         },
         {
@@ -563,6 +616,11 @@ export const setupOptions = (type) => {
           title: "validation",
           key: "validation",
           rules: ["validation_required"],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
 
@@ -573,14 +631,12 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hideText",
             "columns",
             "imageAspectRatio",
             "spacing",
-            "customCss",
           ],
         },
         {
@@ -593,6 +649,11 @@ export const setupOptions = (type) => {
           key: "validation",
           rules: ["validation_required"],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
 
     case "mcq":
@@ -602,10 +663,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
-            "customCss",
           ],
         },
         {
@@ -622,6 +681,11 @@ export const setupOptions = (type) => {
             "validation_option_count",
           ],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
 
     case "multiple_text":
@@ -631,10 +695,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
-            "customCss",
           ],
         },
         {
@@ -647,6 +709,11 @@ export const setupOptions = (type) => {
           key: "validation",
           rules: ["validation_required"],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
 
     case "ranking":
@@ -656,10 +723,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
-            "customCss",
           ],
         },
         {
@@ -675,6 +740,11 @@ export const setupOptions = (type) => {
             "validation_max_ranking_count",
             "validation_ranking_count",
           ],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
 
@@ -685,14 +755,12 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hideText",
             "columns",
             "imageAspectRatio",
             "spacing",
-            "customCss",
           ],
         },
         {
@@ -709,6 +777,11 @@ export const setupOptions = (type) => {
             "validation_ranking_count",
           ],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
 
     case "icon_mcq":
@@ -718,14 +791,12 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hideText",
             "columns",
             "iconSize",
             "spacing",
-            "customCss",
           ],
         },
         {
@@ -741,6 +812,11 @@ export const setupOptions = (type) => {
             "validation_max_option_count",
             "validation_option_count",
           ],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
 
@@ -751,14 +827,12 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "hideText",
             "columns",
             "imageAspectRatio",
             "spacing",
-            "customCss",
           ],
         },
         {
@@ -775,6 +849,11 @@ export const setupOptions = (type) => {
             "validation_option_count",
           ],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
     case "scq_icon_array":
       return [
@@ -783,10 +862,8 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
-            "customCss",
           ],
         },
         {
@@ -798,6 +875,11 @@ export const setupOptions = (type) => {
           title: "validation",
           key: "validation",
           rules: ["validation_required", "validation_one_response_per_col"],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
     case "mcq_array":
@@ -808,14 +890,12 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "showDescription",
             "disabled",
             "minHeaderMobile",
             "minHeaderDesktop",
             "minRowLabelMobile",
             "minRowLabelDesktop",
-            "customCss",
           ],
         },
         {
@@ -828,6 +908,11 @@ export const setupOptions = (type) => {
           key: "validation",
           rules: ["validation_required", "validation_one_response_per_col"],
         },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
+        },
       ];
     case "nps":
       return [
@@ -836,12 +921,10 @@ export const setupOptions = (type) => {
           key: "general",
           rules: [
             "changeCode",
-            "questionActions",
             "disabled",
             "showDescription",
             "lower_bound_hint",
             "higher_bound_hint",
-            "customCss",
           ],
         },
         {
@@ -853,6 +936,11 @@ export const setupOptions = (type) => {
           title: "validation",
           key: "validation",
           rules: ["validation_required"],
+        },
+        {
+          title: "design",
+          key: "design",
+          rules: ["customCss"],
         },
       ];
   }

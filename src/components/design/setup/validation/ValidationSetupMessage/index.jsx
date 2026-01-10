@@ -16,7 +16,7 @@ function ValidationSetupMessage({ validationRule, code, rule, t }) {
   });
 
   const componentContent = useSelector((state) => {
-    return state.designState[code].content;
+    return state.designState[code]?.content;
   });
 
   const checkedCustomError = (checked) => {
@@ -87,7 +87,7 @@ function ValidationSetupMessage({ validationRule, code, rule, t }) {
                 <TextField
                   size="small"
                   variant="standard"
-                  value={componentContent[l.code]?.[rule] || ""}
+                  value={componentContent?.[l.code]?.[rule] || ""}
                   onChange={(event) =>
                     onContentUpdate(l.code, event.target.value)
                   }

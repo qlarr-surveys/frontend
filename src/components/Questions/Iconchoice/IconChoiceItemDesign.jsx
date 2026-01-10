@@ -24,7 +24,7 @@ import DynamicSvg from "~/components/DynamicSvg";
 import { contentEditable, inDesign } from "~/routes";
 import { setupOptions } from "~/constants/design";
 import { Build } from "@mui/icons-material";
-import ContentEditor from '~/components/design/ContentEditor';
+import ContentEditor from "~/components/design/ContentEditor";
 
 function IconChoiceItemDesign({
   parentCode,
@@ -34,6 +34,7 @@ function IconChoiceItemDesign({
   code,
   columnNumber,
   designMode,
+  langInfo,
   imageHeight,
   hideText,
   t,
@@ -45,9 +46,6 @@ function IconChoiceItemDesign({
   const theme = useTheme();
   const [iconSelectoOpen, setIconSelectorOpen] = useState(false);
 
-  const langInfo = useSelector((state) => {
-    return state.designState.langInfo;
-  });
 
   const answer = useSelector((state) => {
     return type == "add" ? undefined : state.designState[qualifiedCode];
@@ -309,8 +307,13 @@ function IconChoiceItemDesign({
               extended={false}
               placeholder={
                 onMainLang
-                  ? t("content_editor_placeholder_option")
-                  : mainContent || t("content_editor_placeholder_option")
+                  ? t("content_editor_placeholder_option", {
+                      lng: langInfo.mainLang,
+                    })
+                  : mainContent ||
+                    t("content_editor_placeholder_option", {
+                      lng: langInfo.mainLang,
+                    })
               }
               contentKey="label"
             />

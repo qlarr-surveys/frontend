@@ -15,7 +15,16 @@ import "~/styles/tiptap-editor.css";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
 import { createAllExtensions } from "./extensions";
 
-const { BLUR_TIMEOUT_MS, CONTENT_SYNC_TIMEOUT_MS } = EDITOR_CONSTANTS;
+const {
+  BLUR_TIMEOUT_MS,
+  CONTENT_SYNC_TIMEOUT_MS,
+  EMPTY_PARAGRAPH_HTML,
+  EDITOR_CLASS,
+  EDITOR_WRAPPER_CLASS,
+  EDITOR_FOCUSED_CLASS,
+  RTL_CLASS,
+  LTR_CLASS,
+} = EDITOR_CONSTANTS;
 
 function TipTapEditor({
   value,
@@ -35,12 +44,12 @@ function TipTapEditor({
   const isMountedRef = useRef(true);
   const [isFocused, setIsFocused] = useState(false);
 
-  const [showCollapsibleSettings, setShowCollapsibleSettings] = useState(false);
-  const [collapsibleSettingsPosition, setCollapsibleSettingsPosition] =
-    useState(null);
-  const [collapsibleSettingsAttrs, setCollapsibleSettingsAttrs] =
-    useState(null);
-  const [collapsibleSettingsPos, setCollapsibleSettingsPos] = useState(null);
+  const [collapsibleSettings, setCollapsibleSettings] = useState({
+    show: false,
+    position: null,
+    attrs: null,
+    pos: null,
+  });
 
   const getMentionSuggestions = useCallback(
     (query) => {
@@ -56,13 +65,10 @@ function TipTapEditor({
         return values;
       }
 
-      const matches = [];
-      for (let i = 0; i < values.length; i++) {
-        if (values[i].value.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-          matches.push(values[i]);
-        }
-      }
-      return matches;
+      const lowerQuery = query.toLowerCase();
+      return values.filter((item) =>
+        item.value.toLowerCase().includes(lowerQuery)
+      );
     },
     [code]
   );
@@ -71,58 +77,85 @@ function TipTapEditor({
     return createAllExtensions({
       getMentionSuggestions,
       referenceInstruction,
+      extended,
+      onNewLine,
+      onBlurListener,
+      lang,
     });
-  }, [getMentionSuggestions, referenceInstruction]);
+  }, [
+    getMentionSuggestions,
+    referenceInstruction,
+    extended,
+    onNewLine,
+    onBlurListener,
+    lang,
+  ]);
 
   const editor = useEditor({
     extensions,
     content: value || "",
     editorProps: {
       attributes: {
-        class: `tiptap-editor ${isRtl ? "rtl" : "ltr"}`,
+        class: `${EDITOR_CLASS} ${isRtl ? RTL_CLASS : LTR_CLASS}`,
       },
       handlePaste: (view, event) => {
-        const text = event.clipboardData?.getData("text/plain");
-        if (!text) {
+        try {
+          const text = event.clipboardData?.getData("text/plain");
+          if (!text) {
+            return false;
+          }
+
+          const isChoiceOption = typeof onMoreLines === "function";
+          const isExtended = extended;
+
+          if (isExtended) {
+            return false;
+          }
+
+          event.preventDefault();
+          const sanitizedLines = sanitizePastedText(text);
+          const nonEmptyLines = sanitizedLines.filter(line => line.trim().length > 0);
+
+          if (nonEmptyLines.length === 0) {
+            return true;
+          }
+
+          const { state, dispatch } = view;
+          const { selection } = state;
+
+          if (isChoiceOption) {
+            const firstLine = nonEmptyLines[0];
+            const restLines = nonEmptyLines.slice(1);
+
+            const transaction = state.tr.insertText(
+              firstLine,
+              selection.from,
+              selection.to
+            );
+            dispatch(transaction);
+
+            if (restLines.length > 0) {
+              onMoreLines(restLines);
+            }
+          } else {
+            const singleLine = nonEmptyLines.join(" ");
+            const transaction = state.tr.insertText(
+              singleLine,
+              selection.from,
+              selection.to
+            );
+            dispatch(transaction);
+          }
+
+          return true;
+        } catch (error) {
+          console.error("[TipTapEditor] Error handling paste:", error);
           return false;
         }
-
-        event.preventDefault();
-        const sanitizedLines = sanitizePastedText(text);
-        const firstLine = sanitizedLines[0] || "";
-        const restLines = sanitizedLines.slice(1);
-
-        const { state, dispatch } = view;
-        const { selection } = state;
-        const transaction = state.tr.insertText(
-          firstLine,
-          selection.from,
-          selection.to
-        );
-        dispatch(transaction);
-
-        if (typeof onMoreLines === "function" && restLines.length > 0) {
-          onMoreLines(restLines);
-        }
-
-        return true;
       },
     },
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
-
-      if (!extended && onNewLine) {
-        const currentValue = editorRef.current || "";
-        if (
-          html !== "<p></p>" &&
-          html.endsWith("<p></p>") &&
-          !currentValue.endsWith("<p></p>")
-        ) {
-          onNewLine(html);
-          return;
-        }
-      }
-
       editorRef.current = html;
     },
     onFocus: () => {
@@ -163,12 +196,20 @@ function TipTapEditor({
   });
 
   useEffect(() => {
+    if (editor) {
+      editor.commands.focus("end");
+    }
+  }, [editor]);
+
+  useEffect(() => {
     const handleCollapsibleSettingsClick = (e) => {
       const { pos, attrs, buttonRect } = e.detail;
-      setCollapsibleSettingsPos(pos);
-      setCollapsibleSettingsAttrs(attrs);
-      setCollapsibleSettingsPosition(buttonRect);
-      setShowCollapsibleSettings(true);
+      setCollapsibleSettings({
+        show: true,
+        position: buttonRect,
+        attrs,
+        pos,
+      });
     };
 
     const wrapper = wrapperRef.current;
@@ -189,12 +230,12 @@ function TipTapEditor({
   // Handle collapsible settings update
   const handleCollapsibleUpdate = useCallback(
     (attrs) => {
-      if (editor && collapsibleSettingsPos !== null) {
+      if (editor && collapsibleSettings.pos !== null) {
         editor.commands.command(({ tr, dispatch }) => {
-          const nodeAtPos = tr.doc.nodeAt(collapsibleSettingsPos);
+          const nodeAtPos = tr.doc.nodeAt(collapsibleSettings.pos);
           if (nodeAtPos && nodeAtPos.type.name === "collapsible") {
             if (dispatch) {
-              tr.setNodeMarkup(collapsibleSettingsPos, undefined, {
+              tr.setNodeMarkup(collapsibleSettings.pos, undefined, {
                 ...nodeAtPos.attrs,
                 ...attrs,
               });
@@ -205,28 +246,24 @@ function TipTapEditor({
         });
       }
     },
-    [editor, collapsibleSettingsPos]
+    [editor, collapsibleSettings.pos]
   );
 
   const handleCloseCollapsibleSettings = useCallback(() => {
-    setShowCollapsibleSettings(false);
-    setCollapsibleSettingsPosition(null);
-    setCollapsibleSettingsAttrs(null);
-    setCollapsibleSettingsPos(null);
+    setCollapsibleSettings({
+      show: false,
+      position: null,
+      attrs: null,
+      pos: null,
+    });
   }, []);
 
   useEffect(() => {
     if (editor && !editorRef.current) {
       const currentContent = editor.getHTML();
-      if (!currentContent || currentContent === "<p></p>") {
+      if (!currentContent || currentContent === EMPTY_PARAGRAPH_HTML) {
         editor.commands.focus("end");
       }
-    }
-  }, [editor]);
-
-  useEffect(() => {
-    if (editor) {
-      editor.commands.focus("end");
     }
   }, [editor]);
 
@@ -242,7 +279,7 @@ function TipTapEditor({
     const currentContent = editor.getHTML();
     const normalizedValue = value || "";
     const normalizedCurrent =
-      currentContent === "<p></p>" ? "" : currentContent;
+      currentContent === EMPTY_PARAGRAPH_HTML ? "" : currentContent;
 
     if (normalizedValue === normalizedCurrent) {
       return;
@@ -259,7 +296,7 @@ function TipTapEditor({
 
       const finalCurrentContent = editor.getHTML();
       const finalNormalizedCurrent =
-        finalCurrentContent === "<p></p>" ? "" : finalCurrentContent;
+        finalCurrentContent === EMPTY_PARAGRAPH_HTML ? "" : finalCurrentContent;
 
       if (normalizedValue !== finalNormalizedCurrent) {
         editor.commands.setContent(normalizedValue);
@@ -290,16 +327,16 @@ function TipTapEditor({
   return (
     <div
       ref={wrapperRef}
-      className={`tiptap-wrapper ${isFocused ? "tiptap-focused" : ""}`}
+      className={`${EDITOR_WRAPPER_CLASS} ${isFocused ? EDITOR_FOCUSED_CLASS : ""}`}
     >
       <EditorContent editor={editor} />
       {showToolbar && isFocused && (
         <Toolbar editor={editor} extended={extended} />
       )}
       <CollapsibleSettings
-        show={showCollapsibleSettings && isFocused}
-        position={collapsibleSettingsPosition}
-        collapsibleAttrs={collapsibleSettingsAttrs}
+        show={collapsibleSettings.show && isFocused}
+        position={collapsibleSettings.position}
+        collapsibleAttrs={collapsibleSettings.attrs}
         onUpdate={handleCollapsibleUpdate}
         onClose={handleCloseCollapsibleSettings}
         editor={editor}

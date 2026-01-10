@@ -23,8 +23,8 @@ function QuestionDesign({
   parentCode,
   index,
   t,
+  langInfo,
   designMode,
-  onMainLang,
   parentIndex,
   lastAddedComponent,
 }) {
@@ -196,6 +196,7 @@ function QuestionDesign({
               isGroup={false}
               code={code}
               parentCode={parentCode}
+              showActions={hovered || isInSetup}
             />
           </div>
         )}
@@ -223,7 +224,9 @@ function QuestionDesign({
               designMode == DESIGN_SURVEY_MODE.LANGUAGES
             }
             extended={type == "text_display"}
-            placeholder={t("content_editor_placeholder_title")}
+            placeholder={t("content_editor_placeholder_title", {
+              lng: langInfo.mainLang,
+            })}
             contentKey="label"
           />
         </div>
@@ -238,7 +241,9 @@ function QuestionDesign({
               designMode == DESIGN_SURVEY_MODE.LANGUAGES
             }
             extended={true}
-            placeholder={t("content_editor_placeholder_description")}
+            placeholder={t("content_editor_placeholder_description", {
+              lng: langInfo.mainLang,
+            })}
             contentKey="description"
           />
         </Box>
@@ -249,7 +254,7 @@ function QuestionDesign({
         type={type}
         t={t}
         designMode={designMode}
-        onMainLang={onMainLang}
+        langInfo={langInfo}
       />
       <ErrorDisplay code={code} />
     </div>

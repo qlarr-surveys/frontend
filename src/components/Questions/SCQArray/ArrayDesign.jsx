@@ -31,7 +31,6 @@ import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
 import { contentEditable, inDesign } from "~/routes";
 import { columnMinWidth } from "~/utils/design/utils";
-import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
 import ContentEditor from "~/components/design/ContentEditor";
 
 function ArrayDesign(props) {
@@ -40,9 +39,7 @@ function ArrayDesign(props) {
   const t = props.t;
 
   const { header, rowLabel } = columnMinWidth(props.code);
-  const langInfo = useSelector((state) => {
-    return state.designState.langInfo;
-  });
+  const langInfo = props.langInfo;
 
   const children = useSelector(
     (state) => state.designState[props.code].children
@@ -126,6 +123,25 @@ function ArrayDesign(props) {
                   parentQualifiedCode={props.code}
                   type={props.type}
                   langInfo={langInfo}
+                  onMoreLines={(data) => {
+                    dispatch(
+                      addNewAnswers({
+                        questionCode: props.code,
+                        index,
+                        data,
+                        type: "row",
+                      })
+                    );
+                  }}
+                  onNewLine={() => {
+                    dispatch(
+                      onNewLine({
+                        questionCode: props.code,
+                        index,
+                        type: "row",
+                      })
+                    );
+                  }}
                   t={props.t}
                   designMode={props.designMode}
                   key={item.qualifiedCode}
@@ -163,11 +179,12 @@ function ArrayRowDesign({
   designMode,
   type,
   t,
+  onNewLine,
+  onMoreLines,
   langInfo,
   parentQualifiedCode,
 }) {
   const dispatch = useDispatch();
-  const theme = useTheme();
   const ref = useRef();
   const inputRef = useRef();
 
@@ -281,10 +298,17 @@ function ArrayRowDesign({
             showToolbar={false}
             editable={contentEditable(designMode)}
             extended={false}
+            onNewLine={onNewLine}
+            onMoreLines={onMoreLines}
             placeholder={
               onMainLang
-                ? t("content_editor_placeholder_option")
-                : mainContent || t("content_editor_placeholder_option")
+                ? t("content_editor_placeholder_option", {
+                    lng: langInfo.mainLang,
+                  })
+                : mainContent ||
+                  t("content_editor_placeholder_option", {
+                    lng: langInfo.mainLang,
+                  })
             }
             contentKey="label"
           />
@@ -331,19 +355,12 @@ function ArrayHeaderDesign({
   width,
 }) {
   const dispatch = useDispatch();
-  const theme = useTheme();
   const ref = useRef();
 
   const onMainLang = langInfo.lang === langInfo.mainLang;
 
   const isRtl = rtlLanguage.includes(langInfo.lang);
   const isLtr = !isRtl;
-
-  const content = useSelector((state) => {
-    return state.designState[item.qualifiedCode].content?.[langInfo.lang]?.[
-      "label"
-    ];
-  });
 
   const mainContent = useSelector((state) => {
     return state.designState[item.qualifiedCode].content?.[langInfo.mainLang]?.[
@@ -456,8 +473,13 @@ function ArrayHeaderDesign({
         extended={false}
         placeholder={
           onMainLang
-            ? t("content_editor_placeholder_option")
-            : mainContent || t("content_editor_placeholder_option")
+            ? t("content_editor_placeholder_option", {
+                lng: langInfo.mainLang,
+              })
+            : mainContent ||
+              t("content_editor_placeholder_option", {
+                lng: langInfo.mainLang,
+              })
         }
         contentKey="label"
       />

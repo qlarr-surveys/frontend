@@ -20,7 +20,6 @@ import { useTheme } from "@emotion/react";
 import { questionIconByType } from "~/components/Questions/utils";
 import OrderSetup from "../random/OrderSetup";
 import ScqDefaultValue from "../ScqDefaultValue";
-import QuestionActions from "../QuestionActions";
 import DisabledToggle from "../Disabled";
 import EntityCodeEditor from "../EntityCodeEditor";
 import CustomCSS from '../CustomCss';
@@ -152,10 +151,6 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           rule={rule}
           code={code}
         />
-      );
-    case "questionActions":
-      return (
-        <QuestionActions key={code + rule} t={t} rule={rule} code={code} />
       );
     case "scq_default_value":
       return <ScqDefaultValue key={code + rule} code={code} />;
