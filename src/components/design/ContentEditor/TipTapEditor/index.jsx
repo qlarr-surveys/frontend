@@ -201,6 +201,15 @@ function TipTapEditor({
     }
   }, [editor]);
 
+  // Update editor extensions when they change (e.g., after question reorder)
+  useEffect(() => {
+    if (editor && extensions) {
+      editor.setOptions({
+        extensions,
+      });
+    }
+  }, [editor, extensions]);
+
   useEffect(() => {
     const handleCollapsibleSettingsClick = (e) => {
       const { pos, attrs, buttonRect } = e.detail;

@@ -66,3 +66,18 @@ export const PREVENT_ENTER_EXTENSION = {
     NEW_LINE_CALLBACK: "Error in onNewLine callback:",
   },
 };
+
+export const INSTRUCTION_EDITOR_CONFIG = {
+  PATTERN: /\{\{[^}]*\}\}/g,
+  TOOLTIP: {
+    delay: [0, 0],
+    duration: [200, 150],
+    placement: "auto",
+    theme: "instruction",
+    arrow: true,
+    maxWidth: 400,
+    interactive: false,
+    appendTo: document.body,
+    ignoreAttributes: true,
+  },
+};

@@ -19,6 +19,10 @@ import {
   useCollapsibleHandler,
   ensureCollapsiblesClosed,
 } from "~/hooks/useCollapsibleHandler";
+import {
+  parseUsedInstructions,
+  highlightInstructionsInStaticContent,
+} from "./TipTapEditor/instructionUtils";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
 
 const { CONTENT_EDITOR_CLASS, RTL_CLASS, LTR_CLASS } = EDITOR_CONSTANTS;
@@ -52,69 +56,37 @@ function ContentEditor({
     return state.designState.index;
   });
 
+  const designState = useSelector((state) => {
+    return state.designState;
+  });
+
   const lang = langInfo.lang;
   const mainLang = langInfo.mainLang;
   const onMainLang = langInfo.onMainLang;
 
-  const instructionList = useSelector(
-    (state) => state.designState[code]?.instructionList
-  );
+  const value = content?.[lang]?.[contentKey] || "";
 
   const referenceInstruction = useMemo(() => {
-    let returnResult = {};
-    const referenceInstruction = instructionList?.find(
-      (instruction) => instruction.code === `format_${contentKey}_${lang}`
-    );
-    const references = referenceInstruction?.references;
-
-    if (!references || !Array.isArray(references)) {
-      return [];
-    }
-
-    references.forEach((reference) => {
-      const uniqueCode = reference.split(".")[0];
-      returnResult[uniqueCode] = index[uniqueCode];
-    });
-    return returnResult;
-  }, [instructionList, index]);
-
-  const value = content?.[lang]?.[contentKey] || "";
+    return parseUsedInstructions(value, index, designState, mainLang);
+  }, [value, index, designState, mainLang]);
 
   const fixedValue = useMemo(() => {
     if (!referenceInstruction || !Object.keys(referenceInstruction).length) {
       return value;
     }
-    let updated = cloneDeep(value);
 
-    // Create a temporary DOM element to parse and manipulate the HTML
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = updated;
+    let updated = value;
 
+    // Transform instructions ({{questionCode.field}} → {{Q1.field}})
     Object.keys(referenceInstruction).forEach((key) => {
-      // Find all spans with data-id matching the key
-      const spans = tempDiv.querySelectorAll(`span[data-id="${key}"]`);
-
-      spans.forEach((span) => {
-        // Get the data-value attribute
-        const dataValue = span.getAttribute("data-value");
-        if (dataValue) {
-          // Replace the key with referenceInstruction[key] in the data-value
-          const newDataValue = dataValue.replace(
-            new RegExp(`{{${key}:`, "g"),
-            `{{${referenceInstruction[key]}:`
-          );
-          // Find the nested span with contenteditable="false" and update its content
-          const nestedSpan = span.querySelector(
-            'span[contenteditable="false"]'
-          );
-          if (nestedSpan) {
-            nestedSpan.textContent = newDataValue;
-          }
-        }
-      });
+      const ref = referenceInstruction[key];
+      const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const pattern = new RegExp(`\\{\\{${escapedKey}([.:])`, 'g');
+      const replacement = `{{${ref.index}$1`;
+      updated = updated.replace(pattern, replacement);
     });
 
-    return tempDiv.innerHTML;
+    return updated;
   }, [referenceInstruction, value]);
 
   const finalPlaceholder = onMainLang
@@ -156,6 +128,38 @@ function ContentEditor({
   const renderedContentRef = useRef(null);
 
   useCollapsibleHandler(renderedContentRef, !isActive ? fixedValue : null);
+
+  const highlightedContentRef = useRef(null);
+  const lastReferenceInstructionRef = useRef(null);
+
+  useEffect(() => {
+    let cleanup = null;
+
+    if (!isActive && renderedContentRef.current) {
+      const currentContent = fixedValue;
+      const contentChanged = highlightedContentRef.current !== currentContent;
+      const refChanged =
+        lastReferenceInstructionRef.current !== referenceInstruction;
+
+      if (contentChanged || refChanged) {
+        cleanup = highlightInstructionsInStaticContent(
+          renderedContentRef.current,
+          referenceInstruction
+        );
+        highlightedContentRef.current = currentContent;
+        lastReferenceInstructionRef.current = referenceInstruction;
+      }
+    } else if (isActive) {
+      highlightedContentRef.current = null;
+      lastReferenceInstructionRef.current = null;
+    }
+
+    return () => {
+      if (cleanup) {
+        cleanup();
+      }
+    };
+  }, [isActive, fixedValue, referenceInstruction]);
 
   return (
     <Box
