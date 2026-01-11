@@ -74,35 +74,19 @@ function ContentEditor({
     if (!referenceInstruction || !Object.keys(referenceInstruction).length) {
       return value;
     }
-    let updated = cloneDeep(value);
 
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = updated;
+    let updated = value;
 
+    // Transform instructions ({{questionCode.field}} → {{Q1.field}})
     Object.keys(referenceInstruction).forEach((key) => {
-      const spans = tempDiv.querySelectorAll(`span[data-id="${key}"]`);
-
-      spans.forEach((span) => {
-        const dataValue = span.getAttribute("data-value");
-        if (dataValue) {
-          const newDataValue = dataValue.replace(
-            new RegExp(`{{${key}:`, "g"),
-            `{{${referenceInstruction[key].index}:`
-          );
-          const nestedSpan = span.querySelector(
-            'span[contenteditable="false"]'
-          );
-          if (nestedSpan) {
-            nestedSpan.textContent = newDataValue;
-          }
-        }
-        if (referenceInstruction[key].text) {
-          span.setAttribute("title", referenceInstruction[key].text);
-        }
-      });
+      const ref = referenceInstruction[key];
+      const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const pattern = new RegExp(`\\{\\{${escapedKey}([.:])`, 'g');
+      const replacement = `{{${ref.index}$1`;
+      updated = updated.replace(pattern, replacement);
     });
 
-    return tempDiv.innerHTML;
+    return updated;
   }, [referenceInstruction, value]);
 
   const finalPlaceholder = onMainLang
@@ -149,6 +133,8 @@ function ContentEditor({
   const lastReferenceInstructionRef = useRef(null);
 
   useEffect(() => {
+    let cleanup = null;
+
     if (!isActive && renderedContentRef.current) {
       const currentContent = fixedValue;
       const contentChanged = highlightedContentRef.current !== currentContent;
@@ -156,7 +142,7 @@ function ContentEditor({
         lastReferenceInstructionRef.current !== referenceInstruction;
 
       if (contentChanged || refChanged) {
-        highlightInstructionsInStaticContent(
+        cleanup = highlightInstructionsInStaticContent(
           renderedContentRef.current,
           referenceInstruction
         );
@@ -167,6 +153,12 @@ function ContentEditor({
       highlightedContentRef.current = null;
       lastReferenceInstructionRef.current = null;
     }
+
+    return () => {
+      if (cleanup) {
+        cleanup();
+      }
+    };
   }, [isActive, fixedValue, referenceInstruction]);
 
   return (

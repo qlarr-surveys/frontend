@@ -76,6 +76,13 @@ export function parseUsedInstructions(content, index, designState, mainLang) {
     return result;
   }
 
+  // Build reverse index map (display index → question code)
+  const reverseIndex = {};
+  Object.keys(index).forEach((questionCode) => {
+    reverseIndex[index[questionCode]] = questionCode;
+  });
+
+  // PATTERN 1: Find instructions with question codes ({{questionCode.field}})
   Object.keys(index).forEach((questionCode) => {
     const pattern = createQuestionCodePattern(questionCode);
 
@@ -96,6 +103,26 @@ export function parseUsedInstructions(content, index, designState, mainLang) {
     pattern.lastIndex = 0;
   });
 
+  // PATTERN 2: Find mentions with indices ({{Q1:field}})
+  const mentionPattern = /\{\{(Q\d+):/g;
+  let match;
+
+  while ((match = mentionPattern.exec(content)) !== null) {
+    const displayIndex = match[1]; // e.g., "Q1"
+    const questionCode = reverseIndex[displayIndex];
+
+    if (questionCode && !result[questionCode]) {
+      const questionState = designState?.[questionCode];
+      const questionTextHtml = questionState?.content?.[mainLang]?.label || "";
+      const questionText = stripHtml(questionTextHtml);
+
+      result[questionCode] = {
+        index: displayIndex,
+        text: questionText,
+      };
+    }
+  }
+
   return result;
 }
 
@@ -110,25 +137,28 @@ export function highlightInstructionsInStaticContent(
   const tippyInstances = [];
 
   try {
+    // Remove all existing instruction highlights to start fresh
     const existingHighlights = element.querySelectorAll(
       ".instruction-highlight"
     );
 
     existingHighlights.forEach((span) => {
-      const questionCode = span.getAttribute("data-question-code");
-      if (questionCode) {
-        const ref = referenceInstruction[questionCode];
-        if (ref && ref.text) {
-          span.setAttribute("data-tooltip", formatTooltipContent(ref));
-          createInstructionTooltip(span, tippyInstances);
-        }
+      if (span._tippy) {
+        span._tippy.destroy();
       }
+      const textNode = document.createTextNode(span.textContent);
+      span.replaceWith(textNode);
     });
 
-    if (existingHighlights.length > 0) {
-      return () => {
-        tippyInstances.forEach((instance) => instance.destroy());
-      };
+    // Build reverse index map for O(1) lookups (index → question code)
+    const indexToCodeMap = {};
+    if (referenceInstruction) {
+      Object.keys(referenceInstruction).forEach((key) => {
+        const ref = referenceInstruction[key];
+        if (ref && ref.index) {
+          indexToCodeMap[ref.index] = key;
+        }
+      });
     }
 
     const filterNode = (node) => {
@@ -166,9 +196,10 @@ export function highlightInstructionsInStaticContent(
       const text = textNode.textContent;
       const fragment = document.createDocumentFragment();
       let lastIndex = 0;
-      let match;
 
       const matchRegex = getInstructionRegex();
+      let match;
+
       while ((match = matchRegex.exec(text)) !== null) {
         if (match.index > lastIndex) {
           fragment.appendChild(
@@ -177,25 +208,29 @@ export function highlightInstructionsInStaticContent(
         }
 
         const originalPattern = match[0];
-        const originalMatch = originalPattern.match(/\{\{([^:}]+):/);
-        const originalQuestionCode = originalMatch ? originalMatch[1] : null;
-
-        const { transformedText, tooltip } = transformInstructionText(
-          originalPattern,
-          referenceInstruction
-        );
+        const refMatch = originalPattern.match(/\{\{([^.:}]+)[.:]/);
+        const questionRef = refMatch ? refMatch[1] : null;
 
         const span = document.createElement("span");
         span.className = "instruction-highlight";
-        span.textContent = transformedText;
-        if (originalQuestionCode) {
-          span.setAttribute("data-question-code", originalQuestionCode);
-        }
-        if (tooltip) {
-          span.setAttribute("data-tooltip", tooltip);
-        }
-        fragment.appendChild(span);
+        span.textContent = originalPattern;
 
+        // Find the matching reference by index (e.g., "Q1") not by question code
+        if (questionRef && referenceInstruction) {
+          const foundCode = indexToCodeMap[questionRef];
+
+          if (foundCode) {
+            const foundRef = referenceInstruction[foundCode];
+
+            if (foundRef && foundRef.text) {
+              const tooltipContent = formatTooltipContent(foundRef);
+              span.setAttribute("data-tooltip", tooltipContent);
+              span.setAttribute("data-question-code", foundCode);
+            }
+          }
+        }
+
+        fragment.appendChild(span);
         lastIndex = match.index + match[0].length;
       }
 

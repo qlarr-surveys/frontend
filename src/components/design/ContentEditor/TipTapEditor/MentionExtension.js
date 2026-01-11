@@ -63,7 +63,7 @@ export function createMentionExtension({
         }
       }
 
-      return ["span", {}, `{{${node.attrs.instruction}}}`];
+      return ["span", {}, `{{${displayId}:${node.attrs.type}}}`];
     },
   }).configure({
     suggestion: suggestion(getMentionSuggestions),
