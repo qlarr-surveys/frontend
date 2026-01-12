@@ -11,17 +11,24 @@
 
 .rankContainer {
   position: absolute;
-  top: 2px;
-  left: 2px;
+  top: 8px;
+  left: 8px;
   cursor: pointer;
-  padding: .25rem .5rem;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .rankValue {
   color: white;
-  display: table-cell;
-  vertical-align: middle;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1;
 }
 
 .imageFlexContainer {
