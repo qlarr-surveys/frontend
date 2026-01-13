@@ -138,12 +138,6 @@ function ImageRankingItem(props) {
         {state.value > 0 && (
           <div
             style={{
-              height: Math.min(props.imageHeight, props.imageWidth) + "px",
-              width: Math.min(props.imageHeight, props.imageWidth) + "px",
-              borderRadius:
-                Math.min(props.imageHeight, props.imageWidth) / 2 + "px",
-              fontSize:
-                Math.min(props.imageHeight, props.imageWidth) / 2 + "px",
               background: theme.palette.primary.main,
             }}
             className={styles.rankContainer}
