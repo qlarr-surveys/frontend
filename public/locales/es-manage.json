@@ -34,6 +34,9 @@
     "or": "o",
     "empty_state_cta_copy": "¡para comenzar!"
   },
+  "survey": {
+    "description_placeholder": "Haga clic para agregar una descripción..."
+  },
   "create_survey_with_ai": "Crear encuesta con IA",
   "ai_prompt": "Describe tu encuesta",
   "ai_prompt_required": "Por favor describe tu encuesta (mínimo 10 caracteres)",
@@ -213,7 +216,8 @@
     "save": "Guardar",
     "title": "Perfil",
     "manage_users": "Administrar Usuarios",
-    "logout": "Cerrar Sesión"
+    "logout": "Cerrar Sesión",
+    "section_personal": "Personal"
   },
   "registered": "registrado",
   "reset_password": {
@@ -315,7 +319,8 @@
     "qr_code": "Código QR",
     "settings": "Configuración",
     "publish_tooltip": "Tus cambios aún no están en vivo. Publica para actualizar tu encuesta para todos.",
-    "publish_error": "Por favor corrige los errores en tu encuesta antes de comenzar."
+    "publish_error": "Por favor corrige los errores en tu encuesta antes de comenzar.",
+    "download_qr_code": "Descargar código QR"
   },
   "email": {
     "check": "Revisa tu Correo Electrónico",
@@ -342,5 +347,27 @@
     "create_survey_with_ai": "Crear una nueva encuesta automáticamente usando asistencia de IA",
     "survey_title": "Título interno usado por tu equipo para identificar la encuesta. Este título no se muestra a los encuestados.",
     "survey_description": "Descripción interna usada por tu equipo para proporcionar contexto sobre la encuesta. Esta descripción no se muestra a los encuestados."
+  },
+  "translations": {
+    "title": "Traducciones",
+    "translate_to": "Traducir Encuesta A:",
+    "language": "Idioma",
+    "design_language": "Idioma del Diseño"
+  },
+  "error": {
+    "page_not_found": "Página no encontrada"
+  },
+  "responses_export": {
+    "format_csv": "CSV",
+    "format_excel": "Excel",
+    "format_ods": "ODS"
+  },
+  "aria": {
+    "users_table": "Tabla de usuarios",
+    "answers_table": "Tabla de respuestas"
+  },
+  "alt": {
+    "email_inbox": "Bandeja de entrada de correo",
+    "reset_password": "Restablecer contraseña"
   }
 }

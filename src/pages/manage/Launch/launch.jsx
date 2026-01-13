@@ -348,7 +348,7 @@ function LaunchPage({ onPublish }) {
             onClick={downloadQRCode}
             sx={{ mt: 2 }}
           >
-            Download QR Code
+            {t("launch.download_qr_code")}
           </Button>
         </DialogContent>
       </Dialog>

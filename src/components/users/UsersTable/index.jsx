@@ -175,7 +175,7 @@ export const UsersTable = () => {
           },
         }}
       >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 650 }} aria-label={t("aria.users_table")}>
           <TableHead>
             <TableRow>
               <TableCell align="left">

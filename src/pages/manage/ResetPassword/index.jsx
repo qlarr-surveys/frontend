@@ -114,7 +114,7 @@ export default function ResetPasswordView({ confirmNewUser = false }) {
         >
           <Stack sx={{ textAlign: "center" }}>
             <Image
-              alt="reset password"
+              alt={t("alt.reset_password")}
               src="/ic_lock_password.svg"
               sx={{ mb: 5, width: 96, height: 96, mx: "auto" }}
             />

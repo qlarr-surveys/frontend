@@ -588,7 +588,7 @@ function ResponsesSurvey() {
                     </Typography>
 
                     <TableContainer component={Paper} variant="outlined">
-                      <Table size="small" aria-label="answers table">
+                      <Table size="small" aria-label={t("aria.answers_table")}>
                         <TableHead>
                           <TableRow>
                             <TableCell sx={{ width: "33%" }}>

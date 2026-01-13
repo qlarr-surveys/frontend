@@ -271,7 +271,7 @@ export default function ProfileView() {
 
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Personal
+          {t("profile.section_personal")}
         </Typography>
 
         <Box

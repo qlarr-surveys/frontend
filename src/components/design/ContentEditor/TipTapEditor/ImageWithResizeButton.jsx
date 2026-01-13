@@ -61,6 +61,7 @@ const ImageWithResizeButton = ({
         {isEditorActive && (
           <button
             className="tiptap-image-resize-button"
+            data-image-size-button
             onMouseDown={(e) => {
               e.preventDefault();
               e.stopPropagation();

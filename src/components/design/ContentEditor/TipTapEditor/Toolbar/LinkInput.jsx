@@ -31,7 +31,7 @@ const LinkInput = ({
       if (
         linkInputRef.current &&
         !linkInputRef.current.contains(event.target) &&
-        !event.target.closest('button[title="Link"]')
+        !event.target.closest("[data-link-button]")
       ) {
         onClose();
       }

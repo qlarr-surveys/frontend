@@ -565,46 +565,46 @@ const types = {
   }),
 };
 
-const localeSettings = {
-  valueLabel: "Value",
-  valuePlaceholder: "Value",
-  fieldLabel: "Field",
-  operatorLabel: "Operator",
-  fieldPlaceholder: "Select field",
-  operatorPlaceholder: "Select operator",
+const getLocaleSettings = (t) => ({
+  valueLabel: t("logic_builder.value"),
+  valuePlaceholder: t("logic_builder.value"),
+  fieldLabel: t("logic_builder.field"),
+  operatorLabel: t("logic_builder.operator"),
+  fieldPlaceholder: t("logic_builder.select_field"),
+  operatorPlaceholder: t("logic_builder.select_operator"),
   deleteLabel: null,
-  addGroupLabel: "Add group",
-  addRuleLabel: "Add rule",
-  addSubRuleLabel: "Add sub rule",
+  addGroupLabel: t("logic_builder.add_group"),
+  addRuleLabel: t("logic_builder.add_rule"),
+  addSubRuleLabel: t("logic_builder.add_sub_rule"),
   delGroupLabel: null,
-  notLabel: "Not",
-  valueSourcesPopupTitle: "Select value source",
+  notLabel: t("logic_builder.not"),
+  valueSourcesPopupTitle: t("logic_builder.select_value_source"),
   removeRuleConfirmOptions: {
-    title: "Are you sure delete this rule?",
-    okText: "Yes",
+    title: t("logic_builder.confirm_delete_rule"),
+    okText: t("logic_builder.yes"),
     okType: "danger",
   },
   removeGroupConfirmOptions: {
-    title: "Are you sure delete this group?",
-    okText: "Yes",
+    title: t("logic_builder.confirm_delete_group"),
+    okText: t("logic_builder.yes"),
     okType: "danger",
   },
-};
+});
 
-const settings = {
+const getSettings = (t) => ({
   ...InitialConfig.settings,
-  ...localeSettings,
+  ...getLocaleSettings(t),
 
   valueSourcesInfo: {
     value: {
-      label: "Value",
+      label: t("logic_builder.value"),
     },
     field: {
-      label: "Field",
+      label: t("logic_builder.field"),
       widget: "field",
     },
     func: {
-      label: "Function",
+      label: t("logic_builder.function"),
       widget: "func",
     },
   },
@@ -612,18 +612,139 @@ const settings = {
   showNot: false,
   maxNesting: 1,
   canLeaveEmptyGroup: false, //after deletion
-};
+});
 
 const funcs = {};
 
-const config = {
-  ctx: MuiConfig.ctx, 
+const getOperators = (t) => ({
+  ...operators,
+  select_any_in: {
+    ...operators.select_any_in,
+    label: t("logic_builder.has_any_selected"),
+  },
+  select_not_any_in: {
+    ...operators.select_not_any_in,
+    label: t("logic_builder.has_none_selected"),
+  },
+  multiselect_equals: {
+    ...operators.multiselect_equals,
+    label: t("logic_builder.has_any_selected"),
+  },
+  multiselect_not_equals: {
+    ...operators.multiselect_not_equals,
+    label: t("logic_builder.has_none_selected"),
+  },
+  equal: {
+    ...operators.equal,
+    label: t("logic_builder.equals"),
+  },
+  not_equal: {
+    ...operators.not_equal,
+    label: t("logic_builder.not_equals"),
+  },
+  between: {
+    ...operators.between,
+    label: t("logic_builder.between"),
+  },
+  not_between: {
+    ...operators.not_between,
+    label: t("logic_builder.not_between"),
+  },
+  like: {
+    ...operators.like,
+    label: t("logic_builder.contains"),
+  },
+  not_like: {
+    ...operators.not_like,
+    label: t("logic_builder.not_contains"),
+  },
+  is_relevant: {
+    ...operators.is_relevant,
+    label: t("logic_builder.is_displayed"),
+  },
+  is_not_relevant: {
+    ...operators.is_not_relevant,
+    label: t("logic_builder.is_hidden"),
+  },
+  is_valid: {
+    ...operators.is_valid,
+    label: t("logic_builder.is_valid"),
+  },
+  is_not_valid: {
+    ...operators.is_not_valid,
+    label: t("logic_builder.is_not_valid"),
+  },
+  is_empty: {
+    ...operators.is_empty,
+    label: t("logic_builder.is_empty"),
+  },
+  is_not_empty: {
+    ...operators.is_not_empty,
+    label: t("logic_builder.is_not_empty"),
+  },
+  is_online: {
+    ...operators.is_online,
+    label: t("logic_builder.is_online"),
+  },
+  is_offline: {
+    ...operators.is_offline,
+    label: t("logic_builder.is_offline"),
+  },
+});
+
+export const getConfig = (t) => ({
+  ctx: MuiConfig.ctx,
+  conjunctions,
+  operators: getOperators(t),
+  widgets,
+  types,
+  settings: getSettings(t),
+  funcs,
+});
+
+// Keep default export for backward compatibility (English fallback)
+const defaultConfig = {
+  ctx: MuiConfig.ctx,
   conjunctions,
   operators,
   widgets,
   types,
-  settings,
+  settings: {
+    ...InitialConfig.settings,
+    valueLabel: "Value",
+    valuePlaceholder: "Value",
+    fieldLabel: "Field",
+    operatorLabel: "Operator",
+    fieldPlaceholder: "Select field",
+    operatorPlaceholder: "Select operator",
+    deleteLabel: null,
+    addGroupLabel: "Add group",
+    addRuleLabel: "Add rule",
+    addSubRuleLabel: "Add sub rule",
+    delGroupLabel: null,
+    notLabel: "Not",
+    valueSourcesPopupTitle: "Select value source",
+    removeRuleConfirmOptions: {
+      title: "Are you sure delete this rule?",
+      okText: "Yes",
+      okType: "danger",
+    },
+    removeGroupConfirmOptions: {
+      title: "Are you sure delete this group?",
+      okText: "Yes",
+      okType: "danger",
+    },
+    valueSourcesInfo: {
+      value: { label: "Value" },
+      field: { label: "Field", widget: "field" },
+      func: { label: "Function", widget: "func" },
+    },
+    canReorder: false,
+    showNot: false,
+    maxNesting: 1,
+    canLeaveEmptyGroup: false,
+  },
   funcs,
 };
 
-export default config;
+export default defaultConfig;

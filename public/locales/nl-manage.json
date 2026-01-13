@@ -34,6 +34,9 @@
     "or": "of",
     "empty_state_cta_copy": "om te beginnen!"
   },
+  "survey": {
+    "description_placeholder": "Klik om een beschrijving toe te voegen..."
+  },
   "create_survey_with_ai": "Enquête aanmaken met AI",
   "ai_prompt": "Beschrijf je enquête",
   "ai_prompt_required": "Beschrijf je enquête (minimaal 10 tekens)",
@@ -213,7 +216,8 @@
     "save": "Opslaan",
     "title": "Profiel",
     "manage_users": "Gebruikers Beheren",
-    "logout": "Uitloggen"
+    "logout": "Uitloggen",
+    "section_personal": "Persoonlijk"
   },
   "registered": "geregistreerd",
   "reset_password": {
@@ -315,7 +319,8 @@
     "qr_code": "QR Code",
     "settings": "Instellingen",
     "publish_tooltip": "Je wijzigingen zijn nog niet live. Publiceer om je enquête voor iedereen bij te werken.",
-    "publish_error": "Corrigeer de fouten in je enquête voordat je begint."
+    "publish_error": "Corrigeer de fouten in je enquête voordat je begint.",
+    "download_qr_code": "QR-code downloaden"
   },
   "email": {
     "check": "Controleer je E-mail",
@@ -342,5 +347,27 @@
     "create_survey_with_ai": "Maak automatisch een nieuwe enquête met AI ondersteuning",
     "survey_title": "Interne titel gebruikt door je team om de enquête te identificeren. Deze titel wordt niet getoond aan respondenten.",
     "survey_description": "Interne beschrijving gebruikt door je team om context over de enquête te geven. Deze beschrijving wordt niet getoond aan respondenten."
+  },
+  "translations": {
+    "title": "Vertalingen",
+    "translate_to": "Enquête vertalen naar:",
+    "language": "Taal",
+    "design_language": "Ontwerptaal"
+  },
+  "error": {
+    "page_not_found": "Pagina niet gevonden"
+  },
+  "responses_export": {
+    "format_csv": "CSV",
+    "format_excel": "Excel",
+    "format_ods": "ODS"
+  },
+  "aria": {
+    "users_table": "Gebruikerstabel",
+    "answers_table": "Antwoordentabel"
+  },
+  "alt": {
+    "email_inbox": "E-mail inbox",
+    "reset_password": "Wachtwoord opnieuw instellen"
   }
 }

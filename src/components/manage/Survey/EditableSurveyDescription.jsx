@@ -97,7 +97,7 @@ export const EditableSurveyDescription = ({
               className={styles.truncatedText}
             >
               {truncateWithEllipsis(description, charLimit) ||
-                ( isEditable ? "Click to add a description..." : "")}
+                ( isEditable ? t("survey.description_placeholder") : "")}
             </Typography>
           )}
           {isEditable && (

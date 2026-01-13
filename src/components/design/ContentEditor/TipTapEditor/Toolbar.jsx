@@ -95,6 +95,7 @@ const Toolbar = ({ editor, extended }) => {
         onClick={toggleLink}
         isActive={editor.isActive("link")}
         title={t("tiptap_link")}
+        data-link-button
       >
         🔗
       </FormatButton>

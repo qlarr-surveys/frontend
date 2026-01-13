@@ -144,13 +144,13 @@ function IconSelector({ currentIcon, onIconSelected }) {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title-logic-builder">
-        {t("Select Icon")}
+        {t("select_icon")}
       </DialogTitle>
       <DialogContent>
         <div>
           <input
             type="text"
-            placeholder="Search for icons"
+            placeholder={t("search_icons")}
             value={searchTerm}
             onChange={handleInputChange}
           />
@@ -171,7 +171,7 @@ function IconSelector({ currentIcon, onIconSelected }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={() => {}} autoFocus>
-          Select
+          {t("select")}
         </Button>
       </DialogActions>
     </Dialog>

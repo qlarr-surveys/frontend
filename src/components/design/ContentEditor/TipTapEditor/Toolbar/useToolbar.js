@@ -152,7 +152,7 @@ export const useToolbar = ({ editor }) => {
 
       const surveyId = sessionStorage.getItem("surveyId");
       if (!surveyId) {
-        alert("No survey selected. Please select a survey first.");
+        alert(t("tiptap_no_survey_selected"));
         return;
       }
 
@@ -174,21 +174,20 @@ export const useToolbar = ({ editor }) => {
         if (process.env.NODE_ENV === "development") {
           console.error("Image upload failed:", error);
         }
-        let errorMessage = "Failed to upload image. Please try again.";
+        let errorMessage = t("tiptap_upload_failed");
 
         if (error?.response?.status === 401) {
-          errorMessage = "Authentication failed. Please log in again.";
+          errorMessage = t("tiptap_auth_failed");
         } else if (error?.response?.status === 403) {
-          errorMessage = "You don't have permission to upload images.";
+          errorMessage = t("tiptap_no_permission");
         } else if (error?.response?.status === 413) {
-          errorMessage = "File is too large. Please select a smaller image.";
+          errorMessage = t("tiptap_file_too_large_upload");
         } else if (error?.response?.status === 400) {
-          errorMessage = "Invalid file. Please select a valid image file.";
+          errorMessage = t("tiptap_invalid_file");
         } else if (error?.response?.status >= 500) {
-          errorMessage = "Server error. Please try again later.";
+          errorMessage = t("tiptap_server_error");
         } else if (error.code === "ERR_NETWORK") {
-          errorMessage =
-            "Network error. Please check your internet connection.";
+          errorMessage = t("tiptap_network_error");
         }
 
         alert(errorMessage);

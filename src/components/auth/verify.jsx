@@ -69,7 +69,7 @@ export default function VerifyView({ t, open, email, resend, onClose }) {
       <Box className={styles.verifyContainer}>
         <Stack sx={{ textAlign: "center" }}>
           <Image
-            alt="email inbox"
+            alt={t("alt.email_inbox")}
             src="/ic_email_inbox.svg"
             sx={{ mb: 5, width: 96, height: 96, mx: "auto" }}
           />

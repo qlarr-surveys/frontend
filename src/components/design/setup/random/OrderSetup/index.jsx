@@ -151,7 +151,7 @@ export default function OrderSetup({ t, rule, code }) {
         <Select
           id="select-value"
           value={value}
-          label="Select Value"
+          label={t("select_value")}
           onChange={(e) => {
             onChange(e.target.value);
           }}

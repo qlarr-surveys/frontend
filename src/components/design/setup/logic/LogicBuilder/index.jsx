@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Query, Builder, Utils } from "@react-awesome-query-builder/mui";
-import loadedConfig from "./config";
+import { getConfig } from "./config";
 import "@react-awesome-query-builder/mui/css/styles.css";
 import "./override.css";
 import {
@@ -29,6 +29,9 @@ function LogicBuilder(props) {
     return state.designState;
   });
   const langInfo = React.useMemo(() => designState.langInfo);
+
+  const baseConfig = useMemo(() => getConfig(props.t), [props.t]);
+
   const fields = React.useMemo(
     () =>
       buildFields(
@@ -36,12 +39,13 @@ function LogicBuilder(props) {
         props.code,
         designState,
         langInfo.mainLang,
-        langInfo.languagesList.map((lang) => lang.code)
+        langInfo.languagesList.map((lang) => lang.code),
+        props.t
       ),
-    [designState]
+    [designState, props.t]
   );
 
-  const config = { ...loadedConfig, fields };
+  const config = { ...baseConfig, fields };
 
   const initTree = props.logic
     ? checkTree(loadFromJsonLogic(props.logic, config), config)
@@ -129,7 +133,7 @@ function LogicBuilder(props) {
             autoFocus
             variant="contained"
           >
-            Agree
+            {props.t("logic_builder.agree")}
           </Button>
         </DialogActions>
       </Dialog>

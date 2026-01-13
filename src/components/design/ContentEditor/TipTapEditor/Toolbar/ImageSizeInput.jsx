@@ -21,7 +21,7 @@ const ImageSizeInput = ({
       if (
         imageSizeInputRef.current &&
         !imageSizeInputRef.current.contains(event.target) &&
-        !event.target.closest('button[title="Image Size"]')
+        !event.target.closest("[data-image-size-button]")
       ) {
         onClose();
       }

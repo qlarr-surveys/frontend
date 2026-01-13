@@ -34,6 +34,9 @@
     "or": "or",
     "empty_state_cta_copy": "to get started!"
   },
+  "survey": {
+    "description_placeholder": "Click to add a description..."
+  },
   "create_survey_with_ai": "Create survey with AI",
   "ai_prompt": "Describe your survey",
   "ai_prompt_required": "Please describe your survey (minimum 10 characters)",
@@ -213,7 +216,8 @@
     "save": "Save",
     "title": "Profile",
     "manage_users": "Manage Users",
-    "logout": "Logout"
+    "logout": "Logout",
+    "section_personal": "Personal"
   },
   "registered": "registered",
   "reset_password": {
@@ -315,7 +319,8 @@
     "qr_code": "QR Code",
     "settings": "Settings",
     "publish_tooltip": "Your changes are not live yet. Publish to update your survey for everyone.",
-    "publish_error": "Please fix the errors in your survey before starting."
+    "publish_error": "Please fix the errors in your survey before starting.",
+    "download_qr_code": "Download QR Code"
   },
   "email": {
     "check": "Check Your Email",
@@ -342,5 +347,27 @@
     "create_survey_with_ai": "Create a new survey automatically using AI assistance",
     "survey_title": "Internal title used by your team to identify the survey. This title is not shown to respondents.",
     "survey_description": "Internal description used by your team to provide context about the survey. This description is not shown to respondents."
+  },
+  "translations": {
+    "title": "Translations",
+    "translate_to": "Translate Survey To:",
+    "language": "Language",
+    "design_language": "Design Language"
+  },
+  "error": {
+    "page_not_found": "Page not found"
+  },
+  "responses_export": {
+    "format_csv": "CSV",
+    "format_excel": "Excel",
+    "format_ods": "ODS"
+  },
+  "aria": {
+    "users_table": "Users table",
+    "answers_table": "Answers table"
+  },
+  "alt": {
+    "email_inbox": "Email inbox",
+    "reset_password": "Reset password"
   }
 }

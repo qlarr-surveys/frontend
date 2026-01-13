@@ -34,6 +34,9 @@
     "or": "ou",
     "empty_state_cta_copy": "para começar!"
   },
+  "survey": {
+    "description_placeholder": "Clique para adicionar uma descrição..."
+  },
   "create_survey_with_ai": "Criar pesquisa com IA",
   "ai_prompt": "Descreva sua pesquisa",
   "ai_prompt_required": "Por favor descreva sua pesquisa (mínimo 10 caracteres)",
@@ -213,7 +216,8 @@
     "save": "Salvar",
     "title": "Perfil",
     "manage_users": "Gerenciar Usuários",
-    "logout": "Sair"
+    "logout": "Sair",
+    "section_personal": "Pessoal"
   },
   "registered": "registrado",
   "reset_password": {
@@ -315,7 +319,8 @@
     "qr_code": "Código QR",
     "settings": "Configurações",
     "publish_tooltip": "Suas alterações ainda não estão ativas. Publique para atualizar sua pesquisa para todos.",
-    "publish_error": "Por favor corrija os erros em sua pesquisa antes de começar."
+    "publish_error": "Por favor corrija os erros em sua pesquisa antes de começar.",
+    "download_qr_code": "Baixar código QR"
   },
   "email": {
     "check": "Verifique seu E-mail",
@@ -342,5 +347,27 @@
     "create_survey_with_ai": "Criar uma nova pesquisa automaticamente usando assistência de IA",
     "survey_title": "Título interno usado por sua equipe para identificar a pesquisa. Este título não é mostrado aos respondentes.",
     "survey_description": "Descrição interna usada por sua equipe para fornecer contexto sobre a pesquisa. Esta descrição não é mostrada aos respondentes."
+  },
+  "translations": {
+    "title": "Traduções",
+    "translate_to": "Traduzir Pesquisa Para:",
+    "language": "Idioma",
+    "design_language": "Idioma do Design"
+  },
+  "error": {
+    "page_not_found": "Página não encontrada"
+  },
+  "responses_export": {
+    "format_csv": "CSV",
+    "format_excel": "Excel",
+    "format_ods": "ODS"
+  },
+  "aria": {
+    "users_table": "Tabela de usuários",
+    "answers_table": "Tabela de respostas"
+  },
+  "alt": {
+    "email_inbox": "Caixa de entrada de e-mail",
+    "reset_password": "Redefinir senha"
   }
 }

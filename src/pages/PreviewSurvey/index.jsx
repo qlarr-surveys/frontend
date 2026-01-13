@@ -122,7 +122,7 @@ function PreviewSurvey({ responseId = null }) {
         <Tabs
           value={previewMode}
           onChange={handleChange}
-          aria-label="Preview mode tabs"
+          aria-label={tDesign("aria.preview_mode_tabs")}
         >
           <Tab value={PREVIEW_MODE.ONLINE} label={<SurveyIcon name="pc" />} />
           <Tab
@@ -146,7 +146,7 @@ function PreviewSurvey({ responseId = null }) {
               size="small"
               value={navigationMode}
               onChange={handleNavigationModeChange}
-              label="Navigation Mode"
+              label={tDesign("navigation_mode")}
             >
               <MenuItem value="ALL_IN_ONE">{tDesign("all_in_one")}</MenuItem>
               <MenuItem value="GROUP_BY_GROUP">
