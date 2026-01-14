@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const LinkInput = ({
   show,
@@ -11,7 +12,8 @@ const LinkInput = ({
   onClose,
   editor,
 }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
+  const { t: tCore } = useTranslation(NAMESPACES.DESIGN_CORE);
   const linkInputRef = useRef(null);
 
   useEffect(() => {
@@ -97,7 +99,7 @@ const LinkInput = ({
         onClick={onSetLink}
         disabled={!linkText.trim() || !linkUrl.trim()}
       >
-        {t("ok")}
+        {tCore("ok")}
       </button>
       <button
         onMouseDown={(e) => e.preventDefault()}
@@ -106,7 +108,7 @@ const LinkInput = ({
           editor.commands.focus();
         }}
       >
-        {t("cancel")}
+        {tCore("cancel")}
       </button>
     </div>
   );

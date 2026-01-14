@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import {
   Box,
   Button,
@@ -69,7 +70,7 @@ function ClampTwoLines({ children, sx }) {
 
 function ResponsesSurvey() {
   const surveyService = useService("survey");
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const { surveyId } = useParams();
 
   const [fetching, setFetching] = useState(true);

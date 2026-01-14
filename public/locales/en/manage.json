@@ -364,10 +364,17 @@
   },
   "aria": {
     "users_table": "Users table",
-    "answers_table": "Answers table"
+    "answers_table": "Answers table",
+    "preview_mode_tabs": "Preview mode tabs"
   },
   "alt": {
     "email_inbox": "Email inbox",
     "reset_password": "Reset password"
+  },
+  "preview_page": {
+    "navigation_mode": "Navigation Mode",
+    "all_in_one": "All In One",
+    "group_by_group": "Page By Page",
+    "question_by_question": "Question By Question"
   }
 }

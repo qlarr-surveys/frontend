@@ -4,10 +4,11 @@ import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import Image from '~/components/image/image';
 import CompactLayout from '~/layouts/compact';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 
 
 export default function UnsupportedView() {
-    const { t } = useTranslation("manage");
+    const { t } = useTranslation(NAMESPACES.MANAGE);
     return (
         <CompactLayout>
             <Box sx={{ textAlign: 'center', py: 4 }}>

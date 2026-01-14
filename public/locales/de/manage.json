@@ -356,5 +356,16 @@
     "title_delete": "Löschen",
     "title_edit": "Bearbeiten",
     "users": "Benutzer"
+  },
+  "aria": {
+    "users_table": "Benutzertabelle",
+    "answers_table": "Antworttabelle",
+    "preview_mode_tabs": "Vorschaumodus-Tabs"
+  },
+  "preview_page": {
+    "navigation_mode": "Navigationsmodus",
+    "all_in_one": "Alles in einem",
+    "group_by_group": "Seite für Seite",
+    "question_by_question": "Frage für Frage"
   }
 }

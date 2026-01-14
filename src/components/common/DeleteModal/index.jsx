@@ -4,6 +4,7 @@ import SurveyIcon from "../SurveyIcons/SurveyIcon";
 import styles from "./DeleteModal.module.css";
 import { palette } from "~/theme/palette";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const DeleteModal = ({
   title,
@@ -16,14 +17,15 @@ const DeleteModal = ({
     palette: palette("light"),
   });
 
-  const { t } = useTranslation(["manage", "design", "run"]);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
+  const { t: tDesign } = useTranslation(NAMESPACES.DESIGN_CORE);
   const modalTitle = title || t("action_btn.delete");
 
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="delete-modal">
       <Box className={styles.modalBox}>
         <Box display="flex" gap={2} justifyContent="center" alignItems="center">
-          {title === "Delete" && (
+          {!title && (
             <SurveyIcon name="delete" color="#000" size="1.75em" />
           )}
           <Typography
@@ -57,7 +59,7 @@ const DeleteModal = ({
               handleClose();
             }}
           >
-            {t("cancel")}
+            {tDesign("cancel")}
           </Button>
           <Button
             sx={{ textTransform: "capitalize" }}
@@ -70,7 +72,7 @@ const DeleteModal = ({
               handleDelete();
             }}
           >
-            {t("confirm")}
+            {tDesign("confirm")}
           </Button>
         </Box>
       </Box>

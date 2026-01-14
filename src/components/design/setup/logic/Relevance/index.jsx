@@ -5,11 +5,13 @@ import { changeRelevance } from "~/state/design/designState";
 import React, { useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./Relevance.module.css";
-import { Trans } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function Relevance({ code, t }) {
   const dispatch = useDispatch();
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
   const [logicDialogOpen, setLogicDialogOpen] = useState(false);
 
   const state = useSelector((s) => s.designState[code]);
@@ -68,7 +70,7 @@ function Relevance({ code, t }) {
     <div className={`${hasErrors ? styles.relevanceError : ""}`}>
       <div className={styles.toggleValue}>
         <div className={styles.label}>
-          <CustomTooltip body={t("tooltips.relevance")} />
+          <CustomTooltip body={tTooltips("tooltips.relevance")} />
           <Typography color={isDisabled && 'text.disabled'} fontWeight={700}>{t("relevance")}</Typography>
         </div>
         <Switch

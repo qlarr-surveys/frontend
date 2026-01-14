@@ -9,11 +9,12 @@ import ImageUploadButton from "./Toolbar/ImageUploadButton";
 import ListControls from "./Toolbar/ListControls";
 import { useToolbar } from "./Toolbar/useToolbar";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const { TOOLBAR_CLASS, TOOLBAR_BUTTON_CLASS } = EDITOR_CONSTANTS;
 
 const Toolbar = ({ editor, extended }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
 
   const {
     // State

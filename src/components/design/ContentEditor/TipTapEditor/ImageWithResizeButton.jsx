@@ -4,6 +4,7 @@ import { NodeViewWrapper } from "@tiptap/react";
 import AspectRatioIcon from "@mui/icons-material/AspectRatio";
 import ImageSizeInput from "./Toolbar/ImageSizeInput";
 import { useImageResize } from "./useImageResize";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const ImageWithResizeButton = ({
   node,
@@ -11,7 +12,7 @@ const ImageWithResizeButton = ({
   editor,
   selected,
 }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
   const wrapperRef = useRef(null);
 
   const {

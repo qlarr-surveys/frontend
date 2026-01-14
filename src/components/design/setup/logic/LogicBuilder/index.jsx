@@ -15,8 +15,11 @@ import { EditOutlined } from "@mui/icons-material";
 import { stripTags, truncateWithEllipsis } from "~/utils/design/utils";
 import { buildFields } from "./buildFields";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function LogicBuilder(props) {
+  const { t: tLogic } = useTranslation(NAMESPACES.DESIGN_LOGIC);
   const {
     jsonLogicFormat,
     queryString,
@@ -30,7 +33,7 @@ function LogicBuilder(props) {
   });
   const langInfo = React.useMemo(() => designState.langInfo);
 
-  const baseConfig = useMemo(() => getConfig(props.t), [props.t]);
+  const baseConfig = useMemo(() => getConfig(tLogic), [tLogic]);
 
   const fields = React.useMemo(
     () =>
@@ -40,9 +43,9 @@ function LogicBuilder(props) {
         designState,
         langInfo.mainLang,
         langInfo.languagesList.map((lang) => lang.code),
-        props.t
+        tLogic
       ),
-    [designState, props.t]
+    [designState, tLogic]
   );
 
   const config = { ...baseConfig, fields };
@@ -133,7 +136,7 @@ function LogicBuilder(props) {
             autoFocus
             variant="contained"
           >
-            {props.t("logic_builder.agree")}
+            {tLogic("logic_builder.agree")}
           </Button>
         </DialogActions>
       </Dialog>

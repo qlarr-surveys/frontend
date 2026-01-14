@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { shallowEqual, useDispatch } from "react-redux";
 import styles from "./RunSurvey.module.css";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CacheProvider, css } from "@emotion/react";
 import {
@@ -72,7 +73,7 @@ function RunSurvey({
     return state.runState.navigation;
   }, isEquivalent);
 
-  const { t, i18n } = useTranslation("run");
+  const { t, i18n } = useTranslation(NAMESPACES.RUN);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -135,7 +136,17 @@ function RunSurvey({
 
   const startNav = () => {
     startNavigation(runService, lang, preview, mode, navigationMode)
-      .then((response) => {
+      .then(async (response) => {
+        // Change language and load namespace before rendering
+        // This ensures translations are loaded for the correct language only
+        if (i18n.language !== response.lang.code) {
+          await i18n.changeLanguage(response.lang.code);
+        }
+        // Load 'run' namespace if not already loaded (lazy loading)
+        if (!i18n.hasLoadedNamespace('run')) {
+          await i18n.loadNamespaces('run');
+        }
+
         setRender(true);
         dispatch(stateReceived({ response, preview }));
         if (preview) {
@@ -156,7 +167,6 @@ function RunSurvey({
           );
         }
         sessionStorage.setItem("responseId", response.responseId);
-        i18n.changeLanguage(response.lang.code);
         dispatch(setFetching(false));
       })
       .catch((err) => {
@@ -184,11 +194,19 @@ function RunSurvey({
       useCaseMode,
       useCaseNavMode
     )
-      .then((response) => {
+      .then(async (response) => {
+        // Change language and load namespace before rendering
+        if (i18n.language !== response.lang.code) {
+          await i18n.changeLanguage(response.lang.code);
+        }
+        // Load 'run' namespace if not already loaded (lazy loading)
+        if (!i18n.hasLoadedNamespace('run')) {
+          await i18n.loadNamespaces('run');
+        }
+
         setRender(true);
         dispatch(stateReceived({ response, preview }));
         sessionStorage.setItem("responseId", response.responseId);
-        i18n.changeLanguage(response.lang.code);
         dispatch(setFetching(false));
       })
       .catch((err) => {

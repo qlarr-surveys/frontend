@@ -2,9 +2,10 @@ import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import PhotoIcon from "@mui/icons-material/Photo";
 import LoadingDots from "~/components/common/LoadingDots";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const ImageUploadButton = ({ onImageUpload, isUploading }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
   const fileInputRef = useRef(null);
 
   const handleChange = (event) => {

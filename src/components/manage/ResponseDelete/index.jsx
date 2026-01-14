@@ -1,9 +1,10 @@
 import { Box, Modal, Typography, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import styles from "./ResponseDelete.module.css";
 
 export const ResponseDelete = ({ open, onClose, onDelete }) => {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   return (
     <Modal
       sx={{

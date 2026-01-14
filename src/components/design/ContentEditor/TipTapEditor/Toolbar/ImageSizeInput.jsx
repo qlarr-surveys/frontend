@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const ImageSizeInput = ({
   show,
@@ -13,7 +14,8 @@ const ImageSizeInput = ({
   onClose,
   editor,
 }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
+  const { t: tCore } = useTranslation(NAMESPACES.DESIGN_CORE);
   const imageSizeInputRef = useRef(null);
 
   useEffect(() => {
@@ -141,7 +143,7 @@ const ImageSizeInput = ({
               onClose();
             }}
           >
-            {t("ok")}
+            {tCore("ok")}
           </button>
           <button
             onMouseDown={(e) => e.preventDefault()}
@@ -150,7 +152,7 @@ const ImageSizeInput = ({
               editor.commands.focus();
             }}
           >
-            {t("cancel")}
+            {tCore("cancel")}
           </button>
         </div>
       </div>

@@ -364,10 +364,17 @@
   },
   "aria": {
     "users_table": "Tableau des utilisateurs",
-    "answers_table": "Tableau des réponses"
+    "answers_table": "Tableau des réponses",
+    "preview_mode_tabs": "Onglets du mode aperçu"
   },
   "alt": {
     "email_inbox": "Boîte de réception",
     "reset_password": "Réinitialiser le mot de passe"
+  },
+  "preview_page": {
+    "navigation_mode": "Mode de Navigation",
+    "all_in_one": "Tout en Un",
+    "group_by_group": "Page par Page",
+    "question_by_question": "Question par Question"
   }
 }

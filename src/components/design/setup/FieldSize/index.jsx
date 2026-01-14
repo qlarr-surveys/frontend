@@ -3,9 +3,10 @@ import TextField from "@mui/material/TextField";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeAttribute } from "~/state/design/designState";
-import { Trans } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import styles from "./FieldSize.module.css";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { Typography } from "@mui/material";
 
 function FieldSize({
@@ -18,6 +19,7 @@ function FieldSize({
   upperBound,
 }) {
   const dispatch = useDispatch();
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
 
   const stateValue = useSelector((state) => {
     return state.designState[code][rule] || defaultValue;
@@ -57,7 +59,7 @@ function FieldSize({
   return (
     <>
       <div className={styles.label}>
-        <CustomTooltip body={t(`tooltips.${label}`)} />
+        <CustomTooltip body={tTooltips(`tooltips.${label}`)} />
         <Typography fontWeight={700}>{t(label)}:</Typography>
       </div>
       <TextField

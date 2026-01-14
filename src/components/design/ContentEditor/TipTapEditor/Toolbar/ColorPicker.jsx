@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const ColorPicker = ({
   show,
@@ -11,7 +12,7 @@ const ColorPicker = ({
   pickerRef,
   colors,
 }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
   const internalRef = useRef(null);
   const ref = pickerRef || internalRef;
   const colorPalette = colors || EDITOR_CONSTANTS.COLOR_PALETTE;

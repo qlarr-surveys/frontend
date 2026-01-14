@@ -1,9 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const FontSizeSelector = ({ currentFontSize, setFontSize }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
 
   const fontSizes = [
     {

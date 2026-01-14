@@ -5,10 +5,11 @@ import React, {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import "./MentionList.css";
 
 const MentionList = forwardRef(({ items, command }, ref) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {

@@ -5,6 +5,7 @@ import { truncateWithEllipsis } from "~/utils/design/utils";
 import { Edit, Check } from "@mui/icons-material";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 export const EditableSurveyDescription = ({
   survey,
@@ -13,7 +14,7 @@ export const EditableSurveyDescription = ({
 }) => {
   const [isDescriptionEditing, setIsDescriptionEditing] = useState(false);
   const [description, setDescription] = useState(survey.description);
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const charLimit = 125;
 

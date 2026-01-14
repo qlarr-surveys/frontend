@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import styles from "./ManageTranslations.module.css";
 import { BaseLanguage } from "~/components/manage/BaseLanguage";
 import { useSelector } from "react-redux";
@@ -26,7 +27,7 @@ import {
 import { LANGUAGE_DEF } from "~/constants/language";
 
 function ManageTranslations({ onManageTranslationsClose, onStartTranslation }) {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   return (
     <Dialog
       fullWidth
@@ -63,7 +64,7 @@ function ManageTranslations({ onManageTranslationsClose, onStartTranslation }) {
 }
 
 export function ManageLanguages() {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const dispatch = useDispatch();
 
   const langInfo = useSelector((state) => {

@@ -364,10 +364,17 @@
   },
   "aria": {
     "users_table": "جدول المستخدمين",
-    "answers_table": "جدول الإجابات"
+    "answers_table": "جدول الإجابات",
+    "preview_mode_tabs": "علامات تبويب وضع المعاينة"
   },
   "alt": {
     "email_inbox": "صندوق البريد الإلكتروني",
     "reset_password": "إعادة تعيين كلمة المرور"
+  },
+  "preview_page": {
+    "navigation_mode": "وضع التنقل",
+    "all_in_one": "الكل في واحد",
+    "group_by_group": "صفحة بصفحة",
+    "question_by_question": "سؤال بسؤال"
   }
 }

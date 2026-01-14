@@ -12,6 +12,7 @@ import Iconify from "~/components/iconify";
 import Image from "~/components/image/image";
 import FormProvider, { RHFTextField } from "../../../components/hook-form";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
@@ -28,7 +29,7 @@ import { useService } from "~/hooks/use-service";
 
 export default function ResetPasswordView({ confirmNewUser = false }) {
   const authService = useService("auth");
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();

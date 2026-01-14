@@ -2,8 +2,11 @@ import React from "react";
 import styles from "./NewComponentsItem.module.css";
 import { useDrag } from "react-dnd";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function NewComponentsItem({ t, item, onClick }) {
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
   const [isDragging, drag] = useDrag({
     type: item.type,
     item: {
@@ -26,7 +29,7 @@ function NewComponentsItem({ t, item, onClick }) {
       }
       onClick={onClick}
     >
-      <CustomTooltip  title={t(`tooltips.${item.itemType}`)} />
+      <CustomTooltip  title={tTooltips(`tooltips.${item.itemType}`)} />
       {item.icon}
       {t("component_" + item.itemType + "_title")}
     </div>

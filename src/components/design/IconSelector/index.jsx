@@ -8,11 +8,12 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import IconService from "~/services/IconService";
 import styles from "./IconSelector.module.css";
 
 function IconSelector({ currentIcon, onIconSelected }) {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const [searchTerm, setSearchTerm] = useState("");
   const [cancelToken, setCancelToken] = useState(null);
   const [searchResults, setSearchResults] = useState([]);

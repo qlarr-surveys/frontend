@@ -364,10 +364,17 @@
   },
   "aria": {
     "users_table": "Gebruikerstabel",
-    "answers_table": "Antwoordentabel"
+    "answers_table": "Antwoordentabel",
+    "preview_mode_tabs": "Voorbeeldmodus tabbladen"
   },
   "alt": {
     "email_inbox": "E-mail inbox",
     "reset_password": "Wachtwoord opnieuw instellen"
+  },
+  "preview_page": {
+    "navigation_mode": "Navigatiemodus",
+    "all_in_one": "Alles in Een",
+    "group_by_group": "Pagina per Pagina",
+    "question_by_question": "Vraag per Vraag"
   }
 }

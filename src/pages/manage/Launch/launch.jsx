@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { newVersionReceived, setSaving } from "~/state/design/designState";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { useService } from "~/hooks/use-service";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { SURVEY_MODE } from "~/constants/survey";
@@ -22,7 +23,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@emotion/react";
 
 function LaunchPage({ onPublish }) {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const designService = useService("design");
   const theme = useTheme();
   const dispatch = useDispatch();

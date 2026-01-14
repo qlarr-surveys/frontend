@@ -3,9 +3,10 @@ import { useTranslation } from "react-i18next";
 import { useService } from "~/hooks/use-service";
 import { buildResourceUrl } from "~/networking/common";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 export const useToolbar = ({ editor }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
   const designService = useService("design");
 
   // State

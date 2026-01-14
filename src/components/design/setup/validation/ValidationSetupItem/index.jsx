@@ -8,11 +8,14 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeValidationValue } from "~/state/design/designState";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function ValidationSetupItem({ rule, t, code }) {
   console.debug("ValidationSetupItem: " + code);
 
   const dispatch = useDispatch();
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
   const validationRule = useSelector((state) => {
     return state.designState[code]?.validation?.[rule];
   });
@@ -35,7 +38,7 @@ function ValidationSetupItem({ rule, t, code }) {
     <div>
       <div className={styles.title}>
         <div className={styles.label}>
-          <CustomTooltip body={t(`tooltips.${rule}`)} />
+          <CustomTooltip body={tTooltips(`tooltips.${rule}`)} />
           <Typography fontWeight={700}>{t(rule + "_title")}</Typography>
         </div>
         <Switch

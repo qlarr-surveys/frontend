@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, css } from "@mui/material";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { GroupDropArea } from "~/components/design/DropArea/DropArea";
 import { Virtuoso } from "react-virtuoso";
 import useDragNearViewportEdge from "~/utils/useDragEdgeDetection";
@@ -12,7 +13,7 @@ import { resetSetup } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function ContentPanel({ designMode }, ref) {
-  const { t } = useTranslation(["design"]);
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const theme = useTheme();
 
   const groups = useSelector((state) => {

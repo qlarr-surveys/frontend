@@ -1,9 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import FormatButton from "./FormatButton";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const ListControls = ({ editor }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
 
   return (
     <>

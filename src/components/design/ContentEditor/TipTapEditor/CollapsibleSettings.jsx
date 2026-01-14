@@ -9,6 +9,7 @@ import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import ColorPicker from "./Toolbar/ColorPicker";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const CollapsibleSettings = ({
   show,
@@ -18,7 +19,8 @@ const CollapsibleSettings = ({
   onClose,
   editor,
 }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
+  const { t: tCore } = useTranslation(NAMESPACES.DESIGN_CORE);
   const popupRef = useRef(null);
   const colorPickerRef = useRef(null);
   const textColorPickerRef = useRef(null);
@@ -183,7 +185,7 @@ const CollapsibleSettings = ({
               onClose();
             }}
           >
-            {t("ok")}
+            {tCore("ok")}
           </button>
           <button
             onMouseDown={(e) => e.preventDefault()}
@@ -192,7 +194,7 @@ const CollapsibleSettings = ({
               editor?.commands.focus();
             }}
           >
-            {t("cancel")}
+            {tCore("cancel")}
           </button>
         </div>
       </div>

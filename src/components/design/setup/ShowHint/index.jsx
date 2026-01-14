@@ -7,9 +7,12 @@ import { useDispatch } from "react-redux";
 import { changeAttribute, changeContent } from "~/state/design/designState";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function ShowHint({ code, t }) {
   const dispatch = useDispatch();
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
 
   const showHint = useSelector((state) => {
     return state.designState[code].showHint || false;
@@ -23,7 +26,7 @@ function ShowHint({ code, t }) {
     <>
       <div className={styles.showHint}>
         <div className={styles.label}>
-          <CustomTooltip body={t("tooltips.show_question_hint")} />
+          <CustomTooltip body={tTooltips("tooltips.show_question_hint")} />
           <Typography fontWeight={700}>{t("show_question_hint")}</Typography>
         </div>
         <Switch
@@ -38,6 +41,7 @@ function ShowHint({ code, t }) {
 
 export function SetupTextInput({ code, objectName, title, t }) {
   const dispatch = useDispatch();
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
   const setContentValue = (lang, value) => {
     dispatch(changeContent({ code, key: objectName, lang, value }));
   };
@@ -54,7 +58,7 @@ export function SetupTextInput({ code, objectName, title, t }) {
     <>
       <div className={styles.label}>
         {objectName !== "hint" && (
-          <CustomTooltip body={t(`tooltips.${title}`)} />
+          <CustomTooltip body={tTooltips(`tooltips.${title}`)} />
         )}
         {title && <h4>{t(title)}</h4>}
       </div>

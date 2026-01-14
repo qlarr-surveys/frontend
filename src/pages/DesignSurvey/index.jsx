@@ -3,7 +3,8 @@ import { Box, Chip, ThemeProvider, createTheme } from "@mui/material";
 import styles from "./DesignSurvey.module.css";
 
 import { defualtTheme } from "~/constants/theme";
-import { I18nextProvider, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { CacheProvider } from "@emotion/react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +21,6 @@ import {
   setDesignModeToTheme,
 } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
-import i18next from 'i18next';
 
 const ContentPanel = React.lazy(() =>
   import("~/components/design/ContentPanel")
@@ -28,7 +28,9 @@ const ContentPanel = React.lazy(() =>
 const LeftPanel = React.lazy(() => import("~/components/design/LeftPanel"));
 
 function DesignSurvey() {
-  const { t, i18n } = useTranslation(["design"]);
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
+  const { t: tLogic } = useTranslation(NAMESPACES.DESIGN_LOGIC);
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
   const [contentElement, setContentElement] = React.useState(null);
   const dispatch = useDispatch();
 
@@ -49,7 +51,6 @@ function DesignSurvey() {
   });
 
   const lang = langInfo?.lang;
-  const mainLang = langInfo?.mainLang;
 
   const theme = useSelector((state) => {
     return state.designState["Survey"]?.theme;
@@ -65,12 +66,6 @@ function DesignSurvey() {
       contentPanel.scrollTop = 0;
     }
   }, [lang, contentElement]);
-
-  useEffect(() => {
-    if (mainLang) {
-     i18n.loadLanguages(mainLang)
-    }
-  }, [mainLang]);
 
   useEffect(() => {
     if (designMode == DESIGN_SURVEY_MODE.DESIGN) {
