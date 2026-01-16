@@ -725,12 +725,12 @@ const defaultConfig = {
     notLabel: "Not",
     valueSourcesPopupTitle: "Select value source",
     removeRuleConfirmOptions: {
-      title: "Are you sure delete this rule?",
+      title: "are you sure you want to delete this rule",
       okText: "Yes",
       okType: "danger",
     },
     removeGroupConfirmOptions: {
-      title: "Are you sure delete this group?",
+      title: "are you sure you want to delete this group",
       okText: "Yes",
       okType: "danger",
     },

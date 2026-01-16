@@ -107,6 +107,7 @@ function SurveyAppBar({ toggleDrawer, preview }) {
                 variant="contained"
                 size="small"
                 onClick={() => setSaveOpen(true)}
+                sx={{ minWidth: "fit-content", whiteSpace: "nowrap" }}
               >
                 {t("save")}
               </Button>
