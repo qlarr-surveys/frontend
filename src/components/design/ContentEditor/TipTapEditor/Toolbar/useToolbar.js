@@ -160,6 +160,7 @@ export const useToolbar = ({ editor }) => {
       try {
         const response = await designService.uploadResource(file);
         const imageUrl = buildResourceUrl(response.name);
+        const { from } = editor.state.selection;
 
         editor
           .chain()
@@ -169,6 +170,7 @@ export const useToolbar = ({ editor }) => {
             alt: file.name,
             resourceName: response.name,
           })
+          .setTextSelection(from + 1)
           .run();
       } catch (error) {
         if (process.env.NODE_ENV === "development") {
