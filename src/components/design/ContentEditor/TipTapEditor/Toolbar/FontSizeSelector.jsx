@@ -8,19 +8,19 @@ const FontSizeSelector = ({ currentFontSize, setFontSize }) => {
 
   const fontSizes = [
     {
-      label: t("tiptap_font_size_small"),
+      label: t("font_size_small"),
       value: EDITOR_CONSTANTS.FONT_SIZE_VALUES[0],
     },
     {
-      label: t("tiptap_font_size_normal"),
+      label: t("font_size_normal"),
       value: EDITOR_CONSTANTS.FONT_SIZE_VALUES[1],
     },
     {
-      label: t("tiptap_font_size_large"),
+      label: t("font_size_large"),
       value: EDITOR_CONSTANTS.FONT_SIZE_VALUES[2],
     },
     {
-      label: t("tiptap_font_size_huge"),
+      label: t("font_size_huge"),
       value: EDITOR_CONSTANTS.FONT_SIZE_VALUES[3],
     },
   ];

@@ -152,7 +152,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
       }}
     >
       {hasRelevance && !isDisabled && (
-        <CustomTooltip title={tTooltips("tooltips.has_relevance")} showIcon={false}>
+        <CustomTooltip title={tTooltips("has_relevance")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandRelevance()}
@@ -163,7 +163,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
       )}
 
       {isDisabled && (
-        <CustomTooltip title={tTooltips("tooltips.is_disabled")} showIcon={false}>
+        <CustomTooltip title={tTooltips("is_disabled")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandDisabled()}
@@ -174,7 +174,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
       )}
 
       {hasValidation && (
-        <CustomTooltip title={tTooltips("tooltips.has_validation")} showIcon={false}>
+        <CustomTooltip title={tTooltips("has_validation")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandValidation()}
@@ -184,7 +184,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         </CustomTooltip>
       )}
       {randomRule && (
-        <CustomTooltip title={tTooltips("tooltips.is_randomized")} showIcon={false}>
+        <CustomTooltip title={tTooltips("is_randomized")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandRandom(randomRule)}
@@ -194,7 +194,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         </CustomTooltip>
       )}
       {hasSkip && (
-        <CustomTooltip title={tTooltips("tooltips.has_skip")} showIcon={false}>
+        <CustomTooltip title={tTooltips("has_skip")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandSkipLogic()}

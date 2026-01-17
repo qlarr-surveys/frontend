@@ -29,7 +29,7 @@ function NewComponentsItem({ t, item, onClick }) {
       }
       onClick={onClick}
     >
-      <CustomTooltip  title={tTooltips(`tooltips.${item.itemType}`)} />
+      <CustomTooltip  title={tTooltips(item.itemType)} />
       {item.icon}
       {t("component_" + item.itemType + "_title")}
     </div>

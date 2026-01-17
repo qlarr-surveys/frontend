@@ -11,9 +11,9 @@ import { useLocation } from 'react-router-dom';
  * - MANAGE: Dashboard, auth, survey management pages
  * - RUN: Respondent-facing survey runtime
  * - DESIGN_CORE: Main survey designer UI (design/core.json)
- * - DESIGN_EDITOR: TipTap rich text editor (design/editor.json, keys: tiptap_*)
+ * - DESIGN_EDITOR: TipTap rich text editor (design/editor.json)
  * - DESIGN_LOGIC: Logic builder dialog (design/logic.json, keys: logic_builder.*)
- * - DESIGN_TOOLTIPS: Help tooltips (design/tooltips.json, keys: tooltips.*)
+ * - DESIGN_TOOLTIPS: Help tooltips (design/tooltips.json)
  */
 export const NAMESPACES = {
   MANAGE: 'manage',

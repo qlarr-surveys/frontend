@@ -68,8 +68,8 @@ const ImageWithResizeButton = ({
               e.stopPropagation();
             }}
             onClick={toggleImageSizeInput}
-            title={t("tiptap_image_size")}
-            aria-label={t("tiptap_image_size")}
+            title={t("image_size")}
+            aria-label={t("image_size")}
             aria-expanded={showImageSizeInput}
           >
             <AspectRatioIcon sx={{ fontSize: "inherit" }} />

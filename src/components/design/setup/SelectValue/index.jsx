@@ -22,7 +22,7 @@ function SelectValue({ label, rule, defaultValue, code, values, labels }) {
 
   return (
     <div className={styles.selectValue} style={{ gap: "8px%" }}>
-      <CustomTooltip body={tTooltips(`tooltips.${label}`)} />
+      <CustomTooltip body={tTooltips(label)} />
       <RHFSelect
         key={code + rule}
         name={`${code}.${rule}`}

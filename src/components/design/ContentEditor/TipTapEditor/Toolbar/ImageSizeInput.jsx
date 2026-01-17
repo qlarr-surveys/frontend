@@ -77,7 +77,7 @@ const ImageSizeInput = ({
             }}
             style={{ cursor: "pointer" }}
           />
-          <span>{t("tiptap_maintain_aspect_ratio")}</span>
+          <span>{t("maintain_aspect_ratio")}</span>
         </label>
 
         <div
@@ -88,11 +88,11 @@ const ImageSizeInput = ({
           }}
         >
           <label style={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
-            {t("tiptap_width")}:
+            {t("width")}:
           </label>
           <input
             type="text"
-            placeholder={t("tiptap_width")}
+            placeholder={t("width")}
             value={imageWidth}
             onChange={(e) => onWidthChange(e.target.value)}
             onKeyDown={(e) => {
@@ -108,11 +108,11 @@ const ImageSizeInput = ({
             }}
           />
           <label style={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
-            {t("tiptap_height")}:
+            {t("height")}:
           </label>
           <input
             type="text"
-            placeholder={t("tiptap_height")}
+            placeholder={t("height")}
             value={imageHeight}
             onChange={(e) => onHeightChange(e.target.value)}
             onKeyDown={(e) => {

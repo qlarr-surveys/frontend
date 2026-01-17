@@ -30,7 +30,7 @@ export default function DisabledToggle({ code, t }) {
   return (
     <div className={styles.toggleValue}>
       <div className={styles.label}>
-        <CustomTooltip body={tTooltips("tooltips.disabled")} />
+        <CustomTooltip body={tTooltips("disabled")} />
         <Typography fontWeight={700}>{t("disabled")}</Typography>
       </div>
       <Switch

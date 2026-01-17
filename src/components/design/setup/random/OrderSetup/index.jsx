@@ -148,7 +148,7 @@ export default function OrderSetup({ t, rule, code }) {
   return (
     <>
       <div className={styles.label}>
-        <CustomTooltip body={tTooltips(`tooltips.${title}`)} /> <h4>{t(`${title}`)}</h4>
+        <CustomTooltip body={tTooltips(title)} /> <h4>{t(`${title}`)}</h4>
       </div>
       <FormControl variant="standard" fullWidth>
         <Select

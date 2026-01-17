@@ -70,7 +70,7 @@ function Relevance({ code, t }) {
     <div className={`${hasErrors ? styles.relevanceError : ""}`}>
       <div className={styles.toggleValue}>
         <div className={styles.label}>
-          <CustomTooltip body={tTooltips("tooltips.relevance")} />
+          <CustomTooltip body={tTooltips("relevance")} />
           <Typography color={isDisabled && 'text.disabled'} fontWeight={700}>{t("relevance")}</Typography>
         </div>
         <Switch

@@ -38,7 +38,7 @@ function ValidationSetupItem({ rule, t, code }) {
     <div>
       <div className={styles.title}>
         <div className={styles.label}>
-          <CustomTooltip body={tTooltips(`tooltips.${rule}`)} />
+          <CustomTooltip body={tTooltips(rule)} />
           <Typography fontWeight={700}>{t(rule + "_title")}</Typography>
         </div>
         <Switch

@@ -55,7 +55,7 @@ const LinkInput = ({
     <div className="tiptap-link-input" ref={linkInputRef}>
       <input
         type="text"
-        placeholder={t("tiptap_link_text_placeholder")}
+        placeholder={t("link_text_placeholder")}
         value={linkText}
         onChange={(e) => setLinkText(e.target.value)}
         onKeyDown={(e) => {
@@ -78,7 +78,7 @@ const LinkInput = ({
       />
       <input
         type="url"
-        placeholder={t("tiptap_link_placeholder")}
+        placeholder={t("link_placeholder")}
         value={linkUrl}
         onChange={(e) => setLinkUrl(e.target.value)}
         onKeyDown={(e) => {

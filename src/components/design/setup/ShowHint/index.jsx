@@ -26,7 +26,7 @@ function ShowHint({ code, t }) {
     <>
       <div className={styles.showHint}>
         <div className={styles.label}>
-          <CustomTooltip body={tTooltips("tooltips.show_question_hint")} />
+          <CustomTooltip body={tTooltips("show_question_hint")} />
           <Typography fontWeight={700}>{t("show_question_hint")}</Typography>
         </div>
         <Switch
@@ -58,7 +58,7 @@ export function SetupTextInput({ code, objectName, title, t }) {
     <>
       <div className={styles.label}>
         {objectName !== "hint" && (
-          <CustomTooltip body={tTooltips(`tooltips.${title}`)} />
+          <CustomTooltip body={tTooltips(title)} />
         )}
         {title && <h4>{t(title)}</h4>}
       </div>

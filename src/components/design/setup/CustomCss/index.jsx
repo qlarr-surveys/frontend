@@ -25,7 +25,7 @@ function CustomCSS({ code, t }) {
   return (
     <>
       <div style={{display:'flex'}}>
-        <CustomTooltip body={tTooltips("tooltips.custom_css")} />
+        <CustomTooltip body={tTooltips("custom_css")} />
         <Typography fontWeight={700}>{t("custom_css")}</Typography>
       </div>
       <TextField

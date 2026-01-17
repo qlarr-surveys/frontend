@@ -25,7 +25,7 @@ function ToggleValue({ label, code, rule, t }) {
   return (
     <div className={styles.toggleValue}>
       <div className={styles.label}>
-        <CustomTooltip body={tTooltips(`tooltips.${label}`)} />
+        <CustomTooltip body={tTooltips(label)} />
         <Typography fontWeight={700}>{t(label)}</Typography>
       </div>
       <Switch

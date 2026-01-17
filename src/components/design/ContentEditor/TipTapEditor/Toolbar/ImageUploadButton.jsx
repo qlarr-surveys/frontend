@@ -62,7 +62,7 @@ const ImageUploadButton = ({ onImageUpload, isUploading }) => {
             pointerEvents: isUploading ? "none" : "auto",
             opacity: isUploading ? 0.6 : 1,
           }}
-          title={t("tiptap_insert_image")}
+          title={t("insert_image")}
         >
           {isUploading ? (
             <LoadingDots />

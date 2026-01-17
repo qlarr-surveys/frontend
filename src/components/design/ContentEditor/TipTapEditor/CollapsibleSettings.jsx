@@ -37,7 +37,7 @@ const CollapsibleSettings = ({
   useEffect(() => {
     if (show && collapsibleAttrs) {
       setTitle(
-        collapsibleAttrs.buttonText || t("tiptap_collapsible_title_placeholder")
+        collapsibleAttrs.buttonText || t("collapsible_title_placeholder")
       );
       setBgColor(collapsibleAttrs.backgroundColor || "");
       setTextColor(collapsibleAttrs.textColor || "");
@@ -91,10 +91,10 @@ const CollapsibleSettings = ({
     >
       <div className="tiptap-collapsible-settings-content">
         <div className="tiptap-collapsible-settings-field">
-          <label>{t("tiptap_title")}:</label>
+          <label>{t("title")}:</label>
           <input
             type="text"
-            placeholder={t("tiptap_collapsible_title_placeholder")}
+            placeholder={t("collapsible_title_placeholder")}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             onKeyDown={(e) => {
@@ -112,7 +112,7 @@ const CollapsibleSettings = ({
         </div>
 
         <div className="tiptap-collapsible-settings-field">
-          <label>{t("tiptap_background_color")}:</label>
+          <label>{t("background_color")}:</label>
           <div className="tiptap-collapsible-settings-color-row">
             <button
               onMouseDown={(e) => e.preventDefault()}
@@ -124,9 +124,9 @@ const CollapsibleSettings = ({
                 border: "1px solid #ccc",
                 minWidth: "80px",
               }}
-              title={t("tiptap_background_color")}
+              title={t("background_color")}
             >
-              {bgColor ? "✓" : t("tiptap_default")}
+              {bgColor ? "✓" : t("default")}
             </button>
             {showBgColorPicker && (
               <div className="tiptap-collapsible-settings-color-picker">
@@ -135,7 +135,7 @@ const CollapsibleSettings = ({
                   onClose={() => setShowBgColorPicker(false)}
                   onColorSelect={(color) => setBgColor(color)}
                   onRemove={() => setBgColor("")}
-                  removeLabel={t("tiptap_remove_color")}
+                  removeLabel={t("remove_color")}
                   pickerRef={colorPickerRef}
                   colors={colors}
                 />
@@ -145,7 +145,7 @@ const CollapsibleSettings = ({
         </div>
 
         <div className="tiptap-collapsible-settings-field">
-          <label>{t("tiptap_title_color")}:</label>
+          <label>{t("title_color")}:</label>
           <div className="tiptap-collapsible-settings-color-row">
             <button
               onMouseDown={(e) => e.preventDefault()}
@@ -157,9 +157,9 @@ const CollapsibleSettings = ({
                 border: "1px solid #ccc",
                 minWidth: "80px",
               }}
-              title={t("tiptap_title_color")}
+              title={t("title_color")}
             >
-              {textColor ? "✓" : t("tiptap_default")}
+              {textColor ? "✓" : t("default")}
             </button>
             {showTextColorPicker && (
               <div className="tiptap-collapsible-settings-color-picker">
@@ -168,7 +168,7 @@ const CollapsibleSettings = ({
                   onClose={() => setShowTextColorPicker(false)}
                   onColorSelect={(color) => setTextColor(color)}
                   onRemove={() => setTextColor("")}
-                  removeLabel={t("tiptap_remove_color")}
+                  removeLabel={t("remove_color")}
                   pickerRef={textColorPickerRef}
                   colors={colors}
                 />

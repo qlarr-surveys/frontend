@@ -61,7 +61,7 @@ const ColorPicker = ({
           onRemove();
           onClose();
         }}
-        title={removeLabel || t("tiptap_remove_color")}
+        title={removeLabel || t("remove_color")}
       >
         ✕
       </button>

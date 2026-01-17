@@ -82,13 +82,13 @@ Each language folder contains the same namespace files.
 
 **When to use:** All text related to the rich text editor (question content editing).
 
-**Key prefix:** All keys start with `tiptap_`
+**Key pattern:** Flat keys (no prefix needed since file scope is clear)
 
 **Examples:**
-- `tiptap_bold`, `tiptap_italic`, `tiptap_underline`
-- `tiptap_insert_image`, `tiptap_insert_link`
-- `tiptap_font_size_small`, `tiptap_font_size_large`
-- `tiptap_ordered_list`, `tiptap_bullet_list`
+- `bold`, `italic`, `underline`
+- `insert_image`, `link`
+- `font_size_small`, `font_size_large`
+- `ordered_list`, `bullet_list`
 
 **Loaded:** On design routes
 
@@ -134,9 +134,9 @@ Each language folder contains the same namespace files.
 | `manage` | Dashboard, auth, survey list | Flat keys |
 | `run` | Respondent-facing survey | Flat keys |
 | `design/core` | Designer UI (main) | Flat keys |
-| `design/editor` | Rich text editor | `tiptap_*` |
+| `design/editor` | Rich text editor | Flat keys |
 | `design/logic` | Logic builder | `logic_builder.*` |
-| `design/tooltips` | Help tooltips | `tooltips.*` |
+| `design/tooltips` | Help tooltips |  Flat keys |
 
 ---
 

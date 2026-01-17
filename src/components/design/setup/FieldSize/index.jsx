@@ -59,7 +59,7 @@ function FieldSize({
   return (
     <>
       <div className={styles.label}>
-        <CustomTooltip body={tTooltips(`tooltips.${label}`)} />
+        <CustomTooltip body={tTooltips(label)} />
         <Typography fontWeight={700}>{t(label)}:</Typography>
       </div>
       <TextField

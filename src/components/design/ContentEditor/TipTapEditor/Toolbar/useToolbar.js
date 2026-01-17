@@ -26,19 +26,19 @@ export const useToolbar = ({ editor }) => {
   const fontSizes = useMemo(
     () => [
       {
-        label: t("tiptap_font_size_small"),
+        label: t("font_size_small"),
         value: EDITOR_CONSTANTS.FONT_SIZE_VALUES[0],
       },
       {
-        label: t("tiptap_font_size_normal"),
+        label: t("font_size_normal"),
         value: EDITOR_CONSTANTS.FONT_SIZE_VALUES[1],
       },
       {
-        label: t("tiptap_font_size_large"),
+        label: t("font_size_large"),
         value: EDITOR_CONSTANTS.FONT_SIZE_VALUES[2],
       },
       {
-        label: t("tiptap_font_size_huge"),
+        label: t("font_size_huge"),
         value: EDITOR_CONSTANTS.FONT_SIZE_VALUES[3],
       },
     ],
@@ -62,7 +62,7 @@ export const useToolbar = ({ editor }) => {
     if (trimmedUrl) {
       let finalUrl = trimmedUrl;
       if (trimmedUrl.match(/^(javascript|data):/i)) {
-        alert(t("tiptap_invalid_link"));
+        alert(t("invalid_link"));
         return;
       }
 
@@ -73,7 +73,7 @@ export const useToolbar = ({ editor }) => {
       try {
         new URL(finalUrl);
       } catch (e) {
-        alert(t("tiptap_invalid_link"));
+        alert(t("invalid_link"));
         return;
       }
 
@@ -142,18 +142,18 @@ export const useToolbar = ({ editor }) => {
       }
 
       if (!file.type.startsWith("image/")) {
-        alert(t("tiptap_invalid_file_type"));
+        alert(t("invalid_file_type"));
         return;
       }
 
       if (file.size > EDITOR_CONSTANTS.MAX_IMAGE_SIZE) {
-        alert(t("tiptap_file_too_large"));
+        alert(t("file_too_large"));
         return;
       }
 
       const surveyId = sessionStorage.getItem("surveyId");
       if (!surveyId) {
-        alert(t("tiptap_no_survey_selected"));
+        alert(t("no_survey_selected"));
         return;
       }
 
@@ -175,20 +175,20 @@ export const useToolbar = ({ editor }) => {
         if (process.env.NODE_ENV === "development") {
           console.error("Image upload failed:", error);
         }
-        let errorMessage = t("tiptap_upload_failed");
+        let errorMessage = t("upload_failed");
 
         if (error?.response?.status === 401) {
-          errorMessage = t("tiptap_auth_failed");
+          errorMessage = t("auth_failed");
         } else if (error?.response?.status === 403) {
-          errorMessage = t("tiptap_no_permission");
+          errorMessage = t("no_permission");
         } else if (error?.response?.status === 413) {
-          errorMessage = t("tiptap_file_too_large_upload");
+          errorMessage = t("file_too_large_upload");
         } else if (error?.response?.status === 400) {
-          errorMessage = t("tiptap_invalid_file");
+          errorMessage = t("invalid_file");
         } else if (error?.response?.status >= 500) {
-          errorMessage = t("tiptap_server_error");
+          errorMessage = t("server_error");
         } else if (error.code === "ERR_NETWORK") {
-          errorMessage = t("tiptap_network_error");
+          errorMessage = t("network_error");
         }
 
         alert(errorMessage);
@@ -209,7 +209,7 @@ export const useToolbar = ({ editor }) => {
       .focus()
       .setCollapsible({
         open: false,
-        buttonText: t("tiptap_collapsible_title_placeholder"),
+        buttonText: t("collapsible_title_placeholder"),
         backgroundColor: null,
         textColor: null,
         content: [
