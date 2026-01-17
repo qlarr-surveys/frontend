@@ -10,18 +10,6 @@ export function createMentionExtension({
     addAttributes() {
       return {
         ...this.parent?.(),
-        id: {
-          default: null,
-          parseHTML: (element) => element.getAttribute("data-id"),
-          renderHTML: (attributes) => {
-            if (!attributes.id) {
-              return {};
-            }
-            return {
-              "data-id": attributes.id,
-            };
-          },
-        },
         instruction: {
           default: null,
           parseHTML: (element) => element.getAttribute("data-instruction"),
@@ -31,18 +19,6 @@ export function createMentionExtension({
             }
             return {
               "data-instruction": attributes.instruction,
-            };
-          },
-        },
-        type: {
-          default: null,
-          parseHTML: (element) => element.getAttribute("data-type"),
-          renderHTML: (attributes) => {
-            if (!attributes.type) {
-              return {};
-            }
-            return {
-              "data-type": attributes.type,
             };
           },
         },
