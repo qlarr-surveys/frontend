@@ -24,6 +24,7 @@ import {
   highlightInstructionsInStaticContent,
 } from "./TipTapEditor/instructionUtils";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
+import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 
 const { CONTENT_EDITOR_CLASS, RTL_CLASS, LTR_CLASS } = EDITOR_CONSTANTS;
 
@@ -71,22 +72,8 @@ function ContentEditor({
   }, [value, index, designState, mainLang]);
 
   const fixedValue = useMemo(() => {
-    if (!referenceInstruction || !Object.keys(referenceInstruction).length) {
-      return value;
-    }
-
-    let updated = value;
-
-    // Transform instructions ({{questionCode.field}} → {{Q1.field}})
-    Object.keys(referenceInstruction).forEach((key) => {
-      const ref = referenceInstruction[key];
-      const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const pattern = new RegExp(`\\{\\{${escapedKey}([.:])`, 'g');
-      const replacement = `{{${ref.index}$1`;
-      updated = updated.replace(pattern, replacement);
-    });
-
-    return updated;
+    const transformer = new QuestionDisplayTransformer(referenceInstruction);
+    return transformer.transformText(value);
   }, [referenceInstruction, value]);
 
   const finalPlaceholder = onMainLang

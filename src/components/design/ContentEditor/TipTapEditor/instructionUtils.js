@@ -1,5 +1,6 @@
 import tippy from "tippy.js";
 import { INSTRUCTION_EDITOR_CONFIG } from "~/constants/editor";
+import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 
 export const INSTRUCTION_PATTERN = INSTRUCTION_EDITOR_CONFIG.PATTERN;
 export const TIPPY_INSTRUCTION_CONFIG = INSTRUCTION_EDITOR_CONFIG.TOOLTIP;
@@ -40,33 +41,8 @@ export function transformInstructionText(
   instructionText,
   referenceInstruction
 ) {
-  if (!referenceInstruction || Object.keys(referenceInstruction).length === 0) {
-    return {
-      transformedText: instructionText,
-      tooltip: "",
-    };
-  }
-
-  let transformedText = instructionText;
-  let tooltip = "";
-
-  Object.keys(referenceInstruction).forEach((questionCode) => {
-    const ref = referenceInstruction[questionCode];
-
-    if (ref && typeof ref === "object" && ref.index) {
-      const pattern = createQuestionCodePattern(questionCode);
-
-      if (pattern.test(transformedText)) {
-        pattern.lastIndex = 0;
-        transformedText = transformedText.replace(pattern, `{{${ref.index}$1`);
-        tooltip = formatTooltipContent(ref);
-      }
-
-      pattern.lastIndex = 0;
-    }
-  });
-
-  return { transformedText, tooltip };
+  const transformer = new QuestionDisplayTransformer(referenceInstruction);
+  return transformer.transformInstruction(instructionText);
 }
 
 export function parseUsedInstructions(content, index, designState, mainLang) {
