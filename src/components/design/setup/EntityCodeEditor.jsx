@@ -15,7 +15,7 @@ import {
 import { useService } from "~/hooks/use-service";
 import { useTranslation } from "react-i18next";
 
-const ALLOWED_CODE_CHARS_REGEX = /[^a-zA-Z0-9_]/g;
+const ALLOWED_CODE_CHARS_REGEX = /[^a-z0-9_]/g;
 
 const computePrefixAndSuffix = (fullCode) => {
   if (fullCode.startsWith("Q") && fullCode.includes("A")) {
