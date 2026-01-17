@@ -51,9 +51,9 @@ export function createMentionExtension({
 
     renderHTML({ node, HTMLAttributes }) {
       const transformer = new QuestionDisplayTransformer(referenceInstruction);
-      const displayId = transformer.getDisplayId(node.attrs.id);
+      const instruction = transformer.getDisplayId(node.attrs.instruction);
 
-      return ["span", {}, `{{${displayId}:${node.attrs.type}}}`];
+      return ["span", {}, `{{${instruction}}}`];
     },
   }).configure({
     suggestion: suggestion(getMentionSuggestions),
