@@ -24,8 +24,6 @@ const MentionList = forwardRef(({ items, command }, ref) => {
     [items, command]
   );
 
-  // REMOVED the useEffect with document.addEventListener - this was the duplicate!
-
   useImperativeHandle(
     ref,
     () => ({

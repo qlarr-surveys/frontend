@@ -24,7 +24,12 @@ class QuestionDisplayTransformer {
       return "";
     }
 
-    return this._formatTooltipContent(ref);
+    return this.formatTooltipContent(ref);
+  }
+
+  getTooltipFromInstruction(instruction) {
+    const questionCode = this.extractQuestionCode(instruction);
+    return questionCode ? this.getTooltipContent(questionCode) : "";
   }
 
   transformInstruction(instructionText) {
@@ -52,7 +57,7 @@ class QuestionDisplayTransformer {
       const ref = this.referenceInstruction[questionCode];
 
       if (ref && typeof ref === "object" && ref.index) {
-        const pattern = this._createQuestionCodePattern(questionCode);
+        const pattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
 
         if (pattern.test(transformedText)) {
           pattern.lastIndex = 0;
@@ -86,7 +91,7 @@ class QuestionDisplayTransformer {
       const ref = this.referenceInstruction[questionCode];
 
       if (ref && typeof ref === "object" && ref.index) {
-        const pattern = this._createQuestionCodePattern(questionCode);
+        const pattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
         transformedText = transformedText.replace(pattern, `{{${ref.index}$1`);
         pattern.lastIndex = 0;
       }
@@ -102,26 +107,12 @@ class QuestionDisplayTransformer {
     return match ? match[1] : null;
   }
 
-  hasReference(questionCode) {
-    return !!this.referenceInstruction?.[questionCode];
-  }
-
-  getReference(questionCode) {
-    const ref = this.referenceInstruction?.[questionCode];
-
-    if (ref && typeof ref === "object") {
-      return ref;
-    }
-
-    return null;
-  }
-
-  _createQuestionCodePattern(questionCode) {
+  static createQuestionCodePattern(questionCode) {
     const escapedCode = questionCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     return new RegExp(`\\{\\{${escapedCode}([:.\\}])`, "g");
   }
 
-  _formatTooltipContent(ref) {
+  formatTooltipContent(ref) {
     return ref.index && ref.text ? `${ref.index} - ${ref.text}` : ref.text || "";
   }
 }

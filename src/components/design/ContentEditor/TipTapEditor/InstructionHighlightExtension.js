@@ -1,11 +1,9 @@
 import { Extension } from "@tiptap/core";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
-import {
-  transformInstructionText,
-  getInstructionRegex,
-} from "./instructionUtils";
+import { getInstructionRegex } from "./instructionUtils";
 import InstructionTooltipManager from "./InstructionTooltipManager";
+import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 
 const InstructionHighlightExtension = Extension.create({
   name: "instructionHighlight",
@@ -75,6 +73,7 @@ const InstructionHighlightExtension = Extension.create({
 function findInstructionPatterns(doc, referenceInstruction) {
   const decorations = [];
   const regex = getInstructionRegex();
+  const transformer = new QuestionDisplayTransformer(referenceInstruction);
 
   doc.descendants((node, pos) => {
     if (node.isText) {
@@ -87,10 +86,7 @@ function findInstructionPatterns(doc, referenceInstruction) {
         const matchStart = pos + match.index;
         const matchEnd = matchStart + fullMatch.length;
 
-        const { tooltip } = transformInstructionText(
-          fullMatch,
-          referenceInstruction
-        );
+        const tooltip = transformer.getTooltipFromInstruction(fullMatch);
 
         decorations.push(
           Decoration.inline(matchStart, matchEnd, {

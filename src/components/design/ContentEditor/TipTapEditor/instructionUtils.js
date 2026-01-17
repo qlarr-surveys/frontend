@@ -20,21 +20,12 @@ function createInstructionTooltip(element, tippyInstances) {
   }
 }
 
-function formatTooltipContent(ref) {
-  return ref.index && ref.text ? `${ref.index} - ${ref.text}` : ref.text || "";
-}
-
 export function stripHtml(html) {
   if (!html) return "";
 
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
   return doc.body.textContent || "";
-}
-
-export function createQuestionCodePattern(questionCode) {
-  const escapedCode = questionCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`\\{\\{${escapedCode}([:.\\}])`, "g");
 }
 
 export function transformInstructionText(
@@ -52,15 +43,13 @@ export function parseUsedInstructions(content, index, designState, mainLang) {
     return result;
   }
 
-  // Build reverse index map (display index → question code)
   const reverseIndex = {};
   Object.keys(index).forEach((questionCode) => {
     reverseIndex[index[questionCode]] = questionCode;
   });
 
-  // PATTERN 1: Find instructions with question codes ({{questionCode.field}})
   Object.keys(index).forEach((questionCode) => {
-    const pattern = createQuestionCodePattern(questionCode);
+    const pattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
 
     if (pattern.test(content)) {
       const questionIndex = index[questionCode];
@@ -79,12 +68,11 @@ export function parseUsedInstructions(content, index, designState, mainLang) {
     pattern.lastIndex = 0;
   });
 
-  // PATTERN 2: Find mentions with indices ({{Q1:field}})
   const mentionPattern = /\{\{(Q\d+):/g;
   let match;
 
   while ((match = mentionPattern.exec(content)) !== null) {
-    const displayIndex = match[1]; // e.g., "Q1"
+    const displayIndex = match[1];
     const questionCode = reverseIndex[displayIndex];
 
     if (questionCode && !result[questionCode]) {
@@ -111,9 +99,9 @@ export function highlightInstructionsInStaticContent(
   }
 
   const tippyInstances = [];
+  const transformer = new QuestionDisplayTransformer(referenceInstruction);
 
   try {
-    // Remove all existing instruction highlights to start fresh
     const existingHighlights = element.querySelectorAll(
       ".instruction-highlight"
     );
@@ -126,7 +114,6 @@ export function highlightInstructionsInStaticContent(
       span.replaceWith(textNode);
     });
 
-    // Build reverse index map for O(1) lookups (index → question code)
     const indexToCodeMap = {};
     if (referenceInstruction) {
       Object.keys(referenceInstruction).forEach((key) => {
@@ -191,7 +178,6 @@ export function highlightInstructionsInStaticContent(
         span.className = "instruction-highlight";
         span.textContent = originalPattern;
 
-        // Find the matching reference by index (e.g., "Q1") not by question code
         if (questionRef && referenceInstruction) {
           const foundCode = indexToCodeMap[questionRef];
 
@@ -199,7 +185,7 @@ export function highlightInstructionsInStaticContent(
             const foundRef = referenceInstruction[foundCode];
 
             if (foundRef && foundRef.text) {
-              const tooltipContent = formatTooltipContent(foundRef);
+              const tooltipContent = transformer.formatTooltipContent(foundRef);
               span.setAttribute("data-tooltip", tooltipContent);
               span.setAttribute("data-question-code", foundCode);
             }
