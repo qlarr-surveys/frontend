@@ -115,6 +115,19 @@ class QuestionDisplayTransformer {
   formatTooltipContent(ref) {
     return ref.index && ref.text ? `${ref.index} - ${ref.text}` : ref.text || "";
   }
+
+  static decodeInstructionEntities(html) {
+    if (!html) return html;
+
+    return html.replace(/\{\{[^}]*\}\}/g, (match) => {
+      return match
+        .replace(/&gt;/g, '>')
+        .replace(/&lt;/g, '<')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'");
+    });
+  }
 }
 
 export default QuestionDisplayTransformer;

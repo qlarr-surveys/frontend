@@ -14,6 +14,7 @@ import { manageStore } from "~/store";
 import "~/styles/tiptap-editor.css";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
 import { createAllExtensions } from "./extensions";
+import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 
 const {
   BLUR_TIMEOUT_MS,
@@ -155,7 +156,9 @@ function TipTapEditor({
       },
     },
     onUpdate: ({ editor }) => {
-      const html = editor.getHTML();
+      const html = QuestionDisplayTransformer.decodeInstructionEntities(
+        editor.getHTML()
+      );
       editorRef.current = html;
     },
     onFocus: () => {
@@ -189,7 +192,9 @@ function TipTapEditor({
         }
 
         setIsFocused(false);
-        const currentHtml = editor?.getHTML() || "";
+        const currentHtml = QuestionDisplayTransformer.decodeInstructionEntities(
+          editor?.getHTML() || ""
+        );
         onBlurListener(currentHtml, lang);
       }, BLUR_TIMEOUT_MS);
     },
@@ -267,7 +272,9 @@ function TipTapEditor({
 
   useEffect(() => {
     if (editor && !editorRef.current) {
-      const currentContent = editor.getHTML();
+      const currentContent = QuestionDisplayTransformer.decodeInstructionEntities(
+        editor.getHTML()
+      );
       if (!currentContent || currentContent === EMPTY_PARAGRAPH_HTML) {
         editor.commands.focus("end");
       }
@@ -283,7 +290,9 @@ function TipTapEditor({
       return;
     }
 
-    const currentContent = editor.getHTML();
+    const currentContent = QuestionDisplayTransformer.decodeInstructionEntities(
+      editor.getHTML()
+    );
     const normalizedValue = value || "";
     const normalizedCurrent =
       currentContent === EMPTY_PARAGRAPH_HTML ? "" : currentContent;
@@ -301,7 +310,9 @@ function TipTapEditor({
         return;
       }
 
-      const finalCurrentContent = editor.getHTML();
+      const finalCurrentContent = QuestionDisplayTransformer.decodeInstructionEntities(
+        editor.getHTML()
+      );
       const finalNormalizedCurrent =
         finalCurrentContent === EMPTY_PARAGRAPH_HTML ? "" : finalCurrentContent;
 
