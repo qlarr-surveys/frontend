@@ -19,12 +19,8 @@ import {
   useCollapsibleHandler,
   ensureCollapsiblesClosed,
 } from "~/hooks/useCollapsibleHandler";
-import {
-  parseUsedInstructions,
-  highlightInstructionsInStaticContent,
-} from "./TipTapEditor/instructionUtils";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
-import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
+import { useInstructionHighlighting } from "~/hooks/useInstructionHighlighting";
 
 const { CONTENT_EDITOR_CLASS, RTL_CLASS, LTR_CLASS } = EDITOR_CONSTANTS;
 
@@ -66,22 +62,23 @@ function ContentEditor({
   const onMainLang = langInfo.onMainLang;
 
   const value = content?.[lang]?.[contentKey] || "";
+  const [isActive, setActive] = useState(false);
+  const renderedContentRef = useRef(null);
 
-  const referenceInstruction = useMemo(() => {
-    return parseUsedInstructions(value, index, designState, mainLang);
-  }, [value, index, designState, mainLang]);
-
-  const fixedValue = useMemo(() => {
-    const transformer = new QuestionDisplayTransformer(referenceInstruction);
-    return transformer.transformText(value);
-  }, [referenceInstruction, value]);
+  const { referenceInstruction, fixedValue } = useInstructionHighlighting({
+    content: value,
+    index,
+    designState,
+    mainLang,
+    isActive,
+    renderedContentRef,
+  });
 
   const finalPlaceholder = onMainLang
     ? placeholder
     : isNotEmptyHtml(content?.[mainLang]?.[contentKey])
     ? content?.[mainLang]?.[contentKey]
     : placeholder;
-  const [isActive, setActive] = useState(false);
 
   useEffect(() => {
     if (focus && !isActive && editable) {
@@ -112,41 +109,8 @@ function ContentEditor({
   };
 
   const isRtl = rtlLanguage.includes(lang);
-  const renderedContentRef = useRef(null);
 
   useCollapsibleHandler(renderedContentRef, !isActive ? fixedValue : null);
-
-  const highlightedContentRef = useRef(null);
-  const lastReferenceInstructionRef = useRef(null);
-
-  useEffect(() => {
-    let cleanup = null;
-
-    if (!isActive && renderedContentRef.current) {
-      const currentContent = fixedValue;
-      const contentChanged = highlightedContentRef.current !== currentContent;
-      const refChanged =
-        lastReferenceInstructionRef.current !== referenceInstruction;
-
-      if (contentChanged || refChanged) {
-        cleanup = highlightInstructionsInStaticContent(
-          renderedContentRef.current,
-          referenceInstruction
-        );
-        highlightedContentRef.current = currentContent;
-        lastReferenceInstructionRef.current = referenceInstruction;
-      }
-    } else if (isActive) {
-      highlightedContentRef.current = null;
-      lastReferenceInstructionRef.current = null;
-    }
-
-    return () => {
-      if (cleanup) {
-        cleanup();
-      }
-    };
-  }, [isActive, fixedValue, referenceInstruction]);
 
   return (
     <Box
