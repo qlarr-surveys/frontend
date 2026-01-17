@@ -8,6 +8,7 @@ import ImageExtension from "./ImageExtension";
 import CollapsibleExtension from "./CollapsibleExtension";
 import FontSize from "./FontSizeExtension";
 import { createMentionExtension } from "./MentionExtension";
+import InstructionHighlightExtension from "./InstructionHighlightExtension";
 import { PreventEnterExtension } from "./PreventEnterExtension";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
 
@@ -77,6 +78,9 @@ export function createAllExtensions({
     getMentionSuggestions,
     referenceInstruction,
   });
+  const instructionHighlightExtension = InstructionHighlightExtension.configure({
+    referenceInstruction,
+  });
 
-  return [...baseExtensions, mentionExtension];
+  return [...baseExtensions, mentionExtension, instructionHighlightExtension];
 }
