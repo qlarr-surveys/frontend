@@ -3,6 +3,7 @@ import React, { useState, useTransition } from "react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function CustomArrow(props) {
   return (
@@ -23,7 +24,7 @@ const FilterSelectDropdown = ({
   sx,
   className,
 }) => {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   return (
     <FormControl

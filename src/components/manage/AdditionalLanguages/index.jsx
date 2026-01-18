@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import {
   FormControl,
   FormLabel,
@@ -14,7 +15,7 @@ export const AdditionalLanguages = ({
   additionalLanguages,
   disabled,
 }) => {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   return (
     <FormControl sx={{ marginTop: "16px" }}>

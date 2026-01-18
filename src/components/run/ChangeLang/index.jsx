@@ -4,6 +4,7 @@ import { shallowEqual, useDispatch } from "react-redux";
 import { FormControl, MenuItem, Select } from "@mui/material";
 import { langChange } from "~/state/runState";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function ChangeLang(props) {
   const state = useSelector((state) => {
@@ -14,7 +15,7 @@ function ChangeLang(props) {
   }, shallowEqual);
   const dispatch = useDispatch();
 
-  const { t } = useTranslation("run");
+  const { t } = useTranslation(NAMESPACES.RUN);
 
   return (
     props.additionalLang &&

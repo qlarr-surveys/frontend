@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import {
   Checkbox,
   FormControl,
@@ -9,7 +10,7 @@ import {
 
 function FileType({value, onValueChanged}) {
 
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
 
 
   const onFileTypeChanged = (e) => {

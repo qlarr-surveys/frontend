@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Box,
@@ -17,7 +18,7 @@ import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function SurveyQuota() {
   const dispatch = useDispatch();
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const survey = useSelector((state) => state.editState.survey);
 
   const [checked, setChecked] = useState(survey?.quota > 0);

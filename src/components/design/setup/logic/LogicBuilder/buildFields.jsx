@@ -6,19 +6,20 @@ export const buildFields = (
   code,
   state,
   mainLang,
-  langList
+  langList,
+  t
 ) => {
   let dependencies = accessibleDependencies(componentIndices, code);
   let returnResult = {
     mode: {
-      label: "Mode",
+      label: t("logic_builder.mode"),
       type: "text",
       valueSources: ["value"],
       defaultOperator: "is_online",
       operators: ["is_offline", "is_online"],
     },
     survey_lang: {
-      label: "Language",
+      label: t("logic_builder.language"),
       type: "select",
       valueSources: ["value"],
       defaultOperator: "select_any_in",

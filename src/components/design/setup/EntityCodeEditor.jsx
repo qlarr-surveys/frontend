@@ -14,6 +14,7 @@ import {
 } from "~/state/design/designState";
 import { useService } from "~/hooks/use-service";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const ALLOWED_CODE_CHARS_REGEX = /[^a-z0-9_]/g;
 
@@ -53,10 +54,10 @@ const getErrorMessage = (error, t) => {
     return "";
   }
   const translationKey = `processed_errors.${error.name}`;
-  const message = t(translationKey, { ns: "manage" });
+  const message = t(translationKey);
 
   if (message === translationKey) {
-    return t("processed_errors.unidentified_error", { ns: "manage" });
+    return t("processed_errors.unidentified_error");
   }
 
   return message;
@@ -65,7 +66,8 @@ const getErrorMessage = (error, t) => {
 function EntityCodeEditor({ code }) {
   const dispatch = useDispatch();
   const designService = useService("design");
-  const { t } = useTranslation(["design", "manage"]);
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
+  const { t: tManage } = useTranslation(NAMESPACES.MANAGE);
 
   const { currentSetup, saving } = useSelector(
     (state) => ({

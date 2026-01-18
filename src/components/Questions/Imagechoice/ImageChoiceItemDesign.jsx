@@ -67,7 +67,7 @@ function ImageChoiceItemDesign({
   });
 
   const onDelete = () => {
-    if (window.confirm(`Are you sure?`)) {
+    if (window.confirm(t("are_you_sure"))) {
       dispatch(removeAnswer(qualifiedCode));
     }
   };

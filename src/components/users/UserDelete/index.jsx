@@ -1,10 +1,11 @@
 import { Box, Modal, Typography, Button } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import styles from "./UserDelete.module.css";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 export const UserDelete = ({ open, onClose, deleteUser, name, isLoading }) => {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   return (
     <Modal
       sx={{

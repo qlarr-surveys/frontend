@@ -15,9 +15,10 @@ import Image from "~/components/image/image";
 import CompactLayout from "~/layouts/compact";
 import { useNavigate } from "react-router-dom";
 import { palette } from "~/theme/palette";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function ErrorLayout({ setErrorSeen, error }) {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const navigate = useNavigate();
   const theme = createTheme({
     palette: palette("light"),

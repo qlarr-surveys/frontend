@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { TextField, FormHelperText, Button, Box } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -38,7 +39,7 @@ export const SurveyActiveFromTo = ({
   onSurveyActiveToChanged,
   disabled,
 }) => {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const [surveyActiveFrom, setSurveyActiveFrom] = useState(
     initialSurveyActiveFrom
   );

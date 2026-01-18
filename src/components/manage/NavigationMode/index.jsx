@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { FormControl, MenuItem, InputLabel, Select } from "@mui/material";
 import { NAVIGATION_MODE } from "~/constants/survey";
 import { useDispatch } from "react-redux";
@@ -7,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { changeAttribute } from '~/state/design/designState';
 
 export const NavigationMode = () => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
 
   const dispatch = useDispatch();
 

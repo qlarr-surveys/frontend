@@ -20,6 +20,7 @@ import CreateSurvey from "~/components/manage/CreateSurvey/CreateSurvey";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 import { ImportSurvey } from "~/components/manage/ImportSurvey";
 import LoadingDots from "~/components/common/LoadingDots";
@@ -53,7 +54,7 @@ function Dashboard() {
 
   const dispatch = useDispatch();
 
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const processApirror = (e) => {
     setFetchingSurveys(false);

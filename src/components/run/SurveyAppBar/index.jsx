@@ -19,6 +19,7 @@ import { useTheme } from "@emotion/react";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { getValues } from "~/state/runState";
 import { useService } from "~/hooks/use-service";
 import { routes } from "~/routes";
@@ -29,7 +30,7 @@ function SurveyAppBar({ toggleDrawer, preview }) {
   const lang = useSelector((state) => {
     return state.runState.data?.lang;
   }, shallowEqual);
-  const { t } = useTranslation("run");
+  const { t } = useTranslation(NAMESPACES.RUN);
 
   const additionalLang = useSelector((state) => {
     return state.runState.data?.additionalLang;
@@ -106,6 +107,7 @@ function SurveyAppBar({ toggleDrawer, preview }) {
                 variant="contained"
                 size="small"
                 onClick={() => setSaveOpen(true)}
+                sx={{ minWidth: "fit-content", whiteSpace: "nowrap" }}
               >
                 {t("save")}
               </Button>

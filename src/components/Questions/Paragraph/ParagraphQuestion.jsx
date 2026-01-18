@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 
 import styles from "./ParagraphQuestion.module.css";
@@ -26,7 +27,7 @@ function ParagraphQuestion(props) {
   }, shallowEqual);
   const dispatch = useDispatch();
 
-  const { t } = useTranslation("run");
+  const { t } = useTranslation(NAMESPACES.RUN);
 
   const handleChange = (event) => {
     dispatch(

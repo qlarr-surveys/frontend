@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import styles from "./SurveyHeader.module.css";
 import { onEditErrorSeen } from "~/state/edit/editState";
 import { isSessionRtl } from "~/utils/common";
@@ -14,7 +15,7 @@ import { availablePages } from "~/constants/roles";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 export const SurveyHeader = ({ showPreview }) => {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const dispatch = useDispatch();
   const nav = useNavigate();
   const isRtl = isSessionRtl();

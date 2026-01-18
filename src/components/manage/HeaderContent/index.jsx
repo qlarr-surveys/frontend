@@ -1,5 +1,6 @@
 import { Box, css, Stack, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { STATUS } from "../Survey";
 import { RHFSelect } from "~/components/hook-form";
 
@@ -25,7 +26,7 @@ export const HeaderContent = ({
     { value: STATUS.EXPIRED, label: `status.${STATUS.EXPIRED}` },
     { value: STATUS.CLOSED, label: `status.${STATUS.CLOSED}` },
   ];
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   return (
     <Box

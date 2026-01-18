@@ -65,7 +65,7 @@ function IconChoiceItemDesign({
     type == "add" ? undefined : answer.content?.[langInfo.mainLang]?.["label"];
 
   const onDelete = () => {
-    if (window.confirm(`Are you sure?`)) {
+    if (window.confirm(t("are_you_sure"))) {
       dispatch(removeAnswer(qualifiedCode));
     }
   };

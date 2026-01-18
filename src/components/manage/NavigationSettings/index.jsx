@@ -3,6 +3,7 @@ import styles from "./NavigationSettings.module.css";
 import { Box, MenuItem, Typography } from "@mui/material";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { RHFSelect, RHFSwitch } from "~/components/hook-form";
 import { isSurveyAdmin } from "~/constants/roles";
 import { useDispatch, useSelector } from "react-redux";
@@ -52,7 +53,7 @@ const NavigationSettings = () => {
   const dispatch = useDispatch();
   const survey = useSelector((state) => state.editState.survey);
 
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const isDisabled = !isSurveyAdmin() || survey?.status == SURVEY_STATUS.CLOSED;
 
   const mode =

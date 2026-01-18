@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import {
   Box,
   Button,
@@ -27,7 +28,7 @@ function CreateSurvey() {
   const surveyService = useService("survey");
 
   const navigate = useNavigate();
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const dispatch = useDispatch();
 
   const [surveyName, setSurveyName] = useState("");

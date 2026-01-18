@@ -9,11 +9,12 @@ import ImageUploadButton from "./Toolbar/ImageUploadButton";
 import ListControls from "./Toolbar/ListControls";
 import { useToolbar } from "./Toolbar/useToolbar";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const { TOOLBAR_CLASS, TOOLBAR_BUTTON_CLASS } = EDITOR_CONSTANTS;
 
 const Toolbar = ({ editor, extended }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
 
   const {
     // State
@@ -58,7 +59,7 @@ const Toolbar = ({ editor, extended }) => {
       <FormatButton
         onClick={() => editor.chain().focus().toggleBold().run()}
         isActive={editor.isActive("bold")}
-        title={t("tiptap_bold")}
+        title={t("bold")}
       >
         <strong>B</strong>
       </FormatButton>
@@ -67,7 +68,7 @@ const Toolbar = ({ editor, extended }) => {
       <FormatButton
         onClick={() => editor.chain().focus().toggleItalic().run()}
         isActive={editor.isActive("italic")}
-        title={t("tiptap_italic")}
+        title={t("italic")}
       >
         <em>I</em>
       </FormatButton>
@@ -76,7 +77,7 @@ const Toolbar = ({ editor, extended }) => {
       <FormatButton
         onClick={() => editor.chain().focus().toggleUnderline().run()}
         isActive={editor.isActive("underline")}
-        title={t("tiptap_underline")}
+        title={t("underline")}
       >
         <u>U</u>
       </FormatButton>
@@ -85,7 +86,7 @@ const Toolbar = ({ editor, extended }) => {
       <FormatButton
         onClick={() => editor.chain().focus().toggleStrike().run()}
         isActive={editor.isActive("strike")}
-        title={t("tiptap_strikethrough")}
+        title={t("strikethrough")}
       >
         <s>S</s>
       </FormatButton>
@@ -94,7 +95,8 @@ const Toolbar = ({ editor, extended }) => {
       <FormatButton
         onClick={toggleLink}
         isActive={editor.isActive("link")}
-        title={t("tiptap_link")}
+        title={t("link")}
+        data-link-button
       >
         🔗
       </FormatButton>
@@ -126,10 +128,10 @@ const Toolbar = ({ editor, extended }) => {
         onRemove={() => {
           editor.chain().focus().unsetColor().run();
         }}
-        removeLabel={t("tiptap_remove_color")}
+        removeLabel={t("remove_color")}
         pickerRef={colorPickerRef}
         colors={colors}
-        title={t("tiptap_text_color")}
+        title={t("text_color")}
         indicatorStyle={{
           borderBottom: `3px solid ${
             editor.getAttributes("textStyle").color || "#000000"
@@ -151,10 +153,10 @@ const Toolbar = ({ editor, extended }) => {
         onRemove={() => {
           editor.chain().focus().unsetHighlight().run();
         }}
-        removeLabel={t("tiptap_remove_background")}
+        removeLabel={t("remove_background")}
         pickerRef={bgColorPickerRef}
         colors={colors}
-        title={t("tiptap_background_color")}
+        title={t("background_color")}
         indicatorStyle={{
           backgroundColor:
             editor.getAttributes("highlight").color || "transparent",
@@ -177,7 +179,7 @@ const Toolbar = ({ editor, extended }) => {
         onMouseDown={(e) => e.preventDefault()}
         onClick={insertCollapsible}
         className={TOOLBAR_BUTTON_CLASS}
-        title={t("tiptap_insert_collapsible")}
+        title={t("insert_collapsible")}
         disabled={editor.isActive("collapsible")}
       >
         <span style={{ fontSize: "12px" }}>▼</span>
@@ -192,7 +194,7 @@ const Toolbar = ({ editor, extended }) => {
           setLinkUrl("");
         }}
         className={TOOLBAR_BUTTON_CLASS}
-        title={t("tiptap_clear_formatting")}
+        title={t("clear_formatting")}
       >
         🗑
       </button>

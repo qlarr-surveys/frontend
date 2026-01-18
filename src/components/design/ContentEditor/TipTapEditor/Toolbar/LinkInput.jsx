@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const LinkInput = ({
   show,
@@ -11,7 +12,8 @@ const LinkInput = ({
   onClose,
   editor,
 }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
+  const { t: tCore } = useTranslation(NAMESPACES.DESIGN_CORE);
   const linkInputRef = useRef(null);
 
   useEffect(() => {
@@ -31,7 +33,7 @@ const LinkInput = ({
       if (
         linkInputRef.current &&
         !linkInputRef.current.contains(event.target) &&
-        !event.target.closest('button[title="Link"]')
+        !event.target.closest("[data-link-button]")
       ) {
         onClose();
       }
@@ -53,7 +55,7 @@ const LinkInput = ({
     <div className="tiptap-link-input" ref={linkInputRef}>
       <input
         type="text"
-        placeholder={t("tiptap_link_text_placeholder")}
+        placeholder={t("link_text_placeholder")}
         value={linkText}
         onChange={(e) => setLinkText(e.target.value)}
         onKeyDown={(e) => {
@@ -76,7 +78,7 @@ const LinkInput = ({
       />
       <input
         type="url"
-        placeholder={t("tiptap_link_placeholder")}
+        placeholder={t("link_placeholder")}
         value={linkUrl}
         onChange={(e) => setLinkUrl(e.target.value)}
         onKeyDown={(e) => {
@@ -97,7 +99,7 @@ const LinkInput = ({
         onClick={onSetLink}
         disabled={!linkText.trim() || !linkUrl.trim()}
       >
-        {t("ok")}
+        {tCore("ok")}
       </button>
       <button
         onMouseDown={(e) => e.preventDefault()}
@@ -106,7 +108,7 @@ const LinkInput = ({
           editor.commands.focus();
         }}
       >
-        {t("cancel")}
+        {tCore("cancel")}
       </button>
     </div>
   );

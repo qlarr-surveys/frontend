@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import * as Yup from "yup";
 import { Box, Card, Typography, Dialog, Stack } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import styles from "./AddEditUser.module.css";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -19,7 +20,7 @@ import { useService } from "~/hooks/use-service";
 function AddEditUser({ userId, open, onClose }) {
   const userService = useService("user");
 
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const dispatch = useDispatch();
   Yup.addMethod(Yup.string, "noWhitespace", function (errorMessage) {
     return this.test("no-whitespace", errorMessage, function (value) {

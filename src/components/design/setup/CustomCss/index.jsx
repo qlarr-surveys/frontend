@@ -4,9 +4,12 @@ import { useDispatch } from "react-redux";
 import { changeAttribute } from "~/state/design/designState";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { TextField, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function CustomCSS({ code, t }) {
   const dispatch = useDispatch();
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
 
   const inputValue = useSelector((state) => {
     return state.designState[code].customCss;
@@ -22,7 +25,7 @@ function CustomCSS({ code, t }) {
   return (
     <>
       <div style={{display:'flex'}}>
-        <CustomTooltip body={t("tooltips.custom_css")} />
+        <CustomTooltip body={tTooltips("custom_css")} />
         <Typography fontWeight={700}>{t("custom_css")}</Typography>
       </div>
       <TextField

@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { Box, Card } from "@mui/material";
 import * as Yup from "yup";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
@@ -24,7 +25,7 @@ function CreateSurvey({ onSurveyCreated }) {
   const surveyService = useService("survey");
   const navigate = useNavigate();
 
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const dispatch = useDispatch();
 
   const defaultValues = {

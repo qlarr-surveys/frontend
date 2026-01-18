@@ -2,12 +2,13 @@ import React from "react";
 import { MenuItem, Typography, FormControl, Select } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { setDefaultValue } from "~/state/design/designState";
 import { stripTags } from "~/utils/design/utils";
 
 function ScqDefaultValue({ code }) {
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
 
   // Get the question data and its children (answers)
   const answers = useSelector(

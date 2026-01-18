@@ -4,11 +4,12 @@ import styles from "./Survey.module.css";
 import { Edit, Check } from "@mui/icons-material";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(survey.name);
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const handleTitleChange = (event) => {
     const newTitle = event.target.value;
     if (newTitle.length <= 50) {

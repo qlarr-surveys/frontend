@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { FormControl, MenuItem, InputLabel, Select } from "@mui/material";
 import { SURVEY_MODE } from "~/constants/survey";
 import { KeyboardArrowDown } from "@mui/icons-material";
@@ -16,7 +17,7 @@ function CustomArrow(props) {
 }
 
 export const SurveyMode = ({ surveyMode, onSurveyModeChanged }) => {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   return (
     <FormControl fullWidth>

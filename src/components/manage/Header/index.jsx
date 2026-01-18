@@ -18,11 +18,12 @@ import { isSuperAdmin } from "~/constants/roles";
 import { isSessionRtl } from "~/utils/common";
 import { useService } from "~/hooks/use-service";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { SurveyHeader } from "../SurveyHeader";
 
 export const Header = ({ headerOptions }) => {
   const authService = useService("auth");
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const nav = useNavigate();
   const dispatch = useDispatch();

@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 import styles from "./ValidationItem.module.css";
 import { ErrorOutlineOutlined } from "@mui/icons-material";
@@ -15,7 +16,7 @@ function ValidationItem({ name, validation, componentCode, content }) {
       </Box>
     );
   } else {
-    const { t } = useTranslation(["run"]);
+    const { t } = useTranslation(NAMESPACES.RUN);
     var translationKey = name.replace(/[0-9]/g, "");
     const validationMessage = t(translationKey, { ...validation });
     if (validationMessage) {

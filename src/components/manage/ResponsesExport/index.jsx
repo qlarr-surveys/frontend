@@ -207,17 +207,17 @@ export default function ResponsesExport({
                   <FormControlLabel
                     value="csv"
                     control={<Radio />}
-                    label="CSV"
+                    label={t("responses_export.format_csv")}
                   />
                   <FormControlLabel
                     value="xlsx"
                     control={<Radio />}
-                    label="Excel"
+                    label={t("responses_export.format_excel")}
                   />
                   <FormControlLabel
                     value="ods"
                     control={<Radio />}
-                    label="ODS"
+                    label={t("responses_export.format_ods")}
                   />
                 </RadioGroup>
               )}

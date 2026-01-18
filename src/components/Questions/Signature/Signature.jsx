@@ -12,9 +12,12 @@ import {
 } from "~/networking/run";
 import { valueChange } from "~/state/runState";
 import styles from "./Signature.module.css";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function Signature(props) {
   const runService = useService("run");
+  const { t } = useTranslation(NAMESPACES.RUN);
 
   const [submitEnabled, setSubmitEnabled] = useState(false);
   const [clearEnabled, setClearEnabled] = useState(false);
@@ -130,10 +133,10 @@ function Signature(props) {
 
       <div className={styles.buttonContainer}>
         <Button onClick={() => clear()} disabled={!clearEnabled}>
-          Clear
+          {t("clear")}
         </Button>
         <Button onClick={() => submit()} disabled={!submitEnabled}>
-          Submit
+          {t("submit")}
         </Button>
       </div>
     </>

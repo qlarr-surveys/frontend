@@ -4,6 +4,7 @@ import { NodeViewWrapper } from "@tiptap/react";
 import AspectRatioIcon from "@mui/icons-material/AspectRatio";
 import ImageSizeInput from "./Toolbar/ImageSizeInput";
 import { useImageResize } from "./useImageResize";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const ImageWithResizeButton = ({
   node,
@@ -11,7 +12,7 @@ const ImageWithResizeButton = ({
   editor,
   selected,
 }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
   const wrapperRef = useRef(null);
 
   const {
@@ -61,13 +62,14 @@ const ImageWithResizeButton = ({
         {isEditorActive && (
           <button
             className="tiptap-image-resize-button"
+            data-image-size-button
             onMouseDown={(e) => {
               e.preventDefault();
               e.stopPropagation();
             }}
             onClick={toggleImageSizeInput}
-            title={t("tiptap_image_size")}
-            aria-label={t("tiptap_image_size")}
+            title={t("image_size")}
+            aria-label={t("image_size")}
             aria-expanded={showImageSizeInput}
           >
             <AspectRatioIcon sx={{ fontSize: "inherit" }} />

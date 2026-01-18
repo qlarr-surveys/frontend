@@ -19,6 +19,7 @@ import {
 import styles from "./UsersTable.module.css";
 import { UserDelete } from "../UserDelete";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
 import Iconify from "~/components/iconify";
@@ -29,7 +30,7 @@ import TokenService from "~/services/TokenService";
 export const UsersTable = () => {
   const userService = useService("user");
 
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const [users, setUsers] = useState([]);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(null);
@@ -175,7 +176,7 @@ export const UsersTable = () => {
           },
         }}
       >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 650 }} aria-label={t("aria.users_table")}>
           <TableHead>
             <TableRow>
               <TableCell align="left">

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch, shallowEqual } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import Button from "@mui/material/Button";
 import { navigateNext, navigatePrevious } from "~/state/runState";
 import { rtlLanguage } from "~/utils/common";
@@ -19,7 +20,7 @@ function Navigation(props) {
     };
   }, shallowEqual);
   const dispatch = useDispatch();
-  const { t, i18n } = useTranslation("run");
+  const { t, i18n } = useTranslation(NAMESPACES.RUN);
 
   const isRtl = rtlLanguage.includes(i18n.language);
 

@@ -8,6 +8,7 @@ import ValidationItem from "~/components/run/ValidationItem";
 import { valueChange } from "~/state/runState";
 import { setDirty } from "~/state/templateState";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import { fileTypesToMimesArray } from "~/state/design/addInstructions";
@@ -19,7 +20,7 @@ const Input = styled("input")({
 function FileUpload(props) {
   const runService = useService("run");
 
-  const { t } = useTranslation("run");
+  const { t } = useTranslation(NAMESPACES.RUN);
 
   let accepted = fileTypesToMimesArray(
     props.component.validation?.validation_file_types?.fileTypes

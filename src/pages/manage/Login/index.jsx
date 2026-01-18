@@ -18,13 +18,14 @@ import RouterLink from "~/components/router/router-link";
 import { useTranslation } from "react-i18next";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { useService } from "~/hooks/use-service";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 // ----------------------------------------------------------------------
 
 export default function LoginView() {
   const authService = useService("auth");
 
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const passwordShow = useBoolean();
   const dispatch = useDispatch();

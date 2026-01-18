@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { LANGUAGE_DEF } from '~/constants/language';
 
@@ -8,7 +9,7 @@ export const BaseLanguage = ({
   onBaseLanguageChanged,
   disabled,
 }) => {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   return (
     <FormControl fullWidth>

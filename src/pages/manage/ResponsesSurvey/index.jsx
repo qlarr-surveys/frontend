@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import {
   Box,
   Button,
@@ -69,7 +70,7 @@ function ClampTwoLines({ children, sx }) {
 
 function ResponsesSurvey() {
   const surveyService = useService("survey");
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const { surveyId } = useParams();
 
   const [fetching, setFetching] = useState(true);
@@ -588,7 +589,7 @@ function ResponsesSurvey() {
                     </Typography>
 
                     <TableContainer component={Paper} variant="outlined">
-                      <Table size="small" aria-label="answers table">
+                      <Table size="small" aria-label={t("aria.answers_table")}>
                         <TableHead>
                           <TableRow>
                             <TableCell sx={{ width: "33%" }}>
