@@ -38,12 +38,7 @@ export function useNamespaceLoader() {
     const namespacesToLoad = [];
 
     // Design routes need all design namespaces
-    if (
-      path.includes('design-survey') ||
-      path.includes('edit-survey') ||
-      path.includes('survey-lang') ||
-      path.includes('survey-theme')
-    ) {
+    if (path.includes('design-survey') || path.includes('edit-survey')) {
       namespacesToLoad.push(
         NAMESPACES.DESIGN_CORE,
         NAMESPACES.DESIGN_EDITOR,

@@ -99,30 +99,6 @@ function Web() {
         }
       />
       <Route
-        path={routes.surveyLang}
-        element={
-          <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.LANG}
-              />
-            </ManagePageWrapper>
-          </Suspense>
-        }
-      />
-      <Route
-        path={routes.surveyTheme}
-        element={
-          <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.THEME}
-              />
-            </ManagePageWrapper>
-          </Suspense>
-        }
-      />
-      <Route
         path={routes.preview}
         element={
           <Suspense fallback={<LoadingIndicator />}>
