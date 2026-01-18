@@ -30,7 +30,7 @@ if (!i18next.isInitialized) {
   // For run context (iframe), don't preload any namespace or language
   // RunSurvey will set the language and load 'run' namespace after fetching the survey
   const i18nConfig = {
-    fallbackLng: false, // Don't load fallback language files
+    fallbackLng: 'en', // Fall back to English to prevent showing raw translation keys
     ns: initialNS ? [initialNS] : [],
     defaultNS: initialNS || 'run',
     partialBundledLanguages: true,
