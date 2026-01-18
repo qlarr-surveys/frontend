@@ -10,9 +10,8 @@ import { useLocation } from 'react-router-dom';
  * Quick reference:
  * - MANAGE: Dashboard, auth, survey management pages
  * - RUN: Respondent-facing survey runtime
- * - DESIGN_CORE: Main survey designer UI (design/core.json)
+ * - DESIGN_CORE: Main survey designer UI (design/core.json, includes logic_builder.*)
  * - DESIGN_EDITOR: TipTap rich text editor (design/editor.json)
- * - DESIGN_LOGIC: Logic builder dialog (design/logic.json, keys: logic_builder.*)
  * - DESIGN_TOOLTIPS: Help tooltips (design/tooltips.json)
  */
 export const NAMESPACES = {
@@ -21,7 +20,6 @@ export const NAMESPACES = {
   DESIGN_CORE: 'design/core',
   DESIGN_TOOLTIPS: 'design/tooltips',
   DESIGN_EDITOR: 'design/editor',
-  DESIGN_LOGIC: 'design/logic',
 };
 
 /**
@@ -49,7 +47,6 @@ export function useNamespaceLoader() {
       namespacesToLoad.push(
         NAMESPACES.DESIGN_CORE,
         NAMESPACES.DESIGN_EDITOR,
-        NAMESPACES.DESIGN_LOGIC,
         NAMESPACES.DESIGN_TOOLTIPS
       );
     }
@@ -86,19 +83,6 @@ export function useNamespaceLoader() {
 export function loadTooltipsNamespace(i18n) {
   if (!i18n.hasLoadedNamespace(NAMESPACES.DESIGN_TOOLTIPS)) {
     return i18n.loadNamespaces(NAMESPACES.DESIGN_TOOLTIPS);
-  }
-  return Promise.resolve();
-}
-
-/**
- * Load logic builder namespace on demand.
- * Call this when logic builder modal is opened.
- *
- * @param {object} i18n - The i18n instance
- */
-export function loadLogicNamespace(i18n) {
-  if (!i18n.hasLoadedNamespace(NAMESPACES.DESIGN_LOGIC)) {
-    return i18n.loadNamespaces(NAMESPACES.DESIGN_LOGIC);
   }
   return Promise.resolve();
 }

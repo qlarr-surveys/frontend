@@ -29,8 +29,6 @@ const LeftPanel = React.lazy(() => import("~/components/design/LeftPanel"));
 
 function DesignSurvey() {
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
-  const { t: tLogic } = useTranslation(NAMESPACES.DESIGN_LOGIC);
-  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
   const [contentElement, setContentElement] = React.useState(null);
   const dispatch = useDispatch();
 

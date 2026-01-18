@@ -19,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function LogicBuilder(props) {
-  const { t: tLogic } = useTranslation(NAMESPACES.DESIGN_LOGIC);
+  const { t: tCore } = useTranslation(NAMESPACES.DESIGN_CORE);
   const {
     jsonLogicFormat,
     queryString,
@@ -33,7 +33,7 @@ function LogicBuilder(props) {
   });
   const langInfo = React.useMemo(() => designState.langInfo);
 
-  const baseConfig = useMemo(() => getConfig(tLogic), [tLogic]);
+  const baseConfig = useMemo(() => getConfig(tCore), [tCore]);
 
   const fields = React.useMemo(
     () =>
@@ -43,9 +43,9 @@ function LogicBuilder(props) {
         designState,
         langInfo.mainLang,
         langInfo.languagesList.map((lang) => lang.code),
-        tLogic
+        tCore
       ),
-    [designState, tLogic]
+    [designState, tCore]
   );
 
   const config = { ...baseConfig, fields };
@@ -136,7 +136,7 @@ function LogicBuilder(props) {
             autoFocus
             variant="contained"
           >
-            {tLogic("logic_builder.agree")}
+            {tCore("logic_builder.agree")}
           </Button>
         </DialogActions>
       </Dialog>
