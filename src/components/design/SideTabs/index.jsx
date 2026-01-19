@@ -15,6 +15,7 @@ import {
   routes,
 } from "~/routes";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -27,7 +28,7 @@ import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
   const tabAvailable = (tab) => availablePages.indexOf(tab) !== -1;
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const dispatch = useDispatch();
   const getTabButtonStyle = (selected) => ({
     minWidth: "auto",

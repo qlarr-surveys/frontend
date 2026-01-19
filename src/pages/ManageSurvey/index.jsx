@@ -22,9 +22,6 @@ import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import SideTabs from "~/components/design/SideTabs";
 
-const ManageTranslations = React.lazy(() =>
-  import("../manage/ManageTranslations")
-);
 const ResponsesSurvey = React.lazy(() => import("../manage/ResponsesSurvey"));
 const EditSurvey = React.lazy(() => import("../manage/EditSurvey"));
 const DesignSurvey = React.lazy(() => import("../DesignSurvey"));
@@ -136,18 +133,6 @@ function ManageSurvey({ landingPage }) {
 
         <SavingSurvey />
       </Box>
-      {designAvailable &&
-        selectedPage == MANAGE_SURVEY_LANDING_PAGES.LANGUAGE && (
-          <Suspense fallback={<LoadingDots fullHeight />}>
-            <ManageTranslations
-              onManageTranslationsClose={() => {
-                setSelectedTab(MANAGE_SURVEY_LANDING_PAGES.DESIGN);
-              }}
-              permissionsLoadingpermissionsLoading
-              onStartTranslation={() => {}}
-            />
-          </Suspense>
-        )}
     </>
   );
 }

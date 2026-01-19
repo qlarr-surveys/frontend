@@ -6,10 +6,12 @@ import styles from "./SelectValue.module.css";
 import { useTranslation } from "react-i18next";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { RHFSelect } from "~/components/hook-form";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function SelectValue({ label, rule, defaultValue, code, values, labels }) {
   const dispatch = useDispatch();
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
   const value = useSelector((state) => {
     return state.designState[code]?.[rule] || defaultValue;
   });
@@ -20,7 +22,7 @@ function SelectValue({ label, rule, defaultValue, code, values, labels }) {
 
   return (
     <div className={styles.selectValue} style={{ gap: "8px%" }}>
-      <CustomTooltip body={t(`tooltips.${label}`)} />
+      <CustomTooltip body={tTooltips(label)} />
       <RHFSelect
         key={code + rule}
         name={`${code}.${rule}`}

@@ -20,6 +20,7 @@ import TokenService from "~/services/TokenService";
 import { useNavigate } from "react-router-dom";
 import { routes } from "~/routes";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { useDispatch } from "react-redux";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { setLoading } from "~/state/edit/editState";
@@ -42,7 +43,7 @@ export default function ProfileView() {
   const isLoading = useSelector((state) => {
     return state.editState.loading;
   });
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const passwordShow = useBoolean();
   const userId = TokenService.getUser().id;
   const [user, setUser] = useState({});
@@ -271,7 +272,7 @@ export default function ProfileView() {
 
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Personal
+          {t("profile.section_personal")}
         </Typography>
 
         <Box

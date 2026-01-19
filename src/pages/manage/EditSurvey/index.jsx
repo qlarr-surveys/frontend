@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import styles from "./EditSurvey.module.css";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import LaunchPage from "../Launch/launch";
 import SurveyQuota from "~/components/manage/SurveyQuota";
 import ExportSurvey from "~/components/manage/ExportSurvey";
@@ -15,7 +16,7 @@ import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import NavigationSettings from "~/components/manage/NavigationSettings";
 
 function EditSurvey({ onPublish }) {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const survey = useSelector((state) => state.editState.survey);
 
   const sections = [

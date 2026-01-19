@@ -2,6 +2,7 @@ import { Box, Modal, Typography, Button, IconButton } from "@mui/material";
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import styles from "./ImportSurvey.module.css";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { useDispatch } from "react-redux";
@@ -14,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 export const ImportSurvey = ({ open, onResult }) => {
   const surveyService = useService("survey");
 
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

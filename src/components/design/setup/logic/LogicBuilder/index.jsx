@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Query, Builder, Utils } from "@react-awesome-query-builder/mui";
-import loadedConfig from "./config";
+import { getConfig } from "./config";
 import "@react-awesome-query-builder/mui/css/styles.css";
 import "./override.css";
 import {
@@ -15,8 +15,11 @@ import { EditOutlined } from "@mui/icons-material";
 import { stripTags, truncateWithEllipsis } from "~/utils/design/utils";
 import { buildFields } from "./buildFields";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function LogicBuilder(props) {
+  const { t: tCore } = useTranslation(NAMESPACES.DESIGN_CORE);
   const {
     jsonLogicFormat,
     queryString,
@@ -29,6 +32,9 @@ function LogicBuilder(props) {
     return state.designState;
   });
   const langInfo = React.useMemo(() => designState.langInfo);
+
+  const baseConfig = useMemo(() => getConfig(tCore), [tCore]);
+
   const fields = React.useMemo(
     () =>
       buildFields(
@@ -36,12 +42,13 @@ function LogicBuilder(props) {
         props.code,
         designState,
         langInfo.mainLang,
-        langInfo.languagesList.map((lang) => lang.code)
+        langInfo.languagesList.map((lang) => lang.code),
+        tCore
       ),
-    [designState]
+    [designState, tCore]
   );
 
-  const config = { ...loadedConfig, fields };
+  const config = { ...baseConfig, fields };
 
   const initTree = props.logic
     ? checkTree(loadFromJsonLogic(props.logic, config), config)
@@ -129,7 +136,7 @@ function LogicBuilder(props) {
             autoFocus
             variant="contained"
           >
-            Agree
+            {tCore("logic_builder.agree")}
           </Button>
         </DialogActions>
       </Dialog>

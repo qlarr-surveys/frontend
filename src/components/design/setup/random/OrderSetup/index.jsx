@@ -7,9 +7,12 @@ import styles from "./OrderSetup.module.css";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { instructionByCode } from "~/state/design/addInstructions";
 import { stripTags } from "~/utils/design/utils";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 export default function OrderSetup({ t, rule, code }) {
   const dispatch = useDispatch();
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
 
   const value = useSelector((state) => {
     return state.designState[code][rule] || "NONE";
@@ -145,13 +148,13 @@ export default function OrderSetup({ t, rule, code }) {
   return (
     <>
       <div className={styles.label}>
-        <CustomTooltip body={t(`tooltips.${title}`)} /> <h4>{t(`${title}`)}</h4>
+        <CustomTooltip body={tTooltips(title)} /> <h4>{t(`${title}`)}</h4>
       </div>
       <FormControl variant="standard" fullWidth>
         <Select
           id="select-value"
           value={value}
-          label="Select Value"
+          label={t("select_value")}
           onChange={(e) => {
             onChange(e.target.value);
           }}

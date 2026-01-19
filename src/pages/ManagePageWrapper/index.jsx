@@ -10,11 +10,15 @@ import ErrorWrapper from "~/components/design/ErrorWrapper";
 import { StatefulLoadingIndicator } from "~/components/common/LoadingIndicator";
 import ThemeProvider from "~/theme";
 import UnsupportedView from "../UnsupportedView";
+import useNamespaceLoader, { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const ManagePageWrapper = ({ headerOptions = HEADER_OPTIONS.GENERAL, children }) => {
   const lang = localStorage.getItem("lang");
 
-  const { i18n } = useTranslation("manage");
+  const { i18n } = useTranslation(NAMESPACES.MANAGE);
+
+  // Load namespaces based on current route
+  useNamespaceLoader();
 
   const [isSupportedScreenSize, setIsSupportedScreenSize] = useState(() => {
     const minWidth = 768;

@@ -1,9 +1,10 @@
 import { Box } from "@mui/material";
 import styles from "./RandomError.module.css";
 import { Trans, useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 export default function RandomError({ errors }) {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
 
   return (
     <Box key="box" className={styles.errorDisplay}>

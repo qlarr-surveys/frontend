@@ -1,12 +1,13 @@
 import { Box, Button, Card } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { useNavigate } from "react-router-dom";
 import { routes } from "~/routes";
 import styles from "./CountsByRole.module.css";
 
 export const CountsByRole = ({ countByRole }) => {
   const navigate = useNavigate();
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   return (
     <Card className={styles.byRoleWrap}>

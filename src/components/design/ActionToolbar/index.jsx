@@ -14,11 +14,13 @@ import { RuleOutlined, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import DeleteModal from "~/components/common/DeleteModal";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function ActionToolbar({ code, isGroup, parentCode, showActions }) {
   const dispatch = useDispatch();
   const theme = useTheme();
-  const { t } = useTranslation(["design"]);
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const onDelete = useCallback(() => {
@@ -150,7 +152,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
       }}
     >
       {hasRelevance && !isDisabled && (
-        <CustomTooltip title={t("tooltips.has_relevance")} showIcon={false}>
+        <CustomTooltip title={tTooltips("has_relevance")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandRelevance()}
@@ -161,7 +163,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
       )}
 
       {isDisabled && (
-        <CustomTooltip title={t("tooltips.is_disabled")} showIcon={false}>
+        <CustomTooltip title={tTooltips("is_disabled")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandDisabled()}
@@ -172,7 +174,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
       )}
 
       {hasValidation && (
-        <CustomTooltip title={t("tooltips.has_validation")} showIcon={false}>
+        <CustomTooltip title={tTooltips("has_validation")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandValidation()}
@@ -182,7 +184,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         </CustomTooltip>
       )}
       {randomRule && (
-        <CustomTooltip title={t("tooltips.is_randomized")} showIcon={false}>
+        <CustomTooltip title={tTooltips("is_randomized")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandRandom(randomRule)}
@@ -192,7 +194,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         </CustomTooltip>
       )}
       {hasSkip && (
-        <CustomTooltip title={t("tooltips.has_skip")} showIcon={false}>
+        <CustomTooltip title={tTooltips("has_skip")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
             onClick={() => expandSkipLogic()}
