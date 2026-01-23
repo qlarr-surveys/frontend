@@ -87,7 +87,7 @@ function RunSurvey({
     if (window["Android"]) {
       window["autoSaveValues"] = ()=>{
         const valuesToSave = getValues(store.getState().runState.values)
-        window["Android"].autoSaveValues(valuesToSave)
+        window["Android"].autoSaveValues(JSON.stringify(valuesToSave))
 
       }
     }
