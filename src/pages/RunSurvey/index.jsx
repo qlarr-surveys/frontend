@@ -86,7 +86,9 @@ function RunSurvey({
   useEffect(() => {
     if (window["Android"]) {
       window["autoSaveValues"] = ()=>{
-        return getValues(store.getState().runState.values)
+        const valuesToSave = getValues(store.getState().runState.values)
+        window["Android"].autoSaveValues(valuesToSave)
+
       }
     }
   }, []);
