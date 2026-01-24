@@ -1,6 +1,7 @@
 import tippy from "tippy.js";
 import { INSTRUCTION_EDITOR_CONFIG } from "~/constants/editor";
 import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
+import { stripTags } from "~/utils/design/utils";
 
 export const INSTRUCTION_PATTERN = INSTRUCTION_EDITOR_CONFIG.PATTERN;
 export const TIPPY_INSTRUCTION_CONFIG = INSTRUCTION_EDITOR_CONFIG.TOOLTIP;
@@ -18,14 +19,6 @@ function createInstructionTooltip(element, tippyInstances) {
     });
     tippyInstances.push(instance);
   }
-}
-
-export function stripHtml(html) {
-  if (!html) return "";
-
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
-  return doc.body.textContent || "";
 }
 
 export function transformInstructionText(
@@ -55,7 +48,7 @@ export function parseUsedInstructions(content, index, designState, mainLang) {
       const questionIndex = index[questionCode];
       const questionState = designState?.[questionCode];
       const questionTextHtml = questionState?.content?.[mainLang]?.label || "";
-      const questionText = stripHtml(questionTextHtml);
+      const questionText = stripTags(questionTextHtml);
 
       if (questionIndex) {
         result[questionCode] = {
@@ -78,7 +71,7 @@ export function parseUsedInstructions(content, index, designState, mainLang) {
     if (questionCode && !result[questionCode]) {
       const questionState = designState?.[questionCode];
       const questionTextHtml = questionState?.content?.[mainLang]?.label || "";
-      const questionText = stripHtml(questionTextHtml);
+      const questionText = stripTags(questionTextHtml);
 
       result[questionCode] = {
         index: displayIndex,
