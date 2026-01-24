@@ -96,6 +96,18 @@
   },
   "email_required": "E-Mail ist erforderlich",
   "error": {
+    "invalid_email": "Ungültige E-Mail",
+    "invalid_first_name": "Ungültiger Vorname",
+    "invalid_last_name": "Ungültiger Nachname",
+    "invalid_password": "Das Passwort muss mindestens 8 Zeichen lang sein und eine Mischung aus Großbuchstaben, Kleinbuchstaben und Zahlen enthalten.",
+    "incorrect_password": "Das Passwort ist falsch.",
+    "password_should_match": "Das Passwort muss übereinstimmen",
+    "first_name_too_long": "Der Vorname darf maximal 50 Zeichen lang sein.",
+    "last_name_too_long": "Der Nachname darf maximal 50 Zeichen lang sein.",
+    "required": "Ist erforderlich",
+    "at_least_one_role": "Mindestens eine Rolle muss ausgewählt werden.",
+    "roles_required": "Rollen sind erforderlich.",
+    "survey_expired": "Umfrage abgelaufen",
     "page_not_found": "Seite nicht gefunden"
   },
   "error_title": "Fehler",

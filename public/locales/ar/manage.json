@@ -96,7 +96,8 @@
     "roles_required": "الأدوار مطلوبة.",
     "last_name_too_long": "يجب أن يكون الاسم الأخير 50 حرفًا أو أقل.",
     "required": "مطلوب",
-    "survey_expired": "انتهت صلاحية الاستبيان"
+    "survey_expired": "انتهت صلاحية الاستبيان",
+    "page_not_found": "الصفحة غير موجودة"
   },
   "event_response": {
     "details": "تفاصيل",
@@ -353,9 +354,6 @@
     "translate_to": "ترجمة الاستطلاع إلى:",
     "language": "اللغة",
     "design_language": "لغة التصميم"
-  },
-  "error": {
-    "page_not_found": "الصفحة غير موجودة"
   },
   "responses_export": {
     "format_csv": "CSV",

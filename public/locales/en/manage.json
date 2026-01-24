@@ -95,7 +95,8 @@
     "required": "Is required",
     "at_least_one_role": "At least one role must be selected.",
     "roles_required": "Roles are required.",
-    "survey_expired": "Survey Expired"
+    "survey_expired": "Survey Expired",
+    "page_not_found": "Page not found"
   },
   "event_response": {
     "details": "Details",
@@ -353,9 +354,6 @@
     "translate_to": "Translate Survey To:",
     "language": "Language",
     "design_language": "Design Language"
-  },
-  "error": {
-    "page_not_found": "Page not found"
   },
   "responses_export": {
     "format_csv": "CSV",
