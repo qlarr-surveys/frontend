@@ -713,26 +713,50 @@ const editInstruction = (componentState, instruction) => {
 };
 
 const scqSkipEquations = (qualifiedCode, component) => {
-  const skipLogic = component.skip_logic;
+  const skipLogic = component.skip_logic || [];
   const instructionList = [];
-  component.children.forEach((el) => {
-    const key = el.code;
-    const skipObj = skipLogic[key];
-    const instructionCode = "skip_to_on_" + key;
-    if (!skipObj || !skipObj.skipTo || skipObj.skipTo == "proceed") {
-      instructionList.push({ code: instructionCode, remove: true });
-    } else {
-      const instruction = {
-        code: instructionCode,
-        condition: qualifiedCode + '.value == "' + key + '"',
-        isActive: true,
-        disqualify: skipObj.disqualify || false,
-        toEnd: skipObj.toEnd || false,
-        skipToComponent: skipObj.skipTo,
-      };
-      instructionList.push(instruction);
+
+  // Mark old per-answer instructions for removal (backwards compatibility cleanup)
+  component.children?.forEach((el) => {
+    instructionList.push({ code: "skip_to_on_" + el.code, remove: true });
+  });
+
+  // Mark orphaned skip_to_N instructions for removal (where N > current skip_logic length)
+  const currentLength = skipLogic.length;
+  component.instructionList?.forEach((inst) => {
+    const match = inst.code.match(/^skip_to_(\d+)$/);
+    if (match) {
+      const ruleNumber = parseInt(match[1], 10);
+      if (ruleNumber > currentLength) {
+        instructionList.push({ code: inst.code, remove: true });
+      }
     }
   });
+
+  // Generate new instructions from array-based skip_logic
+  skipLogic.forEach((rule, index) => {
+    const instructionCode = "skip_to_" + (index + 1);
+
+    if (!rule.condition?.length || !rule.skipTo) {
+      instructionList.push({ code: instructionCode, remove: true });
+      return;
+    }
+
+    // Build condition using includes: ["A1", "A2"].includes(Q1.value)
+    const conditionText = `[${rule.condition.map((code) => `"${code}"`).join(", ")}].includes(${qualifiedCode}.value)`;
+
+    instructionList.push({
+      code: instructionCode,
+      text: conditionText,
+      returnType: "boolean",
+      isActive: true,
+      skipToComponent: rule.skipTo,
+      condition: conditionText,
+      toEnd: rule.toEnd || false,
+      disqualify: rule.disqualify || false,
+    });
+  });
+
   return instructionList;
 };
 

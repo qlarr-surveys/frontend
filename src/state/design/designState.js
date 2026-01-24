@@ -277,6 +277,17 @@ export const designState = createSlice({
       refreshListForMultipleChoice(question, state);
       addMaskedValuesInstructions(codes[0], question, state);
       cleanupRandomRules(question);
+      // Clean up skip_logic conditions when answer is removed
+      if (question.skip_logic && Array.isArray(question.skip_logic)) {
+        const answerCode = codes[1];
+        question.skip_logic = question.skip_logic
+          .map((rule) => ({
+            ...rule,
+            condition: rule.condition?.filter((c) => c !== answerCode) || [],
+          }))
+          .filter((rule) => rule.condition.length > 0);
+        addSkipInstructions(state, codes[0]);
+      }
     },
     addNewAnswers: (state, action) => {
       const questionCode = action.payload.questionCode;
@@ -454,6 +465,7 @@ export const designState = createSlice({
       survey.children.splice(index, 1);
       delete state[groupCode];
       cleanupRandomRules(survey);
+      cleanupSkipDestinations(state, groupCode);
     },
     deleteQuestion: (state, action) => {
       const questionCode = action.payload;
@@ -483,6 +495,7 @@ export const designState = createSlice({
       }
       delete state[questionCode];
       cleanupRandomRules(group);
+      cleanupSkipDestinations(state, questionCode);
     },
     changeContent: (state, action) => {
       let payload = action.payload;
@@ -559,39 +572,30 @@ export const designState = createSlice({
         removeInstruction(componentState, "random_group");
       }
     },
-    removeSkipDestination: (state, action) => {
-      const payload = action.payload;
-      delete state[payload.code].skip_logic[payload.answerCode];
-      addSkipInstructions(state, payload.code);
-    },
-    editSkipDestination: (state, action) => {
-      const payload = action.payload;
-      if (!state[payload.code].skip_logic) {
-        state[payload.code].skip_logic = {};
+
+    // === SKIP LOGIC REDUCERS ===
+    addSkipRule: (state, action) => {
+      const { code } = action.payload;
+      if (!state[code].skip_logic) {
+        state[code].skip_logic = [];
       }
-      if (!state[payload.code].skip_logic[payload.answerCode]) {
-        state[payload.code].skip_logic[payload.answerCode] = {};
-      }
-      if (
-        state[payload.code].skip_logic?.[payload.answerCode].skipTo !==
-        payload.skipTo
-      ) {
-        state[payload.code].skip_logic[payload.answerCode] = {
-          skipTo: payload.skipTo,
-        };
-        addSkipInstructions(state, payload.code);
-      }
+      state[code].skip_logic.push({ condition: [], skipTo: null });
     },
-    editSkipToEnd: (state, action) => {
-      const payload = action.payload;
-      state[payload.code].skip_logic[payload.answerCode].toEnd = payload.toEnd;
-      addSkipInstructions(state, payload.code);
+    updateSkipRule: (state, action) => {
+      const { code, ruleIndex, updates } = action.payload;
+      const rule = state[code].skip_logic[ruleIndex];
+      Object.assign(rule, updates);
+      // Reset toEnd/disqualify if destination is not a group
+      if (updates.skipTo && !updates.skipTo.startsWith("G")) {
+        rule.toEnd = false;
+        rule.disqualify = false;
+      }
+      addSkipInstructions(state, code);
     },
-    editDisqualifyToEnd: (state, action) => {
-      const payload = action.payload;
-      state[payload.code].skip_logic[payload.answerCode].disqualify =
-        payload.disqualify;
-      addSkipInstructions(state, payload.code);
+    removeSkipRule: (state, action) => {
+      const { code, ruleIndex } = action.payload;
+      state[code].skip_logic.splice(ruleIndex, 1);
+      addSkipInstructions(state, code);
     },
     onBaseLangChanged: (state, action) => {
       state.langInfo.mainLang = action.payload.code;
@@ -731,10 +735,9 @@ export const {
   changeValidationValue,
   updateRandom,
   updateRandomByType,
-  removeSkipDestination,
-  editSkipDestination,
-  editSkipToEnd,
-  editDisqualifyToEnd,
+  addSkipRule,
+  updateSkipRule,
+  removeSkipRule,
   changeRelevance,
   setDefaultValue,
   onDrag,
@@ -757,6 +760,28 @@ const cleanupRandomRules = (componentState) => {
   } else if (componentState["randomize_columns"]) {
     updateRandomByRule(componentState, "randomize_columns");
   }
+};
+
+// Clean up skip_logic rules that point to a deleted destination
+const cleanupSkipDestinations = (state, deletedCode) => {
+  Object.keys(state).forEach((key) => {
+    const component = state[key];
+    if (
+      component?.type &&
+      ["scq", "image_scq", "icon_scq"].includes(component.type) &&
+      Array.isArray(component.skip_logic)
+    ) {
+      const hadRules = component.skip_logic.some(
+        (rule) => rule.skipTo === deletedCode
+      );
+      if (hadRules) {
+        component.skip_logic = component.skip_logic.filter(
+          (rule) => rule.skipTo !== deletedCode
+        );
+        addSkipInstructions(state, key);
+      }
+    }
+  });
 };
 
 const reparentQuestion = (state, survey, payload) => {
