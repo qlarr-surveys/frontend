@@ -96,7 +96,8 @@
     "required": "Is verplicht",
     "at_least_one_role": "Ten minste één rol moet worden geselecteerd.",
     "roles_required": "Rollen zijn verplicht.",
-    "survey_expired": "Enquête Verlopen"
+    "survey_expired": "Enquête Verlopen",
+    "page_not_found": "Pagina niet gevonden"
   },
   "event_response": {
     "details": "Details",
@@ -353,9 +354,6 @@
     "translate_to": "Enquête vertalen naar:",
     "language": "Taal",
     "design_language": "Ontwerptaal"
-  },
-  "error": {
-    "page_not_found": "Pagina niet gevonden"
   },
   "responses_export": {
     "format_csv": "CSV",
