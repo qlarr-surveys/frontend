@@ -13,11 +13,10 @@ import Image from "~/components/image/image";
 import FormProvider, { RHFTextField } from "../../../components/hook-form";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
 import { routes } from "~/routes";
-import { useNavigate } from "react-router-dom";
 import SuccessMessage from "~/components/common/SuccessMessage/SuccessMessage";
 import { useService } from "~/hooks/use-service";
 // ----------------------------------------------------------------------
@@ -28,14 +27,18 @@ export default function ForgotPasswordView() {
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const [isSuccess, setSuccess] = useState(false);
   const dispatch = useDispatch();
-  const ForgotPasswordSchema = Yup.object().shape({
-    email: Yup.string()
-      .required(t("email_required"))
-      .matches(
-        /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
-        t("error.invalid_email")
-      ),
-  });
+  const ForgotPasswordSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        email: Yup.string()
+          .required(t("email_required"))
+          .matches(
+            /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+            t("error.invalid_email")
+          ),
+      }),
+    [t]
+  );
 
   const defaultValues = {
     email: "",
