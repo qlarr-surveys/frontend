@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import * as Yup from "yup";
 import { Box, Card, Typography, Dialog, Stack } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -30,25 +30,29 @@ function AddEditUser({ userId, open, onClose }) {
         : createError({ path, message: errorMessage });
     });
   });
-  const AddUserSchema = Yup.object().shape({
-    firstName: Yup.string()
-      .required(t("firstname_required"))
-      .noWhitespace(t("error.invalid_first_name"))
-      .max(50, t("error.first_name_too_long")),
-    lastName: Yup.string()
-      .required(t("lastname_required"))
-      .noWhitespace(t("error.invalid_last_name"))
-      .max(50, t("error.last_name_too_long")),
-    email: Yup.string()
-      .required(t("email_required"))
-      .matches(
-        /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
-        t("error.invalid_email")
-      ),
-    roles: Yup.array()
-      .required(t("error.roles_required"))
-      .min(1, t("error.at_least_one_role")),
-  });
+  const AddUserSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        firstName: Yup.string()
+          .required(t("firstname_required"))
+          .noWhitespace(t("error.invalid_first_name"))
+          .max(50, t("error.first_name_too_long")),
+        lastName: Yup.string()
+          .required(t("lastname_required"))
+          .noWhitespace(t("error.invalid_last_name"))
+          .max(50, t("error.last_name_too_long")),
+        email: Yup.string()
+          .required(t("email_required"))
+          .matches(
+            /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+            t("error.invalid_email")
+          ),
+        roles: Yup.array()
+          .required(t("error.roles_required"))
+          .min(1, t("error.at_least_one_role")),
+      }),
+    [t]
+  );
 
   const defaultValues = {
     firstName: "",

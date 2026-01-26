@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -39,17 +40,21 @@ export default function ResetPasswordView({ confirmNewUser = false }) {
 
   const refreshToken = searchParams.get("token");
 
-  const ResetPasswordSchema = Yup.object().shape({
-    password: Yup.string()
-      .required(t("password_required"))
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-        t("error.invalid_password")
-      ),
-    confirmPassword: Yup.string()
-      .required(t("password_required"))
-      .oneOf([Yup.ref("password")], t("error.password_should_match")),
-  });
+  const ResetPasswordSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        password: Yup.string()
+          .required(t("password_required"))
+          .matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+            t("error.invalid_password")
+          ),
+        confirmPassword: Yup.string()
+          .required(t("password_required"))
+          .oneOf([Yup.ref("password")], t("error.password_should_match")),
+      }),
+    [t]
+  );
 
   const defaultValues = {
     email: "",

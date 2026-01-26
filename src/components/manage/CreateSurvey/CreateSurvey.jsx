@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { Box, Card } from "@mui/material";
@@ -34,11 +34,15 @@ function CreateSurvey({ onSurveyCreated }) {
     surveyActiveFrom: "",
     surveyActiveTo: "",
   };
-  const CreateSurveySchema = Yup.object().shape({
-    surveyName: Yup.string()
-      .required(t("survey_required"))
-      .max(50, t("survey_too_long")),
-  });
+  const CreateSurveySchema = useMemo(
+    () =>
+      Yup.object().shape({
+        surveyName: Yup.string()
+          .required(t("survey_required"))
+          .max(50, t("survey_too_long")),
+      }),
+    [t]
+  );
   const methods = useForm({
     resolver: yupResolver(CreateSurveySchema),
     defaultValues,
