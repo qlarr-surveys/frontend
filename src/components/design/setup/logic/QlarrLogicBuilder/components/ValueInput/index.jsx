@@ -11,7 +11,7 @@ import { TimeInput } from './TimeInput';
 import { DateTimeInput } from './DateTimeInput';
 import { RangeInput } from './RangeInput';
 
-export function ValueInput({ fieldCode, operator, value, onChange }) {
+export function ValueInput({ fieldCode, operator, value, onChange, compact = false }) {
   const { getFieldDefinition, t } = useLogicBuilder();
 
   const field = fieldCode ? getFieldDefinition(fieldCode) : undefined;
@@ -30,6 +30,7 @@ export function ValueInput({ fieldCode, operator, value, onChange }) {
         value={value}
         onChange={onChange}
         t={t}
+        compact={compact}
       />
     );
   }
@@ -42,6 +43,7 @@ export function ValueInput({ fieldCode, operator, value, onChange }) {
         value={value}
         onChange={onChange}
         t={t}
+        compact={compact}
       />
     );
   }
@@ -53,6 +55,7 @@ export function ValueInput({ fieldCode, operator, value, onChange }) {
         value={value}
         onChange={onChange}
         t={t}
+        compact={compact}
       />
     );
   }
@@ -64,6 +67,7 @@ export function ValueInput({ fieldCode, operator, value, onChange }) {
         value={value}
         onChange={onChange}
         t={t}
+        compact={compact}
       />
     );
   }
@@ -75,6 +79,7 @@ export function ValueInput({ fieldCode, operator, value, onChange }) {
         value={value}
         onChange={onChange}
         t={t}
+        compact={compact}
       />
     );
   }
@@ -86,6 +91,7 @@ export function ValueInput({ fieldCode, operator, value, onChange }) {
         value={value}
         onChange={onChange}
         t={t}
+        compact={compact}
       />
     );
   }
@@ -96,6 +102,7 @@ export function ValueInput({ fieldCode, operator, value, onChange }) {
       value={value}
       onChange={onChange}
       t={t}
+      compact={compact}
     />
   );
 }
@@ -109,4 +116,5 @@ ValueInput.propTypes = {
     PropTypes.array,
   ]),
   onChange: PropTypes.func.isRequired,
+  compact: PropTypes.bool,
 };

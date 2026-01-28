@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-  Box,
-  Typography,
-  ToggleButtonGroup,
-  ToggleButton,
-  Button,
-  IconButton,
-  Tooltip,
-} from '@mui/material';
-import { AddOutlined, DeleteOutline, HelpOutline } from '@mui/icons-material';
+import { Box, Typography, Button, IconButton, Tooltip, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { AddOutlined, Close } from '@mui/icons-material';
 import { useLogicBuilder } from './LogicBuilderContext';
 import { FieldSelector } from './components/FieldSelector';
 import { OperatorSelector } from './components/OperatorSelector';
@@ -18,7 +10,7 @@ import styles from './QlarrLogicBuilderInline.module.css';
 
 /**
  * Inline version of QlarrLogicBuilder for sidebar display
- * Enhanced with natural language, empty state guidance, and preview
+ * Natural language style: "Show when [field] [operator] [value]"
  */
 export function QlarrLogicBuilderInline() {
   const { state, dispatch, getFieldDefinition, t } = useLogicBuilder();
@@ -32,21 +24,23 @@ export function QlarrLogicBuilderInline() {
     dispatch({ type: 'REMOVE_RULE', ruleId });
   };
 
-  const handleConjunctionChange = (_event, newConjunction) => {
-    if (newConjunction !== null) {
-      dispatch({ type: 'UPDATE_CONJUNCTION', conjunction: newConjunction });
+  const handleConjunctionChange = (_event, newValue) => {
+    if (newValue !== null) {
+      dispatch({ type: 'UPDATE_CONJUNCTION', conjunction: newValue });
     }
   };
 
   const handleFieldChange = (ruleId, fieldCode) => {
-    dispatch({ type: 'UPDATE_FIELD', ruleId, field: fieldCode });
-
-    // Auto-select default operator for the field
+    // Use single dispatch to set field, operator, and value together
+    // This prevents intermediate invalid states from triggering saves
     const fieldDef = getFieldDefinition(fieldCode);
-    if (fieldDef) {
-      dispatch({ type: 'UPDATE_OPERATOR', ruleId, operator: fieldDef.defaultOperator });
-      dispatch({ type: 'UPDATE_VALUE', ruleId, value: null });
-    }
+    dispatch({
+      type: 'UPDATE_FIELD_WITH_DEFAULTS',
+      ruleId,
+      field: fieldCode,
+      operator: fieldDef?.defaultOperator || null,
+      value: null,
+    });
   };
 
   const handleOperatorChange = (ruleId, operator) => {
@@ -65,26 +59,6 @@ export function QlarrLogicBuilderInline() {
 
   return (
     <Box className={styles.container}>
-      {/* Conjunction selector with help tooltip */}
-      {tree.children.length > 1 && (
-        <Box className={styles.conjunctionRow}>
-          <ToggleButtonGroup
-            value={tree.conjunction}
-            exclusive
-            onChange={handleConjunctionChange}
-            size="small"
-            className={styles.toggleGroup}
-          >
-            <ToggleButton value="and" className={styles.toggleButton}>
-              {t('logic_builder.all')}
-            </ToggleButton>
-            <ToggleButton value="or" className={styles.toggleButton}>
-              {t('logic_builder.any')}
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </Box>
-      )}
-
       {/* Empty state with guidance */}
       {tree.children.length === 0 ? (
         <Box className={styles.emptyState}>
@@ -96,65 +70,94 @@ export function QlarrLogicBuilderInline() {
           </Typography>
         </Box>
       ) : (
-        tree.children.map((rule) => {
-          const operatorDef = rule.operator ? OPERATORS[rule.operator] : undefined;
-          const showValue = operatorDef && operatorDef.cardinality > 0;
+        <>
+          {/* Conjunction selector with toggle buttons */}
+          {tree.children.length > 1 && (
+            <Box className={styles.conjunctionRow}>
+              <ToggleButtonGroup
+                value={tree.conjunction}
+                exclusive
+                onChange={handleConjunctionChange}
+                size="small"
+                className={styles.toggleGroup}
+              >
+                <ToggleButton value="and" className={styles.toggleButton}>
+                  {t('logic_builder.all')}
+                </ToggleButton>
+                <ToggleButton value="or" className={styles.toggleButton}>
+                  {t('logic_builder.any')}
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
+          )}
 
-          return (
-            <Box key={rule.id} className={styles.ruleCard}>
+          {tree.children.map((rule) => {
+            const operatorDef = rule.operator ? OPERATORS[rule.operator] : undefined;
+            const showValue = operatorDef && operatorDef.cardinality > 0;
+
+            return (
+              <Box key={rule.id} className={styles.ruleRow}>
+                {/* Selectors with equal width */}
+                <Box className={styles.selectorsContainer}>
+                <Box className={styles.selectorItem}>
+                  <FieldSelector
+                    value={rule.field}
+                    onChange={(fieldCode) => handleFieldChange(rule.id, fieldCode)}
+                    compact
+                  />
+                </Box>
+
+                {rule.field && (
+                  <Box className={styles.selectorItem}>
+                    <OperatorSelector
+                      fieldCode={rule.field}
+                      value={rule.operator}
+                      onChange={(operator) => handleOperatorChange(rule.id, operator)}
+                      compact
+                    />
+                  </Box>
+                )}
+
+                {rule.field && rule.operator && showValue && (
+                  <Box className={styles.selectorItemFull}>
+                    <ValueInput
+                      fieldCode={rule.field}
+                      operator={rule.operator}
+                      value={rule.value}
+                      onChange={(value) => handleValueChange(rule.id, value)}
+                      compact
+                    />
+                  </Box>
+                )}
+              </Box>
+
+              {/* Delete button */}
               <Tooltip title={t('logic_builder.delete_rule')}>
                 <IconButton
                   size="small"
                   onClick={() => handleRemoveRule(rule.id)}
-                  color="error"
                   className={styles.deleteButton}
                 >
-                  <DeleteOutline fontSize="small" />
+                  <Close fontSize="small" />
                 </IconButton>
               </Tooltip>
-
-              <Box className={styles.fieldRow}>
-                <FieldSelector
-                  value={rule.field}
-                  onChange={(fieldCode) => handleFieldChange(rule.id, fieldCode)}
-                />
-              </Box>
-
-              {rule.field && (
-                <Box className={styles.fieldRow}>
-                  <OperatorSelector
-                    fieldCode={rule.field}
-                    value={rule.operator}
-                    onChange={(operator) => handleOperatorChange(rule.id, operator)}
-                  />
-                </Box>
-              )}
-
-              {rule.field && rule.operator && showValue && (
-                <Box className={styles.fieldRow}>
-                  <ValueInput
-                    fieldCode={rule.field}
-                    operator={rule.operator}
-                    value={rule.value}
-                    onChange={(value) => handleValueChange(rule.id, value)}
-                  />
-                </Box>
-              )}
             </Box>
           );
-        })
+        })}
+        </>
       )}
 
-      <Button
-        variant="outlined"
-        startIcon={<AddOutlined />}
-        onClick={handleAddRule}
-        sx={{ mt: 2 }}
-        fullWidth
-        size="small"
-      >
-        {t('logic_builder.add_condition')}
-      </Button>
+      {/* Add condition button */}
+      <Box className={styles.footerRow}>
+        <Button
+          variant="text"
+          startIcon={<AddOutlined />}
+          onClick={handleAddRule}
+          size="small"
+        >
+          {t('logic_builder.add_condition')}
+        </Button>
+      </Box>
     </Box>
   );
 }

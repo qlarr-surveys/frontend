@@ -73,6 +73,21 @@ function logicReducer(state, action) {
       };
     }
 
+    case 'UPDATE_FIELD_WITH_DEFAULTS': {
+      return {
+        ...state,
+        tree: {
+          ...state.tree,
+          children: state.tree.children.map((rule) =>
+            rule.id === action.ruleId
+              ? { ...rule, field: action.field, operator: action.operator, value: action.value }
+              : rule
+          ),
+        },
+        isDirty: true,
+      };
+    }
+
     case 'UPDATE_OPERATOR': {
       return {
         ...state,

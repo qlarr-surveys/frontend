@@ -308,6 +308,8 @@
     "1y": "1 year"
   },
   "logic_builder": {
+    "show_when": "Show when",
+    "click_to_toggle": "Click to toggle between All/Any",
     "add_condition": "Add condition",
     "agree": "Agree",
     "all": "All of these match",

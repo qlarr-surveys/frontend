@@ -97,7 +97,10 @@ function isRuleValid(rule) {
 
   // Cardinality 1 needs a value
   if (operatorDef.cardinality === 1) {
-    return rule.value !== null && rule.value !== '';
+    if (rule.value === null || rule.value === '') return false;
+    // Empty arrays are also invalid (e.g., no options selected in a select input)
+    if (Array.isArray(rule.value) && rule.value.length === 0) return false;
+    return true;
   }
 
   // Cardinality 2 (range) needs an array of two values

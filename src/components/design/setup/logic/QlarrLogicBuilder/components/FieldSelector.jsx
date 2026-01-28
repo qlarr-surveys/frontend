@@ -4,7 +4,7 @@ import { Autocomplete, TextField, Typography, Box } from '@mui/material';
 import { useLogicBuilder } from '../LogicBuilderContext';
 import styles from '../QlarrLogicBuilder.module.css';
 
-export function FieldSelector({ value, onChange }) {
+export const FieldSelector = React.memo(function FieldSelector({ value, onChange, compact = false }) {
   const { fields, t } = useLogicBuilder();
 
   const selectedField = value
@@ -19,7 +19,7 @@ export function FieldSelector({ value, onChange }) {
 
   return (
     <Autocomplete
-      className={styles.fieldSelector}
+      className={compact ? undefined : styles.fieldSelector}
       options={fields}
       value={selectedField}
       onChange={handleChange}
@@ -31,7 +31,7 @@ export function FieldSelector({ value, onChange }) {
           {...params}
           placeholder={t('logic_builder.select_field')}
           size="small"
-          variant="outlined"
+          variant="filled"
         />
       )}
       renderGroup={(params) => (
@@ -65,11 +65,13 @@ export function FieldSelector({ value, onChange }) {
       size="small"
       disableClearable={false}
       openOnFocus
+      fullWidth
     />
   );
-}
+});
 
 FieldSelector.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
+  compact: PropTypes.bool,
 };

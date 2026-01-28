@@ -6,6 +6,8 @@ import { treeToJsonLogic } from './utils/jsonLogic';
 
 /**
  * Inner component that syncs state changes to parent
+ * Component is "uncontrolled" - initializes from props but maintains its own state
+ * This allows incomplete rules to exist in the UI while only saving valid rules
  */
 function InlineLogicBuilderSync({ onChange }) {
   const { state } = useLogicBuilder();
@@ -15,11 +17,12 @@ function InlineLogicBuilderSync({ onChange }) {
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
 
-  // Sync changes to parent whenever tree changes
+  // Sync local changes to parent whenever tree changes
+  // Only valid rules are saved (incomplete rules are filtered by treeToJsonLogic)
   useEffect(() => {
     if (isDirty) {
-      const jsonLogic = treeToJsonLogic(tree);
-      onChangeRef.current({ jsonLogic, queryString: '' });
+      const newJsonLogic = treeToJsonLogic(tree);
+      onChangeRef.current({ jsonLogic: newJsonLogic, queryString: '' });
     }
   }, [tree, isDirty]);
 
@@ -59,7 +62,7 @@ QlarrLogicBuilderInlineWrapper.propTypes = {
   code: PropTypes.string.isRequired,
   jsonLogic: PropTypes.object,
   onChange: PropTypes.func.isRequired,
-  componentIndices: PropTypes.object.isRequired,
+  componentIndices: PropTypes.array.isRequired,
   designState: PropTypes.object.isRequired,
   mainLang: PropTypes.string.isRequired,
   langList: PropTypes.arrayOf(PropTypes.string).isRequired,

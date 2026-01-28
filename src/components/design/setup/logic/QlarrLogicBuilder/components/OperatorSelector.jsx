@@ -4,7 +4,7 @@ import { FormControl, Select, MenuItem, Box, Typography } from '@mui/material';
 import { useLogicBuilder } from '../LogicBuilderContext';
 import styles from '../QlarrLogicBuilder.module.css';
 
-export function OperatorSelector({ fieldCode, value, onChange }) {
+export const OperatorSelector = React.memo(function OperatorSelector({ fieldCode, value, onChange, compact = false }) {
   const { getOperatorsForField, t } = useLogicBuilder();
 
   // Get operators available for this field
@@ -19,15 +19,17 @@ export function OperatorSelector({ fieldCode, value, onChange }) {
 
   return (
     <FormControl
-      className={styles.operatorSelector}
+      className={compact ? undefined : styles.operatorSelector}
       size="small"
       disabled={!fieldCode || operators.length === 0}
       fullWidth
+      variant="filled"
     >
       <Select
         value={value || ''}
         onChange={handleChange}
         displayEmpty
+        variant="filled"
         renderValue={() =>
           selectedOperator
             ? t(selectedOperator.labelKey, { defaultValue: selectedOperator.displayLabel })
@@ -40,7 +42,7 @@ export function OperatorSelector({ fieldCode, value, onChange }) {
               <Typography variant="body2">
                 {t(op.labelKey, { defaultValue: op.displayLabel })}
               </Typography>
-              {op.descriptionKey && (
+              {!compact && op.descriptionKey && (
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                   {t(op.descriptionKey, { defaultValue: '' })}
                 </Typography>
@@ -51,10 +53,11 @@ export function OperatorSelector({ fieldCode, value, onChange }) {
       </Select>
     </FormControl>
   );
-}
+});
 
 OperatorSelector.propTypes = {
   fieldCode: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
+  compact: PropTypes.bool,
 };

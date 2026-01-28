@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useLogicBuilderState } from './hooks/useLogicBuilderState';
 import { useFieldConfig, getOperatorsForField } from './hooks/useFieldConfig';
 
@@ -20,8 +22,7 @@ export function LogicBuilderProvider({
   t,
 }) {
   // Initialize state hook
-  const { state, dispatch, actions } =
-    useLogicBuilderState(initialJsonLogic);
+  const { state, dispatch } = useLogicBuilderState(initialJsonLogic);
 
   // Build field configuration
   const fields = useFieldConfig(
@@ -53,27 +54,20 @@ export function LogicBuilderProvider({
     () => ({
       state,
       dispatch,
-      actions,
       fields,
       getFieldDefinition,
       getOperatorsForField: getFieldOperators,
       t,
     }),
-    [
-      state,
-      dispatch,
-      actions,
-      fields,
-      getFieldDefinition,
-      getFieldOperators,
-      t,
-    ]
+    [state, dispatch, fields, getFieldDefinition, getFieldOperators, t]
   );
 
   return (
-    <LogicBuilderContext.Provider value={contextValue}>
-      {children}
-    </LogicBuilderContext.Provider>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <LogicBuilderContext.Provider value={contextValue}>
+        {children}
+      </LogicBuilderContext.Provider>
+    </LocalizationProvider>
   );
 }
 
@@ -94,7 +88,7 @@ export function useLogicBuilder() {
 LogicBuilderProvider.propTypes = {
   children: PropTypes.node.isRequired,
   initialJsonLogic: PropTypes.object,
-  componentIndices: PropTypes.object.isRequired,
+  componentIndices: PropTypes.array.isRequired,
   currentCode: PropTypes.string.isRequired,
   designState: PropTypes.object.isRequired,
   mainLang: PropTypes.string.isRequired,

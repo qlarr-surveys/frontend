@@ -2,46 +2,77 @@
   margin-top: 8px;
 }
 
-.conjunctionRow {
+/* Each condition as a card */
+.ruleRow {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+}
+
+.ruleRow:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Conjunction row with toggle buttons */
+.conjunctionRow {
+  display: flex;
+  justify-content: flex-start;
   margin-bottom: 12px;
-  flex-wrap: wrap;
 }
 
 .toggleGroup {
-  flex-shrink: 0;
+  height: 28px;
 }
 
 .toggleButton {
-  padding: 2px 12px !important;
-  font-size: 12px !important;
-  text-transform: none !important;
+  text-transform: none;
+  font-size: 12px;
+  padding: 4px 12px;
 }
 
-.ruleCard {
-  position: relative;
-  margin-bottom: 12px;
-  padding: 12px;
-  padding-right: 40px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #fafafa;
+/* Selectors container - wrapping layout */
+.selectorsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* First row items (field & operator) - 50% each */
+.selectorItem {
+  flex: 1 1 calc(50% - 4px);
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Value item - full width on second row */
+.selectorItemFull {
+  flex: 1 1 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .deleteButton {
-  position: absolute;
-  top: 8px;
-  right: 8px;
+  flex-shrink: 0;
+  opacity: 0.6;
 }
 
-.fieldRow {
-  margin-bottom: 8px;
+.deleteButton:hover {
+  opacity: 1;
 }
 
-.fieldRow:last-child {
-  margin-bottom: 0;
+/* Footer with add button */
+.footerRow {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 8px;
 }
 
 /* Empty state styling */
