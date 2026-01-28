@@ -21,11 +21,20 @@ export const SelectInput = React.memo(function SelectInput({ field, value, onCha
             if (selected.length === 0) {
               return <span style={{ color: '#999' }}>{t('logic_builder.value', 'Value')}</span>;
             }
-            const labels = selected.map((val) => {
-              const opt = options.find((o) => o.value === val);
-              return opt ? opt.label : val;
-            });
-            return <span>{labels.join(', ')}</span>;
+            return (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                {selected.map((val) => {
+                  const opt = options.find((o) => o.value === val);
+                  return (
+                    <Chip
+                      key={val}
+                      label={opt ? opt.label : val}
+                      size="small"
+                    />
+                  );
+                })}
+              </div>
+            );
           }}
         >
           {options.map((opt) => (
