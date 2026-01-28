@@ -1,0 +1,86 @@
+.container {
+  margin-top: 8px;
+}
+
+/* Each condition as a card */
+.ruleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+}
+
+.ruleRow:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Conjunction row with toggle buttons */
+.conjunctionRow {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 12px;
+}
+
+.toggleGroup {
+  height: 28px;
+}
+
+.toggleButton {
+  text-transform: none;
+  font-size: 12px;
+  padding: 4px 12px;
+}
+
+/* Selectors container - wrapping layout */
+.selectorsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* First row items (field & operator) - 50% each */
+.selectorItem {
+  flex: 1 1 calc(50% - 4px);
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Value item - full width on second row */
+.selectorItemFull {
+  flex: 1 1 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.deleteButton {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.deleteButton:hover {
+  opacity: 1;
+}
+
+/* Footer with add button */
+.footerRow {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 8px;
+}
+
+/* Empty state styling */
+.emptyState {
+  padding: 16px;
+  margin: 8px 0;
+  text-align: center;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  border: 1px dashed #e0e0e0;
+}

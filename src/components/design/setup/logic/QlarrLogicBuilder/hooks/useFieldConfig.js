@@ -1,0 +1,372 @@
+import { useMemo } from 'react';
+import {
+  getFieldType,
+  hasOtherOption,
+  isArrayType,
+} from '../config/fieldTypes';
+import { OPERATORS, getOperatorsForFieldType } from '../config/operators';
+import { accessibleDependencies } from '~/utils/design/access/dependencies';
+
+/**
+ * Strip HTML tags from a string
+ */
+function stripTags(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  const text = div.textContent || div.innerText || '';
+  div.innerHTML = '';
+  return text;
+}
+
+/**
+ * Check if code represents a question
+ */
+function isQuestion(code) {
+  return code.startsWith('Q');
+}
+
+/**
+ * Check if code represents a group
+ */
+function isGroup(code) {
+  return code.startsWith('G');
+}
+
+/**
+ * Build field definitions from survey state
+ * This replaces the buildFields.jsx function with a cleaner, hook-based approach
+ */
+export function useFieldConfig(
+  componentIndices,
+  currentCode,
+  designState,
+  mainLang,
+  langList,
+  t
+) {
+  return useMemo(() => {
+    const fields = [];
+
+    // Group labels for UI
+    const groupLabels = {
+      system: t('logic_builder.group_system'),
+      questions: t('logic_builder.group_questions'),
+      pages: t('logic_builder.group_pages'),
+    };
+
+    // System fields
+    fields.push({
+      code: 'mode',
+      label: t('logic_builder.mode'),
+      type: 'survey_mode',
+      defaultOperator: 'is_online',
+      group: groupLabels.system,
+    });
+
+    fields.push({
+      code: 'survey_lang',
+      label: t('logic_builder.language'),
+      type: 'survey_lang',
+      defaultOperator: 'select_any_in',
+      options: langList.map((lang) => ({ value: lang, label: lang })),
+      group: groupLabels.system,
+    });
+
+    // Get accessible dependencies using the existing utility
+    const dependencies = accessibleDependencies(componentIndices, currentCode);
+
+    // Build fields for each dependency
+    for (const code of dependencies) {
+      const component = designState[code];
+      if (!component || (!isQuestion(code) && !isGroup(code))) {
+        continue;
+      }
+
+      const builtFields = buildFieldDefinition(
+        code,
+        component,
+        designState,
+        mainLang,
+        groupLabels
+      );
+      fields.push(...builtFields);
+    }
+
+    return fields;
+  }, [componentIndices, currentCode, designState, mainLang, langList, t]);
+}
+
+/**
+ * Build field definition(s) for a component
+ */
+function buildFieldDefinition(code, component, state, mainLang, groupLabels) {
+  const indexNum = state.index[code];
+  const label =
+    (indexNum ? `${indexNum}. ` : '') +
+    stripTags((component.content?.[mainLang]?.label) || '');
+
+  // Groups have limited operators
+  if (isGroup(code)) {
+    return [
+      {
+        code,
+        label,
+        type: 'group',
+        questionType: 'group',
+        defaultOperator: 'is_relevant',
+        group: groupLabels.pages,
+      },
+    ];
+  }
+
+  const questionType = component.type;
+  const fieldType = getFieldType(questionType);
+
+  const baseField = {
+    code,
+    label,
+    type: fieldType,
+    questionType,
+    defaultOperator: getDefaultOperatorForType(questionType, fieldType),
+    group: groupLabels.questions,
+  };
+
+  // Handle types with options
+  if (fieldType === 'select' || fieldType === 'multiselect') {
+    baseField.options = buildOptions(component, state, mainLang);
+  }
+
+  // Special handling for NPS
+  if (questionType === 'nps') {
+    baseField.options = Array.from({ length: 11 }, (_, i) => ({
+      value: String(i),
+      label: String(i),
+    }));
+  }
+
+  const fields = [baseField];
+
+  // Handle "other" text field for SCQ/MCQ
+  if (hasOtherOption(questionType)) {
+    const otherField = buildOtherField(code, component, state, mainLang, label);
+    if (otherField) {
+      fields.push(otherField);
+    }
+  }
+
+  // Handle array types (scq_array, mcq_array)
+  if (isArrayType(questionType)) {
+    const rowFields = buildArrayRowFields(
+      code,
+      component,
+      state,
+      mainLang,
+      label,
+      questionType
+    );
+    fields.push(...rowFields);
+  }
+
+  // Handle multiple text
+  if (questionType === 'multiple_text') {
+    const textFields = buildMultipleTextFields(
+      code,
+      component,
+      state,
+      mainLang,
+      label
+    );
+    fields.push(...textFields);
+  }
+
+  // Handle ranking
+  if (questionType === 'ranking' || questionType === 'image_ranking') {
+    const rankFields = buildRankingFields(
+      code,
+      component,
+      state,
+      mainLang,
+      label
+    );
+    fields.push(...rankFields);
+  }
+
+  return fields;
+}
+
+/**
+ * Build options for select/multiselect fields
+ */
+function buildOptions(component, state, mainLang) {
+  if (!component.children) {
+    return [];
+  }
+
+  return component.children
+    .filter((child) => !['all', 'none', 'other'].includes(child.type))
+    .map((child) => {
+      const childState = state[child.qualifiedCode];
+      const childLabel = stripTags(childState?.content?.[mainLang]?.label || '');
+      return {
+        value: child.code,
+        label: childLabel ? `${child.code} - ${childLabel}` : child.code,
+      };
+    });
+}
+
+/**
+ * Build the "other" text field for SCQ/MCQ
+ */
+function buildOtherField(code, component, state, mainLang, parentLabel) {
+  const otherChild = component.children?.find((el) => el.code === 'Aother');
+  if (!otherChild) {
+    return null;
+  }
+
+  const otherState = state[otherChild.qualifiedCode];
+  const textChild = otherState?.children?.find((el) => el.code === 'Atext');
+  if (!textChild) {
+    return null;
+  }
+
+  const otherLabel = stripTags(otherState?.content?.[mainLang]?.label || '');
+
+  return {
+    code: `${code}AotherAtext`,
+    label: `${parentLabel} [${otherLabel}]`,
+    type: 'text',
+    questionType: 'text',
+    defaultOperator: 'equal',
+  };
+}
+
+/**
+ * Build row fields for array questions
+ */
+function buildArrayRowFields(
+  code,
+  component,
+  state,
+  mainLang,
+  parentLabel,
+  questionType
+) {
+  const fields = [];
+
+  // Get column options
+  const columns = component.children?.filter((el) => el.type === 'column') || [];
+  const columnOptions = columns.map((col) => {
+    const colState = state[col.qualifiedCode];
+    const colLabel = stripTags(colState?.content?.[mainLang]?.label || '');
+    return {
+      value: col.code,
+      label: colLabel ? `${col.code} - ${colLabel}` : col.code,
+    };
+  });
+
+  // Create field for each row
+  const rows = component.children?.filter((el) => el.type === 'row') || [];
+  for (const row of rows) {
+    const rowState = state[row.qualifiedCode];
+    const rowLabel = stripTags(rowState?.content?.[mainLang]?.label || '');
+
+    fields.push({
+      code: `${code}${row.code}`,
+      label: `${parentLabel} - ${rowLabel}`,
+      type: questionType === 'mcq_array' ? 'multiselect' : 'select',
+      questionType,
+      defaultOperator:
+        questionType === 'mcq_array' ? 'multiselect_equals' : 'select_any_in',
+      options: columnOptions,
+    });
+  }
+
+  return fields;
+}
+
+/**
+ * Build text fields for multiple_text questions
+ */
+function buildMultipleTextFields(code, component, state, mainLang, parentLabel) {
+  if (!component.children) {
+    return [];
+  }
+
+  return component.children.map((child) => {
+    const childState = state[child.qualifiedCode];
+    const childLabel = stripTags(childState?.content?.[mainLang]?.label || '');
+
+    return {
+      code: `${code}${child.code}`,
+      label: `${parentLabel} - ${childLabel}`,
+      type: 'text',
+      questionType: 'text',
+      defaultOperator: 'equal',
+    };
+  });
+}
+
+/**
+ * Build number fields for ranking questions
+ */
+function buildRankingFields(code, component, state, mainLang, parentLabel) {
+  if (!component.children) {
+    return [];
+  }
+
+  return component.children.map((child) => {
+    const childState = state[child.qualifiedCode];
+    const childLabel = stripTags(childState?.content?.[mainLang]?.label || '');
+
+    return {
+      code: `${code}${child.code}`,
+      label: `${parentLabel} - ${childLabel}`,
+      type: 'number',
+      questionType: 'ranking',
+      defaultOperator: 'equal',
+    };
+  });
+}
+
+/**
+ * Get default operator for a question/field type
+ */
+function getDefaultOperatorForType(questionType, fieldType) {
+  const typeDefaults = {
+    file_upload: 'is_not_empty',
+    signature: 'is_not_empty',
+    photo_capture: 'is_not_empty',
+    video_capture: 'is_not_empty',
+    paragraph: 'like',
+    date: 'greater_or_equal',
+    time: 'greater_or_equal',
+    date_time: 'greater_or_equal',
+  };
+
+  if (typeDefaults[questionType]) {
+    return typeDefaults[questionType];
+  }
+
+  const fieldDefaults = {
+    text: 'equal',
+    number: 'equal',
+    select: 'select_any_in',
+    multiselect: 'multiselect_equals',
+    date: 'greater_or_equal',
+    time: 'greater_or_equal',
+    datetime: 'greater_or_equal',
+    file: 'is_not_empty',
+    group: 'is_relevant',
+    survey_mode: 'is_online',
+    survey_lang: 'select_any_in',
+  };
+
+  return fieldDefaults[fieldType] || 'equal';
+}
+
+/**
+ * Get operators for a specific field
+ */
+export function getOperatorsForField(field) {
+  return getOperatorsForFieldType(field.type);
+}

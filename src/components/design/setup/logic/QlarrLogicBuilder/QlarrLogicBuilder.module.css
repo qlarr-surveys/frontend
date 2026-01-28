@@ -1,0 +1,26 @@
+/* Field, operator, and value selectors */
+.fieldSelector {
+  min-width: 200px;
+  flex: 1;
+}
+
+.operatorSelector {
+  min-width: 150px;
+}
+
+.valueInput {
+  min-width: 150px;
+  flex: 1;
+}
+
+/* Range input (for between operator) */
+.rangeInput {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rangeSeparator {
+  color: #666;
+  font-size: 14px;
+}
