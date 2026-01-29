@@ -40,6 +40,21 @@ export const addSkipInstructions = (state, code) => {
   ) {
     return;
   }
+
+  // Clean up skip_logic conditions to remove invalid answer codes
+  if (component.skip_logic && Array.isArray(component.skip_logic)) {
+    const validAnswerCodes = component.children?.map(child => child.code) || [];
+
+    component.skip_logic = component.skip_logic
+      .map((rule) => ({
+        ...rule,
+        condition: rule.condition?.filter((answerCode) =>
+          validAnswerCodes.includes(answerCode)
+        ) || [],
+      }))
+      .filter((rule) => rule.condition.length > 0);
+  }
+
   const instructions = scqSkipEquations(code, component);
   instructions.forEach((instruction) => {
     changeInstruction(state[code], instruction);
@@ -721,21 +736,16 @@ const scqSkipEquations = (qualifiedCode, component) => {
     instructionList.push({ code: "skip_to_on_" + el.code, remove: true });
   });
 
-  // Mark orphaned skip_to_N instructions for removal (where N > current skip_logic length)
-  const currentLength = skipLogic.length;
+  // Remove all skip_to_auto# instructions (they will be recreated below)
   component.instructionList?.forEach((inst) => {
-    const match = inst.code.match(/^skip_to_(\d+)$/);
-    if (match) {
-      const ruleNumber = parseInt(match[1], 10);
-      if (ruleNumber > currentLength) {
-        instructionList.push({ code: inst.code, remove: true });
-      }
+    if (inst.code.match(/^skip_to_auto\d+$/)) {
+      instructionList.push({ code: inst.code, remove: true });
     }
   });
 
   // Generate new instructions from array-based skip_logic
   skipLogic.forEach((rule, index) => {
-    const instructionCode = "skip_to_" + (index + 1);
+    const instructionCode = "skip_to_auto" + (index + 1);
 
     if (!rule.condition?.length || !rule.skipTo) {
       instructionList.push({ code: instructionCode, remove: true });
@@ -751,7 +761,6 @@ const scqSkipEquations = (qualifiedCode, component) => {
       returnType: "boolean",
       isActive: true,
       skipToComponent: rule.skipTo,
-      condition: conditionText,
       toEnd: rule.toEnd || false,
       disqualify: rule.disqualify || false,
     });

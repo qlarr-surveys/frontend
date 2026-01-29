@@ -277,17 +277,7 @@ export const designState = createSlice({
       refreshListForMultipleChoice(question, state);
       addMaskedValuesInstructions(codes[0], question, state);
       cleanupRandomRules(question);
-      // Clean up skip_logic conditions when answer is removed
-      if (question.skip_logic && Array.isArray(question.skip_logic)) {
-        const answerCode = codes[1];
-        question.skip_logic = question.skip_logic
-          .map((rule) => ({
-            ...rule,
-            condition: rule.condition?.filter((c) => c !== answerCode) || [],
-          }))
-          .filter((rule) => rule.condition.length > 0);
-        addSkipInstructions(state, codes[0]);
-      }
+      addSkipInstructions(state, codes[0]);
     },
     addNewAnswers: (state, action) => {
       const questionCode = action.payload.questionCode;
@@ -767,8 +757,6 @@ const cleanupSkipDestinations = (state, deletedCode) => {
   Object.keys(state).forEach((key) => {
     const component = state[key];
     if (
-      component?.type &&
-      ["scq", "image_scq", "icon_scq"].includes(component.type) &&
       Array.isArray(component.skip_logic)
     ) {
       const hadRules = component.skip_logic.some(
