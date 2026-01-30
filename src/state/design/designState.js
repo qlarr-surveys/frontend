@@ -521,6 +521,13 @@ export const designState = createSlice({
         changeInstruction(state[payload.code], instruction)
       );
 
+      saveContentResources(
+        state[payload.code],
+        payload.value,
+        payload.lang,
+        payload.key
+      );
+
       state[payload.code].content[payload.lang][payload.key] = payload.value;
     },
     changeResources: (state, action) => {
@@ -769,6 +776,34 @@ const cleanupSkipDestinations = (state, deletedCode) => {
         addSkipInstructions(state, key);
       }
     }
+  });
+}
+
+const saveContentResources = (
+  component,
+  contentValue,
+  contentLang,
+  contentKey
+) => {
+  const regex = /data-resource-name="([^"]+)"/g;
+  const resources = Array.from(
+    contentValue.matchAll(regex),
+    (match) => match[1]
+  ).filter((name) => name && name.trim());
+
+  if (!component.resources) {
+    component.resources = {};
+  }
+  // Remove existing items with matching keys
+  const prefix = `content_${contentLang}_${contentKey}`;
+  Object.keys(component.resources).forEach((key) => {
+    if (key.startsWith(prefix)) {
+      delete component.resources[key];
+    }
+  });
+  resources.forEach((elem, index) => {
+    component.resources[`${prefix}_${index + 1}`] =
+      elem;
   });
 };
 
