@@ -757,7 +757,7 @@ const cleanupSkipDestinations = (state, deletedCode) => {
   Object.keys(state).forEach((key) => {
     const component = state[key];
     if (
-      Array.isArray(component.skip_logic)
+      Array.isArray(component?.skip_logic)
     ) {
       const hadRules = component.skip_logic.some(
         (rule) => rule.skipTo === deletedCode
