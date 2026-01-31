@@ -1,35 +1,41 @@
 import { useSelector } from "react-redux";
 import { useResponsive } from "~/hooks/use-responsive";
 
-export const isEquivalent = (a, b) => {
+export const isEquivalent = (a, b, visited = new WeakSet()) => {
+  if (a === b) return true;
+
   if (typeof a === "function" || typeof b === "function") {
     return false;
-  } else if (typeof a !== "object" || typeof b !== "object") {
+  }
+
+  if (typeof a !== "object" || typeof b !== "object") {
     return a === b;
   }
 
-  // Create arrays of property names
-  let aProps = a ? Object.getOwnPropertyNames(a) : [];
-  let bProps = b ? Object.getOwnPropertyNames(b) : [];
+  if (a === null || b === null) {
+    return a === b;
+  }
 
-  // If number of properties is different,
-  // objects are not equivalent
+  if (visited.has(a) || visited.has(b)) {
+    return true;
+  }
+
+  visited.add(a);
+  visited.add(b);
+
+  const aProps = Object.getOwnPropertyNames(a);
+  const bProps = Object.getOwnPropertyNames(b);
+
   if (aProps.length !== bProps.length) {
     return false;
   }
 
-  for (var i = 0; i < aProps.length; i++) {
-    let propName = aProps[i];
-
-    // If values of same property are not equal,
-    // objects are not equivalent
-    if (propName !== "key" && !isEquivalent(a[propName], b[propName])) {
+  for (const prop of aProps) {
+    if (prop !== "key" && !isEquivalent(a[prop], b[prop], visited)) {
       return false;
     }
   }
 
-  // If we made it this far, objects
-  // are considered equivalent
   return true;
 };
 
@@ -138,7 +144,9 @@ export const diff = (obj1, obj2) => {
   // Loop through the second object and find missing items
   for (key in obj2) {
     if (obj2.hasOwnProperty(key)) {
-      if (!obj1[key] && obj1[key] !== obj2[key]) {
+      if (!(key in obj1)) {
+        diffs[key] = obj2[key];
+      } else if (obj1[key] !== obj2[key]) {
         diffs[key] = obj2[key];
       }
     }
@@ -156,7 +164,7 @@ export const nextId = (elements) => {
       .filter((el) => el.length > 0);
     if (arrayOfIntCodes.length) {
       let intCodes = arrayOfIntCodes
-        .map((el) => parseInt(el))
+        .map((el) => parseInt(el, 10))
         .sort(function (a, b) {
           return a - b;
         });
@@ -169,31 +177,48 @@ export const nextId = (elements) => {
 };
 
   export const stripTags = (string) => {
-    return string
-      ? string
-          .replace(/<[^>]*>?/gm, "")
-          .replace(/\n/g, "") 
-          .replace(/&nbsp;/g, "") 
-      : string;
+    return string ? string.replace(/<[^>]*>|&nbsp;|\n/g, "") : string;
   };
 
-const stripTagsCache = new Map();
-const CACHE_SIZE_LIMIT = 1000;
+class SimpleLRU {
+  constructor(maxSize = 1000) {
+    this.maxSize = maxSize;
+    this.cache = new Map();
+  }
+
+  get(key) {
+    if (!this.cache.has(key)) return undefined;
+
+    const value = this.cache.get(key);
+    this.cache.delete(key);
+    this.cache.set(key, value);
+    return value;
+  }
+
+  set(key, value) {
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+    } else if (this.cache.size >= this.maxSize) {
+      const firstKey = this.cache.keys().next().value;
+      this.cache.delete(firstKey);
+    }
+    this.cache.set(key, value);
+  }
+
+  clear() {
+    this.cache.clear();
+  }
+}
+
+const stripTagsCache = new SimpleLRU(1000);
 
 export const stripTagsCached = (string) => {
   if (!string) return string;
 
-  if (stripTagsCache.has(string)) {
-    return stripTagsCache.get(string);
-  }
+  const cached = stripTagsCache.get(string);
+  if (cached !== undefined) return cached;
 
   const result = stripTags(string);
-
-  if (stripTagsCache.size >= CACHE_SIZE_LIMIT) {
-    const firstKey = stripTagsCache.keys().next().value;
-    stripTagsCache.delete(firstKey);
-  }
-
   stripTagsCache.set(string, result);
   return result;
 };
@@ -247,7 +272,7 @@ export const isNotEmptyHtml = (value) => {
   return textContent.trim().length > 0 || hasImages;
 };
 
-export const columnMinWidth = (code, runComponent) => {
+export const useColumnMinWidth = (code, runComponent) => {
   const isDesktop = useResponsive("up", "lg");
   const isTablet = useResponsive("between", "md", "lg");
 
