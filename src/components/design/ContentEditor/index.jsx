@@ -1,6 +1,5 @@
 import React, {
   useCallback,
-  useMemo,
   useState,
   useEffect,
   useRef,
@@ -14,7 +13,6 @@ import { useDispatch } from "react-redux";
 import { changeContent, resetFocus } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { isNotEmptyHtml } from "~/utils/design/utils";
-import cloneDeep from "lodash.clonedeep";
 import {
   useCollapsibleHandler,
   ensureCollapsiblesClosed,
@@ -49,14 +47,6 @@ function ContentEditor({
     return state.designState.langInfo;
   });
 
-  const index = useSelector((state) => {
-    return state.designState.index;
-  });
-
-  const designState = useSelector((state) => {
-    return state.designState;
-  });
-
   const lang = langInfo.lang;
   const mainLang = langInfo.mainLang;
   const onMainLang = langInfo.onMainLang;
@@ -67,8 +57,6 @@ function ContentEditor({
 
   const { referenceInstruction, fixedValue } = useInstructionHighlighting({
     content: value,
-    index,
-    designState,
     mainLang,
     isActive,
     renderedContentRef,

@@ -1,12 +1,16 @@
+import { extractReferencedCodes } from "~/components/design/ContentEditor/TipTapEditor/instructionUtils";
+
+const patternCache = new Map();
+
 class QuestionDisplayTransformer {
   constructor(referenceInstruction = {}) {
     this.referenceInstruction = referenceInstruction || {};
   }
 
   getDisplayId(questionCode) {
-    const ref = this.referenceInstruction?.[questionCode];
+    const ref = this.referenceInstruction[questionCode];
 
-    if (ref !== null && typeof ref === "object" && ref.index) {
+    if (ref && typeof ref === "object" && ref.index) {
       return ref.index;
     }
 
@@ -18,7 +22,7 @@ class QuestionDisplayTransformer {
   }
 
   getTooltipContent(questionCode) {
-    const ref = this.referenceInstruction?.[questionCode];
+    const ref = this.referenceInstruction[questionCode];
 
     if (!ref || typeof ref !== "object") {
       return "";
@@ -32,49 +36,6 @@ class QuestionDisplayTransformer {
     return questionCode ? this.getTooltipContent(questionCode) : "";
   }
 
-  transformInstruction(instructionText) {
-    if (!instructionText) {
-      return {
-        transformedText: instructionText,
-        tooltip: "",
-      };
-    }
-
-    if (
-      !this.referenceInstruction ||
-      Object.keys(this.referenceInstruction).length === 0
-    ) {
-      return {
-        transformedText: instructionText,
-        tooltip: "",
-      };
-    }
-
-    let transformedText = instructionText;
-    let tooltip = "";
-
-    Object.keys(this.referenceInstruction).forEach((questionCode) => {
-      const ref = this.referenceInstruction[questionCode];
-
-      if (ref && typeof ref === "object" && ref.index) {
-        const pattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
-
-        if (pattern.test(transformedText)) {
-          pattern.lastIndex = 0;
-          transformedText = transformedText.replace(
-            pattern,
-            `{{${ref.index}$1`
-          );
-          tooltip = this._formatTooltipContent(ref);
-        }
-
-        pattern.lastIndex = 0;
-      }
-    });
-
-    return { transformedText, tooltip };
-  }
-
   transformText(text) {
     if (!text) return text;
 
@@ -85,15 +46,18 @@ class QuestionDisplayTransformer {
       return text;
     }
 
+    const referencedCodes = extractReferencedCodes(text);
+
+    if (referencedCodes.size === 0) return text;
+
     let transformedText = text;
 
-    Object.keys(this.referenceInstruction).forEach((questionCode) => {
+    referencedCodes.forEach((questionCode) => {
       const ref = this.referenceInstruction[questionCode];
 
       if (ref && typeof ref === "object" && ref.index) {
-        const pattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
+        const pattern = this.constructor.createQuestionCodePattern(questionCode);
         transformedText = transformedText.replace(pattern, `{{${ref.index}$1`);
-        pattern.lastIndex = 0;
       }
     });
 
@@ -108,8 +72,14 @@ class QuestionDisplayTransformer {
   }
 
   static createQuestionCodePattern(questionCode) {
+    if (patternCache.has(questionCode)) {
+      return patternCache.get(questionCode);
+    }
+
     const escapedCode = questionCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return new RegExp(`\\{\\{${escapedCode}([:.\\}])`, "g");
+    const pattern = new RegExp(`\\{\\{${escapedCode}([:.\\}])`, "g");
+    patternCache.set(questionCode, pattern);
+    return pattern;
   }
 
   formatTooltipContent(ref) {

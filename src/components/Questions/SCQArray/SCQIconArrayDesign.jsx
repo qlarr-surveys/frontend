@@ -33,7 +33,7 @@ import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
 import { contentEditable, DESIGN_SURVEY_MODE } from "~/routes";
-import { columnMinWidth } from "~/utils/design/utils";
+import { useColumnMinWidth } from "~/utils/design/utils";
 import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
 import ContentEditor from "~/components/design/ContentEditor";
 
@@ -41,7 +41,7 @@ function SCQIconArrayDesign(props) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const t = props.t;
-  const width = columnMinWidth();
+  const width = useColumnMinWidth();
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
