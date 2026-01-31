@@ -20,56 +20,27 @@ export function useInstructionHighlighting({
     return extractReferencedCodes(content);
   }, [content]);
 
-  const hasDisplayIndexRefs = useMemo(() => {
-    return Array.from(referencedCodes).some((code) => DISPLAY_INDEX_PATTERN.test(code));
-  }, [referencedCodes]);
+  const hasDisplayIndexRefs = Array.from(referencedCodes).some((code) => DISPLAY_INDEX_PATTERN.test(code));
 
   const customEquality = useCallback((prev, next) => {
     if (prev === next) return true;
 
-    const prevKeys = Object.keys(prev.questions);
-    const nextKeys = Object.keys(next.questions);
+    if (prev.mainLang !== next.mainLang) return false;
 
-    if (prevKeys.length !== nextKeys.length) {
-      return false;
-    }
+    const prevIndexKeys = Object.keys(prev.index);
+    const nextIndexKeys = Object.keys(next.index);
 
-    for (const key of prevKeys) {
-      if (!next.questions[key] ||
-          prev.questions[key].content !== next.questions[key].content) {
-        return false;
-      }
-    }
+    if (prevIndexKeys.length !== nextIndexKeys.length) return false;
 
-    if (prev.mainLang !== next.mainLang) {
-      return false;
-    }
-
-    const prevIdxKeys = Object.keys(prev.index);
-    const nextIdxKeys = Object.keys(next.index);
-
-    if (prevIdxKeys.length !== nextIdxKeys.length) {
-      return false;
-    }
-
-    for (const key of prevIdxKeys) {
+    // Check if index values changed (e.g., Q1 became Q2 after reordering)
+    for (const key of prevIndexKeys) {
       if (prev.index[key] !== next.index[key]) {
         return false;
       }
     }
 
-    const prevRevKeys = Object.keys(prev.reverseIndex);
-    const nextRevKeys = Object.keys(next.reverseIndex);
-
-    if (prevRevKeys.length !== nextRevKeys.length) {
-      return false;
-    }
-
-    for (const key of prevRevKeys) {
-      if (prev.reverseIndex[key] !== next.reverseIndex[key]) {
-        return false;
-      }
-    }
+    if (Object.keys(prev.questions).length !== Object.keys(next.questions).length) return false;
+    if (Object.keys(prev.reverseIndex).length !== Object.keys(next.reverseIndex).length) return false;
 
     return true;
   }, []);
@@ -112,11 +83,9 @@ export function useInstructionHighlighting({
       content,
       relevantData.index,
       relevantData.questions,
-      relevantData.mainLang,
-      referencedCodes,
-      relevantData.reverseIndex
+      relevantData.mainLang
     );
-  }, [content, relevantData, referencedCodes]);
+  }, [content, relevantData]);
 
   const transformer = useMemo(() => {
     return new QuestionDisplayTransformer(referenceInstruction);

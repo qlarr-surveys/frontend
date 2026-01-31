@@ -55,9 +55,7 @@ export function parseUsedInstructions(
   content,
   index,
   designState,
-  mainLang,
-  referencedCodes,
-  reverseIndex
+  mainLang
 ) {
   const result = {};
 
@@ -65,15 +63,15 @@ export function parseUsedInstructions(
     return result;
   }
 
-  const codes = referencedCodes || extractReferencedCodes(content);
+  const codes = extractReferencedCodes(content);
 
   if (codes.size === 0) {
     return result;
   }
 
-  const reverse = reverseIndex !== undefined
-    ? reverseIndex
-    : (Array.from(codes).some((code) => /^Q\d+$/.test(code)) ? buildReverseIndex(index) : {});
+  const reverse = Array.from(codes).some((code) => /^Q\d+$/.test(code))
+    ? buildReverseIndex(index)
+    : {};
 
   codes.forEach((refCode) => {
     let questionCode = refCode;
@@ -218,6 +216,7 @@ export function highlightInstructionsInStaticContent(
       createInstructionTooltip(span, tippyInstances);
     });
   } catch (error) {
+    console.error("Error highlighting instructions:", error);
   }
 
   return () => {
