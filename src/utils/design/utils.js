@@ -168,13 +168,34 @@ export const nextId = (elements) => {
   return 1;
 };
 
-export const stripTags = (string) => {
-  return string
-    ? string
-        .replace(/<[^>]*>?/gm, "")
-        .replace("\n", "")
-        .replace("&nbsp;", "")
-    : string;
+  export const stripTags = (string) => {
+    return string
+      ? string
+          .replace(/<[^>]*>?/gm, "")
+          .replace(/\n/g, "") 
+          .replace(/&nbsp;/g, "") 
+      : string;
+  };
+
+const stripTagsCache = new Map();
+const CACHE_SIZE_LIMIT = 1000;
+
+export const stripTagsCached = (string) => {
+  if (!string) return string;
+
+  if (stripTagsCache.has(string)) {
+    return stripTagsCache.get(string);
+  }
+
+  const result = stripTags(string);
+
+  if (stripTagsCache.size >= CACHE_SIZE_LIMIT) {
+    const firstKey = stripTagsCache.keys().next().value;
+    stripTagsCache.delete(firstKey);
+  }
+
+  stripTagsCache.set(string, result);
+  return result;
 };
 
 export function truncateWithEllipsis(text, maxLength) {

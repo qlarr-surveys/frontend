@@ -1,6 +1,5 @@
 import React, {
   useCallback,
-  useMemo,
   useState,
   useEffect,
   useRef,
@@ -49,14 +48,6 @@ function ContentEditor({
     return state.designState.langInfo;
   });
 
-  const index = useSelector((state) => {
-    return state.designState.index;
-  });
-
-  const designState = useSelector((state) => {
-    return state.designState;
-  });
-
   const lang = langInfo.lang;
   const mainLang = langInfo.mainLang;
   const onMainLang = langInfo.onMainLang;
@@ -67,8 +58,6 @@ function ContentEditor({
 
   const { referenceInstruction, fixedValue } = useInstructionHighlighting({
     content: value,
-    index,
-    designState,
     mainLang,
     isActive,
     renderedContentRef,

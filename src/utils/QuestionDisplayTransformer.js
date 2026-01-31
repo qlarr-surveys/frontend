@@ -1,3 +1,5 @@
+const patternCache = new Map();
+
 class QuestionDisplayTransformer {
   constructor(referenceInstruction = {}) {
     this.referenceInstruction = referenceInstruction || {};
@@ -108,8 +110,14 @@ class QuestionDisplayTransformer {
   }
 
   static createQuestionCodePattern(questionCode) {
+    if (patternCache.has(questionCode)) {
+      return patternCache.get(questionCode);
+    }
+
     const escapedCode = questionCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return new RegExp(`\\{\\{${escapedCode}([:.\\}])`, "g");
+    const pattern = new RegExp(`\\{\\{${escapedCode}([:.\\}])`, "g");
+    patternCache.set(questionCode, pattern);
+    return pattern;
   }
 
   formatTooltipContent(ref) {

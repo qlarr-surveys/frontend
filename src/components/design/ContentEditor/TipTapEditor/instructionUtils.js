@@ -1,7 +1,7 @@
 import tippy from "tippy.js";
 import { INSTRUCTION_EDITOR_CONFIG } from "~/constants/editor";
 import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
-import { stripTags } from "~/utils/design/utils";
+import { stripTagsCached } from "~/utils/design/utils";
 
 export const INSTRUCTION_PATTERN = INSTRUCTION_EDITOR_CONFIG.PATTERN;
 export const TIPPY_INSTRUCTION_CONFIG = INSTRUCTION_EDITOR_CONFIG.TOOLTIP;
@@ -29,6 +29,28 @@ export function transformInstructionText(
   return transformer.transformInstruction(instructionText);
 }
 
+export function extractReferencedCodes(content) {
+  if (!content) return new Set();
+
+  const codes = new Set();
+  const pattern = /\{\{([^.:}]+)[.:]/g;
+  let match;
+
+  while ((match = pattern.exec(content)) !== null) {
+    codes.add(match[1]);
+  }
+
+  return codes;
+}
+
+function buildReverseIndex(index) {
+  const reverse = {};
+  Object.keys(index).forEach((questionCode) => {
+    reverse[index[questionCode]] = questionCode;
+  });
+  return reverse;
+}
+
 export function parseUsedInstructions(content, index, designState, mainLang) {
   const result = {};
 
@@ -36,49 +58,38 @@ export function parseUsedInstructions(content, index, designState, mainLang) {
     return result;
   }
 
-  const reverseIndex = {};
-  Object.keys(index).forEach((questionCode) => {
-    reverseIndex[index[questionCode]] = questionCode;
-  });
+  const referencedCodes = extractReferencedCodes(content);
 
-  Object.keys(index).forEach((questionCode) => {
-    const pattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
-
-    if (pattern.test(content)) {
-      const questionIndex = index[questionCode];
-      const questionState = designState?.[questionCode];
-      const questionTextHtml = questionState?.content?.[mainLang]?.label || "";
-      const questionText = stripTags(questionTextHtml);
-
-      if (questionIndex) {
-        result[questionCode] = {
-          index: questionIndex,
-          text: questionText,
-        };
-      }
-    }
-
-    pattern.lastIndex = 0;
-  });
-
-  const mentionPattern = /\{\{(Q\d+):/g;
-  let match;
-
-  while ((match = mentionPattern.exec(content)) !== null) {
-    const displayIndex = match[1];
-    const questionCode = reverseIndex[displayIndex];
-
-    if (questionCode && !result[questionCode]) {
-      const questionState = designState?.[questionCode];
-      const questionTextHtml = questionState?.content?.[mainLang]?.label || "";
-      const questionText = stripTags(questionTextHtml);
-
-      result[questionCode] = {
-        index: displayIndex,
-        text: questionText,
-      };
-    }
+  if (referencedCodes.size === 0) {
+    return result;
   }
+
+  const hasDisplayIndexRefs = Array.from(referencedCodes).some((code) =>
+    /^Q\d+$/.test(code)
+  );
+  const reverseIndex = hasDisplayIndexRefs ? buildReverseIndex(index) : {};
+
+  referencedCodes.forEach((refCode) => {
+    let questionCode = refCode;
+
+    if (/^Q\d+$/.test(refCode) && reverseIndex[refCode]) {
+      questionCode = reverseIndex[refCode];
+    }
+
+    if (!index[questionCode]) {
+      return;
+    }
+
+    const displayIndex = index[questionCode];
+    const questionState = designState?.[questionCode];
+    const questionTextHtml = questionState?.content?.[mainLang]?.label || "";
+    const questionText = stripTagsCached(questionTextHtml);
+
+    result[questionCode] = {
+      index: displayIndex,
+      text: questionText,
+    };
+  });
 
   return result;
 }
@@ -201,7 +212,6 @@ export function highlightInstructionsInStaticContent(
       createInstructionTooltip(span, tippyInstances);
     });
   } catch (error) {
-    console.error("Error highlighting instructions in static content:", error);
   }
 
   return () => {
