@@ -87,13 +87,10 @@ export function useInstructionHighlighting({
     );
   }, [content, relevantData]);
 
-  const transformer = useMemo(() => {
-    return new QuestionDisplayTransformer(referenceInstruction);
-  }, [referenceInstruction]);
-
   const fixedValue = useMemo(() => {
+    const transformer = new QuestionDisplayTransformer(referenceInstruction);
     return transformer.transformText(content);
-  }, [transformer, content]);
+  }, [referenceInstruction, content]);
 
   const highlightedContentRef = useRef(null);
   const lastReferenceInstructionRef = useRef(null);
