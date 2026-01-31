@@ -3,6 +3,7 @@ import {
   parseUsedInstructions,
   highlightInstructionsInStaticContent,
   extractReferencedCodes,
+  buildReverseIndex,
 } from "~/components/design/ContentEditor/TipTapEditor/instructionUtils";
 import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 import { useSelector } from "react-redux";
@@ -13,6 +14,10 @@ export function useInstructionHighlighting({
   isActive,
   renderedContentRef,
 }) {
+  const referencedCodes = useMemo(() => {
+    return extractReferencedCodes(content);
+  }, [content]);
+
   const customEquality = (prev, next) => {
     const prevKeys = Object.keys(prev.questions).sort().join(',');
     const nextKeys = Object.keys(next.questions).sort().join(',');
@@ -31,18 +36,23 @@ export function useInstructionHighlighting({
       return false;
     }
 
+    const prevReverseKeys = Object.keys(prev.reverseIndex).sort().join(',');
+    const nextReverseKeys = Object.keys(next.reverseIndex).sort().join(',');
+
+    if (prevReverseKeys !== nextReverseKeys) {
+      return false;
+    }
+
     return true;
   };
 
   const relevantData = useSelector((state) => {
-    const codes = extractReferencedCodes(content);
+    const codes = referencedCodes;
 
-    const reverseIndex = {};
-    if (state.designState.index) {
-      Object.keys(state.designState.index).forEach((code) => {
-        reverseIndex[state.designState.index[code]] = code;
-      });
-    }
+    const hasDisplayIndexRefs = Array.from(codes).some((code) => /^Q\d+$/.test(code));
+    const reverseIndex = hasDisplayIndexRefs && state.designState.index
+      ? buildReverseIndex(state.designState.index)
+      : {};
 
     const data = {
       index: {},
@@ -75,14 +85,19 @@ export function useInstructionHighlighting({
       content,
       relevantData.index,
       relevantData.questions,
-      relevantData.mainLang
+      relevantData.mainLang,
+      referencedCodes,
+      relevantData.reverseIndex
     );
-  }, [content, relevantData]);
+  }, [content, relevantData, referencedCodes]);
+
+  const transformer = useMemo(() => {
+    return new QuestionDisplayTransformer(referenceInstruction);
+  }, [referenceInstruction]);
 
   const fixedValue = useMemo(() => {
-    const transformer = new QuestionDisplayTransformer(referenceInstruction);
     return transformer.transformText(content);
-  }, [referenceInstruction, content]);
+  }, [transformer, content]);
 
   const highlightedContentRef = useRef(null);
   const lastReferenceInstructionRef = useRef(null);

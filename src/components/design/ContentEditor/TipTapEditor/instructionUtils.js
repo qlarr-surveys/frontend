@@ -6,8 +6,14 @@ import { stripTagsCached } from "~/utils/design/utils";
 export const INSTRUCTION_PATTERN = INSTRUCTION_EDITOR_CONFIG.PATTERN;
 export const TIPPY_INSTRUCTION_CONFIG = INSTRUCTION_EDITOR_CONFIG.TOOLTIP;
 
+let cachedInstructionRegex = null;
+
 export const getInstructionRegex = () => {
-  return new RegExp(INSTRUCTION_PATTERN.source, "g");
+  if (!cachedInstructionRegex) {
+    cachedInstructionRegex = new RegExp(INSTRUCTION_PATTERN.source, "g");
+  }
+  cachedInstructionRegex.lastIndex = 0;
+  return cachedInstructionRegex;
 };
 
 function createInstructionTooltip(element, tippyInstances) {
@@ -29,8 +35,10 @@ export function transformInstructionText(
   return transformer.transformInstruction(instructionText);
 }
 
+const EMPTY_SET = Object.freeze(new Set());
+
 export function extractReferencedCodes(content) {
-  if (!content) return new Set();
+  if (!content) return EMPTY_SET;
 
   const codes = new Set();
   const pattern = /\{\{([^.:}]+)[.:]/g;
@@ -43,7 +51,7 @@ export function extractReferencedCodes(content) {
   return codes;
 }
 
-function buildReverseIndex(index) {
+export function buildReverseIndex(index) {
   const reverse = {};
   Object.keys(index).forEach((questionCode) => {
     reverse[index[questionCode]] = questionCode;
@@ -51,29 +59,35 @@ function buildReverseIndex(index) {
   return reverse;
 }
 
-export function parseUsedInstructions(content, index, designState, mainLang) {
+export function parseUsedInstructions(
+  content,
+  index,
+  designState,
+  mainLang,
+  referencedCodes,
+  reverseIndex
+) {
   const result = {};
 
   if (!content || !index || Object.keys(index).length === 0) {
     return result;
   }
 
-  const referencedCodes = extractReferencedCodes(content);
+  const codes = referencedCodes || extractReferencedCodes(content);
 
-  if (referencedCodes.size === 0) {
+  if (codes.size === 0) {
     return result;
   }
 
-  const hasDisplayIndexRefs = Array.from(referencedCodes).some((code) =>
-    /^Q\d+$/.test(code)
-  );
-  const reverseIndex = hasDisplayIndexRefs ? buildReverseIndex(index) : {};
+  const reverse = reverseIndex !== undefined
+    ? reverseIndex
+    : (Array.from(codes).some((code) => /^Q\d+$/.test(code)) ? buildReverseIndex(index) : {});
 
-  referencedCodes.forEach((refCode) => {
+  codes.forEach((refCode) => {
     let questionCode = refCode;
 
-    if (/^Q\d+$/.test(refCode) && reverseIndex[refCode]) {
-      questionCode = reverseIndex[refCode];
+    if (/^Q\d+$/.test(refCode) && reverse[refCode]) {
+      questionCode = reverse[refCode];
     }
 
     if (!index[questionCode]) {
