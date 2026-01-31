@@ -54,7 +54,7 @@ export function buildReverseIndex(index) {
 export function parseUsedInstructions(
   content,
   index,
-  designState,
+  questions,
   mainLang
 ) {
   const result = {};
@@ -85,7 +85,7 @@ export function parseUsedInstructions(
     }
 
     const displayIndex = index[questionCode];
-    const questionState = designState?.[questionCode];
+    const questionState = questions?.[questionCode];
     const questionTextHtml = questionState?.content?.[mainLang]?.label || "";
     const questionText = stripTagsCached(questionTextHtml);
 
@@ -168,10 +168,10 @@ export function highlightInstructionsInStaticContent(
       const fragment = document.createDocumentFragment();
       let lastIndex = 0;
 
-      const matchRegex = getInstructionRegex();
+      regex.lastIndex = 0;
       let match;
 
-      while ((match = matchRegex.exec(text)) !== null) {
+      while ((match = regex.exec(text)) !== null) {
         if (match.index > lastIndex) {
           fragment.appendChild(
             document.createTextNode(text.slice(lastIndex, match.index))

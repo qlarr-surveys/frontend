@@ -13,7 +13,6 @@ import { useDispatch } from "react-redux";
 import { changeContent, resetFocus } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { isNotEmptyHtml } from "~/utils/design/utils";
-import cloneDeep from "lodash.clonedeep";
 import {
   useCollapsibleHandler,
   ensureCollapsiblesClosed,

@@ -1,3 +1,5 @@
+import { extractReferencedCodes } from "~/components/design/ContentEditor/TipTapEditor/instructionUtils";
+
 const patternCache = new Map();
 
 class QuestionDisplayTransformer {
@@ -44,7 +46,7 @@ class QuestionDisplayTransformer {
       return text;
     }
 
-    const referencedCodes = this._extractReferencedCodes(text);
+    const referencedCodes = extractReferencedCodes(text);
 
     if (referencedCodes.size === 0) return text;
 
@@ -67,18 +69,6 @@ class QuestionDisplayTransformer {
 
     const match = instruction.match(/\{\{([^.:}]+)(?:[.:][^}]*)?\}\}/);
     return match ? match[1] : null;
-  }
-
-  _extractReferencedCodes(text) {
-    const codes = new Set();
-    const pattern = /\{\{([^.:}]+)[.:}]/g;
-    let match;
-
-    while ((match = pattern.exec(text)) !== null) {
-      codes.add(match[1]);
-    }
-
-    return codes;
   }
 
   static createQuestionCodePattern(questionCode) {
