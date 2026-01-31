@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect } from "react";
+import { useMemo, useRef, useEffect, useCallback } from "react";
 import {
   parseUsedInstructions,
   highlightInstructionsInStaticContent,
@@ -7,6 +7,8 @@ import {
 } from "~/components/design/ContentEditor/TipTapEditor/instructionUtils";
 import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 import { useSelector } from "react-redux";
+
+const DISPLAY_INDEX_PATTERN = /^Q\d+$/;
 
 export function useInstructionHighlighting({
   content,
@@ -18,16 +20,23 @@ export function useInstructionHighlighting({
     return extractReferencedCodes(content);
   }, [content]);
 
-  const customEquality = (prev, next) => {
-    const prevKeys = Object.keys(prev.questions).sort().join(',');
-    const nextKeys = Object.keys(next.questions).sort().join(',');
+  const hasDisplayIndexRefs = useMemo(() => {
+    return Array.from(referencedCodes).some((code) => DISPLAY_INDEX_PATTERN.test(code));
+  }, [referencedCodes]);
 
-    if (prevKeys !== nextKeys) {
+  const customEquality = useCallback((prev, next) => {
+    if (prev === next) return true;
+
+    const prevKeys = Object.keys(prev.questions);
+    const nextKeys = Object.keys(next.questions);
+
+    if (prevKeys.length !== nextKeys.length) {
       return false;
     }
 
-    for (const key in prev.questions) {
-      if (prev.questions[key].content !== next.questions[key].content) {
+    for (const key of prevKeys) {
+      if (!next.questions[key] ||
+          prev.questions[key].content !== next.questions[key].content) {
         return false;
       }
     }
@@ -36,20 +45,38 @@ export function useInstructionHighlighting({
       return false;
     }
 
-    const prevReverseKeys = Object.keys(prev.reverseIndex).sort().join(',');
-    const nextReverseKeys = Object.keys(next.reverseIndex).sort().join(',');
+    const prevIdxKeys = Object.keys(prev.index);
+    const nextIdxKeys = Object.keys(next.index);
 
-    if (prevReverseKeys !== nextReverseKeys) {
+    if (prevIdxKeys.length !== nextIdxKeys.length) {
       return false;
     }
 
+    for (const key of prevIdxKeys) {
+      if (prev.index[key] !== next.index[key]) {
+        return false;
+      }
+    }
+
+    const prevRevKeys = Object.keys(prev.reverseIndex);
+    const nextRevKeys = Object.keys(next.reverseIndex);
+
+    if (prevRevKeys.length !== nextRevKeys.length) {
+      return false;
+    }
+
+    for (const key of prevRevKeys) {
+      if (prev.reverseIndex[key] !== next.reverseIndex[key]) {
+        return false;
+      }
+    }
+
     return true;
-  };
+  }, []);
 
   const relevantData = useSelector((state) => {
     const codes = referencedCodes;
 
-    const hasDisplayIndexRefs = Array.from(codes).some((code) => /^Q\d+$/.test(code));
     const reverseIndex = hasDisplayIndexRefs && state.designState.index
       ? buildReverseIndex(state.designState.index)
       : {};
@@ -64,7 +91,7 @@ export function useInstructionHighlighting({
     codes.forEach((refCode) => {
       let questionCode = refCode;
 
-      if (/^Q\d+$/.test(refCode) && reverseIndex[refCode]) {
+      if (DISPLAY_INDEX_PATTERN.test(refCode) && reverseIndex[refCode]) {
         questionCode = reverseIndex[refCode];
       }
 
@@ -103,33 +130,32 @@ export function useInstructionHighlighting({
   const lastReferenceInstructionRef = useRef(null);
 
   useEffect(() => {
-    let cleanup = null;
+    if (isActive) return;
+    if (!renderedContentRef.current) return;
 
-    if (!isActive && renderedContentRef.current) {
-      const currentContent = fixedValue;
-      const contentChanged = highlightedContentRef.current !== currentContent;
-      const refChanged =
-        lastReferenceInstructionRef.current !== referenceInstruction;
+    const currentContent = fixedValue;
+    const contentChanged = highlightedContentRef.current !== currentContent;
+    const refChanged = lastReferenceInstructionRef.current !== referenceInstruction;
 
-      if (contentChanged || refChanged) {
-        cleanup = highlightInstructionsInStaticContent(
-          renderedContentRef.current,
-          referenceInstruction
-        );
-        highlightedContentRef.current = currentContent;
-        lastReferenceInstructionRef.current = referenceInstruction;
-      }
-    } else if (isActive) {
-      highlightedContentRef.current = null;
-      lastReferenceInstructionRef.current = null;
-    }
+    if (!contentChanged && !refChanged) return;
 
-    return () => {
-      if (cleanup) {
-        cleanup();
-      }
-    };
+    const cleanup = highlightInstructionsInStaticContent(
+      renderedContentRef.current,
+      referenceInstruction
+    );
+
+    highlightedContentRef.current = currentContent;
+    lastReferenceInstructionRef.current = referenceInstruction;
+
+    return cleanup;
   }, [isActive, fixedValue, referenceInstruction, renderedContentRef]);
+
+  useEffect(() => {
+    if (!isActive) return;
+
+    highlightedContentRef.current = null;
+    lastReferenceInstructionRef.current = null;
+  }, [isActive]);
 
   return { referenceInstruction, fixedValue };
 }
