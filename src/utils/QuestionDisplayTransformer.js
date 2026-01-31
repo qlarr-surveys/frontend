@@ -6,9 +6,9 @@ class QuestionDisplayTransformer {
   }
 
   getDisplayId(questionCode) {
-    const ref = this.referenceInstruction?.[questionCode];
+    const ref = this.referenceInstruction[questionCode];
 
-    if (ref !== null && typeof ref === "object" && ref.index) {
+    if (ref && typeof ref === "object" && ref.index) {
       return ref.index;
     }
 
@@ -20,7 +20,7 @@ class QuestionDisplayTransformer {
   }
 
   getTooltipContent(questionCode) {
-    const ref = this.referenceInstruction?.[questionCode];
+    const ref = this.referenceInstruction[questionCode];
 
     if (!ref || typeof ref !== "object") {
       return "";
@@ -34,49 +34,6 @@ class QuestionDisplayTransformer {
     return questionCode ? this.getTooltipContent(questionCode) : "";
   }
 
-  transformInstruction(instructionText) {
-    if (!instructionText) {
-      return {
-        transformedText: instructionText,
-        tooltip: "",
-      };
-    }
-
-    if (
-      !this.referenceInstruction ||
-      Object.keys(this.referenceInstruction).length === 0
-    ) {
-      return {
-        transformedText: instructionText,
-        tooltip: "",
-      };
-    }
-
-    let transformedText = instructionText;
-    let tooltip = "";
-
-    Object.keys(this.referenceInstruction).forEach((questionCode) => {
-      const ref = this.referenceInstruction[questionCode];
-
-      if (ref && typeof ref === "object" && ref.index) {
-        const pattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
-
-        if (pattern.test(transformedText)) {
-          pattern.lastIndex = 0;
-          transformedText = transformedText.replace(
-            pattern,
-            `{{${ref.index}$1`
-          );
-          tooltip = this._formatTooltipContent(ref);
-        }
-
-        pattern.lastIndex = 0;
-      }
-    });
-
-    return { transformedText, tooltip };
-  }
-
   transformText(text) {
     if (!text) return text;
 
@@ -87,15 +44,18 @@ class QuestionDisplayTransformer {
       return text;
     }
 
+    const referencedCodes = this._extractReferencedCodes(text);
+
+    if (referencedCodes.size === 0) return text;
+
     let transformedText = text;
 
-    Object.keys(this.referenceInstruction).forEach((questionCode) => {
+    referencedCodes.forEach((questionCode) => {
       const ref = this.referenceInstruction[questionCode];
 
       if (ref && typeof ref === "object" && ref.index) {
-        const pattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
+        const pattern = this.constructor.createQuestionCodePattern(questionCode);
         transformedText = transformedText.replace(pattern, `{{${ref.index}$1`);
-        pattern.lastIndex = 0;
       }
     });
 
@@ -107,6 +67,18 @@ class QuestionDisplayTransformer {
 
     const match = instruction.match(/\{\{([^.:}]+)(?:[.:][^}]*)?\}\}/);
     return match ? match[1] : null;
+  }
+
+  _extractReferencedCodes(text) {
+    const codes = new Set();
+    const pattern = /\{\{([^.:}]+)[.:}]/g;
+    let match;
+
+    while ((match = pattern.exec(text)) !== null) {
+      codes.add(match[1]);
+    }
+
+    return codes;
   }
 
   static createQuestionCodePattern(questionCode) {

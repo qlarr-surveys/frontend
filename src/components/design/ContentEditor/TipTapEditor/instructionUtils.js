@@ -27,14 +27,6 @@ function createInstructionTooltip(element, tippyInstances) {
   }
 }
 
-export function transformInstructionText(
-  instructionText,
-  referenceInstruction
-) {
-  const transformer = new QuestionDisplayTransformer(referenceInstruction);
-  return transformer.transformInstruction(instructionText);
-}
-
 const EMPTY_SET = Object.freeze(new Set());
 
 export function extractReferencedCodes(content) {
