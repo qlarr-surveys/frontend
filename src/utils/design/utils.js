@@ -181,51 +181,8 @@ export const nextId = (elements) => {
   return 1;
 };
 
-  export const stripTags = (string) => {
-    return string ? string.replace(STRIP_TAGS_PATTERN, "") : string;
-  };
-
-class SimpleLRU {
-  constructor(maxSize = 1000) {
-    this.maxSize = maxSize;
-    this.cache = new Map();
-  }
-
-  get(key) {
-    if (!this.cache.has(key)) return undefined;
-
-    const value = this.cache.get(key);
-    this.cache.delete(key);
-    this.cache.set(key, value);
-    return value;
-  }
-
-  set(key, value) {
-    if (this.cache.has(key)) {
-      this.cache.delete(key);
-    } else if (this.cache.size >= this.maxSize) {
-      const firstKey = this.cache.keys().next().value;
-      this.cache.delete(firstKey);
-    }
-    this.cache.set(key, value);
-  }
-
-  clear() {
-    this.cache.clear();
-  }
-}
-
-const stripTagsCache = new SimpleLRU(1000);
-
-export const stripTagsCached = (string) => {
-  if (!string) return string;
-
-  const cached = stripTagsCache.get(string);
-  if (cached !== undefined) return cached;
-
-  const result = stripTags(string);
-  stripTagsCache.set(string, result);
-  return result;
+export const stripTags = (string) => {
+  return string ? string.replace(STRIP_TAGS_PATTERN, "") : string;
 };
 
 export function truncateWithEllipsis(text, maxLength) {

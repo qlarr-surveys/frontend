@@ -1,7 +1,7 @@
 import tippy from "tippy.js";
 import { INSTRUCTION_EDITOR_CONFIG } from "~/constants/editor";
 import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
-import { stripTagsCached } from "~/utils/design/utils";
+import { stripTags } from "~/utils/design/utils";
 import {
   DISPLAY_INDEX_PATTERN,
   INSTRUCTION_SYNTAX_PATTERN,
@@ -132,7 +132,7 @@ export function parseUsedInstructions(content, index, questions, mainLang, rever
     const displayIndex = index[questionCode];
     const questionState = questions?.[questionCode];
     const questionTextHtml = questionState?.content?.[mainLang]?.label || "";
-    const questionText = stripTagsCached(questionTextHtml);
+    const questionText = stripTags(questionTextHtml);
 
     result[questionCode] = {
       index: displayIndex,
