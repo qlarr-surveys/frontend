@@ -55,9 +55,8 @@ export const FieldSelector = React.memo(function FieldSelector({ value, onChange
         </li>
       )}
       renderOption={(props, option) => {
-        const { key, ...otherProps } = props;
         return (
-          <li key={key} {...otherProps}>
+          <li key={option.code} {...props}>
             {option.label}
           </li>
         );
