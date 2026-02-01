@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -12,6 +13,7 @@ import Iconify from "~/components/iconify";
 import Image from "~/components/image/image";
 import FormProvider, { RHFTextField } from "../../../components/hook-form";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
@@ -28,7 +30,7 @@ import { useService } from "~/hooks/use-service";
 
 export default function ResetPasswordView({ confirmNewUser = false }) {
   const authService = useService("auth");
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -38,17 +40,21 @@ export default function ResetPasswordView({ confirmNewUser = false }) {
 
   const refreshToken = searchParams.get("token");
 
-  const ResetPasswordSchema = Yup.object().shape({
-    password: Yup.string()
-      .required(t("password_required"))
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-        t("error.invalid_password")
-      ),
-    confirmPassword: Yup.string()
-      .required(t("password_required"))
-      .oneOf([Yup.ref("password")], t("error.password_should_match")),
-  });
+  const ResetPasswordSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        password: Yup.string()
+          .required(t("password_required"))
+          .matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+            t("error.invalid_password")
+          ),
+        confirmPassword: Yup.string()
+          .required(t("password_required"))
+          .oneOf([Yup.ref("password")], t("error.password_should_match")),
+      }),
+    [t]
+  );
 
   const defaultValues = {
     email: "",
@@ -114,7 +120,7 @@ export default function ResetPasswordView({ confirmNewUser = false }) {
         >
           <Stack sx={{ textAlign: "center" }}>
             <Image
-              alt="reset password"
+              alt={t("alt.reset_password")}
               src="/ic_lock_password.svg"
               sx={{ mb: 5, width: 96, height: 96, mx: "auto" }}
             />

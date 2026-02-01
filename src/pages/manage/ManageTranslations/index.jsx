@@ -10,6 +10,8 @@ import {
   Select,
   Typography,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import styles from "./ManageTranslations.module.css";
 import { BaseLanguage } from "~/components/manage/BaseLanguage";
 import { useSelector } from "react-redux";
@@ -25,6 +27,7 @@ import {
 import { LANGUAGE_DEF } from "~/constants/language";
 
 function ManageTranslations({ onManageTranslationsClose, onStartTranslation }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   return (
     <Dialog
       fullWidth
@@ -33,7 +36,7 @@ function ManageTranslations({ onManageTranslationsClose, onStartTranslation }) {
       onClose={onManageTranslationsClose}
     >
       <DialogTitle>
-        Translations{" "}
+        {t("translations.title")}{" "}
         <IconButton
           aria-label="close"
           onClick={onManageTranslationsClose}
@@ -61,6 +64,7 @@ function ManageTranslations({ onManageTranslationsClose, onStartTranslation }) {
 }
 
 export function ManageLanguages() {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const dispatch = useDispatch();
 
   const langInfo = useSelector((state) => {
@@ -105,14 +109,14 @@ export function ManageLanguages() {
           <Typography
             sx={{ marginTop: "16px", marginBottom: "8px", fontSize: "1em" }}
           >
-            Translate Survey To:
+            {t("translations.translate_to")}
           </Typography>
           <FormControl fullWidth>
-            <InputLabel id="label-base-language">Language</InputLabel>
+            <InputLabel id="label-base-language">{t("translations.language")}</InputLabel>
             <Select
               id="ChangeLang"
               value={lang}
-              label="Design Language"
+              label={t("translations.design_language")}
               onChange={(event) => {
                 dispatch(changeLang(event.target.value));
               }}

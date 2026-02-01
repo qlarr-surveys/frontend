@@ -12,11 +12,11 @@ import Iconify from "~/components/iconify";
 import Image from "~/components/image/image";
 import FormProvider, { RHFTextField } from "../../../components/hook-form";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
+import { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
 import { routes } from "~/routes";
-import { useNavigate } from "react-router-dom";
 import SuccessMessage from "~/components/common/SuccessMessage/SuccessMessage";
 import { useService } from "~/hooks/use-service";
 // ----------------------------------------------------------------------
@@ -24,17 +24,21 @@ import { useService } from "~/hooks/use-service";
 export default function ForgotPasswordView() {
   const authService = useService("auth");
 
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const [isSuccess, setSuccess] = useState(false);
   const dispatch = useDispatch();
-  const ForgotPasswordSchema = Yup.object().shape({
-    email: Yup.string()
-      .required(t("email_required"))
-      .matches(
-        /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
-        t("error.invalid_email")
-      ),
-  });
+  const ForgotPasswordSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        email: Yup.string()
+          .required(t("email_required"))
+          .matches(
+            /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+            t("error.invalid_email")
+          ),
+      }),
+    [t]
+  );
 
   const defaultValues = {
     email: "",
@@ -69,7 +73,7 @@ export default function ForgotPasswordView() {
       ) : (
         <Stack sx={{ textAlign: "center" }}>
           <Image
-            alt="reset password"
+            alt={t("alt.reset_password")}
             src="/ic_lock_password.svg"
             sx={{ mb: 5, width: 96, height: 96, mx: "auto" }}
           />

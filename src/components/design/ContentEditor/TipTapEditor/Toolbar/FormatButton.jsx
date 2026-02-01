@@ -6,6 +6,7 @@ const FormatButton = ({
   title,
   children,
   disabled = false,
+  ...rest
 }) => {
   return (
     <button
@@ -14,6 +15,7 @@ const FormatButton = ({
       className={`tiptap-toolbar-button ${isActive ? "is-active" : ""}`}
       title={title}
       disabled={disabled}
+      {...rest}
     >
       {children}
     </button>

@@ -1,6 +1,17 @@
-.skipItem {
-  margin-top: 24px;
-  margin-bottom: 24px;
+.ruleCard {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.ruleHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .toEnd {
@@ -8,5 +19,15 @@
   justify-content: space-between;
   width: 100%;
   align-items: center;
-  padding: 4dp;
+  padding: 4px;
+}
+
+.errorDisplay {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background-color: #fff3e0;
+  border-radius: 4px;
+  color: #e65100;
 }

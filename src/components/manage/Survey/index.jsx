@@ -13,6 +13,7 @@ import ArticleIcon from "@mui/icons-material/Article";
 import styles from "./Survey.module.css";
 import { serverDateTimeToLocalDateTime } from "~/utils/DateUtils";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import SavingSurvey from "~/components/design/SavingSurvey";
 import { fDate } from "~/utils/format-time";
 import TableRowsIcon from "@mui/icons-material/TableRows";
@@ -110,7 +111,7 @@ const Survey = ({
   onUpdateDescription,
   onUpdateImage,
 }) => {
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const surveyStatus = status(survey);
   const surveyService = useService("survey");
   const designService = useService("design");

@@ -15,6 +15,7 @@ import {
 import { BG_COLOR } from "~/constants/theme";
 import { PREVIEW_MODE, routes } from "~/routes";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function PreviewSurvey({ responseId = null }) {
   const [searchParams] = useSearchParams();
@@ -25,7 +26,7 @@ function PreviewSurvey({ responseId = null }) {
     searchParams.get("navigation_mode") || "ALL_IN_ONE"
   );
   const [currentResponseId, setCurrentResponseId] = useState(responseId);
-  const { t: tDesign } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const surveyId = getparam(useParams(), "surveyId");
 
@@ -122,7 +123,7 @@ function PreviewSurvey({ responseId = null }) {
         <Tabs
           value={previewMode}
           onChange={handleChange}
-          aria-label="Preview mode tabs"
+          aria-label={t("aria.preview_mode_tabs")}
         >
           <Tab value={PREVIEW_MODE.ONLINE} label={<SurveyIcon name="pc" />} />
           <Tab
@@ -138,7 +139,7 @@ function PreviewSurvey({ responseId = null }) {
         <Box position="absolute" right="16px" top="0px">
           <FormControl sx={{ minWidth: 200 }}>
             <InputLabel id="navigation-mode-select-label">
-              {tDesign("navigation_mode")}
+              {t("preview_page.navigation_mode")}
             </InputLabel>
             <Select
               labelId="navigation-mode-select-label"
@@ -146,14 +147,14 @@ function PreviewSurvey({ responseId = null }) {
               size="small"
               value={navigationMode}
               onChange={handleNavigationModeChange}
-              label="Navigation Mode"
+              label={t("preview_page.navigation_mode")}
             >
-              <MenuItem value="ALL_IN_ONE">{tDesign("all_in_one")}</MenuItem>
+              <MenuItem value="ALL_IN_ONE">{t("preview_page.all_in_one")}</MenuItem>
               <MenuItem value="GROUP_BY_GROUP">
-                {tDesign("group_by_group")}
+                {t("preview_page.group_by_group")}
               </MenuItem>
               <MenuItem value="QUESTION_BY_QUESTION">
-                {tDesign("question_by_question")}
+                {t("preview_page.question_by_question")}
               </MenuItem>
             </Select>
           </FormControl>

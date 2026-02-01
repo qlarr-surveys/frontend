@@ -67,10 +67,9 @@ const MUTATING = [
   "designState/changeValidationValue",
   "designState/updateRandom",
   "designState/updateRandomByType",
-  "designState/removeSkipDestination",
-  "designState/editSkipDestination",
-  "designState/editSkipToEnd",
-  "designState/editDisqualifyToEnd",
+  "designState/addSkipRule",
+  "designState/updateSkipRule",
+  "designState/removeSkipRule",
   "designState/changeRelevance",
   "designState/addComponent",
   "designState/onDrag",
@@ -139,6 +138,7 @@ const reservedKeys = [
   "designMode",
   "globalSetup",
 ];
+
 function getDiff(currentState, latestState) {
   const changes = {};
 

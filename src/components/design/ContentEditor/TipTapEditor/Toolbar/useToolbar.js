@@ -3,9 +3,10 @@ import { useTranslation } from "react-i18next";
 import { useService } from "~/hooks/use-service";
 import { buildResourceUrl } from "~/networking/common";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 export const useToolbar = ({ editor }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
   const designService = useService("design");
 
   // State
@@ -25,19 +26,19 @@ export const useToolbar = ({ editor }) => {
   const fontSizes = useMemo(
     () => [
       {
-        label: t("tiptap_font_size_small"),
+        label: t("font_size_small"),
         value: EDITOR_CONSTANTS.FONT_SIZE_VALUES[0],
       },
       {
-        label: t("tiptap_font_size_normal"),
+        label: t("font_size_normal"),
         value: EDITOR_CONSTANTS.FONT_SIZE_VALUES[1],
       },
       {
-        label: t("tiptap_font_size_large"),
+        label: t("font_size_large"),
         value: EDITOR_CONSTANTS.FONT_SIZE_VALUES[2],
       },
       {
-        label: t("tiptap_font_size_huge"),
+        label: t("font_size_huge"),
         value: EDITOR_CONSTANTS.FONT_SIZE_VALUES[3],
       },
     ],
@@ -61,7 +62,7 @@ export const useToolbar = ({ editor }) => {
     if (trimmedUrl) {
       let finalUrl = trimmedUrl;
       if (trimmedUrl.match(/^(javascript|data):/i)) {
-        alert(t("tiptap_invalid_link"));
+        alert(t("invalid_link"));
         return;
       }
 
@@ -72,7 +73,7 @@ export const useToolbar = ({ editor }) => {
       try {
         new URL(finalUrl);
       } catch (e) {
-        alert(t("tiptap_invalid_link"));
+        alert(t("invalid_link"));
         return;
       }
 
@@ -141,18 +142,18 @@ export const useToolbar = ({ editor }) => {
       }
 
       if (!file.type.startsWith("image/")) {
-        alert(t("tiptap_invalid_file_type"));
+        alert(t("invalid_file_type"));
         return;
       }
 
       if (file.size > EDITOR_CONSTANTS.MAX_IMAGE_SIZE) {
-        alert(t("tiptap_file_too_large"));
+        alert(t("file_too_large"));
         return;
       }
 
       const surveyId = sessionStorage.getItem("surveyId");
       if (!surveyId) {
-        alert("No survey selected. Please select a survey first.");
+        alert(t("no_survey_selected"));
         return;
       }
 
@@ -160,6 +161,7 @@ export const useToolbar = ({ editor }) => {
       try {
         const response = await designService.uploadResource(file);
         const imageUrl = buildResourceUrl(response.name);
+        const { from } = editor.state.selection;
 
         editor
           .chain()
@@ -169,26 +171,26 @@ export const useToolbar = ({ editor }) => {
             alt: file.name,
             resourceName: response.name,
           })
+          .setTextSelection(from + 1)
           .run();
       } catch (error) {
         if (process.env.NODE_ENV === "development") {
           console.error("Image upload failed:", error);
         }
-        let errorMessage = "Failed to upload image. Please try again.";
+        let errorMessage = t("upload_failed");
 
         if (error?.response?.status === 401) {
-          errorMessage = "Authentication failed. Please log in again.";
+          errorMessage = t("auth_failed");
         } else if (error?.response?.status === 403) {
-          errorMessage = "You don't have permission to upload images.";
+          errorMessage = t("no_permission");
         } else if (error?.response?.status === 413) {
-          errorMessage = "File is too large. Please select a smaller image.";
+          errorMessage = t("file_too_large_upload");
         } else if (error?.response?.status === 400) {
-          errorMessage = "Invalid file. Please select a valid image file.";
+          errorMessage = t("invalid_file");
         } else if (error?.response?.status >= 500) {
-          errorMessage = "Server error. Please try again later.";
+          errorMessage = t("server_error");
         } else if (error.code === "ERR_NETWORK") {
-          errorMessage =
-            "Network error. Please check your internet connection.";
+          errorMessage = t("network_error");
         }
 
         alert(errorMessage);
@@ -209,7 +211,7 @@ export const useToolbar = ({ editor }) => {
       .focus()
       .setCollapsible({
         open: false,
-        buttonText: t("tiptap_collapsible_title_placeholder"),
+        buttonText: t("collapsible_title_placeholder"),
         backgroundColor: null,
         textColor: null,
         content: [

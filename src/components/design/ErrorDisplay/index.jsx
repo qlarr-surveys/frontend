@@ -9,10 +9,11 @@ import { useDispatch } from "react-redux";
 import { surveySetup, setupOptions } from "~/constants/design";
 import { setup } from "~/state/design/designState";
 import { Trans, useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { createSelector } from "@reduxjs/toolkit";
 
 function ErrorDisplay(props) {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const dispatch = useDispatch();
 
   const selectDesignState = (state) => state.designState[props.code] || {};

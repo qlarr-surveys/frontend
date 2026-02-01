@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,27 +19,32 @@ import RouterLink from "~/components/router/router-link";
 import { useTranslation } from "react-i18next";
 import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { useService } from "~/hooks/use-service";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 // ----------------------------------------------------------------------
 
 export default function LoginView() {
   const authService = useService("auth");
 
-  const { t } = useTranslation("manage");
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const passwordShow = useBoolean();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const LoginSchema = Yup.object().shape({
-    email: Yup.string()
-      .required(t("email_required"))
-      .matches(
-        /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
-        t("error.invalid_email")
-      ),
-    password: Yup.string().required(t("password_required")),
-  });
+  const LoginSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        email: Yup.string()
+          .required(t("email_required"))
+          .matches(
+            /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+            t("error.invalid_email")
+          ),
+        password: Yup.string().required(t("password_required")),
+      }),
+    [t]
+  );
 
   const defaultValues = {
     email: "",

@@ -6,9 +6,12 @@ import { changeAttribute } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function ToggleValue({ label, code, rule, t }) {
   const dispatch = useDispatch();
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
 
   const value = useSelector((state) => {
     return state.designState[code][rule] || false;
@@ -22,7 +25,7 @@ function ToggleValue({ label, code, rule, t }) {
   return (
     <div className={styles.toggleValue}>
       <div className={styles.label}>
-        <CustomTooltip body={t(`tooltips.${label}`)} />
+        <CustomTooltip body={tTooltips(label)} />
         <Typography fontWeight={700}>{t(label)}</Typography>
       </div>
       <Switch

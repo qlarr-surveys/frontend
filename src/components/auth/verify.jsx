@@ -12,7 +12,7 @@ import Iconify from "../iconify";
 import FormProvider, { RHFCode } from "../hook-form";
 import { Box, Button, Modal } from "@mui/material";
 import styles from "./verify.module.css";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useService } from "~/hooks/use-service";
 
 export default function VerifyView({ t, open, email, resend, onClose }) {
@@ -20,11 +20,15 @@ export default function VerifyView({ t, open, email, resend, onClose }) {
   const [loading, setLoading] = useState(false);
 
 
-  const VerifySchema = Yup.object().shape({
-    pin: Yup.string()
-      .min(6, `${t("email.code_characters")}`)
-      .required(`${t("email.code_required")}`),
-  });
+  const VerifySchema = useMemo(
+    () =>
+      Yup.object().shape({
+        pin: Yup.string()
+          .min(6, `${t("email.code_characters")}`)
+          .required(`${t("email.code_required")}`),
+      }),
+    [t]
+  );
 
   const defaultValues = {
     pin: "",
@@ -69,7 +73,7 @@ export default function VerifyView({ t, open, email, resend, onClose }) {
       <Box className={styles.verifyContainer}>
         <Stack sx={{ textAlign: "center" }}>
           <Image
-            alt="email inbox"
+            alt={t("alt.email_inbox")}
             src="/ic_email_inbox.svg"
             sx={{ mb: 5, width: 96, height: 96, mx: "auto" }}
           />

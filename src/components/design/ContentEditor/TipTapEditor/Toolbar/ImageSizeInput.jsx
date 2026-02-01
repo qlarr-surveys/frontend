@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const ImageSizeInput = ({
   show,
@@ -13,7 +14,8 @@ const ImageSizeInput = ({
   onClose,
   editor,
 }) => {
-  const { t } = useTranslation("design");
+  const { t } = useTranslation(NAMESPACES.DESIGN_EDITOR);
+  const { t: tCore } = useTranslation(NAMESPACES.DESIGN_CORE);
   const imageSizeInputRef = useRef(null);
 
   useEffect(() => {
@@ -21,7 +23,7 @@ const ImageSizeInput = ({
       if (
         imageSizeInputRef.current &&
         !imageSizeInputRef.current.contains(event.target) &&
-        !event.target.closest('button[title="Image Size"]')
+        !event.target.closest("[data-image-size-button]")
       ) {
         onClose();
       }
@@ -75,7 +77,7 @@ const ImageSizeInput = ({
             }}
             style={{ cursor: "pointer" }}
           />
-          <span>{t("tiptap_maintain_aspect_ratio")}</span>
+          <span>{t("maintain_aspect_ratio")}</span>
         </label>
 
         <div
@@ -86,11 +88,11 @@ const ImageSizeInput = ({
           }}
         >
           <label style={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
-            {t("tiptap_width")}:
+            {t("width")}:
           </label>
           <input
             type="text"
-            placeholder={t("tiptap_width")}
+            placeholder={t("width")}
             value={imageWidth}
             onChange={(e) => onWidthChange(e.target.value)}
             onKeyDown={(e) => {
@@ -106,11 +108,11 @@ const ImageSizeInput = ({
             }}
           />
           <label style={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
-            {t("tiptap_height")}:
+            {t("height")}:
           </label>
           <input
             type="text"
-            placeholder={t("tiptap_height")}
+            placeholder={t("height")}
             value={imageHeight}
             onChange={(e) => onHeightChange(e.target.value)}
             onKeyDown={(e) => {
@@ -141,7 +143,7 @@ const ImageSizeInput = ({
               onClose();
             }}
           >
-            {t("ok")}
+            {tCore("ok")}
           </button>
           <button
             onMouseDown={(e) => e.preventDefault()}
@@ -150,7 +152,7 @@ const ImageSizeInput = ({
               editor.commands.focus();
             }}
           >
-            {t("cancel")}
+            {tCore("cancel")}
           </button>
         </div>
       </div>
