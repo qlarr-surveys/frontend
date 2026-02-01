@@ -20,7 +20,7 @@ export const OPERATORS = {
     category: 'comparison',
     cardinality: 1,
     jsonLogicOp: '==',
-    applicableTypes: ['text', 'number', 'select', 'date', 'time', 'datetime'],
+    applicableTypes: ['text', 'number', 'date', 'time', 'datetime'],
   },
   not_equal: {
     key: 'not_equal',
@@ -30,7 +30,7 @@ export const OPERATORS = {
     category: 'comparison',
     cardinality: 1,
     jsonLogicOp: '!=',
-    applicableTypes: ['text', 'number', 'select', 'date', 'time', 'datetime'],
+    applicableTypes: ['text', 'number', 'date', 'time', 'datetime'],
   },
   less: {
     key: 'less',
