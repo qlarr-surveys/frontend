@@ -1191,6 +1191,10 @@ export const conditionalRelevanceEquation = (logic, rule, state) => {
     (code) => state[code].type,
     (code) => getQuestionType(state, code)
   );
+  // If no valid logic yet (empty text), treat as "show_always" to avoid validation errors
+  if (!text) {
+    return { code, remove: true };
+  }
   if (rule == "show_if") {
     return { code, text, isActive: true, returnType: "boolean" };
   } else if (rule == "hide_if") {
@@ -1206,7 +1210,7 @@ export const conditionalRelevanceEquation = (logic, rule, state) => {
 };
 
 const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
-  if (typeof json !== "object") {
+  if (!json || typeof json !== "object") {
     return "";
   }
   const key = Object.keys(json)[0];
