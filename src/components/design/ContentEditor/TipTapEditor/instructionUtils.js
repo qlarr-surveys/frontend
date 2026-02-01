@@ -43,7 +43,6 @@ export function extractReferencedCodes(content) {
 function processInstructionContent(
   fullPattern,
   referenceInstruction,
-  transformer,
   indexToCodeMap
 ) {
   const fragment = document.createDocumentFragment();
@@ -77,7 +76,7 @@ function processInstructionContent(
     const codeSpan = document.createElement("span");
     codeSpan.textContent = codeMatch.text;
 
-    const tooltipContent = transformer.formatTooltipContent(codeMatch.ref);
+    const tooltipContent = QuestionDisplayTransformer.formatTooltipContent(codeMatch.ref);
     codeSpan.setAttribute("data-tooltip", tooltipContent);
     codeSpan.setAttribute("data-question-code", codeMatch.code);
 
@@ -147,7 +146,6 @@ export function highlightInstructionsInStaticContent(
   }
 
   const tippyInstances = [];
-  const transformer = new QuestionDisplayTransformer(referenceInstruction);
 
   try {
     const existingHighlights = element.querySelectorAll(
@@ -213,7 +211,6 @@ export function highlightInstructionsInStaticContent(
         const processedFragment = processInstructionContent(
           fullPattern,
           referenceInstruction,
-          transformer,
           indexToCodeMap
         );
 

@@ -131,8 +131,7 @@ export function useInstructionHighlighting({
   }, [referenceInstruction]);
 
   const fixedValue = useMemo(() => {
-    const transformer = new QuestionDisplayTransformer(referenceInstruction);
-    return transformer.transformText(content);
+    return QuestionDisplayTransformer.transformText(content, referenceInstruction);
   }, [referenceInstruction, content]);
 
   const highlightedContentRef = useRef(null);

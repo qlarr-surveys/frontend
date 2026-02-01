@@ -6,12 +6,8 @@ import {
 } from "~/constants/instruction";
 
 class QuestionDisplayTransformer {
-  constructor(referenceInstruction = {}) {
-    this.referenceInstruction = referenceInstruction || {};
-  }
-
-  getDisplayId(questionCode) {
-    const ref = this.referenceInstruction[questionCode];
+  static getDisplayId(questionCode, referenceInstruction = {}) {
+    const ref = referenceInstruction[questionCode];
 
     if (ref && typeof ref === "object" && ref.index) {
       return ref.index;
@@ -24,23 +20,20 @@ class QuestionDisplayTransformer {
     return questionCode;
   }
 
-  getTooltipContent(questionCode) {
-    const ref = this.referenceInstruction[questionCode];
+  static getTooltipContent(questionCode, referenceInstruction = {}) {
+    const ref = referenceInstruction[questionCode];
 
     if (!ref || typeof ref !== "object") {
       return "";
     }
 
-    return this.formatTooltipContent(ref);
+    return QuestionDisplayTransformer.formatTooltipContent(ref);
   }
 
-  transformText(text) {
+  static transformText(text, referenceInstruction = {}) {
     if (!text) return text;
 
-    if (
-      !this.referenceInstruction ||
-      Object.keys(this.referenceInstruction).length === 0
-    ) {
+    if (!referenceInstruction || Object.keys(referenceInstruction).length === 0) {
       return text;
     }
 
@@ -51,7 +44,7 @@ class QuestionDisplayTransformer {
     let transformedText = text;
 
     referencedCodes.forEach((questionCode) => {
-      const ref = this.referenceInstruction[questionCode];
+      const ref = referenceInstruction[questionCode];
 
       if (ref && typeof ref === "object" && ref.index) {
         const pattern = createQuestionCodePattern(questionCode);
@@ -63,7 +56,7 @@ class QuestionDisplayTransformer {
     return transformedText;
   }
 
-  formatTooltipContent(ref) {
+  static formatTooltipContent(ref) {
     return ref.index && ref.text ? `${ref.index} - ${ref.text}` : ref.text || "";
   }
 
