@@ -1,12 +1,16 @@
+import { extractReferencedCodes } from "~/components/design/ContentEditor/TipTapEditor/instructionUtils";
+
+const patternCache = new Map();
+
 class QuestionDisplayTransformer {
   constructor(referenceInstruction = {}) {
     this.referenceInstruction = referenceInstruction || {};
   }
 
   getDisplayId(questionCode) {
-    const ref = this.referenceInstruction?.[questionCode];
+    const ref = this.referenceInstruction[questionCode];
 
-    if (ref !== null && typeof ref === "object" && ref.index) {
+    if (ref && typeof ref === "object" && ref.index) {
       return ref.index;
     }
 
@@ -18,7 +22,7 @@ class QuestionDisplayTransformer {
   }
 
   getTooltipContent(questionCode) {
-    const ref = this.referenceInstruction?.[questionCode];
+    const ref = this.referenceInstruction[questionCode];
 
     if (!ref || typeof ref !== "object") {
       return "";
@@ -62,7 +66,7 @@ class QuestionDisplayTransformer {
         if (pattern.test(transformedText)) {
           pattern.lastIndex = 0;
           transformedText = transformedText.replace(pattern, ref.index);
-          tooltip = this._formatTooltipContent(ref);
+          tooltip = this.formatTooltipContent(ref);
         }
 
         pattern.lastIndex = 0;
@@ -71,6 +75,7 @@ class QuestionDisplayTransformer {
 
     return { transformedText, tooltip };
   }
+
 
   transformText(text) {
     if (!text) return text;
@@ -82,13 +87,17 @@ class QuestionDisplayTransformer {
       return text;
     }
 
+    const referencedCodes = extractReferencedCodes(text);
+
+    if (referencedCodes.size === 0) return text;
+
     let transformedText = text;
 
-    Object.keys(this.referenceInstruction).forEach((questionCode) => {
+    referencedCodes.forEach((questionCode) => {
       const ref = this.referenceInstruction[questionCode];
 
       if (ref && typeof ref === "object" && ref.index) {
-        const pattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
+        const pattern = this.constructor.createQuestionCodePattern(questionCode);
         transformedText = transformedText.replace(pattern, ref.index);
         pattern.lastIndex = 0;
       }
@@ -105,8 +114,14 @@ class QuestionDisplayTransformer {
   }
 
   static createQuestionCodePattern(questionCode) {
+    if (patternCache.has(questionCode)) {
+      return patternCache.get(questionCode);
+    }
+
     const escapedCode = questionCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return new RegExp(`\\b${escapedCode}\\b(?=[.:\\s}])`, "g");
+    const pattern = new RegExp(`\\b${escapedCode}\\b(?=[.:\\s}])`, "g");
+    patternCache.set(questionCode, pattern);
+    return pattern;
   }
 
   formatTooltipContent(ref) {
