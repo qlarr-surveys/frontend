@@ -61,10 +61,7 @@ class QuestionDisplayTransformer {
 
         if (pattern.test(transformedText)) {
           pattern.lastIndex = 0;
-          transformedText = transformedText.replace(
-            pattern,
-            `{{${ref.index}$1`
-          );
+          transformedText = transformedText.replace(pattern, ref.index);
           tooltip = this._formatTooltipContent(ref);
         }
 
@@ -92,7 +89,7 @@ class QuestionDisplayTransformer {
 
       if (ref && typeof ref === "object" && ref.index) {
         const pattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
-        transformedText = transformedText.replace(pattern, `{{${ref.index}$1`);
+        transformedText = transformedText.replace(pattern, ref.index);
         pattern.lastIndex = 0;
       }
     });
@@ -103,13 +100,13 @@ class QuestionDisplayTransformer {
   extractQuestionCode(instruction) {
     if (!instruction) return null;
 
-    const match = instruction.match(/\{\{([^.:}]+)(?:[.:][^}]*)?\}\}/);
-    return match ? match[1] : null;
+    const match = instruction.match(/\{\{\s*([^.:}\s]+)(?:\s*[.:][^}]*)?\}\}/);
+    return match ? match[1].trim() : null;
   }
 
   static createQuestionCodePattern(questionCode) {
     const escapedCode = questionCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return new RegExp(`\\{\\{${escapedCode}([:.\\}])`, "g");
+    return new RegExp(`\\b${escapedCode}\\b(?=[.:\\s}])`, "g");
   }
 
   formatTooltipContent(ref) {

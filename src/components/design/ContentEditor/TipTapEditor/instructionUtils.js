@@ -29,6 +29,100 @@ export function transformInstructionText(
   return transformer.transformInstruction(instructionText);
 }
 
+function processInstructionContent(
+  fullPattern,
+  referenceInstruction,
+  transformer,
+  indexToCodeMap
+) {
+  const fragment = document.createDocumentFragment();
+
+  // Find all question codes and their positions
+  const codeMatches = [];
+
+  // Check for question codes
+  Object.keys(referenceInstruction || {}).forEach((questionCode) => {
+    const ref = referenceInstruction[questionCode];
+    if (!ref || !ref.index) return;
+
+    const codePattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
+    let match;
+
+    while ((match = codePattern.exec(fullPattern)) !== null) {
+      codeMatches.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        code: questionCode,
+        text: match[0],
+        ref: ref,
+      });
+    }
+  });
+
+  // Also check for display index patterns (Q1, Q2, etc.)
+  Object.keys(indexToCodeMap || {}).forEach((displayIndex) => {
+    const questionCode = indexToCodeMap[displayIndex];
+    const ref = referenceInstruction?.[questionCode];
+    if (!ref) return;
+
+    // Escape special regex characters in display index
+    const escapedIndex = displayIndex.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // Create pattern for display index
+    const indexPattern = new RegExp(`\\b${escapedIndex}\\b(?=[.:\\s}])`, "g");
+    let match;
+
+    while ((match = indexPattern.exec(fullPattern)) !== null) {
+      codeMatches.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        code: questionCode,
+        text: match[0],
+        ref: ref,
+      });
+    }
+  });
+
+  // Sort by start position
+  codeMatches.sort((a, b) => a.start - b.start);
+
+  // Wrap entire pattern in a span with highlight class
+  const wrapperSpan = document.createElement("span");
+  wrapperSpan.className = "instruction-highlight";
+
+  // Build content with nested spans for tooltips
+  let lastIndex = 0;
+
+  codeMatches.forEach((codeMatch) => {
+    // Add text before this code (highlighted but no tooltip)
+    if (codeMatch.start > lastIndex) {
+      wrapperSpan.appendChild(
+        document.createTextNode(fullPattern.slice(lastIndex, codeMatch.start))
+      );
+    }
+
+    // Create nested span for this question code with tooltip
+    const codeSpan = document.createElement("span");
+    codeSpan.textContent = codeMatch.text;
+
+    const tooltipContent = transformer.formatTooltipContent(codeMatch.ref);
+    codeSpan.setAttribute("data-tooltip", tooltipContent);
+    codeSpan.setAttribute("data-question-code", codeMatch.code);
+
+    wrapperSpan.appendChild(codeSpan);
+    lastIndex = codeMatch.end;
+  });
+
+  // Add any remaining text (highlighted but no tooltip)
+  if (lastIndex < fullPattern.length) {
+    wrapperSpan.appendChild(
+      document.createTextNode(fullPattern.slice(lastIndex))
+    );
+  }
+
+  fragment.appendChild(wrapperSpan);
+  return fragment;
+}
+
 export function parseUsedInstructions(content, index, designState, mainLang) {
   const result = {};
 
@@ -61,7 +155,7 @@ export function parseUsedInstructions(content, index, designState, mainLang) {
     pattern.lastIndex = 0;
   });
 
-  const mentionPattern = /\{\{(Q\d+):/g;
+  const mentionPattern = /\{\{\s*(Q\d+)\s*:/g;
   let match;
 
   while ((match = mentionPattern.exec(content)) !== null) {
@@ -163,29 +257,17 @@ export function highlightInstructionsInStaticContent(
           );
         }
 
-        const originalPattern = match[0];
-        const refMatch = originalPattern.match(/\{\{([^.:}]+)[.:]/);
-        const questionRef = refMatch ? refMatch[1] : null;
+        const fullPattern = match[0];
 
-        const span = document.createElement("span");
-        span.className = "instruction-highlight";
-        span.textContent = originalPattern;
+        // Process the content to find individual question codes
+        const processedFragment = processInstructionContent(
+          fullPattern,
+          referenceInstruction,
+          transformer,
+          indexToCodeMap
+        );
 
-        if (questionRef && referenceInstruction) {
-          const foundCode = indexToCodeMap[questionRef];
-
-          if (foundCode) {
-            const foundRef = referenceInstruction[foundCode];
-
-            if (foundRef && foundRef.text) {
-              const tooltipContent = transformer.formatTooltipContent(foundRef);
-              span.setAttribute("data-tooltip", tooltipContent);
-              span.setAttribute("data-question-code", foundCode);
-            }
-          }
-        }
-
-        fragment.appendChild(span);
+        fragment.appendChild(processedFragment);
         lastIndex = match.index + match[0].length;
       }
 
@@ -196,8 +278,9 @@ export function highlightInstructionsInStaticContent(
       parent.replaceChild(fragment, textNode);
     });
 
-    const newHighlights = element.querySelectorAll(".instruction-highlight");
-    newHighlights.forEach((span) => {
+    // Find all elements with data-tooltip within instruction highlights
+    const tooltipElements = element.querySelectorAll(".instruction-highlight [data-tooltip]");
+    tooltipElements.forEach((span) => {
       createInstructionTooltip(span, tippyInstances);
     });
   } catch (error) {
