@@ -38,8 +38,39 @@ export function useInstructionHighlighting({
       }
     }
 
-    if (Object.keys(prev.questions).length !== Object.keys(next.questions).length) return false;
-    if (Object.keys(prev.reverseIndex).length !== Object.keys(next.reverseIndex).length) return false;
+    // Check actual question content, not just length
+    const prevQuestionKeys = Object.keys(prev.questions);
+    const nextQuestionKeys = Object.keys(next.questions);
+
+    if (prevQuestionKeys.length !== nextQuestionKeys.length) return false;
+
+    for (const key of prevQuestionKeys) {
+      const prevQ = prev.questions[key];
+      const nextQ = next.questions[key];
+
+      if (!nextQ) return false;
+
+      // Compare the actual content object for the current language
+      const prevContent = prevQ?.content?.[prev.mainLang];
+      const nextContent = nextQ?.content?.[next.mainLang];
+
+      // Deep comparison of content (label is what we show in tooltips)
+      if (prevContent?.label !== nextContent?.label) {
+        return false;
+      }
+    }
+
+    // Check reverseIndex mappings, not just length
+    const prevRevKeys = Object.keys(prev.reverseIndex);
+    const nextRevKeys = Object.keys(next.reverseIndex);
+
+    if (prevRevKeys.length !== nextRevKeys.length) return false;
+
+    for (const key of prevRevKeys) {
+      if (prev.reverseIndex[key] !== next.reverseIndex[key]) {
+        return false;
+      }
+    }
 
     return true;
   }, []);
