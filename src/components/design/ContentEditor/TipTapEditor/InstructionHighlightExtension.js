@@ -1,7 +1,7 @@
 import { Extension } from "@tiptap/core";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
-import { getInstructionRegex, extractReferencedCodes } from "./instructionUtils";
+import { getInstructionRegex } from "./instructionUtils";
 import InstructionTooltipManager from "./InstructionTooltipManager";
 import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 
@@ -77,46 +77,24 @@ function findCodesInPattern(
   transformer,
   indexToCodeMap
 ) {
-  const decorations = [];
+  // Use shared method to find all code matches
+  const matches = QuestionDisplayTransformer.findAllCodesInPattern(
+    fullPattern,
+    referenceInstruction,
+    indexToCodeMap
+  );
 
-  // OPTIMIZATION: Only check codes actually in this pattern
-  const codesInPattern = extractReferencedCodes(fullPattern);
-
-  if (codesInPattern.size === 0) {
-    return decorations;
-  }
-
-  codesInPattern.forEach((codeOrIndex) => {
-    let questionCode = codeOrIndex;
-
-    // If it's a display index, convert to question code
-    if (/^Q\d+$/.test(codeOrIndex) && indexToCodeMap[codeOrIndex]) {
-      questionCode = indexToCodeMap[codeOrIndex];
-    }
-
-    const ref = referenceInstruction[questionCode];
-    if (!ref || !ref.index) return;
-
-    const codePattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
-    let match;
-
-    while ((match = codePattern.exec(fullPattern)) !== null) {
-      const codeStart = patternStart + match.index;
-      const codeEnd = codeStart + match[0].length;
-
-      const tooltipContent = transformer.formatTooltipContent(ref);
-
-      decorations.push(
-        Decoration.inline(codeStart, codeEnd, {
-          "data-tooltip": tooltipContent,
-          "data-question-code": questionCode,
-        })
-      );
-    }
-    codePattern.lastIndex = 0;
+  // Convert matches to ProseMirror decorations
+  return matches.map((match) => {
+    return Decoration.inline(
+      patternStart + match.start,
+      patternStart + match.end,
+      {
+        "data-tooltip": transformer.formatTooltipContent(match.ref),
+        "data-question-code": match.code,
+      }
+    );
   });
-
-  return decorations;
 }
 
 function findInstructionPatterns(doc, referenceInstruction) {

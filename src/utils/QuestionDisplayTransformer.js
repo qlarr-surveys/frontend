@@ -128,6 +128,45 @@ class QuestionDisplayTransformer {
     return ref.index && ref.text ? `${ref.index} - ${ref.text}` : ref.text || "";
   }
 
+  static findAllCodesInPattern(fullPattern, referenceInstruction, indexToCodeMap) {
+    const matches = [];
+
+    // Use extractReferencedCodes for efficiency
+    const codesInPattern = extractReferencedCodes(fullPattern);
+
+    if (codesInPattern.size === 0) {
+      return matches;
+    }
+
+    codesInPattern.forEach((codeOrIndex) => {
+      let questionCode = codeOrIndex;
+
+      // Convert display index to question code if needed
+      if (/^Q\d+$/.test(codeOrIndex) && indexToCodeMap?.[codeOrIndex]) {
+        questionCode = indexToCodeMap[codeOrIndex];
+      }
+
+      const ref = referenceInstruction?.[questionCode];
+      if (!ref || !ref.index) return;
+
+      const codePattern = this.createQuestionCodePattern(questionCode);
+      let match;
+
+      while ((match = codePattern.exec(fullPattern)) !== null) {
+        matches.push({
+          start: match.index,
+          end: match.index + match[0].length,
+          code: questionCode,
+          text: match[0],
+          ref: ref,
+        });
+      }
+      codePattern.lastIndex = 0;
+    });
+
+    return matches.sort((a, b) => a.start - b.start);
+  }
+
   static decodeInstructionEntities(html) {
     if (!html) return html;
 
