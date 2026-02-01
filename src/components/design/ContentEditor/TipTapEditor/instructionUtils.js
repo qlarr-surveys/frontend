@@ -27,7 +27,7 @@ function createInstructionTooltip(element, tippyInstances) {
 const EMPTY_SET = Object.freeze(new Set());
 
 export function extractReferencedCodes(content) {
-  if (!content) return EMPTY_SET;
+  if (typeof content !== "string") return EMPTY_SET;
 
   const codes = new Set();
   let match;
@@ -105,7 +105,7 @@ export function buildReverseIndex(index) {
 export function parseUsedInstructions(content, index, questions, mainLang, reverseIndex = {}) {
   const result = {};
 
-  if (!content || !index || Object.keys(index).length === 0) {
+  if (!content || !index) {
     return result;
   }
 
@@ -182,7 +182,6 @@ export function highlightInstructionsInStaticContent(
     const regex = getInstructionRegex();
 
     while ((node = walker.nextNode())) {
-      regex.lastIndex = 0;
       if (regex.test(node.textContent)) {
         nodesToProcess.push(node);
       }

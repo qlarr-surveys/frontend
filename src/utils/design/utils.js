@@ -182,7 +182,7 @@ export const nextId = (elements) => {
 };
 
 export const stripTags = (string) => {
-  return string ? string.replace(STRIP_TAGS_PATTERN, "") : string;
+  return typeof string === "string" ? string.replace(STRIP_TAGS_PATTERN, "") : string;
 };
 
 export function truncateWithEllipsis(text, maxLength) {

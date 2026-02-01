@@ -31,11 +31,7 @@ class QuestionDisplayTransformer {
   }
 
   static transformText(text, referenceInstruction = {}) {
-    if (!text) return text;
-
-    if (!referenceInstruction || Object.keys(referenceInstruction).length === 0) {
-      return text;
-    }
+    if (typeof text !== "string") return text;
 
     const referencedCodes = extractReferencedCodes(text);
 
@@ -49,7 +45,6 @@ class QuestionDisplayTransformer {
       if (ref && typeof ref === "object" && ref.index) {
         const pattern = createQuestionCodePattern(questionCode);
         transformedText = transformedText.replace(pattern, ref.index);
-        pattern.lastIndex = 0;
       }
     });
 
@@ -90,7 +85,6 @@ class QuestionDisplayTransformer {
           ref: ref,
         });
       }
-      codePattern.lastIndex = 0;
     });
 
     return matches.sort((a, b) => a.start - b.start);
