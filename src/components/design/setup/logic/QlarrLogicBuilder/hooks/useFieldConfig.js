@@ -121,30 +121,33 @@ function buildFieldDefinition(code, component, state, mainLang, groupLabels) {
 
   const questionType = component.type;
   const fieldType = getFieldType(questionType);
+  const fields = [];
 
-  const baseField = {
-    code,
-    label,
-    type: fieldType,
-    questionType,
-    defaultOperator: getDefaultOperatorForType(questionType, fieldType),
-    group: groupLabels.questions,
-  };
+  // Ranking types don't have a base field - only sub-fields
+  const isRankingType = questionType === 'ranking' || questionType === 'image_ranking';
 
-  // Handle types with options
-  if (fieldType === 'select' || fieldType === 'multiselect') {
-    baseField.options = buildOptions(component, state, mainLang);
+  if (!isRankingType) {
+    const baseField = {
+      code,
+      label,
+      type: fieldType,
+      questionType,
+      defaultOperator: getDefaultOperatorForType(questionType, fieldType),
+      group: groupLabels.questions,
+    };
+
+    // Add options based on field/question type
+    if (questionType === 'nps') {
+      baseField.options = Array.from({ length: 11 }, (_, i) => ({
+        value: String(i),
+        label: String(i),
+      }));
+    } else if (fieldType === 'select' || fieldType === 'multiselect') {
+      baseField.options = buildOptions(component, state, mainLang);
+    }
+
+    fields.push(baseField);
   }
-
-  // Special handling for NPS
-  if (questionType === 'nps') {
-    baseField.options = Array.from({ length: 11 }, (_, i) => ({
-      value: String(i),
-      label: String(i),
-    }));
-  }
-
-  const fields = [baseField];
 
   // Handle "other" text field for SCQ/MCQ
   if (hasOtherOption(questionType)) {
@@ -180,14 +183,8 @@ function buildFieldDefinition(code, component, state, mainLang, groupLabels) {
   }
 
   // Handle ranking
-  if (questionType === 'ranking' || questionType === 'image_ranking') {
-    const rankFields = buildRankingFields(
-      code,
-      component,
-      state,
-      mainLang,
-      label
-    );
+  if (isRankingType) {
+    const rankFields = buildRankingFields(code, component, state, mainLang, label);
     fields.push(...rankFields);
   }
 
@@ -324,6 +321,7 @@ function buildRankingFields(code, component, state, mainLang, parentLabel) {
       type: 'number',
       questionType: 'ranking',
       defaultOperator: 'equal',
+      group: stripTags(component.content?.[mainLang]?.label || ''),
     };
   });
 }
