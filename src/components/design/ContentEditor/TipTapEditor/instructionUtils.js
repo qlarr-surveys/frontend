@@ -175,52 +175,54 @@ export function highlightInstructionsInStaticContent(
       filterNode
     );
 
-    const nodesToProcess = [];
     let node;
     const regex = getInstructionRegex();
 
     while ((node = walker.nextNode())) {
-      if (regex.test(node.textContent)) {
-        nodesToProcess.push(node);
+      const text = node.textContent;
+      regex.lastIndex = 0;
+      let match;
+      const matches = [];
+
+      while ((match = regex.exec(text)) !== null) {
+        matches.push({
+          index: match.index,
+          length: match[0].length,
+          pattern: match[0]
+        });
       }
-    }
 
-    nodesToProcess.forEach((textNode) => {
-      const parent = textNode.parentNode;
-      if (!parent) return;
+      if (matches.length === 0) continue;
 
-      const text = textNode.textContent;
+      const parent = node.parentNode;
+      if (!parent) continue;
+
       const fragment = document.createDocumentFragment();
       let lastIndex = 0;
 
-      regex.lastIndex = 0;
-      let match;
-
-      while ((match = regex.exec(text)) !== null) {
-        if (match.index > lastIndex) {
+      matches.forEach((matchInfo) => {
+        if (matchInfo.index > lastIndex) {
           fragment.appendChild(
-            document.createTextNode(text.slice(lastIndex, match.index))
+            document.createTextNode(text.slice(lastIndex, matchInfo.index))
           );
         }
 
-        const fullPattern = match[0];
-
         const processedFragment = processInstructionContent(
-          fullPattern,
+          matchInfo.pattern,
           referenceInstruction,
           indexToCodeMap
         );
 
         fragment.appendChild(processedFragment);
-        lastIndex = match.index + match[0].length;
-      }
+        lastIndex = matchInfo.index + matchInfo.length;
+      });
 
       if (lastIndex < text.length) {
         fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
       }
 
-      parent.replaceChild(fragment, textNode);
-    });
+      parent.replaceChild(fragment, node);
+    }
 
     const tooltipElements = element.querySelectorAll(
       ".instruction-highlight [data-tooltip]"
