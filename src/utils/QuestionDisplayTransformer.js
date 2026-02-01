@@ -1,14 +1,13 @@
 import { extractReferencedCodes } from "~/components/design/ContentEditor/TipTapEditor/instructionUtils";
-
-const patternCache = new Map();
+import {
+  INSTRUCTION_SYNTAX_PATTERN,
+  createQuestionCodePattern,
+  resolveQuestionCode,
+} from "~/constants/instruction";
 
 class QuestionDisplayTransformer {
-  constructor(referenceInstruction = {}) {
-    this.referenceInstruction = referenceInstruction || {};
-  }
-
-  getDisplayId(questionCode) {
-    const ref = this.referenceInstruction[questionCode];
+  static getDisplayId(questionCode, referenceInstruction = {}) {
+    const ref = referenceInstruction[questionCode];
 
     if (ref && typeof ref === "object" && ref.index) {
       return ref.index;
@@ -21,30 +20,18 @@ class QuestionDisplayTransformer {
     return questionCode;
   }
 
-  getTooltipContent(questionCode) {
-    const ref = this.referenceInstruction[questionCode];
+  static getTooltipContent(questionCode, referenceInstruction = {}) {
+    const ref = referenceInstruction[questionCode];
 
     if (!ref || typeof ref !== "object") {
       return "";
     }
 
-    return this.formatTooltipContent(ref);
+    return QuestionDisplayTransformer.formatTooltipContent(ref);
   }
 
-  getTooltipFromInstruction(instruction) {
-    const questionCode = this.extractQuestionCode(instruction);
-    return questionCode ? this.getTooltipContent(questionCode) : "";
-  }
-
-  transformText(text) {
-    if (!text) return text;
-
-    if (
-      !this.referenceInstruction ||
-      Object.keys(this.referenceInstruction).length === 0
-    ) {
-      return text;
-    }
+  static transformText(text, referenceInstruction = {}) {
+    if (typeof text !== "string") return text;
 
     const referencedCodes = extractReferencedCodes(text);
 
@@ -53,43 +40,60 @@ class QuestionDisplayTransformer {
     let transformedText = text;
 
     referencedCodes.forEach((questionCode) => {
-      const ref = this.referenceInstruction[questionCode];
+      const ref = referenceInstruction[questionCode];
 
       if (ref && typeof ref === "object" && ref.index) {
-        const pattern = this.constructor.createQuestionCodePattern(questionCode);
-        transformedText = transformedText.replace(pattern, `{{${ref.index}$1`);
+        const pattern = createQuestionCodePattern(questionCode);
+        transformedText = transformedText.replace(pattern, ref.index);
       }
     });
 
     return transformedText;
   }
 
-  extractQuestionCode(instruction) {
-    if (!instruction) return null;
-
-    const match = instruction.match(/\{\{([^.:}]+)(?:[.:][^}]*)?\}\}/);
-    return match ? match[1] : null;
+  static formatTooltipContent(ref) {
+    return ref.index && ref.text ? `${ref.index} - ${ref.text}` : ref.text || "";
   }
 
-  static createQuestionCodePattern(questionCode) {
-    if (patternCache.has(questionCode)) {
-      return patternCache.get(questionCode);
+  static findAllCodesInPattern(fullPattern, referenceInstruction, indexToCodeMap) {
+    const matches = [];
+    const codesInPattern = extractReferencedCodes(fullPattern);
+
+    if (codesInPattern.size === 0) {
+      return matches;
     }
 
-    const escapedCode = questionCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const pattern = new RegExp(`\\{\\{${escapedCode}([:.\\}])`, "g");
-    patternCache.set(questionCode, pattern);
-    return pattern;
-  }
+    codesInPattern.forEach((codeOrIndex) => {
+      const questionCode = resolveQuestionCode(codeOrIndex, indexToCodeMap);
+      const searchCode = codeOrIndex;
 
-  formatTooltipContent(ref) {
-    return ref.index && ref.text ? `${ref.index} - ${ref.text}` : ref.text || "";
+      const ref = referenceInstruction?.[questionCode];
+
+      if (!ref || !ref.index) {
+        return;
+      }
+
+      const codePattern = createQuestionCodePattern(searchCode);
+      let match;
+
+      while ((match = codePattern.exec(fullPattern)) !== null) {
+        matches.push({
+          start: match.index,
+          end: match.index + match[0].length,
+          code: questionCode,
+          text: match[0],
+          ref: ref,
+        });
+      }
+    });
+
+    return matches.sort((a, b) => a.start - b.start);
   }
 
   static decodeInstructionEntities(html) {
     if (!html) return html;
 
-    return html.replace(/\{\{[^}]*\}\}/g, (match) => {
+    return html.replace(INSTRUCTION_SYNTAX_PATTERN, (match) => {
       return match
         .replace(/&gt;/g, '>')
         .replace(/&lt;/g, '<')

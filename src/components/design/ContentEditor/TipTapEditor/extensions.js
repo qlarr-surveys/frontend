@@ -1,5 +1,4 @@
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
@@ -28,6 +27,7 @@ export function createBaseExtensions(
         },
       },
       heading: false,
+      link: false,
     }),
     LinkExtension.configure({
       openOnClick: false,
@@ -36,7 +36,6 @@ export function createBaseExtensions(
       },
       autolink: false,
     }),
-    Underline,
     TextStyle,
     FontSize,
     Color,

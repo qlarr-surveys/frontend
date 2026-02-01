@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect, useCallback } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import {
   parseUsedInstructions,
   highlightInstructionsInStaticContent,
@@ -7,8 +7,8 @@ import {
 } from "~/components/design/ContentEditor/TipTapEditor/instructionUtils";
 import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 import { useSelector } from "react-redux";
-
-const DISPLAY_INDEX_PATTERN = /^Q\d+$/;
+import { DISPLAY_INDEX_PATTERN } from "~/constants/instruction";
+import { makeSelectRelevantInstructionData } from "./instructionSelectors";
 
 export function useInstructionHighlighting({
   content,
@@ -22,74 +22,44 @@ export function useInstructionHighlighting({
 
   const hasDisplayIndexRefs = Array.from(referencedCodes).some((code) => DISPLAY_INDEX_PATTERN.test(code));
 
-  const customEquality = useCallback((prev, next) => {
-    if (prev === next) return true;
+  const fullIndex = useSelector((state) => state.designState.index);
 
-    if (prev.mainLang !== next.mainLang) return false;
+  const reverseIndex = useMemo(() => {
+    if (!hasDisplayIndexRefs || !fullIndex) return {};
+    return buildReverseIndex(fullIndex);
+  }, [hasDisplayIndexRefs, fullIndex]);
 
-    const prevIndexKeys = Object.keys(prev.index);
-    const nextIndexKeys = Object.keys(next.index);
+  const selectRelevantData = useMemo(
+    () => makeSelectRelevantInstructionData(),
+    []
+  );
 
-    if (prevIndexKeys.length !== nextIndexKeys.length) return false;
-
-    // Check if index values changed (e.g., Q1 became Q2 after reordering)
-    for (const key of prevIndexKeys) {
-      if (prev.index[key] !== next.index[key]) {
-        return false;
-      }
-    }
-
-    if (Object.keys(prev.questions).length !== Object.keys(next.questions).length) return false;
-    if (Object.keys(prev.reverseIndex).length !== Object.keys(next.reverseIndex).length) return false;
-
-    return true;
-  }, []);
-
-  const relevantData = useSelector((state) => {
-    const codes = referencedCodes;
-
-    const reverseIndex = hasDisplayIndexRefs && state.designState.index
-      ? buildReverseIndex(state.designState.index)
-      : {};
-
-    const data = {
-      index: {},
-      questions: {},
-      reverseIndex,
-      mainLang,
-    };
-
-    codes.forEach((refCode) => {
-      let questionCode = refCode;
-
-      if (DISPLAY_INDEX_PATTERN.test(refCode) && reverseIndex[refCode]) {
-        questionCode = reverseIndex[refCode];
-      }
-
-      if (state.designState[questionCode] && state.designState.index[questionCode]) {
-        data.index[questionCode] = state.designState.index[questionCode];
-        data.questions[questionCode] = {
-          code: questionCode,
-          content: state.designState[questionCode].content,
-        };
-      }
-    });
-
-    return data;
-  }, customEquality);
+  const relevantData = useSelector((state) =>
+    selectRelevantData(state, referencedCodes, reverseIndex, mainLang)
+  );
 
   const referenceInstruction = useMemo(() => {
     return parseUsedInstructions(
       content,
       relevantData.index,
       relevantData.questions,
-      relevantData.mainLang
+      relevantData.mainLang,
+      reverseIndex
     );
-  }, [content, relevantData]);
+  }, [content, relevantData, reverseIndex]);
+
+  const indexToCodeMap = {};
+  if (referenceInstruction) {
+    Object.keys(referenceInstruction).forEach((key) => {
+      const ref = referenceInstruction[key];
+      if (ref && ref.index) {
+        indexToCodeMap[ref.index] = key;
+      }
+    });
+  }
 
   const fixedValue = useMemo(() => {
-    const transformer = new QuestionDisplayTransformer(referenceInstruction);
-    return transformer.transformText(content);
+    return QuestionDisplayTransformer.transformText(content, referenceInstruction);
   }, [referenceInstruction, content]);
 
   const highlightedContentRef = useRef(null);
@@ -107,7 +77,8 @@ export function useInstructionHighlighting({
 
     const cleanup = highlightInstructionsInStaticContent(
       renderedContentRef.current,
-      referenceInstruction
+      referenceInstruction,
+      indexToCodeMap
     );
 
     highlightedContentRef.current = currentContent;

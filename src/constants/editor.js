@@ -1,3 +1,5 @@
+import { INSTRUCTION_SYNTAX_PATTERN } from "~/constants/instruction";
+
 export const EDITOR_CONSTANTS = {
   BLUR_TIMEOUT_MS: 100,
   CONTENT_SYNC_TIMEOUT_MS: 0,
@@ -68,7 +70,7 @@ export const PREVENT_ENTER_EXTENSION = {
 };
 
 export const INSTRUCTION_EDITOR_CONFIG = {
-  PATTERN: /\{\{[^}]*\}\}/g,
+  PATTERN: INSTRUCTION_SYNTAX_PATTERN,
   TOOLTIP: {
     delay: [0, 0],
     duration: [200, 150],

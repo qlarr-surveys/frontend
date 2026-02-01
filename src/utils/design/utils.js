@@ -1,5 +1,10 @@
 import { useSelector } from "react-redux";
 import { useResponsive } from "~/hooks/use-responsive";
+import {
+  QUESTION_CODE_PATTERN,
+  GROUP_CODE_PATTERN,
+  STRIP_TAGS_PATTERN,
+} from "~/constants/instruction";
 
 export const isEquivalent = (a, b, visited = new WeakSet()) => {
   if (a === b) return true;
@@ -40,67 +45,39 @@ export const isEquivalent = (a, b, visited = new WeakSet()) => {
 };
 
 export const diff = (obj1, obj2) => {
-  // Make sure an object to compare is provided
   if (!obj2 || Object.prototype.toString.call(obj2) !== "[object Object]") {
     return obj1;
   }
 
-  //
-  // Variables
-  //
-
   let diffs = {};
   let key;
 
-  //
-  // Methods
-  //
-
-  /**
-   * Check if two arrays are equal
-   * @param  {Array}   arr1 The first array
-   * @param  {Array}   arr2 The second array
-   * @return {Boolean}      If true, both arrays are equal
-   */
   let arraysMatch = function (arr1, arr2) {
-    // Check if the arrays are the same length
     if (arr1.length !== arr2.length) return false;
 
-    // Check if all items exist and are in the same order
     for (var i = 0; i < arr1.length; i++) {
       if (!isEquivalent(arr1[i], arr2[i])) {
         return false;
       }
     }
 
-    // Otherwise, return true
     return true;
   };
 
-  /**
-   * Compare two items and push non-matches to object
-   * @param  {*}      item1 The first item
-   * @param  {*}      item2 The second item
-   * @param  {String} key   The key in our object
-   */
   const compare = function (item1, item2, key) {
-    // Get the object type
     let type1 = Object.prototype.toString.call(item1);
     let type2 = Object.prototype.toString.call(item2);
 
-    // If type2 is undefined it has been removed
     if (type2 === "[object Undefined]") {
       diffs[key] = null;
       return;
     }
 
-    // If items are different types
     if (type1 !== type2) {
       diffs[key] = item2;
       return;
     }
 
-    // If an object, compare recursively
     if (type1 === "[object Object]") {
       let objDiff = diff(item1, item2);
       if (Object.keys(objDiff).length > 0) {
@@ -109,7 +86,6 @@ export const diff = (obj1, obj2) => {
       return;
     }
 
-    // If an array, compare
     if (type1 === "[object Array]") {
       if (!arraysMatch(item1, item2)) {
         diffs[key] = item2;
@@ -117,8 +93,6 @@ export const diff = (obj1, obj2) => {
       return;
     }
 
-    // Else if it's a function, convert to a string and compare
-    // Otherwise, just compare
     if (type1 === "[object Function]") {
       if (item1.toString() !== item2.toString()) {
         diffs[key] = item2;
@@ -130,18 +104,12 @@ export const diff = (obj1, obj2) => {
     }
   };
 
-  //
-  // Compare our objects
-  //
-
-  // Loop through the first object
   for (key in obj1) {
     if (obj1.hasOwnProperty(key)) {
       compare(obj1[key], obj2[key], key);
     }
   }
 
-  // Loop through the second object and find missing items
   for (key in obj2) {
     if (obj2.hasOwnProperty(key)) {
       if (!(key in obj1)) {
@@ -152,7 +120,6 @@ export const diff = (obj1, obj2) => {
     }
   }
 
-  // Return the object of differences
   return diffs;
 };
 
@@ -176,51 +143,8 @@ export const nextId = (elements) => {
   return 1;
 };
 
-  export const stripTags = (string) => {
-    return string ? string.replace(/<[^>]*>|&nbsp;|\n/g, "") : string;
-  };
-
-class SimpleLRU {
-  constructor(maxSize = 1000) {
-    this.maxSize = maxSize;
-    this.cache = new Map();
-  }
-
-  get(key) {
-    if (!this.cache.has(key)) return undefined;
-
-    const value = this.cache.get(key);
-    this.cache.delete(key);
-    this.cache.set(key, value);
-    return value;
-  }
-
-  set(key, value) {
-    if (this.cache.has(key)) {
-      this.cache.delete(key);
-    } else if (this.cache.size >= this.maxSize) {
-      const firstKey = this.cache.keys().next().value;
-      this.cache.delete(firstKey);
-    }
-    this.cache.set(key, value);
-  }
-
-  clear() {
-    this.cache.clear();
-  }
-}
-
-const stripTagsCache = new SimpleLRU(1000);
-
-export const stripTagsCached = (string) => {
-  if (!string) return string;
-
-  const cached = stripTagsCache.get(string);
-  if (cached !== undefined) return cached;
-
-  const result = stripTags(string);
-  stripTagsCache.set(string, result);
-  return result;
+export const stripTags = (string) => {
+  return typeof string === "string" ? string.replace(STRIP_TAGS_PATTERN, "") : string;
 };
 
 export function truncateWithEllipsis(text, maxLength) {
@@ -231,8 +155,8 @@ export function truncateWithEllipsis(text, maxLength) {
   }
 }
 
-export const isQuestion = (code) => /^Q[a-z0-9_]+$/.test(code);
-export const isGroup = (code) => /^G[a-z0-9_]+$/.test(code);
+export const isQuestion = (code) => QUESTION_CODE_PATTERN.test(code);
+export const isGroup = (code) => GROUP_CODE_PATTERN.test(code);
 
 export const lastIndexInArray = (array, func) => {
   if (!array) {

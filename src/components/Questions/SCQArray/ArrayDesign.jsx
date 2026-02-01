@@ -221,7 +221,6 @@ function ArrayRowDesign({
 
   useEffect(() => {
     if (inFocus) {
-      // Use setTimeout to ensure the DOM is ready
       setTimeout(() => {
         if (inputRef.current) {
           inputRef.current.focus();

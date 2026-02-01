@@ -26,8 +26,10 @@ export function createMentionExtension({
     },
 
     renderHTML({ node, HTMLAttributes }) {
-      const transformer = new QuestionDisplayTransformer(referenceInstruction);
-      const instruction = transformer.getDisplayId(node.attrs.instruction);
+      const instruction = QuestionDisplayTransformer.getDisplayId(
+        node.attrs.instruction,
+        referenceInstruction
+      );
 
       return ["span", {}, `{{${instruction}}}`];
     },

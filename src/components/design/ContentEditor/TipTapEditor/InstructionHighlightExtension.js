@@ -3,7 +3,6 @@ import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { getInstructionRegex } from "./instructionUtils";
 import InstructionTooltipManager from "./InstructionTooltipManager";
-import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 
 const InstructionHighlightExtension = Extension.create({
   name: "instructionHighlight",
@@ -24,7 +23,7 @@ const InstructionHighlightExtension = Extension.create({
         state: {
           init(_, { doc }) {
             return {
-              decorations: findInstructionPatterns(doc, referenceInstruction),
+              decorations: findInstructionPatterns(doc),
               lastReferenceInstructionStr: JSON.stringify(referenceInstruction),
             };
           },
@@ -35,8 +34,7 @@ const InstructionHighlightExtension = Extension.create({
 
             if (refChanged || tr.docChanged) {
               const newDecorations = findInstructionPatterns(
-                newEditorState.doc,
-                referenceInstruction
+                newEditorState.doc
               );
 
               return {
@@ -70,28 +68,24 @@ const InstructionHighlightExtension = Extension.create({
   },
 });
 
-function findInstructionPatterns(doc, referenceInstruction) {
+function findInstructionPatterns(doc) {
   const decorations = [];
   const regex = getInstructionRegex();
-  const transformer = new QuestionDisplayTransformer(referenceInstruction);
 
   doc.descendants((node, pos) => {
     if (node.isText) {
-      let match;
       regex.lastIndex = 0;
       const text = node.text;
+      let match;
 
       while ((match = regex.exec(text)) !== null) {
         const fullMatch = match[0];
-        const matchStart = pos + match.index;
-        const matchEnd = matchStart + fullMatch.length;
-
-        const tooltip = transformer.getTooltipFromInstruction(fullMatch);
+        const patternStart = pos + match.index;
+        const patternEnd = patternStart + fullMatch.length;
 
         decorations.push(
-          Decoration.inline(matchStart, matchEnd, {
+          Decoration.inline(patternStart, patternEnd, {
             class: "instruction-highlight",
-            ...(tooltip && { "data-tooltip": tooltip }),
           })
         );
       }

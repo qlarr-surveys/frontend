@@ -1,19 +1,16 @@
 import tippy from "tippy.js";
 import { INSTRUCTION_EDITOR_CONFIG } from "~/constants/editor";
 import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
-import { stripTagsCached } from "~/utils/design/utils";
-
-export const INSTRUCTION_PATTERN = INSTRUCTION_EDITOR_CONFIG.PATTERN;
-export const TIPPY_INSTRUCTION_CONFIG = INSTRUCTION_EDITOR_CONFIG.TOOLTIP;
-
-let cachedInstructionRegex = null;
+import { stripTags } from "~/utils/design/utils";
+import {
+  DISPLAY_INDEX_PATTERN,
+  INSTRUCTION_SYNTAX_PATTERN,
+  REFERENCED_CODE_PATTERN,
+  resolveQuestionCode,
+} from "~/constants/instruction";
 
 export const getInstructionRegex = () => {
-  if (!cachedInstructionRegex) {
-    cachedInstructionRegex = new RegExp(INSTRUCTION_PATTERN.source, "g");
-  }
-  cachedInstructionRegex.lastIndex = 0;
-  return cachedInstructionRegex;
+  return new RegExp(INSTRUCTION_SYNTAX_PATTERN.source, "g");
 };
 
 function createInstructionTooltip(element, tippyInstances) {
@@ -21,26 +18,78 @@ function createInstructionTooltip(element, tippyInstances) {
   if (tooltipContent && !element._tippy) {
     const instance = tippy(element, {
       content: tooltipContent,
-      ...TIPPY_INSTRUCTION_CONFIG,
+      ...INSTRUCTION_EDITOR_CONFIG.TOOLTIP,
     });
     tippyInstances.push(instance);
   }
 }
 
-const EMPTY_SET = Object.freeze(new Set());
-
 export function extractReferencedCodes(content) {
-  if (!content) return EMPTY_SET;
+  if (typeof content !== "string") return new Set();
 
   const codes = new Set();
-  const pattern = /\{\{([^.:}]+)[.:]/g;
   let match;
 
-  while ((match = pattern.exec(content)) !== null) {
-    codes.add(match[1]);
+  while ((match = REFERENCED_CODE_PATTERN.exec(content)) !== null) {
+    codes.add(match[1].trim());
   }
+  REFERENCED_CODE_PATTERN.lastIndex = 0;
 
   return codes;
+}
+
+function processInstructionContent(
+  fullPattern,
+  referenceInstruction,
+  indexToCodeMap
+) {
+  const fragment = document.createDocumentFragment();
+
+  const codeMatches = QuestionDisplayTransformer.findAllCodesInPattern(
+    fullPattern,
+    referenceInstruction,
+    indexToCodeMap
+  );
+
+  if (codeMatches.length === 0) {
+    const wrapperSpan = document.createElement("span");
+    wrapperSpan.className = "instruction-highlight";
+    wrapperSpan.textContent = fullPattern;
+    fragment.appendChild(wrapperSpan);
+    return fragment;
+  }
+
+  const wrapperSpan = document.createElement("span");
+  wrapperSpan.className = "instruction-highlight";
+
+  let lastIndex = 0;
+
+  codeMatches.forEach((codeMatch) => {
+    if (codeMatch.start > lastIndex) {
+      wrapperSpan.appendChild(
+        document.createTextNode(fullPattern.slice(lastIndex, codeMatch.start))
+      );
+    }
+
+    const codeSpan = document.createElement("span");
+    codeSpan.textContent = codeMatch.text;
+
+    const tooltipContent = QuestionDisplayTransformer.formatTooltipContent(codeMatch.ref);
+    codeSpan.setAttribute("data-tooltip", tooltipContent);
+    codeSpan.setAttribute("data-question-code", codeMatch.code);
+
+    wrapperSpan.appendChild(codeSpan);
+    lastIndex = codeMatch.end;
+  });
+
+  if (lastIndex < fullPattern.length) {
+    wrapperSpan.appendChild(
+      document.createTextNode(fullPattern.slice(lastIndex))
+    );
+  }
+
+  fragment.appendChild(wrapperSpan);
+  return fragment;
 }
 
 export function buildReverseIndex(index) {
@@ -51,15 +100,10 @@ export function buildReverseIndex(index) {
   return reverse;
 }
 
-export function parseUsedInstructions(
-  content,
-  index,
-  questions,
-  mainLang
-) {
+export function parseUsedInstructions(content, index, questions, mainLang, reverseIndex = {}) {
   const result = {};
 
-  if (!content || !index || Object.keys(index).length === 0) {
+  if (!content || !index) {
     return result;
   }
 
@@ -69,16 +113,8 @@ export function parseUsedInstructions(
     return result;
   }
 
-  const reverse = Array.from(codes).some((code) => /^Q\d+$/.test(code))
-    ? buildReverseIndex(index)
-    : {};
-
   codes.forEach((refCode) => {
-    let questionCode = refCode;
-
-    if (/^Q\d+$/.test(refCode) && reverse[refCode]) {
-      questionCode = reverse[refCode];
-    }
+    const questionCode = resolveQuestionCode(refCode, reverseIndex);
 
     if (!index[questionCode]) {
       return;
@@ -87,7 +123,7 @@ export function parseUsedInstructions(
     const displayIndex = index[questionCode];
     const questionState = questions?.[questionCode];
     const questionTextHtml = questionState?.content?.[mainLang]?.label || "";
-    const questionText = stripTagsCached(questionTextHtml);
+    const questionText = stripTags(questionTextHtml);
 
     result[questionCode] = {
       index: displayIndex,
@@ -100,14 +136,14 @@ export function parseUsedInstructions(
 
 export function highlightInstructionsInStaticContent(
   element,
-  referenceInstruction
+  referenceInstruction,
+  indexToCodeMap
 ) {
   if (!element || !(element instanceof HTMLElement)) {
     return () => {};
   }
 
   const tippyInstances = [];
-  const transformer = new QuestionDisplayTransformer(referenceInstruction);
 
   try {
     const existingHighlights = element.querySelectorAll(
@@ -121,16 +157,6 @@ export function highlightInstructionsInStaticContent(
       const textNode = document.createTextNode(span.textContent);
       span.replaceWith(textNode);
     });
-
-    const indexToCodeMap = {};
-    if (referenceInstruction) {
-      Object.keys(referenceInstruction).forEach((key) => {
-        const ref = referenceInstruction[key];
-        if (ref && ref.index) {
-          indexToCodeMap[ref.index] = key;
-        }
-      });
-    }
 
     const filterNode = (node) => {
       let current = node.parentElement;
@@ -154,7 +180,6 @@ export function highlightInstructionsInStaticContent(
     const regex = getInstructionRegex();
 
     while ((node = walker.nextNode())) {
-      regex.lastIndex = 0;
       if (regex.test(node.textContent)) {
         nodesToProcess.push(node);
       }
@@ -178,29 +203,15 @@ export function highlightInstructionsInStaticContent(
           );
         }
 
-        const originalPattern = match[0];
-        const refMatch = originalPattern.match(/\{\{([^.:}]+)[.:]/);
-        const questionRef = refMatch ? refMatch[1] : null;
+        const fullPattern = match[0];
 
-        const span = document.createElement("span");
-        span.className = "instruction-highlight";
-        span.textContent = originalPattern;
+        const processedFragment = processInstructionContent(
+          fullPattern,
+          referenceInstruction,
+          indexToCodeMap
+        );
 
-        if (questionRef && referenceInstruction) {
-          const foundCode = indexToCodeMap[questionRef];
-
-          if (foundCode) {
-            const foundRef = referenceInstruction[foundCode];
-
-            if (foundRef && foundRef.text) {
-              const tooltipContent = transformer.formatTooltipContent(foundRef);
-              span.setAttribute("data-tooltip", tooltipContent);
-              span.setAttribute("data-question-code", foundCode);
-            }
-          }
-        }
-
-        fragment.appendChild(span);
+        fragment.appendChild(processedFragment);
         lastIndex = match.index + match[0].length;
       }
 
@@ -211,8 +222,11 @@ export function highlightInstructionsInStaticContent(
       parent.replaceChild(fragment, textNode);
     });
 
-    const newHighlights = element.querySelectorAll(".instruction-highlight");
-    newHighlights.forEach((span) => {
+    const tooltipElements = element.querySelectorAll(
+      ".instruction-highlight [data-tooltip]"
+    );
+
+    tooltipElements.forEach((span) => {
       createInstructionTooltip(span, tippyInstances);
     });
   } catch (error) {

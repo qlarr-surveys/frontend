@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { MenuItem, Typography, FormControl, Select } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { setDefaultValue } from "~/state/design/designState";
 import { stripTags } from "~/utils/design/utils";
@@ -9,12 +9,10 @@ function ScqDefaultValue({ code }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  // Get the question data and its children (answers)
   const answers = useSelector(
     (state) => state.designState[code]?.children || []
   );
 
-  // Get the current "value" instruction
   const currentInstruction = useSelector((state) => {
     return state.designState[code]?.instructionList?.find(
       (instruction) => instruction.code === "value"
@@ -25,24 +23,31 @@ function ScqDefaultValue({ code }) {
     return state.designState.langInfo;
   });
 
-  // Get current default value from the instruction
+  const answerData = useSelector((state) => {
+    const data = {};
+    answers.forEach((answer) => {
+      if (answer && answer.qualifiedCode) {
+        data[answer.code] = state.designState[answer.qualifiedCode];
+      }
+    });
+    return data;
+  }, shallowEqual);
+
   const currentDefaultValue = currentInstruction?.text || "";
 
-  // Get answer labels for display
-  const answerLabels = useSelector((state) => {
+  const answerLabels = useMemo(() => {
     const labels = {};
     answers.forEach((answer) => {
       if (answer && answer.qualifiedCode) {
-        const answerData = state.designState[answer.qualifiedCode];
-        // Only use plain text properties
+        const data = answerData[answer.code];
         const rawLabel =
-          stripTags(answerData?.content?.[langInfo.mainLang]?.label) ||
+          stripTags(data?.content?.[langInfo.mainLang]?.label) ||
           answer.code;
         labels[answer.code] = rawLabel;
       }
     });
     return labels;
-  });
+  }, [answers, answerData, langInfo.mainLang]);
 
   const getAnswerLabel = (answerCode) => {
     return answerLabels[answerCode] || answerCode;
