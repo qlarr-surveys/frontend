@@ -33,11 +33,12 @@ export function extractReferencedCodes(content) {
   if (!content) return EMPTY_SET;
 
   const codes = new Set();
-  const pattern = /\{\{([^.:}]+)[.:]/g;
+  // Support spaces: {{ code.value }} or {{code.value}}
+  const pattern = /\{\{\s*([^.:}\s]+)\s*[.:]/g;
   let match;
 
   while ((match = pattern.exec(content)) !== null) {
-    codes.add(match[1]);
+    codes.add(match[1].trim());
   }
 
   return codes;
@@ -51,14 +52,43 @@ function processInstructionContent(
 ) {
   const fragment = document.createDocumentFragment();
 
-  // Find all question codes and their positions
+  // Early exit if no reference instruction
+  if (!referenceInstruction || Object.keys(referenceInstruction).length === 0) {
+    const wrapperSpan = document.createElement("span");
+    wrapperSpan.className = "instruction-highlight";
+    wrapperSpan.textContent = fullPattern;
+    fragment.appendChild(wrapperSpan);
+    return fragment;
+  }
+
+  // OPTIMIZATION: Only check codes that are actually in this pattern
+  const codesInPattern = extractReferencedCodes(fullPattern);
+
+  if (codesInPattern.size === 0) {
+    // No codes found, just highlight the whole pattern
+    const wrapperSpan = document.createElement("span");
+    wrapperSpan.className = "instruction-highlight";
+    wrapperSpan.textContent = fullPattern;
+    fragment.appendChild(wrapperSpan);
+    return fragment;
+  }
+
   const codeMatches = [];
 
-  // Check for question codes
-  Object.keys(referenceInstruction || {}).forEach((questionCode) => {
+  // Only iterate through codes that are actually in THIS pattern
+  codesInPattern.forEach((codeOrIndex) => {
+    // Could be question code (Q161xfc) or display index (Q1)
+    let questionCode = codeOrIndex;
+
+    // If it's a display index, convert to question code
+    if (/^Q\d+$/.test(codeOrIndex) && indexToCodeMap[codeOrIndex]) {
+      questionCode = indexToCodeMap[codeOrIndex];
+    }
+
     const ref = referenceInstruction[questionCode];
     if (!ref || !ref.index) return;
 
+    // Find matches for this code
     const codePattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
     let match;
 
@@ -71,29 +101,7 @@ function processInstructionContent(
         ref: ref,
       });
     }
-  });
-
-  // Also check for display index patterns (Q1, Q2, etc.)
-  Object.keys(indexToCodeMap || {}).forEach((displayIndex) => {
-    const questionCode = indexToCodeMap[displayIndex];
-    const ref = referenceInstruction?.[questionCode];
-    if (!ref) return;
-
-    // Escape special regex characters in display index
-    const escapedIndex = displayIndex.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    // Create pattern for display index
-    const indexPattern = new RegExp(`\\b${escapedIndex}\\b(?=[.:\\s}])`, "g");
-    let match;
-
-    while ((match = indexPattern.exec(fullPattern)) !== null) {
-      codeMatches.push({
-        start: match.index,
-        end: match.index + match[0].length,
-        code: questionCode,
-        text: match[0],
-        ref: ref,
-      });
-    }
+    codePattern.lastIndex = 0;
   });
 
   // Sort by start position

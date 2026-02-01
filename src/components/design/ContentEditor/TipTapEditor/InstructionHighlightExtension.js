@@ -1,7 +1,7 @@
 import { Extension } from "@tiptap/core";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
-import { getInstructionRegex } from "./instructionUtils";
+import { getInstructionRegex, extractReferencedCodes } from "./instructionUtils";
 import InstructionTooltipManager from "./InstructionTooltipManager";
 import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 
@@ -79,8 +79,21 @@ function findCodesInPattern(
 ) {
   const decorations = [];
 
-  // Find all question codes and their positions
-  Object.keys(referenceInstruction || {}).forEach((questionCode) => {
+  // OPTIMIZATION: Only check codes actually in this pattern
+  const codesInPattern = extractReferencedCodes(fullPattern);
+
+  if (codesInPattern.size === 0) {
+    return decorations;
+  }
+
+  codesInPattern.forEach((codeOrIndex) => {
+    let questionCode = codeOrIndex;
+
+    // If it's a display index, convert to question code
+    if (/^Q\d+$/.test(codeOrIndex) && indexToCodeMap[codeOrIndex]) {
+      questionCode = indexToCodeMap[codeOrIndex];
+    }
+
     const ref = referenceInstruction[questionCode];
     if (!ref || !ref.index) return;
 
@@ -100,33 +113,7 @@ function findCodesInPattern(
         })
       );
     }
-  });
-
-  // Also check for display index patterns (Q1, Q2, etc.)
-  Object.keys(indexToCodeMap || {}).forEach((displayIndex) => {
-    const questionCode = indexToCodeMap[displayIndex];
-    const ref = referenceInstruction?.[questionCode];
-    if (!ref) return;
-
-    // Escape special regex characters in display index
-    const escapedIndex = displayIndex.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    // Create pattern for display index
-    const indexPattern = new RegExp(`\\b${escapedIndex}\\b(?=[.:\\s}])`, "g");
-    let match;
-
-    while ((match = indexPattern.exec(fullPattern)) !== null) {
-      const codeStart = patternStart + match.index;
-      const codeEnd = codeStart + match[0].length;
-
-      const tooltipContent = transformer.formatTooltipContent(ref);
-
-      decorations.push(
-        Decoration.inline(codeStart, codeEnd, {
-          "data-tooltip": tooltipContent,
-          "data-question-code": questionCode,
-        })
-      );
-    }
+    codePattern.lastIndex = 0;
   });
 
   return decorations;
