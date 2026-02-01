@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { Checkbox, Radio } from "@mui/material";
 import { valueChange } from "~/state/runState";
 import Validation from "~/components/run/Validation";
-import { columnMinWidth } from "~/utils/design/utils";
+import { useColumnMinWidth } from "~/utils/design/utils";
 import Content from "~/components/run/Content";
 
 function Array(props) {
@@ -20,7 +20,7 @@ function Array(props) {
     (answer) => answer.type == "column"
   );
   let rows = props.component.answers.filter((answer) => answer.type == "row");
-  const { header, rowLabel } = columnMinWidth(null, props.component);
+  const { header, rowLabel } = useColumnMinWidth(null, props.component);
 
   return (
     <TableContainer

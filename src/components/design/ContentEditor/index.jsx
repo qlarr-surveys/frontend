@@ -1,6 +1,5 @@
 import React, {
   useCallback,
-  useMemo,
   useState,
   useEffect,
   useRef,
@@ -14,12 +13,12 @@ import { useDispatch } from "react-redux";
 import { changeContent, resetFocus } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { isNotEmptyHtml } from "~/utils/design/utils";
-import cloneDeep from "lodash.clonedeep";
 import {
   useCollapsibleHandler,
   ensureCollapsiblesClosed,
 } from "~/hooks/useCollapsibleHandler";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
+import { useInstructionHighlighting } from "~/hooks/useInstructionHighlighting";
 
 const { CONTENT_EDITOR_CLASS, RTL_CLASS, LTR_CLASS } = EDITOR_CONSTANTS;
 
@@ -48,81 +47,26 @@ function ContentEditor({
     return state.designState.langInfo;
   });
 
-  const index = useSelector((state) => {
-    return state.designState.index;
-  });
-
   const lang = langInfo.lang;
   const mainLang = langInfo.mainLang;
   const onMainLang = langInfo.onMainLang;
 
-  const instructionList = useSelector(
-    (state) => state.designState[code]?.instructionList
-  );
-
-  const referenceInstruction = useMemo(() => {
-    let returnResult = {};
-    const referenceInstruction = instructionList?.find(
-      (instruction) => instruction.code === `format_${contentKey}_${lang}`
-    );
-    const references = referenceInstruction?.references;
-
-    if (!references || !Array.isArray(references)) {
-      return [];
-    }
-
-    references.forEach((reference) => {
-      const uniqueCode = reference.split(".")[0];
-      returnResult[uniqueCode] = index[uniqueCode];
-    });
-    return returnResult;
-  }, [instructionList, index]);
-
   const value = content?.[lang]?.[contentKey] || "";
+  const [isActive, setActive] = useState(false);
+  const renderedContentRef = useRef(null);
 
-  const fixedValue = useMemo(() => {
-    if (!referenceInstruction || !Object.keys(referenceInstruction).length) {
-      return value;
-    }
-    let updated = cloneDeep(value);
-
-    // Create a temporary DOM element to parse and manipulate the HTML
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = updated;
-
-    Object.keys(referenceInstruction).forEach((key) => {
-      // Find all spans with data-id matching the key
-      const spans = tempDiv.querySelectorAll(`span[data-id="${key}"]`);
-
-      spans.forEach((span) => {
-        // Get the data-value attribute
-        const dataValue = span.getAttribute("data-value");
-        if (dataValue) {
-          // Replace the key with referenceInstruction[key] in the data-value
-          const newDataValue = dataValue.replace(
-            new RegExp(`{{${key}:`, "g"),
-            `{{${referenceInstruction[key]}:`
-          );
-          // Find the nested span with contenteditable="false" and update its content
-          const nestedSpan = span.querySelector(
-            'span[contenteditable="false"]'
-          );
-          if (nestedSpan) {
-            nestedSpan.textContent = newDataValue;
-          }
-        }
-      });
-    });
-
-    return tempDiv.innerHTML;
-  }, [referenceInstruction, value]);
+  const { referenceInstruction, fixedValue } = useInstructionHighlighting({
+    content: value,
+    mainLang,
+    isActive,
+    renderedContentRef,
+  });
 
   const finalPlaceholder = onMainLang
     ? placeholder
     : isNotEmptyHtml(content?.[mainLang]?.[contentKey])
     ? content?.[mainLang]?.[contentKey]
     : placeholder;
-  const [isActive, setActive] = useState(false);
 
   useEffect(() => {
     if (focus && !isActive && editable) {
@@ -153,7 +97,6 @@ function ContentEditor({
   };
 
   const isRtl = rtlLanguage.includes(lang);
-  const renderedContentRef = useRef(null);
 
   useCollapsibleHandler(renderedContentRef, !isActive ? fixedValue : null);
 

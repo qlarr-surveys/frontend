@@ -30,7 +30,7 @@ import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
 import { contentEditable, inDesign } from "~/routes";
-import { columnMinWidth } from "~/utils/design/utils";
+import { useColumnMinWidth } from "~/utils/design/utils";
 import ContentEditor from "~/components/design/ContentEditor";
 
 function ArrayDesign(props) {
@@ -38,7 +38,7 @@ function ArrayDesign(props) {
   const dispatch = useDispatch();
   const t = props.t;
 
-  const { header, rowLabel } = columnMinWidth(props.code);
+  const { header, rowLabel } = useColumnMinWidth(props.code);
   const langInfo = props.langInfo;
 
   const children = useSelector(
@@ -221,7 +221,6 @@ function ArrayRowDesign({
 
   useEffect(() => {
     if (inFocus) {
-      // Use setTimeout to ensure the DOM is ready
       setTimeout(() => {
         if (inputRef.current) {
           inputRef.current.focus();

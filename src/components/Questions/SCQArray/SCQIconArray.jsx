@@ -12,12 +12,12 @@ import Validation from "~/components/run/Validation";
 import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 import { TableHead } from "@mui/material";
-import { columnMinWidth } from "~/utils/design/utils";
+import { useColumnMinWidth } from "~/utils/design/utils";
 import Content from "~/components/run/Content";
 
 function SCQIconArray(props) {
   const theme = useTheme();
-  const width = columnMinWidth();
+  const width = useColumnMinWidth();
 
   let columns = props.component.answers.filter(
     (answer) => answer.type == "column"

@@ -1,5 +1,4 @@
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
@@ -8,6 +7,7 @@ import ImageExtension from "./ImageExtension";
 import CollapsibleExtension from "./CollapsibleExtension";
 import FontSize from "./FontSizeExtension";
 import { createMentionExtension } from "./MentionExtension";
+import InstructionHighlightExtension from "./InstructionHighlightExtension";
 import { PreventEnterExtension } from "./PreventEnterExtension";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
 
@@ -27,6 +27,7 @@ export function createBaseExtensions(
         },
       },
       heading: false,
+      link: false,
     }),
     LinkExtension.configure({
       openOnClick: false,
@@ -35,7 +36,6 @@ export function createBaseExtensions(
       },
       autolink: false,
     }),
-    Underline,
     TextStyle,
     FontSize,
     Color,
@@ -77,6 +77,9 @@ export function createAllExtensions({
     getMentionSuggestions,
     referenceInstruction,
   });
+  const instructionHighlightExtension = InstructionHighlightExtension.configure({
+    referenceInstruction,
+  });
 
-  return [...baseExtensions, mentionExtension];
+  return [...baseExtensions, mentionExtension, instructionHighlightExtension];
 }
