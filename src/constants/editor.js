@@ -71,6 +71,11 @@ export const PREVENT_ENTER_EXTENSION = {
 
 export const INSTRUCTION_EDITOR_CONFIG = {
   PATTERN: INSTRUCTION_SYNTAX_PATTERN,
+  SELECTORS: {
+    HIGHLIGHT_CLASS: "instruction-highlight",
+    HIGHLIGHT: ".instruction-highlight",
+    TOOLTIP_TARGETS: ".instruction-highlight [data-tooltip]",
+  },
   TOOLTIP: {
     delay: [0, 0],
     duration: [200, 150],

@@ -53,14 +53,14 @@ function processInstructionContent(
 
   if (codeMatches.length === 0) {
     const wrapperSpan = document.createElement("span");
-    wrapperSpan.className = "instruction-highlight";
+    wrapperSpan.className = INSTRUCTION_EDITOR_CONFIG.SELECTORS.HIGHLIGHT_CLASS;
     wrapperSpan.textContent = fullPattern;
     fragment.appendChild(wrapperSpan);
     return fragment;
   }
 
   const wrapperSpan = document.createElement("span");
-  wrapperSpan.className = "instruction-highlight";
+  wrapperSpan.className = INSTRUCTION_EDITOR_CONFIG.SELECTORS.HIGHLIGHT_CLASS;
 
   let lastIndex = 0;
 
@@ -147,7 +147,7 @@ export function highlightInstructionsInStaticContent(
 
   try {
     const existingHighlights = element.querySelectorAll(
-      ".instruction-highlight"
+      INSTRUCTION_EDITOR_CONFIG.SELECTORS.HIGHLIGHT
     );
 
     existingHighlights.forEach((span) => {
@@ -161,7 +161,7 @@ export function highlightInstructionsInStaticContent(
     const filterNode = (node) => {
       let current = node.parentElement;
       while (current) {
-        if (current.classList.contains("instruction-highlight")) {
+        if (current.classList.contains(INSTRUCTION_EDITOR_CONFIG.SELECTORS.HIGHLIGHT_CLASS)) {
           return NodeFilter.FILTER_REJECT;
         }
         current = current.parentElement;
@@ -225,7 +225,7 @@ export function highlightInstructionsInStaticContent(
     }
 
     const tooltipElements = element.querySelectorAll(
-      ".instruction-highlight [data-tooltip]"
+      INSTRUCTION_EDITOR_CONFIG.SELECTORS.TOOLTIP_TARGETS
     );
 
     tooltipElements.forEach((span) => {

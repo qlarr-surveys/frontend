@@ -3,6 +3,7 @@ import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
 import { getInstructionRegex } from "./instructionUtils";
 import InstructionTooltipManager from "./InstructionTooltipManager";
+import { INSTRUCTION_EDITOR_CONFIG } from "~/constants/editor";
 
 const InstructionHighlightExtension = Extension.create({
   name: "instructionHighlight",
@@ -85,7 +86,7 @@ function findInstructionPatterns(doc) {
 
         decorations.push(
           Decoration.inline(patternStart, patternEnd, {
-            class: "instruction-highlight",
+            class: INSTRUCTION_EDITOR_CONFIG.SELECTORS.HIGHLIGHT_CLASS,
           })
         );
       }

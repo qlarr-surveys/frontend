@@ -10,7 +10,7 @@ class InstructionTooltipManager {
     if (!editorElement) return;
 
     const currentHighlights = new Set(
-      editorElement.querySelectorAll(".instruction-highlight [data-tooltip]")
+      editorElement.querySelectorAll(INSTRUCTION_EDITOR_CONFIG.SELECTORS.TOOLTIP_TARGETS)
     );
 
     this.instances.forEach((instance, element) => {
