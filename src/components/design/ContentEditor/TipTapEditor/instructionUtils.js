@@ -68,15 +68,7 @@ function processInstructionContent(
   const wrapperSpan = document.createElement("span");
   wrapperSpan.className = INSTRUCTION_EDITOR_CONFIG.SELECTORS.HIGHLIGHT_CLASS;
 
-  let lastIndex = 0;
-
-  codeMatches.forEach((codeMatch) => {
-    if (codeMatch.start > lastIndex) {
-      wrapperSpan.appendChild(
-        document.createTextNode(fullPattern.slice(lastIndex, codeMatch.start))
-      );
-    }
-
+  const spans = codeMatches.map((codeMatch) => {
     const codeSpan = document.createElement("span");
     codeSpan.textContent = codeMatch.text;
 
@@ -84,15 +76,14 @@ function processInstructionContent(
     codeSpan.setAttribute("data-tooltip", tooltipContent);
     codeSpan.setAttribute("data-question-code", codeMatch.code);
 
-    wrapperSpan.appendChild(codeSpan);
-    lastIndex = codeMatch.end;
+    return {
+      start: codeMatch.start,
+      end: codeMatch.end,
+      node: codeSpan,
+    };
   });
 
-  if (lastIndex < fullPattern.length) {
-    wrapperSpan.appendChild(
-      document.createTextNode(fullPattern.slice(lastIndex))
-    );
-  }
+  buildFragmentWithTextAndNodes(fullPattern, spans, wrapperSpan);
 
   fragment.appendChild(wrapperSpan);
   return fragment;
@@ -104,6 +95,27 @@ export function buildReverseIndex(index) {
     reverse[index[questionCode]] = questionCode;
   });
   return reverse;
+}
+
+function buildFragmentWithTextAndNodes(text, spans, container) {
+  let lastIndex = 0;
+
+  spans.forEach(({ start, end, node }) => {
+    if (start > lastIndex) {
+      container.appendChild(
+        document.createTextNode(text.slice(lastIndex, start))
+      );
+    }
+
+    container.appendChild(node);
+    lastIndex = end;
+  });
+
+  if (lastIndex < text.length) {
+    container.appendChild(document.createTextNode(text.slice(lastIndex)));
+  }
+
+  return container;
 }
 
 export function parseUsedInstructions(content, index, questions, mainLang, reverseIndex = {}) {
@@ -184,7 +196,6 @@ export function highlightInstructionsInStaticContent(
 
     while ((node = walker.nextNode())) {
       const text = node.textContent;
-      regex.lastIndex = 0;
       let match;
       const matches = [];
 
@@ -202,28 +213,22 @@ export function highlightInstructionsInStaticContent(
       if (!parent) continue;
 
       const fragment = document.createDocumentFragment();
-      let lastIndex = 0;
 
-      matches.forEach((matchInfo) => {
-        if (matchInfo.index > lastIndex) {
-          fragment.appendChild(
-            document.createTextNode(text.slice(lastIndex, matchInfo.index))
-          );
-        }
-
+      const spans = matches.map((matchInfo) => {
         const processedFragment = processInstructionContent(
           matchInfo.pattern,
           referenceInstruction,
           indexToCodeMap
         );
 
-        fragment.appendChild(processedFragment);
-        lastIndex = matchInfo.index + matchInfo.length;
+        return {
+          start: matchInfo.index,
+          end: matchInfo.index + matchInfo.length,
+          node: processedFragment,
+        };
       });
 
-      if (lastIndex < text.length) {
-        fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
-      }
+      buildFragmentWithTextAndNodes(text, spans, fragment);
 
       parent.replaceChild(fragment, node);
     }

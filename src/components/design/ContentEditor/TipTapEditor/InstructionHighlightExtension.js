@@ -85,7 +85,6 @@ function findInstructionPatterns(doc) {
 
   doc.descendants((node, pos) => {
     if (node.isText) {
-      regex.lastIndex = 0;
       const text = node.text;
       let match;
 
