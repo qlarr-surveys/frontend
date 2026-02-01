@@ -13,13 +13,13 @@ This document provides a deep technical review of the `feature/format_instructio
 
 ### Issue Summary by Severity
 
-| Severity | Count | Fixed | Remaining |
-|----------|-------|-------|-----------|
-| 🔥 Critical | 2 | ✅ 2 | 0 |
-| ⚠️ High | 4 | ✅ 1 | 3 |
-| 📋 Medium | 7 | ✅ 1 | 6 |
-| 📝 Low | 4 | ✅ 4 | 0 |
-| **Total** | **17** | **8** | **9** |
+| Severity | Count | Fixed | Not a Bug | Remaining |
+|----------|-------|-------|-----------|-----------|
+| 🔥 Critical | 2 | ✅ 2 | 0 | 0 |
+| ⚠️ High | 4 | ✅ 1 | 1 | 2 |
+| 📋 Medium | 7 | ✅ 1 | 0 | 6 |
+| 📝 Low | 4 | ✅ 4 | 0 | 0 |
+| **Total** | **17** | **8** | **1** | **8** |
 
 ### Fixed Issues (feature/format_instructions_bugs branch)
 
@@ -308,6 +308,9 @@ Mention items were changed from semantic `<button>` elements to `<div>` elements
 **File**: `src/components/design/ContentEditor/TipTapEditor/MentionExtension.js`
 **Lines**: 28-35
 **Severity**: ⚠️ HIGH
+**Status**: ✅ NOT A BUG - Intentional simplification (commit c216fda by Askoura)
+
+**Note**: After investigation, this was an intentional refactoring where `id` and `type` attributes were removed because the system switched to using `instruction` as the primary identifier. The simplification from `{{Q1:question}}` to `{{Q1}}` was deliberate.
 
 **Issue**:
 The simplified `renderHTML` implementation discards the `type` and `id` attributes that were previously stored.
