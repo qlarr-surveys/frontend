@@ -33,8 +33,7 @@ export function extractReferencedCodes(content) {
   if (!content) return EMPTY_SET;
 
   const codes = new Set();
-  // Support spaces: {{ code.value }} or {{code.value}}
-  const pattern = /\{\{\s*([^.:}\s]+)\s*[.:]/g;
+  const pattern = /\b([A-Z][a-zA-Z0-9_]*)\s*[.:]/g;
   let match;
 
   while ((match = pattern.exec(content)) !== null) {
@@ -52,14 +51,12 @@ function processInstructionContent(
 ) {
   const fragment = document.createDocumentFragment();
 
-  // Use shared method to find all code matches
   const codeMatches = QuestionDisplayTransformer.findAllCodesInPattern(
     fullPattern,
     referenceInstruction,
     indexToCodeMap
   );
 
-  // If no matches found, just highlight the whole pattern
   if (codeMatches.length === 0) {
     const wrapperSpan = document.createElement("span");
     wrapperSpan.className = "instruction-highlight";
@@ -68,22 +65,18 @@ function processInstructionContent(
     return fragment;
   }
 
-  // Wrap entire pattern in a span with highlight class
   const wrapperSpan = document.createElement("span");
   wrapperSpan.className = "instruction-highlight";
 
-  // Build content with nested spans for tooltips
   let lastIndex = 0;
 
   codeMatches.forEach((codeMatch) => {
-    // Add text before this code (highlighted but no tooltip)
     if (codeMatch.start > lastIndex) {
       wrapperSpan.appendChild(
         document.createTextNode(fullPattern.slice(lastIndex, codeMatch.start))
       );
     }
 
-    // Create nested span for this question code with tooltip
     const codeSpan = document.createElement("span");
     codeSpan.textContent = codeMatch.text;
 
@@ -95,7 +88,6 @@ function processInstructionContent(
     lastIndex = codeMatch.end;
   });
 
-  // Add any remaining text (highlighted but no tooltip)
   if (lastIndex < fullPattern.length) {
     wrapperSpan.appendChild(
       document.createTextNode(fullPattern.slice(lastIndex))
@@ -114,12 +106,7 @@ export function buildReverseIndex(index) {
   return reverse;
 }
 
-export function parseUsedInstructions(
-  content,
-  index,
-  questions,
-  mainLang
-) {
+export function parseUsedInstructions(content, index, questions, mainLang) {
   const result = {};
 
   if (!content || !index || Object.keys(index).length === 0) {
@@ -243,7 +230,6 @@ export function highlightInstructionsInStaticContent(
 
         const fullPattern = match[0];
 
-        // Process the content to find individual question codes
         const processedFragment = processInstructionContent(
           fullPattern,
           referenceInstruction,
@@ -262,8 +248,10 @@ export function highlightInstructionsInStaticContent(
       parent.replaceChild(fragment, textNode);
     });
 
-    // Find all elements with data-tooltip within instruction highlights
-    const tooltipElements = element.querySelectorAll(".instruction-highlight [data-tooltip]");
+    const tooltipElements = element.querySelectorAll(
+      ".instruction-highlight [data-tooltip]"
+    );
+
     tooltipElements.forEach((span) => {
       createInstructionTooltip(span, tippyInstances);
     });

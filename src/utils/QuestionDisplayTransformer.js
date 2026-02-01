@@ -130,8 +130,6 @@ class QuestionDisplayTransformer {
 
   static findAllCodesInPattern(fullPattern, referenceInstruction, indexToCodeMap) {
     const matches = [];
-
-    // Use extractReferencedCodes for efficiency
     const codesInPattern = extractReferencedCodes(fullPattern);
 
     if (codesInPattern.size === 0) {
@@ -140,16 +138,21 @@ class QuestionDisplayTransformer {
 
     codesInPattern.forEach((codeOrIndex) => {
       let questionCode = codeOrIndex;
+      let searchCode = codeOrIndex;
 
-      // Convert display index to question code if needed
-      if (/^Q\d+$/.test(codeOrIndex) && indexToCodeMap?.[codeOrIndex]) {
+      const isDisplayIndex = /^Q\d+$/.test(codeOrIndex);
+
+      if (isDisplayIndex && indexToCodeMap?.[codeOrIndex]) {
         questionCode = indexToCodeMap[codeOrIndex];
       }
 
       const ref = referenceInstruction?.[questionCode];
-      if (!ref || !ref.index) return;
 
-      const codePattern = this.createQuestionCodePattern(questionCode);
+      if (!ref || !ref.index) {
+        return;
+      }
+
+      const codePattern = this.createQuestionCodePattern(searchCode);
       let match;
 
       while ((match = codePattern.exec(fullPattern)) !== null) {
