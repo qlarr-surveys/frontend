@@ -96,7 +96,8 @@
     "required": "É obrigatório",
     "at_least_one_role": "Pelo menos uma função deve ser selecionada.",
     "roles_required": "As funções são obrigatórias.",
-    "survey_expired": "Pesquisa Expirada"
+    "survey_expired": "Pesquisa Expirada",
+    "page_not_found": "Página não encontrada"
   },
   "event_response": {
     "details": "Detalhes",
@@ -353,9 +354,6 @@
     "translate_to": "Traduzir Pesquisa Para:",
     "language": "Idioma",
     "design_language": "Idioma do Design"
-  },
-  "error": {
-    "page_not_found": "Página não encontrada"
   },
   "responses_export": {
     "format_csv": "CSV",

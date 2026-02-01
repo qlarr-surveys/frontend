@@ -96,7 +96,8 @@
     "required": "Est requis",
     "at_least_one_role": "Au moins un rôle doit être sélectionné.",
     "roles_required": "Les rôles sont requis.",
-    "survey_expired": "Sondage Expiré"
+    "survey_expired": "Sondage Expiré",
+    "page_not_found": "Page non trouvée"
   },
   "event_response": {
     "details": "Détails",
@@ -353,9 +354,6 @@
     "translate_to": "Traduire le sondage vers:",
     "language": "Langue",
     "design_language": "Langue du design"
-  },
-  "error": {
-    "page_not_found": "Page non trouvée"
   },
   "responses_export": {
     "format_csv": "CSV",

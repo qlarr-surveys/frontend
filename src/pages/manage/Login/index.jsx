@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -31,15 +32,19 @@ export default function LoginView() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const LoginSchema = Yup.object().shape({
-    email: Yup.string()
-      .required(t("email_required"))
-      .matches(
-        /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
-        t("error.invalid_email")
-      ),
-    password: Yup.string().required(t("password_required")),
-  });
+  const LoginSchema = useMemo(
+    () =>
+      Yup.object().shape({
+        email: Yup.string()
+          .required(t("email_required"))
+          .matches(
+            /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/i,
+            t("error.invalid_email")
+          ),
+        password: Yup.string().required(t("password_required")),
+      }),
+    [t]
+  );
 
   const defaultValues = {
     email: "",

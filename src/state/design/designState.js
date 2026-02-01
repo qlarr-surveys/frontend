@@ -277,17 +277,7 @@ export const designState = createSlice({
       refreshListForMultipleChoice(question, state);
       addMaskedValuesInstructions(codes[0], question, state);
       cleanupRandomRules(question);
-      // Clean up skip_logic conditions when answer is removed
-      if (question.skip_logic && Array.isArray(question.skip_logic)) {
-        const answerCode = codes[1];
-        question.skip_logic = question.skip_logic
-          .map((rule) => ({
-            ...rule,
-            condition: rule.condition?.filter((c) => c !== answerCode) || [],
-          }))
-          .filter((rule) => rule.condition.length > 0);
-        addSkipInstructions(state, codes[0]);
-      }
+      addSkipInstructions(state, codes[0]);
     },
     addNewAnswers: (state, action) => {
       const questionCode = action.payload.questionCode;
@@ -531,6 +521,13 @@ export const designState = createSlice({
         changeInstruction(state[payload.code], instruction)
       );
 
+      saveContentResources(
+        state[payload.code],
+        payload.value,
+        payload.lang,
+        payload.key
+      );
+
       state[payload.code].content[payload.lang][payload.key] = payload.value;
     },
     changeResources: (state, action) => {
@@ -767,9 +764,7 @@ const cleanupSkipDestinations = (state, deletedCode) => {
   Object.keys(state).forEach((key) => {
     const component = state[key];
     if (
-      component?.type &&
-      ["scq", "image_scq", "icon_scq"].includes(component.type) &&
-      Array.isArray(component.skip_logic)
+      Array.isArray(component?.skip_logic)
     ) {
       const hadRules = component.skip_logic.some(
         (rule) => rule.skipTo === deletedCode
@@ -781,6 +776,34 @@ const cleanupSkipDestinations = (state, deletedCode) => {
         addSkipInstructions(state, key);
       }
     }
+  });
+}
+
+const saveContentResources = (
+  component,
+  contentValue,
+  contentLang,
+  contentKey
+) => {
+  const regex = /data-resource-name="([^"]+)"/g;
+  const resources = Array.from(
+    contentValue.matchAll(regex),
+    (match) => match[1]
+  ).filter((name) => name && name.trim());
+
+  if (!component.resources) {
+    component.resources = {};
+  }
+  // Remove existing items with matching keys
+  const prefix = `content_${contentLang}_${contentKey}`;
+  Object.keys(component.resources).forEach((key) => {
+    if (key.startsWith(prefix)) {
+      delete component.resources[key];
+    }
+  });
+  resources.forEach((elem, index) => {
+    component.resources[`${prefix}_${index + 1}`] =
+      elem;
   });
 };
 
