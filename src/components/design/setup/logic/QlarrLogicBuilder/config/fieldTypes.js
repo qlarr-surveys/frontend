@@ -2,7 +2,7 @@
  * Maps survey question types to logic builder field types
  * This replaces the massive switch statement in buildFields.jsx
  */
-export const QUESTION_TYPE_TO_FIELD_TYPE = {
+const QUESTION_TYPE_TO_FIELD_TYPE = {
   // Text-based questions
   text: 'text',
   autocomplete: 'text',
@@ -51,7 +51,7 @@ export const QUESTION_TYPE_TO_FIELD_TYPE = {
 /**
  * Question types that support "other" text field
  */
-export const QUESTION_TYPES_WITH_OTHER = [
+const QUESTION_TYPES_WITH_OTHER = [
   'scq',
   'icon_scq',
   'image_scq',
@@ -63,29 +63,10 @@ export const QUESTION_TYPES_WITH_OTHER = [
 /**
  * Question types that are arrays (rows/columns)
  */
-export const ARRAY_QUESTION_TYPES = [
+const ARRAY_QUESTION_TYPES = [
   'scq_array',
   'mcq_array',
   'scq_icon_array',
-];
-
-/**
- * Question types that have child items
- */
-export const QUESTION_TYPES_WITH_CHILDREN = [
-  'scq',
-  'icon_scq',
-  'image_scq',
-  'mcq',
-  'icon_mcq',
-  'image_mcq',
-  'scq_array',
-  'mcq_array',
-  'scq_icon_array',
-  'ranking',
-  'image_ranking',
-  'multiple_text',
-  'nps',
 ];
 
 /**
