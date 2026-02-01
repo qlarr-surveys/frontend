@@ -24,10 +24,8 @@ function createInstructionTooltip(element, tippyInstances) {
   }
 }
 
-const EMPTY_SET = Object.freeze(new Set());
-
 export function extractReferencedCodes(content) {
-  if (typeof content !== "string") return EMPTY_SET;
+  if (typeof content !== "string") return new Set();
 
   const codes = new Set();
   let match;
