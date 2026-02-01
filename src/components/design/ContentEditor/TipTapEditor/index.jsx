@@ -95,6 +95,12 @@ function TipTapEditor({
   const editor = useEditor({
     extensions,
     content: value || "",
+    onCreate: ({ editor }) => {
+      const html = QuestionDisplayTransformer.decodeInstructionEntities(
+        editor.getHTML()
+      );
+      editorRef.current = html;
+    },
     editorProps: {
       attributes: {
         class: `${EDITOR_CLASS} ${isRtl ? RTL_CLASS : LTR_CLASS}`,
@@ -192,9 +198,8 @@ function TipTapEditor({
         }
 
         setIsFocused(false);
-        const currentHtml = QuestionDisplayTransformer.decodeInstructionEntities(
-          editor?.getHTML() || ""
-        );
+        // Use cached decoded HTML from ref (maintained by onCreate/onUpdate)
+        const currentHtml = editorRef.current || "";
         onBlurListener(currentHtml, lang);
       }, BLUR_TIMEOUT_MS);
     },
@@ -272,10 +277,13 @@ function TipTapEditor({
 
   useEffect(() => {
     if (editor && !editorRef.current) {
-      const currentContent = QuestionDisplayTransformer.decodeInstructionEntities(
-        editor.getHTML()
-      );
-      if (!currentContent || currentContent === EMPTY_PARAGRAPH_HTML) {
+      // Fallback: ref should be set by onCreate, but check just in case
+      if (!editorRef.current) {
+        editorRef.current = QuestionDisplayTransformer.decodeInstructionEntities(
+          editor.getHTML()
+        );
+      }
+      if (!editorRef.current || editorRef.current === EMPTY_PARAGRAPH_HTML) {
         editor.commands.focus("end");
       }
     }
@@ -290,9 +298,8 @@ function TipTapEditor({
       return;
     }
 
-    const currentContent = QuestionDisplayTransformer.decodeInstructionEntities(
-      editor.getHTML()
-    );
+    // Use cached decoded HTML from ref (maintained by onCreate/onUpdate)
+    const currentContent = editorRef.current || "";
     const normalizedValue = value || "";
     const normalizedCurrent =
       currentContent === EMPTY_PARAGRAPH_HTML ? "" : currentContent;
@@ -310,9 +317,8 @@ function TipTapEditor({
         return;
       }
 
-      const finalCurrentContent = QuestionDisplayTransformer.decodeInstructionEntities(
-        editor.getHTML()
-      );
+      // Use cached decoded HTML from ref (maintained by onCreate/onUpdate)
+      const finalCurrentContent = editorRef.current || "";
       const finalNormalizedCurrent =
         finalCurrentContent === EMPTY_PARAGRAPH_HTML ? "" : finalCurrentContent;
 
