@@ -12,16 +12,6 @@ export const INSTRUCTION_CODE_EXTRACTION_PATTERN = /\{\{\s*([^.:}\s]+)(?:\s*[.:]
 
 export const STRIP_TAGS_PATTERN = /<[^>]*>|&nbsp;|\n/g;
 
-export function execWithReset(regex, text) {
-  regex.lastIndex = 0;
-  return regex.exec(text);
-}
-
-export function testWithReset(regex, text) {
-  regex.lastIndex = 0;
-  return regex.test(text);
-}
-
 const patternCache = new Map();
 
 export function createQuestionCodePattern(questionCode) {

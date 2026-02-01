@@ -1,8 +1,6 @@
 import { extractReferencedCodes } from "~/components/design/ContentEditor/TipTapEditor/instructionUtils";
 import {
-  DISPLAY_INDEX_PATTERN,
   INSTRUCTION_SYNTAX_PATTERN,
-  INSTRUCTION_CODE_EXTRACTION_PATTERN,
   createQuestionCodePattern,
   resolveQuestionCode,
 } from "~/constants/instruction";
@@ -36,52 +34,6 @@ class QuestionDisplayTransformer {
     return this.formatTooltipContent(ref);
   }
 
-  getTooltipFromInstruction(instruction) {
-    const questionCode = this.extractQuestionCode(instruction);
-    return questionCode ? this.getTooltipContent(questionCode) : "";
-  }
-
-  transformInstruction(instructionText) {
-    if (!instructionText) {
-      return {
-        transformedText: instructionText,
-        tooltip: "",
-      };
-    }
-
-    if (
-      !this.referenceInstruction ||
-      Object.keys(this.referenceInstruction).length === 0
-    ) {
-      return {
-        transformedText: instructionText,
-        tooltip: "",
-      };
-    }
-
-    let transformedText = instructionText;
-    let tooltip = "";
-
-    Object.keys(this.referenceInstruction).forEach((questionCode) => {
-      const ref = this.referenceInstruction[questionCode];
-
-      if (ref && typeof ref === "object" && ref.index) {
-        const pattern = createQuestionCodePattern(questionCode);
-
-        if (pattern.test(transformedText)) {
-          pattern.lastIndex = 0;
-          transformedText = transformedText.replace(pattern, ref.index);
-          tooltip = this.formatTooltipContent(ref);
-        }
-
-        pattern.lastIndex = 0;
-      }
-    });
-
-    return { transformedText, tooltip };
-  }
-
-
   transformText(text) {
     if (!text) return text;
 
@@ -110,14 +62,6 @@ class QuestionDisplayTransformer {
 
     return transformedText;
   }
-
-  extractQuestionCode(instruction) {
-    if (!instruction) return null;
-
-    const match = instruction.match(INSTRUCTION_CODE_EXTRACTION_PATTERN);
-    return match ? match[1].trim() : null;
-  }
-
 
   formatTooltipContent(ref) {
     return ref.index && ref.text ? `${ref.index} - ${ref.text}` : ref.text || "";
