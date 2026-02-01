@@ -9,14 +9,8 @@ import {
   resolveQuestionCode,
 } from "~/constants/instruction";
 
-let cachedInstructionRegex = null;
-
 export const getInstructionRegex = () => {
-  if (!cachedInstructionRegex) {
-    cachedInstructionRegex = new RegExp(INSTRUCTION_SYNTAX_PATTERN.source, "g");
-  }
-  cachedInstructionRegex.lastIndex = 0;
-  return cachedInstructionRegex;
+  return new RegExp(INSTRUCTION_SYNTAX_PATTERN.source, "g");
 };
 
 function createInstructionTooltip(element, tippyInstances) {
