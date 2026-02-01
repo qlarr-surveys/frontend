@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Autocomplete, TextField, Typography, Box } from '@mui/material';
 import { useLogicBuilder } from '../LogicBuilderContext';
 import styles from '../QlarrLogicBuilder.module.css';
+import TextMaxLine from '~/components/text-max-line';
 
 export const FieldSelector = React.memo(function FieldSelector({ value, onChange, compact = false }) {
   const { fields, t } = useLogicBuilder();
@@ -23,7 +24,10 @@ export const FieldSelector = React.memo(function FieldSelector({ value, onChange
       options={fields}
       value={selectedField}
       onChange={handleChange}
-      getOptionLabel={(option) => option.label}
+      getOptionLabel={(option) => {
+        const labelWithoutNumber = option.label.replace(/^\d+\.\s*/, '');
+        return `${option.code} - ${labelWithoutNumber}`;
+      }}
       isOptionEqualToValue={(option, val) => option.code === val.code}
       groupBy={(option) => option.group || ''}
       renderInput={(params) => (
@@ -55,9 +59,12 @@ export const FieldSelector = React.memo(function FieldSelector({ value, onChange
         </li>
       )}
       renderOption={(props, option) => {
+        const labelWithoutNumber = option.label.replace(/^\d+\.\s*/, '');
         return (
           <li key={option.code} {...props}>
-            {option.label}
+            <TextMaxLine line={2} variant="body2">
+              {`${labelWithoutNumber}`}
+            </TextMaxLine>
           </li>
         );
       }}
