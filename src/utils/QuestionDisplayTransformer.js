@@ -74,6 +74,7 @@ class QuestionDisplayTransformer {
       }
 
       const codePattern = createQuestionCodePattern(searchCode);
+      codePattern.lastIndex = 0;
       let match;
 
       while ((match = codePattern.exec(fullPattern)) !== null) {

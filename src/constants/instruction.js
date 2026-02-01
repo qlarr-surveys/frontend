@@ -8,21 +8,16 @@ export const GROUP_CODE_PATTERN = /^G[a-z0-9_]+$/;
 
 export const REFERENCED_CODE_PATTERN = /\b([A-Z][a-zA-Z0-9_]*)\s*[.:]/g;
 
-export const INSTRUCTION_CODE_EXTRACTION_PATTERN = /\{\{\s*([^.:}\s]+)(?:\s*[.:][^}]*)?\}\}/;
+export const INSTRUCTION_CODE_EXTRACTION_PATTERN =
+  /\{\{\s*([^.:}\s]+)(?:\s*[.:][^}]*)?\}\}/;
 
 export const STRIP_TAGS_PATTERN = /<[^>]*>|&nbsp;|\n/g;
 
-const patternCache = new Map();
+export const REGEX_ESCAPE_PATTERN = /[.*+?^${}()|[\]\\]/g;
 
 export function createQuestionCodePattern(questionCode) {
-  if (patternCache.has(questionCode)) {
-    return patternCache.get(questionCode);
-  }
-
-  const escapedCode = questionCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const pattern = new RegExp(`\\b${escapedCode}\\b(?=[.:\\s}])`, "g");
-  patternCache.set(questionCode, pattern);
-  return pattern;
+  const escapedCode = questionCode.replace(REGEX_ESCAPE_PATTERN, "\\$&");
+  return new RegExp(`\\b${escapedCode}\\b(?=[.:\\s}])`, "g");
 }
 
 export function resolveQuestionCode(refCode, reverseIndex = {}) {
