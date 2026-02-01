@@ -7,8 +7,7 @@ import {
 } from "~/components/design/ContentEditor/TipTapEditor/instructionUtils";
 import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 import { useSelector } from "react-redux";
-
-const DISPLAY_INDEX_PATTERN = /^Q\d+$/;
+import { DISPLAY_INDEX_PATTERN } from "~/constants/instruction";
 
 export function useInstructionHighlighting({
   content,
@@ -45,12 +44,15 @@ export function useInstructionHighlighting({
     return true;
   }, []);
 
+  const fullIndex = useSelector((state) => state.designState.index);
+
+  const reverseIndex = useMemo(() => {
+    if (!hasDisplayIndexRefs || !fullIndex) return {};
+    return buildReverseIndex(fullIndex);
+  }, [hasDisplayIndexRefs, fullIndex]);
+
   const relevantData = useSelector((state) => {
     const codes = referencedCodes;
-
-    const reverseIndex = hasDisplayIndexRefs && state.designState.index
-      ? buildReverseIndex(state.designState.index)
-      : {};
 
     const data = {
       index: {},
@@ -83,9 +85,23 @@ export function useInstructionHighlighting({
       content,
       relevantData.index,
       relevantData.questions,
-      relevantData.mainLang
+      relevantData.mainLang,
+      reverseIndex
     );
-  }, [content, relevantData]);
+  }, [content, relevantData, reverseIndex]);
+
+  const indexToCodeMap = useMemo(() => {
+    const map = {};
+    if (referenceInstruction) {
+      Object.keys(referenceInstruction).forEach((key) => {
+        const ref = referenceInstruction[key];
+        if (ref && ref.index) {
+          map[ref.index] = key;
+        }
+      });
+    }
+    return map;
+  }, [referenceInstruction]);
 
   const fixedValue = useMemo(() => {
     const transformer = new QuestionDisplayTransformer(referenceInstruction);
@@ -107,7 +123,8 @@ export function useInstructionHighlighting({
 
     const cleanup = highlightInstructionsInStaticContent(
       renderedContentRef.current,
-      referenceInstruction
+      referenceInstruction,
+      indexToCodeMap
     );
 
     highlightedContentRef.current = currentContent;

@@ -2,15 +2,17 @@ import tippy from "tippy.js";
 import { INSTRUCTION_EDITOR_CONFIG } from "~/constants/editor";
 import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 import { stripTagsCached } from "~/utils/design/utils";
-
-export const INSTRUCTION_PATTERN = INSTRUCTION_EDITOR_CONFIG.PATTERN;
-export const TIPPY_INSTRUCTION_CONFIG = INSTRUCTION_EDITOR_CONFIG.TOOLTIP;
+import {
+  DISPLAY_INDEX_PATTERN,
+  INSTRUCTION_SYNTAX_PATTERN,
+  REFERENCED_CODE_PATTERN,
+} from "~/constants/instruction";
 
 let cachedInstructionRegex = null;
 
 export const getInstructionRegex = () => {
   if (!cachedInstructionRegex) {
-    cachedInstructionRegex = new RegExp(INSTRUCTION_PATTERN.source, "g");
+    cachedInstructionRegex = new RegExp(INSTRUCTION_SYNTAX_PATTERN.source, "g");
   }
   cachedInstructionRegex.lastIndex = 0;
   return cachedInstructionRegex;
@@ -21,7 +23,7 @@ function createInstructionTooltip(element, tippyInstances) {
   if (tooltipContent && !element._tippy) {
     const instance = tippy(element, {
       content: tooltipContent,
-      ...TIPPY_INSTRUCTION_CONFIG,
+      ...INSTRUCTION_EDITOR_CONFIG.TOOLTIP,
     });
     tippyInstances.push(instance);
   }
@@ -33,12 +35,12 @@ export function extractReferencedCodes(content) {
   if (!content) return EMPTY_SET;
 
   const codes = new Set();
-  const pattern = /\b([A-Z][a-zA-Z0-9_]*)\s*[.:]/g;
   let match;
 
-  while ((match = pattern.exec(content)) !== null) {
+  while ((match = REFERENCED_CODE_PATTERN.exec(content)) !== null) {
     codes.add(match[1].trim());
   }
+  REFERENCED_CODE_PATTERN.lastIndex = 0;
 
   return codes;
 }
@@ -106,7 +108,7 @@ export function buildReverseIndex(index) {
   return reverse;
 }
 
-export function parseUsedInstructions(content, index, questions, mainLang) {
+export function parseUsedInstructions(content, index, questions, mainLang, reverseIndex = {}) {
   const result = {};
 
   if (!content || !index || Object.keys(index).length === 0) {
@@ -119,15 +121,11 @@ export function parseUsedInstructions(content, index, questions, mainLang) {
     return result;
   }
 
-  const reverse = Array.from(codes).some((code) => /^Q\d+$/.test(code))
-    ? buildReverseIndex(index)
-    : {};
-
   codes.forEach((refCode) => {
     let questionCode = refCode;
 
-    if (/^Q\d+$/.test(refCode) && reverse[refCode]) {
-      questionCode = reverse[refCode];
+    if (DISPLAY_INDEX_PATTERN.test(refCode) && reverseIndex[refCode]) {
+      questionCode = reverseIndex[refCode];
     }
 
     if (!index[questionCode]) {
@@ -150,7 +148,8 @@ export function parseUsedInstructions(content, index, questions, mainLang) {
 
 export function highlightInstructionsInStaticContent(
   element,
-  referenceInstruction
+  referenceInstruction,
+  indexToCodeMap
 ) {
   if (!element || !(element instanceof HTMLElement)) {
     return () => {};
@@ -171,16 +170,6 @@ export function highlightInstructionsInStaticContent(
       const textNode = document.createTextNode(span.textContent);
       span.replaceWith(textNode);
     });
-
-    const indexToCodeMap = {};
-    if (referenceInstruction) {
-      Object.keys(referenceInstruction).forEach((key) => {
-        const ref = referenceInstruction[key];
-        if (ref && ref.index) {
-          indexToCodeMap[ref.index] = key;
-        }
-      });
-    }
 
     const filterNode = (node) => {
       let current = node.parentElement;

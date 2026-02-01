@@ -1,6 +1,10 @@
 import { extractReferencedCodes } from "~/components/design/ContentEditor/TipTapEditor/instructionUtils";
-
-const patternCache = new Map();
+import {
+  DISPLAY_INDEX_PATTERN,
+  INSTRUCTION_SYNTAX_PATTERN,
+  INSTRUCTION_CODE_EXTRACTION_PATTERN,
+  createQuestionCodePattern,
+} from "~/constants/instruction";
 
 class QuestionDisplayTransformer {
   constructor(referenceInstruction = {}) {
@@ -61,7 +65,7 @@ class QuestionDisplayTransformer {
       const ref = this.referenceInstruction[questionCode];
 
       if (ref && typeof ref === "object" && ref.index) {
-        const pattern = QuestionDisplayTransformer.createQuestionCodePattern(questionCode);
+        const pattern = createQuestionCodePattern(questionCode);
 
         if (pattern.test(transformedText)) {
           pattern.lastIndex = 0;
@@ -97,7 +101,7 @@ class QuestionDisplayTransformer {
       const ref = this.referenceInstruction[questionCode];
 
       if (ref && typeof ref === "object" && ref.index) {
-        const pattern = this.constructor.createQuestionCodePattern(questionCode);
+        const pattern = createQuestionCodePattern(questionCode);
         transformedText = transformedText.replace(pattern, ref.index);
         pattern.lastIndex = 0;
       }
@@ -109,20 +113,10 @@ class QuestionDisplayTransformer {
   extractQuestionCode(instruction) {
     if (!instruction) return null;
 
-    const match = instruction.match(/\{\{\s*([^.:}\s]+)(?:\s*[.:][^}]*)?\}\}/);
+    const match = instruction.match(INSTRUCTION_CODE_EXTRACTION_PATTERN);
     return match ? match[1].trim() : null;
   }
 
-  static createQuestionCodePattern(questionCode) {
-    if (patternCache.has(questionCode)) {
-      return patternCache.get(questionCode);
-    }
-
-    const escapedCode = questionCode.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const pattern = new RegExp(`\\b${escapedCode}\\b(?=[.:\\s}])`, "g");
-    patternCache.set(questionCode, pattern);
-    return pattern;
-  }
 
   formatTooltipContent(ref) {
     return ref.index && ref.text ? `${ref.index} - ${ref.text}` : ref.text || "";
@@ -140,7 +134,7 @@ class QuestionDisplayTransformer {
       let questionCode = codeOrIndex;
       let searchCode = codeOrIndex;
 
-      const isDisplayIndex = /^Q\d+$/.test(codeOrIndex);
+      const isDisplayIndex = DISPLAY_INDEX_PATTERN.test(codeOrIndex);
 
       if (isDisplayIndex && indexToCodeMap?.[codeOrIndex]) {
         questionCode = indexToCodeMap[codeOrIndex];
@@ -152,7 +146,7 @@ class QuestionDisplayTransformer {
         return;
       }
 
-      const codePattern = this.createQuestionCodePattern(searchCode);
+      const codePattern = createQuestionCodePattern(searchCode);
       let match;
 
       while ((match = codePattern.exec(fullPattern)) !== null) {
@@ -173,7 +167,7 @@ class QuestionDisplayTransformer {
   static decodeInstructionEntities(html) {
     if (!html) return html;
 
-    return html.replace(/\{\{[^}]*\}\}/g, (match) => {
+    return html.replace(INSTRUCTION_SYNTAX_PATTERN, (match) => {
       return match
         .replace(/&gt;/g, '>')
         .replace(/&lt;/g, '<')

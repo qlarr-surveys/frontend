@@ -1,5 +1,10 @@
 import { useSelector } from "react-redux";
 import { useResponsive } from "~/hooks/use-responsive";
+import {
+  QUESTION_CODE_PATTERN,
+  GROUP_CODE_PATTERN,
+  STRIP_TAGS_PATTERN,
+} from "~/constants/instruction";
 
 export const isEquivalent = (a, b, visited = new WeakSet()) => {
   if (a === b) return true;
@@ -177,7 +182,7 @@ export const nextId = (elements) => {
 };
 
   export const stripTags = (string) => {
-    return string ? string.replace(/<[^>]*>|&nbsp;|\n/g, "") : string;
+    return string ? string.replace(STRIP_TAGS_PATTERN, "") : string;
   };
 
 class SimpleLRU {
@@ -231,8 +236,8 @@ export function truncateWithEllipsis(text, maxLength) {
   }
 }
 
-export const isQuestion = (code) => /^Q[a-z0-9_]+$/.test(code);
-export const isGroup = (code) => /^G[a-z0-9_]+$/.test(code);
+export const isQuestion = (code) => QUESTION_CODE_PATTERN.test(code);
+export const isGroup = (code) => GROUP_CODE_PATTERN.test(code);
 
 export const lastIndexInArray = (array, func) => {
   if (!array) {
