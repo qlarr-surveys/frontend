@@ -198,7 +198,6 @@ function TipTapEditor({
         }
 
         setIsFocused(false);
-        // Use cached decoded HTML from ref (maintained by onCreate/onUpdate)
         const currentHtml = editorRef.current || "";
         onBlurListener(currentHtml, lang);
       }, BLUR_TIMEOUT_MS);
@@ -277,7 +276,6 @@ function TipTapEditor({
 
   useEffect(() => {
     if (editor && !editorRef.current) {
-      // Fallback: ref should be set by onCreate, but check just in case
       if (!editorRef.current) {
         editorRef.current = QuestionDisplayTransformer.decodeInstructionEntities(
           editor.getHTML()
@@ -298,7 +296,6 @@ function TipTapEditor({
       return;
     }
 
-    // Use cached decoded HTML from ref (maintained by onCreate/onUpdate)
     const currentContent = editorRef.current || "";
     const normalizedValue = value || "";
     const normalizedCurrent =
@@ -317,7 +314,6 @@ function TipTapEditor({
         return;
       }
 
-      // Use cached decoded HTML from ref (maintained by onCreate/onUpdate)
       const finalCurrentContent = editorRef.current || "";
       const finalNormalizedCurrent =
         finalCurrentContent === EMPTY_PARAGRAPH_HTML ? "" : finalCurrentContent;
