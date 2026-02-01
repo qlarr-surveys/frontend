@@ -13,14 +13,20 @@ export const getInstructionRegex = () => {
   return new RegExp(INSTRUCTION_SYNTAX_PATTERN.source, "g");
 };
 
-function createInstructionTooltip(element, tippyInstances) {
+function createInstructionTooltip(element, tippyInstances, processedElements) {
+  if (processedElements.has(element)) return;
+
   const tooltipContent = element.getAttribute("data-tooltip");
-  if (tooltipContent && !element._tippy) {
-    const instance = tippy(element, {
-      content: tooltipContent,
-      ...INSTRUCTION_EDITOR_CONFIG.TOOLTIP,
-    });
+  if (!tooltipContent) return;
+
+  const instance = tippy(element, {
+    content: tooltipContent,
+    ...INSTRUCTION_EDITOR_CONFIG.TOOLTIP,
+  });
+
+  if (instance) {
     tippyInstances.push(instance);
+    processedElements.add(element);
   }
 }
 
@@ -144,6 +150,7 @@ export function highlightInstructionsInStaticContent(
   }
 
   const tippyInstances = [];
+  const processedElements = new Set();
 
   try {
     const existingHighlights = element.querySelectorAll(
@@ -151,9 +158,6 @@ export function highlightInstructionsInStaticContent(
     );
 
     existingHighlights.forEach((span) => {
-      if (span._tippy) {
-        span._tippy.destroy();
-      }
       const textNode = document.createTextNode(span.textContent);
       span.replaceWith(textNode);
     });
@@ -229,7 +233,7 @@ export function highlightInstructionsInStaticContent(
     );
 
     tooltipElements.forEach((span) => {
-      createInstructionTooltip(span, tippyInstances);
+      createInstructionTooltip(span, tippyInstances, processedElements);
     });
   } catch (error) {
     console.error("Error highlighting instructions:", error);
