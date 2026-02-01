@@ -7,7 +7,7 @@ import {
 } from "~/components/design/ContentEditor/TipTapEditor/instructionUtils";
 import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 import { useSelector } from "react-redux";
-import { DISPLAY_INDEX_PATTERN } from "~/constants/instruction";
+import { DISPLAY_INDEX_PATTERN, resolveQuestionCode } from "~/constants/instruction";
 
 export function useInstructionHighlighting({
   content,
@@ -93,11 +93,7 @@ export function useInstructionHighlighting({
     };
 
     codes.forEach((refCode) => {
-      let questionCode = refCode;
-
-      if (DISPLAY_INDEX_PATTERN.test(refCode) && reverseIndex[refCode]) {
-        questionCode = reverseIndex[refCode];
-      }
+      const questionCode = resolveQuestionCode(refCode, reverseIndex);
 
       if (state.designState[questionCode] && state.designState.index[questionCode]) {
         data.index[questionCode] = state.designState.index[questionCode];

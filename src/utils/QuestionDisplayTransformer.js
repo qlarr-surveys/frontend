@@ -4,6 +4,7 @@ import {
   INSTRUCTION_SYNTAX_PATTERN,
   INSTRUCTION_CODE_EXTRACTION_PATTERN,
   createQuestionCodePattern,
+  resolveQuestionCode,
 } from "~/constants/instruction";
 
 class QuestionDisplayTransformer {
@@ -131,14 +132,8 @@ class QuestionDisplayTransformer {
     }
 
     codesInPattern.forEach((codeOrIndex) => {
-      let questionCode = codeOrIndex;
-      let searchCode = codeOrIndex;
-
-      const isDisplayIndex = DISPLAY_INDEX_PATTERN.test(codeOrIndex);
-
-      if (isDisplayIndex && indexToCodeMap?.[codeOrIndex]) {
-        questionCode = indexToCodeMap[codeOrIndex];
-      }
+      const questionCode = resolveQuestionCode(codeOrIndex, indexToCodeMap);
+      const searchCode = codeOrIndex;
 
       const ref = referenceInstruction?.[questionCode];
 

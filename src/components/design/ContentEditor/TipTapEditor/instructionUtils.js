@@ -6,6 +6,7 @@ import {
   DISPLAY_INDEX_PATTERN,
   INSTRUCTION_SYNTAX_PATTERN,
   REFERENCED_CODE_PATTERN,
+  resolveQuestionCode,
 } from "~/constants/instruction";
 
 let cachedInstructionRegex = null;
@@ -122,11 +123,7 @@ export function parseUsedInstructions(content, index, questions, mainLang, rever
   }
 
   codes.forEach((refCode) => {
-    let questionCode = refCode;
-
-    if (DISPLAY_INDEX_PATTERN.test(refCode) && reverseIndex[refCode]) {
-      questionCode = reverseIndex[refCode];
-    }
+    const questionCode = resolveQuestionCode(refCode, reverseIndex);
 
     if (!index[questionCode]) {
       return;

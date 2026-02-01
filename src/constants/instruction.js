@@ -34,3 +34,10 @@ export function createQuestionCodePattern(questionCode) {
   patternCache.set(questionCode, pattern);
   return pattern;
 }
+
+export function resolveQuestionCode(refCode, reverseIndex = {}) {
+  if (DISPLAY_INDEX_PATTERN.test(refCode) && reverseIndex[refCode]) {
+    return reverseIndex[refCode];
+  }
+  return refCode;
+}
