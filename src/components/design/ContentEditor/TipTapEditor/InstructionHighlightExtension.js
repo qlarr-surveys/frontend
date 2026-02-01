@@ -53,13 +53,23 @@ const InstructionHighlightExtension = Extension.create({
           },
         },
         view() {
+          let rafId = null;
+
           return {
             update(view) {
-              requestAnimationFrame(() => {
+              if (rafId !== null) {
+                cancelAnimationFrame(rafId);
+              }
+
+              rafId = requestAnimationFrame(() => {
+                rafId = null;
                 tooltipManager.updateTooltips(view.dom);
               });
             },
             destroy() {
+              if (rafId !== null) {
+                cancelAnimationFrame(rafId);
+              }
               tooltipManager.destroy();
             },
           };
