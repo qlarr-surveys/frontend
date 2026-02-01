@@ -9,7 +9,6 @@ class InstructionTooltipManager {
   updateTooltips(editorElement) {
     if (!editorElement) return;
 
-    // Find all elements with data-tooltip within instruction highlights
     const currentHighlights = new Set(
       editorElement.querySelectorAll(".instruction-highlight [data-tooltip]")
     );

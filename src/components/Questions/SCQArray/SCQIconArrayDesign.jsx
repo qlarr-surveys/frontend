@@ -249,7 +249,6 @@ function SCQArrayRowDesign({
 
   useEffect(() => {
     if (inFocus) {
-      // Use setTimeout to ensure the DOM is ready
       setTimeout(() => {
         if (inputRef.current) {
           inputRef.current.focus();
@@ -428,7 +427,6 @@ function SCQArrayHeaderDesign({
   const uploadAsResource = (svgContent) => {
     const svgBlob = new Blob([svgContent], { type: "image/svg+xml" });
 
-    // Create a File object to simulate a file upload
     const svgFile = new File([svgBlob], "file.svg", { type: "image/svg+xml" });
 
     designService

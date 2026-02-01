@@ -56,7 +56,7 @@ const MentionList = forwardRef(({ items, command }, ref) => {
               index === selectedIndex ? "is-selected" : ""
             }`}
             onMouseDown={(e) => {
-              e.preventDefault(); // Prevent blur events
+              e.preventDefault();
               selectItem(index);
             }}
             key={index}
