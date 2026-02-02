@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useState,
-  useEffect,
-  useRef,
-} from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import styles from "./ContentEditor.module.css";
 import "~/styles/tiptap-editor.css";
 import { Box, css } from "@mui/material";
@@ -55,7 +50,7 @@ function ContentEditor({
   const [isActive, setActive] = useState(false);
   const renderedContentRef = useRef(null);
 
-  const { referenceInstruction, fixedValue } = useInstructionHighlighting({
+  const fixedValue = useInstructionHighlighting({
     content: value,
     mainLang,
     isActive,
@@ -65,8 +60,8 @@ function ContentEditor({
   const finalPlaceholder = onMainLang
     ? placeholder
     : isNotEmptyHtml(content?.[mainLang]?.[contentKey])
-    ? content?.[mainLang]?.[contentKey]
-    : placeholder;
+      ? content?.[mainLang]?.[contentKey]
+      : placeholder;
 
   useEffect(() => {
     if (focus && !isActive && editable) {
@@ -84,11 +79,11 @@ function ContentEditor({
       const normalizedText = isNotEmptyHtml(text) ? text : "";
       if (normalizedText !== value) {
         dispatch(
-          changeContent({ code, key: contentKey, lang, value: normalizedText })
+          changeContent({ code, key: contentKey, lang, value: normalizedText }),
         );
       }
     },
-    [value, lang, code, contentKey, dispatch]
+    [value, lang, code, contentKey, dispatch],
   );
 
   const onContainerClicked = (event) => {
@@ -123,7 +118,6 @@ function ContentEditor({
           showToolbar={showToolbar}
           onBlurListener={OnEditorBlurred}
           value={value}
-          referenceInstruction={referenceInstruction}
         />
       ) : isNotEmptyHtml(value) ? (
         <div

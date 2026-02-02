@@ -1,11 +1,7 @@
 import Mention from "@tiptap/extension-mention";
 import suggestion from "./suggestion";
-import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 
-export function createMentionExtension({
-  getMentionSuggestions,
-  referenceInstruction = {},
-}) {
+export function createMentionExtension({ getMentionSuggestions }) {
   return Mention.extend({
     addAttributes() {
       return {
@@ -26,12 +22,7 @@ export function createMentionExtension({
     },
 
     renderHTML({ node, HTMLAttributes }) {
-      const instruction = QuestionDisplayTransformer.getDisplayId(
-        node.attrs.instruction,
-        referenceInstruction
-      );
-
-      return ["span", {}, `{{${instruction}}}`];
+      return ["span", {"class":"mention"}, `{{${node.attrs.instruction}}}`];
     },
   }).configure({
     suggestion: suggestion(getMentionSuggestions),

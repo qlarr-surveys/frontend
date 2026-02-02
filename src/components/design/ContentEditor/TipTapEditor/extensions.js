@@ -61,7 +61,6 @@ export function createBaseExtensions(
 
 export function createAllExtensions({
   getMentionSuggestions,
-  referenceInstruction,
   extended = true,
   onNewLine = null,
   onBlurListener = null,
@@ -73,13 +72,8 @@ export function createAllExtensions({
     onBlurListener,
     lang
   );
-  const mentionExtension = createMentionExtension({
-    getMentionSuggestions,
-    referenceInstruction,
-  });
-  const instructionHighlightExtension = InstructionHighlightExtension.configure({
-    referenceInstruction,
-  });
+  const mentionExtension = createMentionExtension({getMentionSuggestions});
+  const instructionHighlightExtension = InstructionHighlightExtension.configure({});
 
   return [...baseExtensions, mentionExtension, instructionHighlightExtension];
 }

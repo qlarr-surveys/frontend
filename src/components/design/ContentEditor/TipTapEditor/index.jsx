@@ -37,7 +37,6 @@ function TipTapEditor({
   onMoreLines,
   code,
   showToolbar = true,
-  referenceInstruction = {},
 }) {
   const editorRef = useRef(null);
   const wrapperRef = useRef(null);
@@ -77,7 +76,6 @@ function TipTapEditor({
   const extensions = useMemo(() => {
     return createAllExtensions({
       getMentionSuggestions,
-      referenceInstruction,
       extended,
       onNewLine,
       onBlurListener,
@@ -85,7 +83,6 @@ function TipTapEditor({
     });
   }, [
     getMentionSuggestions,
-    referenceInstruction,
     extended,
     onNewLine,
     onBlurListener,
@@ -162,10 +159,14 @@ function TipTapEditor({
       },
     },
     onUpdate: ({ editor }) => {
+      const currentHtml = editor.getHTML();
       const html = QuestionDisplayTransformer.decodeInstructionEntities(
-        editor.getHTML()
+        currentHtml
       );
       editorRef.current = html;
+      if (currentHtml !== html) {
+        editor.commands.setContent(html, false);
+      }
     },
     onFocus: () => {
       if (blurTimeoutRef.current) {

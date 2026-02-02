@@ -6,11 +6,11 @@ import {
 } from "~/constants/instruction";
 
 const HTML_ENTITY_MAP = {
-  '&gt;': '>',
-  '&lt;': '<',
-  '&amp;': '&',
-  '&quot;': '"',
-  '&#39;': "'",
+  "&gt;": ">",
+  "&lt;": "<",
+  "&amp;": "&",
+  "&quot;": '"',
+  "&#39;": "'",
 };
 
 const HTML_ENTITY_PATTERN = /&(?:gt|lt|amp|quot|#39);/g;
@@ -62,10 +62,16 @@ class QuestionDisplayTransformer {
   }
 
   static formatTooltipContent(ref) {
-    return ref.index && ref.text ? `${ref.index} - ${ref.text}` : ref.text || "";
+    return ref.index && ref.text
+      ? `${ref.index} - ${ref.text}`
+      : ref.text || "";
   }
 
-  static findAllCodesInPattern(fullPattern, referenceInstruction, indexToCodeMap) {
+  static findAllCodesInPattern(
+    fullPattern,
+    referenceInstruction,
+    indexToCodeMap,
+  ) {
     const matches = [];
     const codesInPattern = extractReferencedCodes(fullPattern);
 
@@ -102,12 +108,22 @@ class QuestionDisplayTransformer {
   }
 
   static decodeInstructionEntities(html) {
-    if (typeof html !== 'string') return html;
+    if (typeof html !== "string") return html;
     if (!html) return html;
+    if (!html.includes("{{")) return html;
 
-    return html.replace(INSTRUCTION_SYNTAX_PATTERN, (match) => {
-      return match.replace(HTML_ENTITY_PATTERN, (entity) => HTML_ENTITY_MAP[entity]);
+    let result = html;
+
+    result = result.replace(INSTRUCTION_SYNTAX_PATTERN, (match) => {
+      return match.replace(
+        HTML_ENTITY_PATTERN,
+        (entity) => HTML_ENTITY_MAP[entity],
+      );
     });
+
+    result = result.replace(/<span class="mention"[^>]*>(.*?)<\/span>/g, "$1");
+
+    return result;
   }
 }
 

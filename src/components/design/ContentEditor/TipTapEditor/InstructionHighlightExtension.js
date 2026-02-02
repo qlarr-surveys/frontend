@@ -9,13 +9,10 @@ const InstructionHighlightExtension = Extension.create({
   name: "instructionHighlight",
 
   addOptions() {
-    return {
-      referenceInstruction: {},
-    };
+    return {};
   },
 
   addProseMirrorPlugins() {
-    const referenceInstruction = this.options.referenceInstruction;
     const tooltipManager = new InstructionTooltipManager();
 
     return [
@@ -23,33 +20,21 @@ const InstructionHighlightExtension = Extension.create({
         key: new PluginKey("instructionHighlight"),
         state: {
           init(_, { doc }) {
-            return {
-              decorations: findInstructionPatterns(doc),
-              lastReferenceInstructionStr: JSON.stringify(referenceInstruction),
-            };
+            console.log("init");
+            return findInstructionPatterns(doc);
           },
-          apply(tr, oldState, newEditorState) {
-            const currentRefStr = JSON.stringify(referenceInstruction);
-            const refChanged =
-              currentRefStr !== oldState.lastReferenceInstructionStr;
-
-            if (refChanged || tr.docChanged) {
-              const newDecorations = findInstructionPatterns(
-                newEditorState.doc
-              );
-
-              return {
-                decorations: newDecorations,
-                lastReferenceInstructionStr: currentRefStr,
-              };
+          apply(tr, oldState, oldEditorState, newEditorState) {
+            console.log("apply");
+            // Only recalculate if document actually changed
+            if (!tr.docChanged) {
+              return oldState;
             }
-
-            return oldState;
+            return findInstructionPatterns(newEditorState.doc);
           },
         },
         props: {
           decorations(state) {
-            return this.getState(state).decorations;
+            return this.getState(state);
           },
         },
         view() {
@@ -86,6 +71,7 @@ function findInstructionPatterns(doc) {
   doc.descendants((node, pos) => {
     if (node.isText) {
       const text = node.text;
+      console.log(text);
       let match;
 
       while ((match = regex.exec(text)) !== null) {
@@ -96,7 +82,7 @@ function findInstructionPatterns(doc) {
         decorations.push(
           Decoration.inline(patternStart, patternEnd, {
             class: INSTRUCTION_EDITOR_CONFIG.SELECTORS.HIGHLIGHT_CLASS,
-          })
+          }),
         );
       }
     }

@@ -94,5 +94,5 @@ export function useInstructionHighlighting({
     lastReferenceInstructionRef.current = null;
   }, [isActive]);
 
-  return { referenceInstruction, fixedValue };
+  return fixedValue;
 }
