@@ -7,11 +7,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px;
+  padding: 8px;
   margin-bottom: 8px;
   background-color: #f8f9fa;
   border-radius: 8px;
   border: 1px solid #e8e8e8;
+  overflow: visible; /* Allow dropdowns to extend beyond */
 }
 
 .ruleRow:last-of-type {
@@ -35,28 +36,40 @@
   padding: 4px 12px;
 }
 
-/* Selectors container - wrapping layout */
+/* Selectors container - 2-column grid: field | operator on row 1, value spans row 2 */
 .selectorsContainer {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   flex: 1;
   min-width: 0;
+  overflow: visible; /* Allow dropdowns to extend beyond */
 }
 
-/* First row items (field & operator) - 50% each */
-.selectorItem {
-  flex: 1 1 calc(50% - 4px);
+/* Each grid cell: field cell or (connector + operator) cell */
+.selectorCell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
+  width: 100%;
 }
 
-/* Value item - full width on second row */
-.selectorItemFull {
-  flex: 1 1 100%;
+/* Connector text between selectors (e.g., "is") */
+.connector {
+  color: #666;
+  font-size: 14px;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+
+/* Value input - spans both columns on row 2 */
+.valueInputWrapper {
+  grid-column: 1 / -1;
   min-width: 0;
-  overflow: hidden;
+  width: 100%;
 }
 
 .deleteButton {

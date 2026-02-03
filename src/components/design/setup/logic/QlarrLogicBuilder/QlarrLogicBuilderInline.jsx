@@ -2,8 +2,8 @@ import React from 'react';
 import { Box, Typography, Button, IconButton, Tooltip, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { AddOutlined, Close } from '@mui/icons-material';
 import { useLogicBuilder } from './LogicBuilderContext';
-import { FieldSelector } from './components/FieldSelector';
-import { OperatorSelector } from './components/OperatorSelector';
+import { InlineFieldSelector } from './components/InlineFieldSelector';
+import { InlineOperatorSelector } from './components/InlineOperatorSelector';
 import { ValueInput } from './components/ValueInput';
 import { OPERATORS } from './config/operators';
 import styles from './QlarrLogicBuilderInline.module.css';
@@ -99,37 +99,35 @@ export function QlarrLogicBuilderInline() {
               <Box key={rule.id} className={styles.ruleRow}>
                 {/* Selectors with equal width */}
                 <Box className={styles.selectorsContainer}>
-                <Box className={styles.selectorItem}>
-                  <FieldSelector
-                    value={rule.field}
-                    onChange={(fieldCode) => handleFieldChange(rule.id, fieldCode)}
-                    compact
-                  />
+                  <Box className={styles.selectorCell}>
+                    <InlineFieldSelector
+                      value={rule.field}
+                      onChange={(fieldCode) => handleFieldChange(rule.id, fieldCode)}
+                    />
+                  </Box>
+
+                  {rule.field && (
+                    <Box className={styles.selectorCell}>
+                      <InlineOperatorSelector
+                        fieldCode={rule.field}
+                        value={rule.operator}
+                        onChange={(operator) => handleOperatorChange(rule.id, operator)}
+                      />
+                    </Box>
+                  )}
+
+                  {rule.field && rule.operator && showValue && (
+                    <Box className={styles.valueInputWrapper}>
+                      <ValueInput
+                        fieldCode={rule.field}
+                        operator={rule.operator}
+                        value={rule.value}
+                        onChange={(value) => handleValueChange(rule.id, value)}
+                        compact
+                      />
+                    </Box>
+                  )}
                 </Box>
-
-                {rule.field && (
-                  <Box className={styles.selectorItem}>
-                    <OperatorSelector
-                      fieldCode={rule.field}
-                      value={rule.operator}
-                      onChange={(operator) => handleOperatorChange(rule.id, operator)}
-                      compact
-                    />
-                  </Box>
-                )}
-
-                {rule.field && rule.operator && showValue && (
-                  <Box className={styles.selectorItemFull}>
-                    <ValueInput
-                      fieldCode={rule.field}
-                      operator={rule.operator}
-                      value={rule.value}
-                      onChange={(value) => handleValueChange(rule.id, value)}
-                      compact
-                    />
-                  </Box>
-                )}
-              </Box>
 
               {/* Delete button */}
               <Tooltip title={t('logic_builder.delete_rule')}>

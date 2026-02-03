@@ -1,25 +1,25 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, Autocomplete, Chip, Select, MenuItem, FormControl, Input, Checkbox, ListItemText } from '@mui/material';
+import { TextField, Autocomplete, Chip, Select, MenuItem, FormControl, Checkbox, ListItemText } from '@mui/material';
 import styles from '../../QlarrLogicBuilder.module.css';
 
 export const SelectInput = React.memo(function SelectInput({ field, value, onChange, t, compact = false }) {
   const options = field.options || [];
   const selectedValues = Array.isArray(value) ? value : value ? [value] : [];
 
-  // Compact mode: use Select with filled variant
+  // Compact mode: use Select with outlined variant
   if (compact) {
     return (
-      <FormControl fullWidth size="small" variant="filled">
+      <FormControl fullWidth size="small" variant="outlined">
         <Select
-          variant="filled"
+          variant="outlined"
           multiple
           value={selectedValues}
           onChange={(e) => onChange(e.target.value)}
           displayEmpty
           renderValue={(selected) => {
             if (selected.length === 0) {
-              return <span style={{ color: '#999' }}>{t('logic_builder.value', 'Value')}</span>;
+              return <span style={{ color: '#9e9e9e' }}>{t('logic_builder.value', 'Value')}</span>;
             }
             return (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
@@ -35,6 +35,23 @@ export const SelectInput = React.memo(function SelectInput({ field, value, onCha
                 })}
               </div>
             );
+          }}
+          sx={{
+            height: 32,
+            fontSize: 14,
+            backgroundColor: '#fff',
+            borderRadius: '6px',
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#e0e0e0',
+            },
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#bdbdbd',
+            },
+            '& .MuiSelect-select': {
+              padding: '6px 8px',
+              display: 'flex',
+              alignItems: 'center',
+            },
           }}
         >
           {options.map((opt) => (
