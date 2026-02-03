@@ -12,8 +12,8 @@ import {
   TextField,
   useTheme,
 } from "@mui/material";
-import { useSelector } from "react-redux";
-import React, { useEffect, useRef, useState } from "react";
+import { useSelector, shallowEqual } from "react-redux";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
@@ -33,7 +33,7 @@ import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
 import { contentEditable, DESIGN_SURVEY_MODE } from "~/routes";
-import { columnMinWidth } from "~/utils/design/utils";
+import { useColumnMinWidth } from "~/utils/design/utils";
 import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
 import ContentEditor from "~/components/design/ContentEditor";
 
@@ -41,7 +41,7 @@ function SCQIconArrayDesign(props) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const t = props.t;
-  const width = columnMinWidth();
+  const width = useColumnMinWidth();
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
@@ -56,9 +56,9 @@ function SCQIconArrayDesign(props) {
   const rows = children?.filter((el) => el.type == "row") || [];
   const columns = children?.filter((el) => el.type == "column") || [];
 
-  const icons = useSelector((state) =>
-    columns.map((col) => state.designState[col.qualifiedCode].resources?.icon)
-  );
+  const icons = useSelector((state) => {
+    return columns.map((col) => state.designState[col.qualifiedCode]?.resources?.icon);
+  }, shallowEqual);
 
   return (
     <>
@@ -249,7 +249,6 @@ function SCQArrayRowDesign({
 
   useEffect(() => {
     if (inFocus) {
-      // Use setTimeout to ensure the DOM is ready
       setTimeout(() => {
         if (inputRef.current) {
           inputRef.current.focus();
@@ -428,7 +427,6 @@ function SCQArrayHeaderDesign({
   const uploadAsResource = (svgContent) => {
     const svgBlob = new Blob([svgContent], { type: "image/svg+xml" });
 
-    // Create a File object to simulate a file upload
     const svgFile = new File([svgBlob], "file.svg", { type: "image/svg+xml" });
 
     designService
