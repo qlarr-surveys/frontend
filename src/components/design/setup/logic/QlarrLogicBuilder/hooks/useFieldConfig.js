@@ -264,18 +264,20 @@ function buildArrayRowFields(
 
   // Create field for each row
   const rows = component.children?.filter((el) => el.type === 'row') || [];
+
   for (const row of rows) {
     const rowState = state[row.qualifiedCode];
     const rowLabel = stripTags(rowState?.content?.[mainLang]?.label || '');
 
     fields.push({
       code: `${code}${row.code}`,
-      label: `${parentLabel} - ${rowLabel}`,
+      label: rowLabel || row.code,
       type: questionType === 'mcq_array' ? 'multiselect' : 'select',
       questionType,
       defaultOperator:
         questionType === 'mcq_array' ? 'multiselect_equals' : 'select_any_in',
       options: columnOptions,
+      group: parentLabel.toUpperCase(),
     });
   }
 
@@ -296,10 +298,11 @@ function buildMultipleTextFields(code, component, state, mainLang, parentLabel) 
 
     return {
       code: `${code}${child.code}`,
-      label: `${parentLabel} - ${childLabel}`,
+      label: childLabel || child.code,
       type: 'text',
       questionType: 'text',
       defaultOperator: 'equal',
+      group: parentLabel.toUpperCase(),
     };
   });
 }
