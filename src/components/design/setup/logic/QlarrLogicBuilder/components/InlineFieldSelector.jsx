@@ -24,9 +24,9 @@ export const InlineFieldSelector = React.memo(function InlineFieldSelector({
     }));
   }, [fields]);
 
-  // Custom render for display text (shows field label)
+  // Custom render for display text (shows field label, falls back to code)
   const renderValue = (option) => {
-    return option.label;
+    return option.label || option.code;
   };
 
   // Custom render for dropdown options
@@ -45,7 +45,7 @@ export const InlineFieldSelector = React.memo(function InlineFieldSelector({
           WebkitBoxOrient: 'vertical',
         }}
       >
-        {option.label}
+        {option.label || option.code}
       </Typography>
     </Box>
   );
