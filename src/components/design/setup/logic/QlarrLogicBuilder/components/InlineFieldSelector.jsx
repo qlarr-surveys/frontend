@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Typography, Box } from '@mui/material';
 import { useLogicBuilder } from '../LogicBuilderContext';
 import { InlineDropdown } from './InlineDropdown';
-import TextMaxLine from '~/components/text-max-line';
 
 /**
  * InlineFieldSelector - Field selector using inline dropdown style
@@ -36,9 +35,18 @@ export const InlineFieldSelector = React.memo(function InlineFieldSelector({
       <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
         {option.code}
       </Typography>
-      <TextMaxLine line={2} variant="body2">
+      <Typography
+        variant="body2"
+        sx={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+        }}
+      >
         {option.label}
-      </TextMaxLine>
+      </Typography>
     </Box>
   );
 
