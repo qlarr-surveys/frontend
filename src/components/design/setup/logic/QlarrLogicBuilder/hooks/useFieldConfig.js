@@ -123,10 +123,11 @@ function buildFieldDefinition(code, component, state, mainLang, groupLabels) {
   const fieldType = getFieldType(questionType);
   const fields = [];
 
-  // Ranking types don't have a base field - only sub-fields
+  // These types don't have a base field - only sub-fields
   const isRankingType = questionType === 'ranking' || questionType === 'image_ranking';
+  const skipBaseField = isRankingType || isArrayType(questionType) || questionType === 'multiple_text';
 
-  if (!isRankingType) {
+  if (!skipBaseField) {
     const baseField = {
       code,
       label,
