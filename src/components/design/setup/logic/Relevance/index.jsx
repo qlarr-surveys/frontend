@@ -69,7 +69,7 @@ function Relevance({ code, t }) {
 
 
   return (
-    <div className={`${hasErrors ? styles.relevanceError : ""}`}>
+    <div>
       <div className={styles.toggleValue}>
         <div className={styles.label}>
           <CustomTooltip body={tTooltips("relevance")} />
@@ -86,8 +86,10 @@ function Relevance({ code, t }) {
 
       {hasErrors ? (
         <div className={styles.errorContainer}>
-          <Trans t={t} i18nKey="wrong_logic_err" />
-          <Button variant="contained" onClick={resetToShowAlways}>
+          <span className={styles.errorText}>
+            <Trans t={t} i18nKey="wrong_logic_err" />
+          </span>
+          <Button variant="contained" size="small" onClick={resetToShowAlways}>
             OK
           </Button>
         </div>

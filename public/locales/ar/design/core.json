@@ -279,7 +279,7 @@
   "validation_ranking_count_title": "العدد المصنف بالضبط",
   "validation_required_title": "مطلوب",
   "video_options": "خيارات الفيديو",
-  "wrong_logic_err": "❌ حدث خطأ في المنطق ولذلك تمت إعادة ضبطه على <strong>العرض دائمًا</strong>",
+  "wrong_logic_err": "حدث خطأ في المنطق ولذلك تمت إعادة ضبطه على <strong>العرض دائمًا</strong>",
   "general": "عام",
   "logic": "منطق",
   "response_expiry": "انتهاء صلاحية الرد (الوقت منذ البداية)",

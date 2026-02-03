@@ -279,7 +279,7 @@
   "validation_ranking_count_title": "Genaue Rangliste",
   "validation_required_title": "Erforderlich",
   "video_options": "Videooptionen",
-  "wrong_logic_err": "❌ Es gab einen Fehler in Logic, daher wurde dies auf <strong>Immer anzeigen</strong> zurückgesetzt",
+  "wrong_logic_err": "Es gab einen Fehler in Logic, daher wurde dies auf <strong>Immer anzeigen</strong> zurückgesetzt",
   "general": "Allgemein",
   "logic": "Logik",
   "response_expiry": "Antwortablauf (Zeit seit Beginn)",

@@ -306,7 +306,7 @@
   "value_beyond_bounds_no_label": "ongeldige waarde! werkelijke waarde is: {{setup_value}} ",
   "video_options": "Video Opties",
   "word_count": "Woordentelling: {{count}}",
-  "wrong_logic_err": "❌ Er was een fout in de Logica, daarom is dit gereset naar <strong>Altijd Tonen</strong>",
+  "wrong_logic_err": "Er was een fout in de Logica, daarom is dit gereset naar <strong>Altijd Tonen</strong>",
   "logic_builder": {
     "add_condition": "Voorwaarde toevoegen",
     "add_group": "Groep toevoegen",

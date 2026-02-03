@@ -284,7 +284,7 @@
   "validation_ranking_count_title": "Exact Ranked Count",
   "validation_required_title": "Required",
   "video_options": "Video Options",
-  "wrong_logic_err": "❌ There was an error in Logic therefore this was reset to <strong>Always Show</strong>",
+  "wrong_logic_err": "There was an error in Logic therefore this was reset to <strong>Always Show</strong>",
   "general": "General",
   "logic": "Logic",
   "response_expiry": "Response expiry (time since start)",

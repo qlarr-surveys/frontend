@@ -306,7 +306,7 @@
   "value_beyond_bounds_no_label": "¡valor inválido! el valor actual es: {{setup_value}} ",
   "video_options": "Opciones de Video",
   "word_count": "Contador de palabras: {{count}}",
-  "wrong_logic_err": "❌ Hubo un error en la Lógica por lo tanto esto se restableció a <strong>Mostrar Siempre</strong>",
+  "wrong_logic_err": "Hubo un error en la Lógica por lo tanto esto se restableció a <strong>Mostrar Siempre</strong>",
   "logic_builder": {
     "add_condition": "Agregar condición",
     "add_group": "Agregar grupo",
