@@ -1,4 +1,9 @@
-import React, { useCallback, useState, useEffect, useRef } from "react";
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import styles from "./ContentEditor.module.css";
 import "~/styles/tiptap-editor.css";
 import { Box, css } from "@mui/material";
@@ -13,7 +18,7 @@ import {
   ensureCollapsiblesClosed,
 } from "~/hooks/useCollapsibleHandler";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
-import { useInstructionHighlighting } from "~/hooks/useInstructionHighlighting";
+import { useReferenceTooltips } from "./useReferenceTooltips";
 
 const { CONTENT_EDITOR_CLASS, RTL_CLASS, LTR_CLASS } = EDITOR_CONSTANTS;
 
@@ -38,6 +43,10 @@ function ContentEditor({
     return contentKey == "label" && state.designState["focus"] == code;
   });
 
+  const index = useSelector((state) => {
+    return state.designState.index;
+  });
+
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
   });
@@ -50,8 +59,16 @@ function ContentEditor({
   const [isActive, setActive] = useState(false);
   const renderedContentRef = useRef(null);
 
-  const fixedValue = useInstructionHighlighting({
-    content: value,
+  const rawInstructionList = useSelector((state) => {
+    return isActive ? [] : state.designState[code].instructionList;
+  });
+
+  const { fixedValue } = useReferenceTooltips({
+    rawInstructionList,
+    contentKey,
+    lang,
+    value,
+    index,
     mainLang,
     isActive,
     renderedContentRef,

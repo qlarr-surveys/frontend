@@ -326,11 +326,9 @@
 }
 
 .instruction-highlight {
-  background-color: #e3f2fd;
+  background-color: #6ec0f96f;
   border-radius: 0.25rem;
   padding: 0.125rem 0.25rem;
-  font-weight: 500;
-  color: #1976d2;
 }
 
 .tippy-box[data-theme~="instruction"] {

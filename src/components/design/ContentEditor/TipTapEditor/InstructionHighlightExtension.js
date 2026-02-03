@@ -1,9 +1,8 @@
 import { Extension } from "@tiptap/core";
 import { Plugin, PluginKey } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
-import { getInstructionRegex } from "./instructionUtils";
-import InstructionTooltipManager from "./InstructionTooltipManager";
 import { INSTRUCTION_EDITOR_CONFIG } from "~/constants/editor";
+import { INSTRUCTION_SYNTAX_PATTERN } from '~/constants/instruction';
 
 const InstructionHighlightExtension = Extension.create({
   name: "instructionHighlight",
@@ -13,18 +12,14 @@ const InstructionHighlightExtension = Extension.create({
   },
 
   addProseMirrorPlugins() {
-    const tooltipManager = new InstructionTooltipManager();
-
     return [
       new Plugin({
         key: new PluginKey("instructionHighlight"),
         state: {
           init(_, { doc }) {
-            console.log("init");
             return findInstructionPatterns(doc);
           },
           apply(tr, oldState, oldEditorState, newEditorState) {
-            console.log("apply");
             // Only recalculate if document actually changed
             if (!tr.docChanged) {
               return oldState;
@@ -37,28 +32,6 @@ const InstructionHighlightExtension = Extension.create({
             return this.getState(state);
           },
         },
-        view() {
-          let rafId = null;
-
-          return {
-            update(view) {
-              if (rafId !== null) {
-                cancelAnimationFrame(rafId);
-              }
-
-              rafId = requestAnimationFrame(() => {
-                rafId = null;
-                tooltipManager.updateTooltips(view.dom);
-              });
-            },
-            destroy() {
-              if (rafId !== null) {
-                cancelAnimationFrame(rafId);
-              }
-              tooltipManager.destroy();
-            },
-          };
-        },
       }),
     ];
   },
@@ -66,12 +39,11 @@ const InstructionHighlightExtension = Extension.create({
 
 function findInstructionPatterns(doc) {
   const decorations = [];
-  const regex = getInstructionRegex();
+  const regex = new RegExp(INSTRUCTION_SYNTAX_PATTERN.source, "g");
 
   doc.descendants((node, pos) => {
     if (node.isText) {
       const text = node.text;
-      console.log(text);
       let match;
 
       while ((match = regex.exec(text)) !== null) {

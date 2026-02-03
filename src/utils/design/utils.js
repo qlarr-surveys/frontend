@@ -144,7 +144,10 @@ export const nextId = (elements) => {
 };
 
 export const stripTags = (string) => {
-  return typeof string === "string" ? string.replace(STRIP_TAGS_PATTERN, "") : string;
+  if (typeof string !== "string") return string;
+  return string
+    .replace(STRIP_TAGS_PATTERN, "")
+    .replace(/\{\{.*?\}\}/g, "{{ ... }}");
 };
 
 export function truncateWithEllipsis(text, maxLength) {
