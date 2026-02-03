@@ -12,8 +12,8 @@ import {
   TextField,
   useTheme,
 } from "@mui/material";
-import { useSelector } from "react-redux";
-import React, { useEffect, useRef, useState } from "react";
+import { useSelector, shallowEqual } from "react-redux";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
@@ -56,9 +56,9 @@ function SCQIconArrayDesign(props) {
   const rows = children?.filter((el) => el.type == "row") || [];
   const columns = children?.filter((el) => el.type == "column") || [];
 
-  const icons = useSelector((state) =>
-    columns.map((col) => state.designState[col.qualifiedCode].resources?.icon)
-  );
+  const icons = useSelector((state) => {
+    return columns.map((col) => state.designState[col.qualifiedCode]?.resources?.icon);
+  }, shallowEqual);
 
   return (
     <>
