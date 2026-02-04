@@ -5,10 +5,10 @@
 /* Each condition as a card */
 .ruleRow {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  margin-bottom: 8px;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 4px;
   background-color: #f8f9fa;
   border-radius: 8px;
   border: 1px solid #e8e8e8;
@@ -36,12 +36,12 @@
   padding: 4px 12px;
 }
 
-/* Selectors container - 2-column grid: field | operator on row 1, value spans row 2 */
+/* Selectors container - single column: field, operator, value each on own row */
 .selectorsContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   flex: 1;
   min-width: 0;
   overflow: visible; /* Allow dropdowns to extend beyond */
@@ -51,7 +51,7 @@
 .selectorCell {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0;
   min-width: 0;
   overflow: visible;
   width: 100%;
@@ -75,6 +75,8 @@
 .deleteButton {
   flex-shrink: 0;
   opacity: 0.6;
+  align-self: flex-start;
+  margin-top: 2px;
 }
 
 .deleteButton:hover {

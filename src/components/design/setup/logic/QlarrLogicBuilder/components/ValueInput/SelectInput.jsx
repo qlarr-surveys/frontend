@@ -37,7 +37,8 @@ export const SelectInput = React.memo(function SelectInput({ field, value, onCha
             );
           }}
           sx={{
-            height: 32,
+            minHeight: 32,
+            height: 'auto',
             fontSize: 14,
             backgroundColor: '#fff',
             borderRadius: '6px',
@@ -51,6 +52,7 @@ export const SelectInput = React.memo(function SelectInput({ field, value, onCha
               padding: '6px 8px',
               display: 'flex',
               alignItems: 'center',
+              minHeight: 'auto',
             },
           }}
         >

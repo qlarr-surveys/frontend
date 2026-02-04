@@ -16,9 +16,9 @@
 .trigger {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 2px 4px;
   border-radius: 6px;
   background-color: transparent;
   transition: background-color 0.2s ease;
