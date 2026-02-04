@@ -14,6 +14,7 @@ import { manageStore } from "~/store";
 import "~/styles/tiptap-editor.css";
 import { EDITOR_CONSTANTS } from "~/constants/editor";
 import { createAllExtensions } from "./extensions";
+import QuestionDisplayTransformer from "~/utils/QuestionDisplayTransformer";
 
 const {
   BLUR_TIMEOUT_MS,
@@ -36,7 +37,6 @@ function TipTapEditor({
   onMoreLines,
   code,
   showToolbar = true,
-  referenceInstruction = {},
 }) {
   const editorRef = useRef(null);
   const wrapperRef = useRef(null);
@@ -76,7 +76,6 @@ function TipTapEditor({
   const extensions = useMemo(() => {
     return createAllExtensions({
       getMentionSuggestions,
-      referenceInstruction,
       extended,
       onNewLine,
       onBlurListener,
@@ -84,7 +83,6 @@ function TipTapEditor({
     });
   }, [
     getMentionSuggestions,
-    referenceInstruction,
     extended,
     onNewLine,
     onBlurListener,
@@ -94,6 +92,12 @@ function TipTapEditor({
   const editor = useEditor({
     extensions,
     content: value || "",
+    onCreate: ({ editor }) => {
+      const html = QuestionDisplayTransformer.decodeInstructionEntities(
+        editor.getHTML()
+      );
+      editorRef.current = html;
+    },
     editorProps: {
       attributes: {
         class: `${EDITOR_CLASS} ${isRtl ? RTL_CLASS : LTR_CLASS}`,
@@ -155,8 +159,14 @@ function TipTapEditor({
       },
     },
     onUpdate: ({ editor }) => {
-      const html = editor.getHTML();
+      const currentHtml = editor.getHTML();
+      const html = QuestionDisplayTransformer.decodeInstructionEntities(
+        currentHtml
+      );
       editorRef.current = html;
+      if (currentHtml !== html) {
+        editor.commands.setContent(html, false);
+      }
     },
     onFocus: () => {
       if (blurTimeoutRef.current) {
@@ -189,7 +199,7 @@ function TipTapEditor({
         }
 
         setIsFocused(false);
-        const currentHtml = editor?.getHTML() || "";
+        const currentHtml = editorRef.current || "";
         onBlurListener(currentHtml, lang);
       }, BLUR_TIMEOUT_MS);
     },
@@ -200,6 +210,14 @@ function TipTapEditor({
       editor.commands.focus("end");
     }
   }, [editor]);
+
+  useEffect(() => {
+    if (editor && extensions) {
+      editor.setOptions({
+        extensions,
+      });
+    }
+  }, [editor, extensions]);
 
   useEffect(() => {
     const handleCollapsibleSettingsClick = (e) => {
@@ -227,7 +245,6 @@ function TipTapEditor({
     }
   }, []);
 
-  // Handle collapsible settings update
   const handleCollapsibleUpdate = useCallback(
     (attrs) => {
       if (editor && collapsibleSettings.pos !== null) {
@@ -260,8 +277,12 @@ function TipTapEditor({
 
   useEffect(() => {
     if (editor && !editorRef.current) {
-      const currentContent = editor.getHTML();
-      if (!currentContent || currentContent === EMPTY_PARAGRAPH_HTML) {
+      if (!editorRef.current) {
+        editorRef.current = QuestionDisplayTransformer.decodeInstructionEntities(
+          editor.getHTML()
+        );
+      }
+      if (!editorRef.current || editorRef.current === EMPTY_PARAGRAPH_HTML) {
         editor.commands.focus("end");
       }
     }
@@ -276,7 +297,7 @@ function TipTapEditor({
       return;
     }
 
-    const currentContent = editor.getHTML();
+    const currentContent = editorRef.current || "";
     const normalizedValue = value || "";
     const normalizedCurrent =
       currentContent === EMPTY_PARAGRAPH_HTML ? "" : currentContent;
@@ -294,7 +315,7 @@ function TipTapEditor({
         return;
       }
 
-      const finalCurrentContent = editor.getHTML();
+      const finalCurrentContent = editorRef.current || "";
       const finalNormalizedCurrent =
         finalCurrentContent === EMPTY_PARAGRAPH_HTML ? "" : finalCurrentContent;
 

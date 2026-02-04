@@ -1,3 +1,5 @@
+import { INSTRUCTION_SYNTAX_PATTERN } from "~/constants/instruction";
+
 export const EDITOR_CONSTANTS = {
   BLUR_TIMEOUT_MS: 100,
   CONTENT_SYNC_TIMEOUT_MS: 0,
@@ -64,5 +66,25 @@ export const PREVENT_ENTER_EXTENSION = {
   ERROR_MESSAGES: {
     SAVING_CONTENT: "Error saving content:",
     NEW_LINE_CALLBACK: "Error in onNewLine callback:",
+  },
+};
+
+export const INSTRUCTION_EDITOR_CONFIG = {
+  PATTERN: INSTRUCTION_SYNTAX_PATTERN,
+  SELECTORS: {
+    HIGHLIGHT_CLASS: "instruction-highlight",
+    HIGHLIGHT: ".instruction-highlight",
+    TOOLTIP_TARGETS: ".instruction-highlight [data-tooltip]",
+  },
+  TOOLTIP: {
+    delay: [0, 0],
+    duration: [200, 150],
+    placement: "auto",
+    theme: "instruction",
+    arrow: true,
+    maxWidth: 400,
+    interactive: false,
+    appendTo: document.body,
+    ignoreAttributes: true,
   },
 };
