@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Box, Typography, InputBase } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import styles from './InlineDropdown.module.css';
+import { isSessionRtl } from '~/utils/common';
 
 /**
  * InlineDropdown - A text-like dropdown that appears as regular text
@@ -22,10 +23,12 @@ export function InlineDropdown({
   size = 'small',
   triggerMaxWidth,
 }) {
+  const isRtl = isSessionRtl();
+
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, right: 0, width: 0 });
   const containerRef = useRef(null);
   const dropdownRef = useRef(null);
   const searchInputRef = useRef(null);
@@ -75,6 +78,7 @@ export function InlineDropdown({
     setDropdownPosition({
       top: rect.bottom + 4, // 4px gap, matching margin-top from original CSS
       left: rect.left,
+      right: window.innerWidth - rect.right,
       width: rect.width,
     });
   }, []);
@@ -249,7 +253,9 @@ export function InlineDropdown({
           style={{
             position: 'fixed',
             top: `${dropdownPosition.top}px`,
-            left: `${dropdownPosition.left}px`,
+            ...(isRtl
+              ? { right: `${dropdownPosition.right}px` }
+              : { left: `${dropdownPosition.left}px` }),
             minWidth: `${Math.max(dropdownPosition.width, 200)}px`,
           }}
         >
