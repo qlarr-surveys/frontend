@@ -359,6 +359,8 @@
     "min": "Min",
     "max": "Max",
     "from": "Van",
-    "to": "Tot"
+    "to": "Tot",
+    "search": "Zoeken...",
+    "no_options": "Geen opties gevonden"
   }
 }

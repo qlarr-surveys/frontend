@@ -361,6 +361,8 @@
     "min": "Min",
     "max": "Max",
     "from": "From",
-    "to": "To"
+    "to": "To",
+    "search": "Search...",
+    "no_options": "No options found"
   }
 }

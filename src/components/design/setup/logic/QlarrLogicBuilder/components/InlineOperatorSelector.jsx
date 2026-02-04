@@ -47,6 +47,7 @@ export const InlineOperatorSelector = React.memo(function InlineOperatorSelector
       options={options}
       onChange={onChange}
       placeholder={t('logic_builder.select_operator')}
+      noOptionsText={t('logic_builder.no_options')}
       disabled={!fieldCode || operators.length === 0}
       renderOption={renderOption}
     />

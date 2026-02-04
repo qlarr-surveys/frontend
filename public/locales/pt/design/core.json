@@ -359,6 +359,8 @@
     "min": "Mín",
     "max": "Máx",
     "from": "De",
-    "to": "Até"
+    "to": "Até",
+    "search": "Pesquisar...",
+    "no_options": "Nenhuma opção encontrada"
   }
 }

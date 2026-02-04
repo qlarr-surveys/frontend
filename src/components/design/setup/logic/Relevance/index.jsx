@@ -90,7 +90,7 @@ function Relevance({ code, t }) {
             <Trans t={t} i18nKey="wrong_logic_err" />
           </span>
           <Button variant="contained" size="small" onClick={resetToShowAlways}>
-            OK
+            {tCore("ok")}
           </Button>
         </div>
       ) : conditionOn ? (

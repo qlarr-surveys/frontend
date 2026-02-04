@@ -15,6 +15,8 @@ export function InlineDropdown({
   options,
   onChange,
   placeholder = 'Select...',
+  searchPlaceholder = 'Search...',
+  noOptionsText = 'No options found',
   groupBy,
   searchable = false,
   disabled = false,
@@ -269,7 +271,7 @@ export function InlineDropdown({
                   setSearchTerm(e.target.value);
                   setFocusedIndex(0);
                 }}
-                placeholder="Search..."
+                placeholder={searchPlaceholder}
                 className={styles.searchInput}
                 size="small"
                 fullWidth
@@ -329,7 +331,7 @@ export function InlineDropdown({
             {flatOptions.length === 0 && (
               <Box className={styles.noOptions}>
                 <Typography variant="body2" color="text.secondary">
-                  No options found
+                  {noOptionsText}
                 </Typography>
               </Box>
             )}
@@ -354,6 +356,8 @@ InlineDropdown.propTypes = {
   ).isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
+  searchPlaceholder: PropTypes.string,
+  noOptionsText: PropTypes.string,
   groupBy: PropTypes.func,
   searchable: PropTypes.bool,
   disabled: PropTypes.bool,

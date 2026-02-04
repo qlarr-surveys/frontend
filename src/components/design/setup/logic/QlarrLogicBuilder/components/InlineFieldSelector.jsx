@@ -56,6 +56,8 @@ export const InlineFieldSelector = React.memo(function InlineFieldSelector({
       options={options}
       onChange={onChange}
       placeholder={t('logic_builder.select_field')}
+      searchPlaceholder={t('logic_builder.search')}
+      noOptionsText={t('logic_builder.no_options')}
       groupBy={(opt) => opt.group}
       searchable
       renderValue={renderValue}
