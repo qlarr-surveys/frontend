@@ -77,7 +77,7 @@ function Relevance({ code, t }) {
         </div>
         <Switch
           id="conditional-visibility-switch"
-          disabled={isDisabled}
+          disabled={isDisabled || hasErrors}
           checked={conditionOn}
           onChange={(e) => handleToggle(e.target.checked)}
           inputProps={{ "aria-label": "conditional-visibility-switch" }}
