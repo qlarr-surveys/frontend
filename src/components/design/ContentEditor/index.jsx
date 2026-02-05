@@ -60,7 +60,7 @@ function ContentEditor({
   const renderedContentRef = useRef(null);
 
   const rawInstructionList = useSelector((state) => {
-    return isActive ? [] : state.designState[code].instructionList;
+    return isActive ? [] : state.designState[code].instructionList || [];
   });
 
   const { fixedValue } = useReferenceTooltips({

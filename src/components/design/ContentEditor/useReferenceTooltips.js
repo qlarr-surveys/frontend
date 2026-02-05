@@ -46,9 +46,12 @@ export const useReferenceTooltips = ({
           }
         });
       }
+      const escapedElement = element.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`{{(\\s*)${escapedElement}(\\s*)}}`, 'g');
       returnValue = returnValue.replace(
-        `{{${element}}}`,
-        `<span class="instruction-highlight">{{${newElement}}}</span>`,
+        regex,
+        (match, spacesBefore, spacesAfter) =>
+          `<span class="instruction-highlight">{{${spacesBefore}${newElement}${spacesAfter}}}</span>`,
       );
     });
     return returnValue;
