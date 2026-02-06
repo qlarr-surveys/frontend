@@ -7,9 +7,12 @@ import {
 
 /**
  * Initial state factory
+ * @param {Object} params - Initialization parameters
+ * @param {Object} params.jsonLogic - The JSON Logic to parse
+ * @param {Array} params.fields - Field definitions for type-aware parsing
  */
-function createInitialState(jsonLogic) {
-  const tree = jsonLogic ? jsonLogicToTree(jsonLogic) : createEmptyTree();
+function createInitialState({ jsonLogic, fields }) {
+  const tree = jsonLogic ? jsonLogicToTree(jsonLogic, fields || []) : createEmptyTree();
 
   return {
     tree,
@@ -120,7 +123,7 @@ function logicReducer(state, action) {
 
     case 'LOAD_FROM_JSON_LOGIC': {
       const tree = action.jsonLogic
-        ? jsonLogicToTree(action.jsonLogic)
+        ? jsonLogicToTree(action.jsonLogic, action.fields || [])
         : createEmptyTree();
       return {
         tree,
@@ -143,11 +146,13 @@ function logicReducer(state, action) {
 
 /**
  * Hook for managing logic builder state
+ * @param {Object} initialJsonLogic - The initial JSON Logic to parse
+ * @param {Array} fields - Field definitions for type-aware operator parsing
  */
-export function useLogicBuilderState(initialJsonLogic) {
+export function useLogicBuilderState(initialJsonLogic, fields = []) {
   const [state, dispatch] = useReducer(
     logicReducer,
-    initialJsonLogic,
+    { jsonLogic: initialJsonLogic, fields },
     createInitialState
   );
 
@@ -176,8 +181,8 @@ export function useLogicBuilderState(initialJsonLogic) {
     dispatch({ type: 'UPDATE_VALUE', ruleId, value });
   }, []);
 
-  const loadFromJsonLogic = useCallback((jsonLogic) => {
-    dispatch({ type: 'LOAD_FROM_JSON_LOGIC', jsonLogic });
+  const loadFromJsonLogic = useCallback((jsonLogic, fields = []) => {
+    dispatch({ type: 'LOAD_FROM_JSON_LOGIC', jsonLogic, fields });
   }, []);
 
   const clearAll = useCallback(() => {

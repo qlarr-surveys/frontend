@@ -21,10 +21,7 @@ export function LogicBuilderProvider({
   langList,
   t,
 }) {
-  // Initialize state hook
-  const { state, dispatch } = useLogicBuilderState(initialJsonLogic);
-
-  // Build field configuration
+  // Build field configuration FIRST - needed for type-aware operator parsing
   const fields = useFieldConfig(
     componentIndices,
     currentCode,
@@ -33,6 +30,10 @@ export function LogicBuilderProvider({
     langList,
     t
   );
+
+  // Initialize state hook with fields for proper operator resolution
+  // This ensures ambiguous operators like 'in' are correctly mapped based on field type
+  const { state, dispatch } = useLogicBuilderState(initialJsonLogic, fields);
 
   // Memoized field lookup
   const getFieldDefinition = useMemo(() => {

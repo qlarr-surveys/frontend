@@ -164,15 +164,20 @@ function ruleToJsonLogic(rule) {
 /**
  * Convert JSON Logic to internal tree model
  * This parses the format produced by react-awesome-query-builder
+ * @param {Object} jsonLogic - The JSON Logic object to parse
+ * @param {Array} fields - Optional field definitions for type-aware operator resolution
  */
-export function jsonLogicToTree(jsonLogic) {
+export function jsonLogicToTree(jsonLogic, fields = []) {
   const root = createEmptyTree();
 
   if (!jsonLogic || typeof jsonLogic !== 'object') {
     return root;
   }
 
-  const parsed = parseJsonLogicNode(jsonLogic);
+  // Build field type map for disambiguating operators like 'in' and 'not_in'
+  const fieldTypeMap = new Map(fields.map((f) => [f.code, f.type]));
+
+  const parsed = parseJsonLogicNode(jsonLogic, fieldTypeMap);
 
   if (parsed) {
     if (parsed.type === 'group') {
@@ -188,8 +193,10 @@ export function jsonLogicToTree(jsonLogic) {
 
 /**
  * Parse a JSON Logic node into our tree structure
+ * @param {Object} node - The JSON Logic node
+ * @param {Map} fieldTypeMap - Map of field codes to their types for operator disambiguation
  */
-function parseJsonLogicNode(node) {
+function parseJsonLogicNode(node, fieldTypeMap) {
   if (!node || typeof node !== 'object') {
     return null;
   }
@@ -205,7 +212,7 @@ function parseJsonLogicNode(node) {
   // Handle conjunctions (and/or)
   if (key === 'and' || key === 'or') {
     const children = value
-      .map((child) => parseJsonLogicNode(child))
+      .map((child) => parseJsonLogicNode(child, fieldTypeMap))
       .filter((child) => child !== null && child.type === 'rule');
 
     return {
@@ -217,18 +224,24 @@ function parseJsonLogicNode(node) {
   }
 
   // Handle operators
-  return parseOperatorRule(key, value);
+  return parseOperatorRule(key, value, fieldTypeMap);
 }
 
 /**
  * Parse an operator expression into a LogicRule
+ * @param {string} jsonLogicOp - The JSON Logic operator name
+ * @param {*} value - The operator value/arguments
+ * @param {Map} fieldTypeMap - Map of field codes to their types for operator disambiguation
  */
-function parseOperatorRule(jsonLogicOp, value) {
-  // Find the operator by its JSON Logic operator name
-  const operatorDef = findOperatorByJsonLogicOp(jsonLogicOp);
+function parseOperatorRule(jsonLogicOp, value, fieldTypeMap) {
+  // Extract field code first to help disambiguate operators
+  const fieldCode = Array.isArray(value)
+    ? extractFieldVar(value[0])
+    : extractFieldVar(value);
+  const fieldType = fieldTypeMap?.get(fieldCode);
 
-  // If not found directly, try looking up by key
-  const opKey = operatorDef?.key || findOperatorKeyByJsonLogicOp(jsonLogicOp);
+  // Resolve operator key, handling ambiguous operators based on field type
+  let opKey = resolveOperatorKey(jsonLogicOp, fieldType);
 
   if (!opKey) {
     logParseWarning('Could not resolve operator, rule ignored', { jsonLogicOp, value });
@@ -260,9 +273,8 @@ function parseOperatorRule(jsonLogicOp, value) {
 
   // Array-based operators: [{ var: "field" }, value] or [{ var: "field" }, min, max]
   if (Array.isArray(value)) {
-    const fieldVar = extractFieldVar(value[0]);
-    if (fieldVar) {
-      rule.field = fieldVar;
+    if (fieldCode) {
+      rule.field = fieldCode;
     }
 
     // Range operators (cardinality 2)
@@ -276,6 +288,41 @@ function parseOperatorRule(jsonLogicOp, value) {
   }
 
   return rule;
+}
+
+/**
+ * Resolve the operator key from JSON Logic operator name
+ * Handles ambiguous operators like 'in' and 'not_in' that map to different
+ * internal operators based on field type (select vs multiselect)
+ * @param {string} jsonLogicOp - The JSON Logic operator name
+ * @param {string} fieldType - The field type (select, multiselect, etc.)
+ * @returns {string|null} The resolved operator key
+ */
+function resolveOperatorKey(jsonLogicOp, fieldType) {
+  // Handle ambiguous 'in' operator - used by both select and multiselect
+  if (jsonLogicOp === 'in') {
+    if (fieldType === 'multiselect') {
+      return 'multiselect_equals';
+    }
+    // Default to select_any_in for 'select', 'survey_lang', or unknown types
+    return 'select_any_in';
+  }
+
+  // Handle ambiguous 'not_in' operator
+  if (jsonLogicOp === 'not_in') {
+    if (fieldType === 'multiselect') {
+      return 'multiselect_not_equals';
+    }
+    return 'select_not_any_in';
+  }
+
+  // For non-ambiguous operators, use standard lookup
+  const operatorDef = findOperatorByJsonLogicOp(jsonLogicOp);
+  if (operatorDef?.key) {
+    return operatorDef.key;
+  }
+
+  return findOperatorKeyByJsonLogicOp(jsonLogicOp);
 }
 
 /**
