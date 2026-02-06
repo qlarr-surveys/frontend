@@ -301,10 +301,11 @@ function buildArrayRowFields(
   for (const row of rows) {
     const rowState = state[row.qualifiedCode];
     const rowLabel = stripTags(rowState?.content?.[mainLang]?.label || '');
+    const questionNum = state.index[code];
 
     fields.push({
       code: `${code}${row.code}`,
-      label: rowLabel || row.code,
+      label: questionNum ? `${questionNum}. ${rowLabel || row.code}` : (rowLabel || row.code),
       type: questionType === 'mcq_array' ? 'multiselect' : 'select',
       questionType,
       defaultOperator:
