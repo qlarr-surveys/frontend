@@ -77,13 +77,36 @@ export function useFieldConfig(
 
     // Build index lookup map for O(1) access during sort
     const indexMap = new Map(
-      componentIndices.map((el) => [el.code, el.minIndex ?? Infinity])
+      componentIndices.map((el) => [el.code, el])
     );
 
-    // Sort dependencies by their visual position in the editor
-    const sortedDependencies = [...dependencies].sort(
-      (a, b) => (indexMap.get(a) ?? Infinity) - (indexMap.get(b) ?? Infinity)
-    );
+    // Sort dependencies hierarchically: group, then its children, then next group
+    const sortedDependencies = [...dependencies].sort((a, b) => {
+      const itemA = indexMap.get(a);
+      const itemB = indexMap.get(b);
+
+      // Get parent group's minIndex (for questions) or own minIndex (for groups)
+      const parentA = isGroup(a) ? itemA : indexMap.get(itemA?.parent);
+      const parentB = isGroup(b) ? itemB : indexMap.get(itemB?.parent);
+
+      const parentIndexA = parentA?.minIndex ?? Infinity;
+      const parentIndexB = parentB?.minIndex ?? Infinity;
+
+      // First: sort by parent group
+      if (parentIndexA !== parentIndexB) {
+        return parentIndexA - parentIndexB;
+      }
+
+      // Second: groups before their children
+      const typeA = isGroup(a) ? 0 : 1;
+      const typeB = isGroup(b) ? 0 : 1;
+      if (typeA !== typeB) {
+        return typeA - typeB;
+      }
+
+      // Third: by own index within group
+      return (itemA?.minIndex ?? Infinity) - (itemB?.minIndex ?? Infinity);
+    });
 
     // Build fields for each dependency
     for (const code of sortedDependencies) {
@@ -325,13 +348,13 @@ function buildRankingFields(code, component, state, mainLang, parentLabel) {
     return [];
   }
 
-  return component.children.map((child) => {
+  return component.children.map((child, index) => {
     const childState = state[child.qualifiedCode];
     const childLabel = stripTags(childState?.content?.[mainLang]?.label || '');
 
     return {
       code: `${code}${child.code}`,
-      label: `${parentLabel} - ${childLabel}`,
+      label: `${parentLabel}-${childLabel || index + 1}`,
       type: 'number',
       questionType: 'ranking',
       defaultOperator: 'equal',

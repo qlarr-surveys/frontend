@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Box } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useLogicBuilder } from '../LogicBuilderContext';
 import { InlineDropdown } from './InlineDropdown';
 
@@ -18,9 +18,11 @@ export const InlineFieldSelector = React.memo(function InlineFieldSelector({
   const options = useMemo(() => {
     return fields.map((f) => ({
       value: f.code,
-      label: f.label.replace(/^\d+\.\s*/, ''), // Strip number prefix
+      label: f.label
+        .replace(/\s*-\s*(\d+)/, '-$1')  // Normalize " - 2" to "-2"
+        .replace(/\s*-\s*$/, '')         // Remove trailing dash without number
+        .trim(),
       code: f.code,
-      group: f.group || '',
     }));
   }, [fields]);
 
@@ -31,25 +33,18 @@ export const InlineFieldSelector = React.memo(function InlineFieldSelector({
 
   // Custom render for dropdown options
   const renderOption = (option) => (
-    <Box>
-      <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-        {option.code}
-      </Typography>
-      <Typography
-        variant="body2"
-        sx={{
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-        }}
-      >
-        {option.label || option.code}
-      </Typography>
-    </Box>
+    <Typography
+      variant="body2"
+      sx={{
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {option.label || option.code}
+    </Typography>
   );
-
+console.log('InlineFieldSelector', options);
   return (
     <InlineDropdown
       value={value}
@@ -58,7 +53,6 @@ export const InlineFieldSelector = React.memo(function InlineFieldSelector({
       placeholder={t('logic_builder.select_field')}
       searchPlaceholder={t('logic_builder.search')}
       noOptionsText={t('logic_builder.no_options')}
-      groupBy={(opt) => opt.group}
       searchable
       renderValue={renderValue}
       renderOption={renderOption}
