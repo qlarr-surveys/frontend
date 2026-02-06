@@ -188,7 +188,7 @@ export const OPERATORS = {
     category: 'state',
     cardinality: 0,
     jsonLogicOp: 'is_relevant',
-    applicableTypes: ['text', 'number', 'select', 'multiselect', 'date', 'time', 'datetime', 'file', 'group'],
+    applicableTypes: ['text', 'number', 'select', 'multiselect', 'date', 'time', 'datetime', 'file', 'group', 'question_state'],
   },
   is_not_relevant: {
     key: 'is_not_relevant',
@@ -198,7 +198,7 @@ export const OPERATORS = {
     category: 'state',
     cardinality: 0,
     jsonLogicOp: 'is_not_relevant',
-    applicableTypes: ['text', 'number', 'select', 'multiselect', 'date', 'time', 'datetime', 'file', 'group'],
+    applicableTypes: ['text', 'number', 'select', 'multiselect', 'date', 'time', 'datetime', 'file', 'group', 'question_state'],
   },
   is_valid: {
     key: 'is_valid',
@@ -208,7 +208,7 @@ export const OPERATORS = {
     category: 'state',
     cardinality: 0,
     jsonLogicOp: 'is_valid',
-    applicableTypes: ['text', 'number', 'select', 'multiselect', 'date', 'time', 'datetime', 'file', 'group'],
+    applicableTypes: ['text', 'number', 'select', 'multiselect', 'date', 'time', 'datetime', 'file', 'group', 'question_state'],
   },
   is_not_valid: {
     key: 'is_not_valid',
@@ -218,7 +218,7 @@ export const OPERATORS = {
     category: 'state',
     cardinality: 0,
     jsonLogicOp: 'is_not_valid',
-    applicableTypes: ['text', 'number', 'select', 'multiselect', 'date', 'time', 'datetime', 'file', 'group'],
+    applicableTypes: ['text', 'number', 'select', 'multiselect', 'date', 'time', 'datetime', 'file', 'group', 'question_state'],
   },
   is_empty: {
     key: 'is_empty',

@@ -44,7 +44,7 @@ export const InlineFieldSelector = React.memo(function InlineFieldSelector({
       {option.label || option.code}
     </Typography>
   );
-console.log('InlineFieldSelector', options);
+
   return (
     <InlineDropdown
       value={value}

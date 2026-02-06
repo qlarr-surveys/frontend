@@ -3,6 +3,7 @@ import {
   getFieldType,
   hasOtherOption,
   isArrayType,
+  isRankingType,
 } from '../config/fieldTypes';
 import { OPERATORS, getOperatorsForFieldType } from '../config/operators';
 import { accessibleDependencies } from '~/utils/design/access/dependencies';
@@ -157,14 +158,13 @@ function buildFieldDefinition(code, component, state, mainLang, groupLabels) {
   const fields = [];
 
   // These types don't have a base field - only sub-fields
-  const isRankingType = questionType === 'ranking' || questionType === 'image_ranking';
-  const skipBaseField = isRankingType || isArrayType(questionType) || questionType === 'multiple_text';
+  const skipBaseField = isArrayType(questionType) || questionType === 'multiple_text';
 
   if (!skipBaseField) {
     const baseField = {
       code,
       label,
-      type: fieldType,
+      type: isRankingType(questionType) ? 'question_state' : fieldType,
       questionType,
       defaultOperator: getDefaultOperatorForType(questionType, fieldType),
       group: groupLabels.questions,
@@ -217,7 +217,7 @@ function buildFieldDefinition(code, component, state, mainLang, groupLabels) {
   }
 
   // Handle ranking
-  if (isRankingType) {
+  if (isRankingType(questionType)) {
     const rankFields = buildRankingFields(code, component, state, mainLang, label);
     fields.push(...rankFields);
   }
@@ -376,6 +376,8 @@ function getDefaultOperatorForType(questionType, fieldType) {
     date: 'greater_or_equal',
     time: 'greater_or_equal',
     date_time: 'greater_or_equal',
+    ranking: 'is_relevant',
+    image_ranking: 'is_relevant',
   };
 
   if (typeDefaults[questionType]) {

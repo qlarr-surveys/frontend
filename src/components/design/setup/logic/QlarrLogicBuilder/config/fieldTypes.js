@@ -70,6 +70,14 @@ const ARRAY_QUESTION_TYPES = [
 ];
 
 /**
+ * Question types that are ranking questions
+ */
+const RANKING_QUESTION_TYPES = [
+  'ranking',
+  'image_ranking',
+];
+
+/**
  * Get field type for a question type
  */
 export function getFieldType(questionType) {
@@ -88,5 +96,12 @@ export function hasOtherOption(questionType) {
  */
 export function isArrayType(questionType) {
   return ARRAY_QUESTION_TYPES.includes(questionType);
+}
+
+/**
+ * Check if question type is a ranking type
+ */
+export function isRankingType(questionType) {
+  return RANKING_QUESTION_TYPES.includes(questionType);
 }
 
