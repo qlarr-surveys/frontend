@@ -75,8 +75,18 @@ export function useFieldConfig(
     // Get accessible dependencies using the existing utility
     const dependencies = accessibleDependencies(componentIndices, currentCode);
 
+    // Build index lookup map for O(1) access during sort
+    const indexMap = new Map(
+      componentIndices.map((el) => [el.code, el.minIndex ?? Infinity])
+    );
+
+    // Sort dependencies by their visual position in the editor
+    const sortedDependencies = [...dependencies].sort(
+      (a, b) => (indexMap.get(a) ?? Infinity) - (indexMap.get(b) ?? Infinity)
+    );
+
     // Build fields for each dependency
-    for (const code of dependencies) {
+    for (const code of sortedDependencies) {
       const component = designState[code];
       if (!component || (!isQuestion(code) && !isGroup(code))) {
         continue;
