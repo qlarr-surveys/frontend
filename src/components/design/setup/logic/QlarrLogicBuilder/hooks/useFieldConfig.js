@@ -379,6 +379,9 @@ function getDefaultOperatorForType(questionType, fieldType) {
     date_time: 'greater_or_equal',
     ranking: 'is_relevant',
     image_ranking: 'is_relevant',
+    scq_array: 'is_relevant',
+    mcq_array: 'is_relevant',
+    scq_icon_array: 'is_relevant',
   };
 
   if (typeDefaults[questionType]) {
