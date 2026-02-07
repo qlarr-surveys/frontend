@@ -158,13 +158,13 @@ function buildFieldDefinition(code, component, state, mainLang, groupLabels) {
   const fields = [];
 
   // These types don't have a base field - only sub-fields
-  const skipBaseField = isArrayType(questionType) || questionType === 'multiple_text';
+  const skipBaseField = questionType === 'multiple_text';
 
   if (!skipBaseField) {
     const baseField = {
       code,
       label,
-      type: isRankingType(questionType) ? 'question_state' : fieldType,
+      type: (isRankingType(questionType) || isArrayType(questionType)) ? 'question_state' : fieldType,
       questionType,
       defaultOperator: getDefaultOperatorForType(questionType, fieldType),
       group: groupLabels.questions,
@@ -397,6 +397,7 @@ function getDefaultOperatorForType(questionType, fieldType) {
     group: 'is_relevant',
     survey_mode: 'is_online',
     survey_lang: 'select_any_in',
+    question_state: 'is_relevant',
   };
 
   return fieldDefaults[fieldType] || 'equal';
