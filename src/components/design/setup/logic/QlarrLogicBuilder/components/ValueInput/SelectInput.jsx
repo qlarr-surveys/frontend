@@ -5,7 +5,8 @@ import styles from '../../QlarrLogicBuilder.module.css';
 
 export const SelectInput = React.memo(function SelectInput({ field, value, onChange, t, compact = false }) {
   const options = field.options || [];
-  const selectedValues = Array.isArray(value) ? value : value ? [value] : [];
+  const rawValues = Array.isArray(value) ? value : value ? [value] : [];
+  const selectedValues = rawValues.filter((v) => options.some((o) => o.value === v));
 
   // Compact mode: use Select with outlined variant
   if (compact) {
