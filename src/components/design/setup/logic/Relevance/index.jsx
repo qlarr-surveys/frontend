@@ -1,8 +1,8 @@
 // components/design/setup/logic/Relevance.tsx
-import { Switch, Button, Typography } from "@mui/material";
-import LogicBuilder from "~/components/design/setup/logic/LogicBuilder";
+import { Switch, Button, Divider, Typography } from "@mui/material";
+import { QlarrLogicBuilderInlineWrapper } from "~/components/design/setup/logic/QlarrLogicBuilder";
 import { changeRelevance } from "~/state/design/designState";
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./Relevance.module.css";
 import { Trans, useTranslation } from "react-i18next";
@@ -12,9 +12,18 @@ import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 function Relevance({ code, t }) {
   const dispatch = useDispatch();
   const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
-  const [logicDialogOpen, setLogicDialogOpen] = useState(false);
+  const { t: tCore } = useTranslation(NAMESPACES.DESIGN_CORE);
 
-  const state = useSelector((s) => s.designState[code]);
+  const designState = useSelector((s) => s.designState);
+  const state = designState[code];
+  const componentIndex = designState.componentIndex;
+  const langInfo = designState.langInfo;
+  const mainLang = langInfo?.mainLang;
+  const langList = useMemo(
+    () => langInfo?.languagesList?.map((lang) => lang.code) || [],
+    [langInfo?.languagesList]
+  );
+
   const instruction = state?.instructionList?.find(
     (i) => i.code === "conditional_relevance"
   );
@@ -27,7 +36,7 @@ function Relevance({ code, t }) {
   // Disabled behaves like "hide_always" → this UI should disappear
   const isDisabled = rule === "hide_always";
 
-  // our single toggle = “Use condition to show”
+  // our single toggle = "Use condition to show"
   const conditionOn = useMemo(() => rule === "show_if", [rule]);
 
   const setRelevance = useCallback(
@@ -45,29 +54,22 @@ function Relevance({ code, t }) {
 
   const handleToggle = (checked) => {
     if (checked) {
-      if (!logic) {
-        setLogicDialogOpen(true);
-        return;
-      }
-      setRelevance({ rule: "show_if", logic });
+      setRelevance({ rule: "show_if", logic: logic || null });
     } else {
       setRelevance({ rule: "show_always", logic: undefined });
     }
   };
 
-  const onLogicChange = (newLogic) => {
-    setLogicDialogOpen(false);
-    setRelevance({ rule: "show_if", logic: newLogic });
-  };
+  const onLogicChange = useCallback(({ jsonLogic }) => {
+    setRelevance({ rule: "show_if", logic: jsonLogic });
+  }, [setRelevance]);
 
   const resetToShowAlways = () =>
     setRelevance({ rule: "show_always", logic: undefined });
 
-  const shouldHaveLogic = conditionOn || logicDialogOpen;
-
 
   return (
-    <div className={`${hasErrors ? styles.relevanceError : ""}`}>
+    <div>
       <div className={styles.toggleValue}>
         <div className={styles.label}>
           <CustomTooltip body={tTooltips("relevance")} />
@@ -75,38 +77,36 @@ function Relevance({ code, t }) {
         </div>
         <Switch
           id="conditional-visibility-switch"
-          disabled={isDisabled}
-          checked={conditionOn || logicDialogOpen}
+          disabled={isDisabled || hasErrors}
+          checked={conditionOn}
           onChange={(e) => handleToggle(e.target.checked)}
           inputProps={{ "aria-label": "conditional-visibility-switch" }}
         />
       </div>
 
-      {!hasErrors && shouldHaveLogic && (
-        <LogicBuilder
-          title={t("condition_to_show")}
-          code={code}
-          onChange={onLogicChange}
-          onDialogStateChanged={setLogicDialogOpen}
-          t={t}
-          dialogOpen={logicDialogOpen}
-          logic={logic}
-        />
-      )}
-
-      {hasErrors && !logicDialogOpen ? (
+      {hasErrors ? (
         <div className={styles.errorContainer}>
-          <Trans t={t} i18nKey="wrong_logic_err" />
-          <Button variant="contained" onClick={resetToShowAlways}>
-            OK
+          <span className={styles.errorText}>
+            <Trans t={t} i18nKey="wrong_logic_err" />
+          </span>
+          <Button variant="contained" size="small" onClick={resetToShowAlways}>
+            {tCore("ok")}
           </Button>
         </div>
-      ) : null}
-
-      {shouldHaveLogic && !logicDialogOpen && !logic ? (
-        <div>
-          <Trans t={t} i18nKey="no_logic_err" />
-        </div>
+      ) : conditionOn ? (
+        <>
+          <Divider sx={{ my: 1 }} />
+          <QlarrLogicBuilderInlineWrapper
+            code={code}
+            jsonLogic={logic}
+            onChange={onLogicChange}
+            componentIndices={componentIndex}
+            designState={designState}
+            mainLang={mainLang}
+            langList={langList}
+            t={tCore}
+          />
+        </>
       ) : null}
     </div>
   );

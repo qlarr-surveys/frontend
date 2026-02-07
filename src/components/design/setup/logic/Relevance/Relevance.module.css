@@ -2,12 +2,19 @@
   display: inline-block;
 }
 
-.relevanceError {
-  background-color: #ff000022;
-}
-
 .errorContainer {
   display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: #fff3e0;
+  border-radius: 8px;
+  color: #e65100;
+  margin-top: 8px;
+}
+
+.errorText {
+  flex: 1;
 }
 
 .label {
