@@ -172,6 +172,13 @@ class SurveyService extends BaseService {
     link.click();
     document.body.removeChild(link);
   }
+
+  async getAnalytics(surveyId, maxResponses = 5000) {
+    const response = await this.handleRequest(() =>
+      authenticatedApi.get(`/survey/${surveyId}/response/analytics?max_responses=${maxResponses}`)
+    );
+    return response.data;
+  }
 }
 
 export default SurveyService;

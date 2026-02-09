@@ -3,6 +3,7 @@ export const MANAGE_SURVEY_LANDING_PAGES = {
   RESPONSES: "responses",
   SETTINGS: "edit-survey",
   RESPONSE: "response",
+  ANALYTICS: "analytics",
 };
 
 export const DESIGN_SURVEY_MODE = {
@@ -29,6 +30,7 @@ export const routes = {
   designSurvey: `/${MANAGE_SURVEY_LANDING_PAGES.DESIGN}/:surveyId`,
   editSurvey: `/${MANAGE_SURVEY_LANDING_PAGES.SETTINGS}/:surveyId`,
   responses: `/${MANAGE_SURVEY_LANDING_PAGES.RESPONSES}/:surveyId`,
+  analytics: `/${MANAGE_SURVEY_LANDING_PAGES.ANALYTICS}/:surveyId`,
   runSurvey: "/run-survey/:surveyId",
   resumeSurvey: "/run-survey/:surveyId/:responseId",
   iframePreviewSurvey: "/preview-survey/:surveyId",

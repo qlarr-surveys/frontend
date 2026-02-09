@@ -22,10 +22,12 @@ export const availablePages = (user) => {
       MANAGE_SURVEY_LANDING_PAGES.DESIGN,
       MANAGE_SURVEY_LANDING_PAGES.SETTINGS,
       MANAGE_SURVEY_LANDING_PAGES.RESPONSES,
+      MANAGE_SURVEY_LANDING_PAGES.ANALYTICS,
     ];
   } else if (isAnalyst(user)) {
     return [
       MANAGE_SURVEY_LANDING_PAGES.RESPONSES,
+      MANAGE_SURVEY_LANDING_PAGES.ANALYTICS,
     ];
   } else {
     return [];

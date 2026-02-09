@@ -3,4 +3,5 @@
   width: 100%;
   height: calc(100vh - 64px);
   background-color: #f7f8fc;
+  overflow-y: auto;
 }
