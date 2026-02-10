@@ -21,7 +21,7 @@ export default function SCQVisualization({ question }) {
     { label: 'Total Responses', value: data.total, color: 'blue' },
     { label: 'Most Selected', value: data.mode, color: 'green' },
     { label: 'Mode Count', value: data.modeCount, color: 'purple' },
-    { label: 'Options', value: question.options.length, color: 'gray' },
+    { label: 'Options', value: question.options?.length ?? 0, color: 'gray' },
   ];
 
   return (
