@@ -120,7 +120,7 @@ function SkipLogic({ code, t }) {
       <Typography fontWeight={700}>{t("skip_logic")}</Typography>
       <Divider sx={{ my: 1 }} />
 
-      {skipLogic.length === 0 ? (
+      {skipLogic.length == 0 ? (
         <Typography color="text.secondary" sx={{ my: 2 }}>
           {t("no_skip_rules")}
         </Typography>
