@@ -3,12 +3,13 @@ import {
   calculateNPS,
   calculateStats,
   calculateFrequency,
-  calculateHistogram,
+
   calculateRankingAverages,
   calculateMCQFrequency,
   calculateMatrixData,
   calculateEmailDomains,
   calculateCompletionRate,
+  detectOutliers,
 } from './calculations';
 import { getChartColor, NPS_COLORS, LIKERT_COLORS } from './colors';
 
@@ -110,19 +111,18 @@ export const transformRankingData = (question) => {
   };
 };
 
-// Transform Number data for histogram
+// Transform Number data for table view
 export const transformNumberData = (question) => {
-  const { responses, min, max } = question;
+  const { responses } = question;
+
+  // Calculate statistics
   const stats = calculateStats(responses);
-  const histogram = calculateHistogram(responses, 10);
+  const outlierData = detectOutliers(responses);
 
   return {
-    histogramData: histogram.map((bin, i) => ({
-      name: bin.label,
-      count: bin.count,
-      fill: getChartColor(0),
-    })),
     stats,
+    outlierData,
+    total: responses.length
   };
 };
 
@@ -302,21 +302,20 @@ export const transformTextData = (question) => {
   };
 };
 
-// Transform Paragraph data
+// Transform Paragraph data for frequency table
 export const transformParagraphData = (question) => {
   const { responses } = question;
+  const frequency = calculateFrequency(responses);
 
-  const wordCounts = responses.map((r) => r.split(/\s+/).length);
-  const stats = calculateStats(wordCounts);
+  const avgLength = responses.length > 0
+    ? (responses.reduce((sum, r) => sum + r.length, 0) / responses.length).toFixed(1)
+    : 0;
 
   return {
-    lengthHistogram: calculateHistogram(wordCounts, 8).map((bin, i) => ({
-      name: bin.label,
-      count: bin.count,
-      fill: getChartColor(i),
-    })),
-    stats: { ...stats, avgWordCount: stats.mean },
+    frequencyData: frequency.slice(0, 20),
+    uniqueCount: frequency.length,
     total: responses.length,
+    avgLength,
   };
 };
 
@@ -325,6 +324,28 @@ export const transformEmailData = (question) => {
   const { responses } = question;
   const emailStats = calculateEmailDomains(responses);
 
+  // Build per-email frequency map for duplicate detection
+  const emailFreq = {};
+  responses.forEach((email) => {
+    if (email) {
+      const key = email.toLowerCase();
+      emailFreq[key] = (emailFreq[key] || 0) + 1;
+    }
+  });
+
+  const emailList = responses.map((email, i) => {
+    const key = email ? email.toLowerCase() : '';
+    const domain = email && email.includes('@') ? email.split('@')[1]?.toLowerCase() : '';
+    return {
+      index: i + 1,
+      email: email || '',
+      domain,
+      isDuplicate: emailFreq[key] > 1,
+    };
+  });
+
+  const duplicateCount = Object.values(emailFreq).filter((c) => c > 1).length;
+
   return {
     domainData: emailStats.domains.slice(0, 10).map((item, i) => ({
       name: item.domain,
@@ -332,6 +353,13 @@ export const transformEmailData = (question) => {
       percentage: item.percentage,
       fill: getChartColor(i),
     })),
+    allDomainData: emailStats.domains.map((item) => ({
+      domain: item.domain,
+      count: item.count,
+      percentage: `${item.percentage}%`,
+    })),
+    emailList,
+    duplicateCount,
     uniqueDomains: emailStats.uniqueDomains,
     invalidCount: emailStats.invalidCount,
     total: responses.length,
@@ -340,7 +368,7 @@ export const transformEmailData = (question) => {
 
 // Transform Multiple Text data
 export const transformMultipleTextData = (question) => {
-  const { fields, responses } = question;
+  const { fields = [], responses = [] } = question;
 
   const fieldStats = fields.map((field) => {
     const values = responses.map((r) => r[field] || '').filter(Boolean);
@@ -350,26 +378,13 @@ export const transformMultipleTextData = (question) => {
 
     return {
       field,
-      completionRate: Math.round((values.length / responses.length) * 100),
+      completionRate: responses.length > 0 ? Math.round((values.length / responses.length) * 100) : 0,
       avgLength,
       count: values.length,
     };
   });
 
-  return {
-    completionData: fieldStats.map((item, i) => ({
-      name: item.field,
-      rate: item.completionRate,
-      fill: getChartColor(i),
-    })),
-    lengthData: fieldStats.map((item, i) => ({
-      name: item.field,
-      avgLength: parseFloat(item.avgLength),
-      fill: getChartColor(i),
-    })),
-    fieldStats,
-    total: responses.length,
-  };
+  return { fieldStats, total: responses.length };
 };
 
 // Transform Autocomplete data (same as SCQ)
@@ -457,7 +472,7 @@ export const transformFileUploadData = (question) => {
   const uploaded = responses.filter((r) => r && r.uploaded).length;
 
   return {
-    completionRate: Math.round((uploaded / responses.length) * 100),
+    completionRate: responses.length > 0 ? Math.round((uploaded / responses.length) * 100) : 0,
     uploaded,
     notUploaded: responses.length - uploaded,
     total: responses.length,
@@ -470,7 +485,7 @@ export const transformSignatureData = (question) => {
   const signed = responses.filter((r) => r.signed).length;
 
   return {
-    completionRate: Math.round((signed / responses.length) * 100),
+    completionRate: responses.length > 0 ? Math.round((signed / responses.length) * 100) : 0,
     signed,
     unsigned: responses.length - signed,
     total: responses.length,
@@ -485,7 +500,7 @@ export const transformPhotoCaptureData = (question) => {
   const stats = calculateStats(sizes);
 
   return {
-    completionRate: Math.round((captured.length / responses.length) * 100),
+    completionRate: responses.length > 0 ? Math.round((captured.length / responses.length) * 100) : 0,
     captured: captured.length,
     notCaptured: responses.length - captured.length,
     sizeStats: stats,

@@ -46,8 +46,6 @@ export default function MatrixSCQVisualization({ question }) {
 
   return (
     <ChartContainer
-      title={question.title}
-      subtitle={question.description}
       actions={<ChartTabs tabs={tabs} activeTab={viewType} onChange={setViewType} />}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>

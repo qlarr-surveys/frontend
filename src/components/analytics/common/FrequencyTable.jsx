@@ -1,14 +1,24 @@
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
   Paper,
 } from '@mui/material';
 
-export default function FrequencyTable({ data, valueLabel = 'Value', countLabel = 'Count' }) {
+export default function FrequencyTable({ data, valueLabel = 'Value', countLabel = 'Count', emptyMessage = 'No data available' }) {
+  if (!data || data.length === 0) {
+    return (
+      <Box sx={{ p: 4, textAlign: 'center', color: 'text.secondary' }}>
+        <Typography variant="body1">{emptyMessage}</Typography>
+      </Box>
+    );
+  }
+
   return (
     <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 2 }}>
       <Table size="small">

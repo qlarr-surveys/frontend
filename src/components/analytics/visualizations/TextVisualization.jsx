@@ -7,23 +7,23 @@ import { transformTextData } from '~/utils/analytics/dataTransformers';
 export default function TextVisualization({ question }) {
   const data = transformTextData(question);
 
+  const mostCommon = data.frequencyData[0]?.value || '-';
+  const truncatedMostCommon = mostCommon.length > 30 ? `${mostCommon.slice(0, 30)}...` : mostCommon;
+
   const stats = [
     { label: 'Total Responses', value: data.total, color: 'blue' },
     { label: 'Unique Responses', value: data.uniqueCount, color: 'purple' },
     { label: 'Avg Length', value: `${data.avgLength} chars`, color: 'gray' },
     {
       label: 'Most Common',
-      value: data.frequencyData[0]?.value || '-',
+      value: truncatedMostCommon,
       description: `${data.frequencyData[0]?.count || 0} times`,
       color: 'green',
     },
   ];
 
   return (
-    <ChartContainer
-      title={question.title}
-      subtitle={question.description}
-    >
+    <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         <StatsRow stats={stats} columns={4} />
         <FrequencyTable

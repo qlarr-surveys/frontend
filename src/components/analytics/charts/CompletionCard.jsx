@@ -21,7 +21,8 @@ export default function CompletionCard({
   const strokeWidth = size === 'small' ? 6 : size === 'medium' ? 8 : 10;
   const radius = 45;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference * (1 - rate / 100);
+  const safeRate = Number.isFinite(rate) ? rate : 0;
+  const strokeDashoffset = circumference * (1 - safeRate / 100);
 
   const getColor = () => {
     if (rate >= 80) return '#22c55e'; // green

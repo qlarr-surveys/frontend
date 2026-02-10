@@ -26,8 +26,6 @@ export default function SCQVisualization({ question }) {
 
   return (
     <ChartContainer
-      title={question.title}
-      subtitle={question.description}
       actions={<ChartTabs tabs={tabs} activeTab={chartType} onChange={setChartType} />}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>

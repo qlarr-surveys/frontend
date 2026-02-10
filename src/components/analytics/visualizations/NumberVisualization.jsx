@@ -1,80 +1,104 @@
+import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
-import HistogramChart from '../charts/HistogramChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
+import DataTable from '../common/DataTable';
 import { transformNumberData } from '~/utils/analytics/dataTransformers';
+import { formatNumber } from '~/utils/analytics/formatting';
 
 export default function NumberVisualization({ question }) {
   const data = transformNumberData(question);
+  const hasOutliers = data.outlierData.outliersCount > 0;
 
+  // Build table data
+  const tableData = useMemo(() => {
+    const valueCounts = {};
+
+    // Count frequency of each value
+    question.responses.forEach((value) => {
+      valueCounts[value] = (valueCounts[value] || 0) + 1;
+    });
+
+    // Build table rows
+    return Object.entries(valueCounts).map(([value, count]) => ({
+      rawValue: parseFloat(value),
+      value: formatNumber(parseFloat(value), { context: 'full', decimals: 2 }),
+      frequency: count,
+      percentage: `${((count / data.stats.count) * 100).toFixed(1)}%`,
+    }));
+  }, [question.responses, data.stats.count]);
+
+  // Define columns
+  const columns = [
+    { key: 'value', label: 'Value', sortable: true, align: 'right' },
+    { key: 'frequency', label: 'Frequency', sortable: true, align: 'right' },
+    { key: 'percentage', label: 'Percentage', sortable: true, align: 'right' },
+  ];
+
+  // Highlight outliers
+  const highlightRow = (row) => data.outlierData.outliers.includes(row.rawValue);
+
+  // Primary stats
   const stats = [
-    { label: 'Mean', value: data.stats.mean, color: 'blue' },
-    { label: 'Median', value: data.stats.median, color: 'purple' },
-    { label: 'Std Dev', value: data.stats.stdDev, color: 'gray' },
-    { label: 'Range', value: `${data.stats.min} - ${data.stats.max}`, color: 'green' },
+    {
+      label: 'Mean',
+      value: formatNumber(data.stats.mean, { context: 'full', decimals: 2 }),
+      color: 'blue',
+    },
+    {
+      label: 'Median',
+      value: formatNumber(data.stats.median, { context: 'full', decimals: 2 }),
+      color: 'purple',
+    },
+    {
+      label: 'Std Dev',
+      value: formatNumber(data.stats.stdDev, { context: 'full', decimals: 2 }),
+      color: 'gray',
+    },
+    {
+      label: 'Range',
+      value: `${formatNumber(data.stats.min, { context: 'full', decimals: 2 })} - ${formatNumber(
+        data.stats.max,
+        { context: 'full', decimals: 2 }
+      )}`,
+      color: 'green',
+    },
   ];
 
   return (
-    <ChartContainer
-      title={question.title}
-      subtitle={question.description}
-    >
+    <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Stats Row */}
         <StatsRow stats={stats} columns={4} />
 
-        {/* Histogram */}
-        <HistogramChart
-          data={data.histogramData}
-          stats={data.stats}
-          height={300}
-          showStats={false}
-        />
+        {/* Outlier Summary */}
+        {hasOutliers && (
+          <Box
+            sx={{
+              p: 1.5,
+              bgcolor: 'warning.light',
+              borderRadius: 1,
+              border: '1px solid',
+              borderColor: 'warning.main',
+            }}
+          >
+            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+              ⚠️ {data.outlierData.outliersCount} outlier
+              {data.outlierData.outliersCount > 1 ? 's' : ''} detected (highlighted in red below)
+            </Typography>
+          </Box>
+        )}
 
-        {/* Additional Stats */}
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-            gap: 2,
-            p: 2,
-            bgcolor: 'grey.50',
-            borderRadius: 2,
-          }}
-        >
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              Mode
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              {data.stats.mode}
-            </Typography>
-          </Box>
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              Count
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              {data.stats.count}
-            </Typography>
-          </Box>
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              Sum
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              {data.stats.sum}
-            </Typography>
-          </Box>
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              Range
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              {data.stats.range}
-            </Typography>
-          </Box>
-        </Box>
+        {/* Data Table */}
+        <DataTable
+          data={tableData}
+          columns={columns}
+          searchable={true}
+          paginated={true}
+          rowsPerPage={20}
+          highlightRow={highlightRow}
+          emptyMessage="No numeric data available"
+        />
       </Box>
     </ChartContainer>
   );

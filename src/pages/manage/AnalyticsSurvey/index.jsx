@@ -5,6 +5,45 @@ import { useService } from '~/hooks/use-service';
 import LoadingDots from '~/components/common/LoadingDots';
 import QuestionCard from '~/components/analytics/QuestionCard';
 
+const QUESTION_TYPE_LABELS = {
+  SCQ: 'Single Choice',
+  SINGLECHOICEQUESTION: 'Single Choice',
+  MCQ: 'Multiple Choice',
+  MULTIPLECHOICEQUESTION: 'Multiple Choice',
+  NPS: 'Net Promoter Score',
+  NETPROMOTERSCORE: 'Net Promoter Score',
+  RANKING: 'Ranking',
+  NUMBER: 'Number',
+  NUMERIC: 'Number',
+  DATE: 'Date',
+  TIME: 'Time',
+  DATETIME: 'Date & Time',
+  DATE_TIME: 'Date & Time',
+  MATRIX_SCQ: 'Matrix (Single Choice)',
+  MATRIX_MCQ: 'Matrix (Multiple Choice)',
+  TEXT: 'Short Text',
+  SHORTTEXT: 'Short Text',
+  PARAGRAPH: 'Long Text',
+  LONGTEXT: 'Long Text',
+  EMAIL: 'Email',
+  MULTIPLE_TEXT: 'Multiple Text',
+  AUTOCOMPLETE: 'Autocomplete',
+  ICON_SCQ: 'Icon Single Choice',
+  ICON_MCQ: 'Icon Multiple Choice',
+  SCQ_ARRAY: 'Single Choice Array',
+  MCQ_ARRAY: 'Multiple Choice Array',
+  SCQ_ICON_ARRAY: 'Icon Single Choice Array',
+  IMAGE_RANKING: 'Image Ranking',
+  IMAGE_SCQ: 'Image Single Choice',
+  IMAGE_MCQ: 'Image Multiple Choice',
+  FILE_UPLOAD: 'File Upload',
+  FILE: 'File Upload',
+  SIGNATURE: 'Signature',
+  PHOTO_CAPTURE: 'Photo Capture',
+  PHOTO: 'Photo Capture',
+  BARCODE: 'Barcode',
+};
+
 function AnalyticsSurvey() {
   const surveyService = useService('survey');
   const { surveyId } = useParams();
@@ -113,6 +152,9 @@ function AnalyticsSurvey() {
         <Paper key={question.id} variant="outlined" sx={{ mb: 3, p: 3, borderRadius: 3 }}>
           <Typography variant="h6" gutterBottom>
             {question.title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+            {QUESTION_TYPE_LABELS[question.type] || question.type}
           </Typography>
           <QuestionCard question={question} />
         </Paper>

@@ -211,6 +211,27 @@ export const calculateEmailDomains = (emails) => {
   };
 };
 
+// Detect outliers using IQR method
+export const detectOutliers = (values) => {
+  if (!values || values.length < 4) {
+    return { outliers: [], outliersCount: 0 };
+  }
+
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  const q1Arr = sorted.slice(0, mid);
+  const q3Arr = sorted.length % 2 !== 0 ? sorted.slice(mid + 1) : sorted.slice(mid);
+  const q1 = q1Arr[Math.floor(q1Arr.length / 2)];
+  const q3 = q3Arr[Math.floor(q3Arr.length / 2)];
+  const iqr = q3 - q1;
+  const lowerBound = q1 - 1.5 * iqr;
+  const upperBound = q3 + 1.5 * iqr;
+
+  const outliers = values.filter((v) => v < lowerBound || v > upperBound);
+
+  return { outliers, outliersCount: outliers.length };
+};
+
 // Format file size
 export const formatFileSize = (bytes) => {
   if (bytes < 1024) return `${bytes} B`;

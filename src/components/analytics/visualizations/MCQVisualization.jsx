@@ -16,10 +16,7 @@ export default function MCQVisualization({ question }) {
   ];
 
   return (
-    <ChartContainer
-      title={question.title}
-      subtitle={question.description}
-    >
+    <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Stats Row */}
         <StatsRow stats={stats} columns={4} />

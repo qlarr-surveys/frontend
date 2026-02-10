@@ -20,10 +20,7 @@ export default function BarcodeVisualization({ question }) {
   ];
 
   return (
-    <ChartContainer
-      title={question.title}
-      subtitle={question.description}
-    >
+    <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         <StatsRow stats={stats} columns={3} />
         {data.barData.length > 0 && (

@@ -27,10 +27,7 @@ export default function ImageMCQVisualization({ question }) {
   });
 
   return (
-    <ChartContainer
-      title={question.title}
-      subtitle={question.description}
-    >
+    <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         <StatsRow stats={stats} columns={4} />
         <ImageGallery images={galleryImages} columns={4} showLabels={true} showStats={true} />

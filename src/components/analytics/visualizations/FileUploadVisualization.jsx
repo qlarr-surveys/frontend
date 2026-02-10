@@ -15,10 +15,7 @@ export default function FileUploadVisualization({ question }) {
   ];
 
   return (
-    <ChartContainer
-      title={question.title}
-      subtitle={question.description}
-    >
+    <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         <StatsRow stats={stats} columns={4} />
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>

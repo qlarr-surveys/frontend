@@ -3,6 +3,7 @@ import PieDonutChart from '../charts/PieDonutChart';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
+import DataTable from '../common/DataTable';
 import { transformEmailData } from '~/utils/analytics/dataTransformers';
 
 export default function EmailVisualization({ question }) {
@@ -12,6 +13,7 @@ export default function EmailVisualization({ question }) {
     { label: 'Total Emails', value: data.total, color: 'blue' },
     { label: 'Unique Domains', value: data.uniqueDomains, color: 'purple' },
     { label: 'Invalid Emails', value: data.invalidCount, color: 'red' },
+    { label: 'Duplicate Emails', value: data.duplicateCount, color: 'orange' },
     {
       label: 'Top Domain',
       value: data.domainData[0]?.name || '-',
@@ -20,14 +22,27 @@ export default function EmailVisualization({ question }) {
     },
   ];
 
+  // Email list table
+  const emailColumns = [
+    { key: 'index', label: '#', sortable: true, align: 'right' },
+    { key: 'email', label: 'Email', sortable: true },
+    { key: 'domain', label: 'Domain', sortable: true },
+  ];
+
+  const highlightDuplicate = (row) => row.isDuplicate;
+
+  // Domain table
+  const domainColumns = [
+    { key: 'domain', label: 'Domain', sortable: true },
+    { key: 'count', label: 'Count', sortable: true, align: 'right' },
+    { key: 'percentage', label: 'Percentage', sortable: true, align: 'right' },
+  ];
+
   return (
-    <ChartContainer
-      title={question.title}
-      subtitle={question.description}
-    >
+    <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Stats Row */}
-        <StatsRow stats={stats} columns={4} />
+        <StatsRow stats={stats} columns={5} />
 
         {/* Charts Side by Side */}
         <Grid container spacing={3}>
@@ -48,6 +63,53 @@ export default function EmailVisualization({ question }) {
             <HorizontalBarChart data={data.domainData.slice(0, 8)} height={280} />
           </Grid>
         </Grid>
+
+        {/* All Emails Table */}
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
+            All Emails
+          </Typography>
+          {data.duplicateCount > 0 && (
+            <Box
+              sx={{
+                p: 1.5,
+                mb: 2,
+                bgcolor: 'warning.light',
+                borderRadius: 1,
+                border: '1px solid',
+                borderColor: 'warning.main',
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                {data.duplicateCount} duplicate email{data.duplicateCount > 1 ? 's' : ''} detected (highlighted in red below)
+              </Typography>
+            </Box>
+          )}
+          <DataTable
+            data={data.emailList}
+            columns={emailColumns}
+            searchable={true}
+            paginated={true}
+            rowsPerPage={20}
+            highlightRow={highlightDuplicate}
+            emptyMessage="No email data available"
+          />
+        </Box>
+
+        {/* Domains Table */}
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
+            Domains
+          </Typography>
+          <DataTable
+            data={data.allDomainData}
+            columns={domainColumns}
+            searchable={true}
+            paginated={true}
+            rowsPerPage={20}
+            emptyMessage="No domain data available"
+          />
+        </Box>
       </Box>
     </ChartContainer>
   );

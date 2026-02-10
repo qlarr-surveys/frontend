@@ -21,29 +21,44 @@ import SignatureVisualization from './visualizations/SignatureVisualization';
 import MediaCaptureVisualization from './visualizations/MediaCaptureVisualization';
 import BarcodeVisualization from './visualizations/BarcodeVisualization';
 import { Paper, Typography } from '@mui/material';
+import NoResponsesMessage from './common/NoResponsesMessage';
 
 const QUESTION_TYPE_MAP = {
   SCQ: SCQVisualization,
+  SINGLECHOICEQUESTION: SCQVisualization,
   MCQ: MCQVisualization,
+  MULTIPLECHOICEQUESTION: MCQVisualization,
   NPS: NPSVisualization,
+  NETPROMOTERSCORE: NPSVisualization,
   RANKING: RankingVisualization,
   NUMBER: NumberVisualization,
+  NUMERIC: NumberVisualization,
   DATE: DateVisualization,
   TIME: TimeVisualization,
   DATETIME: DateTimeVisualization,
+  DATE_TIME: DateTimeVisualization,
   MATRIX_SCQ: MatrixSCQVisualization,
   MATRIX_MCQ: MatrixMCQVisualization,
   TEXT: TextVisualization,
+  SHORTTEXT: TextVisualization,
   PARAGRAPH: ParagraphVisualization,
+  LONGTEXT: ParagraphVisualization,
   EMAIL: EmailVisualization,
   MULTIPLE_TEXT: MultipleTextVisualization,
   AUTOCOMPLETE: AutocompleteVisualization,
   IMAGE_RANKING: ImageRankingVisualization,
+  ICON_SCQ: SCQVisualization,
+  ICON_MCQ: MCQVisualization,
+  SCQ_ARRAY: MatrixSCQVisualization,
+  MCQ_ARRAY: MatrixMCQVisualization,
+  SCQ_ICON_ARRAY: MatrixSCQVisualization,
   IMAGE_SCQ: ImageSCQVisualization,
   IMAGE_MCQ: ImageMCQVisualization,
   FILE_UPLOAD: FileUploadVisualization,
+  FILE: FileUploadVisualization,
   SIGNATURE: SignatureVisualization,
   PHOTO_CAPTURE: MediaCaptureVisualization,
+  PHOTO: MediaCaptureVisualization,
   BARCODE: BarcodeVisualization,
 };
 
@@ -61,6 +76,10 @@ export default function QuestionCard({ question }) {
         </Typography>
       </Paper>
     );
+  }
+
+  if (!question.responses || question.responses.length === 0) {
+    return <NoResponsesMessage />;
   }
 
   return <VisualizationComponent question={question} />;
