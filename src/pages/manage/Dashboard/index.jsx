@@ -401,7 +401,7 @@ function Dashboard() {
             )}
           </Box>
 
-          {surveys?.surveys?.length > 0 ? (
+          {surveys?.totalCount > 6 ? (
             <TablePagination
               rowsPerPageOptions={[6, 12, 18, 24]}
               component="div"
