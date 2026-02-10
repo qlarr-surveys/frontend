@@ -1,0 +1,101 @@
+.container {
+  margin-top: 8px;
+}
+
+/* Each condition as a card */
+.ruleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 4px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+  overflow: visible; /* Allow dropdowns to extend beyond */
+}
+
+.ruleRow:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Conjunction row with toggle buttons */
+.conjunctionRow {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 12px;
+}
+
+.toggleGroup {
+  height: 28px;
+}
+
+.toggleButton {
+  text-transform: none;
+  font-size: 12px;
+  padding: 4px 12px;
+}
+
+/* Selectors container - single column: field, operator, value each on own row */
+.selectorsContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  overflow: visible; /* Allow dropdowns to extend beyond */
+}
+
+/* Each grid cell: field cell or (connector + operator) cell */
+.selectorCell {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  min-width: 0;
+  overflow: visible;
+  width: 100%;
+}
+
+/* Connector text between selectors (e.g., "is") */
+.connector {
+  color: #666;
+  font-size: 14px;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+
+/* Value input - spans both columns on row 2 */
+.valueInputWrapper {
+  grid-column: 1 / -1;
+  min-width: 0;
+  width: 100%;
+}
+
+.deleteButton {
+  flex-shrink: 0;
+  opacity: 0.6;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.deleteButton:hover {
+  opacity: 1;
+}
+
+/* Footer with add button */
+.footerRow {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 8px;
+}
+
+/* Empty state styling */
+.emptyState {
+  padding: 16px;
+  margin: 8px 0;
+  text-align: center;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  border: 1px dashed #e0e0e0;
+}
