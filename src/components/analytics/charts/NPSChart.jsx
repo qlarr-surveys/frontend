@@ -1,3 +1,4 @@
+import { Box, Typography } from '@mui/material';
 import {
   BarChart,
   Bar,
@@ -9,106 +10,13 @@ import {
   Cell,
   ReferenceLine,
 } from 'recharts';
+import PieDonutChart from './PieDonutChart';
+import NPSBenchmarkScale from './NPSBenchmarkScale';
+import CategoryLegend from '../common/CategoryLegend';
 import { NPS_COLORS } from '~/utils/analytics/colors';
 
-// NPS Gauge Component
-function NPSGauge({ score, size = 200 }) {
-  const radius = size / 2 - 20;
-  const circumference = Math.PI * radius;
-  const normalizedScore = (score + 100) / 200; // Convert -100 to 100 → 0 to 1
-  const strokeDashoffset = circumference * (1 - normalizedScore);
-
-  const getScoreColor = () => {
-    if (score >= 50) return NPS_COLORS.promoter;
-    if (score >= 0) return '#84cc16'; // lime
-    if (score >= -50) return NPS_COLORS.passive;
-    return NPS_COLORS.detractor;
-  };
-
-  return (
-    <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-      <svg width={size} height={size / 2 + 30} style={{ transform: 'rotate(-90deg)' }}>
-        {/* Background arc */}
-        <path
-          d={`M ${size / 2 - radius} ${size / 2} A ${radius} ${radius} 0 0 1 ${size / 2 + radius} ${size / 2}`}
-          fill="none"
-          stroke="#e5e7eb"
-          strokeWidth="12"
-          strokeLinecap="round"
-        />
-        {/* Colored arc */}
-        <path
-          d={`M ${size / 2 - radius} ${size / 2} A ${radius} ${radius} 0 0 1 ${size / 2 + radius} ${size / 2}`}
-          fill="none"
-          stroke={getScoreColor()}
-          strokeWidth="12"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={strokeDashoffset}
-          style={{ transition: 'stroke-dashoffset 1s ease-out' }}
-        />
-      </svg>
-      <div style={{ position: 'absolute', bottom: 0, textAlign: 'center' }}>
-        <span style={{ fontSize: 36, fontWeight: 'bold', color: getScoreColor() }}>
-          {score}
-        </span>
-        <p style={{ fontSize: 14, color: '#6b7280', marginTop: 4 }}>NPS Score</p>
-      </div>
-    </div>
-  );
-}
-
-// Category Bar Component
-function NPSCategoryBar({ data }) {
-  const total = data.reduce((sum, d) => sum + d.value, 0);
-
-  return (
-    <div style={{ width: '100%' }}>
-      <div style={{ display: 'flex', height: 32, borderRadius: 8, overflow: 'hidden' }}>
-        {data.map((item, index) => (
-          <div
-            key={index}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontSize: 12,
-              fontWeight: 500,
-              width: `${item.percentage}%`,
-              backgroundColor: item.fill,
-              minWidth: item.percentage > 0 ? '30px' : '0',
-              transition: 'all 0.5s'
-            }}
-          >
-            {item.percentage >= 10 && `${item.percentage}%`}
-          </div>
-        ))}
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8, fontSize: 14 }}>
-        {data.map((item, index) => (
-          <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span
-              style={{
-                width: 12,
-                height: 12,
-                borderRadius: '50%',
-                backgroundColor: item.fill,
-                display: 'inline-block'
-              }}
-            />
-            <span style={{ color: '#6b7280' }}>
-              {item.name}: {item.value} ({item.percentage}%)
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Distribution Chart Component
-function NPSDistributionChart({ data, height = 200 }) {
+// Distribution Chart Component (score 0-10 histogram)
+function NPSDistributionChart({ data, height = 250 }) {
   return (
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
@@ -156,37 +64,52 @@ function NPSDistributionChart({ data, height = 200 }) {
   );
 }
 
-export default function NPSChart({
-  score,
-  categoryData,
-  distributionData,
-  showGauge = true,
-  showCategoryBar = true,
-  showDistribution = true,
-  gaugeSize = 200,
-}) {
+export default function NPSChart({ score, categoryData, distributionData }) {
+  const legendItems = [
+    { name: 'Detractors (0-6)', value: categoryData[0]?.value || 0, fill: NPS_COLORS.detractor },
+    { name: 'Passives (7-8)', value: categoryData[1]?.value || 0, fill: NPS_COLORS.passive },
+    { name: 'Promoters (9-10)', value: categoryData[2]?.value || 0, fill: NPS_COLORS.promoter },
+  ];
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {showGauge && (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <NPSGauge score={score} size={gaugeSize} />
-        </div>
-      )}
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      {/* Benchmark Scale */}
+      <NPSBenchmarkScale score={score} />
 
-      {showCategoryBar && categoryData && (
-        <div style={{ padding: '0 16px' }}>
-          <NPSCategoryBar data={categoryData} />
-        </div>
-      )}
+      {/* Two-column: Donut + Distribution */}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+          gap: 3,
+        }}
+      >
+        {/* Category Breakdown (Donut) */}
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1 }}>
+            Category Breakdown
+          </Typography>
+          <PieDonutChart
+            data={categoryData}
+            donut
+            showLegend={false}
+            height={250}
+          />
+          <Box sx={{ mt: 2 }}>
+            <CategoryLegend items={legendItems} />
+          </Box>
+        </Box>
 
-      {showDistribution && distributionData && (
-        <div>
-          <h4 style={{ fontSize: 14, fontWeight: 500, color: '#374151', marginBottom: 8 }}>Score Distribution</h4>
+        {/* Score Distribution */}
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1 }}>
+            Score Distribution
+          </Typography>
           <NPSDistributionChart data={distributionData} />
-        </div>
-      )}
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 
-export { NPSGauge, NPSCategoryBar, NPSDistributionChart };
+export { NPSDistributionChart };

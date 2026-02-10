@@ -70,7 +70,6 @@ export const transformNPSData = (question) => {
 
   return {
     score: nps.score,
-    gaugeData: [{ value: nps.score, fill: nps.score >= 0 ? NPS_COLORS.promoter : NPS_COLORS.detractor }],
     categoryData: [
       { name: 'Detractors', value: nps.detractors, percentage: nps.detractorPct, fill: NPS_COLORS.detractor },
       { name: 'Passives', value: nps.passives, percentage: nps.passivePct, fill: NPS_COLORS.passive },

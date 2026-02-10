@@ -19,6 +19,13 @@ export const NPS_COLORS = {
   promoter: '#22c55e',  // green (9-10)
 };
 
+export const NPS_BENCHMARK_COLORS = {
+  needsImprovement: '#ef4444', // red (-100 to 0)
+  good: '#f59e0b',             // amber (0 to 30)
+  great: '#22c55e',            // green (30 to 70)
+  excellent: '#15803d',        // dark green (70 to 100)
+};
+
 export const LIKERT_COLORS = {
   veryNegative: '#ef4444',
   negative: '#f97316',
