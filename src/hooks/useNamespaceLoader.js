@@ -42,7 +42,8 @@ export function useNamespaceLoader() {
       namespacesToLoad.push(
         NAMESPACES.DESIGN_CORE,
         NAMESPACES.DESIGN_EDITOR,
-        NAMESPACES.DESIGN_TOOLTIPS
+        NAMESPACES.DESIGN_TOOLTIPS,
+        NAMESPACES.RUN
       );
     }
 
