@@ -27,7 +27,7 @@ export default function HeatmapChart({
 
   return (
     <div style={{ overflowX: 'auto' }}>
-      <table style={{ minWidth: '100%', borderCollapse: 'collapse' }}>
+      <table style={{ borderCollapse: 'collapse', margin: '0 auto' }}>
         <thead>
           <tr>
             <th style={{

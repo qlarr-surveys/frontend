@@ -1,21 +1,11 @@
-import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import HeatmapChart from '../charts/HeatmapChart';
-import StackedBarChart from '../charts/StackedBarChart';
 import ChartContainer from '../common/ChartContainer';
-import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import { transformMatrixSCQData } from '~/utils/analytics/dataTransformers';
-import { LIKERT_COLORS } from '~/utils/analytics/colors';
 
 export default function MatrixSCQVisualization({ question }) {
-  const [viewType, setViewType] = useState('heatmap');
   const data = transformMatrixSCQData(question);
-
-  const tabs = [
-    { value: 'heatmap', label: 'Heatmap' },
-    { value: 'stacked', label: 'Stacked Bar' },
-  ];
 
   // Calculate highest rated row
   const highestRated = data.rowAverages.reduce(
@@ -35,43 +25,20 @@ export default function MatrixSCQVisualization({ question }) {
     },
   ];
 
-  // Prepare stacked bar data
-  const stackedData = data.heatmapData.map((rowData) => {
-    const result = { option: rowData.row };
-    data.columns.forEach((col) => {
-      result[col] = rowData[col] || 0;
-    });
-    return result;
-  });
-
   return (
-    <ChartContainer
-      actions={<ChartTabs tabs={tabs} activeTab={viewType} onChange={setViewType} />}
-    >
+    <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Stats Row */}
         <StatsRow stats={stats} columns={4} />
 
-        {/* Chart */}
-        {viewType === 'heatmap' && (
-          <HeatmapChart
-            data={data.heatmapData}
-            rows={data.rows}
-            columns={data.columns}
-            cellSize={60}
-            showValues={true}
-          />
-        )}
-
-        {viewType === 'stacked' && (
-          <StackedBarChart
-            data={stackedData}
-            keys={data.columns}
-            colors={Object.values(LIKERT_COLORS)}
-            height={350}
-            layout="vertical"
-          />
-        )}
+        {/* Heatmap */}
+        <HeatmapChart
+          data={data.heatmapData}
+          rows={data.rows}
+          columns={data.columns}
+          cellSize={60}
+          showValues={true}
+        />
 
         {/* Row Averages */}
         <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 2 }}>

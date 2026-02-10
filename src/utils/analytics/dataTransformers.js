@@ -230,9 +230,23 @@ export const transformDateTimeData = (question) => {
   };
 };
 
+// Extract rows and columns from response objects when metadata is null
+const extractMatrixDimensions = (responses, questionRows, questionColumns, isMultiSelect = false) => {
+  const rows = questionRows?.length ? questionRows : responses.length > 0
+    ? [...new Set(responses.flatMap((r) => Object.keys(r)))].sort()
+    : [];
+  const columns = questionColumns?.length ? questionColumns : responses.length > 0
+    ? [...new Set(responses.flatMap((r) =>
+        isMultiSelect ? Object.values(r).flat() : Object.values(r)
+      ))].sort()
+    : [];
+  return { rows, columns };
+};
+
 // Transform Matrix SCQ data for heatmap
 export const transformMatrixSCQData = (question) => {
-  const { rows, columns, responses } = question;
+  const responses = question.responses || [];
+  const { rows, columns } = extractMatrixDimensions(responses, question.rows, question.columns);
   const matrix = calculateMatrixData(responses, rows, columns);
 
   // Calculate row averages (for Likert scale)
@@ -247,15 +261,16 @@ export const transformMatrixSCQData = (question) => {
   });
 
   // Diverging bar data for Likert
-  const divergingData = matrix.map((rowData) => {
+  const divergingData = columns.length >= 5 ? matrix.map((rowData) => {
     const total = columns.reduce((sum, col) => sum + rowData[col], 0);
+    if (total === 0) return { row: rowData.row, negative: '0.0', neutral: '0.0', positive: '0.0' };
     return {
       row: rowData.row,
       negative: ((rowData[columns[0]] + rowData[columns[1]]) / total * -100).toFixed(1),
       neutral: ((rowData[columns[2]]) / total * 100).toFixed(1),
       positive: ((rowData[columns[3]] + rowData[columns[4]]) / total * 100).toFixed(1),
     };
-  });
+  }) : [];
 
   return {
     heatmapData: matrix,
@@ -269,7 +284,8 @@ export const transformMatrixSCQData = (question) => {
 
 // Transform Matrix MCQ data for heatmap
 export const transformMatrixMCQData = (question) => {
-  const { rows, columns, responses } = question;
+  const responses = question.responses || [];
+  const { rows, columns } = extractMatrixDimensions(responses, question.rows, question.columns, true);
   const matrix = calculateMatrixData(responses, rows, columns);
 
   // Calculate average selections per row

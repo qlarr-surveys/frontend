@@ -154,6 +154,8 @@ export const calculateMCQFrequency = (responses, options) => {
 
 // Calculate matrix data for heatmap
 export const calculateMatrixData = (responses, rows, columns) => {
+  if (!rows || !columns) return [];
+
   const matrix = rows.map((row) => {
     const rowData = { row };
     columns.forEach((col) => (rowData[col] = 0));
