@@ -5,14 +5,7 @@ import { StatsRow } from '../common/StatCard';
 import ImageGallery from '../common/ImageGallery';
 import IconLegend from '../common/IconLegend';
 import DataTable from '../common/DataTable';
-import { transformIconMCQData } from '~/utils/analytics/dataTransformers';
-import { BACKEND_BASE_URL } from '~/constants/networking';
-
-const resolveUrl = (url) => {
-  if (!url) return null;
-  if (url.startsWith('http')) return url;
-  return BACKEND_BASE_URL + url.replace(/^\//, '');
-};
+import { transformIconMCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
 
 export default function IconMCQVisualization({ question }) {
   const data = transformIconMCQData(question);
@@ -29,7 +22,7 @@ export default function IconMCQVisualization({ question }) {
     const barItem = data.barData[i];
     return {
       ...img,
-      url: resolveUrl(img.url),
+      url: resolveImageUrl(img.url),
       label: img.label || `Option ${i + 1}`,
       count: barItem?.count || 0,
       percentage: barItem?.percentage || 0,

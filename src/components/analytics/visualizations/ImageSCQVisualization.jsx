@@ -5,7 +5,7 @@ import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import ImageGallery from '../common/ImageGallery';
-import { transformImageSCQData } from '~/utils/analytics/dataTransformers';
+import { transformImageSCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
 
 export default function ImageSCQVisualization({ question }) {
   const [viewType, setViewType] = useState('gallery');
@@ -30,10 +30,12 @@ export default function ImageSCQVisualization({ question }) {
   ];
 
   // Prepare gallery data with stats
-  const galleryImages = question.images.map((img) => {
-    const pieItem = data.pieData.find((p) => p.name === img.label);
+  const galleryImages = question.images.map((img, i) => {
+    const pieItem = data.pieData.find((p) => p.imageId === img.id) || data.pieData[i];
     return {
       ...img,
+      url: resolveImageUrl(img.url),
+      label: img.label || `Image ${i + 1}`,
       count: pieItem?.value || 0,
       percentage: pieItem?.percentage || 0,
       color: pieItem?.fill,

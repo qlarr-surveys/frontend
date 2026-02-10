@@ -4,7 +4,7 @@ import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import ImageGallery from '../common/ImageGallery';
 import CategoryLegend from '../common/CategoryLegend';
-import { transformImageMCQData } from '~/utils/analytics/dataTransformers';
+import { transformImageMCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
 
 export default function ImageMCQVisualization({ question }) {
   const data = transformImageMCQData(question);
@@ -16,10 +16,12 @@ export default function ImageMCQVisualization({ question }) {
     { label: 'Images', value: question.images.length, color: 'gray' },
   ];
 
-  const galleryImages = question.images.map((img) => {
-    const barItem = data.barData.find((b) => b.name === img.label);
+  const galleryImages = question.images.map((img, i) => {
+    const barItem = data.barData.find((b) => b.imageId === img.id) || data.barData[i];
     return {
       ...img,
+      url: resolveImageUrl(img.url),
+      label: img.label || `Image ${i + 1}`,
       count: barItem?.count || 0,
       percentage: barItem?.percentage || 0,
       color: barItem?.fill,

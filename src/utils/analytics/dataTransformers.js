@@ -15,7 +15,7 @@ import { getChartColor, NPS_COLORS, LIKERT_COLORS } from './colors';
 import { BACKEND_BASE_URL } from '~/constants/networking';
 
 // Resolve relative API image URLs to full URLs
-const resolveImageUrl = (url) => {
+export const resolveImageUrl = (url) => {
   if (!url) return null;
   if (url.startsWith('http://') || url.startsWith('https://')) return url;
   return BACKEND_BASE_URL + url.replace(/^\//, '');
@@ -421,11 +421,11 @@ export const transformImageRankingData = (question) => {
   const rankings = calculateRankingAverages(responses, options);
 
   const rankedImages = rankings.map((item, i) => {
-    const image = images.find((img) => img.id === item.option);
+    const image = resolveIconImage(images, item.option);
     return {
       ...item,
-      name: image?.label || item.option,
-      imageUrl: image?.url,
+      name: image?.label || `Image ${i + 1}`,
+      imageUrl: resolveImageUrl(image?.url),
       averageRank: item.averageRank,
       firstPlace: item.firstPlaceCount,
       lastPlace: item.lastPlaceCount,
@@ -454,12 +454,13 @@ export const transformImageSCQData = (question) => {
 
   return {
     pieData: frequency.map((item, i) => {
-      const image = images.find((img) => img.id === item.value);
+      const image = resolveIconImage(images, item.value);
       return {
-        name: image?.label || item.value,
+        name: image?.label || `Image ${i + 1}`,
         value: item.count,
         percentage: item.percentage,
-        imageUrl: image?.url,
+        imageUrl: resolveImageUrl(image?.url),
+        imageId: image?.id,
         fill: getChartColor(i),
       };
     }),
@@ -476,12 +477,13 @@ export const transformImageMCQData = (question) => {
 
   return {
     barData: freq.map((item, i) => {
-      const image = images.find((img) => img.id === item.option);
+      const image = resolveIconImage(images, item.option);
       return {
-        name: image?.label || item.option,
+        name: image?.label || `Image ${i + 1}`,
         count: item.count,
         percentage: item.percentage,
-        imageUrl: image?.url,
+        imageUrl: resolveImageUrl(image?.url),
+        imageId: image?.id,
         fill: getChartColor(i),
       };
     }),

@@ -7,14 +7,7 @@ import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import ImageGallery from '../common/ImageGallery';
 import IconLegend from '../common/IconLegend';
-import { transformIconSCQData } from '~/utils/analytics/dataTransformers';
-import { BACKEND_BASE_URL } from '~/constants/networking';
-
-const resolveUrl = (url) => {
-  if (!url) return null;
-  if (url.startsWith('http')) return url;
-  return BACKEND_BASE_URL + url.replace(/^\//, '');
-};
+import { transformIconSCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
 
 export default function IconSCQVisualization({ question }) {
   const [viewType, setViewType] = useState('gallery');
@@ -39,7 +32,7 @@ export default function IconSCQVisualization({ question }) {
     const pieItem = data.pieData[i];
     return {
       ...img,
-      url: resolveUrl(img.url),
+      url: resolveImageUrl(img.url),
       label: img.label || `Option ${i + 1}`,
       count: pieItem?.value || 0,
       percentage: pieItem?.percentage || 0,
