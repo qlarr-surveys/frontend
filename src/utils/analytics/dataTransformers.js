@@ -40,7 +40,8 @@ export const transformSCQData = (question) => {
 // Transform MCQ data for bar charts
 export const transformMCQData = (question) => {
   const { options, responses } = question;
-  const freq = calculateMCQFrequency(responses, options);
+  const answerIds = options.map((_, i) => `A${i + 1}`);
+  const freq = calculateMCQFrequency(responses, answerIds);
 
   const avgSelections = responses.length > 0
     ? (responses.reduce((sum, r) => sum + r.length, 0) / responses.length).toFixed(1)
@@ -48,7 +49,7 @@ export const transformMCQData = (question) => {
 
   return {
     barData: freq.map((item, i) => ({
-      name: item.option,
+      name: options[answerIds.indexOf(item.option)] || item.option,
       count: item.count,
       percentage: item.percentage,
       fill: getChartColor(i),
