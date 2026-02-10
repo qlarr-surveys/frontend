@@ -12,6 +12,14 @@ import {
   detectOutliers,
 } from './calculations';
 import { getChartColor, NPS_COLORS, LIKERT_COLORS } from './colors';
+import { BACKEND_BASE_URL } from '~/constants/networking';
+
+// Resolve relative API image URLs to full URLs
+const resolveImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return BACKEND_BASE_URL + url.replace(/^\//, '');
+};
 
 // Transform SCQ data for pie/bar charts
 export const transformSCQData = (question) => {
@@ -482,6 +490,90 @@ export const transformImageMCQData = (question) => {
   };
 };
 
+// Match short response codes (e.g. "A1") to images with prefixed IDs (e.g. "Q370kykA1")
+const resolveIconImage = (images, responseValue) => {
+  if (!images || !responseValue) return null;
+  return images.find((img) => img.id === responseValue)
+    || images.find((img) => img.id.endsWith(responseValue))
+    || null;
+};
+
+// Transform Icon SCQ data for pie/bar charts with icon support
+export const transformIconSCQData = (question) => {
+  const { responses } = question;
+  const images = question.images || [];
+  const frequency = calculateFrequency(responses);
+
+  const mapItem = (item, i) => {
+    const image = resolveIconImage(images, item.value);
+    return {
+      name: image?.label || `Option ${i + 1}`,
+      value: item.count,
+      count: item.count,
+      percentage: item.percentage,
+      iconUrl: resolveImageUrl(image?.url),
+      fill: getChartColor(i),
+    };
+  };
+
+  const pieData = frequency.map(mapItem);
+
+  return {
+    pieData,
+    barData: pieData,
+    total: responses.length,
+    mode: pieData[0]?.name,
+    modeCount: frequency[0]?.count,
+  };
+};
+
+// Transform Icon MCQ data for bar charts with icon support
+export const transformIconMCQData = (question) => {
+  const { responses } = question;
+  const images = question.images || [];
+  const options = question.options || [];
+  const answerIds = options.length > 0
+    ? options.map((_, i) => `A${i + 1}`)
+    : images.map((_, i) => `A${i + 1}`);
+  const freq = calculateMCQFrequency(responses, answerIds);
+
+  const avgSelections = responses.length > 0
+    ? (responses.reduce((sum, r) => sum + r.length, 0) / responses.length).toFixed(1)
+    : 0;
+
+  return {
+    barData: freq.map((item, i) => {
+      const image = resolveIconImage(images, item.option);
+      return {
+        name: image?.label || `Option ${i + 1}`,
+        count: item.count,
+        percentage: item.percentage,
+        iconUrl: resolveImageUrl(image?.url),
+        fill: getChartColor(i),
+      };
+    }),
+    total: responses.length,
+    avgSelections,
+  };
+};
+
+// Transform Icon Matrix SCQ data (SCQ_ICON_ARRAY) — heatmap with icon column headers
+export const transformIconMatrixSCQData = (question) => {
+  const baseData = transformMatrixSCQData(question);
+  const images = question.images || [];
+
+  const columnsWithIcons = baseData.columns.map((col) => {
+    const image = resolveIconImage(images, col);
+    return {
+      key: col,
+      label: image?.label || col,
+      iconUrl: resolveImageUrl(image?.url),
+    };
+  });
+
+  return { ...baseData, columnsWithIcons };
+};
+
 // Transform File Upload data
 export const transformFileUploadData = (question) => {
   const { responses } = question;
@@ -567,6 +659,9 @@ export const transformQuestionData = (question) => {
     IMAGE_RANKING: transformImageRankingData,
     IMAGE_SCQ: transformImageSCQData,
     IMAGE_MCQ: transformImageMCQData,
+    ICON_SCQ: transformIconSCQData,
+    ICON_MCQ: transformIconMCQData,
+    SCQ_ICON_ARRAY: transformIconMatrixSCQData,
     FILE_UPLOAD: transformFileUploadData,
     SIGNATURE: transformSignatureData,
     PHOTO_CAPTURE: transformPhotoCaptureData,

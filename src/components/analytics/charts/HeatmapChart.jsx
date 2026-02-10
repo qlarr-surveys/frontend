@@ -9,9 +9,12 @@ export default function HeatmapChart({
   showValues = true,
   colorScale = { low: '#dbeafe', high: '#1d4ed8' },
 }) {
+  // Resolve column key (supports both string and {key, label, iconUrl} objects)
+  const colKey = (col) => (typeof col === 'object' ? col.key : col);
+
   // Find max value for color scaling
   const maxValue = Math.max(
-    ...data.flatMap((row) => columns.map((col) => row[col] || 0))
+    ...data.flatMap((row) => columns.map((col) => row[colKey(col)] || 0))
   );
 
   const getCellColor = (value) => {
@@ -38,22 +41,33 @@ export default function HeatmapChart({
               color: '#374151',
               backgroundColor: '#f9fafb'
             }}></th>
-            {columns.map((col, i) => (
-              <th
-                key={i}
-                style={{
-                  padding: 8,
-                  textAlign: 'center',
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: '#374151',
-                  backgroundColor: '#f9fafb',
-                  minWidth: cellSize
-                }}
-              >
-                {col}
-              </th>
-            ))}
+            {columns.map((col, i) => {
+              const label = typeof col === 'object' ? col.label : col;
+              const iconUrl = typeof col === 'object' ? col.iconUrl : null;
+              return (
+                <th
+                  key={i}
+                  style={{
+                    padding: 8,
+                    textAlign: 'center',
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: '#374151',
+                    backgroundColor: '#f9fafb',
+                    minWidth: cellSize
+                  }}
+                >
+                  {iconUrl && (
+                    <img
+                      src={iconUrl}
+                      alt={label}
+                      style={{ width: 24, height: 24, objectFit: 'contain', display: 'block', margin: '0 auto 4px' }}
+                    />
+                  )}
+                  {label}
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody>
@@ -70,7 +84,7 @@ export default function HeatmapChart({
                 {rowData.row}
               </td>
               {columns.map((col, colIndex) => {
-                const value = rowData[col] || 0;
+                const value = rowData[colKey(col)] || 0;
                 return (
                   <td
                     key={colIndex}

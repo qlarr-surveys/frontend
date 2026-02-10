@@ -16,6 +16,9 @@ import AutocompleteVisualization from './visualizations/AutocompleteVisualizatio
 import ImageRankingVisualization from './visualizations/ImageRankingVisualization';
 import ImageSCQVisualization from './visualizations/ImageSCQVisualization';
 import ImageMCQVisualization from './visualizations/ImageMCQVisualization';
+import IconSCQVisualization from './visualizations/IconSCQVisualization';
+import IconMCQVisualization from './visualizations/IconMCQVisualization';
+import IconMatrixSCQVisualization from './visualizations/IconMatrixSCQVisualization';
 import FileUploadVisualization from './visualizations/FileUploadVisualization';
 import SignatureVisualization from './visualizations/SignatureVisualization';
 import MediaCaptureVisualization from './visualizations/MediaCaptureVisualization';
@@ -47,11 +50,11 @@ const QUESTION_TYPE_MAP = {
   MULTIPLE_TEXT: MultipleTextVisualization,
   AUTOCOMPLETE: AutocompleteVisualization,
   IMAGE_RANKING: ImageRankingVisualization,
-  ICON_SCQ: SCQVisualization,
-  ICON_MCQ: MCQVisualization,
+  ICON_SCQ: IconSCQVisualization,
+  ICON_MCQ: IconMCQVisualization,
   SCQ_ARRAY: MatrixSCQVisualization,
   MCQ_ARRAY: MatrixMCQVisualization,
-  SCQ_ICON_ARRAY: MatrixSCQVisualization,
+  SCQ_ICON_ARRAY: IconMatrixSCQVisualization,
   IMAGE_SCQ: ImageSCQVisualization,
   IMAGE_MCQ: ImageMCQVisualization,
   FILE_UPLOAD: FileUploadVisualization,
