@@ -14,7 +14,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const token = TokenService.getAuthToken();
-    if (config.url !== REFRESH_URL && config.headers != token) {
+    if (config.url !== REFRESH_URL && token) {
       config.headers["Authorization"] = "Bearer " + token;
     } else {
       delete config.headers["Authorization"];
