@@ -52,6 +52,7 @@ instance.interceptors.response.use(
 
         return instance(originalConfig);
       } catch (_error) {
+        TokenService.removeSession();
         window.location.href = "/login";
         // return Promise.reject(_error);
       }

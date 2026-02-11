@@ -7,6 +7,7 @@ import { buildResourceUrl } from "~/networking/common";
 import styles from "./ImageMcq.module.css";
 import { setDirty } from "~/state/templateState";
 import { rtlLanguage } from "~/utils/common";
+import Content from '~/components/run/Content';
 
 function ImageMcq(props) {
   const lang = useSelector((state) => {
@@ -66,7 +67,7 @@ function ImageMcqItem(props) {
       valueChange({
         componentCode: props.parentCode,
         value: parentValue,
-      })
+      }),
     );
     dispatch(setDirty(props.option.qualifiedCode));
     dispatch(setDirty(props.parentCode));
@@ -108,7 +109,15 @@ function ImageMcqItem(props) {
           />
         </div>
       </Box>
-      {!props.hideText && <Box>{props.option.content?.label}</Box>}
+      {!props.hideText && (
+        <Content
+          customStyle={`
+                        text-align: center;
+                        margin-top: 8px;
+                      `}
+          content={props.option.content?.label}
+        />
+      )}
     </Box>
   );
 }
