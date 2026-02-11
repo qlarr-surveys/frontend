@@ -95,13 +95,14 @@ export const transformNPSData = (question) => {
 // Transform Ranking data for bar charts
 export const transformRankingData = (question) => {
   const { options, responses } = question;
-  const rankings = calculateRankingAverages(responses, options);
+  const parsed = responses.map((r) => Array.isArray(r) ? r : (() => { try { return JSON.parse(r); } catch { return []; } })());
+  const rankings = calculateRankingAverages(parsed, options);
 
   // Calculate rank distribution for stacked chart
   const rankDistribution = options.map((opt) => {
     const data = { option: opt };
     for (let rank = 1; rank <= options.length; rank++) {
-      data[`Rank ${rank}`] = responses.filter((r) => r.indexOf(opt) === rank - 1).length;
+      data[`Rank ${rank}`] = parsed.filter((r) => r.indexOf(opt) === rank - 1).length;
     }
     return data;
   });
@@ -417,8 +418,13 @@ export const transformAutocompleteData = transformSCQData;
 // Transform Image Ranking data
 export const transformImageRankingData = (question) => {
   const { images, responses } = question;
-  const options = images.map((img) => img.id);
-  const rankings = calculateRankingAverages(responses, options);
+  const options = images.map((img) => img.label);
+  const parsed = responses.map((r) => {
+    if (Array.isArray(r)) return r;
+    const entries = Object.entries(r);
+    return entries.sort((a, b) => a[1] - b[1]).map(([key]) => key);
+  });
+  const rankings = calculateRankingAverages(parsed, options);
 
   const rankedImages = rankings.map((item, i) => {
     const image = resolveIconImage(images, item.option);

@@ -118,7 +118,15 @@ export const calculateRankingAverages = (rankings, options) => {
     counts[opt] = 0;
   });
 
-  rankings.forEach((ranking) => {
+  const parsed = rankings.map((ranking) => {
+    if (Array.isArray(ranking)) return ranking;
+    if (typeof ranking === 'string') {
+      try { return JSON.parse(ranking); } catch { return []; }
+    }
+    return [];
+  });
+
+  parsed.forEach((ranking) => {
     ranking.forEach((opt, index) => {
       totals[opt] += index + 1; // 1-based ranking
       counts[opt]++;
@@ -128,8 +136,8 @@ export const calculateRankingAverages = (rankings, options) => {
   return options.map((opt) => ({
     option: opt,
     averageRank: counts[opt] > 0 ? Math.round((totals[opt] / counts[opt]) * 100) / 100 : 0,
-    firstPlaceCount: rankings.filter((r) => r[0] === opt).length,
-    lastPlaceCount: rankings.filter((r) => r[r.length - 1] === opt).length,
+    firstPlaceCount: parsed.filter((r) => r[0] === opt).length,
+    lastPlaceCount: parsed.filter((r) => r[r.length - 1] === opt).length,
   })).sort((a, b) => a.averageRank - b.averageRank);
 };
 
