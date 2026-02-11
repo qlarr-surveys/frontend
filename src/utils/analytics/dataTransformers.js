@@ -629,14 +629,23 @@ export const transformIconMatrixMCQData = (question) => {
 // Transform File Upload data
 export const transformFileUploadData = (question) => {
   const { responses } = question;
-  const uploaded = responses.filter((r) => r && r.uploaded).length;
+  const extCounts = {};
 
-  return {
-    completionRate: responses.length > 0 ? Math.round((uploaded / responses.length) * 100) : 0,
-    uploaded,
-    notUploaded: responses.length - uploaded,
-    total: responses.length,
-  };
+  responses.forEach((r) => {
+    if (r?.filename) {
+      const ext = r.filename.split('.').pop().toLowerCase();
+      extCounts[ext] = (extCounts[ext] || 0) + 1;
+    }
+  });
+
+  const total = responses.length;
+  return Object.entries(extCounts)
+    .map(([name, count]) => ({
+      name,
+      count,
+      percentage: total > 0 ? Math.round((count / total) * 100) : 0,
+    }))
+    .sort((a, b) => b.count - a.count);
 };
 
 // Transform Signature data
