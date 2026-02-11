@@ -33,7 +33,6 @@ export default function ImageMCQVisualization({ question }) {
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         <StatsRow stats={stats} columns={4} />
         <ImageGallery images={galleryImages} columns={4} showLabels={true} showStats={true} />
-        <HorizontalBarChart data={data.barData} height={Math.max(300, data.barData.length * 50)} />
         <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 2 }}>
           <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
             Selection Frequency

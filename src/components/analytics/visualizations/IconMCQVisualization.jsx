@@ -19,7 +19,7 @@ export default function IconMCQVisualization({ question }) {
   ];
 
   const galleryImages = images.map((img, i) => {
-    const barItem = data.barData[i];
+    const barItem = data.barData.find((d) => d.name === img.label);
     return {
       ...img,
       url: resolveImageUrl(img.url),
@@ -49,27 +49,12 @@ export default function IconMCQVisualization({ question }) {
 
         <ImageGallery images={galleryImages} columns={4} showLabels={true} showStats={true} />
 
-        <HorizontalBarChart data={data.barData} height={Math.max(300, data.barData.length * 50)} />
 
         <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 2 }}>
           <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
             Selection Frequency
           </Typography>
           <IconLegend items={data.barData} />
-        </Box>
-
-        <Box>
-          <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
-            Option Breakdown
-          </Typography>
-          <DataTable
-            data={tableData}
-            columns={tableColumns}
-            searchable={data.barData.length > 10}
-            paginated={data.barData.length > 20}
-            rowsPerPage={20}
-            emptyMessage="No selection data available"
-          />
         </Box>
       </Box>
     </ChartContainer>

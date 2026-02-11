@@ -484,7 +484,9 @@ export const transformImageSCQData = (question) => {
 // Transform Image MCQ data
 export const transformImageMCQData = (question) => {
   const { images, responses } = question;
-  const options = images.map((img) => img.id);
+  const options = question.options?.length > 0
+    ? question.options
+    : images.map((img) => img.label);
   const freq = calculateMCQFrequency(responses, options);
 
   return {
@@ -547,10 +549,10 @@ export const transformIconMCQData = (question) => {
   const { responses } = question;
   const images = question.images || [];
   const options = question.options || [];
-  const answerIds = options.length > 0
-    ? options.map((_, i) => `A${i + 1}`)
-    : images.map((_, i) => `A${i + 1}`);
-  const freq = calculateMCQFrequency(responses, answerIds);
+  const optionKeys = options.length > 0
+    ? options
+    : images.map((img) => img.label);
+  const freq = calculateMCQFrequency(responses, optionKeys);
 
   const avgSelections = responses.length > 0
     ? (responses.reduce((sum, r) => sum + r.length, 0) / responses.length).toFixed(1)
