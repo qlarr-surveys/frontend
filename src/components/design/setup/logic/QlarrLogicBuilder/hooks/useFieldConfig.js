@@ -7,31 +7,7 @@ import {
 } from '../config/fieldTypes';
 import { OPERATORS, getOperatorsForFieldType } from '../config/operators';
 import { accessibleDependencies } from '~/utils/design/access/dependencies';
-
-/**
- * Strip HTML tags from a string
- */
-function stripTags(html) {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  const text = div.textContent || div.innerText || '';
-  div.innerHTML = '';
-  return text;
-}
-
-/**
- * Check if code represents a question
- */
-function isQuestion(code) {
-  return code.startsWith('Q');
-}
-
-/**
- * Check if code represents a group
- */
-function isGroup(code) {
-  return code.startsWith('G');
-}
+import { isGroup, isQuestion, stripTags } from '~/utils/design/utils';
 
 /**
  * Build field definitions from survey state
@@ -234,7 +210,6 @@ function buildOptions(component, state, mainLang) {
   }
 
   return component.children
-    .filter((child) => !['all', 'none', 'other'].includes(child.type))
     .map((child) => {
       const childState = state[child.qualifiedCode];
       const childLabel = stripTags(childState?.content?.[mainLang]?.label || '');
