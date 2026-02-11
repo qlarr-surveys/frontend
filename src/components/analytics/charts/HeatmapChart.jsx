@@ -4,6 +4,7 @@ export default function HeatmapChart({
   data,
   rows,
   columns,
+  rowsWithIcons,
   height = 'auto',
   cellSize = 50,
   showValues = true,
@@ -11,6 +12,13 @@ export default function HeatmapChart({
 }) {
   // Resolve column key (supports both string and {key, label, iconUrl} objects)
   const colKey = (col) => (typeof col === 'object' ? col.key : col);
+
+  // Resolve row display info from rowsWithIcons (if provided)
+  const getRowInfo = (rowKey) => {
+    if (!rowsWithIcons) return { label: rowKey, iconUrl: null };
+    const found = rowsWithIcons.find((r) => r.key === rowKey);
+    return found || { label: rowKey, iconUrl: null };
+  };
 
   // Find max value for color scaling
   const maxValue = Math.max(
@@ -57,14 +65,16 @@ export default function HeatmapChart({
                     minWidth: cellSize
                   }}
                 >
-                  {iconUrl && (
+                  {iconUrl ? (
                     <img
                       src={iconUrl}
                       alt={label}
-                      style={{ width: 24, height: 24, objectFit: 'contain', display: 'block', margin: '0 auto 4px' }}
+                      title={label}
+                      style={{ width: 40, height: 40, objectFit: 'contain', display: 'block', margin: '0 auto' }}
                     />
+                  ) : (
+                    label
                   )}
-                  {label}
                 </th>
               );
             })}
@@ -81,7 +91,23 @@ export default function HeatmapChart({
                 backgroundColor: '#f9fafb',
                 whiteSpace: 'nowrap'
               }}>
-                {rowData.row}
+                {(() => {
+                  const rowInfo = getRowInfo(rowData.row);
+                  return (
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      {rowInfo.iconUrl ? (
+                        <img
+                          src={rowInfo.iconUrl}
+                          alt={rowInfo.label}
+                          title={rowInfo.label}
+                          style={{ width: 40, height: 40, objectFit: 'contain', flexShrink: 0 }}
+                        />
+                      ) : (
+                        rowInfo.label
+                      )}
+                    </span>
+                  );
+                })()}
               </td>
               {columns.map((col, colIndex) => {
                 const value = rowData[colKey(col)] || 0;

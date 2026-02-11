@@ -31,7 +31,7 @@ export default function ImageSCQVisualization({ question }) {
 
   // Prepare gallery data with stats
   const galleryImages = question.images.map((img, i) => {
-    const pieItem = data.pieData.find((p) => p.imageId === img.id) || data.pieData[i];
+    const pieItem = data.pieData.find((p) => p.imageId === img.id);
     return {
       ...img,
       url: resolveImageUrl(img.url),

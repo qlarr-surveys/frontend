@@ -19,6 +19,7 @@ import ImageMCQVisualization from './visualizations/ImageMCQVisualization';
 import IconSCQVisualization from './visualizations/IconSCQVisualization';
 import IconMCQVisualization from './visualizations/IconMCQVisualization';
 import IconMatrixSCQVisualization from './visualizations/IconMatrixSCQVisualization';
+import IconMatrixMCQVisualization from './visualizations/IconMatrixMCQVisualization';
 import FileUploadVisualization from './visualizations/FileUploadVisualization';
 import SignatureVisualization from './visualizations/SignatureVisualization';
 import MediaCaptureVisualization from './visualizations/MediaCaptureVisualization';
@@ -55,6 +56,7 @@ const QUESTION_TYPE_MAP = {
   SCQ_ARRAY: MatrixSCQVisualization,
   MCQ_ARRAY: MatrixMCQVisualization,
   SCQ_ICON_ARRAY: IconMatrixSCQVisualization,
+  MCQ_ICON_ARRAY: IconMatrixMCQVisualization,
   IMAGE_SCQ: ImageSCQVisualization,
   IMAGE_MCQ: ImageMCQVisualization,
   FILE_UPLOAD: FileUploadVisualization,
@@ -66,7 +68,16 @@ const QUESTION_TYPE_MAP = {
 };
 
 export default function QuestionCard({ question }) {
-  const VisualizationComponent = QUESTION_TYPE_MAP[question.type];
+  let VisualizationComponent = QUESTION_TYPE_MAP[question.type];
+
+  // Auto-upgrade matrix visualizations to icon variants when images are available
+  if (question.images?.length > 0) {
+    if (VisualizationComponent === MatrixSCQVisualization) {
+      VisualizationComponent = IconMatrixSCQVisualization;
+    } else if (VisualizationComponent === MatrixMCQVisualization) {
+      VisualizationComponent = IconMatrixMCQVisualization;
+    }
+  }
 
   if (!VisualizationComponent) {
     return (

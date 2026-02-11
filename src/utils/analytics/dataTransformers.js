@@ -451,21 +451,33 @@ export const transformImageRankingData = (question) => {
 export const transformImageSCQData = (question) => {
   const { images, responses } = question;
   const frequency = calculateFrequency(responses);
+  const total = responses.length;
+
+  // Build lookup: imageId -> frequency entry, bridging short codes ("A2") to full IDs ("Q309vcaA2")
+  const freqByImageId = {};
+  frequency.forEach((item) => {
+    const image = resolveIconImage(images, item.value);
+    if (image) {
+      freqByImageId[image.id] = item;
+    }
+  });
 
   return {
-    pieData: frequency.map((item, i) => {
-      const image = resolveIconImage(images, item.value);
+    pieData: images.map((img, i) => {
+      const freq = freqByImageId[img.id];
+      const count = freq?.count || 0;
+      const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
       return {
-        name: image?.label || `Image ${i + 1}`,
-        value: item.count,
-        percentage: item.percentage,
-        imageUrl: resolveImageUrl(image?.url),
-        imageId: image?.id,
+        name: img.label || `Image ${i + 1}`,
+        value: count,
+        percentage,
+        imageUrl: resolveImageUrl(img.url),
+        imageId: img.id,
         fill: getChartColor(i),
       };
-    }),
+    }).sort((a, b) => b.value - a.value),
     images,
-    total: responses.length,
+    total,
   };
 };
 
@@ -492,11 +504,12 @@ export const transformImageMCQData = (question) => {
   };
 };
 
-// Match short response codes (e.g. "A1") to images with prefixed IDs (e.g. "Q370kykA1")
+// Match response codes or labels to images — tries ID exact, ID suffix, then label match
 const resolveIconImage = (images, responseValue) => {
   if (!images || !responseValue) return null;
   return images.find((img) => img.id === responseValue)
     || images.find((img) => img.id.endsWith(responseValue))
+    || images.find((img) => img.label === responseValue)
     || null;
 };
 
@@ -559,7 +572,7 @@ export const transformIconMCQData = (question) => {
   };
 };
 
-// Transform Icon Matrix SCQ data (SCQ_ICON_ARRAY) — heatmap with icon column headers
+// Transform Icon Matrix SCQ data (SCQ_ICON_ARRAY) — heatmap with icon column and row headers
 export const transformIconMatrixSCQData = (question) => {
   const baseData = transformMatrixSCQData(question);
   const images = question.images || [];
@@ -573,7 +586,42 @@ export const transformIconMatrixSCQData = (question) => {
     };
   });
 
-  return { ...baseData, columnsWithIcons };
+  const rowsWithIcons = baseData.rows.map((row) => {
+    const image = resolveIconImage(images, row);
+    return {
+      key: row,
+      label: image?.label || row,
+      iconUrl: resolveImageUrl(image?.url),
+    };
+  });
+
+  return { ...baseData, columnsWithIcons, rowsWithIcons };
+};
+
+// Transform Icon Matrix MCQ data (MCQ_ICON_ARRAY) — heatmap with icon column and row headers
+export const transformIconMatrixMCQData = (question) => {
+  const baseData = transformMatrixMCQData(question);
+  const images = question.images || [];
+
+  const columnsWithIcons = baseData.columns.map((col) => {
+    const image = resolveIconImage(images, col);
+    return {
+      key: col,
+      label: image?.label || col,
+      iconUrl: resolveImageUrl(image?.url),
+    };
+  });
+
+  const rowsWithIcons = baseData.rows.map((row) => {
+    const image = resolveIconImage(images, row);
+    return {
+      key: row,
+      label: image?.label || row,
+      iconUrl: resolveImageUrl(image?.url),
+    };
+  });
+
+  return { ...baseData, columnsWithIcons, rowsWithIcons };
 };
 
 // Transform File Upload data

@@ -33,6 +33,7 @@ const QUESTION_TYPE_LABELS = {
   SCQ_ARRAY: 'Single Choice Array',
   MCQ_ARRAY: 'Multiple Choice Array',
   SCQ_ICON_ARRAY: 'Icon Single Choice Array',
+  MCQ_ICON_ARRAY: 'Icon Multiple Choice Array',
   IMAGE_RANKING: 'Image Ranking',
   IMAGE_SCQ: 'Image Single Choice',
   IMAGE_MCQ: 'Image Multiple Choice',

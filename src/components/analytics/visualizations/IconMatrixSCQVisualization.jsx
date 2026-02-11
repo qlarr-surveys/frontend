@@ -33,6 +33,7 @@ export default function IconMatrixSCQVisualization({ question }) {
           data={data.heatmapData}
           rows={data.rows}
           columns={data.columnsWithIcons}
+          rowsWithIcons={data.rowsWithIcons}
           cellSize={60}
           showValues={true}
         />
@@ -42,16 +43,19 @@ export default function IconMatrixSCQVisualization({ question }) {
             Row Averages
           </Typography>
           <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 2 }}>
-            {data.rowAverages.map((row, i) => (
-              <Box key={i} sx={{ textAlign: 'center' }}>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  {row.row}
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
-                  {row.average}
-                </Typography>
-              </Box>
-            ))}
+            {data.rowAverages.map((row, i) => {
+              const rowInfo = data.rowsWithIcons?.find((r) => r.key === row.row);
+              return (
+                <Box key={i} sx={{ textAlign: 'center' }}>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    {rowInfo?.label || row.row}
+                  </Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
+                    {row.average}
+                  </Typography>
+                </Box>
+              );
+            })}
           </Box>
         </Box>
       </Box>

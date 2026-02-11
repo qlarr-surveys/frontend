@@ -17,7 +17,7 @@ export default function ImageMCQVisualization({ question }) {
   ];
 
   const galleryImages = question.images.map((img, i) => {
-    const barItem = data.barData.find((b) => b.imageId === img.id) || data.barData[i];
+    const barItem = data.barData.find((b) => b.imageId === img.id);
     return {
       ...img,
       url: resolveImageUrl(img.url),
