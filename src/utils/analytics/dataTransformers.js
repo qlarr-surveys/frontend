@@ -657,7 +657,7 @@ export const transformFileUploadData = (question) => {
 // Transform Signature data
 export const transformSignatureData = (question) => {
   const { responses } = question;
-  const signed = responses.filter((r) => r.signed).length;
+  const signed = responses.filter((r) => r === true).length;
 
   return {
     completionRate: responses.length > 0 ? Math.round((signed / responses.length) * 100) : 0,

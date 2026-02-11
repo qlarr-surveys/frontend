@@ -1,13 +1,20 @@
 import ChartContainer from '../common/ChartContainer';
-import StatCard from '../common/StatCard';
+import { StatsRow } from '../common/StatCard';
 import { transformSignatureData } from '~/utils/analytics/dataTransformers';
 
 export default function SignatureVisualization({ question }) {
   const data = transformSignatureData(question);
 
+  const stats = [
+    { label: 'Total Responses', value: data.total },
+    { label: 'Signed', value: data.signed },
+    { label: 'Unsigned', value: data.unsigned },
+    { label: 'Completion Rate', value: `${data.completionRate}%` },
+  ];
+
   return (
     <ChartContainer>
-      <StatCard label="Signatures Collected" value={data.signed} color="green" />
+      <StatsRow stats={stats} columns={4} />
     </ChartContainer>
   );
 }
