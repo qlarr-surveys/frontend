@@ -8,6 +8,7 @@ import { buildResourceUrl } from "~/networking/common";
 import { useSelector } from "react-redux";
 import { setDirty } from "~/state/templateState";
 import { rtlLanguage } from "~/utils/common";
+import Content from '~/components/run/Content';
 
 function ImageRanking(props) {
   const values = useSelector((state) => {
@@ -155,7 +156,15 @@ function ImageRankingItem(props) {
           </div>
         )}
       </Box>
-      {!props.hideText && <Box>{props.option.content?.label}</Box>}
+     {!props.hideText && (
+             <Content
+               customStyle={`
+                             text-align: center;
+                             margin-top: 8px;
+                           `}
+               content={props.option.content?.label}
+             />
+           )}
     </Box>
   );
 }
