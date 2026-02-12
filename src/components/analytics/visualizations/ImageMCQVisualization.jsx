@@ -10,9 +10,9 @@ export default function ImageMCQVisualization({ question }) {
   const data = transformImageMCQData(question);
 
   const stats = [
-    { label: 'Total Respondents', value: data.total, color: 'blue' },
-    { label: 'Avg Selections', value: data.avgSelections, color: 'purple' },
-    { label: 'Most Popular', value: data.barData[0]?.name || '-', color: 'green' },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
+    { label: 'Most Popular', value: data.barData[0]?.name || '-', color: 'purple' },
     { label: 'Images', value: question.images.length, color: 'gray' },
   ];
 

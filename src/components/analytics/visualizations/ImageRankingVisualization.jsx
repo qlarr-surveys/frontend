@@ -12,13 +12,13 @@ export default function ImageRankingVisualization({ question }) {
   const bottomItem = data.rankedImages[data.rankedImages.length - 1];
 
   const stats = [
-    { label: 'Total Responses', value: data.total, color: 'blue' },
-    { label: 'Images Ranked', value: question.images.length, color: 'purple' },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
     {
       label: 'Most Preferred',
       value: topItem?.name || '-',
       description: `Avg rank: ${topItem?.averageRank}`,
-      color: 'green',
+      color: 'purple',
     },
     {
       label: 'Least Preferred',

@@ -9,9 +9,9 @@ export default function MCQVisualization({ question }) {
   const data = transformMCQData(question);
 
   const stats = [
-    { label: 'Total Respondents', value: data.total, color: 'blue' },
-    { label: 'Avg Selections', value: data.avgSelections, color: 'purple' },
-    { label: 'Most Popular', value: data.barData[0]?.name || '-', color: 'green' },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
+    { label: 'Most Popular', value: data.barData[0]?.name || '-', color: 'purple' },
     { label: 'Options', value: question.options.length, color: 'gray' },
   ];
 
@@ -32,10 +32,6 @@ export default function MCQVisualization({ question }) {
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Stats Row */}
         <StatsRow stats={stats} columns={4} />
-
-        {/* Bar Chart */}
-        <HorizontalBarChart data={data.barData} height={Math.max(300, data.barData.length * 50)} />
-
         {/* Option Breakdown Table */}
         <Box>
           <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>

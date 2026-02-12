@@ -157,7 +157,7 @@ function AnalyticsSurvey() {
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
             {QUESTION_TYPE_LABELS[question.type] || question.type}
           </Typography>
-          <QuestionCard question={question} />
+          <QuestionCard question={{ ...question, totalResponses: data.totalResponses }} />
         </Paper>
       ))}
     </Box>

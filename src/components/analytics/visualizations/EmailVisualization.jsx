@@ -10,15 +10,15 @@ export default function EmailVisualization({ question }) {
   const data = transformEmailData(question);
 
   const stats = [
-    { label: 'Total Emails', value: data.total, color: 'blue' },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
     { label: 'Unique Domains', value: data.uniqueDomains, color: 'purple' },
     { label: 'Invalid Emails', value: data.invalidCount, color: 'red' },
-    { label: 'Duplicate Emails', value: data.duplicateCount, color: 'orange' },
     {
       label: 'Top Domain',
       value: data.domainData[0]?.name || '-',
       description: `${data.domainData[0]?.count || 0} emails`,
-      color: 'green',
+      color: 'gray',
     },
   ];
 

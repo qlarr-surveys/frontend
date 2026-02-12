@@ -6,10 +6,10 @@ export default function SignatureVisualization({ question }) {
   const data = transformSignatureData(question);
 
   const stats = [
-    { label: 'Total Responses', value: data.total },
-    { label: 'Signed', value: data.signed },
-    { label: 'Unsigned', value: data.unsigned },
-    { label: 'Completion Rate', value: `${data.completionRate}%` },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Signed', value: data.signed, color: 'green' },
+    { label: 'Unsigned', value: data.unsigned, color: 'red' },
+    { label: 'Completion Rate', value: `${data.completionRate}%`, color: 'purple' },
   ];
 
   return (

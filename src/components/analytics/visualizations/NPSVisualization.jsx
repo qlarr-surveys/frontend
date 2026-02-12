@@ -39,12 +39,18 @@ export default function NPSVisualization({ question }) {
       description: `${data.detractors} responses`,
       color: 'red',
     },
+    {
+      label: 'Response Rate',
+      value: `${data.responseRate}%`,
+      description: `${data.answered} of ${data.total}`,
+      color: 'blue',
+    },
   ];
 
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={4} />
+        <StatsRow stats={stats} columns={5} />
         <NPSChart
           score={data.score}
           categoryData={data.categoryData}

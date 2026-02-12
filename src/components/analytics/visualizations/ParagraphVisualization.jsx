@@ -7,19 +7,11 @@ import { transformParagraphData } from '~/utils/analytics/dataTransformers';
 export default function ParagraphVisualization({ question }) {
   const data = transformParagraphData(question);
 
-  const mostCommon = data.frequencyData[0]?.value || '-';
-  const truncatedMostCommon = mostCommon.length > 30 ? `${mostCommon.slice(0, 30)}...` : mostCommon;
-
   const stats = [
-    { label: 'Total Responses', value: data.total, color: 'blue' },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
     { label: 'Unique Responses', value: data.uniqueCount, color: 'purple' },
     { label: 'Avg Length', value: `${data.avgLength} chars`, color: 'gray' },
-    {
-      label: 'Most Common',
-      value: truncatedMostCommon,
-      description: `${data.frequencyData[0]?.count || 0} times`,
-      color: 'green',
-    },
   ];
 
   return (

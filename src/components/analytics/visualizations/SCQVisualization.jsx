@@ -18,9 +18,9 @@ export default function SCQVisualization({ question }) {
   ];
 
   const stats = [
-    { label: 'Total Responses', value: data.total, color: 'blue' },
-    { label: 'Most Selected', value: data.mode, color: 'green' },
-    { label: 'Mode Count', value: data.modeCount, color: 'purple' },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
+    { label: 'Most Selected', value: data.mode, color: 'purple' },
     { label: 'Options', value: question.options?.length ?? 0, color: 'gray' },
   ];
 

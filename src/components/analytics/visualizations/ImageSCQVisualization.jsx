@@ -19,13 +19,13 @@ export default function ImageSCQVisualization({ question }) {
   const topChoice = data.pieData[0];
 
   const stats = [
-    { label: 'Total Responses', value: data.total, color: 'blue' },
-    { label: 'Images', value: question.images.length, color: 'purple' },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
     {
       label: 'Most Selected',
       value: topChoice?.name || '-',
       description: `${topChoice?.percentage}%`,
-      color: 'green',
+      color: 'purple',
     },
   ];
 

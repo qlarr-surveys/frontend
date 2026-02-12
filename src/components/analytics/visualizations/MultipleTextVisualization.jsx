@@ -19,9 +19,10 @@ export default function MultipleTextVisualization({ question }) {
     : 0;
 
   const stats = [
-    { label: 'Total Responses', value: data.total, color: 'blue' },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
     { label: 'Fields', value: fields.length, color: 'purple' },
-    { label: 'Avg Completion', value: `${avgCompletion}%`, color: 'green' },
+    { label: 'Avg Completion', value: `${avgCompletion}%`, color: 'gray' },
   ];
 
   const columns = fields.map((field) => ({
@@ -41,7 +42,7 @@ export default function MultipleTextVisualization({ question }) {
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={3} />
+        <StatsRow stats={stats} columns={4} />
         <DataTable
           data={tableData}
           columns={columns}

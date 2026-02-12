@@ -22,9 +22,9 @@ export default function IconSCQVisualization({ question }) {
   ];
 
   const stats = [
-    { label: 'Total Responses', value: data.total, color: 'blue' },
-    { label: 'Most Selected', value: data.mode || '-', color: 'green' },
-    { label: 'Mode Count', value: data.modeCount || 0, color: 'purple' },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
+    { label: 'Most Selected', value: data.mode || '-', color: 'purple' },
     { label: 'Options', value: images.length, color: 'gray' },
   ];
 

@@ -11,13 +11,13 @@ export default function RankingVisualization({ question }) {
   const bottomItem = data.averageRankData[data.averageRankData.length - 1];
 
   const stats = [
-    { label: 'Total Responses', value: data.total, color: 'blue' },
-    { label: 'Items Ranked', value: question.options.length, color: 'purple' },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
     {
       label: 'Most Preferred',
       value: topItem?.name || '-',
       description: `Avg rank: ${topItem?.averageRank}`,
-      color: 'green',
+      color: 'purple',
     },
     {
       label: 'Least Preferred',

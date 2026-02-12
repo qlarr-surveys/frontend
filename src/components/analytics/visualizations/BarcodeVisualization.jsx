@@ -9,14 +9,9 @@ export default function BarcodeVisualization({ question }) {
   const data = transformBarcodeData(question);
 
   const stats = [
-    { label: 'Total Scans', value: data.total, color: 'blue' },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Scanned', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
     { label: 'Unique Codes', value: data.uniqueCount, color: 'purple' },
-    {
-      label: 'Most Common',
-      value: data.frequencyData[0]?.value || '-',
-      description: `${data.frequencyData[0]?.count || 0} times`,
-      color: 'green',
-    },
   ];
 
   return (

@@ -41,18 +41,19 @@ export default function NumberVisualization({ question }) {
   // Primary stats
   const stats = [
     {
+      label: 'Responses',
+      value: `${data.answered} / ${data.total}`,
+      description: `${data.skipped} skipped`,
+      color: 'blue',
+    },
+    {
       label: 'Mean',
       value: formatNumber(data.stats.mean, { context: 'full', decimals: 2 }),
-      color: 'blue',
+      color: 'purple',
     },
     {
       label: 'Median',
       value: formatNumber(data.stats.median, { context: 'full', decimals: 2 }),
-      color: 'purple',
-    },
-    {
-      label: 'Std Dev',
-      value: formatNumber(data.stats.stdDev, { context: 'full', decimals: 2 }),
       color: 'gray',
     },
     {

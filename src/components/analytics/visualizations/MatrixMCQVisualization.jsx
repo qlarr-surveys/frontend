@@ -8,10 +8,10 @@ export default function MatrixMCQVisualization({ question }) {
   const data = transformMatrixMCQData(question);
 
   const stats = [
-    { label: 'Total Responses', value: data.total, color: 'blue' },
+    { label: 'Total Submissions', value: data.total, color: 'blue' },
+    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
     { label: 'Rows', value: data.rows.length, color: 'purple' },
-    { label: 'Columns', value: data.columns.length, color: 'gray' },
-    { label: 'Avg Selections', value: data.avgSelections, color: 'green' },
+    { label: 'Avg Selections', value: data.avgSelections, color: 'gray' },
   ];
 
   return (
