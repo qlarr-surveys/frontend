@@ -42,6 +42,37 @@ export default defineConfig(({ mode }) => {
           }),
         ],
       };
+    case "production":
+      return {
+        define: {
+          "process.env": {},
+        },
+        build: {
+          outDir: "build",
+          emptyOutDir: true,
+          manifest: true,
+          minify: true,
+          sourcemap: true,
+          target: "es2018",
+        },
+        resolve: {
+          alias: {
+            "~": path.resolve(__dirname, "src"),
+          },
+        },
+        plugins: [
+          react({
+            jsxImportSource: "@emotion/react",
+            babel: {
+              plugins: ["@emotion/babel-plugin"],
+            },
+          }),
+          legacy({
+            targets: ["Chrome >= 50"],
+          }),
+        ],
+      };
+
     case "development":
       return {
         define: {
@@ -74,16 +105,20 @@ export default defineConfig(({ mode }) => {
         define: {
           "process.env": {},
         },
-        server: {
-          port: 3000,
-        },
         build: {
           outDir: "build",
-          output: {
-            manualChunks: undefined, // Disable automatic chunk splitting
-          },
+          minify: true,
           target: "es2015",
-          polyfillDynamicImport: false,
+          rollupOptions: {
+            output: {
+              manualChunks: {
+                vendor: ["react", "react-dom", "react-router-dom"],
+                mui: ["@mui/material", "@mui/icons-material", "@mui/lab", "@mui/x-date-pickers"],
+                editor: ["@tiptap/core", "@tiptap/react", "@tiptap/starter-kit"],
+                dnd: ["react-dnd", "react-dnd-html5-backend", "react-dnd-touch-backend"],
+              },
+            },
+          },
         },
         resolve: {
           alias: {
