@@ -15,8 +15,6 @@ import { BACKEND_BASE_URL } from '~/constants/networking';
 const MAX_FREQUENCY_ITEMS = 20;
 const MAX_CHART_BAR_ITEMS = 10;
 const MAX_DOMAIN_ITEMS = 10;
-const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 // Shared helper: extract total/answered/skipped/responseRate from any question
 const getResponseMetrics = ({ responses = [], totalResponses }) => {
   const total = totalResponses ?? responses.length;
@@ -167,110 +165,6 @@ export const transformNumberData = (question) => {
   const outlierData = detectOutliers(responses);
 
   return { stats, outlierData, ...metrics };
-};
-
-// Transform Date data for timeline
-export const transformDateData = (question) => {
-  const { responses } = question;
-  const metrics = getResponseMetrics(question);
-
-  // Group by month
-  const monthCounts = {};
-  const dayOfWeekCounts = { Sun: 0, Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0 };
-
-  responses.forEach((dateStr) => {
-    const date = new Date(dateStr);
-    const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-    monthCounts[monthKey] = (monthCounts[monthKey] || 0) + 1;
-    dayOfWeekCounts[DAY_NAMES[date.getDay()]]++;
-  });
-
-  const dates = responses.map((d) => new Date(d)).sort((a, b) => a - b);
-
-  return {
-    monthData: Object.entries(monthCounts)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([month, count], i) => ({ name: month, count, fill: getChartColor(i) })),
-    dayOfWeekData: DAY_NAMES.map((day, i) => ({
-      name: day,
-      count: dayOfWeekCounts[day],
-      fill: getChartColor(i),
-    })),
-    dateRange: {
-      earliest: dates[0]?.toISOString().split('T')[0],
-      latest: dates[dates.length - 1]?.toISOString().split('T')[0],
-    },
-    ...metrics,
-  };
-};
-
-// Transform Time data for hour histogram
-export const transformTimeData = (question) => {
-  const { responses } = question;
-  const metrics = getResponseMetrics(question);
-
-  const hourCounts = Array(24).fill(0);
-  responses.forEach((timeStr) => {
-    const hour = parseInt(timeStr.split(':')[0], 10);
-    hourCounts[hour]++;
-  });
-
-  const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
-  const morning = hourCounts.slice(6, 12).reduce((a, b) => a + b, 0);
-  const afternoon = hourCounts.slice(12, 18).reduce((a, b) => a + b, 0);
-  const evening = hourCounts.slice(18, 24).reduce((a, b) => a + b, 0);
-
-  return {
-    hourData: hourCounts.map((count, hour) => ({
-      name: `${hour.toString().padStart(2, '0')}:00`,
-      count,
-      fill: getChartColor(Math.floor(hour / 6)),
-    })),
-    peakHour: `${peakHour.toString().padStart(2, '0')}:00`,
-    periodData: [
-      { name: 'Morning (6-12)', count: morning, fill: getChartColor(0) },
-      { name: 'Afternoon (12-18)', count: afternoon, fill: getChartColor(1) },
-      { name: 'Evening (18-24)', count: evening, fill: getChartColor(2) },
-    ],
-    ...metrics,
-  };
-};
-
-// Transform DateTime data for heatmap
-export const transformDateTimeData = (question) => {
-  const { responses } = question;
-  const metrics = getResponseMetrics(question);
-
-  const heatmapData = [];
-
-  // Create 7x24 matrix
-  for (let day = 0; day < 7; day++) {
-    for (let hour = 0; hour < 24; hour++) {
-      heatmapData.push({
-        day: DAY_NAMES[day],
-        hour: `${hour.toString().padStart(2, '0')}:00`,
-        count: 0,
-      });
-    }
-  }
-
-  responses.forEach((dtStr) => {
-    const date = new Date(dtStr);
-    const dayIndex = date.getDay();
-    const hour = date.getHours();
-    const index = dayIndex * 24 + hour;
-    heatmapData[index].count++;
-  });
-
-  const maxCount = Math.max(...heatmapData.map((d) => d.count));
-
-  return {
-    heatmapData: heatmapData.map((d) => ({
-      ...d,
-      intensity: maxCount > 0 ? d.count / maxCount : 0,
-    })),
-    ...metrics,
-  };
 };
 
 // Extract rows and columns from response objects when metadata is null

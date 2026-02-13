@@ -36,17 +36,3 @@ export const formatNumber = (value, options = {}) => {
 
   return value.toFixed(decimals);
 };
-
-/**
- * Format range display
- */
-export const formatRange = (min, max, context = 'full') => {
-  return `${formatNumber(min, { context })} - ${formatNumber(max, { context })}`;
-};
-
-/**
- * Format percentage
- */
-export const formatPercentage = (value, decimals = 1) => {
-  return `${value.toFixed(decimals)}%`;
-};

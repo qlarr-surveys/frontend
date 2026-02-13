@@ -1,6 +1,6 @@
 // Chart color palettes for survey visualizations
 
-export const CHART_COLORS = [
+const CHART_COLORS = [
   '#3b82f6', // blue
   '#8b5cf6', // purple
   '#22c55e', // green
@@ -26,38 +26,17 @@ export const NPS_BENCHMARK_COLORS = {
   excellent: '#15803d',        // dark green (70 to 100)
 };
 
-export const LIKERT_COLORS = {
-  veryNegative: '#ef4444',
-  negative: '#f97316',
-  neutral: '#9ca3af',
-  positive: '#84cc16',
-  veryPositive: '#22c55e',
-};
-
-export const HEATMAP_COLORS = {
+const HEATMAP_COLORS = {
   low: '#dbeafe',    // light blue
   medium: '#60a5fa', // medium blue
   high: '#1d4ed8',   // dark blue
-};
-
-export const FILE_TYPE_COLORS = {
-  pdf: '#ef4444',
-  doc: '#3b82f6',
-  docx: '#3b82f6',
-  xls: '#22c55e',
-  xlsx: '#22c55e',
-  png: '#8b5cf6',
-  jpg: '#8b5cf6',
-  jpeg: '#8b5cf6',
-  gif: '#ec4899',
-  other: '#9ca3af',
 };
 
 // Get color by index with cycling
 export const getChartColor = (index) => CHART_COLORS[index % CHART_COLORS.length];
 
 // Generate gradient colors between two colors
-export const interpolateColor = (color1, color2, factor) => {
+const interpolateColor = (color1, color2, factor) => {
   const hex = (c) => parseInt(c, 16);
   const r1 = hex(color1.slice(1, 3));
   const g1 = hex(color1.slice(3, 5));

@@ -1,11 +1,9 @@
 import { Box, Typography } from '@mui/material';
-import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import ImageGallery from '../common/ImageGallery';
 import IconLegend from '../common/IconLegend';
-import DataTable from '../common/DataTable';
 import { transformIconMCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
 
 export default function IconMCQVisualization({ question }) {

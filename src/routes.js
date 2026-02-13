@@ -47,6 +47,5 @@ export const routes = {
   editUser: "/edit-user/:userId",
   profile: "/profile",
   createSurvey: "/create-survey",
-  dashboard1: "",
   page404: "*",
 };

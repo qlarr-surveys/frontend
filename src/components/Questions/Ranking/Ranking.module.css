@@ -20,10 +20,6 @@
   transition: background-color 0.2s ease;
 }
 
-.dragContainerHighlight {
-  composes: dragContainer;
-}
-
 .rankingItem {
   display: flex;
   align-items: center;
