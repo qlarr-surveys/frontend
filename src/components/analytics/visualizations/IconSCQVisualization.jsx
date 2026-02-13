@@ -5,6 +5,7 @@ import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
+import { buildBaseStats } from '../common/buildBaseStats';
 import ImageGallery from '../common/ImageGallery';
 import IconLegend from '../common/IconLegend';
 import { transformIconSCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
@@ -22,10 +23,9 @@ export default function IconSCQVisualization({ question }) {
   ];
 
   const stats = [
-    { label: 'Total Submissions', value: data.total, color: 'blue' },
-    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
-    { label: 'Most Selected', value: data.mode || '-', color: 'purple' },
-    { label: 'Options', value: images.length, color: 'gray' },
+    ...buildBaseStats(data),
+    { label: 'Most Selected', value: data.mode || '-' },
+    { label: 'Options', value: images.length },
   ];
 
   const galleryImages = images.map((img, i) => {

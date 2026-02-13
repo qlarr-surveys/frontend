@@ -4,6 +4,7 @@ import PieDonutChart from '../charts/PieDonutChart';
 import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
+import { buildBaseStats } from '../common/buildBaseStats';
 import ImageGallery from '../common/ImageGallery';
 import { transformImageSCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
 
@@ -19,13 +20,11 @@ export default function ImageSCQVisualization({ question }) {
   const topChoice = data.pieData[0];
 
   const stats = [
-    { label: 'Total Submissions', value: data.total, color: 'blue' },
-    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
+    ...buildBaseStats(data),
     {
       label: 'Most Selected',
       value: topChoice?.name || '-',
       description: `${topChoice?.percentage}%`,
-      color: 'purple',
     },
   ];
 

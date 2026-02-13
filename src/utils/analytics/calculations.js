@@ -85,29 +85,6 @@ export const calculateFrequency = (values) => {
     .sort((a, b) => b.count - a.count);
 };
 
-// Calculate histogram bins
-export const calculateHistogram = (values, binCount = 10) => {
-  if (!values || values.length === 0) return [];
-
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const binWidth = (max - min) / binCount || 1;
-
-  const bins = Array(binCount).fill(0).map((_, i) => ({
-    binStart: Math.round((min + i * binWidth) * 100) / 100,
-    binEnd: Math.round((min + (i + 1) * binWidth) * 100) / 100,
-    count: 0,
-    label: `${Math.round(min + i * binWidth)}-${Math.round(min + (i + 1) * binWidth)}`,
-  }));
-
-  values.forEach((val) => {
-    const binIndex = Math.min(Math.floor((val - min) / binWidth), binCount - 1);
-    bins[binIndex].count++;
-  });
-
-  return bins;
-};
-
 // Calculate ranking averages
 export const calculateRankingAverages = (rankings, options) => {
   const totals = {};
@@ -186,16 +163,6 @@ export const calculateMatrixData = (responses, rows, columns) => {
   return matrix;
 };
 
-// Calculate completion rate
-export const calculateCompletionRate = (responses, totalExpected) => {
-  const completed = responses.filter((r) => r && (r.signed || r.captured || r.uploaded)).length;
-  return {
-    completed,
-    total: totalExpected,
-    rate: Math.round((completed / totalExpected) * 100),
-  };
-};
-
 // Calculate email domain distribution
 export const calculateEmailDomains = (emails) => {
   const domains = {};
@@ -242,31 +209,3 @@ export const detectOutliers = (values) => {
   return { outliers, outliersCount: outliers.length };
 };
 
-// Format file size
-export const formatFileSize = (bytes) => {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};
-
-// Calculate file upload statistics
-export const calculateFileStats = (files) => {
-  const types = {};
-  let totalSize = 0;
-
-  files.forEach((file) => {
-    const ext = file.type || file.filename?.split('.').pop()?.toLowerCase() || 'other';
-    types[ext] = (types[ext] || 0) + 1;
-    totalSize += file.size || 0;
-  });
-
-  return {
-    totalFiles: files.length,
-    totalSize,
-    formattedSize: formatFileSize(totalSize),
-    avgSize: files.length > 0 ? formatFileSize(totalSize / files.length) : '0 B',
-    types: Object.entries(types)
-      .map(([type, count]) => ({ type, count, percentage: Math.round((count / files.length) * 100) }))
-      .sort((a, b) => b.count - a.count),
-  };
-};

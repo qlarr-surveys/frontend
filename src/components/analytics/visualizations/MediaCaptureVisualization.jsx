@@ -8,10 +8,10 @@ export default function MediaCaptureVisualization({ question }) {
   const data = transformMediaCaptureData(question);
 
   const stats = [
-    { label: 'Total Submissions', value: data.total, color: 'blue' },
-    { label: 'Captured', value: data.captured, color: 'green' },
-    { label: 'Not Captured', value: data.notCaptured, color: 'red' },
-    { label: 'Completion Rate', value: `${data.completionRate}%`, color: 'purple' },
+    { label: 'Total Submissions', value: data.total },
+    { label: 'Captured', value: data.captured },
+    { label: 'Not Captured', value: data.notCaptured },
+    { label: 'Completion Rate', value: `${data.completionRate}%` },
   ];
 
   return (

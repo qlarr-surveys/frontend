@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import RankingChart from '../charts/RankingChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
+import { buildBaseStats } from '../common/buildBaseStats';
 import { transformRankingData } from '~/utils/analytics/dataTransformers';
 
 export default function RankingVisualization({ question }) {
@@ -11,19 +12,16 @@ export default function RankingVisualization({ question }) {
   const bottomItem = data.averageRankData[data.averageRankData.length - 1];
 
   const stats = [
-    { label: 'Total Submissions', value: data.total, color: 'blue' },
-    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
+    ...buildBaseStats(data),
     {
       label: 'Most Preferred',
       value: topItem?.name || '-',
       description: `Avg rank: ${topItem?.averageRank}`,
-      color: 'purple',
     },
     {
       label: 'Least Preferred',
       value: bottomItem?.name || '-',
       description: `Avg rank: ${bottomItem?.averageRank}`,
-      color: 'red',
     },
   ];
 

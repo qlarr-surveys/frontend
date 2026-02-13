@@ -44,17 +44,14 @@ export default function NumberVisualization({ question }) {
       label: 'Responses',
       value: `${data.answered} / ${data.total}`,
       description: `${data.skipped} skipped`,
-      color: 'blue',
     },
     {
       label: 'Mean',
       value: formatNumber(data.stats.mean, { context: 'full', decimals: 2 }),
-      color: 'purple',
     },
     {
       label: 'Median',
       value: formatNumber(data.stats.median, { context: 'full', decimals: 2 }),
-      color: 'gray',
     },
     {
       label: 'Range',
@@ -62,7 +59,6 @@ export default function NumberVisualization({ question }) {
         data.stats.max,
         { context: 'full', decimals: 2 }
       )}`,
-      color: 'green',
     },
   ];
 

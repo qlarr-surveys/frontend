@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
+import { buildBaseStats } from '../common/buildBaseStats';
 import DataTable from '../common/DataTable';
 import NoResponsesMessage from '../common/NoResponsesMessage';
 import { transformMultipleTextData } from '~/utils/analytics/dataTransformers';
@@ -19,10 +20,9 @@ export default function MultipleTextVisualization({ question }) {
     : 0;
 
   const stats = [
-    { label: 'Total Submissions', value: data.total, color: 'blue' },
-    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
-    { label: 'Fields', value: fields.length, color: 'purple' },
-    { label: 'Avg Completion', value: `${avgCompletion}%`, color: 'gray' },
+    ...buildBaseStats(data),
+    { label: 'Fields', value: fields.length },
+    { label: 'Avg Completion', value: `${avgCompletion}%` },
   ];
 
   const columns = fields.map((field) => ({

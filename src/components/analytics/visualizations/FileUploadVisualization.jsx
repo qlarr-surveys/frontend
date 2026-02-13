@@ -8,10 +8,10 @@ export default function FileUploadVisualization({ question }) {
   const data = transformFileUploadData(question);
 
   const stats = [
-    { label: 'Total Submissions', value: data.total, color: 'blue' },
-    { label: 'Uploaded', value: data.answered, color: 'green' },
-    { label: 'Skipped', value: data.skipped, color: 'gray' },
-    { label: 'Upload Rate', value: `${data.responseRate}%`, color: 'purple' },
+    { label: 'Total Submissions', value: data.total },
+    { label: 'Uploaded', value: data.answered },
+    { label: 'Skipped', value: data.skipped },
+    { label: 'Upload Rate', value: `${data.responseRate}%` },
   ];
 
   return (

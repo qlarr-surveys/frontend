@@ -4,46 +4,7 @@ import { Box, Paper, Typography } from '@mui/material';
 import { useService } from '~/hooks/use-service';
 import LoadingDots from '~/components/common/LoadingDots';
 import QuestionCard from '~/components/analytics/QuestionCard';
-
-const QUESTION_TYPE_LABELS = {
-  SCQ: 'Single Choice',
-  SINGLECHOICEQUESTION: 'Single Choice',
-  MCQ: 'Multiple Choice',
-  MULTIPLECHOICEQUESTION: 'Multiple Choice',
-  NPS: 'Net Promoter Score',
-  NETPROMOTERSCORE: 'Net Promoter Score',
-  RANKING: 'Ranking',
-  NUMBER: 'Number',
-  NUMERIC: 'Number',
-  DATE: 'Date',
-  TIME: 'Time',
-  DATETIME: 'Date & Time',
-  DATE_TIME: 'Date & Time',
-  MATRIX_SCQ: 'Matrix (Single Choice)',
-  MATRIX_MCQ: 'Matrix (Multiple Choice)',
-  TEXT: 'Short Text',
-  SHORTTEXT: 'Short Text',
-  PARAGRAPH: 'Long Text',
-  LONGTEXT: 'Long Text',
-  EMAIL: 'Email',
-  MULTIPLE_TEXT: 'Multiple Text',
-  AUTOCOMPLETE: 'Autocomplete',
-  ICON_SCQ: 'Icon Single Choice',
-  ICON_MCQ: 'Icon Multiple Choice',
-  SCQ_ARRAY: 'Single Choice Array',
-  MCQ_ARRAY: 'Multiple Choice Array',
-  SCQ_ICON_ARRAY: 'Icon Single Choice Array',
-  MCQ_ICON_ARRAY: 'Icon Multiple Choice Array',
-  IMAGE_RANKING: 'Image Ranking',
-  IMAGE_SCQ: 'Image Single Choice',
-  IMAGE_MCQ: 'Image Multiple Choice',
-  FILE_UPLOAD: 'File Upload',
-  FILE: 'File Upload',
-  SIGNATURE: 'Signature',
-  PHOTO_CAPTURE: 'Photo Capture',
-  PHOTO: 'Photo Capture',
-  BARCODE: 'Barcode',
-};
+import { QUESTION_TYPE_LABELS } from '~/components/analytics/questionTypes';
 
 function AnalyticsSurvey() {
   const surveyService = useService('survey');

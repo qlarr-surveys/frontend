@@ -18,32 +18,27 @@ export default function NPSVisualization({ question }) {
     {
       label: 'NPS Score',
       value: data.score,
-      color: data.score >= 30 ? 'green' : data.score >= 0 ? 'yellow' : 'red',
       description: getNPSBenchmarkLabel(data.score),
     },
     {
       label: 'Promoters',
       value: `${data.promoterPct}%`,
       description: `${data.promoters} responses`,
-      color: 'green',
     },
     {
       label: 'Passives',
       value: `${data.passivePct}%`,
       description: `${data.passives} responses`,
-      color: 'yellow',
     },
     {
       label: 'Detractors',
       value: `${data.detractorPct}%`,
       description: `${data.detractors} responses`,
-      color: 'red',
     },
     {
       label: 'Response Rate',
       value: `${data.responseRate}%`,
       description: `${data.answered} of ${data.total}`,
-      color: 'blue',
     },
   ];
 

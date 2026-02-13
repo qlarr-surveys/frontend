@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import HeatmapChart from '../charts/HeatmapChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
+import { buildBaseStats } from '../common/buildBaseStats';
 import { transformMatrixSCQData } from '~/utils/analytics/dataTransformers';
 
 export default function MatrixSCQVisualization({ question }) {
@@ -14,14 +15,12 @@ export default function MatrixSCQVisualization({ question }) {
   );
 
   const stats = [
-    { label: 'Total Submissions', value: data.total, color: 'blue' },
-    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
-    { label: 'Rows', value: data.rows.length, color: 'purple' },
+    ...buildBaseStats(data),
+    { label: 'Rows', value: data.rows.length },
     {
       label: 'Highest Rated',
       value: highestRated.row || '-',
       description: `Avg: ${highestRated.average}`,
-      color: 'gray',
     },
   ];
 

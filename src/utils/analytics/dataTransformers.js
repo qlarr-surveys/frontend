@@ -3,16 +3,31 @@ import {
   calculateNPS,
   calculateStats,
   calculateFrequency,
-
   calculateRankingAverages,
   calculateMCQFrequency,
   calculateMatrixData,
   calculateEmailDomains,
-  calculateCompletionRate,
   detectOutliers,
 } from './calculations';
-import { getChartColor, NPS_COLORS, LIKERT_COLORS } from './colors';
+import { getChartColor, NPS_COLORS } from './colors';
 import { BACKEND_BASE_URL } from '~/constants/networking';
+
+const MAX_FREQUENCY_ITEMS = 20;
+const MAX_CHART_BAR_ITEMS = 10;
+const MAX_DOMAIN_ITEMS = 10;
+const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+// Shared helper: extract total/answered/skipped/responseRate from any question
+const getResponseMetrics = ({ responses = [], totalResponses }) => {
+  const total = totalResponses ?? responses.length;
+  const answered = responses.length;
+  return {
+    total,
+    answered,
+    skipped: Math.max(0, total - answered),
+    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+  };
+};
 
 // Resolve relative API image URLs to full URLs
 export const resolveImageUrl = (url) => {
@@ -21,29 +36,46 @@ export const resolveImageUrl = (url) => {
   return BACKEND_BASE_URL + url.replace(/^\//, '');
 };
 
+// Match response codes or labels to images — tries ID exact, ID suffix, then label match
+const resolveIconImage = (images, responseValue) => {
+  if (!images || !responseValue) return null;
+  return images.find((img) => img.id === responseValue)
+    || images.find((img) => img.id.endsWith(responseValue))
+    || images.find((img) => img.label === responseValue)
+    || null;
+};
+
+// Attach icon info to matrix rows and columns
+const attachIconsToMatrixData = (baseData, images) => {
+  const attachIcons = (items) => items.map((item) => {
+    const image = resolveIconImage(images, item);
+    return { key: item, label: image?.label || item, iconUrl: resolveImageUrl(image?.url) };
+  });
+  return {
+    ...baseData,
+    columnsWithIcons: attachIcons(baseData.columns),
+    rowsWithIcons: attachIcons(baseData.rows),
+  };
+};
+
 // Transform SCQ data for pie/bar charts
 export const transformSCQData = (question) => {
-  const { options, responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
   const frequency = calculateFrequency(responses);
 
   const mapItem = (item, i) => ({
     name: item.value,
     value: item.count,
     count: item.count,
-    percentage: total > 0 ? Math.round((item.count / total) * 100) : 0,
+    percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
     fill: getChartColor(i),
   });
 
   return {
     pieData: frequency.map(mapItem),
     barData: frequency.map(mapItem),
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
     mode: frequency[0]?.value,
     modeCount: frequency[0]?.count,
   };
@@ -51,37 +83,30 @@ export const transformSCQData = (question) => {
 
 // Transform MCQ data for bar charts
 export const transformMCQData = (question) => {
-  const { options, responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
-  const freq = calculateMCQFrequency(responses, options);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
+  const freq = calculateMCQFrequency(responses, question.options);
 
-  const avgSelections = answered > 0
-    ? (responses.reduce((sum, r) => sum + r.length, 0) / answered).toFixed(1)
+  const avgSelections = metrics.answered > 0
+    ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
     : 0;
 
   return {
     barData: freq.map((item, i) => ({
       name: item.option,
       count: item.count,
-      percentage: total > 0 ? Math.round((item.count / total) * 100) : 0,
+      percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
       fill: getChartColor(i),
     })),
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
     avgSelections,
   };
 };
 
 // Transform NPS data for gauge and bar charts
 export const transformNPSData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
   const nps = calculateNPS(responses);
 
   // Distribution by score (0-10)
@@ -101,19 +126,14 @@ export const transformNPSData = (question) => {
       fill: score <= 6 ? NPS_COLORS.detractor : score <= 8 ? NPS_COLORS.passive : NPS_COLORS.promoter,
     })),
     ...nps,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
   };
 };
 
 // Transform Ranking data for bar charts
 export const transformRankingData = (question) => {
-  const { options, responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { options, responses } = question;
+  const metrics = getResponseMetrics(question);
   const parsed = responses.map((r) => Array.isArray(r) ? r : (() => { try { return JSON.parse(r); } catch { return []; } })());
   const rankings = calculateRankingAverages(parsed, options);
 
@@ -135,51 +155,34 @@ export const transformRankingData = (question) => {
       fill: getChartColor(i),
     })),
     rankDistribution,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
   };
 };
 
 // Transform Number data for table view
 export const transformNumberData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
-
-  // Calculate statistics
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
   const stats = calculateStats(responses);
   const outlierData = detectOutliers(responses);
 
-  return {
-    stats,
-    outlierData,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
-  };
+  return { stats, outlierData, ...metrics };
 };
 
 // Transform Date data for timeline
 export const transformDateData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
 
   // Group by month
   const monthCounts = {};
   const dayOfWeekCounts = { Sun: 0, Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0 };
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   responses.forEach((dateStr) => {
     const date = new Date(dateStr);
     const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
     monthCounts[monthKey] = (monthCounts[monthKey] || 0) + 1;
-    dayOfWeekCounts[dayNames[date.getDay()]]++;
+    dayOfWeekCounts[DAY_NAMES[date.getDay()]]++;
   });
 
   const dates = responses.map((d) => new Date(d)).sort((a, b) => a - b);
@@ -188,7 +191,7 @@ export const transformDateData = (question) => {
     monthData: Object.entries(monthCounts)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([month, count], i) => ({ name: month, count, fill: getChartColor(i) })),
-    dayOfWeekData: dayNames.map((day, i) => ({
+    dayOfWeekData: DAY_NAMES.map((day, i) => ({
       name: day,
       count: dayOfWeekCounts[day],
       fill: getChartColor(i),
@@ -197,19 +200,14 @@ export const transformDateData = (question) => {
       earliest: dates[0]?.toISOString().split('T')[0],
       latest: dates[dates.length - 1]?.toISOString().split('T')[0],
     },
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
   };
 };
 
 // Transform Time data for hour histogram
 export const transformTimeData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
 
   const hourCounts = Array(24).fill(0);
   responses.forEach((timeStr) => {
@@ -234,28 +232,22 @@ export const transformTimeData = (question) => {
       { name: 'Afternoon (12-18)', count: afternoon, fill: getChartColor(1) },
       { name: 'Evening (18-24)', count: evening, fill: getChartColor(2) },
     ],
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
   };
 };
 
 // Transform DateTime data for heatmap
 export const transformDateTimeData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
 
   const heatmapData = [];
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   // Create 7x24 matrix
   for (let day = 0; day < 7; day++) {
     for (let hour = 0; hour < 24; hour++) {
       heatmapData.push({
-        day: dayNames[day],
+        day: DAY_NAMES[day],
         hour: `${hour.toString().padStart(2, '0')}:00`,
         count: 0,
       });
@@ -277,10 +269,7 @@ export const transformDateTimeData = (question) => {
       ...d,
       intensity: maxCount > 0 ? d.count / maxCount : 0,
     })),
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
   };
 };
 
@@ -300,10 +289,7 @@ const extractMatrixDimensions = (responses, questionRows, questionColumns, isMul
 // Transform Matrix SCQ data for heatmap
 export const transformMatrixSCQData = (question) => {
   const responses = question.responses || [];
-  const totalResponses = question.totalResponses;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const metrics = getResponseMetrics({ responses, totalResponses: question.totalResponses });
   const { rows, columns } = extractMatrixDimensions(responses, question.rows, question.columns);
   const matrix = calculateMatrixData(responses, rows, columns);
 
@@ -330,98 +316,48 @@ export const transformMatrixSCQData = (question) => {
     };
   }) : [];
 
-  return {
-    heatmapData: matrix,
-    rowAverages,
-    divergingData,
-    rows,
-    columns,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
-  };
+  return { heatmapData: matrix, rowAverages, divergingData, rows, columns, ...metrics };
 };
 
 // Transform Matrix MCQ data for heatmap
 export const transformMatrixMCQData = (question) => {
   const responses = question.responses || [];
-  const totalResponses = question.totalResponses;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const metrics = getResponseMetrics({ responses, totalResponses: question.totalResponses });
   const { rows, columns } = extractMatrixDimensions(responses, question.rows, question.columns, true);
   const matrix = calculateMatrixData(responses, rows, columns);
 
-  // Calculate average selections per row
-  const avgSelections = answered > 0
-    ? (responses.flat().length / answered).toFixed(1)
+  const avgSelections = metrics.answered > 0
+    ? (responses.flat().length / metrics.answered).toFixed(1)
     : 0;
 
-  return {
-    heatmapData: matrix,
-    rows,
-    columns,
-    avgSelections,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
-  };
+  return { heatmapData: matrix, rows, columns, avgSelections, ...metrics };
 };
 
 // Transform Text data for word cloud and table
 export const transformTextData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
   const frequency = calculateFrequency(responses);
 
-  const avgLength = answered > 0
-    ? (responses.reduce((sum, r) => sum + r.length, 0) / answered).toFixed(1)
+  const avgLength = metrics.answered > 0
+    ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
     : 0;
 
   return {
-    frequencyData: frequency.slice(0, 20), // Top 20
+    frequencyData: frequency.slice(0, MAX_FREQUENCY_ITEMS),
     uniqueCount: frequency.length,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
     avgLength,
   };
 };
 
-// Transform Paragraph data for frequency table
-export const transformParagraphData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
-  const frequency = calculateFrequency(responses);
-
-  const avgLength = answered > 0
-    ? (responses.reduce((sum, r) => sum + r.length, 0) / answered).toFixed(1)
-    : 0;
-
-  return {
-    frequencyData: frequency.slice(0, 20),
-    uniqueCount: frequency.length,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
-    avgLength,
-  };
-};
+// Transform Paragraph data — identical to Text
+export const transformParagraphData = transformTextData;
 
 // Transform Email data
 export const transformEmailData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
   const emailStats = calculateEmailDomains(responses);
 
   // Build per-email frequency map for duplicate detection
@@ -447,7 +383,7 @@ export const transformEmailData = (question) => {
   const duplicateCount = Object.values(emailFreq).filter((c) => c > 1).length;
 
   return {
-    domainData: emailStats.domains.slice(0, 10).map((item, i) => ({
+    domainData: emailStats.domains.slice(0, MAX_DOMAIN_ITEMS).map((item, i) => ({
       name: item.domain,
       count: item.count,
       percentage: item.percentage,
@@ -462,19 +398,14 @@ export const transformEmailData = (question) => {
     duplicateCount,
     uniqueDomains: emailStats.uniqueDomains,
     invalidCount: emailStats.invalidCount,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
   };
 };
 
 // Transform Multiple Text data
 export const transformMultipleTextData = (question) => {
-  const { fields = [], responses = [], totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { fields = [], responses = [] } = question;
+  const metrics = getResponseMetrics(question);
 
   const fieldStats = fields.map((field) => {
     const values = responses.map((r) => r[field] || '').filter(Boolean);
@@ -484,19 +415,13 @@ export const transformMultipleTextData = (question) => {
 
     return {
       field,
-      completionRate: total > 0 ? Math.round((values.length / total) * 100) : 0,
+      completionRate: metrics.total > 0 ? Math.round((values.length / metrics.total) * 100) : 0,
       avgLength,
       count: values.length,
     };
   });
 
-  return {
-    fieldStats,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
-  };
+  return { fieldStats, ...metrics };
 };
 
 // Transform Autocomplete data (same as SCQ)
@@ -504,10 +429,8 @@ export const transformAutocompleteData = transformSCQData;
 
 // Transform Image Ranking data
 export const transformImageRankingData = (question) => {
-  const { images, responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { images, responses } = question;
+  const metrics = getResponseMetrics(question);
   const options = images.map((img) => img.label);
   const parsed = responses.map((r) => {
     if (Array.isArray(r)) return r;
@@ -522,36 +445,19 @@ export const transformImageRankingData = (question) => {
       ...item,
       name: image?.label || `Image ${i + 1}`,
       imageUrl: resolveImageUrl(image?.url),
-      averageRank: item.averageRank,
       firstPlace: item.firstPlaceCount,
       lastPlace: item.lastPlaceCount,
       fill: getChartColor(i),
     };
   });
 
-  return {
-    rankedImages,
-    chartData: rankedImages.map(img => ({
-      name: img.name,
-      averageRank: img.averageRank,
-      firstPlace: img.firstPlace,
-      lastPlace: img.lastPlace,
-      fill: img.fill,
-    })),
-    images,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
-  };
+  return { rankedImages, chartData: rankedImages, images, ...metrics };
 };
 
 // Transform Image SCQ data
 export const transformImageSCQData = (question) => {
-  const { images, responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { images, responses } = question;
+  const metrics = getResponseMetrics(question);
   const frequency = calculateFrequency(responses);
 
   // Build lookup: imageId -> frequency entry, bridging short codes ("A2") to full IDs ("Q309vcaA2")
@@ -567,7 +473,7 @@ export const transformImageSCQData = (question) => {
     pieData: images.map((img, i) => {
       const freq = freqByImageId[img.id];
       const count = freq?.count || 0;
-      const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+      const percentage = metrics.total > 0 ? Math.round((count / metrics.total) * 100) : 0;
       return {
         name: img.label || `Image ${i + 1}`,
         value: count,
@@ -578,19 +484,14 @@ export const transformImageSCQData = (question) => {
       };
     }).sort((a, b) => b.value - a.value),
     images,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
   };
 };
 
 // Transform Image MCQ data
 export const transformImageMCQData = (question) => {
-  const { images, responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { images, responses } = question;
+  const metrics = getResponseMetrics(question);
   const options = question.options?.length > 0
     ? question.options
     : images.map((img) => img.label);
@@ -602,35 +503,21 @@ export const transformImageMCQData = (question) => {
       return {
         name: image?.label || `Image ${i + 1}`,
         count: item.count,
-        percentage: total > 0 ? Math.round((item.count / total) * 100) : 0,
+        percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
         imageUrl: resolveImageUrl(image?.url),
         imageId: image?.id,
         fill: getChartColor(i),
       };
     }),
     images,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
   };
-};
-
-// Match response codes or labels to images — tries ID exact, ID suffix, then label match
-const resolveIconImage = (images, responseValue) => {
-  if (!images || !responseValue) return null;
-  return images.find((img) => img.id === responseValue)
-    || images.find((img) => img.id.endsWith(responseValue))
-    || images.find((img) => img.label === responseValue)
-    || null;
 };
 
 // Transform Icon SCQ data for pie/bar charts with icon support
 export const transformIconSCQData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
   const images = question.images || [];
   const frequency = calculateFrequency(responses);
 
@@ -640,7 +527,7 @@ export const transformIconSCQData = (question) => {
       name: image?.label || `Option ${i + 1}`,
       value: item.count,
       count: item.count,
-      percentage: total > 0 ? Math.round((item.count / total) * 100) : 0,
+      percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
       iconUrl: resolveImageUrl(image?.url),
       fill: getChartColor(i),
     };
@@ -651,10 +538,7 @@ export const transformIconSCQData = (question) => {
   return {
     pieData,
     barData: pieData,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
     mode: pieData[0]?.name,
     modeCount: frequency[0]?.count,
   };
@@ -662,10 +546,8 @@ export const transformIconSCQData = (question) => {
 
 // Transform Icon MCQ data for bar charts with icon support
 export const transformIconMCQData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
   const images = question.images || [];
   const options = question.options || [];
   const optionKeys = options.length > 0
@@ -673,8 +555,8 @@ export const transformIconMCQData = (question) => {
     : images.map((img) => img.label);
   const freq = calculateMCQFrequency(responses, optionKeys);
 
-  const avgSelections = answered > 0
-    ? (responses.reduce((sum, r) => sum + r.length, 0) / answered).toFixed(1)
+  const avgSelections = metrics.answered > 0
+    ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
     : 0;
 
   return {
@@ -683,77 +565,28 @@ export const transformIconMCQData = (question) => {
       return {
         name: image?.label || `Option ${i + 1}`,
         count: item.count,
-        percentage: total > 0 ? Math.round((item.count / total) * 100) : 0,
+        percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
         iconUrl: resolveImageUrl(image?.url),
         fill: getChartColor(i),
       };
     }),
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
     avgSelections,
   };
 };
 
-// Transform Icon Matrix SCQ data (SCQ_ICON_ARRAY) — heatmap with icon column and row headers
-export const transformIconMatrixSCQData = (question) => {
-  const baseData = transformMatrixSCQData(question);
-  const images = question.images || [];
+// Transform Icon Matrix SCQ data (SCQ_ICON_ARRAY)
+export const transformIconMatrixSCQData = (question) =>
+  attachIconsToMatrixData(transformMatrixSCQData(question), question.images || []);
 
-  const columnsWithIcons = baseData.columns.map((col) => {
-    const image = resolveIconImage(images, col);
-    return {
-      key: col,
-      label: image?.label || col,
-      iconUrl: resolveImageUrl(image?.url),
-    };
-  });
-
-  const rowsWithIcons = baseData.rows.map((row) => {
-    const image = resolveIconImage(images, row);
-    return {
-      key: row,
-      label: image?.label || row,
-      iconUrl: resolveImageUrl(image?.url),
-    };
-  });
-
-  return { ...baseData, columnsWithIcons, rowsWithIcons };
-};
-
-// Transform Icon Matrix MCQ data (MCQ_ICON_ARRAY) — heatmap with icon column and row headers
-export const transformIconMatrixMCQData = (question) => {
-  const baseData = transformMatrixMCQData(question);
-  const images = question.images || [];
-
-  const columnsWithIcons = baseData.columns.map((col) => {
-    const image = resolveIconImage(images, col);
-    return {
-      key: col,
-      label: image?.label || col,
-      iconUrl: resolveImageUrl(image?.url),
-    };
-  });
-
-  const rowsWithIcons = baseData.rows.map((row) => {
-    const image = resolveIconImage(images, row);
-    return {
-      key: row,
-      label: image?.label || row,
-      iconUrl: resolveImageUrl(image?.url),
-    };
-  });
-
-  return { ...baseData, columnsWithIcons, rowsWithIcons };
-};
+// Transform Icon Matrix MCQ data (MCQ_ICON_ARRAY)
+export const transformIconMatrixMCQData = (question) =>
+  attachIconsToMatrixData(transformMatrixMCQData(question), question.images || []);
 
 // Transform File Upload data
 export const transformFileUploadData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
   const extCounts = {};
 
   responses.forEach((r) => {
@@ -768,120 +601,63 @@ export const transformFileUploadData = (question) => {
       .map(([name, count]) => ({
         name,
         count,
-        percentage: total > 0 ? Math.round((count / total) * 100) : 0,
+        percentage: metrics.total > 0 ? Math.round((count / metrics.total) * 100) : 0,
       }))
       .sort((a, b) => b.count - a.count),
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
   };
 };
 
 // Transform Signature data
 export const transformSignatureData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
   const signed = responses.filter((r) => r === true).length;
 
   return {
-    completionRate: total > 0 ? Math.round((signed / total) * 100) : 0,
+    completionRate: metrics.total > 0 ? Math.round((signed / metrics.total) * 100) : 0,
     signed,
-    unsigned: total - signed,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    unsigned: metrics.total - signed,
+    ...metrics,
   };
 };
 
 // Transform Photo Capture data
 export const transformPhotoCaptureData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
   const captured = responses.filter((r) => r.captured);
   const sizes = captured.map((r) => r.fileSize);
   const stats = calculateStats(sizes);
 
   return {
-    completionRate: total > 0 ? Math.round((captured.length / total) * 100) : 0,
+    completionRate: metrics.total > 0 ? Math.round((captured.length / metrics.total) * 100) : 0,
     captured: captured.length,
-    notCaptured: total - captured.length,
+    notCaptured: metrics.total - captured.length,
     sizeStats: stats,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
   };
 };
 
 // Transform Barcode data
 export const transformBarcodeData = (question) => {
-  const { responses, totalResponses } = question;
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
-  const skipped = Math.max(0, total - answered);
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
   const frequency = calculateFrequency(responses);
   const duplicates = frequency.filter((f) => f.count > 1);
 
   return {
-    frequencyData: frequency.slice(0, 20),
-    barData: frequency.slice(0, 10).map((item, i) => ({
+    frequencyData: frequency.slice(0, MAX_FREQUENCY_ITEMS),
+    barData: frequency.slice(0, MAX_CHART_BAR_ITEMS).map((item, i) => ({
       name: item.value,
       count: item.count,
       fill: getChartColor(i),
     })),
     uniqueCount: frequency.length,
     duplicateCount: duplicates.length,
-    total,
-    answered,
-    skipped,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
+    ...metrics,
   };
 };
 
 // Alias for MediaCapture (same as PhotoCapture)
 export const transformMediaCaptureData = transformPhotoCaptureData;
-
-// Master transformer function
-export const transformQuestionData = (question) => {
-  const transformers = {
-    SCQ: transformSCQData,
-    MCQ: transformMCQData,
-    NPS: transformNPSData,
-    RANKING: transformRankingData,
-    NUMBER: transformNumberData,
-    DATE: transformDateData,
-    TIME: transformTimeData,
-    DATETIME: transformDateTimeData,
-    MATRIX_SCQ: transformMatrixSCQData,
-    MATRIX_MCQ: transformMatrixMCQData,
-    TEXT: transformTextData,
-    PARAGRAPH: transformParagraphData,
-    EMAIL: transformEmailData,
-    MULTIPLE_TEXT: transformMultipleTextData,
-    AUTOCOMPLETE: transformAutocompleteData,
-    IMAGE_RANKING: transformImageRankingData,
-    IMAGE_SCQ: transformImageSCQData,
-    IMAGE_MCQ: transformImageMCQData,
-    ICON_SCQ: transformIconSCQData,
-    ICON_MCQ: transformIconMCQData,
-    SCQ_ICON_ARRAY: transformIconMatrixSCQData,
-    FILE_UPLOAD: transformFileUploadData,
-    SIGNATURE: transformSignatureData,
-    PHOTO_CAPTURE: transformPhotoCaptureData,
-    BARCODE: transformBarcodeData,
-  };
-
-  const transformer = transformers[question.type];
-  if (!transformer) {
-    console.warn(`No transformer found for question type: ${question.type}`);
-    return { raw: question.responses };
-  }
-
-  return transformer(question);
-};

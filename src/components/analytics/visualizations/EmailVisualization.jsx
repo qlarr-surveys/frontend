@@ -3,6 +3,7 @@ import PieDonutChart from '../charts/PieDonutChart';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
+import { buildBaseStats } from '../common/buildBaseStats';
 import DataTable from '../common/DataTable';
 import { transformEmailData } from '~/utils/analytics/dataTransformers';
 
@@ -10,15 +11,13 @@ export default function EmailVisualization({ question }) {
   const data = transformEmailData(question);
 
   const stats = [
-    { label: 'Total Submissions', value: data.total, color: 'blue' },
-    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
-    { label: 'Unique Domains', value: data.uniqueDomains, color: 'purple' },
-    { label: 'Invalid Emails', value: data.invalidCount, color: 'red' },
+    ...buildBaseStats(data),
+    { label: 'Unique Domains', value: data.uniqueDomains },
+    { label: 'Invalid Emails', value: data.invalidCount },
     {
       label: 'Top Domain',
       value: data.domainData[0]?.name || '-',
       description: `${data.domainData[0]?.count || 0} emails`,
-      color: 'gray',
     },
   ];
 

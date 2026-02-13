@@ -5,6 +5,7 @@ import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
+import { buildBaseStats } from '../common/buildBaseStats';
 import { transformSCQData } from '~/utils/analytics/dataTransformers';
 
 export default function SCQVisualization({ question }) {
@@ -18,10 +19,9 @@ export default function SCQVisualization({ question }) {
   ];
 
   const stats = [
-    { label: 'Total Submissions', value: data.total, color: 'blue' },
-    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
-    { label: 'Most Selected', value: data.mode, color: 'purple' },
-    { label: 'Options', value: question.options?.length ?? 0, color: 'gray' },
+    ...buildBaseStats(data),
+    { label: 'Most Selected', value: data.mode },
+    { label: 'Options', value: question.options?.length ?? 0 },
   ];
 
   return (

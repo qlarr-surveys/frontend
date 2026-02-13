@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
+import { buildBaseStats } from '../common/buildBaseStats';
 import DataTable from '../common/DataTable';
 import { transformMCQData } from '~/utils/analytics/dataTransformers';
 
@@ -9,10 +10,9 @@ export default function MCQVisualization({ question }) {
   const data = transformMCQData(question);
 
   const stats = [
-    { label: 'Total Submissions', value: data.total, color: 'blue' },
-    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
-    { label: 'Most Popular', value: data.barData[0]?.name || '-', color: 'purple' },
-    { label: 'Options', value: question.options.length, color: 'gray' },
+    ...buildBaseStats(data),
+    { label: 'Most Popular', value: data.barData[0]?.name || '-' },
+    { label: 'Options', value: question.options.length },
   ];
 
   const tableData = data.barData.map((item) => ({

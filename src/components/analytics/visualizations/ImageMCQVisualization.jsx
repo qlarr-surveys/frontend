@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
+import { buildBaseStats } from '../common/buildBaseStats';
 import ImageGallery from '../common/ImageGallery';
 import CategoryLegend from '../common/CategoryLegend';
 import { transformImageMCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
@@ -10,10 +11,9 @@ export default function ImageMCQVisualization({ question }) {
   const data = transformImageMCQData(question);
 
   const stats = [
-    { label: 'Total Submissions', value: data.total, color: 'blue' },
-    { label: 'Answered', value: data.answered, description: `${data.skipped} skipped`, color: 'green' },
-    { label: 'Most Popular', value: data.barData[0]?.name || '-', color: 'purple' },
-    { label: 'Images', value: question.images.length, color: 'gray' },
+    ...buildBaseStats(data),
+    { label: 'Most Popular', value: data.barData[0]?.name || '-' },
+    { label: 'Images', value: question.images.length },
   ];
 
   const galleryImages = question.images.map((img, i) => {
