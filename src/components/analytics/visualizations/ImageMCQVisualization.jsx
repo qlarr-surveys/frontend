@@ -1,0 +1,44 @@
+import { Box, Typography } from '@mui/material';
+import ChartContainer from '../common/ChartContainer';
+import { StatsRow } from '../common/StatCard';
+import { buildBaseStats } from '../common/buildBaseStats';
+import ImageGallery from '../common/ImageGallery';
+import CategoryLegend from '../common/CategoryLegend';
+import { transformImageMCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
+
+export default function ImageMCQVisualization({ question }) {
+  const data = transformImageMCQData(question);
+
+  const stats = [
+    ...buildBaseStats(data),
+    { label: 'Most Popular', value: data.barData[0]?.name || '-' },
+    { label: 'Images', value: question.images.length },
+  ];
+
+  const galleryImages = question.images.map((img, i) => {
+    const barItem = data.barData.find((b) => b.imageId === img.id);
+    return {
+      ...img,
+      url: resolveImageUrl(img.url),
+      label: img.label || `Image ${i + 1}`,
+      count: barItem?.count || 0,
+      percentage: barItem?.percentage || 0,
+      color: barItem?.fill,
+    };
+  });
+
+  return (
+    <ChartContainer>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <StatsRow stats={stats} columns={4} />
+        <ImageGallery images={galleryImages} columns={4} showLabels={true} showStats={true} />
+        <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 2 }}>
+          <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
+            Selection Frequency
+          </Typography>
+          <CategoryLegend items={data.barData} showPercentage={true} />
+        </Box>
+      </Box>
+    </ChartContainer>
+  );
+}

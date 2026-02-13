@@ -144,6 +144,18 @@ function Web() {
         }
       />
       <Route
+        path={routes.analytics}
+        element={
+          <Suspense fallback={<LoadingIndicator />}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY_NO_PREVIEW}>
+              <PrivateDesignSurvey
+                landingPage={MANAGE_SURVEY_LANDING_PAGES.ANALYTICS}
+              />
+            </ManagePageWrapper>
+          </Suspense>
+        }
+      />
+      <Route
         path={routes.manageUsers}
         element={
           <Suspense fallback={<LoadingIndicator />}>

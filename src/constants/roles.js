@@ -22,10 +22,12 @@ export const availablePages = (user) => {
       MANAGE_SURVEY_LANDING_PAGES.DESIGN,
       MANAGE_SURVEY_LANDING_PAGES.SETTINGS,
       MANAGE_SURVEY_LANDING_PAGES.RESPONSES,
+      MANAGE_SURVEY_LANDING_PAGES.ANALYTICS,
     ];
   } else if (isAnalyst(user)) {
     return [
       MANAGE_SURVEY_LANDING_PAGES.RESPONSES,
+      MANAGE_SURVEY_LANDING_PAGES.ANALYTICS,
     ];
   } else {
     return [];
@@ -52,11 +54,6 @@ export const isAnalyst = (user) => {
   return (
     roles.indexOf(ROLES.SUPER_ADMIN) != -1 || roles.indexOf(ROLES.ANALYST) != -1 || roles.indexOf(ROLES.SURVEY_ADMIN) != -1
   );
-};
-
-export const isAnalystOnly = (user) => {
-  const roles = user.roles;
-  return roles.length == 1 && roles.indexOf(ROLES.ANALYST) != -1;
 };
 
 export const isSurveyorOnly = () => {

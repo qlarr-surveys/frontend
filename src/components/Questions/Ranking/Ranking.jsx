@@ -7,6 +7,10 @@ import { useDrag, useDrop } from "react-dnd";
 import { orderChange, valueChange } from "~/state/runState";
 import Content from "~/components/run/Content";
 import { useTheme } from "@emotion/react";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import CloseIcon from "@mui/icons-material/Close";
+import { Typography, IconButton } from "@mui/material";
 
 function Ranking(props) {
   const dispatch = useDispatch();
@@ -131,6 +135,15 @@ function Ranking(props) {
     }
   };
 
+  const onClickMove = (option) => {
+    const item = { qualifiedCode: option.qualifiedCode };
+    if (itemTypeByCode(option.qualifiedCode) == "unsorted") {
+      onItemTransfer(item, withOrder.length, "sorted");
+    } else {
+      onItemTransfer(item, withoutOrder.length, "unsorted");
+    }
+  };
+
   const onDoubleClick = (item) => {
     if (itemTypeByCode(item.qualifiedCode) == "unsorted") {
       onItemTransfer(item, withOrder.length, "sorted");
@@ -181,52 +194,102 @@ function Ranking(props) {
       style={{
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
+        gap: "16px",
       }}
     >
-      <RankingContainer
-        styles={styles}
-        theme={theme}
-        ordererLength={withOrder.length}
-        unordererLength={withoutOrder.length}
-        onHover={onHover}
-        order={order}
-        onItemTransfer={onItemTransfer}
-        onDoubleClick={onDoubleClick}
-        itemType="unsorted"
-        options={withoutOrder}
-      />
-      <RankingContainer
-        styles={styles}
-        theme={theme}
-        onHover={onHover}
-        onItemTransfer={onItemTransfer}
-        onDoubleClick={onDoubleClick}
-        ordererLength={withOrder.length}
-        unordererLength={withoutOrder.length}
-        order={order}
-        itemType="sorted"
-        options={withOrder}
-      />
+      <div className={styles.column}>
+        <div className={styles.columnHeader}>
+          <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
+            Options
+          </Typography>
+          <Typography variant="caption" sx={{ color: "text.disabled" }}>
+            {withoutOrder.length} remaining
+          </Typography>
+        </div>
+        <RankingContainer
+          theme={theme}
+          ordererLength={withOrder.length}
+          unordererLength={withoutOrder.length}
+          onHover={onHover}
+          order={order}
+          onItemTransfer={onItemTransfer}
+          onDoubleClick={onDoubleClick}
+          onClickMove={onClickMove}
+          itemType="unsorted"
+          options={withoutOrder}
+          state={state}
+        />
+      </div>
+      <div className={styles.column}>
+        <div className={styles.columnHeader}>
+          <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
+            Your Ranking
+          </Typography>
+          <Typography variant="caption" sx={{ color: "text.disabled" }}>
+            {withOrder.length} ranked
+          </Typography>
+        </div>
+        <RankingContainer
+          theme={theme}
+          onHover={onHover}
+          onItemTransfer={onItemTransfer}
+          onDoubleClick={onDoubleClick}
+          onClickMove={onClickMove}
+          ordererLength={withOrder.length}
+          unordererLength={withoutOrder.length}
+          order={order}
+          itemType="sorted"
+          options={withOrder}
+          state={state}
+        />
+      </div>
     </div>
   );
 }
 
 function RankingContainer({
-  styles,
   itemType,
   theme,
   options,
   onItemTransfer,
   onDoubleClick,
+  onClickMove,
   onHover,
+  state,
 }) {
-  const refDrop = useRef(null);
+  const containerRef = useRef(null);
+  const [{ isOver }, containerDrop] = useDrop({
+    accept: "rankingOption",
+    collect(monitor) {
+      return { isOver: monitor.isOver({ shallow: false }) };
+    },
+  });
+  containerDrop(containerRef);
+
+  const isSorted = itemType === "sorted";
+
   return (
     <Box
-      ref={refDrop}
+      ref={containerRef}
       className={styles.dragContainer}
-      sx={{ backgroundColor: "background.default" }}
+      sx={{
+        backgroundColor: isOver
+          ? "action.hover"
+          : "background.default",
+      }}
     >
+      {options.length === 0 && (
+        <Box
+          className={styles.emptyState}
+          sx={{ borderColor: "divider" }}
+        >
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            {isSorted
+              ? "Drag items here to rank them"
+              : "All items have been ranked"}
+          </Typography>
+        </Box>
+      )}
       {options.map((option, index) => {
         return (
           <Fragment key={option.code}>
@@ -243,19 +306,22 @@ function RankingContainer({
               onHover={onHover}
               itemType={itemType}
               option={option}
-              rankingItemStyle={styles.rankingItem}
               onDoubleClick={onDoubleClick}
+              onClickMove={onClickMove}
+              rank={isSorted ? state[option.qualifiedCode] : null}
             />
           </Fragment>
         );
       })}
-      <DropArea
-        itemType={itemType}
-        index={options.length}
-        key="last"
-        fillParent={true}
-        onItemTransfer={onItemTransfer}
-      />
+      {options.length > 0 && (
+        <DropArea
+          itemType={itemType}
+          index={options.length}
+          key="last"
+          fillParent={true}
+          onItemTransfer={onItemTransfer}
+        />
+      )}
     </Box>
   );
 }
@@ -264,10 +330,11 @@ function RankingOption({
   theme,
   option,
   onDoubleClick,
-  rankingItemStyle,
+  onClickMove,
   index,
   onHover,
   itemType,
+  rank,
 }) {
   const containerRef = useRef();
   const item = {
@@ -310,7 +377,6 @@ function RankingOption({
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
         return;
       }
-      // Dragging upwards
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
         return;
       }
@@ -318,27 +384,47 @@ function RankingOption({
     },
   });
   drop(preview(containerRef));
+
+  const isSorted = itemType === "sorted";
+
   return (
     <div ref={drag}>
       <Box
         data-code={option.code}
         ref={containerRef}
         data-handler-id={handlerId}
-        style={{
-          opacity: isDragging ? "0.2" : "1",
-        }}
+        className={isDragging ? styles.rankingItemDragging : styles.rankingItem}
         onDoubleClick={() => onDoubleClick(item)}
-        className={rankingItemStyle}
         sx={{ backgroundColor: "background.paper" }}
       >
-        <Content
-          elementCode={option.code}
-          customStyle={`
-        font-size: ${theme.textStyles.text.size}px;
-        `}
-          name="label"
-          content={option.content?.label}
+        {isSorted && rank != null && (
+          <Box className={styles.rankBadge} sx={{ backgroundColor: "primary.main" }}>
+            {rank}
+          </Box>
+        )}
+        <DragIndicatorIcon
+          className={styles.dragHandle}
+          sx={{ color: "text.disabled", fontSize: 20 }}
         />
+        <div className={styles.itemContent}>
+          <Content
+            elementCode={option.code}
+            customStyle={`font-size: ${theme.textStyles.text.size}px;`}
+            name="label"
+            content={option.content?.label}
+          />
+        </div>
+        <IconButton
+          size="small"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClickMove(option);
+          }}
+          className={styles.actionButton}
+          sx={{ color: "text.secondary" }}
+        >
+          {isSorted ? <CloseIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}
+        </IconButton>
       </Box>
     </div>
   );
@@ -367,7 +453,7 @@ function DropArea({ index, onItemTransfer, itemType, fillParent }) {
   drop(containerRef);
   return (
     <div
-      style={{ flex: fillParent ? 1 : "inherit", minHeight: "12px" }}
+      style={{ flex: fillParent ? 1 : "inherit", minHeight: "8px" }}
       ref={containerRef}
       data-handler-id={handlerId}
     />

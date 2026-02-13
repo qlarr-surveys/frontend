@@ -3,11 +3,11 @@ import TableRowsIcon from "@mui/icons-material/TableRows";
 import styles from "./SideTabs.module.css";
 import React from "react";
 import {
+  BarChart,
   Edit,
   Palette,
   Settings,
   Translate,
-  Visibility,
 } from "@mui/icons-material";
 import {
   DESIGN_SURVEY_MODE,
@@ -19,7 +19,6 @@ import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-  resetSetup,
   setDesignModeToDesign,
   setDesignModeToLang,
   setDesignModeToTheme,
@@ -119,6 +118,19 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
             icon={<TableRowsIcon sx={{ color: "#fff" }} />}
             onClick={() => {
               onPageChange(MANAGE_SURVEY_LANDING_PAGES.RESPONSES);
+            }}
+          />
+        )}
+        {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.ANALYTICS) && (
+          <SideTab
+            tooltip={t("analytics")}
+            style={getTabButtonStyle(
+              selectedPage == MANAGE_SURVEY_LANDING_PAGES.ANALYTICS
+            )}
+            link={routes.analytics.replace(":surveyId", surveyId)}
+            icon={<BarChart sx={{ color: "#fff" }} />}
+            onClick={() => {
+              onPageChange(MANAGE_SURVEY_LANDING_PAGES.ANALYTICS);
             }}
           />
         )}

@@ -113,14 +113,6 @@ class SurveyService extends BaseService {
     return response;
   }
 
-  async eventResponse(responseId) {
-    const surveyId = sessionStorage.getItem("surveyId");
-    const response = await this.handleRequest(() =>
-      authenticatedApi.get(`/survey/${surveyId}/response/${responseId}/events`)
-    );
-    return response;
-  }
-
   async importSurvey(file, onProgress) {
     const formData = new FormData();
     formData.append("file", file);
@@ -140,13 +132,6 @@ class SurveyService extends BaseService {
       })
     );
 
-    return response.data;
-  }
-
-  async createSurveyWithAI(prompt) {
-    const response = await this.handleRequest(() =>
-      authenticatedApi.post(`/survey/generate_ai`, { prompt })
-    );
     return response.data;
   }
 
@@ -171,6 +156,13 @@ class SurveyService extends BaseService {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  async getAnalytics(surveyId, maxResponses = 5000) {
+    const response = await this.handleRequest(() =>
+      authenticatedApi.get(`/survey/${surveyId}/response/analytics?max_responses=${maxResponses}`)
+    );
+    return response.data;
   }
 }
 
