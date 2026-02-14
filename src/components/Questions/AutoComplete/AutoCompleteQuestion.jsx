@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { shallowEqual, useSelector } from "react-redux";
 import { Autocomplete, CircularProgress, TextField } from "@mui/material";
@@ -29,7 +29,11 @@ function AutoCompleteQuestion(props) {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(state.value);
+
+  useEffect(() => {
+    setInputValue(state.value);
+  }, [state.value]);
 
   const fetchOptions = useCallback(
     debounce(async (query) => {
