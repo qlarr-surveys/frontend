@@ -11,6 +11,7 @@ import { StatefulLoadingIndicator } from "~/components/common/LoadingIndicator";
 import ThemeProvider from "~/theme";
 import UnsupportedView from "../UnsupportedView";
 import useNamespaceLoader, { NAMESPACES } from "~/hooks/useNamespaceLoader";
+import { HEADER_OPTIONS } from "./headerOptions";
 
 const ManagePageWrapper = ({ headerOptions = HEADER_OPTIONS.GENERAL, children }) => {
   const lang = localStorage.getItem("lang");
@@ -71,11 +72,3 @@ const ManagePageWrapper = ({ headerOptions = HEADER_OPTIONS.GENERAL, children })
 };
 
 export default ManagePageWrapper;
-
-
-export const HEADER_OPTIONS = {
-  NONE: {showHeader: false, showSurveyHeader: false, showPreview: false},
-  GENERAL: {showHeader: true, showSurveyHeader: false, showPreview: false},
-  SURVEY: {showHeader: true, showSurveyHeader: true, showPreview: true},
-  SURVEY_NO_PREVIEW: {showHeader: true, showSurveyHeader: true, showPreview: false},
-};

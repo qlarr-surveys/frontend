@@ -17,7 +17,7 @@ import { getparam } from "./networking/run";
 
 import LoadingIndicator from "./components/common/LoadingIndicator";
 import { ROLES } from "./constants/roles";
-import { HEADER_OPTIONS } from './pages/ManagePageWrapper';
+import { HEADER_OPTIONS } from './pages/ManagePageWrapper/headerOptions';
 
 const AuthIllustrationLayout = lazy(() => import("./layouts/authlayout"));
 const ManagePageWrapper = lazy(() => import("./pages/ManagePageWrapper"));
