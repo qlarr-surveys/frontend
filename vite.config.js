@@ -24,6 +24,29 @@ export default defineConfig(({ mode }) => {
           ssr: false,
           polyfillModulePreload: true,
           target: "es2018",
+          rollupOptions: {
+            output: {
+              manualChunks: {
+                vendor: ["react", "react-dom", "react-router-dom"],
+                mui: [
+                  "@mui/material",
+                  "@mui/icons-material",
+                  "@mui/lab",
+                  "@mui/x-date-pickers",
+                ],
+                editor: [
+                  "@tiptap/core",
+                  "@tiptap/react",
+                  "@tiptap/starter-kit",
+                ],
+                dnd: [
+                  "react-dnd",
+                  "react-dnd-html5-backend",
+                  "react-dnd-touch-backend",
+                ],
+              },
+            },
+          },
         },
         resolve: {
           alias: {
@@ -58,9 +81,22 @@ export default defineConfig(({ mode }) => {
             output: {
               manualChunks: {
                 vendor: ["react", "react-dom", "react-router-dom"],
-                mui: ["@mui/material", "@mui/icons-material", "@mui/lab", "@mui/x-date-pickers"],
-                editor: ["@tiptap/core", "@tiptap/react", "@tiptap/starter-kit"],
-                dnd: ["react-dnd", "react-dnd-html5-backend", "react-dnd-touch-backend"],
+                mui: [
+                  "@mui/material",
+                  "@mui/icons-material",
+                  "@mui/lab",
+                  "@mui/x-date-pickers",
+                ],
+                editor: [
+                  "@tiptap/core",
+                  "@tiptap/react",
+                  "@tiptap/starter-kit",
+                ],
+                dnd: [
+                  "react-dnd",
+                  "react-dnd-html5-backend",
+                  "react-dnd-touch-backend",
+                ],
               },
             },
           },
@@ -123,9 +159,22 @@ export default defineConfig(({ mode }) => {
             output: {
               manualChunks: {
                 vendor: ["react", "react-dom", "react-router-dom"],
-                mui: ["@mui/material", "@mui/icons-material", "@mui/lab", "@mui/x-date-pickers"],
-                editor: ["@tiptap/core", "@tiptap/react", "@tiptap/starter-kit"],
-                dnd: ["react-dnd", "react-dnd-html5-backend", "react-dnd-touch-backend"],
+                mui: [
+                  "@mui/material",
+                  "@mui/icons-material",
+                  "@mui/lab",
+                  "@mui/x-date-pickers",
+                ],
+                editor: [
+                  "@tiptap/core",
+                  "@tiptap/react",
+                  "@tiptap/starter-kit",
+                ],
+                dnd: [
+                  "react-dnd",
+                  "react-dnd-html5-backend",
+                  "react-dnd-touch-backend",
+                ],
               },
             },
           },
