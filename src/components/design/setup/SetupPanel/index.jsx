@@ -1,6 +1,7 @@
 import FieldSize from "~/components/design/setup/FieldSize";
 import ShowHint, { SetupTextInput } from "~/components/design/setup/ShowHint";
 import ValidationSetupItem from "~/components/design/setup/validation/ValidationSetupItem";
+import CustomValidationRules from "../validation/CustomValidationRules";
 import React from "react";
 import ToggleValue from "../ToggleValue";
 import SelectValue from "../SelectValue";
@@ -98,6 +99,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
   }
 
   switch (rule) {
+    case "custom_validation_rules":
+      return <CustomValidationRules code={code} t={t} key={code + rule} />;
     case "changeCode":
       return <EntityCodeEditor code={code} />;
     case "theme":
