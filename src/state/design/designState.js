@@ -594,6 +594,49 @@ export const designState = createSlice({
       state[code].skip_logic.splice(ruleIndex, 1);
       addSkipInstructions(state, code);
     },
+
+    addCustomValidationRule: (state, action) => {
+      const { code } = action.payload;
+
+      if (!state[code].validation) {
+        state[code].validation = {};
+      }
+
+      if (!state[code].validation.custom_rules) {
+        state[code].validation.custom_rules = [];
+      }
+
+      const existingNumbers = state[code].validation.custom_rules
+        .map((rule) => {
+          const match = rule.id.match(/^validation_custom_(\d+)$/);
+          return match ? parseInt(match[1], 10) : 0;
+        })
+        .filter((num) => !isNaN(num));
+
+      const maxNumber =
+        existingNumbers.length > 0 ? Math.max(...existingNumbers) : 0;
+      const newNumber = maxNumber + 1;
+
+      state[code].validation.custom_rules.push({
+        id: `validation_custom_${newNumber}`,
+        rule: "",
+        errorMessages: {},
+      });
+    },
+
+    updateCustomValidationRule: (state, action) => {
+      const { code, ruleIndex, updates } = action.payload;
+      const rule = state[code].validation.custom_rules[ruleIndex];
+
+      Object.assign(rule, updates);
+    },
+
+    removeCustomValidationRule: (state, action) => {
+      const { code, ruleIndex } = action.payload;
+
+      state[code].validation.custom_rules.splice(ruleIndex, 1);
+    },
+
     onBaseLangChanged: (state, action) => {
       state.langInfo.mainLang = action.payload.code;
       state.Survey.defaultLang = action.payload;
@@ -735,6 +778,9 @@ export const {
   addSkipRule,
   updateSkipRule,
   removeSkipRule,
+  addCustomValidationRule,
+  updateCustomValidationRule,
+  removeCustomValidationRule,
   changeRelevance,
   setDefaultValue,
   onDrag,
@@ -763,9 +809,7 @@ const cleanupRandomRules = (componentState) => {
 const cleanupSkipDestinations = (state, deletedCode) => {
   Object.keys(state).forEach((key) => {
     const component = state[key];
-    if (
-      Array.isArray(component?.skip_logic)
-    ) {
+    if (Array.isArray(component?.skip_logic)) {
       const hadRules = component.skip_logic.some(
         (rule) => rule.skipTo === deletedCode
       );
@@ -777,7 +821,7 @@ const cleanupSkipDestinations = (state, deletedCode) => {
       }
     }
   });
-}
+};
 
 const saveContentResources = (
   component,
@@ -802,8 +846,7 @@ const saveContentResources = (
     }
   });
   resources.forEach((elem, index) => {
-    component.resources[`${prefix}_${index + 1}`] =
-      elem;
+    component.resources[`${prefix}_${index + 1}`] = elem;
   });
 };
 
