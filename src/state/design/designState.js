@@ -637,6 +637,16 @@ export const designState = createSlice({
       state[code].validation.custom_rules.splice(ruleIndex, 1);
     },
 
+    updateInstruction: (state, action) => {
+      const { code, instruction } = action.payload;
+
+      if (!state[code]) {
+        return;
+      }
+
+      changeInstruction(state[code], instruction);
+    },
+
     onBaseLangChanged: (state, action) => {
       state.langInfo.mainLang = action.payload.code;
       state.Survey.defaultLang = action.payload;
@@ -781,6 +791,7 @@ export const {
   addCustomValidationRule,
   updateCustomValidationRule,
   removeCustomValidationRule,
+  updateInstruction,
   changeRelevance,
   setDefaultValue,
   onDrag,

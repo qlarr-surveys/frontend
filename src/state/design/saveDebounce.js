@@ -73,6 +73,7 @@ const MUTATING = [
   "designState/addCustomValidationRule",
   "designState/updateCustomValidationRule",
   "designState/removeCustomValidationRule",
+  "designState/updateInstruction",
   "designState/changeRelevance",
   "designState/addComponent",
   "designState/onDrag",
