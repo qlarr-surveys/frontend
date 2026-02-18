@@ -2,6 +2,8 @@
   display: flex;
   align-items: center;
   margin-top: 12px;
+  overflow-wrap: break-word;
+  overflow: hidden;
 }
 
 .moveBox {
@@ -25,20 +27,20 @@
 .titleContainer {
   display: flex;
   align-items: center;
-  gap: .5rem;
+  gap: 0.5rem;
 }
 
 .titleQuestion {
-  overflow: "hidden";
+  overflow: hidden;
   width: 100%;
   display: flex;
   align-items: center;
+  overflow-wrap: break-word;
 }
 
 .titleQuestion h3 {
   width: auto;
 }
-
 
 .iconBox {
   display: flex;
