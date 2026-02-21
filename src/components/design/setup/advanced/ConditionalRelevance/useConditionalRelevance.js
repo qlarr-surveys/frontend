@@ -11,18 +11,16 @@ export function useConditionalRelevance(code) {
     );
   });
 
-  const onToggleActive = (isActive) => {
-    if (conditionalRelevance) {
-      dispatch(
-        updateInstruction({
-          code,
-          instruction: {
-            ...conditionalRelevance,
-            isActive,
-          },
-        })
-      );
-    }
+  const onDelete = () => {
+    dispatch(
+      updateInstruction({
+        code,
+        instruction: {
+          code: "conditional_relevance",
+          remove: true,
+        },
+      })
+    );
   };
 
   const onTextChange = (newText) => {
@@ -55,7 +53,7 @@ export function useConditionalRelevance(code) {
 
   return {
     conditionalRelevance,
-    onToggleActive,
+    onDelete,
     onTextChange,
     onAdd,
   };
