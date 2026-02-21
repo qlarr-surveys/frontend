@@ -17,8 +17,8 @@ function NPSDesign({ code }) {
   return (
     <>
       <Box className={styles.choiceLabels}>
-        <Box>{state.content?.lower_bound_hint?.[lang]}</Box>
-        <Box>{state.content?.higher_bound_hint?.[lang]}</Box>
+        <Box>{state.content?.[lang]?.lower_bound_hint}</Box>
+        <Box>{state.content?.[lang]?.higher_bound_hint}</Box>
       </Box>
       <Box className={styles.choicesContainer}>
         {columns.map((option) => {
