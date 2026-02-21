@@ -210,6 +210,9 @@ export const designState = createSlice({
       state[payload.code].relevance = payload.value;
       addRelevanceInstructions(state, payload.code, payload.value);
     },
+    clearRelevanceConfig: (state, action) => {
+      delete state[action.payload.code].relevance;
+    },
     setDefaultValue: (state, action) => {
       const { code, selectedValue } = action.payload;
       const component = state[code];
@@ -793,6 +796,7 @@ export const {
   removeCustomValidationRule,
   updateInstruction,
   changeRelevance,
+  clearRelevanceConfig,
   setDefaultValue,
   onDrag,
   addComponent,
