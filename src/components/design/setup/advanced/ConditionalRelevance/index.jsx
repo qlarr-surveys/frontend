@@ -6,7 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 function ConditionalRelevance({ code, t }) {
-  const { conditionalRelevance, onDelete, onTextChange, onAdd } =
+  const { conditionalRelevance, errors, onDelete, onTextChange, onAdd } =
     useConditionalRelevance(code);
 
   return (
@@ -41,7 +41,13 @@ function ConditionalRelevance({ code, t }) {
             value={conditionalRelevance.text || ""}
             onChange={(e) => onTextChange(e.target.value)}
             sx={{ mt: 1 }}
+            error={errors.length > 0}
           />
+          {errors.map((err, i) => (
+            <Typography key={i} variant="caption" color="error" display="block" sx={{ mt: 0.5 }}>
+              {err.message}
+            </Typography>
+          ))}
         </Box>
       )}
     </>

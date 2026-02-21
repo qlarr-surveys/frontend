@@ -26,6 +26,7 @@ export function useOrderInstructions(code) {
 
   return {
     orderInstruction,
+    errors: orderInstruction?.errors || [],
     onTextChange,
   };
 }

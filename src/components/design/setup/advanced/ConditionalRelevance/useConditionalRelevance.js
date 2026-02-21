@@ -53,6 +53,7 @@ export function useConditionalRelevance(code) {
 
   return {
     conditionalRelevance,
+    errors: conditionalRelevance?.errors || [],
     onDelete,
     onTextChange,
     onAdd,

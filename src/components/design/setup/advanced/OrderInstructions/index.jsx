@@ -4,7 +4,7 @@ import { useOrderInstructions } from "./useOrderInstructions";
 import styles from "../shared.module.css";
 
 function OrderInstructions({ code, t }) {
-  const { orderInstruction, onTextChange } = useOrderInstructions(code);
+  const { orderInstruction, errors, onTextChange } = useOrderInstructions(code);
 
   if (!orderInstruction) {
     return null;
@@ -24,7 +24,13 @@ function OrderInstructions({ code, t }) {
         placeholder={t("order_instruction_placeholder")}
         value={orderInstruction.text || ""}
         onChange={(e) => onTextChange(e.target.value)}
+        error={errors.length > 0}
       />
+      {errors.map((err, i) => (
+        <Typography key={i} variant="caption" color="error" display="block" sx={{ mt: 0.5 }}>
+          {err.message}
+        </Typography>
+      ))}
     </Box>
   );
 }
