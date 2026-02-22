@@ -210,6 +210,9 @@ export const designState = createSlice({
       state[payload.code].relevance = payload.value;
       addRelevanceInstructions(state, payload.code, payload.value);
     },
+    clearRelevanceConfig: (state, action) => {
+      delete state[action.payload.code].relevance;
+    },
     setDefaultValue: (state, action) => {
       const { code, selectedValue } = action.payload;
       const component = state[code];
@@ -598,43 +601,59 @@ export const designState = createSlice({
     addCustomValidationRule: (state, action) => {
       const { code } = action.payload;
 
-      if (!state[code].validation) {
-        state[code].validation = {};
-      }
+      const numbers = (state[code].instructionList || [])
+        .map((i) => i.code.match(/^validation_custom_(\d+)$/)?.[1])
+        .filter(Boolean)
+        .map(Number);
 
-      if (!state[code].validation.custom_rules) {
-        state[code].validation.custom_rules = [];
-      }
+      const newRuleCode = `validation_custom_${Math.max(0, ...numbers) + 1}`;
 
-      const existingNumbers = state[code].validation.custom_rules
-        .map((rule) => {
-          const match = rule.id.match(/^validation_custom_(\d+)$/);
-          return match ? parseInt(match[1], 10) : 0;
-        })
-        .filter((num) => !isNaN(num));
-
-      const maxNumber =
-        existingNumbers.length > 0 ? Math.max(...existingNumbers) : 0;
-      const newNumber = maxNumber + 1;
-
-      state[code].validation.custom_rules.push({
-        id: `validation_custom_${newNumber}`,
-        rule: "",
-        errorMessages: {},
+      changeInstruction(state[code], {
+        code: newRuleCode,
+        text: "",
+        returnType: "boolean",
+        isActive: true,
       });
     },
 
-    updateCustomValidationRule: (state, action) => {
-      const { code, ruleIndex, updates } = action.payload;
-      const rule = state[code].validation.custom_rules[ruleIndex];
+    updateCustomValidationRuleText: (state, action) => {
+      const { code, ruleCode, text } = action.payload;
+      state[code].instructionList.find((i) => i.code === ruleCode).text = text;
+    },
 
-      Object.assign(rule, updates);
+    renameCustomValidationRule: (state, action) => {
+      const { code, ruleCode, newCode } = action.payload;
+      const instruction = state[code].instructionList.find(
+        (i) => i.code === ruleCode
+      );
+      instruction.code = newCode;
+      const content = state[code].content || {};
+      Object.keys(content).forEach((lang) => {
+        if (content[lang][ruleCode] !== undefined) {
+          content[lang][newCode] = content[lang][ruleCode];
+          delete content[lang][ruleCode];
+        }
+      });
+    },
+
+    updateCustomValidationRuleError: (state, action) => {
+      const { code, ruleCode, lang, value } = action.payload;
+      if (value) {
+        state[code].content[lang][ruleCode] = value;
+      } else {
+        delete state[code].content[lang][ruleCode];
+      }
     },
 
     removeCustomValidationRule: (state, action) => {
-      const { code, ruleIndex } = action.payload;
+      const { code, ruleCode } = action.payload;
 
-      state[code].validation.custom_rules.splice(ruleIndex, 1);
+      changeInstruction(state[code], { code: ruleCode, remove: true });
+
+      const content = state[code].content || {};
+      Object.keys(content).forEach((lang) => {
+        delete content[lang][ruleCode];
+      });
     },
 
     updateInstruction: (state, action) => {
@@ -789,10 +808,13 @@ export const {
   updateSkipRule,
   removeSkipRule,
   addCustomValidationRule,
-  updateCustomValidationRule,
+  updateCustomValidationRuleText,
+  renameCustomValidationRule,
+  updateCustomValidationRuleError,
   removeCustomValidationRule,
   updateInstruction,
   changeRelevance,
+  clearRelevanceConfig,
   setDefaultValue,
   onDrag,
   addComponent,

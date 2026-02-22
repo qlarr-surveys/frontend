@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { updateInstruction } from "~/state/design/designState";
+import { clearRelevanceConfig, updateInstruction } from "~/state/design/designState";
 
 export function useConditionalRelevance(code) {
   const dispatch = useDispatch();
@@ -11,18 +11,17 @@ export function useConditionalRelevance(code) {
     );
   });
 
-  const onToggleActive = (isActive) => {
-    if (conditionalRelevance) {
-      dispatch(
-        updateInstruction({
-          code,
-          instruction: {
-            ...conditionalRelevance,
-            isActive,
-          },
-        })
-      );
-    }
+  const onDelete = () => {
+    dispatch(
+      updateInstruction({
+        code,
+        instruction: {
+          code: "conditional_relevance",
+          remove: true,
+        },
+      })
+    );
+    dispatch(clearRelevanceConfig({ code }));
   };
 
   const onTextChange = (newText) => {
@@ -36,6 +35,7 @@ export function useConditionalRelevance(code) {
           },
         })
       );
+      dispatch(clearRelevanceConfig({ code }));
     }
   };
 
@@ -55,7 +55,8 @@ export function useConditionalRelevance(code) {
 
   return {
     conditionalRelevance,
-    onToggleActive,
+    errors: conditionalRelevance?.errors || [],
+    onDelete,
     onTextChange,
     onAdd,
   };

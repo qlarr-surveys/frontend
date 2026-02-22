@@ -1,7 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   addCustomValidationRule,
-  updateCustomValidationRule,
+  updateCustomValidationRuleText,
+  renameCustomValidationRule,
+  updateCustomValidationRuleError,
   removeCustomValidationRule,
 } from "~/state/design/designState";
 
@@ -9,33 +11,40 @@ export function useCustomValidationRules(code, t) {
   const dispatch = useDispatch();
 
   const customRules = useSelector((state) => {
-    return state.designState[code]?.validation?.custom_rules || [];
+    const instructionList = state.designState[code]?.instructionList || [];
+    const content = state.designState[code]?.content || {};
+    return instructionList
+      .filter((i) => /^validation_custom_/.test(i.code))
+      .map((i) => ({
+        code: i.code,
+        rule: i.text,
+        errors: i.errors || [],
+        errorMessages: Object.fromEntries(
+          Object.entries(content).map(([lang, langContent]) => [
+            lang,
+            langContent?.[i.code] || "",
+          ])
+        ),
+      }));
   });
 
   const languagesList = useSelector((state) => {
     return state.designState.langInfo.languagesList;
   });
 
-  const validateRuleIdSuffix = (suffix, currentIndex) => {
+  const validateRuleIdSuffix = (suffix, currentRuleCode) => {
     if (!suffix) {
       return t("validation_id_required");
     }
     if (!/^[a-zA-Z0-9_]+$/.test(suffix)) {
       return t("validation_id_invalid_chars");
     }
-    const fullId = `validation_custom_${suffix}`;
+    const fullCode = `validation_custom_${suffix}`;
     const isDuplicate = customRules.some(
-      (rule, idx) => idx !== currentIndex && rule.id === fullId
+      (rule) => rule.code !== currentRuleCode && rule.code === fullCode
     );
     if (isDuplicate) {
       return t("validation_id_duplicate");
-    }
-    return null;
-  };
-
-  const validateRuleCondition = (ruleText) => {
-    if (!ruleText || ruleText.trim() === "") {
-      return t("rule_condition_required");
     }
     return null;
   };
@@ -44,51 +53,32 @@ export function useCustomValidationRules(code, t) {
     dispatch(addCustomValidationRule({ code }));
   };
 
-  const onRemoveRule = (ruleIndex) => {
-    dispatch(removeCustomValidationRule({ code, ruleIndex }));
+  const onRemoveRule = (ruleCode) => {
+    dispatch(removeCustomValidationRule({ code, ruleCode }));
   };
 
-  const onRuleChange = (ruleIndex, newRule) => {
+  const onRuleChange = (ruleCode, text) => {
+    dispatch(updateCustomValidationRuleText({ code, ruleCode, text }));
+  };
+
+  const onRuleIdChange = (ruleCode, newSuffix) => {
     dispatch(
-      updateCustomValidationRule({
+      renameCustomValidationRule({
         code,
-        ruleIndex,
-        updates: { rule: newRule },
+        ruleCode,
+        newCode: `validation_custom_${newSuffix}`,
       })
     );
   };
 
-  const onRuleIdChange = (ruleIndex, newSuffix) => {
-    const newId = `validation_custom_${newSuffix}`;
-    dispatch(
-      updateCustomValidationRule({
-        code,
-        ruleIndex,
-        updates: { id: newId },
-      })
-    );
-  };
-
-  const onErrorMessageChange = (ruleIndex, lang, value) => {
-    dispatch(
-      updateCustomValidationRule({
-        code,
-        ruleIndex,
-        updates: {
-          errorMessages: {
-            ...customRules[ruleIndex].errorMessages,
-            [lang]: value,
-          },
-        },
-      })
-    );
+  const onErrorMessageChange = (ruleCode, lang, value) => {
+    dispatch(updateCustomValidationRuleError({ code, ruleCode, lang, value }));
   };
 
   return {
     customRules,
     languagesList,
     validateRuleIdSuffix,
-    validateRuleCondition,
     onAddRule,
     onRemoveRule,
     onRuleChange,
