@@ -8,6 +8,7 @@ import LoadingDots from "../common/LoadingDots";
 import Validation from "../run/Validation";
 import MultipleText from "../Questions/MultipleText/MultipleText";
 import AutoCompleteQuestion from "../Questions/AutoComplete/AutoCompleteQuestion";
+import { replaceFormatInstructions } from '../run/Content';
 
 const DateTimeQuestion = React.lazy(() =>
   import("../Questions/DateTime/DateTimeQuestion")
@@ -338,12 +339,15 @@ const QuestionWrapper = React.memo((props) => {
     let validity = questionState?.validity;
     return (show_errors || isDirty) && validity === false;
   });
+  const formatState = useSelector((state) => {
+    return state.runState.values[props.qualifiedCode];
+  });
 
   return (
     <Box
       data-code={props.code}
       css={css`
-        ${props.customCss}
+        ${replaceFormatInstructions(props.customCss, formatState, "custom_css")}
       `}
       sx={{
         borderColor: invalid ? "error.main" : "grey.500",

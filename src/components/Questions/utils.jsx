@@ -3,7 +3,7 @@ import PagesIcon from "@mui/icons-material/Pages";
 import FlagIcon from "@mui/icons-material/Flag";
 import StartIcon from "@mui/icons-material/Start";
 import SurveyIcon from "../common/SurveyIcons/SurveyIcon";
-import { alpha, getContrastRatio } from "@mui/material";
+import { getContrastRatio } from "@mui/material";
 
 export const groupIconByType = (type, size = "medium") => {
   switch (type) {

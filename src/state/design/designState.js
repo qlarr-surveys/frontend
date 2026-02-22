@@ -530,6 +530,18 @@ export const designState = createSlice({
 
       state[payload.code].content[payload.lang][payload.key] = payload.value;
     },
+    changeCustomCss: (state, action) => {
+      let payload = action.payload;
+      const referenceInstructions = buildReferenceInstruction(
+        payload.value,
+        "custom",
+        "css"
+      );
+      state[payload.code].customCss = payload.value
+      referenceInstructions?.forEach((instruction) =>
+        changeInstruction(state[payload.code], instruction)
+      );
+    },
     changeResources: (state, action) => {
       let payload = action.payload;
       if (!state[payload.code].resources) {
@@ -712,6 +724,7 @@ export const {
   onAdditionalLangAdded,
   onAdditionalLangRemoved,
   changeLang,
+  changeCustomCss,
   changeAttribute,
   changeTimeFormats,
   changeContent,
