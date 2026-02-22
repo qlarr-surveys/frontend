@@ -1,6 +1,7 @@
 .fullWidth {
   min-height: 24px;
   width: 100%;
+  overflow-wrap: break-word;
   cursor: text;
 }
 
