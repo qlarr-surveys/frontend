@@ -73,6 +73,9 @@ function Content(props) {
 export default React.memo(Content);
 
 export function replaceFormatInstructions(html, state, postFix) {
+  if(!html){
+    return html
+  }
   const allMatches = getAllFormatInstructions(html);
   console.log(allMatches);
   allMatches.forEach((match, index) => {
