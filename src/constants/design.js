@@ -43,6 +43,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
     case "text_display":
       return [
@@ -64,6 +69,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -89,6 +99,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "video_display":
@@ -113,6 +128,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -152,6 +172,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "options":
@@ -160,6 +185,11 @@ export const setupOptions = (type) => {
           title: "",
           key: "",
           rules: ["changeCode", "disabled", "relevance"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -182,6 +212,11 @@ export const setupOptions = (type) => {
             "validation_not_contains",
             "custom_validation_rules",
           ],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -225,6 +260,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "email":
@@ -261,6 +301,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "autocomplete":
@@ -289,6 +334,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -328,6 +378,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "file_upload":
@@ -361,6 +416,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "signature":
@@ -388,6 +448,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -418,6 +483,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "barcode":
@@ -447,6 +517,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "video_capture":
@@ -475,6 +550,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -508,6 +588,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "date":
@@ -539,6 +624,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "time":
@@ -567,7 +657,12 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
-        }
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
     case "scq":
       return [
@@ -595,6 +690,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -628,6 +728,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "image_scq":
@@ -659,6 +764,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -693,6 +803,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "multiple_text":
@@ -720,6 +835,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -753,6 +873,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -791,6 +916,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "icon_mcq":
@@ -827,6 +957,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -865,6 +1000,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
     case "scq_icon_array":
       return [
@@ -891,6 +1031,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
     case "mcq_array":
@@ -924,6 +1069,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
     case "nps":
       return [
@@ -952,6 +1102,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
   }
