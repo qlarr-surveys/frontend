@@ -203,53 +203,45 @@ function Web() {
       <Route
         path={routes.login}
         element={
-          <PublicOnlyRoute>
-            <Suspense fallback={<LoadingIndicator />}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
-                <AuthIllustrationLayout>
-                  <LoginView />
-                </AuthIllustrationLayout>
-              </ManagePageWrapper>
-            </Suspense>
-          </PublicOnlyRoute>
+          <Suspense fallback={<LoadingIndicator />}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
+              <AuthIllustrationLayout>
+                <LoginView />
+              </AuthIllustrationLayout>
+            </ManagePageWrapper>
+          </Suspense>
         }
       />
       <Route
         path={routes.forgotPassword}
         element={
-          <PublicOnlyRoute>
-            <Suspense fallback={<LoadingIndicator />}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
-                <AuthIllustrationLayout>
-                  <ForgotPasswordView />
-                </AuthIllustrationLayout>
-              </ManagePageWrapper>
-            </Suspense>
-          </PublicOnlyRoute>
+          <Suspense fallback={<LoadingIndicator />}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
+              <AuthIllustrationLayout>
+                <ForgotPasswordView />
+              </AuthIllustrationLayout>
+            </ManagePageWrapper>
+          </Suspense>
         }
       />
       <Route
         path={routes.resetPassword}
         element={
-          <PublicOnlyRoute>
-            <Suspense fallback={<LoadingIndicator />}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
-                <ResetPasswordView />
-              </ManagePageWrapper>
-            </Suspense>
-          </PublicOnlyRoute>
+          <Suspense fallback={<LoadingIndicator />}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
+              <ResetPasswordView />
+            </ManagePageWrapper>
+          </Suspense>
         }
       />
       <Route
         path={routes.confirmNewUser}
         element={
-          <PublicOnlyRoute>
-            <Suspense fallback={<LoadingIndicator />}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
-                <ResetPasswordView confirmNewUser={true} />
-              </ManagePageWrapper>
-            </Suspense>
-          </PublicOnlyRoute>
+          <Suspense fallback={<LoadingIndicator />}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
+              <ResetPasswordView confirmNewUser={true} />
+            </ManagePageWrapper>
+          </Suspense>
         }
       />
     </Routes>
@@ -285,14 +277,6 @@ const PrivateComponent = ({ children }) => {
     children
   ) : (
     <Navigate to="/login" replace state={{ from: location }} />
-  );
-};
-
-const PublicOnlyRoute = ({ children }) => {
-  return TokenService.isAuthenticated() ? (
-    <Navigate to="/" replace />
-  ) : (
-    children
   );
 };
 
