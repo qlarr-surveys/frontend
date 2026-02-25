@@ -9,6 +9,7 @@
   font-size: inherit !important;
   font-family: inherit !important;
   outline: none;
+  overflow-wrap: break-word;
 }
 
 .tiptap-editor:focus {
@@ -353,6 +354,7 @@
 
 .content-editor {
   padding: 0 !important;
+  overflow-wrap: break-word;
 }
 
 .content-editor.rtl {
