@@ -1,7 +1,7 @@
 import { Box, IconButton, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import styles from "./Survey.module.css";
-import { Edit, Check } from "@mui/icons-material";
+import { Edit } from "@mui/icons-material";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
@@ -42,10 +42,11 @@ export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
       {isEditing ? (
         <>
           <TextField
-            sx={{ px: 3, flexGrow: 1 }}
+            sx={{ px: 3, mr: 6, flexGrow: 1 }}
             value={title}
             onChange={handleTitleChange}
             onKeyDown={handleKeyDown}
+            onBlur={handleSave}
             autoFocus
             variant="standard"
             fullWidth
@@ -53,13 +54,6 @@ export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
               style: { color: "white" },
             }}
           />
-          <IconButton
-            className={styles.saveIcon}
-            onClick={handleSave}
-            sx={{ ml: 1 }}
-          >
-            <Check sx={{ color: "white" }} />
-          </IconButton>
         </>
       ) : (
         <>
