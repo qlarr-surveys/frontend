@@ -216,7 +216,7 @@ function Web() {
         path={routes.login}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
               <AuthIllustrationLayout>
                 <LoginView />
               </AuthIllustrationLayout>
@@ -228,7 +228,7 @@ function Web() {
         path={routes.forgotPassword}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
               <AuthIllustrationLayout>
                 <ForgotPasswordView />
               </AuthIllustrationLayout>
@@ -240,7 +240,7 @@ function Web() {
         path={routes.resetPassword}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
               <ResetPasswordView />
             </ManagePageWrapper>
           </Suspense>
@@ -250,7 +250,7 @@ function Web() {
         path={routes.confirmNewUser}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
               <ResetPasswordView confirmNewUser={true} />
             </ManagePageWrapper>
           </Suspense>
