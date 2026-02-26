@@ -15,6 +15,16 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
+.groupLabel {
+  max-width: 800px;
+  min-width: 350px;
+  margin: 0 auto;
+  padding: 16px 8px 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
 .footer {
   height: 100px;
 }

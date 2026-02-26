@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { onDrag, setup } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { setupOptions } from "~/constants/design";
-function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
+function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGroup }) {
   const dispatch = useDispatch();
   const group = useSelector((state) => {
     return state.designState[code];
@@ -212,6 +212,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
             parentCode={code}
             parentType={type}
             emptyGroup={true}
+            isLastGroup={isLastGroup}
           />
         )}
       </>
