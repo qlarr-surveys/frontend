@@ -213,6 +213,7 @@
   "standard_error": "خطأ قياسي",
   "submit": "إرسال",
   "survey": "استطلاع",
+  "saving_survey": "جارٍ حفظ الاستطلاع...",
   "text_field_size": "حجم حقل النص",
   "text_style": "نمط النص",
   "textarea_lines": "خطوط منطقة النص",
@@ -308,6 +309,8 @@
     "1y": "سنة واحدة"
   },
   "logic_builder": {
+    "show_when": "إظهار عندما",
+    "click_to_toggle": "انقر للتبديل بين الكل/أي",
     "add_condition": "إضافة شرط",
     "agree": "موافق",
     "all": "جميع هذه تتطابق",

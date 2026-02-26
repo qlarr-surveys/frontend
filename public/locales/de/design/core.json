@@ -213,6 +213,7 @@
   "standard_error": "Standardfehler",
   "submit": "Absenden",
   "survey": "Umfrage",
+  "saving_survey": "Umfrage wird gespeichert...",
   "text_field_size": "Textfeldgröße",
   "text_style": "Textstil",
   "textarea_lines": "TextArea-Zeilen",
@@ -308,6 +309,8 @@
     "1y": "1 Jahr"
   },
   "logic_builder": {
+    "show_when": "Anzeigen wenn",
+    "click_to_toggle": "Klicken zum Umschalten zwischen Alle/Beliebige",
     "add_condition": "Bedingung hinzufügen",
     "agree": "Einverstanden",
     "all": "Alle müssen zutreffen",

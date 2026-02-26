@@ -236,6 +236,7 @@
   "standard_error": "Erro Padrão",
   "submit": "Enviar",
   "survey": "Pesquisa",
+  "saving_survey": "Salvando pesquisa...",
   "text_color": "Cor do Texto",
   "text_field_size": "Tamanho do Campo de Texto",
   "text_style": "Estilo de Texto",
@@ -308,6 +309,8 @@
   "word_count": "Contador de palavras: {{count}}",
   "wrong_logic_err": "Houve um erro na Lógica, portanto isso foi redefinido para <strong>Sempre Mostrar</strong>",
   "logic_builder": {
+    "show_when": "Mostrar quando",
+    "click_to_toggle": "Clique para alternar entre Todos/Qualquer",
     "add_condition": "Adicionar condição",
     "add_group": "Adicionar grupo",
     "all": "Todas correspondem",

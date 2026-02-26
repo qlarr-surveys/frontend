@@ -256,6 +256,7 @@
   },
   "responses": {
     "answer": "Antwort",
+    "no_selection": "Wählen Sie eine Antwort",
     "complete_response": "Vollständige Antwort",
     "complete_responses": "Vollständige Antworten",
     "database_format": "Datenbankformat",
