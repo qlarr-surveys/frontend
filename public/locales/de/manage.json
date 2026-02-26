@@ -379,5 +379,19 @@
     "all_in_one": "Alles in einem",
     "group_by_group": "Seite für Seite",
     "question_by_question": "Frage für Frage"
+  },
+  "empty_state": {
+    "welcome": "Willkommen {{firstName}} {{lastName}}",
+    "subtitle": "Gewinnen Sie tiefere Einblicke für klügere Entscheidungen.",
+    "create_first_survey": "Erstellen Sie Ihre erste Umfrage in Minuten",
+    "create_survey_btn": "Umfrage erstellen",
+    "generate_with_ai_btn": "Mit KI generieren",
+    "import_template": "Vorhandene Vorlage importieren",
+    "feature_collect": "Daten überall sammeln.",
+    "feature_trust": "Jeder Antwort vertrauen.",
+    "feature_own": "Jedes Ergebnis besitzen.",
+    "need_help": "Brauchen Sie Hilfe beim Einstieg?",
+    "contact_support": "Support kontaktieren",
+    "ai_coming_soon": "Demnächst! KI-Umfrageerstellung ist auf dem Weg."
   }
 }
