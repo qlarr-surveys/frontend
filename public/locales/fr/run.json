@@ -52,5 +52,6 @@
     "saveAndContinueLaterTitle" : "Enregistrer et continuer plus tard",
     "saveAndContinueLaterDesc":"Nous enregistrerons votre progression actuelle. Vous pouvez revenir à ce sondage plus tard.",
     "saveForLater":"Enregistrer pour plus tard",
-    "linkCopied":"Lien copié dans le presse-papiers !"
+    "linkCopied":"Lien copié dans le presse-papiers !",
+    "no_options": "Aucune option trouvée"
 }

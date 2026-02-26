@@ -52,6 +52,7 @@
     "saveAndContinueLaterTitle" : "Guardar y continuar más tarde",
     "saveAndContinueLaterDesc":"Guardaremos tu progreso actual. Puedes regresar a esta encuesta más tarde.",
     "saveForLater":"Guardar para más tarde",
-    "linkCopied":"¡Enlace copiado al portapapeles!"
+    "linkCopied":"¡Enlace copiado al portapapeles!",
+    "no_options": "No se encontraron opciones"
 }
 

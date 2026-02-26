@@ -21,6 +21,7 @@ export const FieldSelector = React.memo(function FieldSelector({ value, onChange
   return (
     <Autocomplete
       className={compact ? undefined : styles.fieldSelector}
+      noOptionsText={t('logic_builder.no_options')}
       options={fields}
       value={selectedField}
       onChange={handleChange}
