@@ -9,10 +9,9 @@ import {
   TablePagination,
   Typography,
 } from "@mui/material";
-import TokenService from "~/services/TokenService";
 import styles from "./Dashboard.module.css";
 import { HeaderContent } from "~/components/manage/HeaderContent";
-import { ROLES } from "~/constants/roles";
+import { isSurveyAdmin } from "~/constants/roles";
 import { setLoading } from "~/state/edit/editState";
 import { useDispatch } from "react-redux";
 
@@ -93,16 +92,6 @@ function Dashboard() {
     }));
   };
 
-  const shouldShowClickAdd = () => {
-    const roles = TokenService.getUser().roles;
-    if (
-      roles.indexOf(ROLES.SUPER_ADMIN) > -1 ||
-      roles.indexOf(ROLES.SURVEY_ADMIN) > -1
-    ) {
-      return true;
-    }
-    return false;
-  };
 
   const [description, setDescription] = useState("");
   const [actionType, setActionType] = useState("");
@@ -273,7 +262,7 @@ function Dashboard() {
                   direction="row"
                   spacing={2}
                 >
-                  {shouldShowClickAdd() && !isCreateSurveyOpen && (
+                  {isSurveyAdmin() && !isCreateSurveyOpen && (
                     <CustomTooltip
                       title={t("tooltips.create_new_survey")}
                       showIcon={false}
@@ -288,7 +277,7 @@ function Dashboard() {
                       </Button>
                     </CustomTooltip>
                   )}
-                  {shouldShowClickAdd() && (
+                  {isSurveyAdmin() && (
                     <CustomTooltip
                       title={t("tooltips.import_survey")}
                       showIcon={false}
@@ -411,7 +400,7 @@ function Dashboard() {
               <DashboardEmptyState
                 onCreateSurvey={handleButtonClick}
                 onImportTemplate={handleImportSurveyClick}
-                canCreate={shouldShowClickAdd()}
+                canCreate={isSurveyAdmin()}
               />
             )}
           </>
