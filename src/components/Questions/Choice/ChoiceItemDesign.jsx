@@ -20,6 +20,7 @@ import { contentEditable, DESIGN_SURVEY_MODE, inDesign } from "~/routes";
 import { useTheme } from "@emotion/react";
 import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
 import ContentEditor from "~/components/design/ContentEditor";
+import InlineCodeEditor from "~/components/design/InlineCodeEditor";
 
 function ChoiceItemDesign(props) {
   const dispatch = useDispatch();
@@ -206,6 +207,13 @@ function ChoiceItemDesign(props) {
               }}
             />
           </div>
+        )}
+        {inDesign(props.designMode) && (
+          <InlineCodeEditor
+            qualifiedCode={props.qualifiedCode}
+            code={props.code}
+            designMode={props.designMode}
+          />
         )}
         {props.type === "checkbox" ? (
           <Checkbox />
