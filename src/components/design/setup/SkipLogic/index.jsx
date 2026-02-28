@@ -175,6 +175,7 @@ function SkipLogic({ code, t }) {
 
               <Autocomplete
                 multiple
+                noOptionsText={t('logic_builder.no_options')}
                 options={availableOptions || []}
                 value={selectedOptions}
                 onChange={(event, newValue) =>

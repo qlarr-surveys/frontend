@@ -240,6 +240,7 @@
   "standard_error": "Erreur Standard",
   "submit": "Soumettre",
   "survey": "Sondage",
+  "saving_survey": "Sauvegarde de l'enquête...",
   "text_color": "Couleur du Texte",
   "text_field_size": "Taille du Champ de Texte",
   "text_style": "Style de Texte",
@@ -326,6 +327,8 @@
   "word_count": "Compteur de mots : {{count}}",
   "wrong_logic_err": "Il y a eu une erreur dans la Logique, donc cela a été réinitialisé à <strong>Toujours Afficher</strong>",
   "logic_builder": {
+    "show_when": "Afficher quand",
+    "click_to_toggle": "Cliquer pour basculer entre Tous/N'importe lequel",
     "add_condition": "Ajouter une condition",
     "add_group": "Ajouter un groupe",
     "all": "Toutes correspondent",

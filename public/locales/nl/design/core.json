@@ -240,6 +240,7 @@
   "standard_error": "Standaard Fout",
   "submit": "Verzenden",
   "survey": "Enquête",
+  "saving_survey": "Enquête opslaan...",
   "text_color": "Tekstkleur",
   "text_field_size": "Tekstveld Grootte",
   "text_style": "Tekststijl",
@@ -326,6 +327,8 @@
   "word_count": "Woordentelling: {{count}}",
   "wrong_logic_err": "Er was een fout in de Logica, daarom is dit gereset naar <strong>Altijd Tonen</strong>",
   "logic_builder": {
+    "show_when": "Tonen wanneer",
+    "click_to_toggle": "Klik om te schakelen tussen Alle/Elke",
     "add_condition": "Voorwaarde toevoegen",
     "add_group": "Groep toevoegen",
     "all": "Alle voorwaarden voldoen",

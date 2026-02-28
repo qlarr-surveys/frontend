@@ -217,6 +217,7 @@
   "standard_error": "Standard Error",
   "submit": "Submit",
   "survey": "Survey",
+  "saving_survey": "Saving Survey...",
   "text_field_size": "Text Field Size",
   "text_style": "Text Style",
   "word_count": "Word count: {{count}}",

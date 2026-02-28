@@ -5,5 +5,8 @@
 }
 
 .snackBar {
+  /* rtl:ignore */
   left: 56px !important;
+  /* rtl:ignore */
+  right: auto !important;
 }
