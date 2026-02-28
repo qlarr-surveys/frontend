@@ -55,7 +55,7 @@ function RuleCard({
           size="small"
           placeholder="custom_rule"
           value={idSuffix}
-          onChange={(e) => setIdSuffix(e.target.value)}
+          onChange={(e) => setIdSuffix(e.target.value.replace(/[^a-zA-Z0-9_]/g, ""))}
           onBlur={() => !idError && onRuleIdChange(rule.code, idSuffix)}
           error={!!idError}
           helperText={idError}

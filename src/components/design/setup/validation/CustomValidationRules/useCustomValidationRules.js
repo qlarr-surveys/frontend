@@ -36,9 +36,6 @@ export function useCustomValidationRules(code, t) {
     if (!suffix) {
       return t("validation_id_required");
     }
-    if (!/^[a-zA-Z0-9_]+$/.test(suffix)) {
-      return t("validation_id_invalid_chars");
-    }
     const fullCode = `validation_custom_${suffix}`;
     const isDuplicate = customRules.some(
       (rule) => rule.code !== currentRuleCode && rule.code === fullCode
