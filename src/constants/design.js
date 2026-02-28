@@ -251,8 +251,8 @@ export const setupOptions = (type) => {
             "validation_gt",
             "validation_gte",
             "validation_equals",
-            "custom_validation_rules",
             "validation_not_equal",
+            "custom_validation_rules",
           ],
         },
         {
