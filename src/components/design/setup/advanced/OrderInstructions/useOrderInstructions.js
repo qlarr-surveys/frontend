@@ -21,6 +21,16 @@ export function useOrderInstructions(code) {
           },
         })
       );
+    } else {
+      dispatch(
+        updateInstruction({
+          code,
+          instruction: {
+            code: "order",
+            remove: true,
+          },
+        })
+      );
     }
   };
 
