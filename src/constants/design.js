@@ -216,7 +216,7 @@ export const setupOptions = (type) => {
         {
           title: "advanced",
           key: "advanced",
-          rules: ["order_instructions", "conditional_relevance"],
+          rules: ["conditional_relevance"],
         },
       ];
 
