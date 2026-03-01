@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { Alert, Autocomplete, Button, TextField } from "@mui/material";
 import StorageIcon from "@mui/icons-material/Storage";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { changeAttribute, changeResources } from "~/state/design/designState";
 import styles from "./AutoComplete.module.css";
 import LoadingDots from "~/components/common/LoadingDots";
@@ -12,10 +13,13 @@ import {
   formatlocalDateTime,
   serverDateTimeToLocalDateTime,
 } from "~/utils/DateUtils";
+import { processError, PROCESSED_ERRORS } from "~/utils/errorsProcessor";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function AutoCompleteQuestion({ code, t, onMainLang }) {
   const designService = useService("design");
   const dispatch = useDispatch();
+  const { t: tManage } = useTranslation(NAMESPACES.MANAGE);
   const [isUploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -44,12 +48,8 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
       })
       .catch((err) => {
         setUploading(false);
-        const errorType = err?.response?.data?.error;
-        if (errorType === "AutoCompleteMalformedInputException") {
-          setError(t("autocomplete_malformed_input"));
-        } else {
-          setError(t("autocomplete_upload_error"));
-        }
+        const processed = processError(err) || PROCESSED_ERRORS.UNIDENTIFIED_ERROR;
+        setError(tManage(`processed_errors.${processed.name}`));
       });
   };
 

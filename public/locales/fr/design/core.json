@@ -251,8 +251,6 @@
   "translation": "Traduction",
   "unspecified": "Non Spécifié",
   "upload_autocomplete": "Télécharger un fichier JSON d'autocomplétion",
-  "autocomplete_malformed_input": "Entrée malformée : Le fichier doit être un tableau JSON contenant uniquement des chaînes de caractères",
-  "autocomplete_upload_error": "Échec du téléchargement des données d'autocomplétion. Veuillez réessayer.",
   "upload_background": "Télécharger l'arrière-plan",
   "upload_image": "Télécharger une Image",
   "upload_video": "Télécharger une Vidéo",

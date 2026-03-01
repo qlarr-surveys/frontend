@@ -185,6 +185,7 @@
     "backend_down": "Backend is Unreachable... Please Try again later",
     "duplicate_email": "Email address is already registered.",
     "autocomplete_malformed_input": "Malformed Input: File must be a JSON array containing only strings",
+    "max_upload_size_exceeded": "File size exceeds the maximum upload limit.",
     "duplicate_survey_name": "Duplicate Survey Name",
     "expired_confirmation_token": "Expired Confirmation Token, Please Register Once more",
     "expired_reset_token": "Expired Confirmation Token, Please Click on Forgot password once more",

@@ -251,8 +251,6 @@
   "translation": "Vertaling",
   "unspecified": "Niet Gespecificeerd",
   "upload_autocomplete": "Autocomplete JSON-bestand uploaden",
-  "autocomplete_malformed_input": "Ongeldige invoer: Het bestand moet een JSON-array zijn die alleen tekenreeksen bevat",
-  "autocomplete_upload_error": "Het uploaden van de autocomplete-gegevens is mislukt. Probeer het opnieuw.",
   "upload_background": "Achtergrond uploaden",
   "upload_image": "Afbeelding Uploaden",
   "upload_video": "Video Uploaden",

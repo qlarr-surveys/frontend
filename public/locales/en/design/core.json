@@ -230,8 +230,6 @@
   "disqualify": "Disqualify",
   "upload_image": "Upload Image",
   "upload_autocomplete": "Upload Autocomplete JSON file",
-  "autocomplete_malformed_input": "Malformed Input: File must be a JSON array containing only strings",
-  "autocomplete_upload_error": "Failed to upload autocomplete data. Please try again.",
   "upload_video": "Upload Video",
   "uploading_image": "Uploading Image",
   "uploading_autocomplete": "Uploading Autocomplete JSON file",

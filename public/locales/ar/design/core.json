@@ -225,8 +225,6 @@
   "disqualify": "استبعاد",
   "upload_image": "رفع الصورة",
   "upload_autocomplete": "رفع ملف JSON للإكمال التلقائي",
-  "autocomplete_malformed_input": "إدخال غير صحيح: يجب أن يكون الملف مصفوفة JSON تحتوي فقط على نصوص",
-  "autocomplete_upload_error": "فشل تحميل بيانات الإكمال التلقائي. يرجى المحاولة مرة أخرى.",
   "upload_video": "تحميل فيديو",
   "uploading_image": "جاري تحميل الصورة",
   "uploading_autocomplete": "تحميل ملف JSON للإكمال التلقائي",
