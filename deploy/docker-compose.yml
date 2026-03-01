@@ -1,0 +1,73 @@
+networks:
+  docker-local_net:
+    driver: bridge
+
+volumes:
+  db: {}
+  survey-files: {}
+
+services:
+  react-app:
+    container_name: 'qlarr-frontend'
+    image: public.ecr.aws/u2n3x2r5/frontend:ee4df20d551b761b169449864382c9abe9aec686
+    environment:
+      CADDY_HOSTNAME: "${CADDY_HOSTNAME}"
+      VITE_PROTOCOL: "http" # rely on auto-redirect to https
+      VITE_FRONT_END_HOST: "${CADDY_HOSTNAME}"
+      VITE_BE_URL: "http://${CADDY_HOSTNAME}:8080"
+      VITE_CLOUD_URL: ""
+    depends_on:
+      - backend-app
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+
+  backend-app:
+    container_name: 'qlarr-backend'
+    image: public.ecr.aws/u2n3x2r5/backend:5579fceca9f2384fe7f1778bfb669c370b660388
+    ports:
+      - "8080:8080"
+    networks:
+      - docker-local_net
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+    restart: unless-stopped
+    volumes:
+      - survey-files:/var/qlarr/resources
+    environment:
+      JWT_SECRET: "${JWT_SECRET}"
+      MAIL_HOST: "${MAIL_HOST}"
+      MAIL_PORT: "${MAIL_PORT}"
+      MAIL_SMTP_SSL: "${MAIL_SMTP_SSL}"
+      MAIL_SMTP_STARTTLS: "${MAIL_SMTP_STARTTLS}"
+      MAIL_USERNAME: "${MAIL_USERNAME}"
+      MAIL_PASSWORD: "${MAIL_PASSWORD}"
+      SPRING_PROFILES_ACTIVE: "docker"
+      DB_URL: "jdbc:postgresql://postgres-db:5432/qlarrdb"
+      DB_USER: "${POSTGRES_USER}"
+      FILE_SYSTEM_ROOT_FOLDER: "/var/qlarr/resources"
+      DB_PASSWORD: "${POSTGRES_PASSWORD}"
+      FRONTEND_URL: "https://${CADDY_HOSTNAME}"
+
+  postgres-db:
+    container_name: 'postgres-db'
+    image: postgres:15.1
+    networks:
+      - docker-local_net
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB:-qlarrdb}"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

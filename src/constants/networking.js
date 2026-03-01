@@ -3,8 +3,8 @@ const normalizeUrl = (url) => {
   return url.endsWith('/') ? url : url + '/';
 };
 
-export const FRONT_END_HOST = import.meta.env.VITE_FRONT_END_HOST;
-export const FRONT_END_DOMAIN = import.meta.env.VITE_FRONT_END_HOST.split(":")[0];
-export const PROTOCOL = import.meta.env.VITE_PROTOCOL;
+export const FRONT_END_HOST = window.APP_CONFIG.FRONT_END_HOST;
+export const FRONT_END_DOMAIN = window.APP_CONFIG.FRONT_END_HOST.split(":")[0];
+export const PROTOCOL = window.APP_CONFIG.PROTOCOL;
 
-export const BACKEND_BASE_URL = normalizeUrl(import.meta.env.VITE_BE_URL);
+export const BACKEND_BASE_URL = normalizeUrl(window.APP_CONFIG.BE_URL);

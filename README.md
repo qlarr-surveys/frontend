@@ -1,3 +1,4 @@
+<!-- markdownlint-disable line-length -->
 # Qlarr Frontend
 Qlarr Surveys is a framework to create and run customizable, scientific & offline-first **[surveys as code](https://github.com/qlarr-surveys/survey-engine)** on all platforms. Surveys are defined using JSON to represent ui agnostic survey components and [Javascript instructions](https://github.com/qlarr-surveys/survey-engine-script) to represent complex survey logic.
 
@@ -9,6 +10,11 @@ This is the backend application for qlarr, built using React to
 
 
 ## Operations
+
+[![Deploy to Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/qlarr-surveys/frontend&envVars=)
+
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
 If you wish to run this project for a production environment, we recommend you to use our [docker-compose](https://github.com/qlarr-surveys/backend/blob/main/docker-compose.yml) file that deploys both frontend and backend
 
 To run this locally, follow these steps:
@@ -29,8 +35,8 @@ To run this locally, follow these steps:
    ```
 
 4. **Set Up Development Environment**:
-   - Edit a `.env` file in the root directory to configure environment variables as needed (e.g., API endpoints, environment settings).
-   
+   - Edit [`./public/config.js`](./public/config.js) to configure environment variables as needed (e.g., API endpoints, environment settings).
+
 5. **Run the Development Server**:
    Start the development server with:
    ```bash
@@ -43,7 +49,7 @@ To run this locally, follow these steps:
    ```bash
    npm run build
    ```
-   
+
 
 
 ## Contributing
