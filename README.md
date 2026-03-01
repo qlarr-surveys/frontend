@@ -1,3 +1,4 @@
+<!-- markdownlint-disable line-length -->
 # Qlarr Frontend
 Qlarr Surveys is a framework to create and run customizable, scientific & offline-first **[surveys as code](https://github.com/qlarr-surveys/survey-engine)** on all platforms. Surveys are defined using JSON to represent ui agnostic survey components and [Javascript instructions](https://github.com/qlarr-surveys/survey-engine-script) to represent complex survey logic.
 
@@ -29,8 +30,8 @@ To run this locally, follow these steps:
    ```
 
 4. **Set Up Development Environment**:
-   - Edit a `.env` file in the root directory to configure environment variables as needed (e.g., API endpoints, environment settings).
-   
+   - Edit [`./public/config.js`](./public/config.js) to configure environment variables as needed (e.g., API endpoints, environment settings).
+
 5. **Run the Development Server**:
    Start the development server with:
    ```bash
@@ -43,7 +44,7 @@ To run this locally, follow these steps:
    ```bash
    npm run build
    ```
-   
+
 
 
 ## Contributing

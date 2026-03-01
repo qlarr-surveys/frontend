@@ -9,10 +9,6 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-
-ARG VITE_FRONT_END_HOST
-ARG VITE_PROTOCOL
-ARG VITE_BE_URL
 RUN  npm run build
 
 
@@ -25,4 +21,6 @@ COPY --from=builder /app/build /usr/share/caddy
 EXPOSE 80
 EXPOSE 443
 
+COPY --chmod=755 entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]

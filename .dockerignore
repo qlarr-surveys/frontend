@@ -1,3 +1,5 @@
+Dockerfile
+.dockerignore
 /node_modules
 /build
 .github
