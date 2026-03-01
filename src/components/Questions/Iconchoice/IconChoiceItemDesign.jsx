@@ -298,13 +298,11 @@ function IconChoiceItemDesign({
           </div>
           {!hideText && (
             <ContentEditor
-              customStyle={`
-                          text-align: center;
-                        `}
               code={qualifiedCode}
               showToolbar={false}
               editable={contentEditable(designMode)}
               extended={false}
+              centered
               placeholder={
                 onMainLang
                   ? t("content_editor_placeholder_option", {

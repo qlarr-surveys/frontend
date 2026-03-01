@@ -32,6 +32,7 @@ function ContentEditor({
   editable,
   customStyle,
   showToolbar = true,
+  centered = false,
 }) {
   const dispatch = useDispatch();
 
@@ -114,7 +115,7 @@ function ContentEditor({
 
   return (
     <Box
-      className={styles.fullWidth}
+      className={`${styles.fullWidth}${centered ? " tiptap-centered" : ""}`}
       css={css`
         ${customStyle}
       `}
