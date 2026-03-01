@@ -1,6 +1,7 @@
 import createCache from "@emotion/cache";
 import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
+import { setDayjsLocale } from "./format-time";
 
 export const rtlLanguage = ["ar"];
 
@@ -13,6 +14,7 @@ export const setLangFromSession = (i18n) => {
   }
   lang && i18n.changeLanguage(lang);
   setDocumentLang(lang);
+  setDayjsLocale(lang);
 };
 
 export const setDocumentLang = (lang) => {

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { shallowEqual, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 import styles from "./AutoComplete.module.css";
@@ -11,6 +12,7 @@ import { useService } from "~/hooks/use-service";
 import { valueChange } from "~/state/runState";
 
 function AutoCompleteQuestion(props) {
+  const { t } = useTranslation("run");
   const runService = useService("run");
   const state = useSelector((state) => {
     let questionState = state.runState.values[props.component.qualifiedCode];
@@ -95,7 +97,8 @@ function AutoCompleteQuestion(props) {
     <div className={styles.questionItem}>
       <Autocomplete
         id="search-autocomplete"
-        sx={{ width: "50%", marginTop: "8px" }}
+        sx={{ width: { xs: "100%", sm: "50%" }, marginTop: "8px" }}
+        noOptionsText={t('no_options')}
         open={open}
         value={state.value}
         onOpen={() => setOpen(true)}

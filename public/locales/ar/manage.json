@@ -227,6 +227,7 @@
   },
   "responses": {
     "export": "تصدير الردود",
+    "no_selection": "اختر ردًا",
     "filter_completed": "استجابات الفلتر المكتملة",
     "filter_completed_show_all": "كل الردود",
     "filter_completed_show_completed": "الردود الكاملة فقط",

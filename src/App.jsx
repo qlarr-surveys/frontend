@@ -5,6 +5,7 @@ import HttpBackend from "i18next-http-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 import LoadingDots from "./components/common/LoadingDots";
 import { isAndroid } from "./utils/common";
+import { setDayjsLocale } from "./utils/format-time";
 
 const Web = isAndroid ? null : lazy(() => import("./Web"));
 const Android = isAndroid ? lazy(() => import("./Android")) : null;
@@ -60,6 +61,8 @@ if (!i18next.isInitialized) {
     .use(HttpBackend)
     .use(LanguageDetector)
     .init(i18nConfig);
+
+  setDayjsLocale(localStorage.getItem("lang") || 'en');
 }
 
 function App() {

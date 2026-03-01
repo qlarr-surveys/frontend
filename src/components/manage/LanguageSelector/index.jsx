@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Select, MenuItem } from "@mui/material";
 import { setDocumentLang } from "~/utils/common";
+import { setDayjsLocale } from "~/utils/format-time";
 import { KeyboardArrowDown } from "@mui/icons-material";
 
 export const LanguageSelector = () => {
@@ -10,6 +11,7 @@ export const LanguageSelector = () => {
     localStorage.setItem("lang", event.target.value);
     i18n.changeLanguage(event.target.value);
     setDocumentLang(event.target.value);
+    setDayjsLocale(event.target.value);
   };
 
   return (

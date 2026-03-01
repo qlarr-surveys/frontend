@@ -25,7 +25,6 @@ function Group(props) {
           data-code={props.group.code}
           className={styles.topLevel}
           sx={{
-            border: `0.1px solid transparent`,
             borderRadius: "12px",
             boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
             backgroundColor: theme.palette.background.paper,

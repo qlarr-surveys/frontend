@@ -227,6 +227,7 @@
   },
   "responses": {
     "export": "Exportar Respostas",
+    "no_selection": "Selecione uma resposta",
     "filter_completed": "Filtrar Respostas Completadas",
     "filter_completed_show_all": "Todas as Respostas",
     "filter_completed_show_completed": "Apenas Respostas Completas",

@@ -52,5 +52,6 @@
   "saveAndContinueLaterTitle": "احفظ وتابع لاحقًا",
   "saveAndContinueLaterDesc": "سنحفظ تقدمك الحالي. يمكنك العودة إلى هذا الاستبيان لاحقًا.",
   "saveForLater": "احفظ لوقت لاحق",
-  "linkCopied": "تم نسخ الرابط إلى الحافظة!"
+  "linkCopied": "تم نسخ الرابط إلى الحافظة!",
+  "no_options": "لا توجد خيارات"
 }

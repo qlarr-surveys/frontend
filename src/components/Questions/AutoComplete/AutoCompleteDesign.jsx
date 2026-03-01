@@ -69,6 +69,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         id="readOnly"
         sx={{ marginTop: "8px" }}
         readOnly
+        noOptionsText={t('logic_builder.no_options')}
         options={[]}
         renderInput={(params) => (
           <TextField
