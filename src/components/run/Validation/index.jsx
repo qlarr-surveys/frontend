@@ -13,38 +13,34 @@ function Validation(props) {
     [selectValidation],
     (selectedState) => {
       var obj = {};
-      Object.keys(props.component.validation || {}).forEach((key) => {
-        var value = selectedState[key];
-        if (value) {
-          obj[key] = value;
-        }
-      });
+      Object.keys(selectedState)
+        .filter((e) => e.startsWith("validation_"))
+        .forEach((key) => {
+          var value = selectedState[key];
+          if (value) {
+            obj[key] = value;
+          }
+        });
       return obj;
-    }
+    },
   );
 
   const validation = useSelector(captureValidation);
 
   const messages = () => {
-    if (props.component.validation) {
-      let array = Object.keys(props.component.validation).filter(
-        (key) => validation[key]
+    let array = Object.keys(validation);
+    let limit = props.limit ? props.limit : array.length;
+    return array.slice(0, limit).map((key, index) => {
+      return (
+        <ValidationItem
+          key={index}
+          name={key}
+          componentCode={props.component.qualifiedCode}
+          content={props.component.content?.[key]}
+          validation={props.component.validation[key]}
+        />
       );
-      let limit = props.limit ? props.limit : array.length;
-      return array.slice(0, limit).map((key, index) => {
-        return (
-          <ValidationItem
-            key={index}
-            name={key}
-            componentCode={props.component.qualifiedCode}
-            content={props.component.content?.[key]}
-            validation={props.component.validation[key]}
-          />
-        );
-      });
-    } else {
-      return "";
-    }
+    });
   };
   return messages();
 }

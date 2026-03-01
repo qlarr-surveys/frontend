@@ -210,6 +210,9 @@ export const designState = createSlice({
       state[payload.code].relevance = payload.value;
       addRelevanceInstructions(state, payload.code, payload.value);
     },
+    clearRelevanceConfig: (state, action) => {
+      delete state[action.payload.code].relevance;
+    },
     setDefaultValue: (state, action) => {
       const { code, selectedValue } = action.payload;
       const component = state[code];
@@ -606,6 +609,75 @@ export const designState = createSlice({
       state[code].skip_logic.splice(ruleIndex, 1);
       addSkipInstructions(state, code);
     },
+
+    addCustomValidationRule: (state, action) => {
+      const { code } = action.payload;
+
+      const numbers = (state[code].instructionList || [])
+        .map((i) => i.code.match(/^validation_custom_(\d+)$/)?.[1])
+        .filter(Boolean)
+        .map(Number);
+
+      const newRuleCode = `validation_custom_${Math.max(0, ...numbers) + 1}`;
+
+      changeInstruction(state[code], {
+        code: newRuleCode,
+        text: "",
+        returnType: "boolean",
+        isActive: true,
+      });
+    },
+
+    updateCustomValidationRuleText: (state, action) => {
+      const { code, ruleCode, text } = action.payload;
+      state[code].instructionList.find((i) => i.code === ruleCode).text = text;
+    },
+
+    renameCustomValidationRule: (state, action) => {
+      const { code, ruleCode, newCode } = action.payload;
+      const instruction = state[code].instructionList.find(
+        (i) => i.code === ruleCode
+      );
+      instruction.code = newCode;
+      const content = state[code].content || {};
+      Object.keys(content).forEach((lang) => {
+        if (content[lang][ruleCode] !== undefined) {
+          content[lang][newCode] = content[lang][ruleCode];
+          delete content[lang][ruleCode];
+        }
+      });
+    },
+
+    updateCustomValidationRuleError: (state, action) => {
+      const { code, ruleCode, lang, value } = action.payload;
+      if (value) {
+        state[code].content[lang][ruleCode] = value;
+      } else {
+        delete state[code].content[lang][ruleCode];
+      }
+    },
+
+    removeCustomValidationRule: (state, action) => {
+      const { code, ruleCode } = action.payload;
+
+      changeInstruction(state[code], { code: ruleCode, remove: true });
+
+      const content = state[code].content || {};
+      Object.keys(content).forEach((lang) => {
+        delete content[lang][ruleCode];
+      });
+    },
+
+    updateInstruction: (state, action) => {
+      const { code, instruction } = action.payload;
+
+      if (!state[code]) {
+        return;
+      }
+
+      changeInstruction(state[code], instruction);
+    },
+
     onBaseLangChanged: (state, action) => {
       state.langInfo.mainLang = action.payload.code;
       state.Survey.defaultLang = action.payload;
@@ -748,7 +820,14 @@ export const {
   addSkipRule,
   updateSkipRule,
   removeSkipRule,
+  addCustomValidationRule,
+  updateCustomValidationRuleText,
+  renameCustomValidationRule,
+  updateCustomValidationRuleError,
+  removeCustomValidationRule,
+  updateInstruction,
   changeRelevance,
+  clearRelevanceConfig,
   setDefaultValue,
   onDrag,
   addComponent,
@@ -776,9 +855,7 @@ const cleanupRandomRules = (componentState) => {
 const cleanupSkipDestinations = (state, deletedCode) => {
   Object.keys(state).forEach((key) => {
     const component = state[key];
-    if (
-      Array.isArray(component?.skip_logic)
-    ) {
+    if (Array.isArray(component?.skip_logic)) {
       const hadRules = component.skip_logic.some(
         (rule) => rule.skipTo === deletedCode
       );
@@ -790,7 +867,7 @@ const cleanupSkipDestinations = (state, deletedCode) => {
       }
     }
   });
-}
+};
 
 const saveContentResources = (
   component,
@@ -815,8 +892,7 @@ const saveContentResources = (
     }
   });
   resources.forEach((elem, index) => {
-    component.resources[`${prefix}_${index + 1}`] =
-      elem;
+    component.resources[`${prefix}_${index + 1}`] = elem;
   });
 };
 

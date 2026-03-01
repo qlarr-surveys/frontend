@@ -43,6 +43,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
     case "text_display":
       return [
@@ -64,6 +69,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -89,6 +99,11 @@ export const setupOptions = (type) => {
           key: "design",
           rules: ["customCss"],
         },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
 
     case "video_display":
@@ -113,6 +128,11 @@ export const setupOptions = (type) => {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -144,12 +164,18 @@ export const setupOptions = (type) => {
             "validation_pattern",
             "validation_contains",
             "validation_not_contains",
+            "custom_validation_rules",
           ],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -159,6 +185,11 @@ export const setupOptions = (type) => {
           title: "",
           key: "",
           rules: ["changeCode", "disabled", "relevance"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -179,7 +210,13 @@ export const setupOptions = (type) => {
             "validation_pattern",
             "validation_contains",
             "validation_not_contains",
+            "custom_validation_rules",
           ],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["conditional_relevance"],
         },
       ];
 
@@ -215,12 +252,18 @@ export const setupOptions = (type) => {
             "validation_gte",
             "validation_equals",
             "validation_not_equal",
+            "custom_validation_rules",
           ],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -250,12 +293,18 @@ export const setupOptions = (type) => {
             "validation_pattern_email",
             "validation_max_char_length",
             "validation_min_char_length",
+            "custom_validation_rules",
           ],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -279,12 +328,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required"],
+          rules: ["validation_required", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -316,12 +370,18 @@ export const setupOptions = (type) => {
             "validation_min_word_count",
             "validation_contains",
             "validation_not_contains",
+            "custom_validation_rules",
           ],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -348,12 +408,18 @@ export const setupOptions = (type) => {
             "validation_required",
             "validation_file_types",
             "validation_max_file_size",
+            "custom_validation_rules",
           ],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -376,12 +442,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required"],
+          rules: ["validation_required", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -405,12 +476,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required", "validation_max_file_size"],
+          rules: ["validation_required", "validation_max_file_size", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -434,12 +510,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required"],
+          rules: ["validation_required", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -463,12 +544,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required", "validation_max_file_size"],
+          rules: ["validation_required", "validation_max_file_size", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -495,12 +581,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required"],
+          rules: ["validation_required", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -526,12 +617,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required"],
+          rules: ["validation_required", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -555,13 +651,18 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required"],
+          rules: ["validation_required", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
-        }
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
+        },
       ];
     case "scq":
       return [
@@ -583,12 +684,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required"],
+          rules: ["validation_required", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -615,12 +721,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required"],
+          rules: ["validation_required", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -647,12 +758,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required"],
+          rules: ["validation_required", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -679,12 +795,18 @@ export const setupOptions = (type) => {
             "validation_min_option_count",
             "validation_max_option_count",
             "validation_option_count",
+            "custom_validation_rules",
           ],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -707,12 +829,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required"],
+          rules: ["validation_required", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -739,12 +866,18 @@ export const setupOptions = (type) => {
             "validation_min_ranking_count",
             "validation_max_ranking_count",
             "validation_ranking_count",
+            "custom_validation_rules",
           ],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -775,12 +908,18 @@ export const setupOptions = (type) => {
             "validation_min_ranking_count",
             "validation_max_ranking_count",
             "validation_ranking_count",
+            "custom_validation_rules",
           ],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -811,12 +950,18 @@ export const setupOptions = (type) => {
             "validation_min_option_count",
             "validation_max_option_count",
             "validation_option_count",
+            "custom_validation_rules",
           ],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
 
@@ -847,12 +992,18 @@ export const setupOptions = (type) => {
             "validation_min_option_count",
             "validation_max_option_count",
             "validation_option_count",
+            "custom_validation_rules",
           ],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
     case "scq_icon_array":
@@ -874,12 +1025,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required", "validation_one_response_per_col"],
+          rules: ["validation_required", "validation_one_response_per_col", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
     case "mcq_array":
@@ -906,12 +1062,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required", "validation_one_response_per_col"],
+          rules: ["validation_required", "validation_one_response_per_col", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
     case "nps":
@@ -935,12 +1096,17 @@ export const setupOptions = (type) => {
         {
           title: "validation",
           key: "validation",
-          rules: ["validation_required"],
+          rules: ["validation_required", "custom_validation_rules"],
         },
         {
           title: "design",
           key: "design",
           rules: ["customCss"],
+        },
+        {
+          title: "advanced",
+          key: "advanced",
+          rules: ["order_instructions", "conditional_relevance"],
         },
       ];
   }

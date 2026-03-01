@@ -78,6 +78,7 @@ export const SelectInput = React.memo(function SelectInput({ field, value, onCha
     <Autocomplete
       className={styles.valueInput}
       multiple
+      noOptionsText={t('logic_builder.no_options')}
       options={options}
       value={selectedOptions}
       onChange={(_event, newValue) => {
