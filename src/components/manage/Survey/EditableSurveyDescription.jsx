@@ -2,7 +2,7 @@ import { Box, IconButton, TextField, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import styles from "./Survey.module.css";
 import { truncateWithEllipsis } from "~/utils/design/utils";
-import { Edit } from "@mui/icons-material";
+import { Edit, Check } from "@mui/icons-material";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
@@ -45,7 +45,7 @@ export const EditableSurveyDescription = ({
       {isDescriptionEditing ? (
         <>
           <TextField
-            sx={{ px: 3, mr: 6 }}
+            sx={{ px: 3 }}
             value={description}
             onChange={handleDescriptionChange}
             onKeyDown={handleKeyDown}
@@ -56,6 +56,13 @@ export const EditableSurveyDescription = ({
             multiline
             rows={3}
           />
+          <IconButton
+            className={`${styles.saveIcon}`}
+            onClick={handleSave}
+            sx={{ ml: 1 }}
+          >
+            <Check sx={{ color: "gray" }} />
+          </IconButton>
         </>
       ) : (
         <>
