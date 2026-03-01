@@ -227,6 +227,7 @@
   },
   "responses": {
     "export": "Export Responses",
+    "no_selection": "Select a response",
     "filter_completed": "Filter Completed Responses",
     "filter_completed_show_all": "All Responses",
     "filter_completed_show_completed": "Complete Responses only",

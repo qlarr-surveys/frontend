@@ -171,7 +171,7 @@ function FileUpload(props) {
           <br />
           <ValidationItem
             name="validation_max_file_size"
-            validation={props.component.validation?.validation_max_file_size}
+            validation={{ ...props.component.validation?.validation_max_file_size, max_size: maxFileSize }}
           />
         </React.Fragment>
       )}

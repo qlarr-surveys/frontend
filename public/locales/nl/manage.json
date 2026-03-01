@@ -227,6 +227,7 @@
   },
   "responses": {
     "export": "Reacties Exporteren",
+    "no_selection": "Selecteer een antwoord",
     "filter_completed": "Volledige Reacties Filteren",
     "filter_completed_show_all": "Alle Reacties",
     "filter_completed_show_completed": "Alleen Volledige Reacties",
