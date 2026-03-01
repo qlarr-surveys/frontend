@@ -141,13 +141,11 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
         isInSetup
           ? {
               padding: "1rem",
-              border: `0.1px solid transparent`,
               borderRadius: "12px",
               boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
               backgroundColor: contrastColor,
             }
           : {
-              border: `0.1px solid transparent`,
               padding: "1rem",
               boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
               borderRadius: "12px",
