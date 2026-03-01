@@ -225,6 +225,8 @@
   "disqualify": "Disqualifizieren",
   "upload_image": "Bild hochladen",
   "upload_autocomplete": "Autocomplete-JSON-Datei hochladen",
+  "autocomplete_malformed_input": "Fehlerhafte Eingabe: Die Datei muss ein JSON-Array sein, das nur Zeichenfolgen enthält",
+  "autocomplete_upload_error": "Fehler beim Hochladen der Autovervollständigungsdaten. Bitte versuchen Sie es erneut.",
   "upload_video": "Video hochladen",
   "uploading_image": "Bild wird hochgeladen",
   "uploading_autocomplete": "Autocomplete-JSON-Datei wird hochgeladen",

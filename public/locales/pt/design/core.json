@@ -251,6 +251,8 @@
   "translation": "Tradução",
   "unspecified": "Não Especificado",
   "upload_autocomplete": "Enviar arquivo JSON de autocompletar",
+  "autocomplete_malformed_input": "Entrada malformada: O arquivo deve ser um array JSON contendo apenas strings",
+  "autocomplete_upload_error": "Falha ao enviar os dados de autocompletar. Por favor, tente novamente.",
   "upload_background": "Enviar fundo",
   "upload_image": "Enviar Imagem",
   "upload_video": "Enviar Vídeo",

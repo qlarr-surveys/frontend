@@ -251,6 +251,8 @@
   "translation": "Traducción",
   "unspecified": "No Especificado",
   "upload_autocomplete": "Subir archivo JSON de autocompletado",
+  "autocomplete_malformed_input": "Entrada malformada: El archivo debe ser un arreglo JSON que contenga solo cadenas de texto",
+  "autocomplete_upload_error": "Error al cargar los datos de autocompletado. Por favor, inténtelo de nuevo.",
   "upload_background": "Subir fondo",
   "upload_image": "Subir Imagen",
   "upload_video": "Subir Video",
