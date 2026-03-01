@@ -3,12 +3,11 @@
   flex-direction: column;
   align-items: center;
   gap: 32px;
-  margin: 0 auto;
+  margin: 40px auto 0;
 }
 
 .welcomeSection {
   text-align: start;
-  margin-top: 40px;
   margin-bottom: 32px;
 }
 

@@ -92,7 +92,6 @@ function Dashboard() {
     }));
   };
 
-
   const [description, setDescription] = useState("");
   const [actionType, setActionType] = useState("");
   const [selectedSurvey, setSelectedSurvey] = useState(null);
@@ -232,181 +231,179 @@ function Dashboard() {
   return (
     <Box className={styles.mainContainer}>
       <Container sx={{ marginBottom: "48px" }}>
-        {isCreateSurveyOpen && (
-          <Fade in={isCreateSurveyOpen} timeout={300}>
-            <div style={{ position: "relative", marginTop: "30px" }}>
-              <IconButton
-                onClick={handleCloseClick}
-                aria-label="close"
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  ...(isRtl === "ltr" ? { right: 0 } : { left: 0 }),
-                  color: "black",
-                  zIndex: 1,
-                }}
+        <Box className={styles.content}>
+          {(surveys?.surveys?.length > 0 || status !== "all") && (
+          <Stack
+            className={styles.newSurveysButton}
+            direction="row"
+            spacing={2}
+          >
+            {isSurveyAdmin() && !isCreateSurveyOpen && (
+              <CustomTooltip
+                title={t("tooltips.create_new_survey")}
+                showIcon={false}
               >
-                <Close color="#000" />
-              </IconButton>
-              <CreateSurvey />
-            </div>
-          </Fade>
-        )}
-
-        {!fetchingSurveys ? (
-          <>
-            {surveys?.surveys?.length > 0 || status !== "all" ? (
-              <Box className={styles.content}>
-                <Stack
-                  className={styles.newSurveysButton}
-                  direction="row"
-                  spacing={2}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<Add />}
+                  onClick={handleButtonClick}
                 >
-                  {isSurveyAdmin() && !isCreateSurveyOpen && (
-                    <CustomTooltip
-                      title={t("tooltips.create_new_survey")}
-                      showIcon={false}
+                  {t("create_new_survey")}
+                </Button>
+              </CustomTooltip>
+            )}
+            {isSurveyAdmin() && (
+              <CustomTooltip
+                title={t("tooltips.import_survey")}
+                showIcon={false}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<FileUpload />}
+                  onClick={handleImportSurveyClick}
+                >
+                  {t("import_survey")}
+                </Button>
+              </CustomTooltip>
+            )}
+          </Stack>
+          )}
+
+          {isCreateSurveyOpen && (
+            <Fade in={isCreateSurveyOpen} timeout={300}>
+              <div style={{ position: "relative" }}>
+                <IconButton
+                  onClick={handleCloseClick}
+                  aria-label="close"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    ...(isRtl === "ltr" ? { right: 0 } : { left: 0 }),
+                    color: "black",
+                    zIndex: 1,
+                  }}
+                >
+                  <Close color="#000" />
+                </IconButton>
+                <CreateSurvey />
+              </div>
+            </Fade>
+          )}
+
+          {(surveys?.surveys?.length > 0 || status != "all") && (
+            <HeaderContent
+              filter={status}
+              onFilterSelected={(el) => {
+                setPage(1);
+                setStatus(el.target.value);
+              }}
+              sort={sortBy}
+              onSortSelected={(el) => {
+                setPage(1);
+                setSortBy(el.target.value);
+              }}
+            />
+          )}
+
+          <Box className={styles.surveyCardsContainer}>
+            {!fetchingSurveys ? (
+              <>
+                {surveys?.surveys?.length > 0 ? (
+                  <Box
+                    sx={{
+                      mt: 3,
+                      columnGap: 2,
+                      display: "grid",
+                      rowGap: { xs: 4, md: 5 },
+                      gridTemplateColumns: {
+                        xs: "1fr",
+                        sm: "repeat(auto-fit, minmax(280px, 1fr))",
+                        md: "repeat(auto-fit, minmax(330px, 350px))",
+                      },
+                    }}
+                  >
+                    {surveys?.surveys?.map((survey) => {
+                      return (
+                        <Suspense key={survey.id} fallback={<LoadingDots />}>
+                          <Survey
+                            key={survey.id}
+                            survey={survey}
+                            highlight={
+                              survey.name === recentlyUpdatedSurveyName
+                            }
+                            onStatusChange={handleSurveyStatusChange}
+                            onClone={() => onClone(survey)}
+                            onDelete={() => onDelete(survey)}
+                            onClose={() => onCloseSurvey(survey)}
+                            onUpdateTitle={handleUpdateSurveyName}
+                            onUpdateDescription={handleUpdateSurveyDescription}
+                            onUpdateImage={handleUpdateSurveyImage}
+                          />
+                        </Suspense>
+                      );
+                    })}
+                  </Box>
+                ) : status !== "all" ? (
+                  <div className={styles.noSurveys}>
+                    <Description sx={{ fontSize: 48, color: "#ccc" }} />
+                    <Typography
+                      variant="h6"
+                      color="textSecondary"
+                      sx={{ mt: 2 }}
                     >
+                      {t("create_survey.empty_state_message")}
                       <Button
                         variant="contained"
                         color="primary"
-                        startIcon={<Add />}
-                        onClick={handleButtonClick}
+                        sx={{ mx: 1 }}
+                        startIcon={<FilterAltOffIcon />}
+                        onClick={() => {
+                          setPage(1);
+                          setStatus("all");
+                        }}
                       >
-                        {t("create_new_survey")}
+                        {t("reset_filter")}
                       </Button>
-                    </CustomTooltip>
-                  )}
-                  {isSurveyAdmin() && (
-                    <CustomTooltip
-                      title={t("tooltips.import_survey")}
-                      showIcon={false}
-                    >
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<FileUpload />}
-                        onClick={handleImportSurveyClick}
-                      >
-                        {t("import_survey")}
-                      </Button>
-                    </CustomTooltip>
-                  )}
-                </Stack>
-
-                <HeaderContent
-                  filter={status}
-                  onFilterSelected={(el) => {
-                    setPage(1);
-                    setStatus(el.target.value);
-                  }}
-                  sort={sortBy}
-                  onSortSelected={(el) => {
-                    setPage(1);
-                    setSortBy(el.target.value);
-                  }}
-                />
-
-                <Box className={styles.surveyCardsContainer}>
-                  {surveys?.surveys?.length > 0 ? (
-                    <Box
-                      sx={{
-                        mt: 3,
-                        columnGap: 2,
-                        display: "grid",
-                        rowGap: { xs: 4, md: 5 },
-                        gridTemplateColumns: {
-                          xs: "1fr",
-                          sm: "repeat(auto-fit, minmax(280px, 1fr))",
-                          md: "repeat(auto-fit, minmax(330px, 350px))",
-                        },
-                      }}
-                    >
-                      {surveys?.surveys?.map((survey) => {
-                        return (
-                          <Suspense key={survey.id} fallback={<LoadingDots />}>
-                            <Survey
-                              key={survey.id}
-                              survey={survey}
-                              highlight={
-                                survey.name === recentlyUpdatedSurveyName
-                              }
-                              onStatusChange={handleSurveyStatusChange}
-                              onClone={() => onClone(survey)}
-                              onDelete={() => onDelete(survey)}
-                              onClose={() => onCloseSurvey(survey)}
-                              onUpdateTitle={handleUpdateSurveyName}
-                              onUpdateDescription={
-                                handleUpdateSurveyDescription
-                              }
-                              onUpdateImage={handleUpdateSurveyImage}
-                            />
-                          </Suspense>
-                        );
-                      })}
-                    </Box>
-                  ) : (
-                    <div className={styles.noSurveys}>
-                      <Description sx={{ fontSize: 48, color: "#ccc" }} />
-                      <Typography
-                        variant="h6"
-                        color="textSecondary"
-                        sx={{ mt: 2 }}
-                      >
-                        {t("create_survey.empty_state_message")}
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          sx={{ mx: 1 }}
-                          startIcon={<FilterAltOffIcon />}
-                          onClick={() => {
-                            setPage(1);
-                            setStatus("all");
-                          }}
-                        >
-                          {t("reset_filter")}
-                        </Button>
-                      </Typography>
-                    </div>
-                  )}
-                </Box>
-
-                {surveys?.surveys?.length > 0 && (
-                  <TablePagination
-                    rowsPerPageOptions={[6, 12, 18, 24]}
-                    component="div"
-                    labelDisplayedRows={({ from, to, count, page }) => {
-                      return t("responses.label_displayed_rows", {
-                        from,
-                        to,
-                        count,
-                      });
-                    }}
-                    labelRowsPerPage={t("responses.label_surveys_per_page")}
-                    count={surveys?.totalCount}
-                    rowsPerPage={perPage}
-                    page={page - 1}
-                    onPageChange={(event, newPage) => {
-                      setPage(newPage + 1);
-                    }}
-                    onRowsPerPageChange={(event) => {
-                      setPerPage(parseInt(event.target.value, 10));
-                      setPage(1);
-                    }}
+                    </Typography>
+                  </div>
+                ) : (
+                  <DashboardEmptyState
+                    onCreateSurvey={handleButtonClick}
+                    onImportTemplate={handleImportSurveyClick}
+                    canCreate={isSurveyAdmin()}
                   />
                 )}
-              </Box>
+              </>
             ) : (
-              <DashboardEmptyState
-                onCreateSurvey={handleButtonClick}
-                onImportTemplate={handleImportSurveyClick}
-                canCreate={isSurveyAdmin()}
-              />
+              <LoadingDots fullHeight />
             )}
-          </>
-        ) : (
-          <LoadingDots fullHeight />
-        )}
+          </Box>
+
+          {surveys?.totalCount > 6 ? (
+            <TablePagination
+              rowsPerPageOptions={[6, 12, 18, 24]}
+              component="div"
+              labelDisplayedRows={({ from, to, count, page }) => {
+                return t("responses.label_displayed_rows", { from, to, count });
+              }}
+              labelRowsPerPage={t("responses.label_surveys_per_page")}
+              count={surveys?.totalCount}
+              rowsPerPage={perPage}
+              page={page - 1}
+              onPageChange={(event, newPage) => {
+                setPage(newPage + 1);
+              }}
+              onRowsPerPageChange={(event) => {
+                setPerPage(parseInt(event.target.value, 10));
+                setPage(1);
+              }}
+            />
+          ) : (
+            <></>
+          )}
+        </Box>
       </Container>
       <ImportSurvey
         open={openImportModal}
