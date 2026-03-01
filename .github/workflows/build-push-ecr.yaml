@@ -43,6 +43,11 @@ jobs:
           push: true
           platforms: amd64
           tags: ${{ steps.populate-env.outputs.full_repo_name }}
+          build-args: |
+            VITE_FRONT_END_HOST="localhost"
+            VITE_PROTOCOL="http"
+            VITE_BE_URL="http://localhost:8080"
+            VITE_CLOUD_URL="https://stg.api.qlarr.com"
           outputs: type=image,push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -53,6 +58,11 @@ jobs:
           push: true
           platforms: arm64
           tags: ${{ steps.populate-env.outputs.full_repo_name }}
+          build-args: |
+            VITE_FRONT_END_HOST="localhost"
+            VITE_PROTOCOL="http"
+            VITE_BE_URL="http://localhost:8080"
+            VITE_CLOUD_URL="https://stg.api.qlarr.com"
           outputs: type=image,push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha
           cache-to: type=gha,mode=max
