@@ -97,8 +97,8 @@ function AutoCompleteQuestion(props) {
     <div className={styles.questionItem}>
       <Autocomplete
         id="search-autocomplete"
+        sx={{ width: { xs: "100%", sm: "50%" }, marginTop: "8px" }}
         noOptionsText={t('no_options')}
-        sx={{ width: "50%", marginTop: "8px" }}
         open={open}
         value={state.value}
         onOpen={() => setOpen(true)}
