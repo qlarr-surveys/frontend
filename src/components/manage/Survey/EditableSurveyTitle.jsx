@@ -70,6 +70,7 @@ export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
 
           <Typography
             variant="h5"
+            onClick={isEditable ? handleEditClick : undefined}
             sx={{
               pr: 3,
               pl: 1,
@@ -78,7 +79,8 @@ export const EditableSurveyTitle = ({ survey, onSave, isEditable = true }) => {
               display: "-webkit-box",
               WebkitLineClamp: "2",
               WebkitBoxOrient: "vertical",
-              flexGrow: 1
+              flexGrow: 1,
+              cursor: isEditable ? "pointer" : "default",
             }}
           >
             {title}

@@ -76,11 +76,13 @@ export const EditableSurveyDescription = ({
             showIcon={false}>
               <Typography
                 variant="caption"
+                onClick={isEditable ? handleEditClick : undefined}
                 sx={{
                   pr: 3,
                   pl: 1,
                   color: description ? "inherit" : "gray",
                   flexGrow: 1,
+                  cursor: isEditable ? "pointer" : "default",
                 }}
                 className={styles.truncatedText}
               >
@@ -90,11 +92,13 @@ export const EditableSurveyDescription = ({
           ) : (
             <Typography
               variant="caption"
+              onClick={isEditable ? handleEditClick : undefined}
               sx={{
                 pr: 3,
                 pl: 1,
                 color: description ? "inherit" : "gray",
                 flexGrow: 1,
+                cursor: isEditable ? "pointer" : "default",
               }}
               className={styles.truncatedText}
             >
