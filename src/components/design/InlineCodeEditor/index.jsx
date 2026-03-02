@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
+import { TextField, Tooltip } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { designStateReceived, setup } from "~/state/design/designState";
@@ -147,17 +147,6 @@ function InlineCodeEditor({ qualifiedCode, code, designMode }) {
           onClick={(e) => e.stopPropagation()}
           inputProps={{ maxLength: MAX_CODE_LENGTH }}
           InputProps={{
-            startAdornment: (
-              <InputAdornment position="start" sx={{ mr: 0 }}>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ fontFamily: "monospace", fontSize: 11 }}
-                >
-                  {prefix}
-                </Typography>
-              </InputAdornment>
-            ),
             sx: { fontFamily: "monospace", fontSize: 11 },
           }}
         />
