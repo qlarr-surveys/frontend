@@ -382,6 +382,7 @@
     "from": "From",
     "to": "To",
     "search": "Search...",
-    "no_options": "No options found"
+    "no_options": "No options found",
+    "range_error": "Invalid range: min exceeds max"
   }
 }

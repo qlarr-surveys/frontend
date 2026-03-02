@@ -382,6 +382,7 @@
     "from": "De",
     "to": "Até",
     "search": "Pesquisar...",
-    "no_options": "Nenhuma opção encontrada"
+    "no_options": "Nenhuma opção encontrada",
+    "range_error": "Intervalo inválido: mínimo excede o máximo"
   }
 }
