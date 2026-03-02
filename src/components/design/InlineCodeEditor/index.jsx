@@ -42,6 +42,20 @@ function InlineCodeEditor({ qualifiedCode, code, designMode }) {
 
   const { prefix, suffix } = computePrefixAndSuffix(qualifiedCode);
 
+  const maxSuffixLength = useSelector((state) => {
+    if (!prefix.endsWith("A") || prefix.length < 2) return suffix.length;
+    const questionCode = prefix.slice(0, -1);
+    const question = state.designState[questionCode];
+    if (!question?.children) return suffix.length;
+    let max = suffix.length;
+    for (const child of question.children) {
+      if (!child.qualifiedCode) continue;
+      const { suffix: s } = computePrefixAndSuffix(child.qualifiedCode);
+      if (s.length > max) max = s.length;
+    }
+    return max;
+  });
+
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
@@ -160,10 +174,11 @@ function InlineCodeEditor({ qualifiedCode, code, designMode }) {
       style={{
         backgroundColor: theme.palette.grey[200],
         color: theme.palette.text.secondary,
+        minWidth: `${maxSuffixLength + (prefix.endsWith("A") ? 1 : 0)}ch`,
       }}
       onClick={handleClick}
     >
-      {suffix}
+      {prefix.endsWith("A") ? "A" + suffix : suffix}
     </span>
   );
 }
