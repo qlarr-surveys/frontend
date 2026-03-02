@@ -163,7 +163,7 @@ function InlineCodeEditor({ qualifiedCode, code, designMode }) {
       }}
       onClick={handleClick}
     >
-      {code.length > MAX_CODE_LENGTH ? code.slice(0, MAX_CODE_LENGTH) + "…" : code}
+      {suffix}
     </span>
   );
 }

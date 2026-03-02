@@ -8,6 +8,12 @@
   user-select: none;
   transition: background-color 0.15s ease;
   line-height: 1.4;
+  display: inline-block;
+  width: 10ch;
+  min-width: 10ch;
+  box-sizing: content-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .codeLabel:hover {
