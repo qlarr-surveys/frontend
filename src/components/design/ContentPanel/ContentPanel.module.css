@@ -16,12 +16,13 @@
 }
 
 .groupLabel {
-  max-width: 800px;
+  max-width: min(800px, calc(100% - 32px));
   min-width: 350px;
   margin: 0 auto;
-  padding: 16px 8px 4px;
+  padding: 16px 0 4px;
+  padding-inline-start: 4px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: #6b7280;
 }
 
