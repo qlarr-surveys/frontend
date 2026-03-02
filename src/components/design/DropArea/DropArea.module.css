@@ -203,6 +203,7 @@
   gap: 8px;
   font-size: 13px;
   color: #16205b;
+  cursor: pointer;
 }
 
 .endPageActionIcon {

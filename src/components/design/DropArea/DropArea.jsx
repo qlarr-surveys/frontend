@@ -256,19 +256,55 @@ export function QuestionDropArea({
               <Trans t={t} i18nKey="end_page_empty_hint" />
             </span>
             <Box className={styles.endPageActions}>
-              <div className={styles.endPageActionItem}>
+              <div
+                className={styles.endPageActionItem}
+                onClick={() =>
+                  dispatch(
+                    onDrag({
+                      type: "new_question",
+                      questionType: "text_display",
+                      destination: parentCode,
+                      toIndex: 0,
+                    })
+                  )
+                }
+              >
                 <div className={styles.endPageActionIcon}>
                   <img src={addTextIcon} alt="" width={24} height={24} />
                 </div>
                 <span>{t("add_a_text")}</span>
               </div>
-              <div className={styles.endPageActionItem}>
+              <div
+                className={styles.endPageActionItem}
+                onClick={() =>
+                  dispatch(
+                    onDrag({
+                      type: "new_question",
+                      questionType: "image_display",
+                      destination: parentCode,
+                      toIndex: 0,
+                    })
+                  )
+                }
+              >
                 <div className={styles.endPageActionIcon}>
                   <img src={addImageIcon} alt="" width={24} height={24} />
                 </div>
                 <span>{t("add_a_image")}</span>
               </div>
-              <div className={styles.endPageActionItem}>
+              <div
+                className={styles.endPageActionItem}
+                onClick={() =>
+                  dispatch(
+                    onDrag({
+                      type: "new_question",
+                      questionType: "video_display",
+                      destination: parentCode,
+                      toIndex: 0,
+                    })
+                  )
+                }
+              >
                 <div className={styles.endPageActionIcon}>
                   <img src={addVideoIcon} alt="" width={24} height={24} />
                 </div>
