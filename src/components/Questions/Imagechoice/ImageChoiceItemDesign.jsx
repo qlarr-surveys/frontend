@@ -315,7 +315,7 @@ function ImageChoiceItemDesign({
             showToolbar={false}
             editable={contentEditable(designMode)}
             extended={false}
-            centered
+            centerText
             placeholder={
               onMainLang
                 ? t("content_editor_placeholder_option", {
