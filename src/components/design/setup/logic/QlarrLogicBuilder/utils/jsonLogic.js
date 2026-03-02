@@ -149,7 +149,10 @@ function ruleToJsonLogic(rule) {
       return { [operatorDef.jsonLogicOp]: [fieldVar, values] };
     }
 
-    return { [operatorDef.jsonLogicOp]: [fieldVar, rule.value] };
+    // Trim string values to prevent whitespace sensitivity in text comparisons
+    const value = typeof rule.value === 'string' ? rule.value.trim() : rule.value;
+
+    return { [operatorDef.jsonLogicOp]: [fieldVar, value] };
   }
 
   // Range operators (cardinality 2)

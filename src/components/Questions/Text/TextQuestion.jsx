@@ -31,6 +31,15 @@ function TextQuestion(props) {
   };
 
   const lostFocus = (event) => {
+    const trimmed = event.target.value.trim();
+    if (event.target.value !== trimmed) {
+      dispatch(
+        valueChange({
+          componentCode: event.target.name,
+          value: trimmed,
+        })
+      );
+    }
     dispatch(setDirty(event.target.name));
   };
 
