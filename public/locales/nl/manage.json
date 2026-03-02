@@ -375,5 +375,25 @@
     "all_in_one": "Alles in Een",
     "group_by_group": "Pagina per Pagina",
     "question_by_question": "Vraag per Vraag"
+  },
+  "support_bubble": {
+    "title": "Praat met het Team",
+    "description": "We zijn een jong team en we lezen elk bericht. Stuur ons een berichtje, we horen graag van je.",
+    "name_label": "Naam",
+    "name_placeholder": "Voer je naam in...",
+    "email_label": "E-mail",
+    "email_placeholder": "Voer je e-mail in...",
+    "message_label": "Je Bericht",
+    "message_placeholder": "Schrijf hier...",
+    "send_button": "Bericht Versturen",
+    "prefer_email": "Liever e-mail? Bereik ons op",
+    "support_email": "support@qlarr.com",
+    "name_required": "Naam is verplicht",
+    "email_required": "E-mail is verplicht",
+    "invalid_email": "Voer een geldig e-mailadres in",
+    "message_required": "Bericht is verplicht",
+    "success_title": "Bedankt voor\nje bericht!",
+    "success_subtitle": "Ons team zal zo snel mogelijk reageren.",
+    "error_message": "Er is iets misgegaan. Probeer het opnieuw of mail ons direct."
   }
 }

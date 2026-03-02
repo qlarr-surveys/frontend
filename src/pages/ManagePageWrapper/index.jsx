@@ -12,6 +12,7 @@ import ThemeProvider from "~/theme";
 import UnsupportedView from "../UnsupportedView";
 import useNamespaceLoader, { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { HEADER_OPTIONS } from "./headerOptions";
+import SupportBubble from "~/components/common/SupportBubble";
 
 const ManagePageWrapper = ({ headerOptions = HEADER_OPTIONS.GENERAL, children }) => {
   const lang = localStorage.getItem("lang");
@@ -65,6 +66,7 @@ const ManagePageWrapper = ({ headerOptions = HEADER_OPTIONS.GENERAL, children })
           <ErrorWrapper />
           <StatefulLoadingIndicator />
           {children}
+          <SupportBubble />
         </ThemeProvider>
       </Provider>
     </CacheProvider>

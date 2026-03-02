@@ -1,0 +1,133 @@
+.fab {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fab:hover {
+    transform: scale(1.08);
+}
+
+/* SupportDialog styles */
+
+.dialog {
+    position: fixed;
+    z-index: 1300;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.dialogDefault {
+    bottom: 24px;
+    width: 545px;
+    max-height: calc(100vh - 48px);
+    border-radius: 12px;
+}
+
+.dialogFullScreen {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: linear-gradient(90deg, #16205B 0%, #2D3CB2 100%);
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.headerIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135.86deg, rgba(177, 177, 177, 0.32) 5.24%, rgba(54, 53, 103, 0.2) 51.01%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.body {
+    background-color: #fff;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.successView {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 118px;
+    padding-top: 60px;
+}
+
+.successIcon {
+    width: 85.03px;
+    height: 85.02px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.formArea {
+    background: linear-gradient(135deg, #F0F9FF 25%, #ECFEFF 95.71%);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.label {
+    margin-bottom: 8px;
+    font-weight: 400;
+    color: #45556C;
+    display: block;
+}
+
+.textField :global(.MuiFilledInput-root) {
+    background-color: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.textField :global(.MuiFilledInput-root:hover) {
+    background-color: #fff;
+}
+
+.textField :global(.MuiFilledInput-root.Mui-focused) {
+    background-color: #fff;
+}
+
+.textField :global(.MuiFilledInput-root::before),
+.textField :global(.MuiFilledInput-root::after) {
+    display: none;
+}
+
+.textField :global(.MuiFilledInput-input) {
+    background-color: #fff;
+}
+
+.footer {
+    border-radius: 8px;
+    box-shadow: 0px 4px 20px 0px #1C1C1B1A;
+    height: 88px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footerText {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: #45556C;
+}

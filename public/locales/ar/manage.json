@@ -375,5 +375,25 @@
     "all_in_one": "الكل في واحد",
     "group_by_group": "صفحة بصفحة",
     "question_by_question": "سؤال بسؤال"
+  },
+  "support_bubble": {
+    "title": "تحدث مع الفريق",
+    "description": "نحن فريق في مرحلة مبكرة ونقرأ كل رسالة. أرسل لنا ملاحظة، يسعدنا أن نسمع منك.",
+    "name_label": "الاسم",
+    "name_placeholder": "أدخل اسمك هنا...",
+    "email_label": "البريد الإلكتروني",
+    "email_placeholder": "أدخل بريدك الإلكتروني هنا...",
+    "message_label": "رسالتك",
+    "message_placeholder": "اكتب هنا...",
+    "send_button": "إرسال الرسالة",
+    "prefer_email": "تفضل البريد الإلكتروني؟ تواصل معنا على",
+    "support_email": "support@qlarr.com",
+    "name_required": "الاسم مطلوب",
+    "email_required": "البريد الإلكتروني مطلوب",
+    "invalid_email": "يرجى إدخال بريد إلكتروني صالح",
+    "message_required": "الرسالة مطلوبة",
+    "success_title": "شكراً لتواصلك\nمعنا!",
+    "success_subtitle": "سيرد فريقنا في أقرب وقت ممكن.",
+    "error_message": "حدث خطأ ما. يرجى المحاولة مرة أخرى أو مراسلتنا مباشرة."
   }
 }

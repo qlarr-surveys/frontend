@@ -375,5 +375,25 @@
     "all_in_one": "All In One",
     "group_by_group": "Page By Page",
     "question_by_question": "Question By Question"
+  },
+  "support_bubble": {
+    "title": "Talk to the Team",
+    "description": "We're an early-stage team and we read every message. Drop us a note, we'd love to hear from you.",
+    "name_label": "Name",
+    "name_placeholder": "Enter your name here...",
+    "email_label": "Email",
+    "email_placeholder": "Enter your email here...",
+    "message_label": "Your Message",
+    "message_placeholder": "Answer here...",
+    "send_button": "Send Message",
+    "prefer_email": "Prefer email? Reach us at",
+    "support_email": "support@qlarr.com",
+    "name_required": "Name is required",
+    "email_required": "Email is required",
+    "invalid_email": "Please enter a valid email address",
+    "message_required": "Message is required",
+    "success_title": "Thank you\nfor reaching out!",
+    "success_subtitle": "Our team will reply as soon as possible.",
+    "error_message": "Something went wrong. Please try again or email us directly."
   }
 }
