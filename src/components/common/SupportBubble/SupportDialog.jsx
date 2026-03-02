@@ -160,6 +160,7 @@ const SupportDialog = ({ open, onClose }) => {
                             htmlFor="name"
                             variant="subtitle2"
                             className={styles.label}
+                            sx={{ mb: "8px", display: "block" }}
                           >
                             {t("support_bubble.name_label")}
                           </Typography>
@@ -177,6 +178,7 @@ const SupportDialog = ({ open, onClose }) => {
                             htmlFor="email"
                             variant="subtitle2"
                             className={styles.label}
+                            sx={{ mb: "8px", display: "block" }}
                           >
                             {t("support_bubble.email_label")}
                           </Typography>
@@ -194,6 +196,7 @@ const SupportDialog = ({ open, onClose }) => {
                             htmlFor="message"
                             variant="subtitle2"
                             className={styles.label}
+                            sx={{ mb: "8px", display: "block" }}
                           >
                             {t("support_bubble.message_label")}
                           </Typography>
