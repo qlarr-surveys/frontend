@@ -122,6 +122,42 @@
   height: 220px;
 }
 
+.questionDropAreaEmptyGroup {
+  composes: dropAreaBase;
+  height: 150px;
+  margin: auto;
+  font-size: 2rem;
+  color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
+}
+
+.questionDropAreaEmptyEnd {
+  composes: dropAreaBase;
+  height: 220px;
+  margin: auto;
+  font-size: 2rem;
+  color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
+}
+
+.isDraggingEmptyGroup {
+  composes: dropAreaBase;
+  height: 150px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
+}
+
+.isDraggingEmptyEnd {
+  composes: dropAreaBase;
+  height: 220px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
+}
+
 .dropText {
   font-size: 20px;
 }

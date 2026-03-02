@@ -193,9 +193,13 @@ export function QuestionDropArea({
           " " +
           (emptyGroup
             ? isOver
-              ? styles.questionDropArea
+              ? parentType === "end"
+                ? styles.questionDropAreaEmptyEnd
+                : styles.questionDropAreaEmptyGroup
               : isDragging && inView
-              ? styles.isDragging
+              ? parentType === "end"
+                ? styles.isDraggingEmptyEnd
+                : styles.isDraggingEmptyGroup
               : parentType === "end"
               ? styles.endPageEmptyHint
               : styles.groupEmptyHint
