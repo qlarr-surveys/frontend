@@ -15,6 +15,7 @@ import {
 import styles from "./InlineCodeEditor.module.css";
 
 const SPECIAL_TYPES = ["other", "all", "none", "other_text"];
+const MAX_CODE_LENGTH = 10;
 
 function InlineCodeEditor({ qualifiedCode, code, designMode }) {
   const dispatch = useDispatch();
@@ -144,6 +145,7 @@ function InlineCodeEditor({ qualifiedCode, code, designMode }) {
           disabled={isSaving}
           className={styles.codeInput}
           onClick={(e) => e.stopPropagation()}
+          inputProps={{ maxLength: MAX_CODE_LENGTH }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start" sx={{ mr: 0 }}>
@@ -172,7 +174,7 @@ function InlineCodeEditor({ qualifiedCode, code, designMode }) {
       }}
       onClick={handleClick}
     >
-      {code}
+      {code.length > MAX_CODE_LENGTH ? code.slice(0, MAX_CODE_LENGTH) + "…" : code}
     </span>
   );
 }
