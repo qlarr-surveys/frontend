@@ -205,7 +205,7 @@ function Web() {
         element={
           <PublicOnlyRoute>
             <Suspense fallback={<LoadingIndicator />}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
+              <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
                 <AuthIllustrationLayout>
                   <LoginView />
                 </AuthIllustrationLayout>
@@ -219,7 +219,7 @@ function Web() {
         element={
           <PublicOnlyRoute>
             <Suspense fallback={<LoadingIndicator />}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
+              <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
                 <AuthIllustrationLayout>
                   <ForgotPasswordView />
                 </AuthIllustrationLayout>
@@ -233,7 +233,7 @@ function Web() {
         element={
           <PublicOnlyRoute>
             <Suspense fallback={<LoadingIndicator />}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
+              <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
                 <ResetPasswordView />
               </ManagePageWrapper>
             </Suspense>
@@ -245,7 +245,7 @@ function Web() {
         element={
           <PublicOnlyRoute>
             <Suspense fallback={<LoadingIndicator />}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
+              <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
                 <ResetPasswordView confirmNewUser={true} />
               </ManagePageWrapper>
             </Suspense>
@@ -288,14 +288,6 @@ const PrivateComponent = ({ children }) => {
   );
 };
 
-const PublicOnlyRoute = ({ children }) => {
-  return TokenService.isAuthenticated() ? (
-    <Navigate to="/" replace />
-  ) : (
-    children
-  );
-};
-
 const PrivateManageUsers = ({ roles, children }) => {
   const location = useLocation();
   const user = TokenService.getUser();
@@ -314,6 +306,14 @@ const PrivateManageUsers = ({ roles, children }) => {
     children
   ) : (
     <Navigate to="/login" replace state={{ from: location }} />
+  );
+};
+
+const PublicOnlyRoute = ({ children }) => {
+  return TokenService.isAuthenticated() ? (
+    <Navigate to="/" replace />
+  ) : (
+    children
   );
 };
 

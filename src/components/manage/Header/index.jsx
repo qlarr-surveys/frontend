@@ -95,7 +95,7 @@ export const Header = ({ headerOptions }) => {
 
       <Box className={isRtl ? styles.userInfoRtl : styles.userInfo}>
         <LanguageSelector />
-        {TokenService.isAuthenticated() && (
+        {headerOptions.showUserMenu !== false && TokenService.isAuthenticated() && (
           <>
             <Box
               ref={dropdownRef}
