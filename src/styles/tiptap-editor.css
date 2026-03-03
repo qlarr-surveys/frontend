@@ -38,6 +38,10 @@
   text-align: left !important;
 }
 
+.tiptap-centered :is(.ltr, .rtl) {
+  text-align: center !important;
+}
+
 .tiptap-link {
   color: #0066cc;
   text-decoration: underline;
