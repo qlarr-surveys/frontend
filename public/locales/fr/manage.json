@@ -186,6 +186,7 @@
     "duplicate_email": "L'adresse e-mail est déjà enregistrée.",
     "duplicate_survey_name": "Nom de Sondage en Double",
     "autocomplete_malformed_input": "Entrée Malformée : Le fichier doit être un tableau JSON contenant uniquement des chaînes de caractères",
+    "max_upload_size_exceeded": "La taille du fichier dépasse la limite maximale de téléchargement.",
     "expired_confirmation_token": "Jeton de Confirmation Expiré, Veuillez Vous Inscrire à Nouveau",
     "expired_reset_token": "Jeton de Confirmation Expiré, Veuillez Cliquer sur Mot de Passe Oublié à Nouveau",
     "invalid_survey_dates": "La Date de Début doit être antérieure à la date de fin",

@@ -25,7 +25,11 @@ export const PROCESSED_ERRORS = {
   DUPLICATE_EMAIL: { name: "duplicate_email", handleGlobally: false },
   AUTOCOMPLETE_MALFORMED_INPUT: {
     name: "autocomplete_malformed_input",
-    handleGlobally: true,
+    handleGlobally: false,
+  },
+  MAX_UPLOAD_SIZE_EXCEEDED: {
+    name: "max_upload_size_exceeded",
+    handleGlobally: false,
   },
   DUPLICATE_SURVEY_NAME: {
     name: "duplicate_survey_name",
@@ -89,6 +93,8 @@ export const processError = (e) => {
         return PROCESSED_ERRORS.WRONG_CREDENTIALS;
       case "AutoCompleteMalformedInputException":
         return PROCESSED_ERRORS.AUTOCOMPLETE_MALFORMED_INPUT;
+      case "MaxUploadSizeExceededException":
+        return PROCESSED_ERRORS.MAX_UPLOAD_SIZE_EXCEEDED;
       case "DuplicateEmailException":
         return PROCESSED_ERRORS.DUPLICATE_EMAIL;
       case "DesignNotAvailableException":

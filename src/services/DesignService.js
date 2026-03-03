@@ -67,13 +67,15 @@ class DesignService extends BaseService {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await this.handleRequest(() =>
-      authenticatedApi.post(`/autocomplete/${surveyId}/${componentId}`, formData, {
+    const response = await authenticatedApi.post(
+      `/autocomplete/${surveyId}/${componentId}`,
+      formData,
+      {
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",
         },
-      })
+      }
     );
     return response.data;
   }

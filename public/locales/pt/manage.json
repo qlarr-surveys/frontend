@@ -186,6 +186,7 @@
     "duplicate_email": "O endereço de e-mail já está registrado.",
     "duplicate_survey_name": "Nome de Pesquisa Duplicado",
     "autocomplete_malformed_input": "Entrada Malformada: O arquivo deve ser um array JSON contendo apenas strings",
+    "max_upload_size_exceeded": "O tamanho do arquivo excede o limite máximo de upload.",
     "expired_confirmation_token": "Token de Confirmação Expirado, Por favor Registre-se Mais Uma Vez",
     "expired_reset_token": "Token de Confirmação Expirado, Por favor Clique em Esqueci minha Senha Mais Uma Vez",
     "invalid_survey_dates": "A Data de Início deve ser anterior à data de finalização",

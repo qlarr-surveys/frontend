@@ -210,6 +210,7 @@
   "preview": "Vorschau",
   "processed_errors": {
     "autocomplete_malformed_input": "Fehlerhaft formatierte Eingabe: Datei muss ein JSON-Array sein, das nur Zeichenketten enthält",
+    "max_upload_size_exceeded": "Die Dateigröße überschreitet das maximale Upload-Limit.",
     "backend_down": "Backend ist nicht erreichbar... Bitte versuchen Sie es später erneut",
     "code_changed_after_publish": "Komponentencode kann nach Veröffentlichung nicht geändert werden",
     "code_invalid": "Ungültiger Code. Bitte versuchen Sie es erneut.",
