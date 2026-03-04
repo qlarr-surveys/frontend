@@ -1,0 +1,96 @@
+/* Tooltip container */
+.design-tour-tooltip.introjs-tooltip {
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  padding: 20px 24px;
+  min-width: 280px;
+  max-width: 360px;
+}
+
+/* Title */
+.design-tour-tooltip .introjs-tooltip-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #091133;
+  margin-bottom: 8px;
+}
+
+/* Step counter */
+.design-tour-step-counter {
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+/* Step body */
+.design-tour-step-body {
+  font-size: 13px;
+  color: #6b7280;
+  white-space: pre-line;
+  line-height: 1.5;
+}
+
+/* Hide bullets and progress */
+.design-tour-tooltip .introjs-bullets,
+.design-tour-tooltip .introjs-progress {
+  display: none;
+}
+
+/* Highlight border radius */
+.design-tour-highlight.introjs-helperLayer {
+  border-radius: 8px;
+}
+
+/* Button row */
+.design-tour-tooltip .introjs-tooltipbuttons {
+  margin-top: 16px;
+  border-top: none;
+}
+
+/* Next / Done button */
+.design-tour-tooltip .introjs-nextbutton {
+  text-transform: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #2d3cb1;
+  border-radius: 8px;
+  padding: 6px 16px;
+  border: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+.design-tour-tooltip .introjs-nextbutton:hover,
+.design-tour-tooltip .introjs-nextbutton:focus {
+  background-color: #232fa0;
+  box-shadow: none;
+}
+
+/* Back / Remind me later button */
+.design-tour-tooltip .introjs-prevbutton {
+  text-transform: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  background-color: transparent;
+  border-radius: 8px;
+  padding: 6px 12px;
+  border: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+.design-tour-tooltip .introjs-prevbutton:hover,
+.design-tour-tooltip .introjs-prevbutton:focus {
+  background-color: #f3f4f6;
+  box-shadow: none;
+}
+
+/* Skip/close button */
+.design-tour-tooltip .introjs-skipbutton {
+  color: #6b7280;
+  font-size: 16px;
+}

@@ -130,6 +130,8 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
     lastAddedComponent?.type === "group" && lastAddedComponent.index === index;
   return (
     <Box
+      {...(type !== "end" && type !== "welcome" && index === 0 ? { "data-tour": "page-group" } : {})}
+      {...(type === "end" ? { "data-tour": "thank-you-page" } : {})}
       onClick={(event) => {
         event.stopPropagation();
         event.preventDefault();
