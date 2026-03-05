@@ -14,6 +14,7 @@ const RTL_POSITION_MAP = {
   "bottom-left-aligned": "bottom-right-aligned",
 };
 
+const TOUR_STORAGE_KEY = "design_tour_completed";
 const QUESTION_TYPES_STEP = 2;
 const REMIND_ICON =
   '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor">' +
@@ -52,8 +53,11 @@ function unclampQuestionTypes() {
 export default function DesignTourProvider({ children }) {
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const introInstanceRef = useRef(null);
+  const completedRef = useRef(false);
 
   useEffect(() => {
+    if (localStorage.getItem(TOUR_STORAGE_KEY) === "true") return;
+
     const rtl = isSessionRtl();
     const tourSteps = getDesignTourSteps(t);
 
@@ -138,6 +142,11 @@ export default function DesignTourProvider({ children }) {
             prevBtn.textContent = rtl ? `\u2192 ${backText}` : `\u2190 ${backText}`;
           }
         }, 0);
+      });
+
+      intro.onComplete(function () {
+        completedRef.current = true;
+        localStorage.setItem(TOUR_STORAGE_KEY, "true");
       });
 
       intro.onExit(function () {
