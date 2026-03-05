@@ -165,3 +165,23 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+
+/* ── RTL overrides ── */
+
+/* Skip button: flip to left corner */
+[dir="rtl"] .design-tour-tooltip .introjs-skipbutton {
+  right: auto;
+  left: -10px;
+}
+
+/* Preview step arrow: mirror to left side */
+[dir="rtl"] .design-tour-step-preview .introjs-arrow.top-left {
+  left: 45px !important;
+  right: auto !important;
+}
+
+/* Add-page step arrow: mirror to right side */
+[dir="rtl"] .design-tour-step-addpage.introjs-tooltip .introjs-arrow.right {
+  top: 16px !important;
+  transform: none !important;
+}

@@ -2,7 +2,15 @@ import { useEffect, useRef } from "react";
 import introJs from "intro.js";
 import "intro.js/introjs.css";
 import { designTourSteps } from "./steps";
+import { isSessionRtl } from "~/utils/common";
 import "./tour.css";
+
+const RTL_POSITION_MAP = {
+  left: "right",
+  right: "left",
+  "bottom-right-aligned": "bottom-left-aligned",
+  "bottom-left-aligned": "bottom-right-aligned",
+};
 
 const QUESTION_TYPES_STEP = 2;
 const REMIND_ICON =
@@ -52,12 +60,14 @@ export default function DesignTourProvider({ children }) {
   const introInstanceRef = useRef(null);
 
   useEffect(() => {
+    const rtl = isSessionRtl();
+
     const timer = setTimeout(() => {
       const steps = designTourSteps.map((step, i) => ({
         element: step.element,
         title: buildStepTitle(i, step),
         intro: buildStepIntro(step),
-        position: step.position,
+        position: rtl ? (RTL_POSITION_MAP[step.position] || step.position) : step.position,
         tooltipClass: step.tooltipClass,
       }));
 
@@ -111,7 +121,7 @@ export default function DesignTourProvider({ children }) {
 
           if (nextBtn) {
             const nextText = step.nextButtonText || "Next";
-            nextBtn.textContent = `${nextText} \u2192`;
+            nextBtn.textContent = rtl ? `\u2190 ${nextText}` : `${nextText} \u2192`;
           }
 
           if (stepIndex === 0 && prevBtn) {
@@ -127,7 +137,8 @@ export default function DesignTourProvider({ children }) {
           } else if (prevBtn) {
             prevBtn.removeAttribute("style");
             prevBtn.onclick = null;
-            prevBtn.textContent = `\u2190 ${step.prevButtonText || "Back"}`;
+            const backText = step.prevButtonText || "Back";
+            prevBtn.textContent = rtl ? `${backText} \u2192` : `\u2190 ${backText}`;
           }
         }, 0);
       });
