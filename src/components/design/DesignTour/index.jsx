@@ -170,7 +170,6 @@ export default function DesignTourProvider({ children }) {
       }
       unclampQuestionTypes();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <>{children}</>;
