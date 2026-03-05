@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import introJs from "intro.js";
 import "intro.js/introjs.css";
-import { designTourSteps } from "./steps";
+import { getDesignTourSteps } from "./steps";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { isSessionRtl } from "~/utils/common";
 import "./tour.css";
 
@@ -47,25 +49,18 @@ function unclampQuestionTypes() {
   }
 }
 
-function buildStepTitle(stepIndex, step) {
-  const counter = `<div class="design-tour-step-counter">Step ${stepIndex + 1} of ${designTourSteps.length}</div>`;
-  return counter + step.title;
-}
-
-function buildStepIntro(step) {
-  return `<div class="design-tour-step-body">${step.intro}</div>`;
-}
-
 export default function DesignTourProvider({ children }) {
+  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const introInstanceRef = useRef(null);
 
   useEffect(() => {
     const rtl = isSessionRtl();
+    const tourSteps = getDesignTourSteps(t);
 
     const timer = setTimeout(() => {
-      const steps = designTourSteps.map((step, i) => ({
+      const steps = tourSteps.map((step, i) => ({
         element: step.element,
-        title: buildStepTitle(i, step),
+        title: buildStepTitle(i, tourSteps, t),
         intro: buildStepIntro(step),
         position: rtl ? (RTL_POSITION_MAP[step.position] || step.position) : step.position,
         tooltipClass: step.tooltipClass,
@@ -79,11 +74,13 @@ export default function DesignTourProvider({ children }) {
         showBullets: false,
         showStepNumbers: false,
         exitOnOverlayClick: false,
+        showSkipButton: false,
+        disableInteraction: true,
         autoPosition: false,
         hidePrev: false,
-        nextLabel: "Next",
-        prevLabel: "Back",
-        doneLabel: "Let's go \u2713",
+        nextLabel: t("tour_next"),
+        prevLabel: t("tour_back"),
+        doneLabel: t("tour_done"),
         tooltipClass: "design-tour-tooltip",
         highlightClass: "design-tour-highlight",
         scrollToElement: false,
@@ -111,7 +108,7 @@ export default function DesignTourProvider({ children }) {
 
       intro.onAfterChange(function () {
         const stepIndex = this.getCurrentStep();
-        const step = designTourSteps[stepIndex];
+        const step = tourSteps[stepIndex];
         if (!step) return;
 
         // Delay to ensure intro.js has finished its DOM updates
@@ -120,15 +117,15 @@ export default function DesignTourProvider({ children }) {
           const prevBtn = document.querySelector(".introjs-prevbutton");
 
           if (nextBtn) {
-            const nextText = step.nextButtonText || "Next";
-            nextBtn.textContent = rtl ? `\u2190 ${nextText}` : `${nextText} \u2192`;
+            const nextText = step.nextButtonText || t("tour_next");
+            nextBtn.textContent = rtl ? `${nextText} \u2190` : `${nextText} \u2192`;
           }
 
           if (stepIndex === 0 && prevBtn) {
             prevBtn.classList.remove("introjs-disabled", "introjs-hidden");
             prevBtn.removeAttribute("style");
             prevBtn.style.display = "inline-flex";
-            prevBtn.innerHTML = `${REMIND_ICON} Remind me later`;
+            prevBtn.innerHTML = `${REMIND_ICON} ${t("tour_remind_me_later")}`;
             prevBtn.onclick = (e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -137,8 +134,8 @@ export default function DesignTourProvider({ children }) {
           } else if (prevBtn) {
             prevBtn.removeAttribute("style");
             prevBtn.onclick = null;
-            const backText = step.prevButtonText || "Back";
-            prevBtn.textContent = rtl ? `${backText} \u2192` : `\u2190 ${backText}`;
+            const backText = step.prevButtonText || t("tour_back");
+            prevBtn.textContent = rtl ? `\u2192 ${backText}` : `\u2190 ${backText}`;
           }
         }, 0);
       });
@@ -159,7 +156,16 @@ export default function DesignTourProvider({ children }) {
       }
       unclampQuestionTypes();
     };
-  }, []);
+  }, [t]);
 
   return <>{children}</>;
+}
+
+function buildStepTitle(stepIndex, tourSteps, t) {
+  const counter = `<div class="design-tour-step-counter">${t("tour_step_counter", { current: stepIndex + 1, total: tourSteps.length })}</div>`;
+  return counter + tourSteps[stepIndex].title;
+}
+
+function buildStepIntro(step) {
+  return `<div class="design-tour-step-body">${step.intro}</div>`;
 }
