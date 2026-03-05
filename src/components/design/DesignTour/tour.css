@@ -1,0 +1,187 @@
+/* Tooltip container */
+.design-tour-tooltip.introjs-tooltip {
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.14);
+  min-width: 280px;
+  padding: 14px 16px;
+  overflow: visible;
+}
+
+/* Header reset — static so skip button positions relative to tooltip */
+.design-tour-tooltip .introjs-tooltip-header {
+  padding: 0;
+  min-height: 0;
+  position: static;
+}
+
+/* Title */
+.design-tour-tooltip .introjs-tooltip-title {
+  font-family: Rubik, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 140%;
+  letter-spacing: -0.14px;
+  color: #000000;
+}
+
+/* Step counter */
+.design-tour-step-counter {
+  font-family: Rubik, sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: #45556C;
+  margin-bottom: 2px;
+}
+
+/* Step body */
+.design-tour-step-body {
+  font-size: 12px;
+  color: #6b7280;
+  white-space: pre-line;
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+
+/* Bold labels in step body (e.g. last step menu descriptions) */
+.design-tour-step-body b {
+  font-weight: 700;
+  color: #000000;
+}
+
+/* Body text area reset */
+.design-tour-tooltip .introjs-tooltiptext {
+  padding: 0;
+}
+
+/* Hide bullets and progress */
+.design-tour-tooltip .introjs-bullets,
+.design-tour-tooltip .introjs-progress {
+  display: none;
+}
+
+/* Step 1 (workspace): offset from top */
+.design-tour-step-workspace.introjs-tooltip {
+  top: 40px !important;
+}
+
+/* Highlight border radius */
+.design-tour-highlight.introjs-helperLayer {
+  border-radius: 8px;
+}
+
+/* Button row */
+.design-tour-tooltip .introjs-tooltipbuttons {
+  border-top: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 0;
+}
+
+/* Next / Done button */
+.design-tour-tooltip .introjs-nextbutton {
+  text-transform: none;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #1a1f4e;
+  border-radius: 6px;
+  padding: 6px 10px;
+  border: none;
+  text-shadow: none;
+  box-shadow: none;
+  white-space: nowrap;
+}
+
+.design-tour-tooltip .introjs-nextbutton:hover,
+.design-tour-tooltip .introjs-nextbutton:focus {
+  background-color: #141842;
+  box-shadow: none;
+}
+
+/* Back / Remind me later button */
+.design-tour-tooltip .introjs-prevbutton {
+  text-transform: none;
+  font-size: 11px;
+  font-weight: 500;
+  color: #6b7280;
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 5px 8px;
+  border: 0.8px solid #CAD5E2;
+  text-shadow: none;
+  box-shadow: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.design-tour-tooltip .introjs-prevbutton:hover,
+.design-tour-tooltip .introjs-prevbutton:focus {
+  background-color: #f3f4f6;
+  box-shadow: none;
+}
+
+/* Center arrow vertically — workspace steps only */
+.design-tour-step-workspace.introjs-tooltip .introjs-arrow.right,
+.design-tour-step-workspace.introjs-tooltip .introjs-arrow.left {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+/* Arrow at top-left — add-page step only */
+.design-tour-step-addpage.introjs-tooltip .introjs-arrow.left {
+  top: 16px !important;
+  transform: none !important;
+}
+
+/* Move arrow right — preview step only */
+.design-tour-step-preview .introjs-arrow.top-right {
+  right: 45px !important;
+  left: auto !important;
+}
+
+/* Skip/close button — positioned relative to tooltip container */
+.design-tour-tooltip .introjs-skipbutton {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  z-index: 1;
+  font-size: 0;
+  color: transparent;
+  overflow: hidden;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* ── RTL overrides ── */
+
+/* Skip button: flip to left corner */
+[dir="rtl"] .design-tour-tooltip .introjs-skipbutton {
+  right: auto;
+  left: -10px;
+}
+
+/* Preview step arrow: mirror to left side */
+[dir="rtl"] .design-tour-step-preview .introjs-arrow.top-left {
+  left: 45px !important;
+  right: auto !important;
+}
+
+/* Add-page step arrow: mirror to right side */
+[dir="rtl"] .design-tour-step-addpage.introjs-tooltip .introjs-arrow.right {
+  top: 16px !important;
+  transform: none !important;
+}

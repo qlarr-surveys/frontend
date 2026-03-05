@@ -120,6 +120,7 @@ function ContentPanel({ designMode }, ref) {
 
   return (
     <Box
+      data-tour="content-panel"
       ref={ref}
       className={`content-panel ${styles.contentPanel}`}
       onClick={(event) => {

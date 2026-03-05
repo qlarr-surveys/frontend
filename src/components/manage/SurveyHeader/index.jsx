@@ -33,7 +33,7 @@ export const SurveyHeader = ({ showPreview }) => {
 
   return (
     availablePagesMemo.length > 0 && (
-      <Box className={styles.header}>
+      <Box data-tour="survey-header" className={styles.header}>
         <Box
           onClick={() => {
             dispatch(onEditErrorSeen());
@@ -57,6 +57,7 @@ export const SurveyHeader = ({ showPreview }) => {
         </Box>
         {showPreview && (
           <Button
+            data-tour="preview-button"
             variant="contained"
             color="primary"
             sx={{ mr: 2 }}
