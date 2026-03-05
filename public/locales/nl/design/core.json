@@ -391,6 +391,7 @@
     "from": "Van",
     "to": "Tot",
     "search": "Zoeken...",
-    "no_options": "Geen opties gevonden"
+    "no_options": "Geen opties gevonden",
+    "range_error": "Ongeldig bereik: minimum overschrijdt maximum"
   }
 }

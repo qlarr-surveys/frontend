@@ -391,6 +391,7 @@
     "from": "Desde",
     "to": "Hasta",
     "search": "Buscar...",
-    "no_options": "No se encontraron opciones"
+    "no_options": "No se encontraron opciones",
+    "range_error": "Rango inválido: el mínimo supera el máximo"
   }
 }

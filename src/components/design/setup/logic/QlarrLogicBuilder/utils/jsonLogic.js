@@ -103,14 +103,20 @@ function isRuleValid(rule) {
     return true;
   }
 
-  // Cardinality 2 (range) needs an array of two values
+  // Cardinality 2 (range) needs an array of two valid values where min <= max
   if (operatorDef.cardinality === 2) {
-    return (
-      Array.isArray(rule.value) &&
-      rule.value.length === 2 &&
-      rule.value[0] !== null &&
-      rule.value[1] !== null
-    );
+    if (
+      !Array.isArray(rule.value) ||
+      rule.value.length !== 2 ||
+      rule.value[0] === null ||
+      rule.value[1] === null ||
+      rule.value[0] === '' ||
+      rule.value[1] === ''
+    ) {
+      return false;
+    }
+    const [min, max] = rule.value;
+    return !(min > max);
   }
 
   return false;
@@ -157,7 +163,11 @@ function ruleToJsonLogic(rule) {
 
   // Range operators (cardinality 2)
   if (operatorDef.cardinality === 2 && Array.isArray(rule.value)) {
-    const [min, max] = rule.value;
+    let [min, max] = rule.value;
+    // Auto-swap if min > max (works for numbers and ISO date/time strings)
+    if (min != null && max != null && min > max) {
+      [min, max] = [max, min];
+    }
     return { [operatorDef.jsonLogicOp]: [fieldVar, min, max] };
   }
 

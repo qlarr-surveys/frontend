@@ -391,6 +391,7 @@
     "from": "Von",
     "to": "Bis",
     "search": "Suchen...",
-    "no_options": "Keine Optionen gefunden"
+    "no_options": "Keine Optionen gefunden",
+    "range_error": "Ungültiger Bereich: Minimum überschreitet Maximum"
   }
 }

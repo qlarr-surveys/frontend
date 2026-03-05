@@ -391,6 +391,7 @@
     "from": "De",
     "to": "À",
     "search": "Rechercher...",
-    "no_options": "Aucune option trouvée"
+    "no_options": "Aucune option trouvée",
+    "range_error": "Plage invalide : le minimum dépasse le maximum"
   }
 }
