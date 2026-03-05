@@ -45,6 +45,12 @@
   margin-bottom: 6px;
 }
 
+/* Bold labels in step body (e.g. last step menu descriptions) */
+.design-tour-step-body b {
+  font-weight: 700;
+  color: #000000;
+}
+
 /* Body text area reset */
 .design-tour-tooltip .introjs-tooltiptext {
   padding: 0;

@@ -73,7 +73,7 @@ export default function DesignTourProvider({ children }) {
         hidePrev: false,
         nextLabel: "Next",
         prevLabel: "Back",
-        doneLabel: "Done",
+        doneLabel: "Let's go \u2713",
         tooltipClass: "design-tour-tooltip",
         highlightClass: "design-tour-highlight",
         scrollToElement: false,
