@@ -5,12 +5,16 @@ import {
   Alert,
   Autocomplete,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
   TextField,
-  ToggleButtonGroup,
-  ToggleButton,
 } from "@mui/material";
 import StorageIcon from "@mui/icons-material/Storage";
 import EditIcon from "@mui/icons-material/Edit";
+import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { changeAttribute, changeResources } from "~/state/design/designState";
@@ -32,6 +36,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
   const [entryMode, setEntryMode] = useState("file");
   const [manualValues, setManualValues] = useState("");
   const [error, setError] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const state = useSelector((state) => {
     return state.designState[code];
@@ -53,6 +58,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         dispatch(
           changeAttribute({ code, key: "autoComplete", value: response })
         );
+        setDialogOpen(false);
         onSuccess?.();
       })
       .catch((err) => {
@@ -99,12 +105,6 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         </>
       )}
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 1 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
-
       <Autocomplete
         id="readOnly"
         sx={{ marginTop: "8px" }}
@@ -122,82 +122,125 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         )}
       />
 
-      {isUploading ? (
+      {onMainLang && (
         <div className={styles.buttonContainer}>
-          <LoadingDots />
-          <br />
-          <span>{t("uploading_autocomplete")}</span>
-        </div>
-      ) : onMainLang ? (
-        <div className={styles.buttonContainer}>
-          <ToggleButtonGroup
-            value={entryMode}
-            exclusive
-            onChange={(e, newMode) => {
-              if (newMode !== null) setEntryMode(newMode);
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setEntryMode("file");
+              setDialogOpen(true);
             }}
-            size="small"
-            sx={{ marginBottom: "16px" }}
           >
-            <ToggleButton value="file">
-              <StorageIcon sx={{ mr: 1, fontSize: "1rem" }} />
-              {t("upload_file")}
-            </ToggleButton>
-            <ToggleButton value="manual">
-              <EditIcon sx={{ mr: 1, fontSize: "1rem" }} />
-              {t("manual_entry")}
-            </ToggleButton>
-          </ToggleButtonGroup>
-
-          {entryMode === "file" && (
-            <div>
-              <Button
-                variant="outlined"
-                component="label"
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <StorageIcon className="mr-10" />
-                {state.autoComplete
-                  ? t("replace_autocomplete")
-                  : t("upload_autocomplete")}
-                <input
-                  hidden
-                  accept="application/json,.json"
-                  type="file"
-                  onChange={handleUpload}
-                />
-              </Button>
-            </div>
-          )}
-
-          {entryMode === "manual" && (
-            <div>
-              <TextField
-                multiline
-                minRows={4}
-                maxRows={12}
-                fullWidth
-                variant="outlined"
-                placeholder={t("manual_entry_placeholder")}
-                value={manualValues}
-                onChange={(e) => setManualValues(e.target.value)}
-                sx={{ marginBottom: "12px" }}
-              />
-              <Button
-                variant="outlined"
-                onClick={handleManualSubmit}
-                disabled={manualValues.trim().length === 0}
-              >
-                {t("submit_values")}
-              </Button>
-            </div>
-          )}
+            <StorageIcon className="mr-10" />
+            {state.autoComplete
+              ? t("replace_autocomplete")
+              : t("upload_autocomplete")}
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{ ml: 1 }}
+            onClick={() => {
+              setEntryMode("manual");
+              setDialogOpen(true);
+            }}
+          >
+            <EditIcon className="mr-10" />
+            {t("manual_entry")}
+          </Button>
         </div>
-      ) : (
-        <></>
       )}
+
+      <Dialog
+        open={dialogOpen}
+        onClose={() => {
+          if (!isUploading) setDialogOpen(false);
+        }}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          {state.autoComplete
+            ? t("replace_autocomplete")
+            : t("upload_autocomplete")}
+          <IconButton
+            aria-label="close"
+            onClick={() => setDialogOpen(false)}
+            disabled={isUploading}
+            sx={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent dividers>
+          {error && (
+            <Alert severity="error" sx={{ mb: 1 }} onClose={() => setError(null)}>
+              {error}
+            </Alert>
+          )}
+
+          {isUploading ? (
+            <div className={styles.buttonContainer}>
+              <LoadingDots />
+              <br />
+              <span>{t("uploading_autocomplete")}</span>
+            </div>
+          ) : (
+            <>
+              {entryMode === "file" && (
+                <div>
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    <StorageIcon className="mr-10" />
+                    {state.autoComplete
+                      ? t("replace_autocomplete")
+                      : t("upload_autocomplete")}
+                    <input
+                      hidden
+                      accept="application/json,.json"
+                      type="file"
+                      onChange={handleUpload}
+                    />
+                  </Button>
+                </div>
+              )}
+
+              {entryMode === "manual" && (
+                <div>
+                  <TextField
+                    multiline
+                    minRows={4}
+                    maxRows={12}
+                    fullWidth
+                    variant="outlined"
+                    placeholder={t("manual_entry_placeholder")}
+                    value={manualValues}
+                    onChange={(e) => setManualValues(e.target.value)}
+                    sx={{ marginBottom: "12px" }}
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </DialogContent>
+
+        {!isUploading && entryMode === "manual" && (
+          <DialogActions>
+            <Button
+              variant="outlined"
+              onClick={handleManualSubmit}
+              disabled={manualValues.trim().length === 0}
+            >
+              {t("submit_values")}
+            </Button>
+          </DialogActions>
+        )}
+      </Dialog>
     </>
   );
 }
