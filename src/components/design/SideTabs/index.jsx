@@ -30,12 +30,20 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
   const tabAvailable = (tab) => availablePages.indexOf(tab) !== -1;
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const dispatch = useDispatch();
-  const getTabButtonStyle = (selected) => ({
+  const getTabButtonSx = (selected) => ({
     minWidth: "auto",
-    margin: "0px !important",
-    padding: "12px 0px",
-    backgroundColor: selected ? "#2d3cb2" : undefined,
+    padding: "0px",
+    height: "70px",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: selected ? "#2d3cb2" : "transparent",
     color: "#fff",
+    "&:hover": {
+      backgroundColor: selected ? "#2d3cb2" : "rgba(255,255,255,0.1)",
+    },
+    "& .MuiTouchRipple-root": {
+      color: "rgba(255,255,255,0.3)",
+    },
   });
 
   const versionDto = useSelector((state) => {
@@ -55,7 +63,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
           <>
             <SideTab
               tooltip={t("design")}
-              style={getTabButtonStyle(
+              buttonSx={getTabButtonSx(
                 selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.DESIGN
               )}
               link={routes.designSurvey.replace(":surveyId", surveyId)}
@@ -67,7 +75,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
             />
             <SideTab
               tooltip={t("theme")}
-              style={getTabButtonStyle(selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.THEME)}
+              buttonSx={getTabButtonSx(selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.THEME)}
               icon={<Palette sx={{ color: "#fff" }} />}
               link={routes.designSurvey.replace(":surveyId", surveyId)}
               onClick={() => {
@@ -78,7 +86,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
             <SideTab
               tooltip={t("translation")}
               link={routes.designSurvey.replace(":surveyId", surveyId)}
-              style={getTabButtonStyle(
+              buttonSx={getTabButtonSx(
                 selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.LANGUAGES
               )}
               icon={<Translate sx={{ color: "#fff" }} />}
@@ -92,7 +100,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
         {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.SETTINGS) && (
           <SideTab
             tooltip={t("settings")}
-            style={getTabButtonStyle(
+            buttonSx={getTabButtonSx(
               selectedPage == MANAGE_SURVEY_LANDING_PAGES.SETTINGS
             )}
             link={routes.editSurvey.replace(":surveyId", surveyId)}
@@ -112,7 +120,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
         {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.RESPONSES) && (
           <SideTab
             tooltip={t("responses")}
-            style={getTabButtonStyle(
+            buttonSx={getTabButtonSx(
               selectedPage == MANAGE_SURVEY_LANDING_PAGES.RESPONSES
             )}
             link={routes.responses.replace(":surveyId", surveyId)}
@@ -131,21 +139,21 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
 
 export default React.memo(SideTabs);
 
-function SideTab({ tooltip, style, link, onClick, icon, isLink = true }) {
+function SideTab({ tooltip, buttonSx, link, onClick, icon, isLink = true }) {
   return (
     <CustomTooltip showIcon={false} title={tooltip} placement="right">
       {isLink ? (
         <Link to={link} onClick={() => onClick()}>
-          <ListItem disablePadding style={style}>
-            <ListItemButton>
-              <ListItemIcon>{icon}</ListItemIcon>
+          <ListItem disablePadding>
+            <ListItemButton sx={buttonSx}>
+              <ListItemIcon sx={{ minWidth: "auto", justifyContent: "center", marginRight: 0 }}>{icon}</ListItemIcon>
             </ListItemButton>
           </ListItem>
         </Link>
       ) : (
-        <ListItem disablePadding style={style}>
-          <ListItemButton onClick={() => onClick()}>
-            <ListItemIcon>{icon}</ListItemIcon>
+        <ListItem disablePadding>
+          <ListItemButton sx={buttonSx} onClick={() => onClick()}>
+            <ListItemIcon sx={{ minWidth: "auto", justifyContent: "center", marginRight: 0 }}>{icon}</ListItemIcon>
           </ListItemButton>
         </ListItem>
       )}
