@@ -256,6 +256,7 @@
   "upload_video": "Télécharger une Vidéo",
   "uploading_autocomplete": "Téléchargement du fichier JSON d'autocomplétion",
   "manual_entry": "Saisie manuelle",
+  "loading_values": "Chargement des valeurs...",
   "upload_file": "Télécharger un fichier",
   "manual_entry_placeholder": "Entrez une valeur par ligne",
   "submit_values": "Soumettre",

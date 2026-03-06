@@ -33,8 +33,10 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
   const dispatch = useDispatch();
   const { t: tManage } = useTranslation(NAMESPACES.MANAGE);
   const [isUploading, setUploading] = useState(false);
+  const [isFetchingValues, setIsFetchingValues] = useState(false);
   const [manualValues, setManualValues] = useState("");
   const [error, setError] = useState(null);
+  const [dialogError, setDialogError] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const state = useSelector((state) => {
@@ -44,9 +46,13 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
     return state.designState.langInfo.lang;
   });
 
-  const uploadFile = (file, onSuccess) => {
-    setUploading(true);
-    setError(null);
+  const uploadFile = (file, onSuccess, useDialogError = false) => {
+    if (!useDialogError) {
+      setUploading(true);
+      setError(null);
+    } else {
+      setDialogError(null);
+    }
     designService
       .uploadAutoCompleteResource(file, code)
       .then((response) => {
@@ -62,13 +68,42 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
       .catch((err) => {
         setUploading(false);
         const processed = processError(err) || PROCESSED_ERRORS.UNIDENTIFIED_ERROR;
-        setError(tManage(`processed_errors.${processed.name}`));
+        const errorMsg = tManage(`processed_errors.${processed.name}`);
+        if (useDialogError) {
+          setDialogError(errorMsg);
+        } else {
+          setError(errorMsg);
+        }
       });
   };
 
   const handleUpload = (e) => {
     e.preventDefault();
     uploadFile(e.target.files[0]);
+  };
+
+  const handleManualEntryClick = () => {
+    setDialogError(null);
+    if (state.autoComplete) {
+      setIsFetchingValues(true);
+      designService
+        .getAutoCompleteValues(code)
+        .then((values) => {
+          setManualValues(values.join("\n"));
+          setDialogOpen(true);
+        })
+        .catch(() => {
+          setManualValues("");
+          setDialogOpen(true);
+          setDialogError(tManage(`processed_errors.UNIDENTIFIED_ERROR`));
+        })
+        .finally(() => {
+          setIsFetchingValues(false);
+        });
+    } else {
+      setManualValues("");
+      setDialogOpen(true);
+    }
   };
 
   const handleManualSubmit = () => {
@@ -84,7 +119,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
     uploadFile(file, () => {
       setManualValues("");
       setDialogOpen(false);
-    });
+    }, true);
   };
 
   return (
@@ -158,10 +193,11 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
           <Button
             variant="outlined"
             sx={{ ml: 1 }}
-            onClick={() => setDialogOpen(true)}
+            onClick={handleManualEntryClick}
+            disabled={isFetchingValues}
           >
             <EditIcon className="mr-10" />
-            {t("manual_entry")}
+            {isFetchingValues ? t("loading_values") : t("manual_entry")}
           </Button>
         </div>
       ) : (
@@ -186,6 +222,11 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         </DialogTitle>
 
         <DialogContent dividers>
+          {dialogError && (
+            <Alert severity="error" sx={{ mb: 1 }} onClose={() => setDialogError(null)}>
+              {dialogError}
+            </Alert>
+          )}
           <TextField
             multiline
             minRows={4}
