@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -99,10 +99,27 @@ function Dashboard() {
   const [title, setTitle] = useState(t("action_btn.delete"));
   const [isCreateSurveyOpen, setCreateSurveyOpen] = useState(false);
   const [importSurvey, setImportSurvey] = useState(false);
+  const mainContainerRef = useRef(null);
+
+  const scrollToTop = () => {
+    if (mainContainerRef.current) {
+      mainContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   const handleButtonClick = () => {
-    setCreateSurveyOpen(true);
+    if (isCreateSurveyOpen) {
+      scrollToTop();
+    } else {
+      setCreateSurveyOpen(true);
+    }
   };
+
+  useEffect(() => {
+    if (isCreateSurveyOpen) {
+      scrollToTop();
+    }
+  }, [isCreateSurveyOpen]);
 
   const handleImportSurveyClick = () => {
     setOpenImportModal(true);
@@ -229,7 +246,7 @@ function Dashboard() {
   const isRtl = getDirFromSession();
 
   return (
-    <Box className={styles.mainContainer}>
+    <Box ref={mainContainerRef} className={styles.mainContainer}>
       <Container sx={{ marginBottom: "48px" }}>
         <Box className={styles.content}>
           {(surveys?.surveys?.length > 0 || status !== "all") && (
