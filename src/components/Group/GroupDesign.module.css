@@ -106,6 +106,7 @@
   justify-content: space-between;
   align-items: center;
   justify-content: end;
+  z-index: 1;
 }
 
 .headerContent {
