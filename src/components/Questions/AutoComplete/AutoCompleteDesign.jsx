@@ -192,7 +192,6 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
           </Button>
           <Button
             variant="outlined"
-            sx={{ ml: 1 }}
             onClick={handleManualEntryClick}
             disabled={isFetchingValues}
           >
