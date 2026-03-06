@@ -1,14 +1,6 @@
-import React, { useState } from "react";
-import {
-  Alert,
-  Box,
-  Button,
-  Link,
-  Snackbar,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { Add, AutoAwesome, UploadFileOutlined } from "@mui/icons-material";
+import React from "react";
+import { Box, Button, Link, Stack, Typography } from "@mui/material";
+import { Add, UploadFileOutlined } from "@mui/icons-material";
 import collectDataIcon from "~/assets/icons/collect-data.svg";
 import trustResponseIcon from "~/assets/icons/trust-every-respons.svg";
 import ownResultIcon from "~/assets/icons/own-every-result.svg";
@@ -24,11 +16,6 @@ function DashboardEmptyState({
 }) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const user = TokenService.getUser();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  const handleGenerateWithAI = () => {
-    setSnackbarOpen(true);
-  };
 
   return (
     <Box>
@@ -72,25 +59,6 @@ function DashboardEmptyState({
                 }}
               >
                 {t("empty_state.create_survey_btn")}
-              </Button>
-              <Button
-                variant="outlined"
-                startIcon={<AutoAwesome />}
-                onClick={handleGenerateWithAI}
-                sx={{
-                  textTransform: "none",
-                  px: 3,
-                  py: 1.2,
-                  borderRadius: "8px",
-                  borderColor: "#C4CDD5",
-                  color: "text.primary",
-                  "&:hover": {
-                    borderColor: "primary.main",
-                    backgroundColor: "rgba(22, 32, 91, 0.04)",
-                  },
-                }}
-              >
-                {t("empty_state.generate_with_ai_btn")}
               </Button>
             </Stack>
             <Link
@@ -154,20 +122,6 @@ function DashboardEmptyState({
       </Box>
       </Box>
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          severity="info"
-          variant="standard"
-          onClose={() => setSnackbarOpen(false)}
-        >
-          {t("empty_state.ai_coming_soon")}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 }

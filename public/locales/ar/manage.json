@@ -380,13 +380,11 @@
     "subtitle": "اكتشف رؤى أعمق تدفع قرارات أذكى.",
     "create_first_survey": "أنشئ استبيانك الأول في دقائق",
     "create_survey_btn": "إنشاء استبيان",
-    "generate_with_ai_btn": "إنشاء بالذكاء الاصطناعي",
     "import_template": "استيراد قالب موجود",
     "feature_collect": "اجمع البيانات من أي مكان.",
     "feature_trust": "ثق بكل استجابة.",
     "feature_own": "امتلك كل نتيجة.",
     "need_help": "تحتاج مساعدة للبدء؟",
-    "contact_support": "تواصل مع الدعم",
-    "ai_coming_soon": "قريباً! إنشاء الاستبيانات بالذكاء الاصطناعي في الطريق."
+    "contact_support": "تواصل مع الدعم"
   }
 }

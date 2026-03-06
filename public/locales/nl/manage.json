@@ -380,13 +380,11 @@
     "subtitle": "Ontdek diepere inzichten voor slimmere beslissingen.",
     "create_first_survey": "Maak uw eerste enquête in enkele minuten",
     "create_survey_btn": "Enquête aanmaken",
-    "generate_with_ai_btn": "Genereren met AI",
     "import_template": "Bestaand sjabloon importeren",
     "feature_collect": "Verzamel overal gegevens.",
     "feature_trust": "Vertrouw elk antwoord.",
     "feature_own": "Bezit elk resultaat.",
     "need_help": "Hulp nodig om te beginnen?",
-    "contact_support": "contact opnemen met support",
-    "ai_coming_soon": "Binnenkort! AI-enquêtegeneratie is onderweg."
+    "contact_support": "contact opnemen met support"
   }
 }

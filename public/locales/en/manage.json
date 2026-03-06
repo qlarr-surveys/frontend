@@ -380,13 +380,11 @@
     "subtitle": "Unlock deeper insights that drive smarter decisions.",
     "create_first_survey": "Create your first survey in minutes",
     "create_survey_btn": "Create Survey",
-    "generate_with_ai_btn": "Generate with AI",
     "import_template": "Import Existing Template",
     "feature_collect": "Collect data anywhere.",
     "feature_trust": "Trust every response.",
     "feature_own": "Own every result.",
     "need_help": "Need help getting started?",
-    "contact_support": "contact support",
-    "ai_coming_soon": "Coming Soon! AI survey generation is on its way."
+    "contact_support": "contact support"
   }
 }

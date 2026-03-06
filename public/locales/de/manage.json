@@ -29,8 +29,9 @@
   },
   "analysts": "analysten",
   "aria": {
+    "users_table": "Benutzertabelle",
     "answers_table": "Antworttabelle",
-    "users_table": "Benutzertabelle"
+    "preview_mode_tabs": "Vorschaumodus-Tabs"
   },
   "base_language_required": "Basissprache ist erforderlich",
   "component_deleted_title": "Löschung nicht erlaubt",
@@ -369,11 +370,6 @@
     "title_edit": "Bearbeiten",
     "users": "Benutzer"
   },
-  "aria": {
-    "users_table": "Benutzertabelle",
-    "answers_table": "Antworttabelle",
-    "preview_mode_tabs": "Vorschaumodus-Tabs"
-  },
   "preview_page": {
     "navigation_mode": "Navigationsmodus",
     "all_in_one": "Alles in einem",
@@ -385,13 +381,11 @@
     "subtitle": "Gewinnen Sie tiefere Einblicke für klügere Entscheidungen.",
     "create_first_survey": "Erstellen Sie Ihre erste Umfrage in Minuten",
     "create_survey_btn": "Umfrage erstellen",
-    "generate_with_ai_btn": "Mit KI generieren",
     "import_template": "Vorhandene Vorlage importieren",
     "feature_collect": "Daten überall sammeln.",
     "feature_trust": "Jeder Antwort vertrauen.",
     "feature_own": "Jedes Ergebnis besitzen.",
     "need_help": "Brauchen Sie Hilfe beim Einstieg?",
-    "contact_support": "Support kontaktieren",
-    "ai_coming_soon": "Demnächst! KI-Umfrageerstellung ist auf dem Weg."
+    "contact_support": "Support kontaktieren"
   }
 }

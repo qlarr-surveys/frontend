@@ -380,13 +380,11 @@
     "subtitle": "Descubra insights mais profundos para decisões mais inteligentes.",
     "create_first_survey": "Crie sua primeira pesquisa em minutos",
     "create_survey_btn": "Criar pesquisa",
-    "generate_with_ai_btn": "Gerar com IA",
     "import_template": "Importar modelo existente",
     "feature_collect": "Colete dados em qualquer lugar.",
     "feature_trust": "Confie em cada resposta.",
     "feature_own": "Domine cada resultado.",
     "need_help": "Precisa de ajuda para começar?",
-    "contact_support": "contatar suporte",
-    "ai_coming_soon": "Em breve! A geração de pesquisas com IA está a caminho."
+    "contact_support": "contatar suporte"
   }
 }

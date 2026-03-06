@@ -380,13 +380,11 @@
     "subtitle": "Descubre información más profunda para tomar decisiones más inteligentes.",
     "create_first_survey": "Crea tu primera encuesta en minutos",
     "create_survey_btn": "Crear encuesta",
-    "generate_with_ai_btn": "Generar con IA",
     "import_template": "Importar plantilla existente",
     "feature_collect": "Recopila datos en cualquier lugar.",
     "feature_trust": "Confía en cada respuesta.",
     "feature_own": "Controla cada resultado.",
     "need_help": "¿Necesitas ayuda para comenzar?",
-    "contact_support": "contactar soporte",
-    "ai_coming_soon": "¡Próximamente! La generación de encuestas con IA está en camino."
+    "contact_support": "contactar soporte"
   }
 }

@@ -380,13 +380,11 @@
     "subtitle": "Découvrez des insights plus profonds pour des décisions plus intelligentes.",
     "create_first_survey": "Créez votre premier sondage en quelques minutes",
     "create_survey_btn": "Créer un sondage",
-    "generate_with_ai_btn": "Générer avec l'IA",
     "import_template": "Importer un modèle existant",
     "feature_collect": "Collectez des données partout.",
     "feature_trust": "Faites confiance à chaque réponse.",
     "feature_own": "Maîtrisez chaque résultat.",
     "need_help": "Besoin d'aide pour commencer ?",
-    "contact_support": "contacter le support",
-    "ai_coming_soon": "Bientôt disponible ! La génération de sondages par IA arrive."
+    "contact_support": "contacter le support"
   }
 }
