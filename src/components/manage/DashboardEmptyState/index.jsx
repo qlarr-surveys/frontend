@@ -13,6 +13,7 @@ function DashboardEmptyState({
   onCreateSurvey,
   onImportTemplate,
   canCreate,
+  children,
 }) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const user = TokenService.getUser();
@@ -60,6 +61,7 @@ function DashboardEmptyState({
               >
                 {t("empty_state.create_survey_btn")}
               </Button>
+              {children}
             </Stack>
             <Link
               component="button"
