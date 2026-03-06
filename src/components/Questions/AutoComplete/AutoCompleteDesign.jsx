@@ -33,7 +33,6 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
   const dispatch = useDispatch();
   const { t: tManage } = useTranslation(NAMESPACES.MANAGE);
   const [isUploading, setUploading] = useState(false);
-  const [entryMode, setEntryMode] = useState("file");
   const [manualValues, setManualValues] = useState("");
   const [error, setError] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -58,7 +57,6 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         dispatch(
           changeAttribute({ code, key: "autoComplete", value: response })
         );
-        setDialogOpen(false);
         onSuccess?.();
       })
       .catch((err) => {
@@ -83,7 +81,10 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
 
     const blob = new Blob([JSON.stringify(lines)], { type: "application/json" });
     const file = new File([blob], "manual-entry.json", { type: "application/json" });
-    uploadFile(file, () => setManualValues(""));
+    uploadFile(file, () => {
+      setManualValues("");
+      setDialogOpen(false);
+    });
   };
 
   return (
@@ -105,6 +106,12 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         </>
       )}
 
+      {error && (
+        <Alert severity="error" sx={{ mb: 1 }} onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
+
       <Autocomplete
         id="readOnly"
         sx={{ marginTop: "8px" }}
@@ -122,50 +129,56 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         )}
       />
 
-      {onMainLang && (
+      {isUploading ? (
+        <div className={styles.buttonContainer}>
+          <LoadingDots />
+          <br />
+          <span>{t("uploading_autocomplete")}</span>
+        </div>
+      ) : onMainLang ? (
         <div className={styles.buttonContainer}>
           <Button
             variant="outlined"
-            onClick={() => {
-              setEntryMode("file");
-              setDialogOpen(true);
+            component="label"
+            onClick={(e) => {
+              e.stopPropagation();
             }}
           >
             <StorageIcon className="mr-10" />
             {state.autoComplete
               ? t("replace_autocomplete")
               : t("upload_autocomplete")}
+            <input
+              hidden
+              accept="application/json,.json"
+              type="file"
+              onChange={handleUpload}
+            />
           </Button>
           <Button
             variant="outlined"
             sx={{ ml: 1 }}
-            onClick={() => {
-              setEntryMode("manual");
-              setDialogOpen(true);
-            }}
+            onClick={() => setDialogOpen(true)}
           >
             <EditIcon className="mr-10" />
             {t("manual_entry")}
           </Button>
         </div>
+      ) : (
+        <></>
       )}
 
       <Dialog
         open={dialogOpen}
-        onClose={() => {
-          if (!isUploading) setDialogOpen(false);
-        }}
+        onClose={() => setDialogOpen(false)}
         maxWidth="sm"
         fullWidth
       >
         <DialogTitle>
-          {state.autoComplete
-            ? t("replace_autocomplete")
-            : t("upload_autocomplete")}
+          {t("manual_entry")}
           <IconButton
             aria-label="close"
             onClick={() => setDialogOpen(false)}
-            disabled={isUploading}
             sx={{ position: "absolute", right: 8, top: 8 }}
           >
             <CloseIcon />
@@ -173,73 +186,28 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         </DialogTitle>
 
         <DialogContent dividers>
-          {error && (
-            <Alert severity="error" sx={{ mb: 1 }} onClose={() => setError(null)}>
-              {error}
-            </Alert>
-          )}
-
-          {isUploading ? (
-            <div className={styles.buttonContainer}>
-              <LoadingDots />
-              <br />
-              <span>{t("uploading_autocomplete")}</span>
-            </div>
-          ) : (
-            <>
-              {entryMode === "file" && (
-                <div>
-                  <Button
-                    variant="outlined"
-                    component="label"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                  >
-                    <StorageIcon className="mr-10" />
-                    {state.autoComplete
-                      ? t("replace_autocomplete")
-                      : t("upload_autocomplete")}
-                    <input
-                      hidden
-                      accept="application/json,.json"
-                      type="file"
-                      onChange={handleUpload}
-                    />
-                  </Button>
-                </div>
-              )}
-
-              {entryMode === "manual" && (
-                <div>
-                  <TextField
-                    multiline
-                    minRows={4}
-                    maxRows={12}
-                    fullWidth
-                    variant="outlined"
-                    placeholder={t("manual_entry_placeholder")}
-                    value={manualValues}
-                    onChange={(e) => setManualValues(e.target.value)}
-                    sx={{ marginBottom: "12px" }}
-                  />
-                </div>
-              )}
-            </>
-          )}
+          <TextField
+            multiline
+            minRows={4}
+            maxRows={12}
+            fullWidth
+            variant="outlined"
+            placeholder={t("manual_entry_placeholder")}
+            value={manualValues}
+            onChange={(e) => setManualValues(e.target.value)}
+            sx={{ marginBottom: "12px" }}
+          />
         </DialogContent>
 
-        {!isUploading && entryMode === "manual" && (
-          <DialogActions>
-            <Button
-              variant="outlined"
-              onClick={handleManualSubmit}
-              disabled={manualValues.trim().length === 0}
-            >
-              {t("submit_values")}
-            </Button>
-          </DialogActions>
-        )}
+        <DialogActions>
+          <Button
+            variant="outlined"
+            onClick={handleManualSubmit}
+            disabled={manualValues.trim().length === 0}
+          >
+            {t("submit_values")}
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );
