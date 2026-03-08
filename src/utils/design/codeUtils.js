@@ -31,6 +31,20 @@ export const computePrefixAndSuffix = (fullCode) => {
   };
 };
 
+export const selectMaxSuffixLength = (state, prefix, suffix) => {
+  if (!prefix.endsWith("A") || prefix.length < 2) return suffix.length;
+  const questionCode = prefix.slice(0, -1);
+  const question = state.designState[questionCode];
+  if (!question?.children) return suffix.length;
+  let max = suffix.length;
+  for (const child of question.children) {
+    if (!child.qualifiedCode) continue;
+    const { suffix: s } = computePrefixAndSuffix(child.qualifiedCode);
+    if (s.length > max) max = s.length;
+  }
+  return max;
+};
+
 export const getErrorMessage = (error, t) => {
   if (!error) {
     return "";

@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { TextField, Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { designStateReceived, setup } from "~/state/design/designState";
+import { designStateReceived, setSaving, setup } from "~/state/design/designState";
 import { useService } from "~/hooks/use-service";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
@@ -11,13 +11,14 @@ import {
   ALLOWED_CODE_CHARS_REGEX,
   computePrefixAndSuffix,
   getErrorMessage,
+  selectMaxSuffixLength,
 } from "~/utils/design/codeUtils";
 import styles from "./InlineCodeEditor.module.css";
 
 const SPECIAL_TYPES = ["other", "all", "none", "other_text"];
 const MAX_CODE_LENGTH = 10;
 
-function InlineCodeEditor({ qualifiedCode, code, designMode }) {
+function InlineCodeEditor({ qualifiedCode, designMode, compact }) {
   const dispatch = useDispatch();
   const theme = useTheme();
   const designService = useService("design");
@@ -42,19 +43,9 @@ function InlineCodeEditor({ qualifiedCode, code, designMode }) {
 
   const { prefix, suffix } = computePrefixAndSuffix(qualifiedCode);
 
-  const maxSuffixLength = useSelector((state) => {
-    if (!prefix.endsWith("A") || prefix.length < 2) return suffix.length;
-    const questionCode = prefix.slice(0, -1);
-    const question = state.designState[questionCode];
-    if (!question?.children) return suffix.length;
-    let max = suffix.length;
-    for (const child of question.children) {
-      if (!child.qualifiedCode) continue;
-      const { suffix: s } = computePrefixAndSuffix(child.qualifiedCode);
-      if (s.length > max) max = s.length;
-    }
-    return max;
-  });
+  const maxSuffixLength = useSelector((state) =>
+    selectMaxSuffixLength(state, prefix, suffix)
+  );
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -95,6 +86,7 @@ function InlineCodeEditor({ qualifiedCode, code, designMode }) {
 
     setIsSaving(true);
     setError(null);
+    dispatch(setSaving(true));
 
     designService
       .changeCode(qualifiedCode, newFullCode)
@@ -110,6 +102,7 @@ function InlineCodeEditor({ qualifiedCode, code, designMode }) {
       })
       .finally(() => {
         setIsSaving(false);
+        dispatch(setSaving(false));
       });
   }, [
     isSaving,
@@ -135,38 +128,8 @@ function InlineCodeEditor({ qualifiedCode, code, designMode }) {
     [handleSave]
   );
 
-  const handleBlur = useCallback(() => {
-    handleSave();
-  }, [handleSave]);
-
-  if (isEditing) {
-    return (
-      <Tooltip
-        open={!!error}
-        title={getErrorMessage(error, t)}
-        placement="bottom"
-        arrow
-      >
-        <TextField
-          inputRef={inputRef}
-          variant="standard"
-          size="small"
-          value={editValue}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          onBlur={handleBlur}
-          error={!!error}
-          disabled={isSaving}
-          className={styles.codeInput}
-          onClick={(e) => e.stopPropagation()}
-          inputProps={{ maxLength: MAX_CODE_LENGTH }}
-          InputProps={{
-            sx: { fontFamily: "monospace", fontSize: 11 },
-          }}
-        />
-      </Tooltip>
-    );
-  }
+  const displayText = prefix.endsWith("A") ? "A" + suffix : suffix;
+  const hasAPrefix = prefix.endsWith("A");
 
   return (
     <span
@@ -174,11 +137,40 @@ function InlineCodeEditor({ qualifiedCode, code, designMode }) {
       style={{
         backgroundColor: theme.palette.grey[200],
         color: theme.palette.text.secondary,
-        minWidth: `${maxSuffixLength + (prefix.endsWith("A") ? 1 : 0)}ch`,
+        ...(!isEditing && compact
+          ? { maxWidth: "4ch" }
+          : { minWidth: `${maxSuffixLength + (hasAPrefix ? 1 : 0)}ch` }),
       }}
       onClick={handleClick}
     >
-      {prefix.endsWith("A") ? "A" + suffix : suffix}
+      {isEditing ? (
+        <Tooltip
+          open={!!error}
+          title={getErrorMessage(error, t)}
+          placement="bottom"
+          arrow
+        >
+          <span className={styles.editingContainer}>
+            {hasAPrefix && (
+              <span className={styles.prefixLabel}>A</span>
+            )}
+            <input
+              ref={inputRef}
+              value={editValue}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              onBlur={handleSave}
+              disabled={isSaving}
+              maxLength={MAX_CODE_LENGTH}
+              onClick={(e) => e.stopPropagation()}
+              className={styles.codeInputNative}
+              data-code-input
+            />
+          </span>
+        </Tooltip>
+      ) : (
+        displayText
+      )}
     </span>
   );
 }

@@ -211,7 +211,6 @@ function ChoiceItemDesign(props) {
         {inDesign(props.designMode) && (
           <InlineCodeEditor
             qualifiedCode={props.qualifiedCode}
-            code={props.code}
             designMode={props.designMode}
           />
         )}

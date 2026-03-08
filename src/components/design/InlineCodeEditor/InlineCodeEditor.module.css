@@ -27,8 +27,25 @@
   filter: none;
 }
 
-.codeInput {
+.editingContainer {
+  display: inline-flex;
+  align-items: center;
+}
+
+.prefixLabel {
   font-family: monospace;
   font-size: 11px;
-  max-width: 100px;
+}
+
+.codeInputNative {
+  font-family: monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  width: 8ch;
+  color: inherit;
 }
