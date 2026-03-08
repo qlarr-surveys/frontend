@@ -376,5 +376,17 @@
     "all_in_one": "All In One",
     "group_by_group": "Page By Page",
     "question_by_question": "Question By Question"
+  },
+  "empty_state": {
+    "welcome": "Welcome {{firstName}} {{lastName}}",
+    "subtitle": "Unlock deeper insights that drive smarter decisions.",
+    "create_first_survey": "Create your first survey in minutes",
+    "create_survey_btn": "Create Survey",
+    "import_template": "Import Existing Template",
+    "feature_collect": "Collect data anywhere.",
+    "feature_trust": "Trust every response.",
+    "feature_own": "Own every result.",
+    "need_help": "Need help getting started?",
+    "contact_support": "contact support"
   }
 }

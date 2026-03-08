@@ -1,0 +1,68 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  margin: 40px auto 0;
+}
+
+.welcomeSection {
+  text-align: start;
+  margin-bottom: 32px;
+}
+
+.centerCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 60px 32px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  width: 100%;
+}
+
+.illustration {
+  width: 180px;
+  height: 140px;
+}
+
+.featuresSection {
+  width: 100%;
+  padding: 8px 0;
+}
+
+.featureItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.featureIcon {
+  width: 36px;
+  height: 36px;
+}
+
+.supportFooter {
+  padding-top: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    padding: 24px 16px;
+    gap: 24px;
+  }
+
+  .centerCard {
+    padding: 24px 16px 20px;
+  }
+
+  .illustration {
+    width: 140px;
+    height: 110px;
+  }
+}

@@ -376,5 +376,17 @@
     "all_in_one": "الكل في واحد",
     "group_by_group": "صفحة بصفحة",
     "question_by_question": "سؤال بسؤال"
+  },
+  "empty_state": {
+    "welcome": "مرحباً {{firstName}} {{lastName}}",
+    "subtitle": "اكتشف رؤى أعمق تدفع قرارات أذكى.",
+    "create_first_survey": "أنشئ استبيانك الأول في دقائق",
+    "create_survey_btn": "إنشاء استبيان",
+    "import_template": "استيراد قالب موجود",
+    "feature_collect": "اجمع البيانات من أي مكان.",
+    "feature_trust": "ثق بكل استجابة.",
+    "feature_own": "امتلك كل نتيجة.",
+    "need_help": "تحتاج مساعدة للبدء؟",
+    "contact_support": "تواصل مع الدعم"
   }
 }

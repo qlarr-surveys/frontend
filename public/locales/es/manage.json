@@ -376,5 +376,17 @@
     "all_in_one": "Todo en Uno",
     "group_by_group": "Página por Página",
     "question_by_question": "Pregunta por Pregunta"
+  },
+  "empty_state": {
+    "welcome": "Bienvenido {{firstName}} {{lastName}}",
+    "subtitle": "Descubre información más profunda para tomar decisiones más inteligentes.",
+    "create_first_survey": "Crea tu primera encuesta en minutos",
+    "create_survey_btn": "Crear encuesta",
+    "import_template": "Importar plantilla existente",
+    "feature_collect": "Recopila datos en cualquier lugar.",
+    "feature_trust": "Confía en cada respuesta.",
+    "feature_own": "Controla cada resultado.",
+    "need_help": "¿Necesitas ayuda para comenzar?",
+    "contact_support": "contactar soporte"
   }
 }
