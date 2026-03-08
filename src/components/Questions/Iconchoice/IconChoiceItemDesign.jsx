@@ -25,6 +25,7 @@ import { contentEditable, inDesign } from "~/routes";
 import { setupOptions } from "~/constants/design";
 import { Build } from "@mui/icons-material";
 import ContentEditor from "~/components/design/ContentEditor";
+import InlineCodeEditor from "~/components/design/InlineCodeEditor";
 
 function IconChoiceItemDesign({
   parentCode,
@@ -296,6 +297,15 @@ function IconChoiceItemDesign({
               svgUrl={svgIconName ? buildResourceUrl(svgIconName) : undefined}
             />
           </div>
+          {inDesign(designMode) && (
+            <div style={{ textAlign: "center", marginTop: "4px" }}>
+              <InlineCodeEditor
+                qualifiedCode={qualifiedCode}
+                code={code}
+                designMode={designMode}
+              />
+            </div>
+          )}
           {!hideText && (
             <ContentEditor
               code={qualifiedCode}

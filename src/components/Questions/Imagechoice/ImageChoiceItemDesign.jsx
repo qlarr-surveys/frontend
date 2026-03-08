@@ -24,6 +24,7 @@ import { contentEditable, inDesign } from "~/routes";
 import { Build } from "@mui/icons-material";
 import { setupOptions } from "~/constants/design";
 import ContentEditor from "~/components/design/ContentEditor";
+import InlineCodeEditor from "~/components/design/InlineCodeEditor";
 
 function ImageChoiceItemDesign({
   parentCode,
@@ -309,6 +310,15 @@ function ImageChoiceItemDesign({
             </div>
           )}
         </div>
+        {inDesign(designMode) && (
+          <div style={{ textAlign: "center", marginTop: "4px" }}>
+            <InlineCodeEditor
+              qualifiedCode={qualifiedCode}
+              code={code}
+              designMode={designMode}
+            />
+          </div>
+        )}
         {!hideText && (
           <ContentEditor
             code={qualifiedCode}
