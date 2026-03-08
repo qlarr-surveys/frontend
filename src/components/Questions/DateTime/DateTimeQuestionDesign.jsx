@@ -21,7 +21,7 @@ function DateTimeQuestionDesign({ code, designMode }) {
         }
         value={isEditable ? hintText : ""}
         onChange={isEditable ? handleHintChange : undefined}
-        helperText={state.dateFormat}
+        placeholder={state.dateFormat}
         sx={{
           pointerEvents: isEditable ? "auto" : "none",
         }}
