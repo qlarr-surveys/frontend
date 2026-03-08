@@ -1,0 +1,38 @@
+export const MANAGE_SURVEY_LANDING_PAGES = {
+  DESIGN: "design-survey",
+  RESPONSES: "responses",
+  SETTINGS: "edit-survey",
+  RESPONSE: "response",
+};
+
+export { DESIGN_SURVEY_MODE, inDesign, contentEditable } from "@qlarr/design-engine";
+
+export const PREVIEW_MODE = {
+  ONLINE: "online",
+  ONLINE_PHONE: "online-phone",
+  OFFLINE: "offline",
+};
+
+export const routes = {
+  designSurvey: `/${MANAGE_SURVEY_LANDING_PAGES.DESIGN}/:surveyId`,
+  editSurvey: `/${MANAGE_SURVEY_LANDING_PAGES.SETTINGS}/:surveyId`,
+  responses: `/${MANAGE_SURVEY_LANDING_PAGES.RESPONSES}/:surveyId`,
+  runSurvey: "/run-survey/:surveyId",
+  resumeSurvey: "/run-survey/:surveyId/:responseId",
+  iframePreviewSurvey: "/preview-survey/:surveyId",
+  resumeIframePreviewSurvey: "/preview-survey/:surveyId/:responseId",
+  preview: "/preview/:surveyId",
+  resumePreview: "/preview/:surveyId/:responseId",
+  login: "/login",
+  confirmNewUser: "/confirm-new-user/:token",
+  forgotPassword: "/forgot-password",
+  resetPassword: "/reset-password",
+  dashboard: "/",
+  manageUsers: "/manage-users",
+  addUser: "/add-user",
+  editUser: "/edit-user/:userId",
+  profile: "/profile",
+  createSurvey: "/create-survey",
+  dashboard1: "",
+  page404: "*",
+};

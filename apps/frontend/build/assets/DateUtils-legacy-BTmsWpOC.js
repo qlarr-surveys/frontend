@@ -1,0 +1,2 @@
+System.register([],(function(e,t){"use strict";return{execute:function(){e("s",(e=>{const t=new Date(e);return new Date(t.getTime()-60*t.getTimezoneOffset()*1e3)})),e("l",(e=>new Date(e.getTime()-60*e.getTimezoneOffset()*1e3).toISOString().split(".")[0].replace("T"," "))),e("f",(e=>`${e.getFullYear()}-${("0"+(e.getMonth()+1)).slice(-2)}-${("0"+e.getDate()).slice(-2)} ${("0"+e.getHours()).slice(-2)}:${("0"+e.getMinutes()).slice(-2)}:${("0"+e.getSeconds()).slice(-2)}`))}}}));
+//# sourceMappingURL=DateUtils-legacy-BTmsWpOC.js.map

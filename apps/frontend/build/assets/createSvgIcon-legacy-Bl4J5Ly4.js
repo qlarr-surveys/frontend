@@ -1,0 +1,2 @@
+System.register(["./vendor-legacy-CiyxY7Ck.js","./mui-legacy-BYdwD65V.js"],(function(e,t){"use strict";var r,n;return{setters:[e=>{r=e.a},e=>{n=e.b1}],execute:function(){e("r",(function(){return c||(c=1,function(e){Object.defineProperty(e,"__esModule",{value:!0}),Object.defineProperty(e,"default",{enumerable:!0,get:function(){return t.createSvgIcon}});var t=u}(t)),t}));var t={};const u=r(n);var c}}}));
+//# sourceMappingURL=createSvgIcon-legacy-Bl4J5Ly4.js.map

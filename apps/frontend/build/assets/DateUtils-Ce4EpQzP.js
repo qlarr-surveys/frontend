@@ -1,0 +1,2 @@
+const r=e=>{const t=new Date(e);return new Date(t.getTime()-t.getTimezoneOffset()*60*1e3)},i=e=>new Date(e.getTime()-e.getTimezoneOffset()*60*1e3).toISOString().split(".")[0].replace("T"," "),l=e=>{const t=e.getFullYear(),s=("0"+(e.getMonth()+1)).slice(-2),n=("0"+e.getDate()).slice(-2),o=("0"+e.getHours()).slice(-2),c=("0"+e.getMinutes()).slice(-2),a=("0"+e.getSeconds()).slice(-2);return"".concat(t,"-").concat(s,"-").concat(n," ").concat(o,":").concat(c,":").concat(a)};export{l as f,i as l,r as s};
+//# sourceMappingURL=DateUtils-Ce4EpQzP.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"isTouchDevice-legacy-AMsXjJqJ.js","sources":["../../src/utils/isTouchDevice.js"],"sourcesContent":["export const isTouchDevice = () => {\n    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;\n};"],"names":["isTouchDevice","window","navigator","maxTouchPoints"],"mappings":"gFAA6BA,IAClB,iBAAkBC,QAAUC,UAAUC,eAAiB"}

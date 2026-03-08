@@ -1,0 +1,2 @@
+import{Q as t,z as a,F as o}from"./Web-CgjjF-sy.js";const i=(e,s=null)=>(s||(s=sessionStorage.getItem("surveyId")),"".concat(t,"survey/").concat(s,"/resource/").concat(e)),u=(e,s,r)=>"".concat(a,"://").concat(o,"/").concat("run-survey","/").concat(e).concat("");async function g(e){const r=await(await fetch(e)).blob(),n=e.substring(e.lastIndexOf("/")+1);return new File([r],n)}export{i as b,g,u as s};
+//# sourceMappingURL=common-B-uwR5iD.js.map

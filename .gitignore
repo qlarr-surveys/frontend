@@ -10,6 +10,7 @@
 
 # production
 /build
+packages/design-engine/dist
 
 # misc
 .DS_Store

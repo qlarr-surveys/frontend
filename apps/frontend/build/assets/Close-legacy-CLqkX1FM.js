@@ -1,0 +1,2 @@
+System.register(["./mui-legacy-BYdwD65V.js","./createSvgIcon-legacy-Bl4J5Ly4.js"],(function(e,t){"use strict";var r,a,s;return{setters:[e=>{r=e.j,a=e.i},e=>{s=e.r}],execute:function(){var t={},u=a;Object.defineProperty(t,"__esModule",{value:!0}),e("d",t.default=void 0);var c=u(s()),d=r;e("d",t.default=(0,c.default)((0,d.jsx)("path",{d:"M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"}),"Close"))}}}));
+//# sourceMappingURL=Close-legacy-CLqkX1FM.js.map

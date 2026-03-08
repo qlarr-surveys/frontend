@@ -9,10 +9,12 @@ ARG VITE_FRONT_END_HOST
 ARG VITE_PROTOCOL
 ARG VITE_BE_URL
 
-# Copy package.json and package-lock.json to the container
-COPY package*.json ./
+# Copy root workspace config and package files
+COPY package.json ./
+COPY apps/frontend/package.json ./apps/frontend/
+COPY packages/design-engine/package.json ./packages/design-engine/
 
-# Install dependencies
+# Install dependencies (npm workspaces)
 RUN npm install
 
 # Copy the rest of the application code
@@ -28,7 +30,7 @@ FROM nginx:alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy the build output to the Nginx HTML directory
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/apps/frontend/build /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80

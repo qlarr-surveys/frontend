@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../node_modules/@mui/material/utils/useForkRef.js"],
+  "sourcesContent": ["'use client';\n\nimport useForkRef from '@mui/utils/useForkRef';\nexport default useForkRef;"],
+  "mappings": ";;;;;;;;;AAAA,IAGO;AAHP,IAAAA,mBAAA;AAAA;AAAA;AAEA;AACA,IAAO,qBAAQ;AAAA;AAAA;",
+  "names": ["init_useForkRef"]
+}
