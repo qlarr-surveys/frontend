@@ -1,19 +1,15 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 import styles from "./NumberQuestionDesign.module.css";
-import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
+import { useEditableHint } from "~/hooks/useEditableHint";
 
-function NumberQuestionDesign({ code }) {
-  const theme = useTheme();
-
+function NumberQuestionDesign({ code, designMode }) {
   const state = useSelector((state) => {
     return state.designState[code];
   });
 
-  const lang = useSelector((state) => {
-    return state.designState.langInfo.lang;
-  });
+  const { hintText, isEditable, handleHintChange } = useEditableHint(code, designMode);
 
   return (
     <div className={styles.questionItem}>
@@ -23,10 +19,10 @@ function NumberQuestionDesign({ code }) {
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
-        label={state.showHint && (state.content?.[lang]?.hint || "")}
-        value={""}
+        value={isEditable ? hintText : ""}
+        onChange={isEditable ? handleHintChange : undefined}
         sx={{
-          pointerEvents: 'none',
+          pointerEvents: isEditable ? "auto" : "none",
         }}
       />
     </div>

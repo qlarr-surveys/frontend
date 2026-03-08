@@ -49,11 +49,11 @@ function QuestionDesignBody({ code, type, t, langInfo, designMode }) {
     case "video_capture":
       return <VideoCaptureDesign code={code} />;
     case "date_time":
-      return <DateTimeQuestionDesign key={code} code={code} />;
+      return <DateTimeQuestionDesign key={code} code={code} designMode={designMode} />;
     case "date":
-      return <DateTimeQuestionDesign key={code} code={code} />;
+      return <DateTimeQuestionDesign key={code} code={code} designMode={designMode} />;
     case "time":
-      return <TimeQuestionDesign key={code} code={code} />;
+      return <TimeQuestionDesign key={code} code={code} designMode={designMode} />;
     case "scq":
       return (
         <ChoiceQuestion
@@ -150,11 +150,11 @@ function QuestionDesignBody({ code, type, t, langInfo, designMode }) {
     case "nps":
       return <NPSDesign key={code} code={code} />;
     case "number":
-      return <NumberQuestionDesign key={code} code={code} />;
+      return <NumberQuestionDesign key={code} code={code} designMode={designMode} />;
     case "text":
-      return <TextQuestionDesign key={code} code={code} />;
+      return <TextQuestionDesign key={code} code={code} designMode={designMode} />;
     case "paragraph":
-      return <ParagraphQuestionDesign t={t} key={code} code={code} />;
+      return <ParagraphQuestionDesign t={t} key={code} code={code} designMode={designMode} />;
     case "autocomplete":
       return (
         <AutoCompleteDesign
@@ -167,7 +167,7 @@ function QuestionDesignBody({ code, type, t, langInfo, designMode }) {
     case "barcode":
       return <BarcodeDesign t={t} key={code} code={code} />;
     case "email":
-      return <EmailQuestionDesign key={code} code={code} />;
+      return <EmailQuestionDesign key={code} code={code} designMode={designMode} />;
     default:
       return "";
   }
