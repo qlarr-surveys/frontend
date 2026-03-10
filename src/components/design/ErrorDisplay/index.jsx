@@ -18,6 +18,8 @@ function ErrorDisplay(props) {
 
   const selectDesignState = (state) => state.designState[props.code] || {};
 
+  const isGroupCode = isGroup(props.code);
+
   const selectErrorsAndInstructions = createSelector(
     [selectDesignState],
     (designState) => {
@@ -25,8 +27,12 @@ function ErrorDisplay(props) {
         (instruction) => instruction.errors?.length > 0
       );
 
+      const errors = isGroupCode
+        ? designState.errors?.filter((e) => e !== "EMPTY_PARENT")
+        : designState.errors;
+
       return {
-        errors: designState.errors,
+        errors,
         designErrors: designState.designErrors,
         instructions: instructionsWithErrors?.length
           ? instructionsWithErrors

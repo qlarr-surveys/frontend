@@ -62,7 +62,9 @@ if (!i18next.isInitialized) {
     .use(LanguageDetector)
     .init(i18nConfig);
 
-  setDayjsLocale(localStorage.getItem("lang") || 'en');
+  if (!isAndroidMode) {
+    setDayjsLocale(localStorage.getItem("lang") || 'en');
+  }
 }
 
 function App() {

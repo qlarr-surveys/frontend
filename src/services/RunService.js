@@ -25,6 +25,7 @@ class RunService extends BaseService {
   }
 
   async navigate(payload, preview = false, mode = "online") {
+    console.log(payload)
     const surveyId = sessionStorage.getItem("surveyId");
     if (preview) {
       const response = await authenticatedApi.post(

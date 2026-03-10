@@ -38,7 +38,7 @@ import { useService } from "~/hooks/use-service";
 import ResponsesDownload from "~/components/manage/ResponsesDownload";
 import ResponsesExport from "~/components/manage/ResponsesExport";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
-import { previewUrlByResponseIdAndCode } from "~/networking/run";
+import { previewUrlByFilename, previewUrlByResponseIdAndCode } from "~/networking/run";
 
 function InfoItem({ label, value }) {
   return (
@@ -78,7 +78,10 @@ function ResponsesSurvey() {
   const [surveyor, setSurveyor] = useState(null);
 
   const [allResponse, setAllResponse] = useState(null);
-  const [responseId, setResponseId] = useState(null);
+  const [responseId, setResponseId] = useState(() => {
+    const stored = sessionStorage.getItem("responseId");
+    return stored ? stored : null;
+  });
   const [selected, setSelected] = useState(null);
   const [canExportFiles, setCanExportFiles] = useState(false);
   const [askedAboutFiles, setAskedAboutFiles] = useState(false);
@@ -224,6 +227,88 @@ function ResponsesSurvey() {
     );
   };
 
+  const getVoiceRecordings = (events) => {
+    if (!Array.isArray(events)) return [];
+    return events.filter((e) => e.name === "VoiceRecording");
+  };
+
+  const getLocations = (events) => {
+    if (!Array.isArray(events)) return [];
+    return events.filter((e) => e.name === "Location");
+  };
+
+  const formatEventTime = (time) => {
+    if (!time) return "—";
+
+    // Handle array format: [year, month, day, hour, minute, second]
+    if (Array.isArray(time) && time.length >= 6) {
+      return formatlocalDateTime(
+        new Date(time[0], time[1] - 1, time[2], time[3], time[4], time[5])
+      );
+    }
+
+    // Handle object format (Java LocalDateTime serialization)
+    if (typeof time === "object" && time.year !== undefined) {
+      return formatlocalDateTime(
+        new Date(
+          time.year,
+          (time.monthValue || time.month) - 1,
+          time.dayOfMonth || time.day,
+          time.hour || 0,
+          time.minute || 0,
+          time.second || 0
+        )
+      );
+    }
+
+    // Handle ISO string format
+    if (typeof time === "string") {
+      const date = new Date(time);
+      if (!isNaN(date.getTime())) {
+        return formatlocalDateTime(date);
+      }
+    }
+
+    return "—";
+  };
+
+  const renderVoiceRecordings = (respId, events) => {
+    const recordings = getVoiceRecordings(events);
+    if (recordings.length === 0) return "—";
+    return (
+      <Box display="flex" flexDirection="column" gap={1}>
+        {recordings.map((recording, index) => (
+          <Box key={recording.fileName || index}>
+            <Typography variant="body2" color="text.secondary" mb={0.5}>
+              {t("responses.recording")} {index + 1} — {formatEventTime(recording.time)}
+            </Typography>
+            <audio controls style={{ width: "100%", maxWidth: 300 }}>
+              <source
+                src={previewUrlByFilename(recording.fileName)}
+                type="audio/mp4"
+              />
+              {t("responses.audio_not_supported", "Your browser does not support audio playback")}
+            </audio>
+          </Box>
+        ))}
+      </Box>
+    );
+  };
+
+  const renderLocations = (events) => {
+    const locations = getLocations(events);
+    if (locations.length === 0) return "—";
+    return (
+      <Box display="flex" flexDirection="column" gap={0.5}>
+        {locations.map((location, index) => (
+          <Typography key={index} sx={{ wordBreak: "break-word" }}>
+            {formatEventTime(location.time)} — <strong>Lat:</strong> {location.latitude}, <strong>Long:</strong> {location.longitude}
+          </Typography>
+        ))}
+      </Box>
+    );
+  };
+
   useEffect(() => {
     firstFetchThisVisitRef.current = true;
   }, [surveyId]);
@@ -234,8 +319,10 @@ function ResponsesSurvey() {
 
   useEffect(() => {
     if (!responseId) {
+      sessionStorage.removeItem("responseId");
       return;
     }
+    sessionStorage.setItem("responseId", responseId);
     surveyService
       .getResponseById(responseId)
       .then((data) => {
@@ -270,21 +357,102 @@ function ResponsesSurvey() {
     );
   }
 
+  const renderEventsCell = (events) => {
+    if (!Array.isArray(events) || events.length === 0) {
+      return <Typography>—</Typography>;
+    }
+
+    let accumulatedMs = 0;
+
+    return (
+      <Box sx={{ maxHeight: 200, overflow: "auto", pr: 1 }}>
+        {events.map((e, idx) => {
+          const { time, name, timeMillis } = e || {};
+          const formattedDate = formatEventTime(time);
+
+          const prettyName =
+            {
+              START: "Started",
+              NEXT: "Next Page",
+              RESUME: "Resumed",
+              Value: "Answered",
+            }[name] ||
+            name ||
+            "—";
+
+          accumulatedMs += timeMillis ?? 0;
+          const timeSinceLastEvent =
+            typeof timeMillis === "number"
+              ? `+${(timeMillis / 1000).toFixed(1)}s`
+              : "";
+
+          return (
+            <Box
+              key={idx}
+              display="flex"
+              flexWrap="wrap"
+              alignItems="center"
+              justifyContent="space-between"
+              py={0.5}
+              sx={{
+                borderBottom:
+                  idx < events.length - 1
+                    ? "1px dashed rgba(0,0,0,0.08)"
+                    : "none",
+              }}
+            >
+              <Typography fontWeight={600}>{prettyName}</Typography>
+              <Typography color="text.secondary" sx={{ whiteSpace: "nowrap" }}>
+                {formattedDate}
+              </Typography>
+              <Box display="flex" gap={1}>
+                {timeSinceLastEvent && (
+                  <Chip
+                    size="small"
+                    variant="outlined"
+                    label={timeSinceLastEvent}
+                    sx={{ fontSize: "0.75rem" }}
+                  />
+                )}
+              </Box>
+            </Box>
+          );
+        })}
+      </Box>
+    );
+  };
+
   return (
     <>
       <ResponsesExport
         open={exportDlgOpen}
         onClose={() => setExportDlgOpen(false)}
-        currentFrom={allResponse?.responses?.length > 0 ? allResponse.responses[0].index : 1}
-        currentTo={allResponse?.responses?.length > 0 ? allResponse.responses[allResponse.responses.length - 1].index : 1}
+        currentFrom={
+          allResponse?.responses?.length > 0
+            ? allResponse.responses[0].index
+            : 1
+        }
+        currentTo={
+          allResponse?.responses?.length > 0
+            ? allResponse.responses[allResponse.responses.length - 1].index
+            : 1
+        }
         t={t}
       />
 
       <ResponsesDownload
         open={downloadDlgOpen}
         onClose={() => setDownloadDlgOpen(false)}
-        currentFrom={allResponse?.responses?.length > 0 ? allResponse.responses[0].index : 1}
-        currentTo={allResponse?.responses?.length > 0 ? allResponse.responses[allResponse.responses.length - 1].index : 1}
+        currentFrom={
+          allResponse?.responses?.length > 0
+            ? allResponse.responses[0].index
+            : 1
+        }
+        currentTo={
+          allResponse?.responses?.length > 0
+            ? allResponse.responses[allResponse.responses.length - 1].index
+            : 1
+        }
         t={t}
       />
 
@@ -577,6 +745,14 @@ function ResponsesSurvey() {
                         : t("responses.no")
                     }
                   />
+                  <InfoItem
+                    label={t("responses.voice_recordings")}
+                    value={renderVoiceRecordings(selected.id, selected.events)}
+                  />
+                  <InfoItem
+                    label={t("responses.locations")}
+                    value={renderLocations(selected.events)}
+                  />
                 </Box>
                 {selected.values && Object.keys(selected.values).length > 0 && (
                   <Box sx={{ minWidth: 0 }}>
@@ -595,8 +771,11 @@ function ResponsesSurvey() {
                             <TableCell sx={{ width: "33%" }}>
                               {t("responses.question")}
                             </TableCell>
-                            <TableCell sx={{ width: "67%" }}>
+                            <TableCell sx={{ width: "33%" }}>
                               {t("responses.answer")}
+                            </TableCell>
+                            <TableCell sx={{ width: "33%" }}>
+                              {t("responses.events")}
                             </TableCell>
                           </TableRow>
                         </TableHead>
@@ -659,6 +838,11 @@ function ResponsesSurvey() {
                                       )}
                                     </Box>
                                   )}
+                                </TableCell>
+                                <TableCell
+                                  sx={{ verticalAlign: "top", maxWidth: 0 }}
+                                >
+                                  {renderEventsCell(val.events)}
                                 </TableCell>
                               </TableRow>
                             );

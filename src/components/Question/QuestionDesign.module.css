@@ -75,6 +75,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.moveBox {
+  pointer-events: auto;
 }
 
 .highlight {

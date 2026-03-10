@@ -9,6 +9,11 @@ import { useInView } from "react-intersection-observer";
 import { Box } from "@mui/material";
 import { HelpOutline } from "@mui/icons-material";
 import { inDesign } from "~/routes";
+import dragIcon from "~/assets/icons/drag.svg";
+import addTextIcon from "~/assets/icons/add-text.svg";
+import addImageIcon from "~/assets/icons/add-image.svg";
+import addVideoIcon from "~/assets/icons/add-video.svg";
+import { Trans } from "react-i18next";
 
 export function GroupDropArea({ index, groupsCount, t, emptySurvey }) {
   const dispatch = useDispatch();
@@ -80,6 +85,7 @@ export function QuestionDropArea({
   parentType,
   parentIndex,
   emptyGroup = false,
+  isLastGroup = false,
   t,
 }) {
   const theme = useTheme();
@@ -187,9 +193,15 @@ export function QuestionDropArea({
           " " +
           (emptyGroup
             ? isOver
-              ? styles.questionDropArea
+              ? parentType === "end"
+                ? styles.questionDropAreaEmptyEnd
+                : styles.questionDropAreaEmptyGroup
               : isDragging && inView
-              ? styles.isDragging
+              ? parentType === "end"
+                ? styles.isDraggingEmptyEnd
+                : styles.isDraggingEmptyGroup
+              : parentType === "end"
+              ? styles.endPageEmptyHint
               : styles.groupEmptyHint
             : isOver
             ? styles.questionDropArea
@@ -199,7 +211,7 @@ export function QuestionDropArea({
           " "
         }
       >
-        {isDragging && !emptyGroup && (
+        {isDragging && inView && (
           <Box display="flex" justifyContent="center" alignItems="center">
             <HelpOutline sx={{ marginRight: "8px", color: textContrast }} />
             <span
@@ -212,17 +224,93 @@ export function QuestionDropArea({
             </span>
           </Box>
         )}
-        {emptyGroup && (
-          <Box display="flex" justifyContent="center" alignItems="center">
-            <HelpOutline sx={{ marginRight: "8px", color: textContrast }} />
+        {emptyGroup && !(isDragging && inView) && parentType !== "end" && (
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            gap="12px"
+            className={styles.emptyGroupContent}
+          >
+            <img src={dragIcon} alt="" width={48} height={48} />
             <span
-              className={styles.dropText}
-              style={{
-                color: textContrast,
-              }}
+              className={styles.emptyGroupText}
             >
-              {t("drop_question_here")}
+              {isLastGroup ? t("empty_group_hint_last") : t("empty_group_hint")}
             </span>
+          </Box>
+        )}
+        {emptyGroup && !(isDragging && inView) && parentType === "end" && (
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            gap="16px"
+            className={styles.emptyGroupContent}
+          >
+            <span
+              className={styles.endPageText}
+            >
+              <Trans t={t} i18nKey="end_page_empty_hint" />
+            </span>
+            <Box className={styles.endPageActions}>
+              <div
+                className={styles.endPageActionItem}
+                onClick={() =>
+                  dispatch(
+                    onDrag({
+                      type: "new_question",
+                      questionType: "text_display",
+                      destination: parentCode,
+                      toIndex: 0,
+                    })
+                  )
+                }
+              >
+                <div className={styles.endPageActionIcon}>
+                  <img src={addTextIcon} alt="" width={24} height={24} />
+                </div>
+                <span>{t("add_a_text")}</span>
+              </div>
+              <div
+                className={styles.endPageActionItem}
+                onClick={() =>
+                  dispatch(
+                    onDrag({
+                      type: "new_question",
+                      questionType: "image_display",
+                      destination: parentCode,
+                      toIndex: 0,
+                    })
+                  )
+                }
+              >
+                <div className={styles.endPageActionIcon}>
+                  <img src={addImageIcon} alt="" width={24} height={24} />
+                </div>
+                <span>{t("add_a_image")}</span>
+              </div>
+              <div
+                className={styles.endPageActionItem}
+                onClick={() =>
+                  dispatch(
+                    onDrag({
+                      type: "new_question",
+                      questionType: "video_display",
+                      destination: parentCode,
+                      toIndex: 0,
+                    })
+                  )
+                }
+              >
+                <div className={styles.endPageActionIcon}>
+                  <img src={addVideoIcon} alt="" width={24} height={24} />
+                </div>
+                <span>{t("add_video")}</span>
+              </div>
+            </Box>
           </Box>
         )}
       </div>

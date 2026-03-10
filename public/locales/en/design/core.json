@@ -88,6 +88,12 @@
   "edit_random_rule": "Edit Random Rule",
   "drop_question_here": "Drop question here",
   "drop_page_here": "Drop new page here",
+  "empty_group_hint": "Drag a question here.",
+  "empty_group_hint_last": "Drag a question here or choose one from the left panel.",
+  "end_page_empty_hint": "This page <strong>can only</strong> contain Info Questions (Text, Image or Video Display)",
+  "add_a_text": "Add a Text",
+  "add_a_image": "Add a Image",
+  "add_video": "Add video",
   "err_duplicate_code": "This {{component_name}} has a duplicate code",
   "err_duplicate_priority_group_items": "Those items are present in more than one priority Group: <strong>{{iterms}}</strong>",
   "err_duplicate_random_group_items": "Those items are present in more than one random group: <strong>{{items}}</strong>",
@@ -120,6 +126,9 @@
   "text_color": "Text Color",
   "fullday_format": "FullDay Format",
   "group": "Page",
+  "page_label": "Page {{number}}",
+  "welcome_page_label": "Welcome Page",
+  "thank_you_page_label": "Thank You Page (Final Page)",
   "group_by_group": "Page By Page",
   "group_title": "Page Title",
   "font": "Font",
@@ -387,6 +396,7 @@
     "from": "From",
     "to": "To",
     "search": "Search...",
-    "no_options": "No options found"
+    "no_options": "No options found",
+    "range_error": "Invalid range: min exceeds max"
   }
 }
