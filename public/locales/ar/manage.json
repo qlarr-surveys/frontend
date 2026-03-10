@@ -72,6 +72,10 @@
     "closed_mode": "تم إغلاق الاستبيان",
     "active_mode": "الاستبيان نشط",
     "to": "ل",
+    "background_audio": "تسجيل الصوت في الخلفية",
+    "record_gps": "تسجيل الموقع الجغرافي",
+    "save_ip": "حفظ عنوان IP",
+    "save_timings": "حفظ التوقيتات",
     "metadata": {
       "created": "تم الإنشاء",
       "last_modified": "آخر تعديل",
@@ -274,7 +278,11 @@
     "disqualified": "مستبعد",
     "preview_not_exportable": "لا يمكن تصدير الردود التجريبية",
     "question": "السؤال",
-    "answer": "الإجابة"
+    "answer": "الإجابة",
+    "events": "الأحداث",
+    "voice_recordings": "التسجيلات الصوتية",
+    "locations": "المواقع",
+    "recording": "تسجيل"
   },
   "responses_count": "الردود",
   "roles_required": "الأدوار مطلوبة",
@@ -376,5 +384,17 @@
     "all_in_one": "الكل في واحد",
     "group_by_group": "صفحة بصفحة",
     "question_by_question": "سؤال بسؤال"
+  },
+  "empty_state": {
+    "welcome": "مرحباً {{firstName}} {{lastName}}",
+    "subtitle": "اكتشف رؤى أعمق تدفع قرارات أذكى.",
+    "create_first_survey": "أنشئ استبيانك الأول في دقائق",
+    "create_survey_btn": "إنشاء استبيان",
+    "import_template": "استيراد قالب موجود",
+    "feature_collect": "اجمع البيانات من أي مكان.",
+    "feature_trust": "ثق بكل استجابة.",
+    "feature_own": "امتلك كل نتيجة.",
+    "need_help": "تحتاج مساعدة للبدء؟",
+    "contact_support": "تواصل مع الدعم"
   }
 }

@@ -31,10 +31,12 @@ export const runState = createSlice({
         lang: response.lang,
         responseId: response.responseId,
       };
+      state.saveTimings = response.saveTimings
       state.values = response.state.qlarrVariables;
     },
     langChange: (state, action) => {
       state.navigation = {
+        events: state.timings,
         values: getValues(state.values),
         lang: action.payload.lang,
         navigationDirection: { name: "RESUME" },
@@ -56,6 +58,7 @@ export const runState = createSlice({
     },
     jump: (state, action) => {
       state.navigation = {
+        events: state.timings,
         values: getValues(state.values),
         navigationDirection: { name: "JUMP", navigationIndex: action.payload },
       };
@@ -125,6 +128,7 @@ function next(state) {
   } else {
     state.values.Survey.show_errors = false;
     state.navigation = {
+      events: state.timings,
       values: getValues(state.values),
       navigationDirection: { name: "NEXT" },
     };

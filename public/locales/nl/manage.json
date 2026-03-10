@@ -72,6 +72,10 @@
     "closed_mode": "Enquête is gesloten",
     "active_mode": "Enquête is actief",
     "to": "tot",
+    "background_audio": "Achtergrondaudio",
+    "record_gps": "GPS opnemen",
+    "save_ip": "IP opslaan",
+    "save_timings": "Tijden opslaan",
     "metadata": {
       "created": "Aangemaakt",
       "last_modified": "Laatst Gewijzigd",
@@ -274,7 +278,11 @@
     "disqualified": "Gediskwalificeerd",
     "preview_not_exportable": "Voorvertoning reacties kunnen niet worden geëxporteerd",
     "question": "Vraag",
-    "answer": "Antwoord"
+    "answer": "Antwoord",
+    "events": "Gebeurtenissen",
+    "voice_recordings": "Spraakopnamen",
+    "locations": "Locaties",
+    "recording": "Opname"
   },
   "responses_count": "Reacties",
   "roles_required": "Rollen zijn Verplicht",
@@ -376,5 +384,17 @@
     "all_in_one": "Alles in Een",
     "group_by_group": "Pagina per Pagina",
     "question_by_question": "Vraag per Vraag"
+  },
+  "empty_state": {
+    "welcome": "Welkom {{firstName}} {{lastName}}",
+    "subtitle": "Ontdek diepere inzichten voor slimmere beslissingen.",
+    "create_first_survey": "Maak uw eerste enquête in enkele minuten",
+    "create_survey_btn": "Enquête aanmaken",
+    "import_template": "Bestaand sjabloon importeren",
+    "feature_collect": "Verzamel overal gegevens.",
+    "feature_trust": "Vertrouw elk antwoord.",
+    "feature_own": "Bezit elk resultaat.",
+    "need_help": "Hulp nodig om te beginnen?",
+    "contact_support": "contact opnemen met support"
   }
 }
