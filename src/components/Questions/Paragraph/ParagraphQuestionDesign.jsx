@@ -4,11 +4,14 @@ import styles from "./ParagraphQuestionDesign.module.css";
 import { useSelector } from "react-redux";
 import { TextField } from '@mui/material';
 import { useEditableHint } from "~/hooks/useEditableHint";
+import { useTheme } from '@emotion/react';
 
 function ParagraphQuestionDesign({ code, t, designMode }) {
   const state = useSelector((state) => {
     return state.designState[code];
   });
+
+  const theme = useTheme();
 
   const lang = useSelector((state) => {
     return state.designState.langInfo.lang;
@@ -29,7 +32,7 @@ function ParagraphQuestionDesign({ code, t, designMode }) {
         minRows={state.minRows || 4}
         sx={{
           pointerEvents: isEditable ? "auto" : "none",
-          textarea: { color: "#aaa", "&:focus": { color: "#000" } },
+          textarea: { color: theme.palette.text.disabled },
         }}
       />
       {state.showWordCount ? (

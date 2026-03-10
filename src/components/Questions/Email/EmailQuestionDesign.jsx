@@ -4,11 +4,14 @@ import TextField from "@mui/material/TextField";
 import styles from "./EmailQuestionDesign.module.css";
 import { useSelector } from "react-redux";
 import { useEditableHint } from "~/hooks/useEditableHint";
+import { useTheme } from '@emotion/react';
 
 function EmailQuestionDesign({ code, designMode }) {
   const state = useSelector((state) => {
     return state.designState[code];
   });
+
+  const theme = useTheme();
 
   const { hintText, isEditable, handleHintChange } = useEditableHint(code, designMode);
 
@@ -25,7 +28,7 @@ function EmailQuestionDesign({ code, designMode }) {
         onChange={isEditable ? handleHintChange : undefined}
         sx={{
           pointerEvents: isEditable ? "auto" : "none",
-          input: { color: "#aaa", "&:focus": { color: "#000" } },
+          input: { color: theme.palette.text.disabled },
         }}
       />
     </div>
