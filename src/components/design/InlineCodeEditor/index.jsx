@@ -128,8 +128,8 @@ function InlineCodeEditor({ qualifiedCode, designMode, compact }) {
     [handleSave]
   );
 
-  const displayText = prefix.endsWith("A") ? "A" + suffix : suffix;
-  const hasAPrefix = prefix.endsWith("A");
+  const hasAPrefix = qualifiedCode.includes("A");
+  const displayText = hasAPrefix ? "A" + suffix : suffix;
 
   return (
     <span
@@ -140,6 +140,7 @@ function InlineCodeEditor({ qualifiedCode, designMode, compact }) {
         ...(!isEditing && compact
           ? { maxWidth: "4ch" }
           : { minWidth: `${maxSuffixLength + (hasAPrefix ? 1 : 0)}ch` }),
+        ...(isEditing && { overflow: "visible" }),
       }}
       onClick={handleClick}
     >

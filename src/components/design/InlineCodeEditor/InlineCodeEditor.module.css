@@ -35,6 +35,7 @@
 .prefixLabel {
   font-family: monospace;
   font-size: 11px;
+  flex-shrink: 0;
 }
 
 .codeInputNative {
