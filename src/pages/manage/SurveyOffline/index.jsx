@@ -12,7 +12,7 @@ import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 
 function SurveyOffline() {
   const dispatch = useDispatch();
-  const { t: tManageCloud } = useTranslation(NAMESPACES.MANAGE_CLOUD);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const survey = useSelector((state) => state.editState.survey);
   const isDisabled = !isSurveyAdmin() || survey.status == SURVEY_STATUS.CLOSED;
 
@@ -36,7 +36,7 @@ function SurveyOffline() {
           />
 
           <Typography color="#1a2052" fontWeight="500">
-            {tManageCloud("edit_survey.background_audio")}
+            {t("edit_survey.background_audio")}
           </Typography>
         </div>
 
@@ -49,7 +49,7 @@ function SurveyOffline() {
       </Box>
       <Box className={styles.boxContainer}>
         <Typography color="#1a2052" fontWeight="500">
-          {tManageCloud("edit_survey.record_gps")}
+          {t("edit_survey.record_gps")}
         </Typography>
         <RHFSwitch
           disabled={isDisabled}

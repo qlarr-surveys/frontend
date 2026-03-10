@@ -11,7 +11,7 @@ import { RHFSwitch } from "~/components/hook-form";
 
 function SurveyPrivacy() {
   const dispatch = useDispatch();
-  const { t: tManageCloud } = useTranslation(NAMESPACES.MANAGE_CLOUD);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const survey = useSelector((state) => state.editState.survey);
   const isDisabled = !isSurveyAdmin() || survey.status == SURVEY_STATUS.CLOSED;
 
@@ -28,7 +28,7 @@ function SurveyPrivacy() {
     <Box className={styles.mainContainer}>
       <Box className={styles.flexContainer}>
         <Typography color="#1a2052" fontWeight="500">
-          {tManageCloud("edit_survey.save_ip")}
+          {t("edit_survey.save_ip")}
         </Typography>
 
         <RHFSwitch
@@ -40,7 +40,7 @@ function SurveyPrivacy() {
       </Box>
       <Box className={styles.flexContainer}>
         <Typography color="#1a2052" fontWeight="500">
-          {tManageCloud("edit_survey.save_timings")}
+          {t("edit_survey.save_timings")}
         </Typography>
 
         <RHFSwitch
