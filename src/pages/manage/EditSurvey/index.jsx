@@ -8,16 +8,31 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import styles from "./EditSurvey.module.css";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
-import LaunchPage from "../Launch/launch";
 import SurveyQuota from "~/components/manage/SurveyQuota";
+import LaunchPage from "../Launch/launch";
 import ExportSurvey from "~/components/manage/ExportSurvey";
 import { useSelector } from "react-redux";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import NavigationSettings from "~/components/manage/NavigationSettings";
+import SurveyOffline from '../SurveyOffline';
+import SurveyPrivacy from '../SurveyPrivacy';
 
 function EditSurvey({ onPublish }) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const survey = useSelector((state) => state.editState.survey);
+
+  const combinedSections = [
+    {
+      id: "offline",
+      title: t("edit_survey.offline"),
+      component: <SurveyOffline />,
+    },
+    {
+      id: "privacy",
+      title: t("edit_survey.privacy"),
+      component: <SurveyPrivacy />,
+    },
+  ];
 
   const sections = [
     {
@@ -38,27 +53,29 @@ function EditSurvey({ onPublish }) {
     },
   ];
 
-  return (
-    survey && (
-      <Box className={styles.mainContainer}>
-        <Accordion className={styles.accordionContainer} defaultExpanded={true}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Box display="flex" alignItems="center" gap=".5rem">
-              <Typography fontWeight="600" color="#1a2052" variant="h5">
-                {t("edit_survey.launch")}
-              </Typography>
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails className={styles.accordionDetails}>
-            <LaunchPage onPublish={onPublish} />
-          </AccordionDetails>
-        </Accordion>
-
-        {sections.map((section) => {
+  return survey && (
+    <Box className={styles.mainContainer}>
+      <Accordion className={styles.accordionContainer} defaultExpanded={true}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography fontWeight="600" color="#1a2052" variant="h5">
+            {t("edit_survey.launch")}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails className={styles.accordionDetails}>
+          <LaunchPage onPublish={onPublish} />
+        </AccordionDetails>
+      </Accordion>
+      <Box
+        display="flex"
+        flexWrap={{ xs: "wrap", sm: "wrap", md: "nowrap" }}
+        gap={4}
+        width="100%"
+      >
+        {combinedSections.map((section) => {
           return (
             <Accordion
               className={styles.accordionContainer}
@@ -86,7 +103,30 @@ function EditSurvey({ onPublish }) {
           );
         })}
       </Box>
-    )
+
+      {sections.map((section) => {
+        return (
+          <Accordion
+            className={styles.accordionContainer}
+            key={section.id}
+            defaultExpanded={true}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography fontWeight="600" color="#1a2052" variant="h5">
+                {section.title}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails className={styles.accordionDetails}>
+              {section.component}
+            </AccordionDetails>
+          </Accordion>
+        );
+      })}
+    </Box>
   );
 }
 

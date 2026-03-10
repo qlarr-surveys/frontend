@@ -72,6 +72,10 @@
     "closed_mode": "Enquête is gesloten",
     "active_mode": "Enquête is actief",
     "to": "tot",
+    "background_audio": "Achtergrondaudio",
+    "record_gps": "GPS opnemen",
+    "save_ip": "IP opslaan",
+    "save_timings": "Tijden opslaan",
     "metadata": {
       "created": "Aangemaakt",
       "last_modified": "Laatst Gewijzigd",
@@ -274,7 +278,11 @@
     "disqualified": "Gediskwalificeerd",
     "preview_not_exportable": "Voorvertoning reacties kunnen niet worden geëxporteerd",
     "question": "Vraag",
-    "answer": "Antwoord"
+    "answer": "Antwoord",
+    "events": "Gebeurtenissen",
+    "voice_recordings": "Spraakopnamen",
+    "locations": "Locaties",
+    "recording": "Opname"
   },
   "responses_count": "Reacties",
   "roles_required": "Rollen zijn Verplicht",

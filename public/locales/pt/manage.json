@@ -72,6 +72,10 @@
     "closed_mode": "A pesquisa foi fechada",
     "active_mode": "A pesquisa está ativa",
     "to": "a",
+    "background_audio": "Áudio de fundo",
+    "record_gps": "Gravar GPS",
+    "save_ip": "Salvar IP",
+    "save_timings": "Salvar tempos",
     "metadata": {
       "created": "Criada",
       "last_modified": "Última Modificação",
@@ -274,7 +278,11 @@
     "disqualified": "Desqualificado",
     "preview_not_exportable": "Respostas de pré-visualização não podem ser exportadas",
     "question": "Pergunta",
-    "answer": "Resposta"
+    "answer": "Resposta",
+    "events": "Eventos",
+    "voice_recordings": "Gravações de Voz",
+    "locations": "Localizações",
+    "recording": "Gravação"
   },
   "responses_count": "Respostas",
   "roles_required": "As Funções são Obrigatórias",
