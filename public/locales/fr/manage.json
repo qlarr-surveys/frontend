@@ -72,6 +72,10 @@
     "closed_mode": "Le sondage a été fermé",
     "active_mode": "Le sondage est actif",
     "to": "à",
+    "background_audio": "Audio en arrière-plan",
+    "record_gps": "Enregistrer le GPS",
+    "save_ip": "Enregistrer l'IP",
+    "save_timings": "Enregistrer les durées",
     "metadata": {
       "created": "Créé",
       "last_modified": "Dernière Modification",
@@ -274,7 +278,11 @@
     "disqualified": "Disqualifié",
     "preview_not_exportable": "Les réponses d'aperçu ne peuvent pas être exportées",
     "question": "Question",
-    "answer": "Réponse"
+    "answer": "Réponse",
+    "events": "Événements",
+    "voice_recordings": "Enregistrements Vocaux",
+    "locations": "Localisations",
+    "recording": "Enregistrement"
   },
   "responses_count": "Réponses",
   "roles_required": "Les Rôles sont Requis",

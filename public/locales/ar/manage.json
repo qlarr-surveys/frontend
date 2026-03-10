@@ -72,6 +72,10 @@
     "closed_mode": "تم إغلاق الاستبيان",
     "active_mode": "الاستبيان نشط",
     "to": "ل",
+    "background_audio": "تسجيل الصوت في الخلفية",
+    "record_gps": "تسجيل الموقع الجغرافي",
+    "save_ip": "حفظ عنوان IP",
+    "save_timings": "حفظ التوقيتات",
     "metadata": {
       "created": "تم الإنشاء",
       "last_modified": "آخر تعديل",
@@ -274,7 +278,11 @@
     "disqualified": "مستبعد",
     "preview_not_exportable": "لا يمكن تصدير الردود التجريبية",
     "question": "السؤال",
-    "answer": "الإجابة"
+    "answer": "الإجابة",
+    "events": "الأحداث",
+    "voice_recordings": "التسجيلات الصوتية",
+    "locations": "المواقع",
+    "recording": "تسجيل"
   },
   "responses_count": "الردود",
   "roles_required": "الأدوار مطلوبة",

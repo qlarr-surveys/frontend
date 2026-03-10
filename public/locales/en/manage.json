@@ -72,6 +72,10 @@
     "closed_mode": "Survey has been closed",
     "active_mode": "Survey is active",
     "to": "to",
+    "background_audio": "Background Audio",
+    "record_gps": "Record GPS",
+    "save_ip": "Save IP",
+    "save_timings": "Save Timings",
     "metadata": {
       "created": "Created",
       "last_modified": "Last Modified",
@@ -274,7 +278,11 @@
     "disqualified": "Disqualified",
     "preview_not_exportable": "Preview responses cannot be exported",
     "question": "Question",
-    "answer": "Answer"
+    "answer": "Answer",
+    "events": "Events",
+    "voice_recordings": "Voice Recordings",
+    "locations": "Locations",
+    "recording": "Recording"
   },
   "responses_count": "Responses",
   "roles_required": "Roles is Required",

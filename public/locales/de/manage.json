@@ -79,7 +79,11 @@
     "survey_users": "Benutzer befragen",
     "surveyor": "Landvermesserin",
     "title": "Umfrage bearbeiten",
-    "to": "zu"
+    "to": "zu",
+    "background_audio": "Hintergrundaudio",
+    "record_gps": "GPS aufzeichnen",
+    "save_ip": "IP speichern",
+    "save_timings": "Zeiten speichern"
   },
   "edit_user": {
     "title": "Benutzer bearbeiten"
@@ -304,7 +308,11 @@
     "title_delete_response": "Antwort löschen?",
     "to": "Zu",
     "version": "Version",
-    "yes": "Ja"
+    "yes": "Ja",
+    "events": "Ereignisse",
+    "voice_recordings": "Sprachaufnahmen",
+    "locations": "Standorte",
+    "recording": "Aufnahme"
   },
   "responses_count": "Antworten",
   "responses_export": {

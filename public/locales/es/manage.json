@@ -72,6 +72,10 @@
     "closed_mode": "La encuesta ha sido cerrada",
     "active_mode": "La encuesta está activa",
     "to": "a",
+    "background_audio": "Audio de fondo",
+    "record_gps": "Registrar GPS",
+    "save_ip": "Guardar IP",
+    "save_timings": "Guardar tiempos",
     "metadata": {
       "created": "Creada",
       "last_modified": "Última Modificación",
@@ -274,7 +278,11 @@
     "disqualified": "Descalificado",
     "preview_not_exportable": "Las respuestas de vista previa no se pueden exportar",
     "question": "Pregunta",
-    "answer": "Respuesta"
+    "answer": "Respuesta",
+    "events": "Eventos",
+    "voice_recordings": "Grabaciones de Voz",
+    "locations": "Ubicaciones",
+    "recording": "Grabación"
   },
   "responses_count": "Respuestas",
   "roles_required": "Los Roles son Requeridos",
