@@ -317,7 +317,6 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
-            "hint",
           ],
         },
         {
@@ -465,7 +464,6 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
-            "hint",
           ],
         },
         {
@@ -499,7 +497,6 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
-            "hint",
           ],
         },
         {
@@ -533,7 +530,6 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
-            "hint",
           ],
         },
         {
