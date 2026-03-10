@@ -274,7 +274,7 @@ function ImageChoiceItemDesign({
               </div>
               <div className={btnStyles.rightZone}>
                 <IconButton
-                  className={btnStyles.hoverIconButton}
+                  className={btnStyles.iconButton}
                   onClick={() => {
                     onDelete();
                   }}
@@ -282,7 +282,7 @@ function ImageChoiceItemDesign({
                   <DeleteOutlineIcon />
                 </IconButton>
                 <IconButton
-                  className={btnStyles.hoverIconButton}
+                  className={btnStyles.iconButton}
                   onClick={(e) => {
                     e.stopPropagation();
                     dispatch(
@@ -297,7 +297,7 @@ function ImageChoiceItemDesign({
                 </IconButton>
                 <IconButton
                   component="label"
-                  className={btnStyles.hoverIconButton}
+                  className={btnStyles.iconButton}
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
