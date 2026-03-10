@@ -24,6 +24,7 @@ function TextQuestionDesign({ code, designMode }) {
         onChange={isEditable ? handleHintChange : undefined}
         sx={{
           pointerEvents: isEditable ? "auto" : "none",
+          input: { color: "#aaa", "&:focus": { color: "#000" } },
         }}
       />
     </div>

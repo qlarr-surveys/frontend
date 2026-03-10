@@ -34,7 +34,6 @@ function ShowHint({ code, t }) {
           onChange={(event) => setCheckedHint(event.target.checked)}
         />
       </div>
-      {showHint && <SetupTextInput code={code} objectName="hint" t={t} />}
     </>
   );
 }

@@ -29,6 +29,7 @@ function ParagraphQuestionDesign({ code, t, designMode }) {
         minRows={state.minRows || 4}
         sx={{
           pointerEvents: isEditable ? "auto" : "none",
+          textarea: { color: "#aaa", "&:focus": { color: "#000" } },
         }}
       />
       {state.showWordCount ? (

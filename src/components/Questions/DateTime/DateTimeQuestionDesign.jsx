@@ -24,6 +24,7 @@ function DateTimeQuestionDesign({ code, designMode }) {
         placeholder={state.dateFormat}
         sx={{
           pointerEvents: isEditable ? "auto" : "none",
+          input: { color: "#aaa", "&:focus": { color: "#000" } },
         }}
       />
     </div>
