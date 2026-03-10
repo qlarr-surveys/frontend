@@ -317,7 +317,6 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
-            "hint",
           ],
         },
         {
@@ -465,7 +464,6 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
-            "hint",
           ],
         },
         {
@@ -499,7 +497,6 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
-            "hint",
           ],
         },
         {
@@ -533,7 +530,6 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
-            "hint",
           ],
         },
         {
@@ -571,6 +567,7 @@ export const setupOptions = (type) => {
             "fullDayFormat",
             "maxDate",
             "minDate",
+            "hint",
           ],
         },
         {
@@ -607,6 +604,7 @@ export const setupOptions = (type) => {
             "dateFormat",
             "maxDate",
             "minDate",
+            "hint",
           ],
         },
         {
@@ -641,6 +639,7 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "fullDayFormat",
+            "hint",
           ],
         },
         {
