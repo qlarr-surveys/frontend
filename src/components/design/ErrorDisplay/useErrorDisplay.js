@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { isGroup } from "~/utils/design/utils";
@@ -10,27 +11,29 @@ const useErrorDisplay = (code) => {
 
   const isGroupCode = isGroup(code);
 
-  const selectDesignState = (state) => state.designState[code] || {};
+  const selectErrorsAndInstructions = useMemo(
+    () =>
+      createSelector(
+        [(state) => state.designState[code] || {}],
+        (designState) => {
+          const instructionsWithErrors = designState.instructionList?.filter(
+            (instruction) => instruction.errors?.length > 0
+          );
 
-  const selectErrorsAndInstructions = createSelector(
-    [selectDesignState],
-    (designState) => {
-      const instructionsWithErrors = designState.instructionList?.filter(
-        (instruction) => instruction.errors?.length > 0
-      );
+          const errors = isGroupCode
+            ? designState.errors?.filter((e) => e !== "EMPTY_PARENT")
+            : designState.errors;
 
-      const errors = isGroupCode
-        ? designState.errors?.filter((e) => e !== "EMPTY_PARENT")
-        : designState.errors;
-
-      return {
-        errors,
-        designErrors: designState.designErrors,
-        instructions: instructionsWithErrors?.length
-          ? instructionsWithErrors
-          : undefined,
-      };
-    }
+          return {
+            errors,
+            designErrors: designState.designErrors,
+            instructions: instructionsWithErrors?.length
+              ? instructionsWithErrors
+              : undefined,
+          };
+        }
+      ),
+    [code, isGroupCode]
   );
 
   const { errors, designErrors, instructions } = useSelector(
