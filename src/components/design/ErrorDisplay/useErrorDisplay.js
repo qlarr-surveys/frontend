@@ -4,7 +4,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import { isGroup } from "~/utils/design/utils";
 import { surveySetup, setupOptions } from "~/constants/design";
 import { setup } from "~/state/design/designState";
-import { getHighlighted } from "~/utils/design/errorDisplay.jsx";
+import { getHighlighted } from "~/utils/design/errorDisplay";
 
 const useErrorDisplay = (code) => {
   const dispatch = useDispatch();
