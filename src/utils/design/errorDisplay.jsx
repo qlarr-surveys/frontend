@@ -42,7 +42,7 @@ export const mapInstructionError = (instruction, t) => {
   const rawMessage = instruction.errors[0]?.message;
   if (
     instruction.code === "value" &&
-    instruction.errors[0].name == "InvalidInstructionInEndGroup"
+    instruction.errors[0].name === "InvalidInstructionInEndGroup"
   ) {
     return { label: t("err_value_in_end_group"), message: rawMessage };
   } else if (instruction.code === "conditional_relevance") {
