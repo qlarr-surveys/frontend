@@ -5,7 +5,7 @@ import Question from "~/components/Question";
 import Content from "~/components/run/Content";
 
 import styles from "./Group.module.css";
-import { Box, useTheme } from "@mui/material";
+import { Box, Divider, useTheme } from "@mui/material";
 
 function Group(props) {
   const theme = useTheme();
@@ -56,14 +56,19 @@ function Group(props) {
           </div>
 
           {props.group && props.group.questions
-            ? props.group.questions
-                .filter((quest) => quest.inCurrentNavigation)
-                .map((quest) => (
-                  <Question
-                    key={quest.code}
-                    component={quest}
-                  />
-                ))
+            ? (() => {
+                const visibleQuestions = props.group.questions.filter(
+                  (quest) => quest.inCurrentNavigation
+                );
+                return visibleQuestions.map((quest, idx) => (
+                  <React.Fragment key={quest.code}>
+                    <Question component={quest} />
+                    {idx < visibleQuestions.length - 1 && (
+                      <Divider sx={{ mt: "4px", mb: "12px" }} />
+                    )}
+                  </React.Fragment>
+                ));
+              })()
             : ""}
         </Box>
       </>
