@@ -1,19 +1,18 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 import styles from "./DateTimeQuestionDesign.module.css";
-import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
+import { useEditableHint } from "~/hooks/useEditableHint";
+import { useTheme } from '@emotion/react';
 
-function DateTimeQuestionDesign({ code }) {
-  const theme = useTheme();
-
+function DateTimeQuestionDesign({ code, designMode }) {
   const state = useSelector((state) => {
     return state.designState[code];
   });
 
-  const lang = useSelector((state) => {
-    return state.designState.langInfo.lang;
-  });
+  const theme = useTheme();
+
+  const { hintText, isEditable, handleHintChange } = useEditableHint(code, designMode);
 
   return (
     <div className={styles.questionItem}>
@@ -23,13 +22,12 @@ function DateTimeQuestionDesign({ code }) {
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
-        label={
-          state.showHint && state.content?.[lang]
-            ? state.content[lang].hint
-            : "" || ""
-        }
-        value={""}
-        placeholder={state.dateFormat}
+        value={isEditable ? hintText : ""}
+        onChange={isEditable ? handleHintChange : undefined}
+        sx={{
+          pointerEvents: isEditable ? "auto" : "none",
+          input: { color: theme.palette.text.disabled },
+        }}
       />
     </div>
   );
