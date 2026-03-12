@@ -26,15 +26,15 @@ export default function MultipleTextVisualization({ question }) {
   ];
 
   const columns = fields.map((field) => ({
-    key: field,
-    label: field,
+    key: field.label,
+    label: field.label,
     sortable: true,
   }));
 
   const tableData = responses.map((r) => {
     const row = {};
     fields.forEach((field) => {
-      row[field] = r[field] || '-';
+      row[field.label] = r[field.code] || '-';
     });
     return row;
   });

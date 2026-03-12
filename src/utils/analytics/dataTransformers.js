@@ -15,6 +15,14 @@ import { BACKEND_BASE_URL } from '~/constants/networking';
 const MAX_FREQUENCY_ITEMS = 20;
 const MAX_CHART_BAR_ITEMS = 10;
 const MAX_DOMAIN_ITEMS = 10;
+
+// Build code→label lookup from AnalyticsOption arrays ({code, label})
+const buildLabelMap = (options) =>
+  Object.fromEntries((options ?? []).map((o) => [o.code, o.label]));
+
+// Extract just the code strings from AnalyticsOption arrays
+const extractCodes = (options) => (options ?? []).map((o) => o.code);
+
 // Shared helper: extract total/answered/skipped/responseRate from any question
 const getResponseMetrics = ({ responses = [], totalResponses }) => {
   const total = totalResponses ?? responses.length;
@@ -61,9 +69,10 @@ export const transformSCQData = (question) => {
   const { responses } = question;
   const metrics = getResponseMetrics(question);
   const frequency = calculateFrequency(responses);
+  const labelMap = buildLabelMap(question.options);
 
   const mapItem = (item, i) => ({
-    name: item.value,
+    name: labelMap[item.value] || item.value,
     value: item.count,
     count: item.count,
     percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
@@ -74,7 +83,7 @@ export const transformSCQData = (question) => {
     pieData: frequency.map(mapItem),
     barData: frequency.map(mapItem),
     ...metrics,
-    mode: frequency[0]?.value,
+    mode: labelMap[frequency[0]?.value] || frequency[0]?.value,
     modeCount: frequency[0]?.count,
   };
 };
@@ -83,7 +92,8 @@ export const transformSCQData = (question) => {
 export const transformMCQData = (question) => {
   const { responses } = question;
   const metrics = getResponseMetrics(question);
-  const freq = calculateMCQFrequency(responses, question.options);
+  const labelMap = buildLabelMap(question.options);
+  const freq = calculateMCQFrequency(responses, extractCodes(question.options));
 
   const avgSelections = metrics.answered > 0
     ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
@@ -91,7 +101,7 @@ export const transformMCQData = (question) => {
 
   return {
     barData: freq.map((item, i) => ({
-      name: item.option,
+      name: labelMap[item.option] || item.option,
       count: item.count,
       percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
       fill: getChartColor(i),
@@ -132,21 +142,23 @@ export const transformNPSData = (question) => {
 export const transformRankingData = (question) => {
   const { options, responses } = question;
   const metrics = getResponseMetrics(question);
+  const labelMap = buildLabelMap(options);
+  const optionCodes = extractCodes(options);
   const parsed = responses.map((r) => Array.isArray(r) ? r : (() => { try { return JSON.parse(r); } catch { return []; } })());
-  const rankings = calculateRankingAverages(parsed, options);
+  const rankings = calculateRankingAverages(parsed, optionCodes);
 
   // Calculate rank distribution for stacked chart
-  const rankDistribution = options.map((opt) => {
-    const data = { option: opt };
-    for (let rank = 1; rank <= options.length; rank++) {
-      data[`Rank ${rank}`] = parsed.filter((r) => r.indexOf(opt) === rank - 1).length;
+  const rankDistribution = optionCodes.map((code) => {
+    const data = { option: labelMap[code] || code };
+    for (let rank = 1; rank <= optionCodes.length; rank++) {
+      data[`Rank ${rank}`] = parsed.filter((r) => r.indexOf(code) === rank - 1).length;
     }
     return data;
   });
 
   return {
     averageRankData: rankings.map((item, i) => ({
-      name: item.option,
+      name: labelMap[item.option] || item.option,
       averageRank: item.averageRank,
       firstPlace: item.firstPlaceCount,
       lastPlace: item.lastPlaceCount,
@@ -168,11 +180,11 @@ export const transformNumberData = (question) => {
 };
 
 // Extract rows and columns from response objects when metadata is null
-const extractMatrixDimensions = (responses, questionRows, questionColumns, isMultiSelect = false) => {
-  const rows = questionRows?.length ? questionRows : responses.length > 0
+const extractMatrixDimensions = (responses, rowCodes, colCodes, isMultiSelect = false) => {
+  const rows = rowCodes?.length ? rowCodes : responses.length > 0
     ? [...new Set(responses.flatMap((r) => Object.keys(r)))].sort()
     : [];
-  const columns = questionColumns?.length ? questionColumns : responses.length > 0
+  const columns = colCodes?.length ? colCodes : responses.length > 0
     ? [...new Set(responses.flatMap((r) =>
         isMultiSelect ? Object.values(r).flat() : Object.values(r)
       ))].sort()
@@ -180,18 +192,37 @@ const extractMatrixDimensions = (responses, questionRows, questionColumns, isMul
   return { rows, columns };
 };
 
+// Remap matrix data from codes to labels for display
+const remapMatrixToLabels = (matrix, rowLabelMap, colLabelMap, colCodes) => {
+  return matrix.map((rowData) => {
+    const remapped = { row: rowLabelMap[rowData.row] || rowData.row };
+    colCodes.forEach((code) => {
+      const label = colLabelMap[code] || code;
+      remapped[label] = rowData[code] || 0;
+    });
+    return remapped;
+  });
+};
+
 // Transform Matrix SCQ data for heatmap
 export const transformMatrixSCQData = (question) => {
   const responses = question.responses || [];
   const metrics = getResponseMetrics({ responses, totalResponses: question.totalResponses });
-  const { rows, columns } = extractMatrixDimensions(responses, question.rows, question.columns);
+  const rowCodes = extractCodes(question.rows);
+  const colCodes = extractCodes(question.columns);
+  const rowLabelMap = buildLabelMap(question.rows);
+  const colLabelMap = buildLabelMap(question.columns);
+  const { rows, columns } = extractMatrixDimensions(responses, rowCodes, colCodes);
   const matrix = calculateMatrixData(responses, rows, columns);
+  const displayMatrix = remapMatrixToLabels(matrix, rowLabelMap, colLabelMap, columns);
+  const displayRows = rows.map((r) => rowLabelMap[r] || r);
+  const displayColumns = columns.map((c) => colLabelMap[c] || c);
 
   // Calculate row averages (for Likert scale)
-  const rowAverages = matrix.map((rowData) => {
+  const rowAverages = displayMatrix.map((rowData) => {
     let sum = 0;
     let count = 0;
-    columns.forEach((col, i) => {
+    displayColumns.forEach((col, i) => {
       sum += rowData[col] * (i + 1);
       count += rowData[col];
     });
@@ -199,32 +230,39 @@ export const transformMatrixSCQData = (question) => {
   });
 
   // Diverging bar data for Likert
-  const divergingData = columns.length >= 5 ? matrix.map((rowData) => {
-    const rowTotal = columns.reduce((sum, col) => sum + rowData[col], 0);
+  const divergingData = displayColumns.length >= 5 ? displayMatrix.map((rowData) => {
+    const rowTotal = displayColumns.reduce((sum, col) => sum + rowData[col], 0);
     if (rowTotal === 0) return { row: rowData.row, negative: '0.0', neutral: '0.0', positive: '0.0' };
     return {
       row: rowData.row,
-      negative: ((rowData[columns[0]] + rowData[columns[1]]) / rowTotal * -100).toFixed(1),
-      neutral: ((rowData[columns[2]]) / rowTotal * 100).toFixed(1),
-      positive: ((rowData[columns[3]] + rowData[columns[4]]) / rowTotal * 100).toFixed(1),
+      negative: ((rowData[displayColumns[0]] + rowData[displayColumns[1]]) / rowTotal * -100).toFixed(1),
+      neutral: ((rowData[displayColumns[2]]) / rowTotal * 100).toFixed(1),
+      positive: ((rowData[displayColumns[3]] + rowData[displayColumns[4]]) / rowTotal * 100).toFixed(1),
     };
   }) : [];
 
-  return { heatmapData: matrix, rowAverages, divergingData, rows, columns, ...metrics };
+  return { heatmapData: displayMatrix, rowAverages, divergingData, rows: displayRows, columns: displayColumns, ...metrics };
 };
 
 // Transform Matrix MCQ data for heatmap
 export const transformMatrixMCQData = (question) => {
   const responses = question.responses || [];
   const metrics = getResponseMetrics({ responses, totalResponses: question.totalResponses });
-  const { rows, columns } = extractMatrixDimensions(responses, question.rows, question.columns, true);
+  const rowCodes = extractCodes(question.rows);
+  const colCodes = extractCodes(question.columns);
+  const rowLabelMap = buildLabelMap(question.rows);
+  const colLabelMap = buildLabelMap(question.columns);
+  const { rows, columns } = extractMatrixDimensions(responses, rowCodes, colCodes, true);
   const matrix = calculateMatrixData(responses, rows, columns);
+  const displayMatrix = remapMatrixToLabels(matrix, rowLabelMap, colLabelMap, columns);
+  const displayRows = rows.map((r) => rowLabelMap[r] || r);
+  const displayColumns = columns.map((c) => colLabelMap[c] || c);
 
   const avgSelections = metrics.answered > 0
     ? (responses.flat().length / metrics.answered).toFixed(1)
     : 0;
 
-  return { heatmapData: matrix, rows, columns, avgSelections, ...metrics };
+  return { heatmapData: displayMatrix, rows: displayRows, columns: displayColumns, avgSelections, ...metrics };
 };
 
 // Transform Text data for word cloud and table
@@ -302,13 +340,13 @@ export const transformMultipleTextData = (question) => {
   const metrics = getResponseMetrics(question);
 
   const fieldStats = fields.map((field) => {
-    const values = responses.map((r) => r[field] || '').filter(Boolean);
+    const values = responses.map((r) => r[field.code] || '').filter(Boolean);
     const avgLength = values.length > 0
       ? (values.reduce((sum, v) => sum + v.length, 0) / values.length).toFixed(1)
       : 0;
 
     return {
-      field,
+      field: field.label,
       completionRate: metrics.total > 0 ? Math.round((values.length / metrics.total) * 100) : 0,
       avgLength,
       count: values.length,
@@ -325,19 +363,20 @@ export const transformAutocompleteData = transformSCQData;
 export const transformImageRankingData = (question) => {
   const { images, responses } = question;
   const metrics = getResponseMetrics(question);
-  const options = images.map((img) => img.label);
+  const optionCodes = extractCodes(question.options);
+  const labelMap = buildLabelMap(question.options);
   const parsed = responses.map((r) => {
     if (Array.isArray(r)) return r;
     const entries = Object.entries(r);
     return entries.sort((a, b) => a[1] - b[1]).map(([key]) => key);
   });
-  const rankings = calculateRankingAverages(parsed, options);
+  const rankings = calculateRankingAverages(parsed, optionCodes);
 
   const rankedImages = rankings.map((item, i) => {
     const image = resolveIconImage(images, item.option);
     return {
       ...item,
-      name: image?.label || `Image ${i + 1}`,
+      name: image?.label || labelMap[item.option] || `Image ${i + 1}`,
       imageUrl: resolveImageUrl(image?.url),
       firstPlace: item.firstPlaceCount,
       lastPlace: item.lastPlaceCount,
@@ -387,7 +426,7 @@ export const transformImageMCQData = (question) => {
   const { images, responses } = question;
   const metrics = getResponseMetrics(question);
   const options = question.options?.length > 0
-    ? question.options
+    ? extractCodes(question.options)
     : images.map((img) => img.label);
   const freq = calculateMCQFrequency(responses, options);
 
@@ -445,7 +484,7 @@ export const transformIconMCQData = (question) => {
   const images = question.images || [];
   const options = question.options || [];
   const optionKeys = options.length > 0
-    ? options
+    ? extractCodes(options)
     : images.map((img) => img.label);
   const freq = calculateMCQFrequency(responses, optionKeys);
 
