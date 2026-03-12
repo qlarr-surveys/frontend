@@ -279,16 +279,23 @@ function RankingContainer({
       }}
     >
       {options.length === 0 && (
-        <Box
-          className={styles.emptyState}
-          sx={{ borderColor: "divider" }}
+        <DropArea
+          itemType={itemType}
+          index={0}
+          fillParent={true}
+          onItemTransfer={onItemTransfer}
         >
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {isSorted
-              ? "Drag items here to rank them"
-              : "All items have been ranked"}
-          </Typography>
-        </Box>
+          <Box
+            className={styles.emptyState}
+            sx={{ borderColor: "divider" }}
+          >
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              {isSorted
+                ? "Drag items here to rank them"
+                : "All items have been ranked"}
+            </Typography>
+          </Box>
+        </DropArea>
       )}
       {options.map((option, index) => {
         return (
@@ -430,7 +437,7 @@ function RankingOption({
   );
 }
 
-function DropArea({ index, onItemTransfer, itemType, fillParent }) {
+function DropArea({ index, onItemTransfer, itemType, fillParent, children }) {
   const containerRef = useRef();
   const [{ handlerId }, drop] = useDrop({
     accept: "rankingOption",
@@ -456,7 +463,9 @@ function DropArea({ index, onItemTransfer, itemType, fillParent }) {
       style={{ flex: fillParent ? 1 : "inherit", minHeight: "8px" }}
       ref={containerRef}
       data-handler-id={handlerId}
-    />
+    >
+      {children}
+    </div>
   );
 }
 
