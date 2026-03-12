@@ -72,6 +72,10 @@
     "closed_mode": "تم إغلاق الاستبيان",
     "active_mode": "الاستبيان نشط",
     "to": "ل",
+    "background_audio": "تسجيل الصوت في الخلفية",
+    "record_gps": "تسجيل الموقع الجغرافي",
+    "save_ip": "حفظ عنوان IP",
+    "save_timings": "حفظ التوقيتات",
     "metadata": {
       "created": "تم الإنشاء",
       "last_modified": "آخر تعديل",
@@ -186,6 +190,7 @@
     "duplicate_email": "عنوان البريد الإلكتروني مسجل بالفعل.",
     "duplicate_survey_name": "تكرار اسم الاستطلاع",
     "autocomplete_malformed_input": "إدخال غير صحيح: يجب أن يكون الملف عبارة عن مصفوفة JSON تحتوي على نصوص فقط",
+    "max_upload_size_exceeded": "حجم الملف يتجاوز الحد الأقصى المسموح به للرفع.",
     "expired_confirmation_token": "رمز التأكيد منتهي الصلاحية , الرجاء التسجيل مرة أخرى",
     "expired_reset_token": "رمز التأكيد منتهي الصلاحية , الرجاء النقر فوق نسيت كلمة المرور مرة أخرى",
     "invalid_survey_dates": "يجب أن يكون تاريخ البدء قبل تاريخ الانتهاء",
@@ -227,6 +232,7 @@
   },
   "responses": {
     "export": "تصدير الردود",
+    "no_selection": "اختر ردًا",
     "filter_completed": "استجابات الفلتر المكتملة",
     "filter_completed_show_all": "كل الردود",
     "filter_completed_show_completed": "الردود الكاملة فقط",
@@ -272,7 +278,11 @@
     "disqualified": "مستبعد",
     "preview_not_exportable": "لا يمكن تصدير الردود التجريبية",
     "question": "السؤال",
-    "answer": "الإجابة"
+    "answer": "الإجابة",
+    "events": "الأحداث",
+    "voice_recordings": "التسجيلات الصوتية",
+    "locations": "المواقع",
+    "recording": "تسجيل"
   },
   "responses_count": "الردود",
   "roles_required": "الأدوار مطلوبة",
@@ -374,5 +384,17 @@
     "all_in_one": "الكل في واحد",
     "group_by_group": "صفحة بصفحة",
     "question_by_question": "سؤال بسؤال"
+  },
+  "empty_state": {
+    "welcome": "مرحباً {{firstName}} {{lastName}}",
+    "subtitle": "اكتشف رؤى أعمق تدفع قرارات أذكى.",
+    "create_first_survey": "أنشئ استبيانك الأول في دقائق",
+    "create_survey_btn": "إنشاء استبيان",
+    "import_template": "استيراد قالب موجود",
+    "feature_collect": "اجمع البيانات من أي مكان.",
+    "feature_trust": "ثق بكل استجابة.",
+    "feature_own": "امتلك كل نتيجة.",
+    "need_help": "تحتاج مساعدة للبدء؟",
+    "contact_support": "تواصل مع الدعم"
   }
 }

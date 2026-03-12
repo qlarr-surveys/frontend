@@ -1,7 +1,7 @@
 import { Box, css, Stack, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
-import { STATUS } from "../Survey";
+import { STATUS } from "../Survey/status";
 import { RHFSelect } from "~/components/hook-form";
 
 export const HeaderContent = ({

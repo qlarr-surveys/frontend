@@ -14,6 +14,12 @@
 }
 
 /* Range input (for between operator) */
+.rangeInputWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .rangeInput {
   display: flex;
   align-items: center;
@@ -24,4 +30,10 @@
 .rangeSeparator {
   color: #666;
   font-size: 14px;
+}
+
+.rangeError {
+  color: #d32f2f;
+  font-size: 12px;
+  margin-top: 4px;
 }

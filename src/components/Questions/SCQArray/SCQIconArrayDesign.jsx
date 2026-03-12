@@ -492,6 +492,7 @@ function SCQArrayHeaderDesign({
           showToolbar={false}
           editable={contentEditable(designMode)}
           extended={false}
+          centerText
           placeholder={
             onMainLang
               ? t("content_editor_placeholder_option", {

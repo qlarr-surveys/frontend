@@ -72,6 +72,10 @@
     "closed_mode": "Le sondage a été fermé",
     "active_mode": "Le sondage est actif",
     "to": "à",
+    "background_audio": "Audio en arrière-plan",
+    "record_gps": "Enregistrer le GPS",
+    "save_ip": "Enregistrer l'IP",
+    "save_timings": "Enregistrer les durées",
     "metadata": {
       "created": "Créé",
       "last_modified": "Dernière Modification",
@@ -186,6 +190,7 @@
     "duplicate_email": "L'adresse e-mail est déjà enregistrée.",
     "duplicate_survey_name": "Nom de Sondage en Double",
     "autocomplete_malformed_input": "Entrée Malformée : Le fichier doit être un tableau JSON contenant uniquement des chaînes de caractères",
+    "max_upload_size_exceeded": "La taille du fichier dépasse la limite maximale de téléchargement.",
     "expired_confirmation_token": "Jeton de Confirmation Expiré, Veuillez Vous Inscrire à Nouveau",
     "expired_reset_token": "Jeton de Confirmation Expiré, Veuillez Cliquer sur Mot de Passe Oublié à Nouveau",
     "invalid_survey_dates": "La Date de Début doit être antérieure à la date de fin",
@@ -227,6 +232,7 @@
   },
   "responses": {
     "export": "Exporter les Réponses",
+    "no_selection": "Sélectionnez une réponse",
     "filter_completed": "Filtrer les Réponses Complétées",
     "filter_completed_show_all": "Toutes les Réponses",
     "filter_completed_show_completed": "Réponses Complètes uniquement",
@@ -272,7 +278,11 @@
     "disqualified": "Disqualifié",
     "preview_not_exportable": "Les réponses d'aperçu ne peuvent pas être exportées",
     "question": "Question",
-    "answer": "Réponse"
+    "answer": "Réponse",
+    "events": "Événements",
+    "voice_recordings": "Enregistrements Vocaux",
+    "locations": "Localisations",
+    "recording": "Enregistrement"
   },
   "responses_count": "Réponses",
   "roles_required": "Les Rôles sont Requis",
@@ -374,5 +384,17 @@
     "all_in_one": "Tout en Un",
     "group_by_group": "Page par Page",
     "question_by_question": "Question par Question"
+  },
+  "empty_state": {
+    "welcome": "Bienvenue {{firstName}} {{lastName}}",
+    "subtitle": "Découvrez des insights plus profonds pour des décisions plus intelligentes.",
+    "create_first_survey": "Créez votre premier sondage en quelques minutes",
+    "create_survey_btn": "Créer un sondage",
+    "import_template": "Importer un modèle existant",
+    "feature_collect": "Collectez des données partout.",
+    "feature_trust": "Faites confiance à chaque réponse.",
+    "feature_own": "Maîtrisez chaque résultat.",
+    "need_help": "Besoin d'aide pour commencer ?",
+    "contact_support": "contacter le support"
   }
 }

@@ -9,6 +9,7 @@
   font-size: inherit !important;
   font-family: inherit !important;
   outline: none;
+  overflow-wrap: break-word;
 }
 
 .tiptap-editor:focus {
@@ -35,6 +36,10 @@
 .tiptap-editor.ltr {
   direction: ltr !important;
   text-align: left !important;
+}
+
+.tiptap-centered :is(.ltr, .rtl) {
+  text-align: center !important;
 }
 
 .tiptap-link {
@@ -353,6 +358,7 @@
 
 .content-editor {
   padding: 0 !important;
+  overflow-wrap: break-word;
 }
 
 .content-editor.rtl {

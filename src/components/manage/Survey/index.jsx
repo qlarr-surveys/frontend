@@ -35,13 +35,7 @@ import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import NumbersIcon from "@mui/icons-material/Numbers";
 import { setDesignModeToDesign } from '~/state/design/designState';
 
-export const STATUS = {
-  DRAFT: "draft",
-  CLOSED: "closed",
-  ACTIVE: "active",
-  EXPIRED: "expired",
-  SCHEDULED: "scheduled",
-};
+import { STATUS } from "./status";
 
 const status = (survey) => {
   switch (survey.status) {

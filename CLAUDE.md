@@ -1,80 +1,85 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Project Overview
+Qlarr Frontend is a React-based web application for creating, managing, and running surveys using the Qlarr Survey Engine DSL. It provides:
+1. A WYSIWYG editor for building surveys in the Survey Engine DSL
+2. A survey renderer used in both web and Android apps
+3. Admin GUI for survey management, user management, login, cloning, etc.
 
-Qlarr Surveys frontend — a React SPA for creating, managing, and running surveys. Built with Vite, Material UI v5, and Redux Toolkit. Supports both web and Android WebView (single codebase, dual entry points: `Web.jsx` and `Android.jsx`).
+Surveys are defined as JSON (UI-agnostic components) with JavaScript instructions for complex logic.
 
-## Commands
+## Tech Stack
+- **Framework**: React 18, JavaScript (JSX — no TypeScript)
+- **Build tool**: Vite 5
+- **UI library**: MUI v5 with Emotion CSS-in-JS
+- **State management**: Redux Toolkit (two stores: `runStore` for survey responses, `manageStore` for survey editing)
+- **Routing**: React Router v6
+- **Forms**: React Hook Form + Yup validation
+- **HTTP client**: Axios with JWT auth interceptors (access + refresh token rotation)
+- **i18n**: i18next — supported languages: en, ar, de, es, pt, fr, nl (RTL support for Arabic)
+- **Rich text editor**: TipTap
+- **Drag & drop**: react-dnd
 
-- **Dev server**: `npm start` (runs on localhost:3000)
-- **Production build**: `npm run build` (outputs to `build/`)
-- **Staging build**: `npm run build-staging` (unminified, with sourcemaps)
-- **Android build**: `npm run build-android`
-- **Preview build**: `npm run serve`
-
-No lint, test, or format scripts are configured.
-
-## Environment Setup
-
-Copy `.env.example` to `.env`. Required variables (all `VITE_` prefixed):
-- `VITE_FRONT_END_HOST` — frontend host (default: `localhost:3000`)
-- `VITE_PROTOCOL` — `http` or `https`
-- `VITE_BE_URL` — backend API URL (default: `http://localhost:8080/`)
-
-## Architecture
-
-### Import Alias
-
-The `~` alias resolves to `src/`. All imports use this convention:
-```js
-import Component from "~/components/SomeComponent";
+## Project Structure
+```
+src/
+  components/    # UI components organized by feature (auth, common, design, manage, run, Questions)
+  pages/         # Page-level components (ManageSurvey, RunSurvey, Dashboard, etc.)
+  state/         # Redux slices (designState, runState, editState, templateState)
+  services/      # API service classes (AuthService, SurveyService, DesignService, RunService, etc.)
+  networking/    # Axios instances (authenticatedApi, publicApi) and endpoint definitions
+  hooks/         # Custom React hooks (useBoolean, useResponsive, useNamespaceLoader, etc.)
+  theme/         # MUI theme config (palette, typography, shadows, RTL)
+  constants/     # App constants (design rules, roles, component types, validation options)
+  utils/         # Utility functions (error processing, date formatting, design utilities)
+  layouts/       # Layout components
+  assets/        # Static assets
+  styles/        # Global CSS
 ```
 
-### Dual Redux Stores (`src/store.js`)
+**Entry points**: `index.jsx` → `App.jsx` → `Web.jsx` (web) / `Android.jsx` (android) → `routes.js`
+**Store config**: `store.js` (defines both `runStore` and `manageStore`)
 
-- **`runStore`**: Survey execution runtime — slices: `runState`, `templateState`
-- **`manageStore`**: Survey design/management — slices: `designState`, `editState`, `templateState`. Includes auto-save middleware (`dataSaver`, `editDataSaver`)
+## Path Aliases
+`~/` maps to `src/` (configured in `jsconfig.json`)
 
-### API Layer (`src/services/`)
+## Development
+- **Package manager**: npm
+- **Node version**: 16+
+- Copy `.env.example` to `.env` and set `VITE_BE_URL` to point to the backend API
 
-Service classes extend `BaseService`. Two Axios instances:
-- `authenticatedApi.js` — JWT Bearer token with auto-refresh on 401
-- `publicApi.js` — no authentication
+### Commands
+| Command | Purpose |
+|---------|---------|
+| `npm start` | Dev server on port 3000 |
+| `npm run build` | Production build |
+| `npm run build-staging` | Staging build (ES2018, sourcemaps) |
+| `npm run build-android` | Android build (ES2015, minified) |
+| `npm run build-android-debuggable` | Android debug build |
+| `npm run serve` | Preview production build |
 
-Key services: `AuthService`, `DesignService`, `RunService`, `SurveyService`, `UserService`, `TokenService` (cookie-based JWT storage).
+### Environment Variables
+```
+VITE_FRONT_END_HOST=localhost:3000
+VITE_PROTOCOL=http
+VITE_BE_URL=http://localhost:8080/
+```
 
-### Android Bridge
+## Code Conventions
+- **Components**: Functional only, `React.memo` for optimization, PascalCase file/folder names
+- **Barrel exports**: `index.jsx` files in component folders
+- **Styling**: MUI `sx` prop and CSS modules (`.module.css`)
+- **Forms**: RHF wrapper components in `components/hook-form/` (RHFTextField, RHFSelect, RHFCheckbox, etc.)
+- **State**: Redux Toolkit slices in `state/`, custom debounced save middleware for auto-saving
+- **Services**: Class-based service layer in `services/` with a `BaseService` for common error handling
+- **Auth**: JWT Bearer tokens via Axios interceptors, automatic token refresh on 401
+- **Lazy loading**: Route-based with React.lazy + Suspense
 
-`src/networking/run.js` checks for `window["Android"]` and delegates API calls to native Android methods instead of HTTP when running inside a WebView.
+## PR Conventions
+- PR titles MUST use semantic/conventional commit prefixes (enforced by `.github/workflows/lint-pr.yaml`)
+- Valid prefixes: `fix:`, `feat:`, `refactor:`, `chore:`, `docs:`, `style:`, `perf:`, `test:`, `build:`, `ci:`, `revert:`
+- Example: `fix: sidebar icon ripple area` or `feat: add new survey type`
 
-### Survey Engine
-
-Uses an external `qlarrStateMachine` loaded at runtime via a dynamically injected `<script>` tag (`runtime.js`). This handles survey navigation logic, skip patterns, and validation.
-
-### Page Structure
-
-All page components in `src/pages/` are lazy-loaded with `React.lazy()` and `<Suspense>`. Routes defined in `src/Web.jsx`. Auth checked via `TokenService.isAuthenticated()`.
-
-User roles: `super_admin`, `survey_admin`, `surveyor`, `analyst` (defined in `src/constants/roles.js`).
-
-### Question Types (`src/components/Questions/`)
-
-30+ question types (text, number, SCQ, MCQ, NPS, ranking, date/time, file upload, signature, barcode, media capture, autocomplete, matrix variants, icon/image variants). Each type has its own directory with design and runtime components.
-
-### i18n (`public/locales/`)
-
-Uses i18next with lazy-loaded namespaces: `manage`, `run`, `design/core`, `design/editor`, `design/logic`, `design/tooltips`. Supported languages: en, ar, de, es, fr, nl, pt. Arabic has RTL support via `stylis-plugin-rtl`.
-
-### Styling
-
-MUI v5 theming (`src/theme/`), Emotion CSS-in-JS, and CSS Modules (`.module.css`). Component overrides in `src/theme/overrides/`.
-
-## Conventions
-
-- JavaScript only (no TypeScript)
-- Component directories use `index.jsx` as entry point
-- PR titles must follow semantic commit format (enforced by CI)
-- Rich text editing uses TipTap v3 (`src/components/design/ContentEditor/`)
-- Drag-and-drop uses react-dnd with HTML5 and touch backends
+## Deployment
+- **Docker**: Multi-stage Dockerfile (Node 18 build → Nginx serve on port 80)
+- **Production**: Use the docker-compose from the backend repo to deploy both frontend and backend

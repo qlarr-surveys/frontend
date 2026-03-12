@@ -54,9 +54,10 @@ function SurveyAppBar({ toggleDrawer, preview }) {
     runService
       .navigate(
         {
+          events: store.getState().runState.timings,
           values: getValues(store.getState().runState.values),
           responseId: sessionStorage.getItem("responseId"),
-          navigationDirection: { name: "RESUME" },
+          navigationDirection: { name: "SAVE" },
         },
         preview
       )

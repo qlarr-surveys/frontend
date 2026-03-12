@@ -1260,10 +1260,10 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
       ) {
         return wrapIfNested(
           nested,
-          `QlarrScripts.isNotVoid(${qCode1}.value) && ${qCode1}.value.size && ${qCode1}.value.stored_filename`
+          `Object.keys(${qCode1}.value).length == 0 || !QlarrScripts.safeAccess(${qCode1}.value,"size") || !QlarrScripts.safeAccess(${qCode1}.value,"stored_filename")`
         );
       } else {
-        return `QlarrScripts.isVoid(${capture(value)}.value)`;
+        return `QlarrScripts.isVoid(${capture(qCode1)}.value)`;
       }
     case "is_not_empty":
       const qCode = capture(value);
@@ -1274,7 +1274,7 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
       ) {
         return wrapIfNested(
           nested,
-          `QlarrScripts.isVoid(${qCode}.value) || !${qCode}.value.size || !${qCode}.value.stored_filename`
+          `Object.keys(${qCode}.value).length > 0 && QlarrScripts.safeAccess(${qCode}.value,"size") && QlarrScripts.safeAccess(${qCode}.value,"stored_filename")`
         );
       } else {
         return `QlarrScripts.isNotVoid(${capture(value)}.value)`;

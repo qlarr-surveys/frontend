@@ -61,7 +61,9 @@ function Content(props) {
         `}
         className={`${isRtl ? "rtl" : "ltr"} ql-editor no-padding`}
         dangerouslySetInnerHTML={{
-          __html: ensureCollapsiblesClosed(replaceMentions(content, state, name, surveyLang)),
+          __html: ensureCollapsiblesClosed(
+            replaceFormatInstructions(content, state, name + "_" + surveyLang),
+          ),
         }}
       />
     );
@@ -70,16 +72,19 @@ function Content(props) {
 
 export default React.memo(Content);
 
-function replaceMentions(html, state, name, lang) {
-  const allMatches = getAllMatches(html);
-  console.log(allMatches)
+export function replaceFormatInstructions(html, state, postFix) {
+  if(!html){
+    return html
+  }
+  const allMatches = getAllFormatInstructions(html);
+  console.log(allMatches);
   allMatches.forEach((match, index) => {
-    html = html.replace(match, state[`format_${name}_${lang}_${index + 1}`]);
+    html = html.replace(match, state[`format_${postFix}_${index + 1}`]);
   });
   return html;
 }
 
-const getAllMatches = (inputString) => {
+const getAllFormatInstructions = (inputString) => {
   const regex = /\{\{(.*?)\}\}/g;
   return Array.from(inputString.matchAll(regex), (m) => m[0]);
 };

@@ -8,7 +8,7 @@ import { Box } from "@mui/material";
 import Content from "../Content";
 
 function ValidationItem({ name, validation, componentCode, content }) {
-  if (content && validation.isCustomErrorActive) {
+  if (content && validation?.isCustomErrorActive !== false) {
     return (
       <Box sx={{ color: "error.main" }} className={styles.wrapper}>
         <ErrorOutlineOutlined />

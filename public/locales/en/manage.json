@@ -72,6 +72,10 @@
     "closed_mode": "Survey has been closed",
     "active_mode": "Survey is active",
     "to": "to",
+    "background_audio": "Background Audio",
+    "record_gps": "Record GPS",
+    "save_ip": "Save IP",
+    "save_timings": "Save Timings",
     "metadata": {
       "created": "Created",
       "last_modified": "Last Modified",
@@ -185,6 +189,7 @@
     "backend_down": "Backend is Unreachable... Please Try again later",
     "duplicate_email": "Email address is already registered.",
     "autocomplete_malformed_input": "Malformed Input: File must be a JSON array containing only strings",
+    "max_upload_size_exceeded": "File size exceeds the maximum upload limit.",
     "duplicate_survey_name": "Duplicate Survey Name",
     "expired_confirmation_token": "Expired Confirmation Token, Please Register Once more",
     "expired_reset_token": "Expired Confirmation Token, Please Click on Forgot password once more",
@@ -227,6 +232,7 @@
   },
   "responses": {
     "export": "Export Responses",
+    "no_selection": "Select a response",
     "filter_completed": "Filter Completed Responses",
     "filter_completed_show_all": "All Responses",
     "filter_completed_show_completed": "Complete Responses only",
@@ -272,7 +278,11 @@
     "disqualified": "Disqualified",
     "preview_not_exportable": "Preview responses cannot be exported",
     "question": "Question",
-    "answer": "Answer"
+    "answer": "Answer",
+    "events": "Events",
+    "voice_recordings": "Voice Recordings",
+    "locations": "Locations",
+    "recording": "Recording"
   },
   "responses_count": "Responses",
   "roles_required": "Roles is Required",
@@ -374,5 +384,17 @@
     "all_in_one": "All In One",
     "group_by_group": "Page By Page",
     "question_by_question": "Question By Question"
+  },
+  "empty_state": {
+    "welcome": "Welcome {{firstName}} {{lastName}}",
+    "subtitle": "Unlock deeper insights that drive smarter decisions.",
+    "create_first_survey": "Create your first survey in minutes",
+    "create_survey_btn": "Create Survey",
+    "import_template": "Import Existing Template",
+    "feature_collect": "Collect data anywhere.",
+    "feature_trust": "Trust every response.",
+    "feature_own": "Own every result.",
+    "need_help": "Need help getting started?",
+    "contact_support": "contact support"
   }
 }

@@ -25,6 +25,8 @@ function Survey() {
         id={FORM_ID}
         style={{
           marginTop: "4rem",
+          marginRight: "6px",
+          marginLeft: "6px"
         }}
       >
         <div className={styles.surveyGroups}>

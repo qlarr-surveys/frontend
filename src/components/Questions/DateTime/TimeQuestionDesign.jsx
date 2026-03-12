@@ -1,35 +1,33 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 import styles from "./TimeQuestionDesign.module.css";
-import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
+import { useEditableHint } from "~/hooks/useEditableHint";
+import { useTheme } from '@emotion/react';
 
-function TimeQuestionDesign({ code }) {
-  const theme = useTheme();
-
+function TimeQuestionDesign({ code, designMode }) {
   const state = useSelector((state) => {
     return state.designState[code];
   });
 
-  const lang = useSelector((state) => {
-    return state.designState.langInfo.lang;
-  });
+  const theme = useTheme();
+
+  const { hintText, isEditable, handleHintChange } = useEditableHint(code, designMode);
 
   return (
     <div className={styles.questionItem}>
       <TextField
-        variant="standard"
+        variant="outlined"
         size="small"
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
-        label={
-          state.showHint && state.content?.[lang]
-            ? state.content[lang].hint
-            : "" || ""
-        }
-        value={""}
-        type="time"
+        value={isEditable ? hintText : ""}
+        onChange={isEditable ? handleHintChange : undefined}
+        sx={{
+          pointerEvents: isEditable ? "auto" : "none",
+          input: { color: theme.palette.text.disabled },
+        }}
       />
     </div>
   );

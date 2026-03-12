@@ -3,7 +3,7 @@ import PagesIcon from "@mui/icons-material/Pages";
 import FlagIcon from "@mui/icons-material/Flag";
 import StartIcon from "@mui/icons-material/Start";
 import SurveyIcon from "../common/SurveyIcons/SurveyIcon";
-import { alpha, getContrastRatio } from "@mui/material";
+import { getContrastRatio } from "@mui/material";
 
 export const groupIconByType = (type, size = "medium") => {
   switch (type) {
@@ -42,7 +42,9 @@ export const questionIconByType = (type, size = "1.25em", color) => {
     case "scq_array":
       return <SurveyIcon name="singleChoiceArray" size={size} color={color} />;
     case "mcq_array":
-      return <SurveyIcon name="multipleChoiceArray" size={size} color={color} />;
+      return (
+        <SurveyIcon name="multipleChoiceArray" size={size} color={color} />
+      );
     case "mcq":
       return <SurveyIcon name="multipleChoice" size={size} color={color} />;
     case "icon_mcq":
@@ -140,7 +142,7 @@ const extractRgbaValues = (colorString) => {
 
   // Handle rgba colors: rgba(r, g, b, a)
   const rgbaMatch = colorString.match(
-    /rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*(\d?\.?\d+)?\)/
+    /rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*(\d?\.?\d+)?\)/,
   );
   if (rgbaMatch) {
     return {
@@ -198,7 +200,7 @@ export const QUESTION_TYPES = [
       {
         type: "multiple_text",
         icon: questionIconByType("multiple_text"),
-      }
+      },
     ],
   },
   {
@@ -373,11 +375,6 @@ export const createQuestion = (type, qId, lang) => {
       break;
     case "paragraph":
       state.showHint = true;
-
-      break;
-    case "barcode":
-      state.showHint = true;
-
       break;
     case "scq":
       returnObj[`Q${qId}A1`] = {};
@@ -686,16 +683,10 @@ export const createQuestion = (type, qId, lang) => {
 
       break;
     case "file_upload":
-      break;
     case "signature":
-      break;
     case "photo_capture":
-      state.showHint = true;
-
-      break;
     case "video_capture":
-      state.showHint = true;
-
+    case "barcode":
       break;
     case "date":
       state.type = "date";

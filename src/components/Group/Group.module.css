@@ -24,7 +24,13 @@
   min-width: 320px;
   margin-right: 16px;
   margin-left: 16px;
-  padding: 0rem 0rem 2rem 0rem;
+  padding: 10px;
   margin: auto;
   position: relative;
+}
+
+@media (min-width: 600px) {
+  .topLevel {
+    padding: 1rem;
+  }
 }

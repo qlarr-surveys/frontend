@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -9,10 +9,9 @@ import {
   TablePagination,
   Typography,
 } from "@mui/material";
-import TokenService from "~/services/TokenService";
 import styles from "./Dashboard.module.css";
 import { HeaderContent } from "~/components/manage/HeaderContent";
-import { ROLES } from "~/constants/roles";
+import { isSurveyAdmin } from "~/constants/roles";
 import { setLoading } from "~/state/edit/editState";
 import { useDispatch } from "react-redux";
 
@@ -29,6 +28,7 @@ import DeleteModal from "~/components/common/DeleteModal";
 import { Add, Close, Description, FileUpload } from "@mui/icons-material";
 import { getDirFromSession } from "~/utils/common";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
+import DashboardEmptyState from "~/components/manage/DashboardEmptyState";
 
 const Survey = lazy(() => import("~/components/manage/Survey"));
 const DASHBOARD_FILTERS_KEY = "dashboard_filters";
@@ -92,17 +92,6 @@ function Dashboard() {
     }));
   };
 
-  const shouldShowClickAdd = () => {
-    const roles = TokenService.getUser().roles;
-    if (
-      roles.indexOf(ROLES.SUPER_ADMIN) > -1 ||
-      roles.indexOf(ROLES.SURVEY_ADMIN) > -1
-    ) {
-      return true;
-    }
-    return false;
-  };
-
   const [description, setDescription] = useState("");
   const [actionType, setActionType] = useState("");
   const [selectedSurvey, setSelectedSurvey] = useState(null);
@@ -110,10 +99,27 @@ function Dashboard() {
   const [title, setTitle] = useState(t("action_btn.delete"));
   const [isCreateSurveyOpen, setCreateSurveyOpen] = useState(false);
   const [importSurvey, setImportSurvey] = useState(false);
+  const mainContainerRef = useRef(null);
+
+  const scrollToTop = () => {
+    if (mainContainerRef.current) {
+      mainContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   const handleButtonClick = () => {
-    setCreateSurveyOpen(true);
+    if (isCreateSurveyOpen) {
+      scrollToTop();
+    } else {
+      setCreateSurveyOpen(true);
+    }
   };
+
+  useEffect(() => {
+    if (isCreateSurveyOpen) {
+      scrollToTop();
+    }
+  }, [isCreateSurveyOpen]);
 
   const handleImportSurveyClick = () => {
     setOpenImportModal(true);
@@ -240,15 +246,16 @@ function Dashboard() {
   const isRtl = getDirFromSession();
 
   return (
-    <Box className={styles.mainContainer}>
+    <Box ref={mainContainerRef} className={styles.mainContainer}>
       <Container sx={{ marginBottom: "48px" }}>
         <Box className={styles.content}>
+          {(surveys?.surveys?.length > 0 || status !== "all") && (
           <Stack
             className={styles.newSurveysButton}
             direction="row"
             spacing={2}
           >
-            {shouldShowClickAdd() && !isCreateSurveyOpen && (
+            {isSurveyAdmin() && !isCreateSurveyOpen && (
               <CustomTooltip
                 title={t("tooltips.create_new_survey")}
                 showIcon={false}
@@ -263,7 +270,7 @@ function Dashboard() {
                 </Button>
               </CustomTooltip>
             )}
-            {shouldShowClickAdd() && (
+            {isSurveyAdmin() && (
               <CustomTooltip
                 title={t("tooltips.import_survey")}
                 showIcon={false}
@@ -279,6 +286,7 @@ function Dashboard() {
               </CustomTooltip>
             )}
           </Stack>
+          )}
 
           {isCreateSurveyOpen && (
             <Fade in={isCreateSurveyOpen} timeout={300}>
@@ -354,7 +362,7 @@ function Dashboard() {
                       );
                     })}
                   </Box>
-                ) : (
+                ) : status !== "all" ? (
                   <div className={styles.noSurveys}>
                     <Description sx={{ fontSize: 48, color: "#ccc" }} />
                     <Typography
@@ -363,37 +371,26 @@ function Dashboard() {
                       sx={{ mt: 2 }}
                     >
                       {t("create_survey.empty_state_message")}
-                      {status !== "all" && (
-                        <>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            sx={{ mx: 1 }}
-                            startIcon={<FilterAltOffIcon />}
-                            onClick={() => {
-                              setPage(1);
-                              setStatus("all");
-                            }}
-                          >
-                            {t("reset_filter")}
-                          </Button>
-                        </>
-                      )}
-                      {status == "all" && !isCreateSurveyOpen && (
-                        <>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            sx={{ mx: 1 }}
-                            startIcon={<Add />}
-                            onClick={handleButtonClick}
-                          >
-                            {t("create_new_survey")}
-                          </Button>
-                        </>
-                      )}
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ mx: 1 }}
+                        startIcon={<FilterAltOffIcon />}
+                        onClick={() => {
+                          setPage(1);
+                          setStatus("all");
+                        }}
+                      >
+                        {t("reset_filter")}
+                      </Button>
                     </Typography>
                   </div>
+                ) : (
+                  <DashboardEmptyState
+                    onCreateSurvey={handleButtonClick}
+                    onImportTemplate={handleImportSurveyClick}
+                    canCreate={isSurveyAdmin()}
+                  />
                 )}
               </>
             ) : (
@@ -401,7 +398,7 @@ function Dashboard() {
             )}
           </Box>
 
-          {surveys?.surveys?.length > 0 ? (
+          {surveys?.totalCount > 6 ? (
             <TablePagination
               rowsPerPageOptions={[6, 12, 18, 24]}
               component="div"

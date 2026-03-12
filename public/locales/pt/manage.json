@@ -72,6 +72,10 @@
     "closed_mode": "A pesquisa foi fechada",
     "active_mode": "A pesquisa está ativa",
     "to": "a",
+    "background_audio": "Áudio de fundo",
+    "record_gps": "Gravar GPS",
+    "save_ip": "Salvar IP",
+    "save_timings": "Salvar tempos",
     "metadata": {
       "created": "Criada",
       "last_modified": "Última Modificação",
@@ -186,6 +190,7 @@
     "duplicate_email": "O endereço de e-mail já está registrado.",
     "duplicate_survey_name": "Nome de Pesquisa Duplicado",
     "autocomplete_malformed_input": "Entrada Malformada: O arquivo deve ser um array JSON contendo apenas strings",
+    "max_upload_size_exceeded": "O tamanho do arquivo excede o limite máximo de upload.",
     "expired_confirmation_token": "Token de Confirmação Expirado, Por favor Registre-se Mais Uma Vez",
     "expired_reset_token": "Token de Confirmação Expirado, Por favor Clique em Esqueci minha Senha Mais Uma Vez",
     "invalid_survey_dates": "A Data de Início deve ser anterior à data de finalização",
@@ -227,6 +232,7 @@
   },
   "responses": {
     "export": "Exportar Respostas",
+    "no_selection": "Selecione uma resposta",
     "filter_completed": "Filtrar Respostas Completadas",
     "filter_completed_show_all": "Todas as Respostas",
     "filter_completed_show_completed": "Apenas Respostas Completas",
@@ -272,7 +278,11 @@
     "disqualified": "Desqualificado",
     "preview_not_exportable": "Respostas de pré-visualização não podem ser exportadas",
     "question": "Pergunta",
-    "answer": "Resposta"
+    "answer": "Resposta",
+    "events": "Eventos",
+    "voice_recordings": "Gravações de Voz",
+    "locations": "Localizações",
+    "recording": "Gravação"
   },
   "responses_count": "Respostas",
   "roles_required": "As Funções são Obrigatórias",
@@ -374,5 +384,17 @@
     "all_in_one": "Tudo em Um",
     "group_by_group": "Página por Página",
     "question_by_question": "Pergunta por Pergunta"
+  },
+  "empty_state": {
+    "welcome": "Bem-vindo {{firstName}} {{lastName}}",
+    "subtitle": "Descubra insights mais profundos para decisões mais inteligentes.",
+    "create_first_survey": "Crie sua primeira pesquisa em minutos",
+    "create_survey_btn": "Criar pesquisa",
+    "import_template": "Importar modelo existente",
+    "feature_collect": "Colete dados em qualquer lugar.",
+    "feature_trust": "Confie em cada resposta.",
+    "feature_own": "Domine cada resultado.",
+    "need_help": "Precisa de ajuda para começar?",
+    "contact_support": "contatar suporte"
   }
 }

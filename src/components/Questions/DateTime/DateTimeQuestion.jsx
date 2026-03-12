@@ -7,13 +7,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 import styles from "./DateTimeQuestion.module.css";
 import { useTheme } from "@mui/system";
 import { valueChange } from "~/state/runState";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function DateTimeQuestion(props) {
   const theme = useTheme();
+  const { i18n } = useTranslation(NAMESPACES.RUN);
 
   const state = useSelector((state) => {
     let own = state.runState.values[props.component.qualifiedCode];
@@ -48,16 +51,29 @@ function DateTimeQuestion(props) {
     ? props.component.dateFormat
     : "DD.MM.YYYY";
 
+  const timeFormat = props.component.fullDayFormat ? "HH:mm" : "hh:mm A";
+  const defaultFormat =
+    props.component.type === "time"
+      ? timeFormat
+      : props.component.type === "date_time"
+        ? dateFormat + " " + timeFormat
+        : dateFormat;
+
+  const hintLabel =
+    (props.component.showHint && props.component.content?.hint) || defaultFormat;
+
   return (
     <div className={styles.wrapper}>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ar-sa">
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language}>
         {props.component.type == "date_time" ? (
           <>
             <DateTimePicker
-              renderInput={(props) => (
+              renderInput={(params) => (
                 <TextField
+                  {...params}
                   size="small"
-                  onKeyDown={(e) => e.preventDefault()} {...props} />
+                  label={hintLabel}
+                  onKeyDown={(e) => e.preventDefault()} />
               )}
               margin="normal"
               value={state.value}
@@ -105,8 +121,10 @@ function DateTimeQuestion(props) {
           <TimePicker
             renderInput={(params) => (
               <TextField
+                {...params}
                 size="small"
-                onKeyDown={(e) => e.preventDefault()} {...params} />
+                label={hintLabel}
+                onKeyDown={(e) => e.preventDefault()} />
             )}
             margin="normal"
             openTo="hours"
@@ -130,8 +148,10 @@ function DateTimeQuestion(props) {
           <DatePicker
             renderInput={(params) => (
               <TextField
+                {...params}
                 size="small"
-                onKeyDown={(e) => e.preventDefault()} {...params} />
+                label={hintLabel}
+                onKeyDown={(e) => e.preventDefault()} />
             )}
             margin="normal"
             openTo="year"

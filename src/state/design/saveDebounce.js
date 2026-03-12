@@ -27,7 +27,7 @@ const saveDebounce = (store) => {
         setError(store, error);
       },
       state.designState.versionDto.version,
-      state.designState.versionDto.subVersion
+      state.designState.versionDto.subVersion,
     );
   }, debounceTime);
 };
@@ -70,8 +70,15 @@ const MUTATING = [
   "designState/addSkipRule",
   "designState/updateSkipRule",
   "designState/removeSkipRule",
+  "designState/addCustomValidationRule",
+  "designState/updateCustomValidationRuleText",
+  "designState/renameCustomValidationRule",
+  "designState/updateCustomValidationRuleError",
+  "designState/removeCustomValidationRule",
+  "designState/updateInstruction",
   "designState/changeRelevance",
   "designState/addComponent",
+  "designState/changeCustomCss",
   "designState/onDrag",
   "designState/setDefaultValue",
 ];
@@ -97,10 +104,10 @@ const setError = (store, error) => {
       designStateReceived({
         designerInput: {
           componentIndexList: store.getState().designState.componentIndex,
-          state: {...rollbackState},
+          state: { ...rollbackState },
         },
         versionDto: store.getState().designState.versionDto,
-      })
+      }),
     );
     rollbackState = null;
   }
