@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   Cell,
   ReferenceLine,
+  LabelList,
 } from 'recharts';
 import PieDonutChart from './PieDonutChart';
 import NPSBenchmarkScale from './NPSBenchmarkScale';
@@ -19,10 +20,10 @@ import { NPS_COLORS } from '~/utils/analytics/colors';
 function NPSDistributionChart({ data, height = 250 }) {
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+      <BarChart data={data} margin={{ top: 20, right: 10, left: 0, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis dataKey="score" tick={{ fontSize: 12 }} />
-        <YAxis tick={{ fontSize: 12 }} />
+        <YAxis hide />
         <Tooltip
           content={({ active, payload }) => {
             if (active && payload && payload.length) {
@@ -58,6 +59,7 @@ function NPSDistributionChart({ data, height = 250 }) {
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.fill} />
           ))}
+          <LabelList dataKey="count" position="top" fill="#374151" fontSize={12} />
         </Bar>
       </BarChart>
     </ResponsiveContainer>
