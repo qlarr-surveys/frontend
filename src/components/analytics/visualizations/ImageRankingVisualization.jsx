@@ -29,7 +29,7 @@ export default function ImageRankingVisualization({ question }) {
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={4} />
+        <StatsRow stats={stats} columns={3} />
         <RankedImageGallery images={data.rankedImages} showAverageRank={true} />
         <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center' }}>
           Lower average rank indicates higher preference (1 = most preferred)

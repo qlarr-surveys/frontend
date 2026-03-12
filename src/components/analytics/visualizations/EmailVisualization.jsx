@@ -41,7 +41,7 @@ export default function EmailVisualization({ question }) {
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Stats Row */}
-        <StatsRow stats={stats} columns={5} />
+        <StatsRow stats={stats} columns={4} />
 
         {/* Charts Side by Side */}
         <Grid container spacing={3}>

@@ -8,7 +8,6 @@ export default function MediaCaptureVisualization({ question }) {
   const data = transformMediaCaptureData(question);
 
   const stats = [
-    { label: 'Total Submissions', value: data.total },
     { label: 'Captured', value: data.captured },
     { label: 'Not Captured', value: data.notCaptured },
     { label: 'Completion Rate', value: `${data.completionRate}%` },
@@ -17,7 +16,7 @@ export default function MediaCaptureVisualization({ question }) {
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={4} />
+        <StatsRow stats={stats} columns={3} />
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
           <CompletionCard
             rate={data.completionRate}

@@ -9,15 +9,14 @@ export default function BarcodeVisualization({ question }) {
   const data = transformBarcodeData(question);
 
   const stats = [
-    { label: 'Total Submissions', value: data.total },
-    { label: 'Scanned', value: data.answered, description: `${data.skipped} skipped` },
+    { label: 'Scanned', value: data.answered },
     { label: 'Unique Codes', value: data.uniqueCount },
   ];
 
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={3} />
+        <StatsRow stats={stats} columns={2} />
         {data.barData.length > 0 && (
           <>
             <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary' }}>

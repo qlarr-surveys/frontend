@@ -43,7 +43,6 @@ export default function NumberVisualization({ question }) {
     {
       label: 'Responses',
       value: `${data.answered} / ${data.total}`,
-      description: `${data.skipped} skipped`,
     },
     {
       label: 'Mean',

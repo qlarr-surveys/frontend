@@ -30,7 +30,7 @@ export default function MCQVisualization({ question }) {
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Stats Row */}
-        <StatsRow stats={stats} columns={4} />
+        <StatsRow stats={stats} columns={3} />
         {/* Option Breakdown Table */}
         <Box>
           <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>

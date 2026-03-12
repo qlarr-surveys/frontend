@@ -26,7 +26,7 @@ export default function IconMatrixSCQVisualization({ question }) {
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={4} />
+        <StatsRow stats={stats} columns={3} />
 
         <HeatmapChart
           data={data.heatmapData}

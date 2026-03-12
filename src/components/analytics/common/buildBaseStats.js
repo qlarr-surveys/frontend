@@ -1,5 +1,4 @@
-// Returns the two stats entries common to most visualizations: Total Submissions + Answered.
+// Returns the base stats entry common to most visualizations.
 export const buildBaseStats = (data) => [
-  { label: 'Total Submissions', value: data.total },
-  { label: 'Answered', value: data.answered, description: `${data.skipped} skipped` },
+  { label: 'Answered', value: data.answered },
 ];

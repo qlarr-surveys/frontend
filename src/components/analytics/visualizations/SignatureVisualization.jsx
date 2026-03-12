@@ -6,7 +6,6 @@ export default function SignatureVisualization({ question }) {
   const data = transformSignatureData(question);
 
   const stats = [
-    { label: 'Total Submissions', value: data.total },
     { label: 'Signed', value: data.signed },
     { label: 'Unsigned', value: data.unsigned },
     { label: 'Completion Rate', value: `${data.completionRate}%` },
@@ -14,7 +13,7 @@ export default function SignatureVisualization({ question }) {
 
   return (
     <ChartContainer>
-      <StatsRow stats={stats} columns={4} />
+      <StatsRow stats={stats} columns={3} />
     </ChartContainer>
   );
 }

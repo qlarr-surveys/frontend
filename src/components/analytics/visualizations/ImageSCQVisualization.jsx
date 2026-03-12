@@ -47,7 +47,7 @@ export default function ImageSCQVisualization({ question }) {
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Stats Row */}
-        <StatsRow stats={stats} columns={3} />
+        <StatsRow stats={stats} columns={2} />
 
         {/* Visualization */}
         {viewType === 'gallery' && (

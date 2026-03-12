@@ -30,8 +30,8 @@ export default function ImageMCQVisualization({ question }) {
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={4} />
-        <ImageGallery images={galleryImages} columns={4} showLabels={true} showStats={true} />
+        <StatsRow stats={stats} columns={3} />
+        <ImageGallery images={galleryImages} columns={3} showLabels={true} showStats={true} />
         <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 2 }}>
           <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
             Selection Frequency

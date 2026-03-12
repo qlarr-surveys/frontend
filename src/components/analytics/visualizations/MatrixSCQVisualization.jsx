@@ -28,7 +28,7 @@ export default function MatrixSCQVisualization({ question }) {
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Stats Row */}
-        <StatsRow stats={stats} columns={4} />
+        <StatsRow stats={stats} columns={3} />
 
         {/* Heatmap */}
         <HeatmapChart

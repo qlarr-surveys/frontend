@@ -42,7 +42,7 @@ export default function MultipleTextVisualization({ question }) {
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={4} />
+        <StatsRow stats={stats} columns={3} />
         <DataTable
           data={tableData}
           columns={columns}

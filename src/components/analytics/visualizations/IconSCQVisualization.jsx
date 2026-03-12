@@ -45,10 +45,10 @@ export default function IconSCQVisualization({ question }) {
       actions={<ChartTabs tabs={tabs} activeTab={viewType} onChange={setViewType} />}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={4} />
+        <StatsRow stats={stats} columns={3} />
 
         {viewType === 'gallery' && (
-          <ImageGallery images={galleryImages} columns={4} showLabels={true} showStats={true} />
+          <ImageGallery images={galleryImages} columns={3} showLabels={true} showStats={true} />
         )}
 
         {viewType === 'pie' && (

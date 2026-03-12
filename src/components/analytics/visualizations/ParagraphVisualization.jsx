@@ -17,7 +17,7 @@ export default function ParagraphVisualization({ question }) {
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={4} />
+        <StatsRow stats={stats} columns={3} />
         <FrequencyTable
           data={data.frequencyData.slice(0, 15)}
           valueLabel="Response"
