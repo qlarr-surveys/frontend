@@ -7,13 +7,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 import styles from "./DateTimeQuestion.module.css";
 import { useTheme } from "@mui/system";
 import { valueChange } from "~/state/runState";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function DateTimeQuestion(props) {
   const theme = useTheme();
+  const { i18n } = useTranslation(NAMESPACES.RUN);
 
   const state = useSelector((state) => {
     let own = state.runState.values[props.component.qualifiedCode];
@@ -61,7 +64,7 @@ function DateTimeQuestion(props) {
 
   return (
     <div className={styles.wrapper}>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ar-sa">
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={i18n.language}>
         {props.component.type == "date_time" ? (
           <>
             <DateTimePicker
