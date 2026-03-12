@@ -8,19 +8,9 @@ import { transformIconMatrixSCQData } from '~/utils/analytics/dataTransformers';
 export default function IconMatrixSCQVisualization({ question }) {
   const data = transformIconMatrixSCQData(question);
 
-  const highestRated = data.rowAverages.reduce(
-    (max, row) => (parseFloat(row.average) > parseFloat(max.average) ? row : max),
-    { average: 0 }
-  );
-
   const stats = [
     ...buildBaseStats(data),
     { label: 'Rows', value: data.rows.length },
-    {
-      label: 'Highest Rated',
-      value: highestRated.row || '-',
-      description: `Avg: ${highestRated.average}`,
-    },
   ];
 
   return (
@@ -36,27 +26,6 @@ export default function IconMatrixSCQVisualization({ question }) {
           cellSize={60}
           showValues={true}
         />
-
-        <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 2 }}>
-          <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
-            Row Averages
-          </Typography>
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 2 }}>
-            {data.rowAverages.map((row, i) => {
-              const rowInfo = data.rowsWithIcons?.find((r) => r.key === row.row);
-              return (
-                <Box key={i} sx={{ textAlign: 'center' }}>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {rowInfo?.label || row.row}
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
-                    {row.average}
-                  </Typography>
-                </Box>
-              );
-            })}
-          </Box>
-        </Box>
       </Box>
     </ChartContainer>
   );
