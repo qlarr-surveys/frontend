@@ -60,7 +60,7 @@ export default function ImageSCQVisualization({ question }) {
         )}
 
         {viewType === 'pie' && (
-          <PieDonutChart data={data.pieData} donut={true} height={350} />
+          <PieDonutChart data={data.pieData} height={350} />
         )}
       </Box>
     </ChartContainer>

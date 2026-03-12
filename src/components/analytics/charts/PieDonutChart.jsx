@@ -49,14 +49,12 @@ const CustomTooltip = ({ active, payload }) => {
 
 export default function PieDonutChart({
   data,
-  donut = false,
   showLabels = true,
   showLegend = true,
   height = 300,
-  innerRadius = 0,
   outerRadius = 100,
 }) {
-  const actualInnerRadius = donut ? outerRadius * 0.6 : innerRadius;
+  const actualInnerRadius = outerRadius * 0.6;
 
   return (
     <ResponsiveContainer width="100%" height={height}>

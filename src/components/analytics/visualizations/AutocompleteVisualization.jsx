@@ -31,7 +31,7 @@ export default function AutocompleteVisualization({ question }) {
         <StatsRow stats={stats} columns={3} />
         <Box sx={{ minHeight: 300 }}>
           {chartType === 'bar' && <HorizontalBarChart data={data.barData} height={300} />}
-          {chartType === 'pie' && <PieDonutChart data={data.pieData} donut={true} height={350} />}
+          {chartType === 'pie' && <PieDonutChart data={data.pieData} height={350} />}
         </Box>
       </Box>
     </ChartContainer>

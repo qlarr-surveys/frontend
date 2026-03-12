@@ -91,7 +91,6 @@ export default function NPSChart({ score, categoryData, distributionData }) {
           </Typography>
           <PieDonutChart
             data={categoryData}
-            donut
             showLegend={false}
             height={250}
           />

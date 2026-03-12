@@ -17,7 +17,6 @@ export default function IconSCQVisualization({ question }) {
 
   const tabs = [
     { value: 'gallery', label: 'Gallery' },
-    { value: 'pie', label: 'Pie' },
     { value: 'donut', label: 'Donut' },
     { value: 'bar', label: 'Bar' },
   ];
@@ -51,16 +50,9 @@ export default function IconSCQVisualization({ question }) {
           <ImageGallery images={galleryImages} columns={3} showLabels={true} showStats={true} />
         )}
 
-        {viewType === 'pie' && (
-          <>
-            <PieDonutChart data={data.pieData} donut={false} height={350} showLegend={false} />
-            <IconLegend items={data.pieData} />
-          </>
-        )}
-
         {viewType === 'donut' && (
           <>
-            <PieDonutChart data={data.pieData} donut={true} height={350} showLegend={false} />
+            <PieDonutChart data={data.pieData} height={350} showLegend={false} />
             <IconLegend items={data.pieData} />
           </>
         )}

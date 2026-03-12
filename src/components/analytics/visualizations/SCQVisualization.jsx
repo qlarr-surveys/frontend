@@ -9,11 +9,10 @@ import { buildBaseStats } from '../common/buildBaseStats';
 import { transformSCQData } from '~/utils/analytics/dataTransformers';
 
 export default function SCQVisualization({ question }) {
-  const [chartType, setChartType] = useState('pie');
+  const [chartType, setChartType] = useState('donut');
   const data = transformSCQData(question);
 
   const tabs = [
-    { value: 'pie', label: 'Pie' },
     { value: 'donut', label: 'Donut' },
     { value: 'bar', label: 'Bar' },
   ];
@@ -34,11 +33,8 @@ export default function SCQVisualization({ question }) {
 
         {/* Chart */}
         <Box sx={{ minHeight: 300 }}>
-          {chartType === 'pie' && (
-            <PieDonutChart data={data.pieData} donut={false} height={350} />
-          )}
           {chartType === 'donut' && (
-            <PieDonutChart data={data.pieData} donut={true} height={350} />
+            <PieDonutChart data={data.pieData} height={350} />
           )}
           {chartType === 'bar' && (
             <HorizontalBarChart data={data.barData} height={300} />
