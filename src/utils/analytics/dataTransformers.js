@@ -99,13 +99,17 @@ export const transformMCQData = (question) => {
     ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
     : 0;
 
+  const chartData = freq.map((item, i) => ({
+    name: labelMap[item.option] || item.option,
+    value: item.count,
+    count: item.count,
+    percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
+    fill: getChartColor(i),
+  }));
+
   return {
-    barData: freq.map((item, i) => ({
-      name: labelMap[item.option] || item.option,
-      count: item.count,
-      percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
-      fill: getChartColor(i),
-    })),
+    pieData: chartData,
+    barData: chartData,
     ...metrics,
     avgSelections,
   };
