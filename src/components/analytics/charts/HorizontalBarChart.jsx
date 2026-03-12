@@ -40,7 +40,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 const renderLegend = (props) => {
   const { payload } = props;
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', justifyContent: 'center', paddingTop: 8 }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', justifyContent: 'center', paddingTop: 22 }}>
       {payload.map((entry, index) => (
         <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <div style={{ width: 12, height: 12, borderRadius: 2, backgroundColor: entry.color, flexShrink: 0 }} />
@@ -75,7 +75,7 @@ export default function HorizontalBarChart({
       <BarChart
         data={data}
         layout="vertical"
-        margin={{ top: 5, right: 50, left: 5, bottom: 5 }}
+        margin={{ top: 5, right: 50, left: 5, bottom: 20 }}
       >
         {showGrid && <CartesianGrid strokeDasharray="3 3" horizontal={false} />}
         <XAxis type="number" />

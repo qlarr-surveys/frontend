@@ -82,7 +82,7 @@ export default function PieDonutChart({
             layout="horizontal"
             verticalAlign="bottom"
             align="center"
-            wrapperStyle={{ paddingTop: 20 }}
+            wrapperStyle={{ paddingTop: 30 }}
           />
         )}
       </PieChart>
