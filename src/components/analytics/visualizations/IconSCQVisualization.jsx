@@ -24,7 +24,6 @@ export default function IconSCQVisualization({ question }) {
   const stats = [
     ...buildBaseStats(data),
     { label: 'Most Selected', value: data.mode || '-' },
-    { label: 'Options', value: images.length },
   ];
 
   const galleryImages = images.map((img, i) => {
@@ -44,7 +43,7 @@ export default function IconSCQVisualization({ question }) {
       actions={<ChartTabs tabs={tabs} activeTab={viewType} onChange={setViewType} />}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={3} />
+        <StatsRow stats={stats} columns={2} />
 
         {viewType === 'gallery' && (
           <ImageGallery images={galleryImages} columns={3} showLabels={true} showStats={true} />

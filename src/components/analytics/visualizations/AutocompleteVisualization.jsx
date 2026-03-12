@@ -20,7 +20,6 @@ export default function AutocompleteVisualization({ question }) {
   const stats = [
     ...buildBaseStats(data),
     { label: 'Most Selected', value: data.mode },
-    { label: 'Options', value: question.options.length },
   ];
 
   return (
@@ -28,7 +27,7 @@ export default function AutocompleteVisualization({ question }) {
       actions={<ChartTabs tabs={tabs} activeTab={chartType} onChange={setChartType} />}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={3} />
+        <StatsRow stats={stats} columns={2} />
         <Box sx={{ minHeight: 300 }}>
           {chartType === 'bar' && <HorizontalBarChart data={data.barData} height={300} />}
           {chartType === 'pie' && <PieDonutChart data={data.pieData} height={350} />}

@@ -13,7 +13,6 @@ export default function IconMCQVisualization({ question }) {
   const stats = [
     ...buildBaseStats(data),
     { label: 'Most Popular', value: data.barData[0]?.name || '-' },
-    { label: 'Options', value: images.length },
   ];
 
   const galleryImages = images.map((img, i) => {
@@ -43,7 +42,7 @@ export default function IconMCQVisualization({ question }) {
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={3} />
+        <StatsRow stats={stats} columns={2} />
 
         <ImageGallery images={galleryImages} columns={3} showLabels={true} showStats={true} />
 
