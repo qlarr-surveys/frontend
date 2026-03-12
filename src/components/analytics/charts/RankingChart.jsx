@@ -6,6 +6,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
   Cell,
   LabelList,
 } from 'recharts';
@@ -38,6 +39,20 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
+const renderLegend = (props) => {
+  const { payload } = props;
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', justifyContent: 'center', paddingTop: 8 }}>
+      {payload.map((entry, index) => (
+        <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ width: 12, height: 12, borderRadius: 2, backgroundColor: entry.color, flexShrink: 0 }} />
+          <span style={{ fontSize: 12, color: '#374151' }}>{entry.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export default function RankingChart({
   data,
   height = 300,
@@ -46,6 +61,12 @@ export default function RankingChart({
   // Sort by average rank (lower is better)
   const sortedData = [...data].sort((a, b) => a.averageRank - b.averageRank);
 
+  const legendPayload = sortedData.map((entry, index) => ({
+    value: entry.name,
+    type: 'square',
+    color: getChartColor(index),
+  }));
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Average Rank Bar Chart */}
@@ -53,7 +74,7 @@ export default function RankingChart({
         <BarChart
           data={sortedData}
           layout="vertical"
-          margin={{ top: 5, right: 50, left: 100, bottom: 5 }}
+          margin={{ top: 5, right: 50, left: 5, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" horizontal={false} />
           <XAxis
@@ -65,11 +86,10 @@ export default function RankingChart({
           <YAxis
             type="category"
             dataKey="name"
-            width={90}
-            tick={{ fontSize: 12 }}
-            tickLine={false}
+            hide
           />
           <Tooltip content={<CustomTooltip />} />
+          <Legend content={renderLegend} payload={legendPayload} />
           <Bar
             dataKey="averageRank"
             animationBegin={0}
