@@ -64,7 +64,7 @@ function Group(props) {
                   <React.Fragment key={quest.code}>
                     <Question component={quest} />
                     {idx < visibleQuestions.length - 1 && (
-                      <Divider sx={{ mt: "4px", mb: "12px" }} />
+                      <Divider sx={{ mt: "12px", mb: "12px" }} />
                     )}
                   </React.Fragment>
                 ));

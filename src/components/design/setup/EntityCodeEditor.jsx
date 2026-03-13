@@ -25,7 +25,6 @@ function EntityCodeEditor({ code }) {
   const dispatch = useDispatch();
   const designService = useService("design");
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
-  const { t: tManage } = useTranslation(NAMESPACES.MANAGE);
 
   const { currentSetup, saving } = useSelector(
     (state) => ({

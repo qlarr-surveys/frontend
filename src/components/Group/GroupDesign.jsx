@@ -201,7 +201,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
                 t={t}
               />
               {childIndex < children.length - 1 && (
-                <Divider sx={{ mt: "4px", mb: "12px" }} />
+                <Divider sx={{ mt: "12px", mb: "12px" }} />
               )}
             </React.Fragment>
           );

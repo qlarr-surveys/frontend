@@ -518,7 +518,8 @@ export const designState = createSlice({
       const referenceInstructions = buildReferenceInstruction(
         payload.value,
         payload.key,
-        payload.lang
+        payload.lang,
+        [payload.value, payload.key, payload.lang]
       );
       referenceInstructions?.forEach((instruction) =>
         changeInstruction(state[payload.code], instruction)
@@ -538,7 +539,8 @@ export const designState = createSlice({
       const referenceInstructions = buildReferenceInstruction(
         payload.value,
         "custom",
-        "css"
+        "css",
+        ["customCss"]
       );
       state[payload.code].customCss = payload.value
       referenceInstructions?.forEach((instruction) =>
