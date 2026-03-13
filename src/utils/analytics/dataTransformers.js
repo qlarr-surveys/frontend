@@ -227,14 +227,35 @@ export const transformRankingData = (question) => {
   };
 };
 
-// Transform Number data for table view
+// Transform Number data for histogram + table view
 export const transformNumberData = (question) => {
   const { responses } = question;
   const metrics = getResponseMetrics(question);
   const stats = calculateStats(responses);
   const outlierData = detectOutliers(responses);
 
-  return { stats, outlierData, ...metrics };
+  // Build histogram buckets
+  let histogramData = [];
+  if (responses.length > 0 && stats.range > 0) {
+    const bucketCount = Math.min(Math.ceil(Math.sqrt(responses.length)), 20);
+    const bucketSize = stats.range / bucketCount;
+    const sorted = [...responses].sort((a, b) => a - b);
+    histogramData = Array.from({ length: bucketCount }, (_, i) => {
+      const low = stats.min + i * bucketSize;
+      const high = low + bucketSize;
+      const count = sorted.filter((v) =>
+        i === bucketCount - 1 ? v >= low && v <= high : v >= low && v < high
+      ).length;
+      return {
+        name: `${Math.round(low * 10) / 10} - ${Math.round(high * 10) / 10}`,
+        count,
+      };
+    });
+  } else if (responses.length > 0) {
+    histogramData = [{ name: String(stats.min), count: responses.length }];
+  }
+
+  return { stats, outlierData, histogramData, ...metrics };
 };
 
 // Remap matrix data from codes to labels for display
@@ -309,7 +330,7 @@ export const transformMatrixMCQData = (question) => {
   return { heatmapData: displayMatrix, rows: displayRows, columns: displayColumns, avgSelections, ...metrics };
 };
 
-// Transform Text data for word cloud and table
+// Transform Text data for charts and table
 export const transformTextData = (question) => {
   const { responses } = question;
   const metrics = getResponseMetrics(question);
@@ -319,9 +340,31 @@ export const transformTextData = (question) => {
     ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
     : 0;
 
+  // Top 10 most frequent responses for bar chart
+  const topResponses = frequency.slice(0, MAX_CHART_BAR_ITEMS).map((item, i) => ({
+    name: item.value.length > 30 ? item.value.slice(0, 30) + '…' : item.value,
+    count: item.count,
+    fill: getChartColor(i),
+  }));
+
+  // Length distribution buckets
+  const lengthBuckets = [
+    { label: '0-10', min: 0, max: 10 },
+    { label: '11-25', min: 11, max: 25 },
+    { label: '26-50', min: 26, max: 50 },
+    { label: '51-100', min: 51, max: 100 },
+    { label: '100+', min: 101, max: Infinity },
+  ];
+  const lengthDistribution = lengthBuckets.map((bucket) => ({
+    name: bucket.label,
+    count: responses.filter((r) => r.length >= bucket.min && r.length <= bucket.max).length,
+  }));
+
   return {
     frequencyData: frequency,
     uniqueCount: frequency.length,
+    topResponses,
+    lengthDistribution,
     ...metrics,
     avgLength,
   };
@@ -336,11 +379,126 @@ export const transformParagraphData = (question) => {
     ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
     : 0;
 
+  // Word count stats
+  const wordCounts = responses.map((r) => r.trim().split(/\s+/).filter(Boolean).length);
+  const avgWordCount = metrics.answered > 0
+    ? (wordCounts.reduce((a, b) => a + b, 0) / metrics.answered).toFixed(1)
+    : 0;
+
+  const wordBuckets = [
+    { label: '1-10', min: 1, max: 10 },
+    { label: '11-25', min: 11, max: 25 },
+    { label: '26-50', min: 26, max: 50 },
+    { label: '51-100', min: 51, max: 100 },
+    { label: '100+', min: 101, max: Infinity },
+  ];
+  const wordCountDistribution = wordBuckets.map((bucket) => ({
+    name: bucket.label,
+    count: wordCounts.filter((c) => c >= bucket.min && c <= bucket.max).length,
+  }));
+
   return {
     responses,
     ...metrics,
     avgLength,
+    avgWordCount,
+    wordCountDistribution,
   };
+};
+
+// Transform Date data for timeline + table
+export const transformDateData = (question) => {
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
+  const counts = {};
+  responses.forEach((r) => {
+    const dateOnly = r.split(' ')[0];
+    counts[dateOnly] = (counts[dateOnly] || 0) + 1;
+  });
+
+  const frequencyData = Object.entries(counts)
+    .map(([value, count]) => ({ value, count, percentage: Math.round((count / metrics.total) * 100) }))
+    .sort((a, b) => b.count - a.count);
+
+  const sortedDates = Object.keys(counts).sort();
+  const timelineData = sortedDates.map((date) => ({ name: date, count: counts[date] }));
+  const earliest = sortedDates[0] || '-';
+  const latest = sortedDates[sortedDates.length - 1] || '-';
+
+  let dateRange = 0;
+  if (sortedDates.length >= 2) {
+    const d1 = new Date(sortedDates[0]);
+    const d2 = new Date(sortedDates[sortedDates.length - 1]);
+    dateRange = Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+  }
+
+  return { frequencyData, timelineData, earliest, latest, dateRange, ...metrics };
+};
+
+// Transform Time data for hourly distribution + table
+export const transformTimeData = (question) => {
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
+  const counts = {};
+  responses.forEach((r) => {
+    counts[r] = (counts[r] || 0) + 1;
+  });
+
+  const frequencyData = Object.entries(counts)
+    .map(([value, count]) => ({ value, count, percentage: Math.round((count / metrics.total) * 100) }))
+    .sort((a, b) => b.count - a.count);
+
+  // Hourly distribution (24 buckets)
+  const hourCounts = Array(24).fill(0);
+  responses.forEach((r) => {
+    const hour = parseInt(r.split(':')[0], 10);
+    if (!isNaN(hour) && hour >= 0 && hour < 24) hourCounts[hour]++;
+  });
+  const hourlyDistribution = hourCounts.map((count, h) => ({
+    name: `${String(h).padStart(2, '0')}:00`,
+    count,
+  }));
+  const peakHour = hourlyDistribution.reduce((max, cur) => (cur.count > max.count ? cur : max), hourlyDistribution[0]);
+
+  return { frequencyData, hourlyDistribution, peakHour: peakHour?.name || '-', ...metrics };
+};
+
+// Transform DateTime data for timeline + hourly + table
+export const transformDateTimeData = (question) => {
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
+  const counts = {};
+  responses.forEach((r) => {
+    counts[r] = (counts[r] || 0) + 1;
+  });
+
+  const frequencyData = Object.entries(counts)
+    .map(([value, count]) => ({ value, count, percentage: Math.round((count / metrics.total) * 100) }))
+    .sort((a, b) => b.count - a.count);
+
+  // Timeline by date
+  const dateCounts = {};
+  const hourCounts = Array(24).fill(0);
+  responses.forEach((r) => {
+    const parts = r.split(' ');
+    const dateOnly = parts[0];
+    dateCounts[dateOnly] = (dateCounts[dateOnly] || 0) + 1;
+    const timePart = parts[1] || '';
+    const hour = parseInt(timePart.split(':')[0], 10);
+    if (!isNaN(hour) && hour >= 0 && hour < 24) hourCounts[hour]++;
+  });
+
+  const sortedDates = Object.keys(dateCounts).sort();
+  const timelineData = sortedDates.map((date) => ({ name: date, count: dateCounts[date] }));
+  const earliest = sortedDates[0] || '-';
+  const latest = sortedDates[sortedDates.length - 1] || '-';
+  const hourlyDistribution = hourCounts.map((count, h) => ({
+    name: `${String(h).padStart(2, '0')}:00`,
+    count,
+  }));
+  const peakHour = hourlyDistribution.reduce((max, cur) => (cur.count > max.count ? cur : max), hourlyDistribution[0]);
+
+  return { frequencyData, timelineData, hourlyDistribution, earliest, latest, peakHour: peakHour?.name || '-', ...metrics };
 };
 
 // Transform Email data

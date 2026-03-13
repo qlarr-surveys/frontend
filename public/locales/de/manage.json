@@ -548,6 +548,27 @@
     "question_type_file_upload": "Datei-Upload",
     "question_type_signature": "Unterschrift",
     "question_type_photo_capture": "Fotoaufnahme",
-    "question_type_barcode": "Barcode"
+    "question_type_barcode": "Barcode",
+    "stat_std_dev": "Std Abw",
+    "stat_mode": "Modus",
+    "stat_sum": "Summe",
+    "stat_duplicates": "Duplikate",
+    "stat_earliest": "Frühestes",
+    "stat_latest": "Spätestes",
+    "stat_date_range": "Datumsbereich",
+    "stat_peak_hour": "Spitzenstunde",
+    "tab_chart": "Diagramm",
+    "tab_table": "Tabelle",
+    "tab_timeline": "Zeitachse",
+    "tab_frequency": "Häufigkeit",
+    "tab_length_dist": "Längenverteilung",
+    "tab_avg_rank": "Durchschnittlicher Rang",
+    "tab_rank_distribution": "Rangverteilung",
+    "tab_hourly": "Stundenverteilung",
+    "days": "{{count}} Tage",
+    "response_length": "Antwortlänge (Zeichen)",
+    "avg_word_count": "Durchschn. Wortanzahl",
+    "words_count": "{{count}} Wörter",
+    "word_count_distribution": "Wortanzahl-Verteilung"
   }
 }

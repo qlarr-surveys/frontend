@@ -24,6 +24,7 @@ export default function MCQVisualization({ question }) {
   const stats = [
     ...buildBaseStats(data, t),
     { label: t('analytics.most_popular'), value: data.barData[0]?.name || '-' },
+    { label: t('analytics.stat_avg_selections'), value: data.avgSelections },
   ];
 
   const tableData = data.barData.map((item) => ({
@@ -44,7 +45,7 @@ export default function MCQVisualization({ question }) {
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Stats Row */}
-        <StatsRow stats={stats} columns={2} />
+        <StatsRow stats={stats} columns={3} />
 
         {/* Chart */}
         <Box sx={{ minHeight: 300 }}>

@@ -547,6 +547,27 @@
     "question_type_file_upload": "Téléchargement de fichier",
     "question_type_signature": "Signature",
     "question_type_photo_capture": "Capture photo",
-    "question_type_barcode": "Code-barres"
+    "question_type_barcode": "Code-barres",
+    "stat_std_dev": "Écart type",
+    "stat_mode": "Mode",
+    "stat_sum": "Somme",
+    "stat_duplicates": "Doublons",
+    "stat_earliest": "Plus ancien",
+    "stat_latest": "Plus récent",
+    "stat_date_range": "Plage de dates",
+    "stat_peak_hour": "Heure de pointe",
+    "tab_chart": "Graphique",
+    "tab_table": "Tableau",
+    "tab_timeline": "Chronologie",
+    "tab_frequency": "Fréquence",
+    "tab_length_dist": "Distribution de longueur",
+    "tab_avg_rank": "Rang moyen",
+    "tab_rank_distribution": "Distribution des rangs",
+    "tab_hourly": "Distribution horaire",
+    "days": "{{count}} jours",
+    "response_length": "Longueur de réponse (caractères)",
+    "avg_word_count": "Moy. de mots",
+    "words_count": "{{count}} mots",
+    "word_count_distribution": "Distribution du nombre de mots"
   }
 }

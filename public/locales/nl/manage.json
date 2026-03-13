@@ -547,6 +547,27 @@
     "question_type_file_upload": "Bestand uploaden",
     "question_type_signature": "Handtekening",
     "question_type_photo_capture": "Foto vastleggen",
-    "question_type_barcode": "Barcode"
+    "question_type_barcode": "Barcode",
+    "stat_std_dev": "Std Afw",
+    "stat_mode": "Modus",
+    "stat_sum": "Som",
+    "stat_duplicates": "Duplicaten",
+    "stat_earliest": "Vroegste",
+    "stat_latest": "Laatste",
+    "stat_date_range": "Datumbereik",
+    "stat_peak_hour": "Piekuur",
+    "tab_chart": "Grafiek",
+    "tab_table": "Tabel",
+    "tab_timeline": "Tijdlijn",
+    "tab_frequency": "Frequentie",
+    "tab_length_dist": "Lengteverdeling",
+    "tab_avg_rank": "Gemiddelde rang",
+    "tab_rank_distribution": "Rangverdeling",
+    "tab_hourly": "Uurverdeling",
+    "days": "{{count}} dagen",
+    "response_length": "Antwoordlengte (tekens)",
+    "avg_word_count": "Gem. woordenaantal",
+    "words_count": "{{count}} woorden",
+    "word_count_distribution": "Verdeling woordenaantal"
   }
 }

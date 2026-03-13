@@ -16,6 +16,7 @@ import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
+import HistogramChart from '../charts/HistogramChart';
 import { transformParagraphData } from '~/utils/analytics/dataTransformers';
 
 const ROWS_PER_PAGE = 10;
@@ -36,6 +37,7 @@ export default function ParagraphVisualization({ question }) {
   const stats = [
     ...buildBaseStats(data, t),
     { label: t('analytics.avg_length'), value: t('analytics.chars', { length: data.avgLength }) },
+    { label: t('analytics.avg_word_count'), value: t('analytics.words_count', { count: data.avgWordCount }) },
   ];
 
   const startRow = (safePage - 1) * ROWS_PER_PAGE + 1;
@@ -45,6 +47,21 @@ export default function ParagraphVisualization({ question }) {
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         <StatsRow stats={stats} columns={3} />
+
+        {/* Word Count Distribution */}
+        {data.wordCountDistribution.some((d) => d.count > 0) && (
+          <Box>
+            <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
+              {t('analytics.word_count_distribution')}
+            </Typography>
+            <HistogramChart
+              data={data.wordCountDistribution}
+              height={220}
+              color="#8b5cf6"
+            />
+          </Box>
+        )}
+
         {data.responses.length === 0 ? (
           <Box sx={{ p: 4, textAlign: 'center', color: 'text.secondary' }}>
             <Typography variant="body1">{t('analytics.no_responses_available')}</Typography>

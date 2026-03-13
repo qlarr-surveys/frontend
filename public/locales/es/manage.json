@@ -547,6 +547,27 @@
     "question_type_file_upload": "Subir archivo",
     "question_type_signature": "Firma",
     "question_type_photo_capture": "Captura de foto",
-    "question_type_barcode": "Código de barras"
+    "question_type_barcode": "Código de barras",
+    "stat_std_dev": "Desv Est",
+    "stat_mode": "Moda",
+    "stat_sum": "Suma",
+    "stat_duplicates": "Duplicados",
+    "stat_earliest": "Más antiguo",
+    "stat_latest": "Más reciente",
+    "stat_date_range": "Rango de fechas",
+    "stat_peak_hour": "Hora pico",
+    "tab_chart": "Gráfico",
+    "tab_table": "Tabla",
+    "tab_timeline": "Línea de tiempo",
+    "tab_frequency": "Frecuencia",
+    "tab_length_dist": "Distribución de longitud",
+    "tab_avg_rank": "Rango promedio",
+    "tab_rank_distribution": "Distribución de rango",
+    "tab_hourly": "Distribución por hora",
+    "days": "{{count}} días",
+    "response_length": "Longitud de respuesta (caracteres)",
+    "avg_word_count": "Promedio de palabras",
+    "words_count": "{{count}} palabras",
+    "word_count_distribution": "Distribución de palabras"
   }
 }

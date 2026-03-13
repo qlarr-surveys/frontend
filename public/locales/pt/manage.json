@@ -547,6 +547,27 @@
     "question_type_file_upload": "Carregar ficheiro",
     "question_type_signature": "Assinatura",
     "question_type_photo_capture": "Captura de foto",
-    "question_type_barcode": "Código de barras"
+    "question_type_barcode": "Código de barras",
+    "stat_std_dev": "Desv Pad",
+    "stat_mode": "Moda",
+    "stat_sum": "Soma",
+    "stat_duplicates": "Duplicados",
+    "stat_earliest": "Mais antigo",
+    "stat_latest": "Mais recente",
+    "stat_date_range": "Intervalo de datas",
+    "stat_peak_hour": "Hora de pico",
+    "tab_chart": "Gráfico",
+    "tab_table": "Tabela",
+    "tab_timeline": "Linha do tempo",
+    "tab_frequency": "Frequência",
+    "tab_length_dist": "Distribuição de comprimento",
+    "tab_avg_rank": "Classificação média",
+    "tab_rank_distribution": "Distribuição de classificação",
+    "tab_hourly": "Distribuição por hora",
+    "days": "{{count}} dias",
+    "response_length": "Comprimento da resposta (caracteres)",
+    "avg_word_count": "Média de palavras",
+    "words_count": "{{count}} palavras",
+    "word_count_distribution": "Distribuição de palavras"
   }
 }

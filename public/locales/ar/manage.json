@@ -547,6 +547,27 @@
     "question_type_file_upload": "رفع ملف",
     "question_type_signature": "توقيع",
     "question_type_photo_capture": "التقاط صورة",
-    "question_type_barcode": "رمز شريطي"
+    "question_type_barcode": "رمز شريطي",
+    "stat_std_dev": "الانحراف المعياري",
+    "stat_mode": "المنوال",
+    "stat_sum": "المجموع",
+    "stat_duplicates": "مكررات",
+    "stat_earliest": "الأقدم",
+    "stat_latest": "الأحدث",
+    "stat_date_range": "نطاق التاريخ",
+    "stat_peak_hour": "ساعة الذروة",
+    "tab_chart": "رسم بياني",
+    "tab_table": "جدول",
+    "tab_timeline": "الخط الزمني",
+    "tab_frequency": "التكرار",
+    "tab_length_dist": "توزيع الطول",
+    "tab_avg_rank": "متوسط الترتيب",
+    "tab_rank_distribution": "توزيع الترتيب",
+    "tab_hourly": "التوزيع بالساعة",
+    "days": "{{count}} أيام",
+    "response_length": "طول الإجابة (أحرف)",
+    "avg_word_count": "متوسط عدد الكلمات",
+    "words_count": "{{count}} كلمات",
+    "word_count_distribution": "توزيع عدد الكلمات"
   }
 }

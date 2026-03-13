@@ -5,6 +5,7 @@ import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
+import { buildBaseStats } from '../common/buildBaseStats';
 import FrequencyTable from '../common/FrequencyTable';
 import { transformBarcodeData } from '~/utils/analytics/dataTransformers';
 
@@ -13,14 +14,15 @@ export default function BarcodeVisualization({ question }) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const stats = [
-    { label: t('analytics.stat_scanned'), value: data.answered },
+    ...buildBaseStats(data, t),
     { label: t('analytics.stat_unique_codes'), value: data.uniqueCount },
+    { label: t('analytics.stat_duplicates'), value: data.duplicateCount },
   ];
 
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={2} />
+        <StatsRow stats={stats} columns={3} />
         {data.barData.length > 0 && (
           <>
             <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary' }}>
