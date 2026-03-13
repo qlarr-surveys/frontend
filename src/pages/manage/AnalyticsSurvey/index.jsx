@@ -83,9 +83,6 @@ function AnalyticsSurvey() {
       <Box sx={{ p: 3, maxWidth: 960, mx: 'auto' }}>
         <Paper variant="outlined" sx={{ p: 2, mb: 3, borderRadius: 3 }}>
           <Typography variant="h5">{data.surveyTitle}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {data.totalResponses} total responses
-          </Typography>
         </Paper>
         <Paper variant="outlined" sx={{ p: 4, borderRadius: 3, textAlign: 'center' }}>
           <Typography variant="h6" color="text.secondary" gutterBottom>
@@ -105,7 +102,7 @@ function AnalyticsSurvey() {
       <Paper variant="outlined" sx={{ p: 2, mb: 3, borderRadius: 3 }}>
         <Typography variant="h5">{data.surveyTitle}</Typography>
         <Typography variant="body2" color="text.secondary">
-          {data.totalResponses} total responses • {data.questions.length} questions
+          {data.questions.length} questions
         </Typography>
       </Paper>
 
