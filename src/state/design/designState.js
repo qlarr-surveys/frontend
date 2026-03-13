@@ -49,797 +49,751 @@ const reservedKeys = [
   "skipScroll",
 ];
 
-export const designState = createSlice({
-  name: "designState",
-  initialState: { state: {} },
-  reducers: {
-    designStateReceived: (state, action) => {
-      const response = action.payload;
-      let newState = response.designerInput.state;
+// --- Extracted reducer logic ---
 
-      if (!newState.Survey.theme) {
-        newState.Survey.theme = defaultSurveyTheme;
-      }
+export const handleDesignStateReceived = (state, action) => {
+  const response = action.payload;
+  let newState = response.designerInput.state;
 
-      const newKeys = Object.keys(newState).filter(
-        (el) => !reservedKeys.includes(el)
-      );
-      const toBeRemoved = Object.keys(state).filter(
-        (el) => !reservedKeys.includes(el) && !newKeys.includes(el)
-      );
+  if (!newState.Survey.theme) {
+    newState.Survey.theme = defaultSurveyTheme;
+  }
 
-      if (!state.langInfo || response.overWriteLang) {
-        const defaultLang = newState.Survey.defaultLang || LANGUAGE_DEF.en;
-        const mainLang = defaultLang.code;
-        const lang = defaultLang.code;
-        const languagesList = [defaultLang].concat(
-          newState.Survey.additionalLang || []
-        );
-        state.langInfo = {
-          languagesList,
-          mainLang,
-          lang,
-          onMainLang: lang == mainLang,
-        };
-      }
+  const newKeys = Object.keys(newState).filter(
+    (el) => !reservedKeys.includes(el)
+  );
+  const toBeRemoved = Object.keys(state).filter(
+    (el) => !reservedKeys.includes(el) && !newKeys.includes(el)
+  );
 
-      toBeRemoved.forEach((key) => {
-        delete state[key];
-      });
-      const inCurrentSetup = state["setup"]?.code;
-      if (!newKeys.includes(inCurrentSetup)) {
-        delete state["setup"];
-      }
+  if (!state.langInfo || response.overWriteLang) {
+    const defaultLang = newState.Survey.defaultLang || LANGUAGE_DEF.en;
+    const mainLang = defaultLang.code;
+    const lang = defaultLang.code;
+    const languagesList = [defaultLang].concat(
+      newState.Survey.additionalLang || []
+    );
+    state.langInfo = {
+      languagesList,
+      mainLang,
+      lang,
+      onMainLang: lang == mainLang,
+    };
+  }
 
-      newKeys.forEach((key) => {
-        state[key] = newState[key];
-      });
-      state.versionDto = response.versionDto;
-      state.componentIndex = response.designerInput.componentIndexList;
-      state["latest"] = structuredClone(newState);
-      state.lastAddedComponent = null;
-      state.index = buildCodeIndex(state);
-    },
-    setup(state, action) {
-      const payload = action.payload;
-      // we want to ignore multiple clicks on the same setup button
-      // but acknowledge when we highlight or expand a specific section
+  toBeRemoved.forEach((key) => {
+    delete state[key];
+  });
+  const inCurrentSetup = state["setup"]?.code;
+  if (!newKeys.includes(inCurrentSetup)) {
+    delete state["setup"];
+  }
+
+  newKeys.forEach((key) => {
+    state[key] = newState[key];
+  });
+  state.versionDto = response.versionDto;
+  state.componentIndex = response.designerInput.componentIndexList;
+  state["latest"] = structuredClone(newState);
+  state.lastAddedComponent = null;
+  state.index = buildCodeIndex(state);
+};
+
+export const handleSetup = (state, action) => {
+  const payload = action.payload;
+  // we want to ignore multiple clicks on the same setup button
+  // but acknowledge when we highlight or expand a specific section
+  if (
+    payload.code != state.setup?.code ||
+    !isEquivalent(payload.rules, state.setup?.rules) ||
+    payload.highlighted
+  ) {
+    state.setup = action.payload;
+  }
+};
+
+export const handleChangeValidationValue = (state, action) => {
+  let payload = action.payload;
+  if (!state[payload.code]["validation"]) {
+    state[payload.code]["validation"] = {};
+  }
+  if (!state[payload.code]["validation"][payload.rule]) {
+    state[payload.code]["validation"][payload.rule] =
+      buildValidationDefaultData(payload.rule);
+  }
+  state[payload.code]["validation"][payload.rule][payload.key] =
+    payload.value;
+  processValidation(
+    state,
+    payload.code,
+    payload.rule,
+    payload.rule != "content"
+  );
+};
+
+export const handleResetSetup = (state) => {
+  const isInTranslationMode =
+    state.designMode === DESIGN_SURVEY_MODE.LANGUAGES;
+
+  if (state.langInfo && !isInTranslationMode) {
+    state.langInfo.lang = state.langInfo.mainLang;
+    state.langInfo.onMainLang = true;
+  }
+  if (!state.globalSetup) {
+    state.globalSetup = {};
+  }
+  delete state["setup"];
+
+  if (!isInTranslationMode) {
+    state.designMode = DESIGN_SURVEY_MODE.DESIGN;
+  }
+};
+
+export const handleSetDesignModeToDesign = (state) => {
+  handleResetSetup(state);
+  state.designMode = DESIGN_SURVEY_MODE.DESIGN;
+};
+
+export const handleSetDesignModeToLang = (state) => {
+  handleResetSetup(state);
+  handleSetup(state, { payload: languageSetup });
+  state.designMode = DESIGN_SURVEY_MODE.LANGUAGES;
+};
+
+export const handleSetDesignModeToTheme = (state) => {
+  handleResetSetup(state);
+  handleSetup(state, { payload: themeSetup });
+  state.designMode = DESIGN_SURVEY_MODE.THEME;
+};
+
+export const handleChangeAttribute = (state, action) => {
+  let payload = action.payload;
+  if (
+    action.payload.key == "content" ||
+    action.payload.key == "instructionList" ||
+    action.payload.key == "relevance" ||
+    action.payload.key == "resources"
+  ) {
+    throw "We are changing attributes way too much than we should";
+  }
+  if (!state[payload.code]) {
+    state[payload.code] = {};
+  }
+  const originalValue = state[payload.code][payload.key];
+
+  state[payload.code][payload.key] = payload.value;
+  if (action.payload.key == "maxChars") {
+    cleanupValidation(state, payload.code);
+  } else if (action.payload.key == "dateFormat") {
+    addMaskedValuesInstructions(payload.code, state[payload.code], state);
+  } else if (action.payload.key == "fullDayFormat") {
+    addMaskedValuesInstructions(payload.code, state[payload.code], state);
+  } else if (action.payload.key == "decimal_separator") {
+    addMaskedValuesInstructions(payload.code, state[payload.code], state);
+  } else if (
+    [
+      "randomize_questions",
+      "randomize_groups",
+      "randomize_options",
+      "randomize_rows",
+      "randomize_columns",
+    ].indexOf(action.payload.key) > -1
+  ) {
+    updateRandomByRule(
+      state[payload.code],
+      action.payload.key,
+      !originalValue || originalValue == "NONE"
+    );
+  }
+};
+
+export const handleChangeRelevance = (state, action) => {
+  let payload = action.payload;
+  state[payload.code].relevance = payload.value;
+  addRelevanceInstructions(state, payload.code, payload.value);
+};
+
+export const handleSetDefaultValue = (state, action) => {
+  const { code, selectedValue } = action.payload;
+  const component = state[code];
+  const valueInstruction = component.instructionList?.find(
+    (instruction) => instruction.code == "value"
+  );
+  if (valueInstruction) {
+    changeInstruction(component, {
+      ...valueInstruction,
+      text: selectedValue,
+      isActive: false,
+    });
+  }
+};
+
+export const handleCloneQuestion = (state, action) => {
+  const code = action.payload;
+  const survey = state.Survey;
+  const group = survey.children
+    ?.map((group) => state[group.code])
+    ?.filter(
+      (group) =>
+        group.children &&
+        group.children.findIndex((child) => child.code == code) !== -1
+    )?.[0];
+  if (!group) {
+    return;
+  }
+  const newQuestionId = "Q" + nextQuestionId(state, survey.children);
+  const questionChild = group.children.find((el) => el.code == code);
+  const newQuestion = {
+    type: questionChild.type,
+    code: newQuestionId,
+    qualifiedCode: newQuestionId,
+  };
+  creatNewState(state, state[code], newQuestionId, code, newQuestionId);
+  group.children.splice(
+    group.children.indexOf(questionChild) + 1,
+    0,
+    newQuestion
+  );
+  handleSetup(state, {
+    payload: { code: newQuestionId, rules: setupOptions(newQuestion.type) },
+  });
+  cleanupRandomRules(group);
+  state.index = buildCodeIndex(state);
+  state.focus = newQuestionId;
+};
+
+export const handleRemoveAnswer = (state, action) => {
+  const answerQualifiedCode = action.payload;
+  const codes = splitQuestionCodes(answerQualifiedCode);
+  let question = state[codes[0]];
+  question.children = question.children.filter(
+    (el) => el.code !== codes[1]
+  );
+  delete state[answerQualifiedCode];
+  // could be otherText
+  if (state.setup?.code?.includes(answerQualifiedCode)) {
+    handleResetSetup(state);
+  }
+  state.index = buildCodeIndex(state);
+  question.designErrors = questionDesignError(question);
+  cleanupValidation(state, codes[0]);
+  cleanupDefaultValue(question);
+  refreshEnumForSingleChoice(question, state);
+  refreshListForMultipleChoice(question, state);
+  addMaskedValuesInstructions(codes[0], question, state);
+  cleanupRandomRules(question);
+  addSkipInstructions(state, codes[0]);
+};
+
+export const handleAddNewAnswers = (state, action) => {
+  const questionCode = action.payload.questionCode;
+  const data = action.payload.data;
+  const type = action.payload.type;
+  let index = action.payload.index;
+  const question = state[questionCode];
+  const children =
+    question.children?.filter(
+      (it) => state[it.qualifiedCode].type == type
+    ) || [];
+  data.forEach((item, itemIndex) => {
+    if (item) {
+      const nextAnswer = children[index + 1];
       if (
-        payload.code != state.setup?.code ||
-        !isEquivalent(payload.rules, state.setup?.rules) ||
-        payload.highlighted
+        nextAnswer &&
+        nextAnswer.qualifiedCode &&
+        state[nextAnswer.qualifiedCode] &&
+        (!state[nextAnswer.qualifiedCode].content ||
+          !state[nextAnswer.qualifiedCode].content[state.langInfo.lang])
       ) {
-        state.setup = action.payload;
-      }
-    },
-    newVersionReceived(state, action) {
-      const payload = action.payload;
-      state.versionDto = payload;
-    },
-    changeValidationValue(state, action) {
-      let payload = action.payload;
-      if (!state[payload.code]["validation"]) {
-        state[payload.code]["validation"] = {};
-      }
-      if (!state[payload.code]["validation"][payload.rule]) {
-        state[payload.code]["validation"][payload.rule] =
-          buildValidationDefaultData(payload.rule);
-      }
-      state[payload.code]["validation"][payload.rule][payload.key] =
-        payload.value;
-      processValidation(
-        state,
-        payload.code,
-        payload.rule,
-        payload.rule != "content"
-      );
-    },
-    resetSetup(state) {
-      const isInTranslationMode =
-        state.designMode === DESIGN_SURVEY_MODE.LANGUAGES;
-
-      if (state.langInfo && !isInTranslationMode) {
-        state.langInfo.lang = state.langInfo.mainLang;
-        state.langInfo.onMainLang = true;
-      }
-      if (!state.globalSetup) {
-        state.globalSetup = {};
-      }
-      delete state["setup"];
-
-      if (!isInTranslationMode) {
-        state.designMode = DESIGN_SURVEY_MODE.DESIGN;
-      }
-    },
-    setDesignModeToDesign(state) {
-      designState.caseReducers.resetSetup(state);
-      state.designMode = DESIGN_SURVEY_MODE.DESIGN;
-    },
-    setDesignModeToLang(state) {
-      designState.caseReducers.resetSetup(state);
-      designState.caseReducers.setup(state, { payload: languageSetup });
-      state.designMode = DESIGN_SURVEY_MODE.LANGUAGES;
-    },
-    setDesignModeToTheme(state) {
-      designState.caseReducers.resetSetup(state);
-      designState.caseReducers.setup(state, { payload: themeSetup });
-      state.designMode = DESIGN_SURVEY_MODE.THEME;
-    },
-    changeAttribute: (state, action) => {
-      let payload = action.payload;
-      if (
-        action.payload.key == "content" ||
-        action.payload.key == "instructionList" ||
-        action.payload.key == "relevance" ||
-        action.payload.key == "resources"
-      ) {
-        throw "We are changing attributes way too much than we should";
-      }
-      if (!state[payload.code]) {
-        state[payload.code] = {};
-      }
-      const originalValue = state[payload.code][payload.key];
-
-      state[payload.code][payload.key] = payload.value;
-      if (action.payload.key == "maxChars") {
-        cleanupValidation(state, payload.code);
-      } else if (action.payload.key == "dateFormat") {
-        addMaskedValuesInstructions(payload.code, state[payload.code], state);
-      } else if (action.payload.key == "fullDayFormat") {
-        addMaskedValuesInstructions(payload.code, state[payload.code], state);
-      } else if (action.payload.key == "decimal_separator") {
-        addMaskedValuesInstructions(payload.code, state[payload.code], state);
-      } else if (
-        [
-          "randomize_questions",
-          "randomize_groups",
-          "randomize_options",
-          "randomize_rows",
-          "randomize_columns",
-        ].indexOf(action.payload.key) > -1
-      ) {
-        updateRandomByRule(
-          state[payload.code],
-          action.payload.key,
-          !originalValue || originalValue == "NONE"
-        );
-      }
-    },
-    changeRelevance: (state, action) => {
-      let payload = action.payload;
-      state[payload.code].relevance = payload.value;
-      addRelevanceInstructions(state, payload.code, payload.value);
-    },
-    clearRelevanceConfig: (state, action) => {
-      delete state[action.payload.code].relevance;
-    },
-    setDefaultValue: (state, action) => {
-      const { code, selectedValue } = action.payload;
-      const component = state[code];
-      const valueInstruction = component.instructionList?.find(
-        (instruction) => instruction.code == "value"
-      );
-      if (valueInstruction) {
-        changeInstruction(component, {
-          ...valueInstruction,
-          text: selectedValue,
-          isActive: false,
+        handleChangeContent(state, {
+          payload: {
+            code: nextAnswer.qualifiedCode,
+            key: "label",
+            value: item,
+            lang: state.langInfo.lang,
+          },
         });
-      }
-    },
-    cloneQuestion: (state, action) => {
-      const code = action.payload;
-      const survey = state.Survey;
-      const group = survey.children
-        ?.map((group) => state[group.code])
-        ?.filter(
-          (group) =>
-            group.children &&
-            group.children.findIndex((child) => child.code == code) !== -1
-        )?.[0];
-      if (!group) {
-        return;
-      }
-      const newQuestionId = "Q" + nextQuestionId(state, survey.children);
-      const questionChild = group.children.find((el) => el.code == code);
-      const newQuestion = {
-        type: questionChild.type,
-        code: newQuestionId,
-        qualifiedCode: newQuestionId,
-      };
-      creatNewState(state, state[code], newQuestionId, code, newQuestionId);
-      group.children.splice(
-        group.children.indexOf(questionChild) + 1,
-        0,
-        newQuestion
-      );
-      designState.caseReducers.setup(state, {
-        payload: { code: newQuestionId, rules: setupOptions(newQuestion.type) },
-      });
-      cleanupRandomRules(group);
-      state.index = buildCodeIndex(state);
-      state.focus = newQuestionId;
-    },
-    removeAnswer: (state, action) => {
-      const answerQualifiedCode = action.payload;
-      const codes = splitQuestionCodes(answerQualifiedCode);
-      let question = state[codes[0]];
-      question.children = question.children.filter(
-        (el) => el.code !== codes[1]
-      );
-      delete state[answerQualifiedCode];
-      // could be otherText
-      if (state.setup?.code?.includes(answerQualifiedCode)) {
-        designState.caseReducers.resetSetup(state);
-      }
-      state.index = buildCodeIndex(state);
-      question.designErrors = questionDesignError(question);
-      cleanupValidation(state, codes[0]);
-      cleanupDefaultValue(question);
-      refreshEnumForSingleChoice(question, state);
-      refreshListForMultipleChoice(question, state);
-      addMaskedValuesInstructions(codes[0], question, state);
-      cleanupRandomRules(question);
-      addSkipInstructions(state, codes[0]);
-    },
-    addNewAnswers: (state, action) => {
-      const questionCode = action.payload.questionCode;
-      const data = action.payload.data;
-      const type = action.payload.type;
-      let index = action.payload.index;
-      const question = state[questionCode];
-      const children =
-        question.children?.filter(
-          (it) => state[it.qualifiedCode].type == type
-        ) || [];
-      data.forEach((item, itemIndex) => {
-        if (item) {
-          const nextAnswer = children[index + 1];
-          if (
-            nextAnswer &&
-            nextAnswer.qualifiedCode &&
-            state[nextAnswer.qualifiedCode] &&
-            (!state[nextAnswer.qualifiedCode].content ||
-              !state[nextAnswer.qualifiedCode].content[state.langInfo.lang])
-          ) {
-            designState.caseReducers.changeContent(state, {
-              payload: {
-                code: nextAnswer.qualifiedCode,
-                key: "label",
-                value: item,
-                lang: state.langInfo.lang,
-              },
-            });
-          } else {
-            designState.caseReducers.addNewAnswer(state, {
-              payload: {
-                questionCode,
-                label: item,
-                type,
-                index,
-                focus: itemIndex == data.length - 1,
-              },
-            });
-          }
-
-          index++;
-        }
-      });
-    },
-    onNewLine: (state, action) => {
-      const questionCode = action.payload.questionCode;
-      const index = action.payload.index;
-      const type = action.payload.type;
-      const answers = state[questionCode].children || [];
-      const nextAnswerOfSameType = answers.filter(
-        (answer) => answer.type == type
-      )[index + 1];
-      if (nextAnswerOfSameType && nextAnswerOfSameType.qualifiedCode) {
-        state.focus = nextAnswerOfSameType.qualifiedCode;
       } else {
-        designState.caseReducers.addNewAnswer(state, {
+        handleAddNewAnswer(state, {
           payload: {
             questionCode,
+            label: item,
             type,
             index,
+            focus: itemIndex == data.length - 1,
           },
         });
       }
-    },
-    addNewAnswer: (state, action) => {
-      const questionCode = action.payload.questionCode;
-      const type = action.payload.type;
-      const index = action.payload.index;
-      const focus = action.payload.focus || true;
-      let label = action.payload.label;
-      const answers = state[questionCode].children || [];
-      let nextAnswerIndex = 1;
-      let code = "";
-      let qualifiedCode = "";
-      switch (type) {
-        case "column":
-          nextAnswerIndex = nextId(
-            answers.filter((el) => el.type === "column")
-          );
 
-          code = "Ac" + nextAnswerIndex;
-          qualifiedCode = questionCode + code;
-          addAnswer(state, { code, qualifiedCode, type, label, index });
-          break;
-        case "row":
-          nextAnswerIndex = nextId(answers.filter((el) => el.type === "row"));
-          code = "A" + nextAnswerIndex;
-          qualifiedCode = questionCode + code;
+      index++;
+    }
+  });
+};
 
-          addAnswer(state, {
-            code,
-            qualifiedCode,
-            type,
-            label,
-            index,
-            focus,
-          });
-          break;
-        case "other":
-          code = "Aother";
-          label = "Other";
-          qualifiedCode = questionCode + code;
-          addAnswer(state, {
-            code,
-            qualifiedCode,
-            type,
-            label,
-            index,
-            focus,
-          });
-          addAnswer(state, {
-            code: "Atext",
-            qualifiedCode: qualifiedCode + "Atext",
-            type: "other_text",
-            index,
-          });
-          break;
+export const handleOnNewLine = (state, action) => {
+  const questionCode = action.payload.questionCode;
+  const index = action.payload.index;
+  const type = action.payload.type;
+  const answers = state[questionCode].children || [];
+  const nextAnswerOfSameType = answers.filter(
+    (answer) => answer.type == type
+  )[index + 1];
+  if (nextAnswerOfSameType && nextAnswerOfSameType.qualifiedCode) {
+    state.focus = nextAnswerOfSameType.qualifiedCode;
+  } else {
+    handleAddNewAnswer(state, {
+      payload: {
+        questionCode,
+        type,
+        index,
+      },
+    });
+  }
+};
 
-        case "all":
-          code = "Aall";
-          label = "All of the above";
-          qualifiedCode = questionCode + code;
-          addAnswer(state, {
-            code,
-            qualifiedCode,
-            type,
-            label,
-            index,
-            focus,
-          });
-          break;
-
-        case "none":
-          code = "Anone";
-          label = "None of the above";
-          qualifiedCode = questionCode + code;
-          addAnswer(state, {
-            code,
-            qualifiedCode,
-            type,
-            label,
-            index,
-            focus,
-          });
-          break;
-        default:
-          nextAnswerIndex = nextId(answers);
-          code = "A" + nextAnswerIndex;
-          qualifiedCode = questionCode + code;
-          addAnswer(state, {
-            code,
-            qualifiedCode,
-            label,
-            index,
-            focus,
-          });
-          break;
-      }
-    },
-
-    deleteGroup: (state, action) => {
-      const groupCode = action.payload;
-      if (state.setup?.code == groupCode) {
-        designState.caseReducers.resetSetup(state);
-      }
-      if (state[groupCode].groupType == "END") {
-        state.error = {
-          message: "There must always be an end group. for an end message ",
-        };
-        return;
-      }
-      const survey = state.Survey;
-      const index = survey.children?.findIndex((x) => x.code === groupCode);
-      survey.children.splice(index, 1);
-      delete state[groupCode];
-      cleanupRandomRules(survey);
-      cleanupSkipDestinations(state, groupCode);
-    },
-    deleteQuestion: (state, action) => {
-      const questionCode = action.payload;
-      if (state.setup?.code == questionCode) {
-        designState.caseReducers.resetSetup(state);
-      }
-      const survey = state.Survey;
-      const group = survey.children
-        ?.map((group) => state[group.code])
-        ?.filter(
-          (group) =>
-            group.children &&
-            group.children.findIndex((child) => child.code == questionCode) !==
-              -1
-        )?.[0];
-      if (!group) {
-        return;
-      }
-      const questionIndex = group.children.findIndex(
-        (x) => x.code === questionCode
+export const handleAddNewAnswer = (state, action) => {
+  const questionCode = action.payload.questionCode;
+  const type = action.payload.type;
+  const index = action.payload.index;
+  const focus = action.payload.focus || true;
+  let label = action.payload.label;
+  const answers = state[questionCode].children || [];
+  let nextAnswerIndex = 1;
+  let code = "";
+  let qualifiedCode = "";
+  switch (type) {
+    case "column":
+      nextAnswerIndex = nextId(
+        answers.filter((el) => el.type === "column")
       );
-      let children = [...group.children];
-      if (children.length === 1) {
-        group.children = [];
-      } else {
-        group.children.splice(questionIndex, 1);
-      }
-      delete state[questionCode];
-      cleanupRandomRules(group);
-      cleanupSkipDestinations(state, questionCode);
-    },
-    changeContent: (state, action) => {
-      let payload = action.payload;
-      if (!state[payload.code].content) {
-        state[payload.code].content = {};
-        state[payload.code].content[payload.lang] = {};
-      } else if (!state[payload.code].content[payload.lang]) {
-        state[payload.code].content[payload.lang] = {};
-      }
-      const prefixToRemove = `format_${payload.key}_${payload.lang}`;
-      const toRemove = state[payload.code].instructionList?.filter(
-        (instruction) => instruction.code.startsWith(prefixToRemove)
-      );
-      toRemove?.forEach((instruction) => {
-        console.log(instruction.code);
-        changeInstruction(state[payload.code], {
-          code: instruction.code,
-          remove: true,
-        });
+
+      code = "Ac" + nextAnswerIndex;
+      qualifiedCode = questionCode + code;
+      addAnswer(state, { code, qualifiedCode, type, label, index });
+      break;
+    case "row":
+      nextAnswerIndex = nextId(answers.filter((el) => el.type === "row"));
+      code = "A" + nextAnswerIndex;
+      qualifiedCode = questionCode + code;
+
+      addAnswer(state, {
+        code,
+        qualifiedCode,
+        type,
+        label,
+        index,
+        focus,
       });
-
-      state[payload.code].instructionList = state[
-        payload.code
-      ].instructionList?.filter(
-        (instruction) => !instruction.code.startsWith(prefixToRemove)
-      );
-      const referenceInstructions = buildReferenceInstruction(
-        payload.value,
-        payload.key,
-        payload.lang,
-        [payload.value, payload.key, payload.lang]
-      );
-      referenceInstructions?.forEach((instruction) =>
-        changeInstruction(state[payload.code], instruction)
-      );
-
-      saveContentResources(
-        state[payload.code],
-        payload.value,
-        payload.lang,
-        payload.key
-      );
-
-      state[payload.code].content[payload.lang][payload.key] = payload.value;
-    },
-    changeCustomCss: (state, action) => {
-      let payload = action.payload;
-      const referenceInstructions = buildReferenceInstruction(
-        payload.value,
-        "custom",
-        "css",
-        ["customCss"]
-      );
-      state[payload.code].customCss = payload.value
-      referenceInstructions?.forEach((instruction) =>
-        changeInstruction(state[payload.code], instruction)
-      );
-    },
-    changeResources: (state, action) => {
-      let payload = action.payload;
-      if (!state[payload.code].resources) {
-        state[payload.code].resources = {};
-      }
-      state[payload.code].resources[payload.key] = payload.value;
-    },
-    updateRandom: (state, action) => {
-      const payload = action.payload;
-      const componentState = state[payload.code];
-      if (payload.groups) {
-        const instruction = { code: "random_group", groups: payload.groups };
-        changeInstruction(componentState, instruction);
-      } else {
-        removeInstruction(componentState, "random_group");
-      }
-    },
-    updateRandomByType: (state, action) => {
-      const payload = action.payload;
-      const componentState = state[payload.code];
-      const otherChildrenCodes = state[payload.code]?.children
-        ?.filter((el) => el.type !== payload.type)
-        ?.map((el) => el.code);
-      const randomInstruction = instructionByCode(
-        componentState,
-        "random_group"
-      );
-      const otherRandomOrders =
-        randomInstruction?.groups?.filter(
-          (x) => x.length && x.some((elem) => otherChildrenCodes.includes(elem))
-        ) || [];
-      const groups = payload.groups.concat(otherRandomOrders);
-      if (groups) {
-        const instruction = { code: "random_group", groups };
-        changeInstruction(componentState, instruction);
-      } else {
-        removeInstruction(componentState, "random_group");
-      }
-    },
-
-    // === SKIP LOGIC REDUCERS ===
-    addSkipRule: (state, action) => {
-      const { code } = action.payload;
-      if (!state[code].skip_logic) {
-        state[code].skip_logic = [];
-      }
-      state[code].skip_logic.push({ condition: [], skipTo: null });
-    },
-    updateSkipRule: (state, action) => {
-      const { code, ruleIndex, updates } = action.payload;
-      const rule = state[code].skip_logic[ruleIndex];
-      Object.assign(rule, updates);
-      // Reset toEnd/disqualify if destination is not a group
-      if (updates.skipTo && !updates.skipTo.startsWith("G")) {
-        rule.toEnd = false;
-        rule.disqualify = false;
-      }
-      addSkipInstructions(state, code);
-    },
-    removeSkipRule: (state, action) => {
-      const { code, ruleIndex } = action.payload;
-      state[code].skip_logic.splice(ruleIndex, 1);
-      addSkipInstructions(state, code);
-    },
-
-    addCustomValidationRule: (state, action) => {
-      const { code } = action.payload;
-
-      const numbers = (state[code].instructionList || [])
-        .map((i) => i.code.match(/^validation_custom_(\d+)$/)?.[1])
-        .filter(Boolean)
-        .map(Number);
-
-      const newRuleCode = `validation_custom_${Math.max(0, ...numbers) + 1}`;
-
-      changeInstruction(state[code], {
-        code: newRuleCode,
-        text: "",
-        returnType: "boolean",
-        isActive: true,
+      break;
+    case "other":
+      code = "Aother";
+      label = "Other";
+      qualifiedCode = questionCode + code;
+      addAnswer(state, {
+        code,
+        qualifiedCode,
+        type,
+        label,
+        index,
+        focus,
       });
-    },
-
-    updateCustomValidationRuleText: (state, action) => {
-      const { code, ruleCode, text } = action.payload;
-      state[code].instructionList.find((i) => i.code === ruleCode).text = text;
-    },
-
-    renameCustomValidationRule: (state, action) => {
-      const { code, ruleCode, newCode } = action.payload;
-      const instruction = state[code].instructionList.find(
-        (i) => i.code === ruleCode
-      );
-      instruction.code = newCode;
-      const content = state[code].content || {};
-      Object.keys(content).forEach((lang) => {
-        if (content[lang][ruleCode] !== undefined) {
-          content[lang][newCode] = content[lang][ruleCode];
-          delete content[lang][ruleCode];
-        }
+      addAnswer(state, {
+        code: "Atext",
+        qualifiedCode: qualifiedCode + "Atext",
+        type: "other_text",
+        index,
       });
-    },
+      break;
 
-    updateCustomValidationRuleError: (state, action) => {
-      const { code, ruleCode, lang, value } = action.payload;
-      if (value) {
-        state[code].content[lang][ruleCode] = value;
-      } else {
-        delete state[code].content[lang][ruleCode];
-      }
-    },
-
-    removeCustomValidationRule: (state, action) => {
-      const { code, ruleCode } = action.payload;
-
-      changeInstruction(state[code], { code: ruleCode, remove: true });
-
-      const content = state[code].content || {};
-      Object.keys(content).forEach((lang) => {
-        delete content[lang][ruleCode];
+    case "all":
+      code = "Aall";
+      label = "All of the above";
+      qualifiedCode = questionCode + code;
+      addAnswer(state, {
+        code,
+        qualifiedCode,
+        type,
+        label,
+        index,
+        focus,
       });
-    },
+      break;
 
-    updateInstruction: (state, action) => {
-      const { code, instruction } = action.payload;
+    case "none":
+      code = "Anone";
+      label = "None of the above";
+      qualifiedCode = questionCode + code;
+      addAnswer(state, {
+        code,
+        qualifiedCode,
+        type,
+        label,
+        index,
+        focus,
+      });
+      break;
+    default:
+      nextAnswerIndex = nextId(answers);
+      code = "A" + nextAnswerIndex;
+      qualifiedCode = questionCode + code;
+      addAnswer(state, {
+        code,
+        qualifiedCode,
+        label,
+        index,
+        focus,
+      });
+      break;
+  }
+};
 
-      if (!state[code]) {
-        return;
-      }
+export const handleDeleteGroup = (state, action) => {
+  const groupCode = action.payload;
+  if (state.setup?.code == groupCode) {
+    handleResetSetup(state);
+  }
+  if (state[groupCode].groupType == "END") {
+    state.error = {
+      message: "There must always be an end group. for an end message ",
+    };
+    return;
+  }
+  const survey = state.Survey;
+  const index = survey.children?.findIndex((x) => x.code === groupCode);
+  survey.children.splice(index, 1);
+  delete state[groupCode];
+  cleanupRandomRules(survey);
+  cleanupSkipDestinations(state, groupCode);
+};
 
-      changeInstruction(state[code], instruction);
-    },
+export const handleDeleteQuestion = (state, action) => {
+  const questionCode = action.payload;
+  if (state.setup?.code == questionCode) {
+    handleResetSetup(state);
+  }
+  const survey = state.Survey;
+  const group = survey.children
+    ?.map((group) => state[group.code])
+    ?.filter(
+      (group) =>
+        group.children &&
+        group.children.findIndex((child) => child.code == questionCode) !==
+          -1
+    )?.[0];
+  if (!group) {
+    return;
+  }
+  const questionIndex = group.children.findIndex(
+    (x) => x.code === questionCode
+  );
+  let children = [...group.children];
+  if (children.length === 1) {
+    group.children = [];
+  } else {
+    group.children.splice(questionIndex, 1);
+  }
+  delete state[questionCode];
+  cleanupRandomRules(group);
+  cleanupSkipDestinations(state, questionCode);
+};
 
-    onBaseLangChanged: (state, action) => {
-      state.langInfo.mainLang = action.payload.code;
-      state.Survey.defaultLang = action.payload;
-      state.Survey.additionalLang = state.Survey.additionalLang?.filter(
-        (language) => language.code !== action.payload.code
-      );
-      state.langInfo.lang = action.payload.code;
-      state.langInfo.onMainLang = true;
-      state.langInfo.languagesList = [action.payload].concat(
-        state.Survey.additionalLang || []
-      );
-    },
-    onAdditionalLangAdded: (state, action) => {
-      state.Survey.additionalLang = (state.Survey.additionalLang || []).concat(
-        action.payload
-      );
-      state.langInfo.languagesList = [state.Survey.defaultLang].concat(
-        state.Survey.additionalLang || []
-      );
-    },
-    onAdditionalLangRemoved: (state, action) => {
-      state.Survey.additionalLang = state.Survey.additionalLang.filter(
-        (language) => language.code !== action.payload.code
-      );
-      state.langInfo.languagesList = [state.Survey.defaultLang].concat(
-        state.Survey.additionalLang || []
-      );
-    },
-    changeLang: (state, action) => {
-      state.langInfo.lang = action.payload;
-      state.langInfo.onMainLang =
-        state.langInfo.lang == state.langInfo.mainLang;
-    },
-    resetFocus: (state, action) => {
-      state.focus = null;
-    },
-    setSaving: (state, action) => {
-      state.isSaving = action.payload;
-    },
-    setUpdating: (state, action) => {
-      state.isUpdating = action.payload;
-    },
-    onDrag: (state, action) => {
-      state.skipScroll = true;
+export const handleChangeContent = (state, action) => {
+  let payload = action.payload;
+  if (!state[payload.code].content) {
+    state[payload.code].content = {};
+    state[payload.code].content[payload.lang] = {};
+  } else if (!state[payload.code].content[payload.lang]) {
+    state[payload.code].content[payload.lang] = {};
+  }
+  const prefixToRemove = `format_${payload.key}_${payload.lang}`;
+  const toRemove = state[payload.code].instructionList?.filter(
+    (instruction) => instruction.code.startsWith(prefixToRemove)
+  );
+  toRemove?.forEach((instruction) => {
+    console.log(instruction.code);
+    changeInstruction(state[payload.code], {
+      code: instruction.code,
+      remove: true,
+    });
+  });
 
-      const payload = action.payload;
-      switch (payload.type) {
-        case "reorder_questions":
-          reorderQuestions(state, state.Survey, payload);
-          state.index = buildCodeIndex(state);
-          break;
-        case "reparent_question":
-          reparentQuestion(state, state.Survey, payload);
-          state.index = buildCodeIndex(state);
-          break;
-        case "reorder_groups":
-          reorderGroups(state.Survey, payload);
-          state.index = buildCodeIndex(state);
-          break;
-        case "reorder_answers":
-          reorderAnswers(state, payload);
-          break;
-        case "reorder_answers_by_type":
-          reorderAnswersByType(state, payload);
-          break;
-        case "new_question":
-          newQuestion(state, payload);
-          state.index = buildCodeIndex(state);
-          break;
-        case "new_group":
-          if (payload.groupType == "group") {
-            newGroup(state, payload);
-            state.index = buildCodeIndex(state);
-          } else if (
-            payload.groupType == "end" ||
-            payload.groupType == "welcome"
-          ) {
-            specialGroup(state, payload);
-          }
-          break;
-          // do nothing
-          deafult: break;
-      }
-    },
-    addComponent: (state, action) => {
-      const { type, questionType } = action.payload;
-      const survey = state.Survey;
-      state.skipScroll = false;
+  state[payload.code].instructionList = state[
+    payload.code
+  ].instructionList?.filter(
+    (instruction) => !instruction.code.startsWith(prefixToRemove)
+  );
+  const referenceInstructions = buildReferenceInstruction(
+    payload.value,
+    payload.key,
+    payload.lang,
+    [payload.value, payload.key, payload.lang]
+  );
+  referenceInstructions?.forEach((instruction) =>
+    changeInstruction(state[payload.code], instruction)
+  );
 
-      if (type === "group") {
-        const lastGroupIndex = Math.max(0, survey.children.length - 1);
-        newGroup(state, { toIndex: lastGroupIndex });
-      } else if (type === "question") {
-        if (state.Survey.children.length == 1) {
-          newGroup(state, { toIndex: 0 });
-        }
-        const lastGroupIndex = Math.max(0, survey.children.length - 2);
-        const destinationGroupCode = survey.children[lastGroupIndex].code;
-        const destinationGroup = state[destinationGroupCode];
-        const toIndex = destinationGroup.children?.length || 0;
-        newQuestion(state, {
-          destination: destinationGroupCode,
-          questionType,
-          toIndex,
-        });
-      }
+  saveContentResources(
+    state[payload.code],
+    payload.value,
+    payload.lang,
+    payload.key
+  );
+
+  state[payload.code].content[payload.lang][payload.key] = payload.value;
+};
+
+export const handleChangeCustomCss = (state, action) => {
+  let payload = action.payload;
+  const referenceInstructions = buildReferenceInstruction(
+    payload.value,
+    "custom",
+    "css",
+    ["customCss"]
+  );
+  state[payload.code].customCss = payload.value
+  referenceInstructions?.forEach((instruction) =>
+    changeInstruction(state[payload.code], instruction)
+  );
+};
+
+export const handleChangeResources = (state, action) => {
+  let payload = action.payload;
+  if (!state[payload.code].resources) {
+    state[payload.code].resources = {};
+  }
+  state[payload.code].resources[payload.key] = payload.value;
+};
+
+export const handleUpdateRandom = (state, action) => {
+  const payload = action.payload;
+  const componentState = state[payload.code];
+  if (payload.groups) {
+    const instruction = { code: "random_group", groups: payload.groups };
+    changeInstruction(componentState, instruction);
+  } else {
+    removeInstruction(componentState, "random_group");
+  }
+};
+
+export const handleUpdateRandomByType = (state, action) => {
+  const payload = action.payload;
+  const componentState = state[payload.code];
+  const otherChildrenCodes = state[payload.code]?.children
+    ?.filter((el) => el.type !== payload.type)
+    ?.map((el) => el.code);
+  const randomInstruction = instructionByCode(
+    componentState,
+    "random_group"
+  );
+  const otherRandomOrders =
+    randomInstruction?.groups?.filter(
+      (x) => x.length && x.some((elem) => otherChildrenCodes.includes(elem))
+    ) || [];
+  const groups = payload.groups.concat(otherRandomOrders);
+  if (groups) {
+    const instruction = { code: "random_group", groups };
+    changeInstruction(componentState, instruction);
+  } else {
+    removeInstruction(componentState, "random_group");
+  }
+};
+
+export const handleAddSkipRule = (state, action) => {
+  const { code } = action.payload;
+  if (!state[code].skip_logic) {
+    state[code].skip_logic = [];
+  }
+  state[code].skip_logic.push({ condition: [], skipTo: null });
+};
+
+export const handleUpdateSkipRule = (state, action) => {
+  const { code, ruleIndex, updates } = action.payload;
+  const rule = state[code].skip_logic[ruleIndex];
+  Object.assign(rule, updates);
+  // Reset toEnd/disqualify if destination is not a group
+  if (updates.skipTo && !updates.skipTo.startsWith("G")) {
+    rule.toEnd = false;
+    rule.disqualify = false;
+  }
+  addSkipInstructions(state, code);
+};
+
+export const handleRemoveSkipRule = (state, action) => {
+  const { code, ruleIndex } = action.payload;
+  state[code].skip_logic.splice(ruleIndex, 1);
+  addSkipInstructions(state, code);
+};
+
+export const handleAddCustomValidationRule = (state, action) => {
+  const { code } = action.payload;
+
+  const numbers = (state[code].instructionList || [])
+    .map((i) => i.code.match(/^validation_custom_(\d+)$/)?.[1])
+    .filter(Boolean)
+    .map(Number);
+
+  const newRuleCode = `validation_custom_${Math.max(0, ...numbers) + 1}`;
+
+  changeInstruction(state[code], {
+    code: newRuleCode,
+    text: "",
+    returnType: "boolean",
+    isActive: true,
+  });
+};
+
+export const handleUpdateCustomValidationRuleText = (state, action) => {
+  const { code, ruleCode, text } = action.payload;
+  state[code].instructionList.find((i) => i.code === ruleCode).text = text;
+};
+
+export const handleRenameCustomValidationRule = (state, action) => {
+  const { code, ruleCode, newCode } = action.payload;
+  const instruction = state[code].instructionList.find(
+    (i) => i.code === ruleCode
+  );
+  instruction.code = newCode;
+  const content = state[code].content || {};
+  Object.keys(content).forEach((lang) => {
+    if (content[lang][ruleCode] !== undefined) {
+      content[lang][newCode] = content[lang][ruleCode];
+      delete content[lang][ruleCode];
+    }
+  });
+};
+
+export const handleUpdateCustomValidationRuleError = (state, action) => {
+  const { code, ruleCode, lang, value } = action.payload;
+  if (value) {
+    state[code].content[lang][ruleCode] = value;
+  } else {
+    delete state[code].content[lang][ruleCode];
+  }
+};
+
+export const handleRemoveCustomValidationRule = (state, action) => {
+  const { code, ruleCode } = action.payload;
+
+  changeInstruction(state[code], { code: ruleCode, remove: true });
+
+  const content = state[code].content || {};
+  Object.keys(content).forEach((lang) => {
+    delete content[lang][ruleCode];
+  });
+};
+
+export const handleUpdateInstruction = (state, action) => {
+  const { code, instruction } = action.payload;
+
+  if (!state[code]) {
+    return;
+  }
+
+  changeInstruction(state[code], instruction);
+};
+
+export const handleOnBaseLangChanged = (state, action) => {
+  state.langInfo.mainLang = action.payload.code;
+  state.Survey.defaultLang = action.payload;
+  state.Survey.additionalLang = state.Survey.additionalLang?.filter(
+    (language) => language.code !== action.payload.code
+  );
+  state.langInfo.lang = action.payload.code;
+  state.langInfo.onMainLang = true;
+  state.langInfo.languagesList = [action.payload].concat(
+    state.Survey.additionalLang || []
+  );
+};
+
+export const handleOnAdditionalLangAdded = (state, action) => {
+  state.Survey.additionalLang = (state.Survey.additionalLang || []).concat(
+    action.payload
+  );
+  state.langInfo.languagesList = [state.Survey.defaultLang].concat(
+    state.Survey.additionalLang || []
+  );
+};
+
+export const handleOnAdditionalLangRemoved = (state, action) => {
+  state.Survey.additionalLang = state.Survey.additionalLang.filter(
+    (language) => language.code !== action.payload.code
+  );
+  state.langInfo.languagesList = [state.Survey.defaultLang].concat(
+    state.Survey.additionalLang || []
+  );
+};
+
+export const handleOnDrag = (state, action) => {
+  state.skipScroll = true;
+
+  const payload = action.payload;
+  switch (payload.type) {
+    case "reorder_questions":
+      reorderQuestions(state, state.Survey, payload);
       state.index = buildCodeIndex(state);
-    },
-  },
-});
+      break;
+    case "reparent_question":
+      reparentQuestion(state, state.Survey, payload);
+      state.index = buildCodeIndex(state);
+      break;
+    case "reorder_groups":
+      reorderGroups(state.Survey, payload);
+      state.index = buildCodeIndex(state);
+      break;
+    case "reorder_answers":
+      reorderAnswers(state, payload);
+      break;
+    case "reorder_answers_by_type":
+      reorderAnswersByType(state, payload);
+      break;
+    case "new_question":
+      newQuestion(state, payload);
+      state.index = buildCodeIndex(state);
+      break;
+    case "new_group":
+      if (payload.groupType == "group") {
+        newGroup(state, payload);
+        state.index = buildCodeIndex(state);
+      } else if (
+        payload.groupType == "end" ||
+        payload.groupType == "welcome"
+      ) {
+        specialGroup(state, payload);
+      }
+      break;
+      // do nothing
+      deafult: break;
+  }
+};
 
-export const {
-  newVersionReceived,
-  designStateReceived,
-  onBaseLangChanged,
-  onAdditionalLangAdded,
-  onAdditionalLangRemoved,
-  changeLang,
-  changeCustomCss,
-  changeAttribute,
-  changeTimeFormats,
-  changeContent,
-  changeResources,
-  deleteQuestion,
-  cloneQuestion,
-  deleteGroup,
-  onNewLine,
-  resetFocus,
-  addNewAnswer,
-  addNewAnswers,
-  setDesignModeToDesign,
-  setDesignModeToLang,
-  setDesignModeToTheme,
-  removeAnswer,
-  setup,
-  resetSetup,
-  changeValidationValue,
-  updateRandom,
-  updateRandomByType,
-  addSkipRule,
-  updateSkipRule,
-  removeSkipRule,
-  addCustomValidationRule,
-  updateCustomValidationRuleText,
-  renameCustomValidationRule,
-  updateCustomValidationRuleError,
-  removeCustomValidationRule,
-  updateInstruction,
-  changeRelevance,
-  clearRelevanceConfig,
-  setDefaultValue,
-  onDrag,
-  addComponent,
-  setSaving,
-  setUpdating,
-} = designState.actions;
+export const handleAddComponent = (state, action) => {
+  const { type, questionType } = action.payload;
+  const survey = state.Survey;
+  state.skipScroll = false;
 
-export default designState.reducer;
+  if (type === "group") {
+    const lastGroupIndex = Math.max(0, survey.children.length - 1);
+    newGroup(state, { toIndex: lastGroupIndex });
+  } else if (type === "question") {
+    if (state.Survey.children.length == 1) {
+      newGroup(state, { toIndex: 0 });
+    }
+    const lastGroupIndex = Math.max(0, survey.children.length - 2);
+    const destinationGroupCode = survey.children[lastGroupIndex].code;
+    const destinationGroup = state[destinationGroupCode];
+    const toIndex = destinationGroup.children?.length || 0;
+    newQuestion(state, {
+      destination: destinationGroupCode,
+      questionType,
+      toIndex,
+    });
+  }
+  state.index = buildCodeIndex(state);
+};
 
-const cleanupRandomRules = (componentState) => {
+// --- Helper functions ---
+
+export const cleanupRandomRules = (componentState) => {
   if (componentState["randomize_questions"]) {
     updateRandomByRule(componentState, "randomize_questions");
   } else if (componentState["randomize_groups"]) {
@@ -854,7 +808,7 @@ const cleanupRandomRules = (componentState) => {
 };
 
 // Clean up skip_logic rules that point to a deleted destination
-const cleanupSkipDestinations = (state, deletedCode) => {
+export const cleanupSkipDestinations = (state, deletedCode) => {
   Object.keys(state).forEach((key) => {
     const component = state[key];
     if (Array.isArray(component?.skip_logic)) {
@@ -871,7 +825,7 @@ const cleanupSkipDestinations = (state, deletedCode) => {
   });
 };
 
-const saveContentResources = (
+export const saveContentResources = (
   component,
   contentValue,
   contentLang,
@@ -898,7 +852,7 @@ const saveContentResources = (
   });
 };
 
-const reparentQuestion = (state, survey, payload) => {
+export const reparentQuestion = (state, survey, payload) => {
   let index = buildIndex(state);
   const sourceGroup = state[payload.source];
   const destinationGroup = state[payload.destination];
@@ -924,7 +878,7 @@ const reparentQuestion = (state, survey, payload) => {
   cleanupRandomRules(sourceGroup);
 };
 
-const reorderQuestions = (state, survey, payload) => {
+export const reorderQuestions = (state, survey, payload) => {
   const sourceGroup = state[payload.source];
   const destinationGroup = state[payload.destination];
   const sourceQuestionIndex = sourceGroup.children.findIndex(
@@ -943,7 +897,7 @@ const reorderQuestions = (state, survey, payload) => {
   cleanupRandomRules(sourceGroup);
 };
 
-const newQuestion = (state, payload) => {
+export const newQuestion = (state, payload) => {
   const survey = state.Survey;
   let questionId = nextQuestionId(state, survey.children);
   const questionObject = createQuestion(
@@ -993,7 +947,7 @@ const newQuestion = (state, payload) => {
   };
   cleanupRandomRules(destinationGroup);
   state.focus = newCode;
-  designState.caseReducers.setup(state, {
+  handleSetup(state, {
     payload: {
       code: newCode,
       rules: setupOptions(payload.questionType),
@@ -1001,7 +955,7 @@ const newQuestion = (state, payload) => {
   });
 };
 
-const newGroup = (state, payload) => {
+export const newGroup = (state, payload) => {
   const survey = state.Survey;
   const group = createGroup("GROUP", nextGroupId(survey.children));
   if (!survey.children) {
@@ -1023,7 +977,7 @@ const newGroup = (state, payload) => {
   };
   cleanupRandomRules(survey);
   state.focus = group.newGroup.code;
-  designState.caseReducers.setup(state, {
+  handleSetup(state, {
     payload: {
       code: group.newGroup.code,
       rules: setupOptions(group.newGroup.type),
@@ -1031,7 +985,7 @@ const newGroup = (state, payload) => {
   });
 };
 
-const specialGroup = (state, payload) => {
+export const specialGroup = (state, payload) => {
   const survey = state.Survey;
   if (!survey.children) {
     survey.children = [];
@@ -1051,7 +1005,7 @@ const specialGroup = (state, payload) => {
     const group = createGroup("WELCOME", nextGroupId(survey.children));
     survey.children.splice(0, 0, group.newGroup);
     state[group.newGroup.code] = group.state;
-    designState.caseReducers.setup(state, {
+    handleSetup(state, {
       payload: {
         code: group.newGroup.code,
         rules: setupOptions(group.newGroup.type),
@@ -1061,7 +1015,7 @@ const specialGroup = (state, payload) => {
     const group = createGroup("END", nextGroupId(survey.children));
     survey.children.push(group.newGroup);
     state[group.newGroup.code] = group.state;
-    designState.caseReducers.setup(state, {
+    handleSetup(state, {
       payload: {
         code: group.newGroup.code,
         rules: setupOptions(group.newGroup.type),
@@ -1070,7 +1024,7 @@ const specialGroup = (state, payload) => {
   }
 };
 
-const addAnswer = (state, answer) => {
+export const addAnswer = (state, answer) => {
   const lang = state.langInfo.mainLang;
   const label = answer.label;
   const qualifiedCode = answer.qualifiedCode;
@@ -1096,14 +1050,14 @@ const addAnswer = (state, answer) => {
   }
 };
 
-const reorderGroups = (survey, payload) => {
+export const reorderGroups = (survey, payload) => {
   survey.children = reorder(
     survey.children,
     payload.fromIndex,
     payload.toIndex
   );
 };
-const reorderAnswers = (state, payload) => {
+export const reorderAnswers = (state, payload) => {
   const codes = splitQuestionCodes(payload.id);
   const parentCode = codes.slice(0, codes.length - 1).join("");
   const component = state[parentCode];
@@ -1113,7 +1067,7 @@ const reorderAnswers = (state, payload) => {
     payload.toIndex
   );
 };
-const reorderAnswersByType = (state, payload) => {
+export const reorderAnswersByType = (state, payload) => {
   const codes = splitQuestionCodes(payload.id);
   const parentCode = codes.slice(0, codes.length - 1).join("");
   const component = state[parentCode];
@@ -1128,7 +1082,7 @@ const reorderAnswersByType = (state, payload) => {
   component.children = reorder(component.children, fromIndex, toIndex);
 };
 
-const insertAnswer = (state, answer, parentCode, index) => {
+export const insertAnswer = (state, answer, parentCode, index) => {
   const component = state[parentCode];
   if (component) {
     if (!component.children) {
@@ -1157,7 +1111,7 @@ const insertAnswer = (state, answer, parentCode, index) => {
     return false;
   }
 };
-const buildIndex = (state) => {
+export const buildIndex = (state) => {
   let retrunRestult = [];
   state.Survey.children?.forEach((group) => {
     retrunRestult.push(group.code);
@@ -1173,7 +1127,7 @@ const buildIndex = (state) => {
   return retrunRestult;
 };
 
-const buildCodeIndex = (state) => {
+export const buildCodeIndex = (state) => {
   let retrunRestult = {};
   let groupCount = 0;
   let questionCount = 0;
@@ -1198,11 +1152,11 @@ const buildCodeIndex = (state) => {
   return retrunRestult;
 };
 
-const splitQuestionCodes = (code) => {
+export const splitQuestionCodes = (code) => {
   return code.split(/(A[a-z_0-9]+|Q[a-z_0-9]+)/).filter(Boolean);
 };
 
-const cleanupValidation = (state, code) => {
+export const cleanupValidation = (state, code) => {
   const component = state[code];
   if (!component.validation) {
     return;
@@ -1211,7 +1165,7 @@ const cleanupValidation = (state, code) => {
   ruleKeys.forEach((key) => processValidation(state, code, key, true));
 };
 
-const addRelevanceInstructions = (state, code, relevance) => {
+export const addRelevanceInstructions = (state, code, relevance) => {
   const instruction = conditionalRelevanceEquation(
     relevance.logic,
     relevance.rule,
@@ -1219,6 +1173,123 @@ const addRelevanceInstructions = (state, code, relevance) => {
   );
   changeInstruction(state[code], instruction);
 };
+
+// --- Slice definition ---
+
+export const designState = createSlice({
+  name: "designState",
+  initialState: { state: {} },
+  reducers: {
+    designStateReceived: handleDesignStateReceived,
+    setup: handleSetup,
+    newVersionReceived(state, action) {
+      state.versionDto = action.payload;
+    },
+    changeValidationValue: handleChangeValidationValue,
+    resetSetup: handleResetSetup,
+    setDesignModeToDesign: handleSetDesignModeToDesign,
+    setDesignModeToLang: handleSetDesignModeToLang,
+    setDesignModeToTheme: handleSetDesignModeToTheme,
+    changeAttribute: handleChangeAttribute,
+    changeRelevance: handleChangeRelevance,
+    clearRelevanceConfig: (state, action) => {
+      delete state[action.payload.code].relevance;
+    },
+    setDefaultValue: handleSetDefaultValue,
+    cloneQuestion: handleCloneQuestion,
+    removeAnswer: handleRemoveAnswer,
+    addNewAnswers: handleAddNewAnswers,
+    onNewLine: handleOnNewLine,
+    addNewAnswer: handleAddNewAnswer,
+    deleteGroup: handleDeleteGroup,
+    deleteQuestion: handleDeleteQuestion,
+    changeContent: handleChangeContent,
+    changeCustomCss: handleChangeCustomCss,
+    changeResources: handleChangeResources,
+    updateRandom: handleUpdateRandom,
+    updateRandomByType: handleUpdateRandomByType,
+    addSkipRule: handleAddSkipRule,
+    updateSkipRule: handleUpdateSkipRule,
+    removeSkipRule: handleRemoveSkipRule,
+    addCustomValidationRule: handleAddCustomValidationRule,
+    updateCustomValidationRuleText: handleUpdateCustomValidationRuleText,
+    renameCustomValidationRule: handleRenameCustomValidationRule,
+    updateCustomValidationRuleError: handleUpdateCustomValidationRuleError,
+    removeCustomValidationRule: handleRemoveCustomValidationRule,
+    updateInstruction: handleUpdateInstruction,
+    onBaseLangChanged: handleOnBaseLangChanged,
+    onAdditionalLangAdded: handleOnAdditionalLangAdded,
+    onAdditionalLangRemoved: handleOnAdditionalLangRemoved,
+    changeLang: (state, action) => {
+      state.langInfo.lang = action.payload;
+      state.langInfo.onMainLang =
+        state.langInfo.lang == state.langInfo.mainLang;
+    },
+    resetFocus: (state) => {
+      state.focus = null;
+    },
+    setSaving: (state, action) => {
+      state.isSaving = action.payload;
+    },
+    setUpdating: (state, action) => {
+      state.isUpdating = action.payload;
+    },
+    onDrag: handleOnDrag,
+    addComponent: handleAddComponent,
+  },
+});
+
+// --- Action exports ---
+
+export const {
+  newVersionReceived,
+  designStateReceived,
+  onBaseLangChanged,
+  onAdditionalLangAdded,
+  onAdditionalLangRemoved,
+  changeLang,
+  changeCustomCss,
+  changeAttribute,
+  changeTimeFormats,
+  changeContent,
+  changeResources,
+  deleteQuestion,
+  cloneQuestion,
+  deleteGroup,
+  onNewLine,
+  resetFocus,
+  addNewAnswer,
+  addNewAnswers,
+  setDesignModeToDesign,
+  setDesignModeToLang,
+  setDesignModeToTheme,
+  removeAnswer,
+  setup,
+  resetSetup,
+  changeValidationValue,
+  updateRandom,
+  updateRandomByType,
+  addSkipRule,
+  updateSkipRule,
+  removeSkipRule,
+  addCustomValidationRule,
+  updateCustomValidationRuleText,
+  renameCustomValidationRule,
+  updateCustomValidationRuleError,
+  removeCustomValidationRule,
+  updateInstruction,
+  changeRelevance,
+  clearRelevanceConfig,
+  setDefaultValue,
+  onDrag,
+  addComponent,
+  setSaving,
+  setUpdating,
+} = designState.actions;
+
+export default designState.reducer;
+
+// --- Other exports ---
 
 export const mapCodeToUserFriendlyOrder = (code, index) => {
   let newCode = cloneDeep(code);
@@ -1247,7 +1318,7 @@ export const mapCodeToUserFriendlyOrder = (code, index) => {
   return newCode;
 };
 
-const creatNewState = (
+export const creatNewState = (
   state,
   toBeCopied,
   newStateCode,

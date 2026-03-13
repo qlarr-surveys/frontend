@@ -103,7 +103,7 @@ export const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-function collectExistingGroupCodes(groups) {
+export function collectExistingGroupCodes(groups) {
   const ids = new Set();
   if (Array.isArray(groups)) {
     groups.forEach((g) => {
@@ -118,7 +118,7 @@ export const nextGroupId = (groups) => {
   return generateId(existing);
 };
 
-function collectExistingIds(state, groups) {
+export function collectExistingIds(state, groups) {
   const ids = new Set();
 
   groups.forEach((group) => {
@@ -134,13 +134,13 @@ function collectExistingIds(state, groups) {
   return ids;
 }
 
-function randChar(chars) {
+export function randChar(chars) {
   const array = new Uint32Array(1);
   crypto.getRandomValues(array);
   return chars[array[0] % chars.length];
 }
 
-function generateId(existing) {
+export function generateId(existing) {
   const letters = "abcdefghijklmnopqrstuvwxyz";
   const numbers = "0123456789";
   let id = "";
@@ -171,7 +171,7 @@ export const buildReferenceInstruction = (content, name, key, contentPath) => {
   })
 };
 
-const getAllMatches = (inputString) => {
+export const getAllMatches = (inputString) => {
   const regex = /\{\{(.*?)\}\}/g;
   return Array.from(inputString.matchAll(regex), m => m[1].trim());
 };

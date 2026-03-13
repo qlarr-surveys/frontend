@@ -704,7 +704,7 @@ export const addAnswerInstructions = (
   }
 };
 
-const addValidationEquation = (state, qualifiedCode, rule) => {
+export const addValidationEquation = (state, qualifiedCode, rule) => {
   const component = state[qualifiedCode];
   const validationInstruction = validationEquation(
     qualifiedCode,
@@ -716,7 +716,7 @@ const addValidationEquation = (state, qualifiedCode, rule) => {
 };
 
 // there is always an assumption that instructionList exists!!!
-const editInstruction = (componentState, instruction) => {
+export const editInstruction = (componentState, instruction) => {
   const index = componentState.instructionList.findIndex(
     (el) => el.code === instruction.code
   );
@@ -727,7 +727,7 @@ const editInstruction = (componentState, instruction) => {
   }
 };
 
-const scqSkipEquations = (qualifiedCode, component) => {
+export const scqSkipEquations = (qualifiedCode, component) => {
   const skipLogic = component.skip_logic || [];
   const instructionList = [];
 
@@ -769,7 +769,7 @@ const scqSkipEquations = (qualifiedCode, component) => {
   return instructionList;
 };
 
-const validationEquation = (qualifiedCode, component, key, validation) => {
+export const validationEquation = (qualifiedCode, component, key, validation) => {
   if (
     !validation.isActive ||
     (key == "validation_not_contains" && !validation.not_contains)
@@ -928,7 +928,7 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
   }
 };
 
-const booleanActiveInstruction = (key, instructionText) => {
+export const booleanActiveInstruction = (key, instructionText) => {
   return {
     code: key,
     text: instructionText,
@@ -937,7 +937,7 @@ const booleanActiveInstruction = (key, instructionText) => {
   };
 };
 
-const requiredText = (qualifiedCode, component) => {
+export const requiredText = (qualifiedCode, component) => {
   if (
     component.type == "file_upload" ||
     component.type == "signature" ||
@@ -980,7 +980,7 @@ const requiredText = (qualifiedCode, component) => {
   }
 };
 
-const isValidRegex = (regex) => {
+export const isValidRegex = (regex) => {
   if (!regex) {
     return false;
   }
@@ -1163,7 +1163,7 @@ export const updateRandomByRule = (
   }
 };
 
-const getQuestionType = (state, code) => {
+export const getQuestionType = (state, code) => {
   const match = code.match(/^Q[a-z0-9_]+/);
   const captured = match ? match[0] : null;
   if (captured) {
@@ -1209,7 +1209,7 @@ export const conditionalRelevanceEquation = (logic, rule, state) => {
   }
 };
 
-const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
+export const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
   if (!json || typeof json !== "object") {
     return "";
   }
@@ -1380,11 +1380,11 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
   }
 };
 
-const wrapIfNested = (nested, text) => {
+export const wrapIfNested = (nested, text) => {
   return (nested ? "(" : "") + text + (nested ? ")" : "");
 };
 
-const capture = (value, type) => {
+export const capture = (value, type) => {
   if (type == "time") {
     return `QlarrScripts.sqlDateTimeToDate(\"1970-01-01 ${integerToTime(
       value
@@ -1406,7 +1406,7 @@ const capture = (value, type) => {
   }
 };
 
-const integerToTime = (time) => {
+export const integerToTime = (time) => {
   let hours = Math.floor(time / 3600);
   let hoursString = hours >= 10 && hours <= 23 ? "" + hours : "0" + hours;
   let minutes = (time % 3600) / 60;
@@ -1415,7 +1415,7 @@ const integerToTime = (time) => {
   return hoursString + ":" + minutesString + ":00";
 };
 
-const toSqlDateTime = (date) => {
+export const toSqlDateTime = (date) => {
   return (
     date.getFullYear() +
     "-" +
@@ -1431,7 +1431,7 @@ const toSqlDateTime = (date) => {
   );
 };
 
-const toSqlDateTimeIgnoreTime = (date) => {
+export const toSqlDateTimeIgnoreTime = (date) => {
   return (
     date.getFullYear() +
     "-" +
@@ -1455,7 +1455,7 @@ export const fileTypesToMimesArray = (fileTypes) => {
   return accepted;
 };
 
-const acceptedFileTypes = (fileType) => {
+export const acceptedFileTypes = (fileType) => {
   switch (fileType) {
     case "presentation":
       return [
@@ -1604,7 +1604,7 @@ export const processValidation = (state, code, rule, modifyEquation = true) => {
   }
 };
 
-const cleanupValidationData = (component, key, validation) => {
+export const cleanupValidationData = (component, key, validation) => {
   switch (key) {
     case "validation_required":
     case "validation_one_response_per_col":
