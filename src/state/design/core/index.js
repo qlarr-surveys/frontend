@@ -8,13 +8,31 @@ export { buildCodeIndex, buildIndex, splitQuestionCodes, mapCodeToUserFriendlyOr
 export { cleanupRandomRules, cleanupSkipDestinations, cleanupValidation } from "./cleanup";
 
 // Content operations
-export { saveContentResources, applyChangeContent } from "./contentOperations";
+export { saveContentResources, applyChangeContent, applyChangeCustomCss, applyChangeResources } from "./contentOperations";
 
 // Setup operations
-export { applySetup, applyResetSetup } from "./setupOperations";
+export { applySetup, applyResetSetup, applySetDesignModeToDesign, applySetDesignModeToLang, applySetDesignModeToTheme, applySetDefaultValue, applyUpdateInstruction } from "./setupOperations";
 
 // Relevance operations
-export { addRelevanceInstructions } from "./relevanceOperations";
+export { addRelevanceInstructions, applyChangeRelevance, applyClearRelevanceConfig } from "./relevanceOperations";
+
+// Attribute operations
+export { applyChangeAttribute } from "./attributeOperations";
+
+// Validation operations
+export { applyChangeValidationValue, applyAddCustomValidationRule, applyUpdateCustomValidationRuleText, applyRenameCustomValidationRule, applyUpdateCustomValidationRuleError, applyRemoveCustomValidationRule } from "./validationOperations";
+
+// Skip logic operations
+export { applyAddSkipRule, applyUpdateSkipRule, applyRemoveSkipRule } from "./skipLogicOperations";
+
+// Random operations
+export { applyUpdateRandom, applyUpdateRandomByType } from "./randomOperations";
+
+// Language operations
+export { applyBaseLangChanged, applyAdditionalLangAdded, applyAdditionalLangRemoved, applyChangeLang } from "./languageOperations";
+
+// State initialization
+export { applyDesignStateReceived } from "./stateInitialization";
 
 // Tree operations
 export {

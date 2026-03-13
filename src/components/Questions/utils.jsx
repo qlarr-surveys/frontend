@@ -347,7 +347,3 @@ export const isDisplay = (type) => {
   return ["text_display", "image_display", "video_display"].indexOf(type) > -1;
 };
 
-export {
-  createQuestion,
-  questionDesignError,
-} from "~/state/design/core/componentFactory";

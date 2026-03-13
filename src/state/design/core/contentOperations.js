@@ -69,3 +69,23 @@ export const applyChangeContent = (state, { code, key, value, lang }) => {
 
   state[code].content[lang][key] = value;
 };
+
+export const applyChangeCustomCss = (state, { code, value }) => {
+  const referenceInstructions = buildReferenceInstruction(
+    value,
+    "custom",
+    "css",
+    ["customCss"]
+  );
+  state[code].customCss = value;
+  referenceInstructions?.forEach((instruction) =>
+    changeInstruction(state[code], instruction)
+  );
+};
+
+export const applyChangeResources = (state, { code, key, value }) => {
+  if (!state[code].resources) {
+    state[code].resources = {};
+  }
+  state[code].resources[key] = value;
+};

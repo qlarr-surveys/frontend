@@ -90,5 +90,3 @@ function NewComponentsPanel({ t }) {
 }
 
 export default React.memo(NewComponentsPanel);
-
-export { createGroup } from "~/state/design/core/componentFactory";

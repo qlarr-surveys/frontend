@@ -8,3 +8,12 @@ export const addRelevanceInstructions = (state, code, relevance) => {
   );
   changeInstruction(state[code], instruction);
 };
+
+export const applyChangeRelevance = (state, { code, value }) => {
+  state[code].relevance = value;
+  addRelevanceInstructions(state, code, value);
+};
+
+export const applyClearRelevanceConfig = (state, { code }) => {
+  delete state[code].relevance;
+};
