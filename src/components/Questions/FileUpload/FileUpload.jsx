@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
-import { fileTypesToMimesArray } from "~/state/design/addInstructions";
+import { fileTypesToMimesArray } from "~/state/design/core/addInstructions";
 
 const Input = styled("input")({
   display: "none",
