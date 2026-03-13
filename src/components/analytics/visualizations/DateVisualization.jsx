@@ -1,26 +1,10 @@
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
-import ChartContainer from '../common/ChartContainer';
-import FrequencyTable from '../common/FrequencyTable';
+import TemporalVisualization from './TemporalVisualization';
+
+const extractDate = (r) => r.split(' ')[0];
 
 export default function DateVisualization({ question }) {
-  const data = useMemo(() => {
-    const counts = {};
-    question.responses.forEach((r) => {
-      const dateOnly = r.split(' ')[0];
-      counts[dateOnly] = (counts[dateOnly] || 0) + 1;
-    });
-    const total = question.totalResponses ?? question.responses.length;
-    return Object.entries(counts)
-      .map(([value, count]) => ({ value, count, percentage: Math.round((count / total) * 100) }))
-      .sort((a, b) => b.count - a.count);
-  }, [question]);
   const { t } = useTranslation(NAMESPACES.MANAGE);
-
-  return (
-    <ChartContainer>
-      <FrequencyTable data={data} valueLabel={t('analytics.col_date')} />
-    </ChartContainer>
-  );
+  return <TemporalVisualization question={question} extractor={extractDate} valueLabel={t('analytics.col_date')} />;
 }

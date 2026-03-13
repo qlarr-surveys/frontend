@@ -20,33 +20,27 @@ import NPSBenchmarkScale from './NPSBenchmarkScale';
 import CategoryLegend from '../common/CategoryLegend';
 import { NPS_COLORS } from '~/utils/analytics/colors';
 
-function NPSDistributionTooltip({ active, payload }) {
+import ChartTooltip, { titleStyle, detailStyle } from '../common/ChartTooltip';
+
+function NPSDistributionTooltip(props) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    const category =
-      parseInt(data.score) <= 6
-        ? t('analytics.detractor')
-        : parseInt(data.score) <= 8
-        ? t('analytics.passive')
-        : t('analytics.promoter');
-    return (
-      <div style={{
-        backgroundColor: '#fff',
-        boxShadow: '0 4px 6px rgba(0,0,0,.1)',
-        borderRadius: 8,
-        padding: 12,
-        border: '1px solid #e5e7eb'
-      }}>
-        <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>{t('analytics.score_label', { score: data.score })}</p>
-        <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>{t('analytics.count_label', { count: data.count })}</p>
-        <p style={{ fontSize: 14, color: data.fill, margin: 0 }}>
-          {category}
-        </p>
-      </div>
-    );
-  }
-  return null;
+  return (
+    <ChartTooltip {...props} renderContent={(data) => {
+      const category =
+        parseInt(data.score) <= 6
+          ? t('analytics.detractor')
+          : parseInt(data.score) <= 8
+          ? t('analytics.passive')
+          : t('analytics.promoter');
+      return (
+        <>
+          <p style={titleStyle}>{t('analytics.score_label', { score: data.score })}</p>
+          <p style={detailStyle}>{t('analytics.count_label', { count: data.count })}</p>
+          <p style={{ fontSize: 14, color: data.fill, margin: 0 }}>{category}</p>
+        </>
+      );
+    }} />
+  );
 }
 
 // Distribution Chart Component (score 0-10 histogram)

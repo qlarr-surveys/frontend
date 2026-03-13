@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import {
   Box,
   Table,
@@ -16,37 +16,28 @@ import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
+import { TABLE_HEADER_CELL_SX, EMPTY_STATE_SX } from '../common/styles';
 import { transformParagraphData } from '~/utils/analytics/dataTransformers';
+import usePagination from '~/hooks/usePagination';
 
 const ROWS_PER_PAGE = 10;
 
 export default function ParagraphVisualization({ question }) {
   const data = useMemo(() => transformParagraphData(question), [question]);
-  const [currentPage, setCurrentPage] = useState(1);
   const { t } = useTranslation(NAMESPACES.MANAGE);
-
-  const totalPages = Math.ceil(data.responses.length / ROWS_PER_PAGE);
-  const safePage = Math.min(currentPage, totalPages || 1);
-
-  const displayData = useMemo(() => {
-    const start = (safePage - 1) * ROWS_PER_PAGE;
-    return data.responses.slice(start, start + ROWS_PER_PAGE);
-  }, [data.responses, safePage]);
+  const { displayData, totalPages, safePage, startRow, endRow, handlePageChange } = usePagination(data.responses, ROWS_PER_PAGE);
 
   const stats = [
     ...buildBaseStats(data, t),
     { label: t('analytics.avg_length'), value: t('analytics.chars', { length: data.avgLength }) },
   ];
 
-  const startRow = (safePage - 1) * ROWS_PER_PAGE + 1;
-  const endRow = Math.min(safePage * ROWS_PER_PAGE, data.responses.length);
-
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         <StatsRow stats={stats} columns={3} />
         {data.responses.length === 0 ? (
-          <Box sx={{ p: 4, textAlign: 'center', color: 'text.secondary' }}>
+          <Box sx={EMPTY_STATE_SX}>
             <Typography variant="body1">{t('analytics.no_responses_available')}</Typography>
           </Box>
         ) : (
@@ -55,10 +46,10 @@ export default function ParagraphVisualization({ question }) {
               <Table size="small">
                 <TableHead>
                   <TableRow sx={{ bgcolor: 'grey.50' }}>
-                    <TableCell sx={{ fontWeight: 600, fontSize: 12, textTransform: 'uppercase', color: 'text.secondary', width: 60 }}>
+                    <TableCell sx={{ ...TABLE_HEADER_CELL_SX, width: 60 }}>
                       #
                     </TableCell>
-                    <TableCell sx={{ fontWeight: 600, fontSize: 12, textTransform: 'uppercase', color: 'text.secondary' }}>
+                    <TableCell sx={TABLE_HEADER_CELL_SX}>
                       {t('analytics.col_response')}
                     </TableCell>
                   </TableRow>
@@ -86,7 +77,7 @@ export default function ParagraphVisualization({ question }) {
                 <Pagination
                   count={totalPages}
                   page={safePage}
-                  onChange={(e, value) => setCurrentPage(value)}
+                  onChange={handlePageChange}
                   color="primary"
                   showFirstButton
                   showLastButton

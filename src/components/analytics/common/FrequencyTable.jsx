@@ -1,4 +1,3 @@
-import { useState, useMemo } from 'react';
 import {
   Box,
   Table,
@@ -13,6 +12,8 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
+import usePagination from '~/hooks/usePagination';
+import { TABLE_HEADER_CELL_SX, EMPTY_STATE_SX } from './styles';
 
 export default function FrequencyTable({
   data,
@@ -23,32 +24,15 @@ export default function FrequencyTable({
   rowsPerPage = 10,
 }) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const totalPages = data?.length ? Math.ceil(data.length / rowsPerPage) : 0;
-  const safePage = Math.min(currentPage, totalPages || 1);
-
-  const displayData = useMemo(() => {
-    if (!data || data.length === 0) return [];
-    if (!paginated) return data;
-    const start = (safePage - 1) * rowsPerPage;
-    return data.slice(start, start + rowsPerPage);
-  }, [data, safePage, rowsPerPage, paginated]);
+  const { displayData, totalPages, safePage, startRow, endRow, handlePageChange } = usePagination(data, rowsPerPage, paginated);
 
   if (!data || data.length === 0) {
     return (
-      <Box sx={{ p: 4, textAlign: 'center', color: 'text.secondary' }}>
+      <Box sx={EMPTY_STATE_SX}>
         <Typography variant="body1">{emptyMessage || t('analytics.no_data_available')}</Typography>
       </Box>
     );
   }
-
-  const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-  };
-
-  const startRow = (safePage - 1) * rowsPerPage + 1;
-  const endRow = Math.min(safePage * rowsPerPage, data.length);
 
   return (
     <Box>
@@ -56,13 +40,13 @@ export default function FrequencyTable({
         <Table size="small">
           <TableHead>
             <TableRow sx={{ bgcolor: 'grey.50' }}>
-              <TableCell sx={{ fontWeight: 600, fontSize: 12, textTransform: 'uppercase', color: 'text.secondary' }}>
+              <TableCell sx={TABLE_HEADER_CELL_SX}>
                 {valueLabel || t('analytics.col_value')}
               </TableCell>
-              <TableCell align="right" sx={{ fontWeight: 600, fontSize: 12, textTransform: 'uppercase', color: 'text.secondary' }}>
+              <TableCell align="right" sx={TABLE_HEADER_CELL_SX}>
                 {countLabel || t('analytics.col_count')}
               </TableCell>
-              <TableCell align="right" sx={{ fontWeight: 600, fontSize: 12, textTransform: 'uppercase', color: 'text.secondary' }}>
+              <TableCell align="right" sx={TABLE_HEADER_CELL_SX}>
                 %
               </TableCell>
             </TableRow>

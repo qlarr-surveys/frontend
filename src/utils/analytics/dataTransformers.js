@@ -30,6 +30,10 @@ const largestRemainderRound = (items, getCount, total) => {
   return floored;
 };
 
+// Calculate average string length from an array of values
+const calculateAvgLength = (values, count) =>
+  count > 0 ? (values.reduce((sum, v) => sum + v.length, 0) / count).toFixed(1) : 0;
+
 // Shared helper: extract total/answered/skipped/incomplete/preview from any question
 const getResponseMetrics = ({ answeredCount, responses, totalResponses, incompleteResponses = 0, previewResponses = 0 }) => {
   const total = totalResponses ?? 0;
@@ -340,15 +344,11 @@ export const transformTextData = (question) => {
   const metrics = getResponseMetrics(question);
   const frequency = calculateFrequency(responses);
 
-  const avgLength = metrics.answered > 0
-    ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
-    : 0;
-
   return {
     frequencyData: frequency,
     uniqueCount: frequency.length,
     ...metrics,
-    avgLength,
+    avgLength: calculateAvgLength(responses, metrics.answered),
   };
 };
 
@@ -357,14 +357,10 @@ export const transformParagraphData = (question) => {
   const { responses } = question;
   const metrics = getResponseMetrics(question);
 
-  const avgLength = metrics.answered > 0
-    ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
-    : 0;
-
   return {
     responses,
     ...metrics,
-    avgLength,
+    avgLength: calculateAvgLength(responses, metrics.answered),
   };
 };
 
@@ -422,9 +418,7 @@ export const transformMultipleTextData = (question) => {
 
   const fieldStats = fields.map((field) => {
     const values = responses.map((r) => r[field.code] || '').filter(Boolean);
-    const avgLength = values.length > 0
-      ? (values.reduce((sum, v) => sum + v.length, 0) / values.length).toFixed(1)
-      : 0;
+    const avgLength = calculateAvgLength(values, values.length);
 
     return {
       field: field.label,
@@ -626,51 +620,36 @@ export const transformFileUploadData = (question) => {
   };
 };
 
-// Transform Signature data
-export const transformSignatureData = (question) => {
+// Shared helper for presence-based visualizations (Signature, PhotoCapture, MediaCapture)
+const transformPresenceData = (question, presentLabel, absentLabel, presentKey, absentKey) => {
   const metrics = getResponseMetrics(question);
   const presence = question.presenceCount;
-  const signed = presence?.presentCount ?? 0;
-  const unsigned = Math.max(0, metrics.answered - signed);
+  const presentCount = presence?.presentCount ?? 0;
+  const absentCount = Math.max(0, metrics.answered - presentCount);
 
   const rawItems = [
-    { name: 'Signed', value: signed, count: signed },
-    { name: 'Unsigned', value: unsigned, count: unsigned },
+    { name: presentLabel, value: presentCount, count: presentCount },
+    { name: absentLabel, value: absentCount, count: absentCount },
   ];
   const allItems = [...rawItems, ...buildStatusEntries(metrics)];
   const chartData = applyRoundedPercentages(allItems, metrics.total);
 
   return {
-    completionRate: metrics.total > 0 ? Math.round((signed / metrics.total) * 100) : 0,
-    signed,
-    unsigned,
+    completionRate: metrics.total > 0 ? Math.round((presentCount / metrics.total) * 100) : 0,
+    [presentKey]: presentCount,
+    [absentKey]: absentCount,
     chartData,
     ...metrics,
   };
 };
+
+// Transform Signature data
+export const transformSignatureData = (question) =>
+  transformPresenceData(question, 'Signed', 'Unsigned', 'signed', 'unsigned');
 
 // Transform Photo Capture data
-export const transformPhotoCaptureData = (question) => {
-  const metrics = getResponseMetrics(question);
-  const presence = question.presenceCount;
-  const captured = presence?.presentCount ?? 0;
-  const notCaptured = Math.max(0, metrics.answered - captured);
-
-  const rawItems = [
-    { name: 'Captured', value: captured, count: captured },
-    { name: 'Not Captured', value: notCaptured, count: notCaptured },
-  ];
-  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const chartData = applyRoundedPercentages(allItems, metrics.total);
-
-  return {
-    completionRate: metrics.total > 0 ? Math.round((captured / metrics.total) * 100) : 0,
-    captured,
-    notCaptured,
-    chartData,
-    ...metrics,
-  };
-};
+export const transformPhotoCaptureData = (question) =>
+  transformPresenceData(question, 'Captured', 'Not Captured', 'captured', 'notCaptured');
 
 // Transform Barcode data
 export const transformBarcodeData = (question) => {

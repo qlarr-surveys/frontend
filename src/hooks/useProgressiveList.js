@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const schedule = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+const schedule = window.requestIdleCallback || ((cb) => setTimeout(cb, 100));
 const cancel = window.cancelIdleCallback || clearTimeout;
 
 export default function useProgressiveList(items, batchSize = 5) {

@@ -15,47 +15,20 @@ import {
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import { getChartColor } from '~/utils/analytics/colors';
+import ChartTooltip, { titleStyle, detailStyle, detailStyleLast, renderLegend } from '../common/ChartTooltip';
 
-const renderLegend = (props) => {
-  const { payload } = props;
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', justifyContent: 'center', paddingTop: 22 }}>
-      {payload.map((entry, index) => (
-        <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <div style={{ width: 12, height: 12, borderRadius: 2, backgroundColor: entry.color, flexShrink: 0 }} />
-          <span style={{ fontSize: 12, color: '#374151' }}>{entry.value}</span>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-function RankingTooltip({ active, payload }) {
+function RankingTooltip(props) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div style={{
-        backgroundColor: '#fff',
-        boxShadow: '0 4px 6px rgba(0,0,0,.1)',
-        borderRadius: 8,
-        padding: 12,
-        border: '1px solid #e5e7eb'
-      }}>
-        <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>{data.name}</p>
-        <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
-          {t('analytics.average_rank_label', { rank: data.averageRank })}
-        </p>
-        <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
-          {t('analytics.first_place_label', { count: data.firstPlace })}
-        </p>
-        <p style={{ fontSize: 14, color: '#6b7280', margin: 0 }}>
-          {t('analytics.last_place_label', { count: data.lastPlace })}
-        </p>
-      </div>
-    );
-  }
-  return null;
+  return (
+    <ChartTooltip {...props} renderContent={(data) => (
+      <>
+        <p style={titleStyle}>{data.name}</p>
+        <p style={detailStyle}>{t('analytics.average_rank_label', { rank: data.averageRank })}</p>
+        <p style={detailStyle}>{t('analytics.first_place_label', { count: data.firstPlace })}</p>
+        <p style={detailStyleLast}>{t('analytics.last_place_label', { count: data.lastPlace })}</p>
+      </>
+    )} />
+  );
 }
 
 function RankingChart({

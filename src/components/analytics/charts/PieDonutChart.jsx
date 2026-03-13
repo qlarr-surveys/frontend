@@ -3,6 +3,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recha
 import useIsFirstRender from '~/hooks/useIsFirstRender';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
+import ChartTooltip, { titleStyle, detailStyle, detailStyleLast } from '../common/ChartTooltip';
 
 const RADIAN = Math.PI / 180;
 
@@ -27,29 +28,17 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
-function PieTooltip({ active, payload }) {
+function PieTooltip(props) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div style={{
-        backgroundColor: '#fff',
-        boxShadow: '0 4px 6px rgba(0,0,0,.1)',
-        borderRadius: 8,
-        padding: 12,
-        border: '1px solid #e5e7eb'
-      }}>
-        <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>{data.name}</p>
-        <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
-          {t('analytics.count_label', { count: data.value })}
-        </p>
-        <p style={{ fontSize: 14, color: '#6b7280', margin: 0 }}>
-          {t('analytics.percentage_label', { percentage: data.percentage })}
-        </p>
-      </div>
-    );
-  }
-  return null;
+  return (
+    <ChartTooltip {...props} renderContent={(data) => (
+      <>
+        <p style={titleStyle}>{data.name}</p>
+        <p style={detailStyle}>{t('analytics.count_label', { count: data.value })}</p>
+        <p style={detailStyleLast}>{t('analytics.percentage_label', { percentage: data.percentage })}</p>
+      </>
+    )} />
+  );
 }
 
 function PieDonutChart({
