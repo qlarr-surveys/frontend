@@ -46,7 +46,7 @@ function InfoItem({ label, value }) {
       <Typography color="text.secondary" fontWeight={500}>
         {label}
       </Typography>
-      <Typography>{value ?? "—"}</Typography>
+      <Typography component="div">{value ?? "—"}</Typography>
     </Box>
   );
 }

@@ -1,13 +1,7 @@
-// Data transformers for converting survey responses to chart-ready formats
+// Data transformers for converting backend analytics summaries to chart-ready formats
 import {
-  calculateNPS,
-  calculateStats,
   calculateFrequency,
-  calculateRankingAverages,
-  calculateMCQFrequency,
-  calculateMatrixData,
   calculateEmailDomains,
-  detectOutliers,
 } from './calculations';
 import { getChartColor, NPS_COLORS, STATUS_COLORS } from './colors';
 import { BACKEND_BASE_URL } from '~/constants/networking';
@@ -24,22 +18,22 @@ const extractCodes = (options) => (options ?? []).map((o) => o.code);
 
 // Largest-remainder rounding: ensures percentages sum to exactly 100
 const largestRemainderRound = (items, getCount, total) => {
-  if (total === 0) return items.map(() => 0);
+  if (total === 0 || items.length === 0) return items.map(() => 0);
   const rawPcts = items.map((item) => (getCount(item) / total) * 100);
   const floored = rawPcts.map(Math.floor);
   let remainder = 100 - floored.reduce((a, b) => a + b, 0);
   const remainders = rawPcts.map((raw, i) => ({ i, frac: raw - floored[i] }));
   remainders.sort((a, b) => b.frac - a.frac);
-  for (let j = 0; j < remainder; j++) {
+  for (let j = 0; j < remainder && j < remainders.length; j++) {
     floored[remainders[j].i]++;
   }
   return floored;
 };
 
 // Shared helper: extract total/answered/skipped/incomplete/preview from any question
-const getResponseMetrics = ({ responses = [], totalResponses, incompleteResponses = 0, previewResponses = 0 }) => {
-  const total = totalResponses ?? responses.length;
-  const answered = responses.length;
+const getResponseMetrics = ({ answeredCount, responses, totalResponses, incompleteResponses = 0, previewResponses = 0 }) => {
+  const total = totalResponses ?? 0;
+  const answered = answeredCount ?? responses?.length ?? 0;
   const incomplete = incompleteResponses;
   const preview = previewResponses;
   const completed = total - incomplete - preview;
@@ -113,15 +107,45 @@ const attachIconsToMatrixData = (baseData, images) => {
   };
 };
 
+// Pivot flat matrixSummary [{rowCode, columnCode, count}] into grid rows [{row, col1: count, ...}]
+const pivotMatrixSummary = (matrixSummary, rowCodes, colCodes) => {
+  const grid = rowCodes.map((row) => {
+    const rowData = { row };
+    colCodes.forEach((col) => (rowData[col] = 0));
+    return rowData;
+  });
+  const rowIndex = new Map(rowCodes.map((r, i) => [r, i]));
+  (matrixSummary || []).forEach(({ rowCode, columnCode, count }) => {
+    const idx = rowIndex.get(rowCode);
+    if (idx !== undefined) {
+      grid[idx][columnCode] = count;
+    }
+  });
+  return grid;
+};
+
+// Remap matrix data from codes to labels for display
+const remapMatrixToLabels = (matrix, rowLabelMap, colLabelMap, colCodes) => {
+  return matrix.map((rowData) => {
+    const remapped = { row: rowLabelMap[rowData.row] || rowData.row };
+    colCodes.forEach((code) => {
+      const label = colLabelMap[code] || code;
+      remapped[label] = rowData[code] || 0;
+    });
+    return remapped;
+  });
+};
+
 // Transform SCQ data for pie/bar charts
 export const transformSCQData = (question) => {
-  const { responses } = question;
   const metrics = getResponseMetrics(question);
-  const frequency = calculateFrequency(responses);
   const labelMap = buildLabelMap(question.options);
+  const counts = question.frequencyCounts || [];
 
-  const rawItems = frequency.map((item, i) => ({
-    name: labelMap[item.value] || item.value,
+  const sorted = [...counts].sort((a, b) => b.count - a.count);
+
+  const rawItems = counts.map((item, i) => ({
+    name: labelMap[item.code] || item.code,
     value: item.count,
     count: item.count,
     fill: getChartColor(i),
@@ -133,24 +157,24 @@ export const transformSCQData = (question) => {
     pieData: chartData,
     barData: chartData,
     ...metrics,
-    mode: labelMap[frequency[0]?.value] || frequency[0]?.value,
-    modeCount: frequency[0]?.count,
+    mode: labelMap[sorted[0]?.code] || sorted[0]?.code,
+    modeCount: sorted[0]?.count,
   };
 };
 
 // Transform MCQ data for bar charts
 export const transformMCQData = (question) => {
-  const { responses } = question;
   const metrics = getResponseMetrics(question);
   const labelMap = buildLabelMap(question.options);
-  const freq = calculateMCQFrequency(responses, extractCodes(question.options));
+  const counts = question.frequencyCounts || [];
 
+  const totalSelections = counts.reduce((sum, item) => sum + item.count, 0);
   const avgSelections = metrics.answered > 0
-    ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
+    ? (totalSelections / metrics.answered).toFixed(1)
     : 0;
 
-  const rawItems = freq.map((item, i) => ({
-    name: labelMap[item.option] || item.option,
+  const rawItems = counts.map((item, i) => ({
+    name: labelMap[item.code] || item.code,
     value: item.count,
     count: item.count,
     fill: getChartColor(i),
@@ -168,13 +192,13 @@ export const transformMCQData = (question) => {
 
 // Transform NPS data for gauge and bar charts
 export const transformNPSData = (question) => {
-  const { responses } = question;
   const metrics = getResponseMetrics(question);
-  const nps = calculateNPS(responses);
+  const nps = question.npsSummary;
+  const total = nps.answeredCount;
 
-  // Distribution by score (0-10)
-  const distribution = Array(11).fill(0);
-  responses.forEach((score) => distribution[score]++);
+  const detractorPct = total > 0 ? Math.round((nps.detractors / total) * 100) : 0;
+  const passivePct = total > 0 ? Math.round((nps.passives / total) * 100) : 0;
+  const promoterPct = total > 0 ? Math.round((nps.promoters / total) * 100) : 0;
 
   const rawCategoryData = [
     { name: 'Detractors', value: nps.detractors, count: nps.detractors, fill: NPS_COLORS.detractor },
@@ -184,86 +208,85 @@ export const transformNPSData = (question) => {
   const allCategoryItems = [...rawCategoryData, ...buildStatusEntries(metrics)];
   const categoryData = applyRoundedPercentages(allCategoryItems, metrics.total);
 
+  const distribution = nps.distribution || Array(11).fill(0);
+
   return {
-    score: nps.score,
+    score: Math.round(nps.score),
     categoryData,
     distributionData: distribution.map((count, score) => ({
       score: score.toString(),
       count,
       fill: score <= 6 ? NPS_COLORS.detractor : score <= 8 ? NPS_COLORS.passive : NPS_COLORS.promoter,
     })),
-    ...nps,
+    detractors: nps.detractors,
+    passives: nps.passives,
+    promoters: nps.promoters,
+    detractorPct,
+    passivePct,
+    promoterPct,
+    total: nps.answeredCount,
     ...metrics,
   };
 };
 
 // Transform Ranking data for bar charts
 export const transformRankingData = (question) => {
-  const { options, responses } = question;
   const metrics = getResponseMetrics(question);
-  const labelMap = buildLabelMap(options);
-  const optionCodes = extractCodes(options);
-  const rankings = calculateRankingAverages(responses, optionCodes);
-
-  // Calculate rank distribution for stacked chart
-  const rankDistribution = optionCodes.map((code) => {
-    const data = { option: labelMap[code] || code };
-    for (let rank = 1; rank <= optionCodes.length; rank++) {
-      data[`Rank ${rank}`] = responses.filter((r) => r.indexOf(code) === rank - 1).length;
-    }
-    return data;
-  });
+  const labelMap = buildLabelMap(question.options);
+  const rankings = question.rankingSummary || [];
 
   return {
     averageRankData: rankings.map((item, i) => ({
-      name: labelMap[item.option] || item.option,
+      name: labelMap[item.code] || item.code,
       averageRank: item.averageRank,
       firstPlace: item.firstPlaceCount,
       lastPlace: item.lastPlaceCount,
       fill: getChartColor(i),
     })),
-    rankDistribution,
     ...metrics,
   };
 };
 
 // Transform Number data for table view
 export const transformNumberData = (question) => {
-  const { responses } = question;
   const metrics = getResponseMetrics(question);
-  const stats = calculateStats(responses);
-  const outlierData = detectOutliers(responses);
+  const ns = question.numberSummary;
 
-  return { stats, outlierData, ...metrics };
-};
+  const stats = ns ? {
+    mean: ns.mean,
+    median: ns.median,
+    stdDev: ns.stdDev,
+    min: ns.min,
+    max: ns.max,
+    range: Math.round((ns.max - ns.min) * 100) / 100,
+    count: ns.count,
+    sum: ns.sum,
+  } : { mean: 0, median: 0, stdDev: 0, min: 0, max: 0, range: 0, count: 0, sum: 0 };
 
-// Remap matrix data from codes to labels for display
-const remapMatrixToLabels = (matrix, rowLabelMap, colLabelMap, colCodes) => {
-  return matrix.map((rowData) => {
-    const remapped = { row: rowLabelMap[rowData.row] || rowData.row };
-    colCodes.forEach((code) => {
-      const label = colLabelMap[code] || code;
-      remapped[label] = rowData[code] || 0;
-    });
-    return remapped;
-  });
+  const outlierData = ns ? {
+    outliers: ns.outlierValues || [],
+    outliersCount: ns.outliersCount || 0,
+  } : { outliers: [], outliersCount: 0 };
+
+  const frequencyTable = ns?.frequencyTable || [];
+
+  return { stats, outlierData, frequencyTable, ...metrics };
 };
 
 // Transform Matrix SCQ data for heatmap
 export const transformMatrixSCQData = (question) => {
-  const responses = question.responses || [];
   const metrics = getResponseMetrics(question);
   const rows = extractCodes(question.rows);
   const columns = extractCodes(question.columns);
   const rowLabelMap = buildLabelMap(question.rows);
   const colLabelMap = buildLabelMap(question.columns);
-  const matrix = calculateMatrixData(responses, rows, columns);
+
+  const matrix = pivotMatrixSummary(question.matrixSummary, rows, columns);
   const displayMatrix = remapMatrixToLabels(matrix, rowLabelMap, colLabelMap, columns);
   const displayRows = rows.map((r) => rowLabelMap[r] || r);
   const displayColumns = columns.map((c) => colLabelMap[c] || c);
 
   // Calculate row averages (for Likert scale)
-
   const rowAverages = displayMatrix.map((rowData) => {
     let sum = 0;
     let count = 0;
@@ -291,19 +314,21 @@ export const transformMatrixSCQData = (question) => {
 
 // Transform Matrix MCQ data for heatmap
 export const transformMatrixMCQData = (question) => {
-  const responses = question.responses || [];
   const metrics = getResponseMetrics(question);
   const rows = extractCodes(question.rows);
   const columns = extractCodes(question.columns);
   const rowLabelMap = buildLabelMap(question.rows);
   const colLabelMap = buildLabelMap(question.columns);
-  const matrix = calculateMatrixData(responses, rows, columns);
+
+  const matrix = pivotMatrixSummary(question.matrixSummary, rows, columns);
   const displayMatrix = remapMatrixToLabels(matrix, rowLabelMap, colLabelMap, columns);
   const displayRows = rows.map((r) => rowLabelMap[r] || r);
   const displayColumns = columns.map((c) => colLabelMap[c] || c);
 
+  // Derive avgSelections from matrix totals
+  const totalSelections = (question.matrixSummary || []).reduce((sum, item) => sum + item.count, 0);
   const avgSelections = metrics.answered > 0
-    ? (responses.flat().length / metrics.answered).toFixed(1)
+    ? (totalSelections / metrics.answered).toFixed(1)
     : 0;
 
   return { heatmapData: displayMatrix, rows: displayRows, columns: displayColumns, avgSelections, ...metrics };
@@ -417,23 +442,18 @@ export const transformAutocompleteData = transformSCQData;
 
 // Transform Image Ranking data
 export const transformImageRankingData = (question) => {
-  const { images, responses } = question;
+  const { images } = question;
   const metrics = getResponseMetrics(question);
-  const optionCodes = extractCodes(question.options);
   const labelMap = buildLabelMap(question.options);
-  const parsed = responses.map((r) => {
-    if (Array.isArray(r)) return r;
-    const entries = Object.entries(r);
-    return entries.sort((a, b) => a[1] - b[1]).map(([key]) => key);
-  });
-  const rankings = calculateRankingAverages(parsed, optionCodes);
+  const rankings = question.rankingSummary || [];
   const resolveIcon = buildImageLookup(images);
 
   const rankedImages = rankings.map((item, i) => {
-    const image = resolveIcon(item.option);
+    const image = resolveIcon(item.code);
     return {
-      ...item,
-      name: image?.label || labelMap[item.option] || `Image ${i + 1}`,
+      option: item.code,
+      averageRank: item.averageRank,
+      name: image?.label || labelMap[item.code] || `Image ${i + 1}`,
       imageUrl: resolveImageUrl(image?.url),
       firstPlace: item.firstPlaceCount,
       lastPlace: item.lastPlaceCount,
@@ -446,23 +466,18 @@ export const transformImageRankingData = (question) => {
 
 // Transform Image SCQ data
 export const transformImageSCQData = (question) => {
-  const { images, responses } = question;
+  const { images } = question;
   const metrics = getResponseMetrics(question);
-  const frequency = calculateFrequency(responses);
+  const counts = question.frequencyCounts || [];
 
-  // Build lookup: imageId -> frequency entry, bridging short codes ("A2") to full IDs ("Q309vcaA2")
+  // Build code→count map from backend frequency counts
+  const countByCode = new Map(counts.map((fc) => [fc.code, fc.count]));
   const resolveIcon = buildImageLookup(images);
-  const freqByImageId = {};
-  frequency.forEach((item) => {
-    const image = resolveIcon(item.value);
-    if (image) {
-      freqByImageId[image.id] = item;
-    }
-  });
 
-  const rawItems = images.map((img, i) => {
-    const freq = freqByImageId[img.id];
-    const count = freq?.count || 0;
+  const rawItems = (images || []).map((img, i) => {
+    // Match image to its frequency count via suffix lookup
+    const imgSuffix = img.id.match(/([A-Za-z]\d+)$/)?.[1];
+    const count = countByCode.get(imgSuffix) || countByCode.get(img.id) || 0;
     return {
       name: img.label || `Image ${i + 1}`,
       value: count,
@@ -487,16 +502,15 @@ export const transformImageSCQData = (question) => {
 
 // Transform Image MCQ data
 export const transformImageMCQData = (question) => {
-  const { images, responses } = question;
+  const { images } = question;
   const metrics = getResponseMetrics(question);
-  const options = question.options?.length > 0
-    ? extractCodes(question.options)
-    : images.map((img) => img.label);
-  const freq = calculateMCQFrequency(responses, options);
+  const counts = question.frequencyCounts || [];
 
+  const countByCode = new Map(counts.map((fc) => [fc.code, fc.count]));
   const resolveIcon = buildImageLookup(images);
-  const rawItems = freq.map((item, i) => {
-    const image = resolveIcon(item.option);
+
+  const rawItems = counts.map((item, i) => {
+    const image = resolveIcon(item.code);
     return {
       name: image?.label || `Image ${i + 1}`,
       value: item.count,
@@ -518,14 +532,13 @@ export const transformImageMCQData = (question) => {
 
 // Transform Icon SCQ data for pie/bar charts with icon support
 export const transformIconSCQData = (question) => {
-  const { responses } = question;
   const metrics = getResponseMetrics(question);
   const images = question.images || [];
-  const frequency = calculateFrequency(responses);
+  const counts = question.frequencyCounts || [];
 
   const resolveIcon = buildImageLookup(images);
-  const rawItems = frequency.map((item, i) => {
-    const image = resolveIcon(item.value);
+  const rawItems = counts.map((item, i) => {
+    const image = resolveIcon(item.code);
     return {
       name: image?.label || `Option ${i + 1}`,
       value: item.count,
@@ -537,33 +550,31 @@ export const transformIconSCQData = (question) => {
   const allItems = [...rawItems, ...buildStatusEntries(metrics)];
   const chartData = applyRoundedPercentages(allItems, metrics.total);
 
+  const sorted = [...counts].sort((a, b) => b.count - a.count);
+
   return {
     pieData: chartData,
     barData: chartData,
     ...metrics,
     mode: chartData[0]?.name,
-    modeCount: frequency[0]?.count,
+    modeCount: sorted[0]?.count,
   };
 };
 
 // Transform Icon MCQ data for bar charts with icon support
 export const transformIconMCQData = (question) => {
-  const { responses } = question;
   const metrics = getResponseMetrics(question);
   const images = question.images || [];
-  const options = question.options || [];
-  const optionKeys = options.length > 0
-    ? extractCodes(options)
-    : images.map((img) => img.label);
-  const freq = calculateMCQFrequency(responses, optionKeys);
+  const counts = question.frequencyCounts || [];
 
+  const totalSelections = counts.reduce((sum, item) => sum + item.count, 0);
   const avgSelections = metrics.answered > 0
-    ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
+    ? (totalSelections / metrics.answered).toFixed(1)
     : 0;
 
   const resolveIcon = buildImageLookup(images);
-  const rawItems = freq.map((item, i) => {
-    const image = resolveIcon(item.option);
+  const rawItems = counts.map((item, i) => {
+    const image = resolveIcon(item.code);
     return {
       name: image?.label || `Option ${i + 1}`,
       value: item.count,
@@ -617,9 +628,9 @@ export const transformFileUploadData = (question) => {
 
 // Transform Signature data
 export const transformSignatureData = (question) => {
-  const { responses } = question;
   const metrics = getResponseMetrics(question);
-  const signed = responses.filter((r) => r === true).length;
+  const presence = question.presenceCount;
+  const signed = presence?.presentCount ?? 0;
   const unsigned = Math.max(0, metrics.answered - signed);
 
   const rawItems = [
@@ -640,25 +651,22 @@ export const transformSignatureData = (question) => {
 
 // Transform Photo Capture data
 export const transformPhotoCaptureData = (question) => {
-  const { responses } = question;
   const metrics = getResponseMetrics(question);
-  const captured = responses.filter((r) => r.captured);
-  const notCaptured = Math.max(0, metrics.answered - captured.length);
-  const sizes = captured.map((r) => r.fileSize);
-  const stats = calculateStats(sizes);
+  const presence = question.presenceCount;
+  const captured = presence?.presentCount ?? 0;
+  const notCaptured = Math.max(0, metrics.answered - captured);
 
   const rawItems = [
-    { name: 'Captured', value: captured.length, count: captured.length },
+    { name: 'Captured', value: captured, count: captured },
     { name: 'Not Captured', value: notCaptured, count: notCaptured },
   ];
   const allItems = [...rawItems, ...buildStatusEntries(metrics)];
   const chartData = applyRoundedPercentages(allItems, metrics.total);
 
   return {
-    completionRate: metrics.total > 0 ? Math.round((captured.length / metrics.total) * 100) : 0,
-    captured: captured.length,
+    completionRate: metrics.total > 0 ? Math.round((captured / metrics.total) * 100) : 0,
+    captured,
     notCaptured,
-    sizeStats: stats,
     chartData,
     ...metrics,
   };

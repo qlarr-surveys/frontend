@@ -13,23 +13,15 @@ export default function NumberVisualization({ question }) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const hasOutliers = data.outlierData.outliersCount > 0;
 
-  // Build table data
+  // Build table data from backend frequency table
   const tableData = useMemo(() => {
-    const valueCounts = {};
-
-    // Count frequency of each value
-    question.responses.forEach((value) => {
-      valueCounts[value] = (valueCounts[value] || 0) + 1;
-    });
-
-    // Build table rows
-    return Object.entries(valueCounts).map(([value, count]) => ({
-      rawValue: parseFloat(value),
-      value: formatNumber(parseFloat(value), { context: 'full', decimals: 2 }),
-      frequency: count,
-      percentage: `${((count / data.stats.count) * 100).toFixed(1)}%`,
+    return (data.frequencyTable || []).map((item) => ({
+      rawValue: item.value,
+      value: formatNumber(item.value, { context: 'full', decimals: 2 }),
+      frequency: item.count,
+      percentage: data.stats.count > 0 ? `${((item.count / data.stats.count) * 100).toFixed(1)}%` : '0.0%',
     }));
-  }, [question.responses, data.stats.count]);
+  }, [data.frequencyTable, data.stats.count]);
 
   // Define columns
   const columns = [

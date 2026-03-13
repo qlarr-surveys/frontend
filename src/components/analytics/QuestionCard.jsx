@@ -91,7 +91,15 @@ function QuestionCard({ question, totalResponses, incompleteResponses, previewRe
     );
   }
 
-  if (!enrichedQuestion.responses || enrichedQuestion.responses.length === 0) {
+  const hasData = enrichedQuestion.responses?.length > 0
+    || enrichedQuestion.frequencyCounts
+    || enrichedQuestion.npsSummary
+    || enrichedQuestion.numberSummary
+    || enrichedQuestion.rankingSummary
+    || enrichedQuestion.matrixSummary
+    || enrichedQuestion.presenceCount;
+
+  if (!hasData) {
     return <NoResponsesMessage />;
   }
 
