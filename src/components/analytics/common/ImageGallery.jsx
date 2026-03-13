@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Box, Grid, Typography, Card } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 
 // Placeholder SVG for mock images
 const PlaceholderImage = ({ label, color = '#3b82f6' }) => (
@@ -29,6 +31,7 @@ export default function ImageGallery({
   selectedId = null,
 }) {
   const [hoveredId, setHoveredId] = useState(null);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   return (
     <Grid container spacing={2}>
@@ -81,7 +84,7 @@ export default function ImageGallery({
                       {image.count}
                     </Typography>
                     <Typography variant="body2">
-                      {image.percentage !== undefined ? `${image.percentage}%` : 'selections'}
+                      {image.percentage !== undefined ? `${image.percentage}%` : t('analytics.selections')}
                     </Typography>
                   </Box>
                 </Box>
@@ -157,6 +160,7 @@ export default function ImageGallery({
 
 // Ranked image gallery with positions
 export function RankedImageGallery({ images, showAverageRank = true }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const getRankColor = (index) => {
     if (index === 0) return '#eab308'; // gold
     if (index === 1) return '#9ca3af'; // silver
@@ -228,7 +232,7 @@ export function RankedImageGallery({ images, showAverageRank = true }) {
             </Typography>
             {showAverageRank && (
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Average rank: {image.averageRank}
+                {t('analytics.average_rank_colon', { rank: image.averageRank })}
               </Typography>
             )}
           </Box>
@@ -236,10 +240,10 @@ export function RankedImageGallery({ images, showAverageRank = true }) {
           {/* Stats */}
           <Box sx={{ textAlign: 'right' }}>
             <Typography variant="body2" sx={{ color: 'success.main' }}>
-              <strong>{image.firstPlace}</strong> first
+              {t('analytics.count_first', { count: image.firstPlace })}
             </Typography>
             <Typography variant="body2" sx={{ color: 'error.main' }}>
-              <strong>{image.lastPlace}</strong> last
+              {t('analytics.count_last', { count: image.lastPlace })}
             </Typography>
           </Box>
         </Box>

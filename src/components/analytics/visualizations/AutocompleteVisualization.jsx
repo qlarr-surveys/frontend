@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import PieDonutChart from '../charts/PieDonutChart';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
@@ -11,15 +13,16 @@ import { transformAutocompleteData } from '~/utils/analytics/dataTransformers';
 export default function AutocompleteVisualization({ question }) {
   const [chartType, setChartType] = useState('bar');
   const data = useMemo(() => transformAutocompleteData(question), [question]);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const tabs = [
-    { value: 'bar', label: 'Bar Chart' },
-    { value: 'pie', label: 'Pie Chart' },
+    { value: 'bar', label: t('analytics.tab_bar_chart') },
+    { value: 'pie', label: t('analytics.tab_pie_chart') },
   ];
 
   const stats = [
-    ...buildBaseStats(data),
-    { label: 'Most Selected', value: data.mode },
+    ...buildBaseStats(data, t),
+    { label: t('analytics.most_selected'), value: data.mode },
   ];
 
   return (

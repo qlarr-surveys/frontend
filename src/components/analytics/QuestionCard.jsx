@@ -1,5 +1,7 @@
 import React, { Suspense, lazy, useMemo } from 'react';
 import { Box, CircularProgress, Paper, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import NoResponsesMessage from './common/NoResponsesMessage';
 
 const SCQVisualization = lazy(() => import('./visualizations/SCQVisualization'));
@@ -64,6 +66,7 @@ const ICON_UPGRADE_MAP = {
 };
 
 function QuestionCard({ question, totalResponses, incompleteResponses, previewResponses }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const enrichedQuestion = useMemo(() => ({
     ...question,
     totalResponses,
@@ -79,10 +82,10 @@ function QuestionCard({ question, totalResponses, incompleteResponses, previewRe
     return (
       <Paper variant="outlined" sx={{ p: 3, borderRadius: 2, bgcolor: 'grey.50' }}>
         <Typography variant="body2" color="text.secondary">
-          Visualization not available for question type: {question.type}
+          {t('analytics.viz_not_available', { type: question.type })}
         </Typography>
         <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-          Data: {JSON.stringify(question).substring(0, 200)}...
+          {t('analytics.data_preview', { data: JSON.stringify(question).substring(0, 200) })}
         </Typography>
       </Paper>
     );

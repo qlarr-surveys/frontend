@@ -12,32 +12,8 @@ import {
   Cell,
   LabelList,
 } from 'recharts';
-
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div style={{
-        backgroundColor: '#fff',
-        boxShadow: '0 4px 6px rgba(0,0,0,.1)',
-        borderRadius: 8,
-        padding: 12,
-        border: '1px solid #e5e7eb'
-      }}>
-        <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>{data.name}</p>
-        <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
-          Count: <span style={{ fontWeight: 500 }}>{data.count}</span>
-        </p>
-        {data.percentage !== undefined && (
-          <p style={{ fontSize: 14, color: '#6b7280', margin: 0 }}>
-            Percentage: <span style={{ fontWeight: 500 }}>{data.percentage}%</span>
-          </p>
-        )}
-      </div>
-    );
-  }
-  return null;
-};
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 
 const renderLegend = (props) => {
   const { payload } = props;
@@ -62,7 +38,35 @@ export default function HorizontalBarChart({
   barSize = 20,
   maxBarSize = 40,
 }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const isFirstRender = useIsFirstRender();
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div style={{
+          backgroundColor: '#fff',
+          boxShadow: '0 4px 6px rgba(0,0,0,.1)',
+          borderRadius: 8,
+          padding: 12,
+          border: '1px solid #e5e7eb'
+        }}>
+          <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>{data.name}</p>
+          <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
+            {t('analytics.count_label', { count: data.count })}
+          </p>
+          {data.percentage !== undefined && (
+            <p style={{ fontSize: 14, color: '#6b7280', margin: 0 }}>
+              {t('analytics.percentage_label', { percentage: data.percentage })}
+            </p>
+          )}
+        </div>
+      );
+    }
+    return null;
+  };
+
   // Calculate dynamic height based on data length
   const dynamicHeight = Math.max(height, data.length * 50);
 

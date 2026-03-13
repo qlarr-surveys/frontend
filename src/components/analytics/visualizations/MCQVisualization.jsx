@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import PieDonutChart from '../charts/PieDonutChart';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
@@ -11,16 +13,17 @@ import { transformMCQData } from '~/utils/analytics/dataTransformers';
 
 export default function MCQVisualization({ question }) {
   const [chartType, setChartType] = useState('donut');
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const data = useMemo(() => transformMCQData(question), [question]);
 
   const tabs = [
-    { value: 'donut', label: 'Donut' },
-    { value: 'bar', label: 'Bar' },
+    { value: 'donut', label: t('analytics.tab_donut') },
+    { value: 'bar', label: t('analytics.tab_bar') },
   ];
 
   const stats = [
-    ...buildBaseStats(data),
-    { label: 'Most Popular', value: data.barData[0]?.name || '-' },
+    ...buildBaseStats(data, t),
+    { label: t('analytics.most_popular'), value: data.barData[0]?.name || '-' },
   ];
 
   const tableData = data.barData.map((item) => ({
@@ -30,9 +33,9 @@ export default function MCQVisualization({ question }) {
   }));
 
   const tableColumns = [
-    { key: 'option', label: 'Option', sortable: true },
-    { key: 'count', label: 'Count', sortable: true, align: 'right' },
-    { key: 'percentage', label: 'Percentage', sortable: true, align: 'right' },
+    { key: 'option', label: t('analytics.col_option'), sortable: true },
+    { key: 'count', label: t('analytics.col_count'), sortable: true, align: 'right' },
+    { key: 'percentage', label: t('analytics.col_percentage'), sortable: true, align: 'right' },
   ];
 
   return (
@@ -56,7 +59,7 @@ export default function MCQVisualization({ question }) {
         {/* Option Breakdown Table */}
         <Box>
           <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
-            Option Breakdown
+            {t('analytics.option_breakdown')}
           </Typography>
           <DataTable
             data={tableData}
@@ -64,7 +67,7 @@ export default function MCQVisualization({ question }) {
             searchable={data.barData.length > 10}
             paginated={data.barData.length > 20}
             rowsPerPage={20}
-            emptyMessage="No selection data available"
+            emptyMessage={t('analytics.no_selection_data')}
           />
         </Box>
       </Box>

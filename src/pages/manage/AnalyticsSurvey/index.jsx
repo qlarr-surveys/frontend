@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import { Box, Paper, Typography } from '@mui/material';
 import { useService } from '~/hooks/use-service';
 import LoadingDots from '~/components/common/LoadingDots';
 import QuestionCard from '~/components/analytics/QuestionCard';
-import { QUESTION_TYPE_LABELS } from '~/components/analytics/questionTypes';
+import { getQuestionTypeLabel } from '~/components/analytics/questionTypes';
 
 function AnalyticsSurvey() {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const surveyService = useService('survey');
   const { surveyId } = useParams();
   const [loading, setLoading] = useState(true);
@@ -23,7 +26,7 @@ function AnalyticsSurvey() {
       })
       .catch((err) => {
         console.error('Failed to load analytics:', err);
-        setError(err.message || 'Failed to load analytics data');
+        setError(err.message || t('analytics.error_loading_data'));
       })
       .finally(() => setLoading(false));
   }, [surveyId]);
@@ -35,7 +38,7 @@ function AnalyticsSurvey() {
       <Box sx={{ p: 3, maxWidth: 960, mx: 'auto' }}>
         <Paper variant="outlined" sx={{ p: 3, borderRadius: 3, bgcolor: 'error.lighter' }}>
           <Typography variant="h6" color="error">
-            Error Loading Analytics
+            {t('analytics.error_loading')}
           </Typography>
           <Typography variant="body2" color="error" sx={{ mt: 1 }}>
             {error}
@@ -50,7 +53,7 @@ function AnalyticsSurvey() {
       <Box sx={{ p: 3, maxWidth: 960, mx: 'auto' }}>
         <Paper variant="outlined" sx={{ p: 3, borderRadius: 3 }}>
           <Typography variant="body1" color="text.secondary">
-            No analytics data available
+            {t('analytics.no_data')}
           </Typography>
         </Paper>
       </Box>
@@ -63,15 +66,15 @@ function AnalyticsSurvey() {
         <Paper variant="outlined" sx={{ p: 2, mb: 3, borderRadius: 3 }}>
           <Typography variant="h5">{data.surveyTitle}</Typography>
           <Typography variant="body2" color="text.secondary">
-            0 responses
+            {t('analytics.zero_responses')}
           </Typography>
         </Paper>
         <Paper variant="outlined" sx={{ p: 4, borderRadius: 3, textAlign: 'center' }}>
           <Typography variant="h6" color="text.secondary" gutterBottom>
-            No Responses Yet
+            {t('analytics.no_responses_title')}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Analytics will appear here once survey responses are submitted.
+            {t('analytics.no_responses_detail')}
           </Typography>
         </Paper>
       </Box>
@@ -86,10 +89,10 @@ function AnalyticsSurvey() {
         </Paper>
         <Paper variant="outlined" sx={{ p: 4, borderRadius: 3, textAlign: 'center' }}>
           <Typography variant="h6" color="text.secondary" gutterBottom>
-            No Questions Found
+            {t('analytics.no_questions_title')}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            This survey doesn't contain any analyzable questions.
+            {t('analytics.no_questions_detail')}
           </Typography>
         </Paper>
       </Box>
@@ -102,7 +105,7 @@ function AnalyticsSurvey() {
       <Paper variant="outlined" sx={{ p: 2, mb: 3, borderRadius: 3 }}>
         <Typography variant="h5">{data.surveyTitle}</Typography>
         <Typography variant="body2" color="text.secondary">
-          {data.questions.length} questions
+          {t('analytics.questions_count', { count: data.questions.length })}
         </Typography>
       </Paper>
 
@@ -113,7 +116,7 @@ function AnalyticsSurvey() {
             {question.title}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-            {QUESTION_TYPE_LABELS[question.type] || question.type}
+            {getQuestionTypeLabel(question.type, t)}
           </Typography>
           <QuestionCard question={question} totalResponses={data.totalResponses} incompleteResponses={data.incompleteResponses} previewResponses={data.previewResponses} />
         </Paper>

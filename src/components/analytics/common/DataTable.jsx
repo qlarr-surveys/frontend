@@ -15,6 +15,8 @@ import {
   InputAdornment,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 
 export default function DataTable({
   data,
@@ -23,8 +25,9 @@ export default function DataTable({
   paginated = true,
   rowsPerPage = 20,
   highlightRow,
-  emptyMessage = 'No data available',
+  emptyMessage,
 }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -110,7 +113,7 @@ export default function DataTable({
   if (data.length === 0) {
     return (
       <Box sx={{ p: 4, textAlign: 'center', color: 'text.secondary' }}>
-        <Typography variant="body1">{emptyMessage}</Typography>
+        <Typography variant="body1">{emptyMessage || t('analytics.no_data_available')}</Typography>
       </Box>
     );
   }
@@ -126,7 +129,7 @@ export default function DataTable({
           <TextField
             fullWidth
             size="small"
-            placeholder="Search..."
+            placeholder={t('analytics.search_placeholder')}
             value={searchTerm}
             onChange={handleSearch}
             InputProps={{
@@ -139,7 +142,7 @@ export default function DataTable({
           />
           {searchTerm && (
             <Typography variant="caption" sx={{ mt: 0.5, display: 'block', color: 'text.secondary' }}>
-              {sortedData.length} of {data.length} results
+              {t('analytics.search_results', { filtered: sortedData.length, total: data.length })}
             </Typography>
           )}
         </Box>
@@ -201,7 +204,7 @@ export default function DataTable({
       {paginated && totalPages > 1 && (
         <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Showing {startRow}-{endRow} of {sortedData.length} rows
+            {t('analytics.showing_rows', { start: startRow, end: endRow, total: sortedData.length })}
           </Typography>
           <Pagination
             count={totalPages}

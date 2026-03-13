@@ -1,11 +1,15 @@
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
+
 export default function CompletionCard({
   rate,
   completed,
   total,
-  label = 'Completion Rate',
+  label,
   color = '#22c55e',
   size = 'medium',
 }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const sizeClasses = {
     small: { width: 128, height: 128 },
     medium: { width: 160, height: 160 },
@@ -72,12 +76,12 @@ export default function CompletionCard({
           <span style={{ fontWeight: 'bold', fontSize: fonts.rate, color: finalColor }}>
             {rate}%
           </span>
-          <span style={{ color: '#6b7280', fontSize: fonts.label }}>{label}</span>
+          <span style={{ color: '#6b7280', fontSize: fonts.label }}>{label || t('analytics.completion_rate')}</span>
         </div>
       </div>
       <div style={{ marginTop: 8, textAlign: 'center', fontSize: fonts.count }}>
         <span style={{ color: '#6b7280' }}>
-          {completed} / {total} completed
+          {t('analytics.completed_count', { completed, total })}
         </span>
       </div>
     </div>

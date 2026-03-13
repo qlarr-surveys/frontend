@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import DataTable from '../common/DataTable';
@@ -8,6 +10,7 @@ import { formatNumber } from '~/utils/analytics/formatting';
 
 export default function NumberVisualization({ question }) {
   const data = useMemo(() => transformNumberData(question), [question]);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const hasOutliers = data.outlierData.outliersCount > 0;
 
   // Build table data
@@ -30,9 +33,9 @@ export default function NumberVisualization({ question }) {
 
   // Define columns
   const columns = [
-    { key: 'value', label: 'Value', sortable: true, align: 'right' },
-    { key: 'frequency', label: 'Frequency', sortable: true, align: 'right' },
-    { key: 'percentage', label: 'Percentage', sortable: true, align: 'right' },
+    { key: 'value', label: t('analytics.col_value'), sortable: true, align: 'right' },
+    { key: 'frequency', label: t('analytics.col_frequency'), sortable: true, align: 'right' },
+    { key: 'percentage', label: t('analytics.col_percentage'), sortable: true, align: 'right' },
   ];
 
   // Highlight outliers
@@ -41,19 +44,19 @@ export default function NumberVisualization({ question }) {
   // Primary stats
   const stats = [
     {
-      label: 'Responses',
+      label: t('analytics.stat_responses'),
       value: `${data.answered} / ${data.total}`,
     },
     {
-      label: 'Mean',
+      label: t('analytics.stat_mean'),
       value: formatNumber(data.stats.mean, { context: 'full', decimals: 2 }),
     },
     {
-      label: 'Median',
+      label: t('analytics.stat_median'),
       value: formatNumber(data.stats.median, { context: 'full', decimals: 2 }),
     },
     {
-      label: 'Range',
+      label: t('analytics.stat_range'),
       value: `${formatNumber(data.stats.min, { context: 'full', decimals: 2 })} - ${formatNumber(
         data.stats.max,
         { context: 'full', decimals: 2 }
@@ -79,8 +82,9 @@ export default function NumberVisualization({ question }) {
             }}
           >
             <Typography variant="body2" sx={{ fontWeight: 500 }}>
-              ⚠️ {data.outlierData.outliersCount} outlier
-              {data.outlierData.outliersCount > 1 ? 's' : ''} detected (highlighted in red below)
+              {data.outlierData.outliersCount > 1
+                ? t('analytics.outlier_message_other', { count: data.outlierData.outliersCount })
+                : t('analytics.outlier_message_one', { count: data.outlierData.outliersCount })}
             </Typography>
           </Box>
         )}
@@ -93,7 +97,7 @@ export default function NumberVisualization({ question }) {
           paginated={true}
           rowsPerPage={20}
           highlightRow={highlightRow}
-          emptyMessage="No numeric data available"
+          emptyMessage={t('analytics.no_numeric_data')}
         />
       </Box>
     </ChartContainer>

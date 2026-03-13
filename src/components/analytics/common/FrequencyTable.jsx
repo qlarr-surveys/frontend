@@ -11,15 +11,18 @@ import {
   Paper,
   Pagination,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 
 export default function FrequencyTable({
   data,
-  valueLabel = 'Value',
-  countLabel = 'Count',
-  emptyMessage = 'No data available',
+  valueLabel,
+  countLabel,
+  emptyMessage,
   paginated = true,
   rowsPerPage = 10,
 }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = data?.length ? Math.ceil(data.length / rowsPerPage) : 0;
@@ -35,7 +38,7 @@ export default function FrequencyTable({
   if (!data || data.length === 0) {
     return (
       <Box sx={{ p: 4, textAlign: 'center', color: 'text.secondary' }}>
-        <Typography variant="body1">{emptyMessage}</Typography>
+        <Typography variant="body1">{emptyMessage || t('analytics.no_data_available')}</Typography>
       </Box>
     );
   }
@@ -54,10 +57,10 @@ export default function FrequencyTable({
           <TableHead>
             <TableRow sx={{ bgcolor: 'grey.50' }}>
               <TableCell sx={{ fontWeight: 600, fontSize: 12, textTransform: 'uppercase', color: 'text.secondary' }}>
-                {valueLabel}
+                {valueLabel || t('analytics.col_value')}
               </TableCell>
               <TableCell align="right" sx={{ fontWeight: 600, fontSize: 12, textTransform: 'uppercase', color: 'text.secondary' }}>
-                {countLabel}
+                {countLabel || t('analytics.col_count')}
               </TableCell>
               <TableCell align="right" sx={{ fontWeight: 600, fontSize: 12, textTransform: 'uppercase', color: 'text.secondary' }}>
                 %
@@ -85,7 +88,7 @@ export default function FrequencyTable({
       {paginated && totalPages > 1 && (
         <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Showing {startRow}-{endRow} of {data.length} rows
+            {t('analytics.showing_rows', { start: startRow, end: endRow, total: data.length })}
           </Typography>
           <Pagination
             count={totalPages}

@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import PieDonutChart from '../charts/PieDonutChart';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
@@ -12,18 +14,19 @@ import { transformIconSCQData, resolveImageUrl } from '~/utils/analytics/dataTra
 
 export default function IconSCQVisualization({ question }) {
   const [viewType, setViewType] = useState('gallery');
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const data = useMemo(() => transformIconSCQData(question), [question]);
   const images = question.images || [];
 
   const tabs = [
-    { value: 'gallery', label: 'Gallery' },
-    { value: 'donut', label: 'Donut' },
-    { value: 'bar', label: 'Bar' },
+    { value: 'gallery', label: t('analytics.tab_gallery') },
+    { value: 'donut', label: t('analytics.tab_donut') },
+    { value: 'bar', label: t('analytics.tab_bar') },
   ];
 
   const stats = [
-    ...buildBaseStats(data),
-    { label: 'Most Selected', value: data.mode || '-' },
+    ...buildBaseStats(data, t),
+    { label: t('analytics.most_selected'), value: data.mode || '-' },
   ];
 
   const galleryImages = images.map((img, i) => {
@@ -31,7 +34,7 @@ export default function IconSCQVisualization({ question }) {
     return {
       ...img,
       url: resolveImageUrl(img.url),
-      label: img.label || `Option ${i + 1}`,
+      label: img.label || t('analytics.option_fallback', { index: i + 1 }),
       count: pieItem?.value || 0,
       percentage: pieItem?.percentage || 0,
       color: pieItem?.fill,

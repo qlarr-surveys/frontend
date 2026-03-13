@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
@@ -8,10 +10,11 @@ import { transformBarcodeData } from '~/utils/analytics/dataTransformers';
 
 export default function BarcodeVisualization({ question }) {
   const data = useMemo(() => transformBarcodeData(question), [question]);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const stats = [
-    { label: 'Scanned', value: data.answered },
-    { label: 'Unique Codes', value: data.uniqueCount },
+    { label: t('analytics.stat_scanned'), value: data.answered },
+    { label: t('analytics.stat_unique_codes'), value: data.uniqueCount },
   ];
 
   return (
@@ -21,7 +24,7 @@ export default function BarcodeVisualization({ question }) {
         {data.barData.length > 0 && (
           <>
             <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary' }}>
-              Top Scanned Codes
+              {t('analytics.top_scanned_codes')}
             </Typography>
             <HorizontalBarChart data={data.barData.slice(0, 10)} height={Math.max(250, data.barData.slice(0, 10).length * 40)} />
           </>
@@ -29,12 +32,12 @@ export default function BarcodeVisualization({ question }) {
         {data.frequencyData.length > 0 && (
           <>
             <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary' }}>
-              All Scanned Codes
+              {t('analytics.all_scanned_codes')}
             </Typography>
             <FrequencyTable
               data={data.frequencyData}
-              valueLabel="Barcode"
-              countLabel="Scans"
+              valueLabel={t('analytics.col_barcode')}
+              countLabel={t('analytics.col_scans')}
             />
           </>
         )}

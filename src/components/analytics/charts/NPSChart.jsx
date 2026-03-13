@@ -1,5 +1,7 @@
 import useIsFirstRender from '~/hooks/useIsFirstRender';
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import {
   BarChart,
   Bar,
@@ -19,6 +21,7 @@ import { NPS_COLORS } from '~/utils/analytics/colors';
 
 // Distribution Chart Component (score 0-10 histogram)
 function NPSDistributionChart({ data, height = 250 }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const isFirstRender = useIsFirstRender();
   return (
     <ResponsiveContainer width="100%" height={height}>
@@ -32,10 +35,10 @@ function NPSDistributionChart({ data, height = 250 }) {
               const data = payload[0].payload;
               const category =
                 parseInt(data.score) <= 6
-                  ? 'Detractor'
+                  ? t('analytics.detractor')
                   : parseInt(data.score) <= 8
-                  ? 'Passive'
-                  : 'Promoter';
+                  ? t('analytics.passive')
+                  : t('analytics.promoter');
               return (
                 <div style={{
                   backgroundColor: '#fff',
@@ -44,8 +47,8 @@ function NPSDistributionChart({ data, height = 250 }) {
                   padding: 12,
                   border: '1px solid #e5e7eb'
                 }}>
-                  <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>Score: {data.score}</p>
-                  <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>Count: {data.count}</p>
+                  <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>{t('analytics.score_label', { score: data.score })}</p>
+                  <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>{t('analytics.count_label', { count: data.count })}</p>
                   <p style={{ fontSize: 14, color: data.fill, margin: 0 }}>
                     {category}
                   </p>
@@ -69,10 +72,11 @@ function NPSDistributionChart({ data, height = 250 }) {
 }
 
 export default function NPSChart({ score, categoryData, distributionData }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const legendItems = [
-    { name: 'Detractors (0-6)', value: categoryData[0]?.value || 0, fill: NPS_COLORS.detractor },
-    { name: 'Passives (7-8)', value: categoryData[1]?.value || 0, fill: NPS_COLORS.passive },
-    { name: 'Promoters (9-10)', value: categoryData[2]?.value || 0, fill: NPS_COLORS.promoter },
+    { name: t('analytics.detractors_range'), value: categoryData[0]?.value || 0, fill: NPS_COLORS.detractor },
+    { name: t('analytics.passives_range'), value: categoryData[1]?.value || 0, fill: NPS_COLORS.passive },
+    { name: t('analytics.promoters_range'), value: categoryData[2]?.value || 0, fill: NPS_COLORS.promoter },
   ];
 
   return (
@@ -91,7 +95,7 @@ export default function NPSChart({ score, categoryData, distributionData }) {
         {/* Category Breakdown (Donut) */}
         <Box>
           <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1 }}>
-            Category Breakdown
+            {t('analytics.category_breakdown')}
           </Typography>
           <PieDonutChart
             data={categoryData}
@@ -106,7 +110,7 @@ export default function NPSChart({ score, categoryData, distributionData }) {
         {/* Score Distribution */}
         <Box>
           <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1 }}>
-            Score Distribution
+            {t('analytics.score_distribution')}
           </Typography>
           <NPSDistributionChart data={distributionData} />
         </Box>

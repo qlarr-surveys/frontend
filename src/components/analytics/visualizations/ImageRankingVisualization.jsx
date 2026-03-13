@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import RankingChart from '../charts/RankingChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
@@ -9,21 +11,22 @@ import { transformImageRankingData } from '~/utils/analytics/dataTransformers';
 
 export default function ImageRankingVisualization({ question }) {
   const data = useMemo(() => transformImageRankingData(question), [question]);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const topItem = data.rankedImages[0];
   const bottomItem = data.rankedImages[data.rankedImages.length - 1];
 
   const stats = [
-    ...buildBaseStats(data),
+    ...buildBaseStats(data, t),
     {
-      label: 'Most Preferred',
+      label: t('analytics.most_preferred'),
       value: topItem?.name || '-',
-      description: `Avg rank: ${topItem?.averageRank}`,
+      description: t('analytics.avg_rank_colon', { rank: topItem?.averageRank }),
     },
     {
-      label: 'Least Preferred',
+      label: t('analytics.least_preferred'),
       value: bottomItem?.name || '-',
-      description: `Avg rank: ${bottomItem?.averageRank}`,
+      description: t('analytics.avg_rank_colon', { rank: bottomItem?.averageRank }),
     },
   ];
 
@@ -33,7 +36,7 @@ export default function ImageRankingVisualization({ question }) {
         <StatsRow stats={stats} columns={3} />
         <RankedImageGallery images={data.rankedImages} showAverageRank={true} />
         <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center' }}>
-          Lower average rank indicates higher preference (1 = most preferred)
+          {t('analytics.ranking_note')}
         </Typography>
       </Box>
     </ChartContainer>

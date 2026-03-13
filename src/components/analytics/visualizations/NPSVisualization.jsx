@@ -1,40 +1,43 @@
 import { useMemo } from 'react';
 import { Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import NPSChart from '../charts/NPSChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { transformNPSData } from '~/utils/analytics/dataTransformers';
 
-const getNPSBenchmarkLabel = (score) => {
-  if (score >= 70) return 'Excellent';
-  if (score >= 30) return 'Great';
-  if (score >= 0) return 'Good';
-  return 'Needs Improvement';
-};
-
 export default function NPSVisualization({ question }) {
   const data = useMemo(() => transformNPSData(question), [question]);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
+
+  const getNPSBenchmarkLabel = (score) => {
+    if (score >= 70) return t('analytics.excellent');
+    if (score >= 30) return t('analytics.great');
+    if (score >= 0) return t('analytics.good');
+    return t('analytics.needs_improvement');
+  };
 
   const stats = [
     {
-      label: 'NPS Score',
+      label: t('analytics.nps_score'),
       value: data.score,
       description: getNPSBenchmarkLabel(data.score),
     },
     {
-      label: 'Promoters',
+      label: t('analytics.promoters'),
       value: `${data.promoterPct}%`,
-      description: `${data.promoters} responses`,
+      description: t('analytics.responses_count', { count: data.promoters }),
     },
     {
-      label: 'Passives',
+      label: t('analytics.passives'),
       value: `${data.passivePct}%`,
-      description: `${data.passives} responses`,
+      description: t('analytics.responses_count', { count: data.passives }),
     },
     {
-      label: 'Detractors',
+      label: t('analytics.detractors'),
       value: `${data.detractorPct}%`,
-      description: `${data.detractors} responses`,
+      description: t('analytics.responses_count', { count: data.detractors }),
     },
   ];
 

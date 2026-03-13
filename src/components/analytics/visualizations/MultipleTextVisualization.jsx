@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
@@ -9,6 +11,7 @@ import { transformMultipleTextData } from '~/utils/analytics/dataTransformers';
 
 export default function MultipleTextVisualization({ question }) {
   const { fields = [], responses = [] } = question;
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   if (responses.length === 0) {
     return <NoResponsesMessage />;
@@ -21,9 +24,9 @@ export default function MultipleTextVisualization({ question }) {
     : 0;
 
   const stats = [
-    ...buildBaseStats(data),
-    { label: 'Fields', value: fields.length },
-    { label: 'Avg Completion', value: `${avgCompletion}%` },
+    ...buildBaseStats(data, t),
+    { label: t('analytics.stat_fields'), value: fields.length },
+    { label: t('analytics.stat_avg_completion'), value: `${avgCompletion}%` },
   ];
 
   const columns = fields.map((field) => ({
@@ -50,7 +53,7 @@ export default function MultipleTextVisualization({ question }) {
           searchable
           paginated
           rowsPerPage={10}
-          emptyMessage="No responses yet"
+          emptyMessage={t('analytics.no_responses_yet')}
         />
       </Box>
     </ChartContainer>

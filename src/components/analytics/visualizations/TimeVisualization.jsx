@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import FrequencyTable from '../common/FrequencyTable';
 
@@ -14,10 +16,11 @@ export default function TimeVisualization({ question }) {
       .map(([value, count]) => ({ value, count, percentage: Math.round((count / total) * 100) }))
       .sort((a, b) => b.count - a.count);
   }, [question]);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   return (
     <ChartContainer>
-      <FrequencyTable data={data} valueLabel="Time" />
+      <FrequencyTable data={data} valueLabel={t('analytics.col_time')} />
     </ChartContainer>
   );
 }

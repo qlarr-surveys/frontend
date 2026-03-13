@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Box, Typography, Pagination } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import { getHeatmapColor } from '~/utils/analytics/colors';
 
 export default function HeatmapChart({
@@ -14,6 +16,7 @@ export default function HeatmapChart({
   paginated = true,
   rowsPerPage = 10,
 }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const [currentPage, setCurrentPage] = useState(1);
 
   // Resolve column key (supports both string and {key, label, iconUrl} objects)
@@ -174,7 +177,7 @@ export default function HeatmapChart({
         marginTop: 16,
         gap: 8
       }}>
-        <span style={{ fontSize: 12, color: '#6b7280' }}>Low</span>
+        <span style={{ fontSize: 12, color: '#6b7280' }}>{t('analytics.low')}</span>
         <div
           style={{
             width: 96,
@@ -183,13 +186,13 @@ export default function HeatmapChart({
             background: `linear-gradient(to right, ${colorScale.low}, ${colorScale.high})`
           }}
         />
-        <span style={{ fontSize: 12, color: '#6b7280' }}>High</span>
+        <span style={{ fontSize: 12, color: '#6b7280' }}>{t('analytics.high')}</span>
       </div>
 
       {paginated && totalPages > 1 && (
         <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Showing {startRow}-{endRow} of {data.length} rows
+            {t('analytics.showing_rows', { start: startRow, end: endRow, total: data.length })}
           </Typography>
           <Pagination
             count={totalPages}

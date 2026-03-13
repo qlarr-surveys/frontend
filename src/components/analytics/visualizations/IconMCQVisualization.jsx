@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
@@ -9,11 +11,12 @@ import { transformIconMCQData, resolveImageUrl } from '~/utils/analytics/dataTra
 
 export default function IconMCQVisualization({ question }) {
   const data = useMemo(() => transformIconMCQData(question), [question]);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const images = question.images || [];
 
   const stats = [
-    ...buildBaseStats(data),
-    { label: 'Most Popular', value: data.barData[0]?.name || '-' },
+    ...buildBaseStats(data, t),
+    { label: t('analytics.most_popular'), value: data.barData[0]?.name || '-' },
   ];
 
   const galleryImages = images.map((img, i) => {
@@ -21,7 +24,7 @@ export default function IconMCQVisualization({ question }) {
     return {
       ...img,
       url: resolveImageUrl(img.url),
-      label: img.label || `Option ${i + 1}`,
+      label: img.label || t('analytics.option_fallback', { index: i + 1 }),
       count: barItem?.count || 0,
       percentage: barItem?.percentage || 0,
       color: barItem?.fill,
@@ -35,9 +38,9 @@ export default function IconMCQVisualization({ question }) {
   }));
 
   const tableColumns = [
-    { key: 'option', label: 'Option', sortable: true },
-    { key: 'count', label: 'Count', sortable: true, align: 'right' },
-    { key: 'percentage', label: 'Percentage', sortable: true, align: 'right' },
+    { key: 'option', label: t('analytics.col_option'), sortable: true },
+    { key: 'count', label: t('analytics.col_count'), sortable: true, align: 'right' },
+    { key: 'percentage', label: t('analytics.col_percentage'), sortable: true, align: 'right' },
   ];
 
   return (
@@ -50,7 +53,7 @@ export default function IconMCQVisualization({ question }) {
 
         <Box sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 2 }}>
           <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
-            Selection Frequency
+            {t('analytics.selection_frequency')}
           </Typography>
           <IconLegend items={data.barData} />
         </Box>

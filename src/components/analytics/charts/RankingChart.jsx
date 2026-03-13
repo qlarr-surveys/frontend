@@ -12,34 +12,9 @@ import {
   Cell,
   LabelList,
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import { getChartColor } from '~/utils/analytics/colors';
-
-const CustomTooltip = ({ active, payload }) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div style={{
-        backgroundColor: '#fff',
-        boxShadow: '0 4px 6px rgba(0,0,0,.1)',
-        borderRadius: 8,
-        padding: 12,
-        border: '1px solid #e5e7eb'
-      }}>
-        <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>{data.name}</p>
-        <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
-          Average Rank: <span style={{ fontWeight: 500 }}>{data.averageRank}</span>
-        </p>
-        <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
-          First Place: <span style={{ fontWeight: 500, color: '#16a34a' }}>{data.firstPlace}</span>
-        </p>
-        <p style={{ fontSize: 14, color: '#6b7280', margin: 0 }}>
-          Last Place: <span style={{ fontWeight: 500, color: '#dc2626' }}>{data.lastPlace}</span>
-        </p>
-      </div>
-    );
-  }
-  return null;
-};
 
 const renderLegend = (props) => {
   const { payload } = props;
@@ -60,9 +35,37 @@ export default function RankingChart({
   height = 300,
   showFirstLast = true,
 }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const isFirstRender = useIsFirstRender();
   // Sort by average rank (lower is better)
   const sortedData = useMemo(() => [...data].sort((a, b) => a.averageRank - b.averageRank), [data]);
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div style={{
+          backgroundColor: '#fff',
+          boxShadow: '0 4px 6px rgba(0,0,0,.1)',
+          borderRadius: 8,
+          padding: 12,
+          border: '1px solid #e5e7eb'
+        }}>
+          <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>{data.name}</p>
+          <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
+            {t('analytics.average_rank_label', { rank: data.averageRank })}
+          </p>
+          <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
+            {t('analytics.first_place_label', { count: data.firstPlace })}
+          </p>
+          <p style={{ fontSize: 14, color: '#6b7280', margin: 0 }}>
+            {t('analytics.last_place_label', { count: data.lastPlace })}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   const legendPayload = useMemo(() => sortedData.map((entry, index) => ({
     value: entry.name,
@@ -85,7 +88,7 @@ export default function RankingChart({
             allowDecimals={false}
             domain={[1, sortedData.length]}
             tick={{ fontSize: 12 }}
-            label={{ value: 'Average Rank (lower is better)', position: 'bottom', fontSize: 12 }}
+            label={{ value: t('analytics.average_rank_axis'), position: 'bottom', fontSize: 12 }}
           />
           <YAxis
             type="category"
@@ -118,7 +121,7 @@ export default function RankingChart({
       {showFirstLast && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginTop: 16 }}>
           <div style={{ backgroundColor: '#f0fdf4', borderRadius: 8, padding: 16 }}>
-            <h4 style={{ fontSize: 14, fontWeight: 500, color: '#166534', marginBottom: 8 }}>Most First Place Votes</h4>
+            <h4 style={{ fontSize: 14, fontWeight: 500, color: '#166534', marginBottom: 8 }}>{t('analytics.most_first_place_votes')}</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
               {sortedData
                 .sort((a, b) => b.firstPlace - a.firstPlace)
@@ -132,7 +135,7 @@ export default function RankingChart({
             </ul>
           </div>
           <div style={{ backgroundColor: '#fef2f2', borderRadius: 8, padding: 16 }}>
-            <h4 style={{ fontSize: 14, fontWeight: 500, color: '#991b1b', marginBottom: 8 }}>Most Last Place Votes</h4>
+            <h4 style={{ fontSize: 14, fontWeight: 500, color: '#991b1b', marginBottom: 8 }}>{t('analytics.most_last_place_votes')}</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
               {sortedData
                 .sort((a, b) => b.lastPlace - a.lastPlace)

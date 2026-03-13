@@ -11,6 +11,8 @@ import {
   Paper,
   Pagination,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
@@ -21,6 +23,7 @@ const ROWS_PER_PAGE = 10;
 export default function ParagraphVisualization({ question }) {
   const data = useMemo(() => transformParagraphData(question), [question]);
   const [currentPage, setCurrentPage] = useState(1);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const totalPages = Math.ceil(data.responses.length / ROWS_PER_PAGE);
   const safePage = Math.min(currentPage, totalPages || 1);
@@ -31,8 +34,8 @@ export default function ParagraphVisualization({ question }) {
   }, [data.responses, safePage]);
 
   const stats = [
-    ...buildBaseStats(data),
-    { label: 'Avg Length', value: `${data.avgLength} chars` },
+    ...buildBaseStats(data, t),
+    { label: t('analytics.avg_length'), value: t('analytics.chars', { length: data.avgLength }) },
   ];
 
   const startRow = (safePage - 1) * ROWS_PER_PAGE + 1;
@@ -44,7 +47,7 @@ export default function ParagraphVisualization({ question }) {
         <StatsRow stats={stats} columns={3} />
         {data.responses.length === 0 ? (
           <Box sx={{ p: 4, textAlign: 'center', color: 'text.secondary' }}>
-            <Typography variant="body1">No responses available</Typography>
+            <Typography variant="body1">{t('analytics.no_responses_available')}</Typography>
           </Box>
         ) : (
           <Box>
@@ -56,7 +59,7 @@ export default function ParagraphVisualization({ question }) {
                       #
                     </TableCell>
                     <TableCell sx={{ fontWeight: 600, fontSize: 12, textTransform: 'uppercase', color: 'text.secondary' }}>
-                      Response
+                      {t('analytics.col_response')}
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -78,7 +81,7 @@ export default function ParagraphVisualization({ question }) {
             {totalPages > 1 && (
               <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  Showing {startRow}-{endRow} of {data.responses.length} responses
+                  {t('analytics.showing_responses', { start: startRow, end: endRow, total: data.responses.length })}
                 </Typography>
                 <Pagination
                   count={totalPages}

@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import PieDonutChart from '../charts/PieDonutChart';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
@@ -9,17 +11,18 @@ import { buildBaseStats } from '../common/buildBaseStats';
 import { transformSCQData } from '~/utils/analytics/dataTransformers';
 
 export default function SCQVisualization({ question }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   const [chartType, setChartType] = useState('donut');
   const data = useMemo(() => transformSCQData(question), [question]);
 
   const tabs = [
-    { value: 'donut', label: 'Donut' },
-    { value: 'bar', label: 'Bar' },
+    { value: 'donut', label: t('analytics.tab_donut') },
+    { value: 'bar', label: t('analytics.tab_bar') },
   ];
 
   const stats = [
-    ...buildBaseStats(data),
-    { label: 'Most Selected', value: data.mode },
+    ...buildBaseStats(data, t),
+    { label: t('analytics.most_selected'), value: data.mode },
   ];
 
   return (

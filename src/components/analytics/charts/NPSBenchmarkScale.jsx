@@ -1,14 +1,18 @@
+import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import { NPS_BENCHMARK_COLORS } from '~/utils/analytics/colors';
 
-const ZONES = [
-  { label: 'Needs Improvement', min: -100, max: 0, color: NPS_BENCHMARK_COLORS.needsImprovement, width: '50%' },
-  { label: 'Good', min: 0, max: 30, color: NPS_BENCHMARK_COLORS.good, width: '15%' },
-  { label: 'Great', min: 30, max: 70, color: NPS_BENCHMARK_COLORS.great, width: '20%' },
-  { label: 'Excellent', min: 70, max: 100, color: NPS_BENCHMARK_COLORS.excellent, width: '15%' },
-];
-
 export default function NPSBenchmarkScale({ score }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
+
+  const ZONES = useMemo(() => [
+    { label: t('analytics.needs_improvement'), min: -100, max: 0, color: NPS_BENCHMARK_COLORS.needsImprovement, width: '50%' },
+    { label: t('analytics.good'), min: 0, max: 30, color: NPS_BENCHMARK_COLORS.good, width: '15%' },
+    { label: t('analytics.great'), min: 30, max: 70, color: NPS_BENCHMARK_COLORS.great, width: '20%' },
+    { label: t('analytics.excellent'), min: 70, max: 100, color: NPS_BENCHMARK_COLORS.excellent, width: '15%' },
+  ], [t]);
   const markerPosition = ((score + 100) / 200) * 100;
   // Clamp label so it doesn't overflow the container
   const clampedPosition = Math.max(4, Math.min(96, markerPosition));

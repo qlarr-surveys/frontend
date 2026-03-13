@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { Box, Typography, Grid } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import PieDonutChart from '../charts/PieDonutChart';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
@@ -10,31 +12,32 @@ import { transformEmailData } from '~/utils/analytics/dataTransformers';
 
 export default function EmailVisualization({ question }) {
   const data = useMemo(() => transformEmailData(question), [question]);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const stats = [
-    ...buildBaseStats(data),
-    { label: 'Unique Domains', value: data.uniqueDomains },
+    ...buildBaseStats(data, t),
+    { label: t('analytics.stat_unique_domains'), value: data.uniqueDomains },
     {
-      label: 'Top Domain',
+      label: t('analytics.stat_top_domain'),
       value: data.domainData[0]?.name || '-',
-      description: `${data.domainData[0]?.count || 0} emails`,
+      description: t('analytics.emails_count', { count: data.domainData[0]?.count || 0 }),
     },
   ];
 
   // Email list table
   const emailColumns = [
     { key: 'index', label: '#', sortable: true, align: 'right' },
-    { key: 'email', label: 'Email', sortable: true },
-    { key: 'domain', label: 'Domain', sortable: true },
+    { key: 'email', label: t('analytics.col_email'), sortable: true },
+    { key: 'domain', label: t('analytics.col_domain'), sortable: true },
   ];
 
   const highlightDuplicate = (row) => row.isDuplicate;
 
   // Domain table
   const domainColumns = [
-    { key: 'domain', label: 'Domain', sortable: true },
-    { key: 'count', label: 'Count', sortable: true, align: 'right' },
-    { key: 'percentage', label: 'Percentage', sortable: true, align: 'right' },
+    { key: 'domain', label: t('analytics.col_domain'), sortable: true },
+    { key: 'count', label: t('analytics.col_count'), sortable: true, align: 'right' },
+    { key: 'percentage', label: t('analytics.col_percentage'), sortable: true, align: 'right' },
   ];
 
   return (
@@ -47,7 +50,7 @@ export default function EmailVisualization({ question }) {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
-              Domain Distribution
+              {t('analytics.domain_distribution')}
             </Typography>
             <PieDonutChart
               data={data.domainData.slice(0, 6).map((d) => ({ ...d, value: d.count }))}
@@ -56,7 +59,7 @@ export default function EmailVisualization({ question }) {
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
-              Top Domains
+              {t('analytics.top_domains')}
             </Typography>
             <HorizontalBarChart data={data.domainData.slice(0, 8)} height={280} />
           </Grid>
@@ -65,7 +68,7 @@ export default function EmailVisualization({ question }) {
         {/* All Emails Table */}
         <Box>
           <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
-            All Emails
+            {t('analytics.all_emails')}
           </Typography>
           {data.duplicateCount > 0 && (
             <Box
@@ -79,7 +82,7 @@ export default function EmailVisualization({ question }) {
               }}
             >
               <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                {data.duplicateCount} duplicate email{data.duplicateCount > 1 ? 's' : ''} detected (highlighted in red below)
+                {data.duplicateCount > 1 ? t('analytics.duplicate_email_message_other', { count: data.duplicateCount }) : t('analytics.duplicate_email_message_one', { count: data.duplicateCount })}
               </Typography>
             </Box>
           )}
@@ -90,14 +93,14 @@ export default function EmailVisualization({ question }) {
             paginated={true}
             rowsPerPage={20}
             highlightRow={highlightDuplicate}
-            emptyMessage="No email data available"
+            emptyMessage={t('analytics.no_email_data')}
           />
         </Box>
 
         {/* Domains Table */}
         <Box>
           <Typography variant="subtitle2" sx={{ fontWeight: 500, color: 'text.primary', mb: 1.5 }}>
-            Domains
+            {t('analytics.domains')}
           </Typography>
           <DataTable
             data={data.allDomainData}
@@ -105,7 +108,7 @@ export default function EmailVisualization({ question }) {
             searchable={true}
             paginated={true}
             rowsPerPage={20}
-            emptyMessage="No domain data available"
+            emptyMessage={t('analytics.no_domain_data')}
           />
         </Box>
       </Box>

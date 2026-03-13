@@ -1,10 +1,13 @@
 import { Box, Typography } from '@mui/material';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 
 export default function NoResponsesMessage({
-  message = 'No responses yet',
-  description = 'Data will appear here once responses are collected.',
+  message,
+  description,
 }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
   return (
     <Box
       sx={{
@@ -31,13 +34,13 @@ export default function NoResponsesMessage({
           mb: 0.5,
         }}
       >
-        {message}
+        {message || t('analytics.no_responses_yet')}
       </Typography>
       <Typography
         variant="body2"
         sx={{ color: 'text.disabled' }}
       >
-        {description}
+        {description || t('analytics.no_responses_description')}
       </Typography>
     </Box>
   );

@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import HeatmapChart from '../charts/HeatmapChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
@@ -8,10 +10,11 @@ import { transformMatrixSCQData } from '~/utils/analytics/dataTransformers';
 
 export default function MatrixSCQVisualization({ question }) {
   const data = useMemo(() => transformMatrixSCQData(question), [question]);
+  const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const stats = [
-    ...buildBaseStats(data),
-    { label: 'Rows', value: data.rows.length },
+    ...buildBaseStats(data, t),
+    { label: t('analytics.stat_rows'), value: data.rows.length },
   ];
 
   return (
