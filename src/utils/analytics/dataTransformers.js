@@ -379,7 +379,6 @@ export const transformEmailData = (question) => {
     emailList,
     duplicateCount,
     uniqueDomains: emailStats.uniqueDomains,
-    invalidCount: emailStats.invalidCount,
     ...metrics,
   };
 };

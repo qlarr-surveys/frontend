@@ -166,11 +166,9 @@ export const calculateMatrixData = (responses, rows, columns) => {
 // Calculate email domain distribution
 export const calculateEmailDomains = (emails) => {
   const domains = {};
-  let invalidCount = 0;
 
   emails.forEach((email) => {
     if (!email || !email.includes('@')) {
-      invalidCount++;
       return;
     }
     const domain = email.split('@')[1]?.toLowerCase();
@@ -183,7 +181,6 @@ export const calculateEmailDomains = (emails) => {
     domains: Object.entries(domains)
       .map(([domain, count]) => ({ domain, count, percentage: Math.round((count / emails.length) * 100) }))
       .sort((a, b) => b.count - a.count),
-    invalidCount,
     uniqueDomains: Object.keys(domains).length,
   };
 };

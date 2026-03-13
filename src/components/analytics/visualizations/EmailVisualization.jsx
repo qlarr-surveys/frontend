@@ -13,7 +13,6 @@ export default function EmailVisualization({ question }) {
   const stats = [
     ...buildBaseStats(data),
     { label: 'Unique Domains', value: data.uniqueDomains },
-    { label: 'Invalid Emails', value: data.invalidCount },
     {
       label: 'Top Domain',
       value: data.domainData[0]?.name || '-',
