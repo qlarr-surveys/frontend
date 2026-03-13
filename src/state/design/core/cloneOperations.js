@@ -1,6 +1,6 @@
 import cloneDeep from "lodash.clonedeep";
 
-export const creatNewState = (
+export const createNewState = (
   state,
   toBeCopied,
   newStateCode,
@@ -13,7 +13,7 @@ export const creatNewState = (
     const index = newState.instructionList?.findIndex(
       (instruction) => instruction.code == "conditional_relevance"
     );
-    if (index) {
+    if (index !== -1) {
       newState.instructionList?.splice(index, 1);
     }
   }
@@ -34,7 +34,7 @@ export const creatNewState = (
       newQuestionCode
     );
     child.qualifiedCode = newChildCode;
-    creatNewState(
+    createNewState(
       state,
       state[oldChildCode],
       newChildCode,

@@ -40,7 +40,6 @@ export const applyChangeContent = (state, { code, key, value, lang }) => {
     (instruction) => instruction.code.startsWith(prefixToRemove)
   );
   toRemove?.forEach((instruction) => {
-    console.log(instruction.code);
     changeInstruction(state[code], {
       code: instruction.code,
       remove: true,

@@ -1,16 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { applyDesignStateReceived } from "./core/stateInitialization";
-import { applySetup, applyResetSetup, applySetDesignModeToDesign, applySetDesignModeToLang, applySetDesignModeToTheme, applySetDefaultValue, applyUpdateInstruction } from "./core/setupOperations";
-import { applyChangeContent, applyChangeCustomCss, applyChangeResources } from "./core/contentOperations";
-import { applyChangeRelevance, applyClearRelevanceConfig } from "./core/relevanceOperations";
-import { applyChangeAttribute } from "./core/attributeOperations";
-import { applyChangeValidationValue, applyAddCustomValidationRule, applyUpdateCustomValidationRuleText, applyRenameCustomValidationRule, applyUpdateCustomValidationRuleError, applyRemoveCustomValidationRule } from "./core/validationOperations";
-import { applyAddSkipRule, applyUpdateSkipRule, applyRemoveSkipRule } from "./core/skipLogicOperations";
-import { applyUpdateRandom, applyUpdateRandomByType } from "./core/randomOperations";
-import { applyBaseLangChanged, applyAdditionalLangAdded, applyAdditionalLangRemoved, applyChangeLang } from "./core/languageOperations";
-import { applyDragOperation, applyAddComponent } from "./core/treeOperations";
-import { addNewAnswerToState, addNewAnswersToState, onNewLineHandler } from "./core/answerOperations";
-import { cloneQuestionInState, deleteQuestionFromState, deleteGroupFromState, removeAnswerFromState } from "./core/questionOperations";
+import {
+  applyDesignStateReceived,
+  applySetup, applyResetSetup, applySetDesignModeToDesign, applySetDesignModeToLang, applySetDesignModeToTheme, applySetDefaultValue, applyUpdateInstruction,
+  applyChangeContent, applyChangeCustomCss, applyChangeResources,
+  applyChangeRelevance, applyClearRelevanceConfig,
+  applyChangeAttribute,
+  applyChangeValidationValue, applyAddCustomValidationRule, applyUpdateCustomValidationRuleText, applyRenameCustomValidationRule, applyUpdateCustomValidationRuleError, applyRemoveCustomValidationRule,
+  applyAddSkipRule, applyUpdateSkipRule, applyRemoveSkipRule,
+  applyUpdateRandom, applyUpdateRandomByType,
+  applyBaseLangChanged, applyAdditionalLangAdded, applyAdditionalLangRemoved, applyChangeLang,
+  applyDragOperation, applyAddComponent,
+  addNewAnswerToState, addNewAnswersToState, onNewLineHandler,
+  cloneQuestionInState, deleteQuestionFromState, deleteGroupFromState, removeAnswerFromState,
+} from "./core";
 
 export const designState = createSlice({
   name: "designState",
@@ -154,7 +156,7 @@ export const {
   changeLang,
   changeCustomCss,
   changeAttribute,
-  changeTimeFormats,
+
   changeContent,
   changeResources,
   deleteQuestion,

@@ -34,7 +34,7 @@ export const reparentQuestion = (state, survey, payload) => {
     destinationGroup.children = [];
   }
   destinationGroup.children.splice(destinationQuestionIndex, 0, question);
-  // cheap trick to notifiy Drop Areas of the update
+  // cheap trick to notify Drop Areas of the update
   state["reorder_refresh_code"] = Math.floor(Math.random() * 1000000);
   cleanupRandomRules(destinationGroup);
   cleanupRandomRules(sourceGroup);
@@ -53,7 +53,7 @@ export const reorderQuestions = (state, survey, payload) => {
     destinationGroup.children = [];
   }
   destinationGroup.children.splice(destinationQuestionIndex, 0, question);
-  // cheap trick to notifiy Drop Areas of the update
+  // cheap trick to notify Drop Areas of the update
   state["reorder_refresh_code"] = Math.floor(Math.random() * 1000000);
   cleanupRandomRules(destinationGroup);
   cleanupRandomRules(sourceGroup);

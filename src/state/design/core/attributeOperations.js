@@ -1,4 +1,4 @@
-import { cleanupValidation } from "./cleanup";
+import { cleanupValidation, RANDOM_KEYS } from "./cleanup";
 import { addMaskedValuesInstructions, updateRandomByRule } from "./addInstructions";
 
 export const applyChangeAttribute = (state, { code, key, value }) => {
@@ -24,15 +24,7 @@ export const applyChangeAttribute = (state, { code, key, value }) => {
     addMaskedValuesInstructions(code, state[code], state);
   } else if (key == "decimal_separator") {
     addMaskedValuesInstructions(code, state[code], state);
-  } else if (
-    [
-      "randomize_questions",
-      "randomize_groups",
-      "randomize_options",
-      "randomize_rows",
-      "randomize_columns",
-    ].indexOf(key) > -1
-  ) {
+  } else if (RANDOM_KEYS.includes(key)) {
     updateRandomByRule(
       state[code],
       key,

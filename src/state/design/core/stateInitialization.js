@@ -1,5 +1,6 @@
 import { buildCodeIndex } from "./indexing";
 import { defaultSurveyTheme } from "~/constants/theme";
+import { LANGUAGE_DEF } from "~/constants/language";
 
 const reservedKeys = [
   "setup",

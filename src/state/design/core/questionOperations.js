@@ -1,7 +1,7 @@
 import { buildCodeIndex, splitQuestionCodes } from "./indexing";
 import { cleanupRandomRules, cleanupSkipDestinations, cleanupValidation } from "./cleanup";
 import { applySetup, applyResetSetup } from "./setupOperations";
-import { creatNewState } from "./cloneOperations";
+import { createNewState } from "./cloneOperations";
 import { questionDesignError } from "./componentFactory";
 import { nextQuestionId } from "./stateUtils";
 import { setupOptions } from "~/constants/design";
@@ -13,15 +13,19 @@ import {
   refreshListForMultipleChoice,
 } from "./addInstructions";
 
-export const cloneQuestionInState = (state, code) => {
-  const survey = state.Survey;
-  const group = survey.children
+const findGroupForQuestion = (state, questionCode) => {
+  return state.Survey.children
     ?.map((group) => state[group.code])
-    ?.filter(
+    ?.find(
       (group) =>
         group.children &&
-        group.children.findIndex((child) => child.code == code) !== -1
-    )?.[0];
+        group.children.some((child) => child.code == questionCode)
+    );
+};
+
+export const cloneQuestionInState = (state, code) => {
+  const survey = state.Survey;
+  const group = findGroupForQuestion(state, code);
   if (!group) {
     return;
   }
@@ -32,7 +36,7 @@ export const cloneQuestionInState = (state, code) => {
     code: newQuestionId,
     qualifiedCode: newQuestionId,
   };
-  creatNewState(state, state[code], newQuestionId, code, newQuestionId);
+  createNewState(state, state[code], newQuestionId, code, newQuestionId);
   group.children.splice(
     group.children.indexOf(questionChild) + 1,
     0,
@@ -51,23 +55,14 @@ export const deleteQuestionFromState = (state, questionCode) => {
   if (state.setup?.code == questionCode) {
     applyResetSetup(state);
   }
-  const survey = state.Survey;
-  const group = survey.children
-    ?.map((group) => state[group.code])
-    ?.filter(
-      (group) =>
-        group.children &&
-        group.children.findIndex((child) => child.code == questionCode) !==
-          -1
-    )?.[0];
+  const group = findGroupForQuestion(state, questionCode);
   if (!group) {
     return;
   }
   const questionIndex = group.children.findIndex(
     (x) => x.code === questionCode
   );
-  let children = [...group.children];
-  if (children.length === 1) {
+  if (group.children.length === 1) {
     group.children = [];
   } else {
     group.children.splice(questionIndex, 1);

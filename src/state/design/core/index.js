@@ -58,7 +58,7 @@ export {
 } from "./answerOperations";
 
 // Clone operations
-export { creatNewState } from "./cloneOperations";
+export { createNewState } from "./cloneOperations";
 
 // Question operations
 export {

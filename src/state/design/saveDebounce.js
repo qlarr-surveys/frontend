@@ -56,7 +56,7 @@ const MUTATING = [
   "designState/onAdditionalLangAdded",
   "designState/onAdditionalLangRemoved",
   "designState/changeAttribute",
-  "designState/changeTimeFormats",
+
   "designState/changeContent",
   "designState/changeResources",
   "designState/deleteQuestion",

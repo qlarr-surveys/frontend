@@ -1,17 +1,16 @@
 import { addSkipInstructions, processValidation, updateRandomByRule } from "./addInstructions";
 
+export const RANDOM_KEYS = [
+  "randomize_questions",
+  "randomize_groups",
+  "randomize_options",
+  "randomize_rows",
+  "randomize_columns",
+];
+
 export const cleanupRandomRules = (componentState) => {
-  if (componentState["randomize_questions"]) {
-    updateRandomByRule(componentState, "randomize_questions");
-  } else if (componentState["randomize_groups"]) {
-    updateRandomByRule(componentState, "randomize_groups");
-  } else if (componentState["randomize_options"]) {
-    updateRandomByRule(componentState, "randomize_options");
-  } else if (componentState["randomize_rows"]) {
-    updateRandomByRule(componentState, "randomize_rows");
-  } else if (componentState["randomize_columns"]) {
-    updateRandomByRule(componentState, "randomize_columns");
-  }
+  const key = RANDOM_KEYS.find((k) => componentState[k]);
+  if (key) updateRandomByRule(componentState, key);
 };
 
 // Clean up skip_logic rules that point to a deleted destination
