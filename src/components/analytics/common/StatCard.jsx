@@ -63,8 +63,8 @@ export default function StatCard({
 }
 
 // Stats row component for displaying multiple stats
-export function StatsRow({ stats, columns }) {
-  const cols = columns ?? stats.length;
+export function StatsRow({ stats, columns, minColumns = 4 }) {
+  const cols = Math.max(columns ?? stats.length, minColumns);
   return (
     <Box
       sx={{

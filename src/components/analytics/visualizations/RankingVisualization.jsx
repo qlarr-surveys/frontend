@@ -29,7 +29,7 @@ export default function RankingVisualization({ question }) {
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Stats Row */}
-        <StatsRow stats={stats} columns={3} />
+        <StatsRow stats={stats} />
 
         {/* Ranking Chart */}
         <RankingChart data={data.averageRankData} height={350} showFirstLast={true} />
