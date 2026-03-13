@@ -8,7 +8,7 @@ export const applyChangeAttribute = (state, { code, key, value }) => {
     key == "relevance" ||
     key == "resources"
   ) {
-    throw "We are changing attributes way too much than we should";
+    throw new Error("changeAttribute must not be used for key: " + key);
   }
   if (!state[code]) {
     state[code] = {};

@@ -74,9 +74,12 @@ export const refreshEnumForSingleChoice = (component, state) => {
     case "image_scq":
     case "icon_scq":
     case "scq":
-      let valueInstruction = component.instructionList.find(
+      let valueInstruction = component.instructionList?.find(
         (it) => it.code == "value"
       );
+      if (!valueInstruction) {
+        break;
+      }
       if (component.children && component.children.length) {
         valueInstruction.returnType = {
           type: "enum",
@@ -145,9 +148,12 @@ export const refreshListForMultipleChoice = (component, state) => {
     case "image_mcq":
     case "icon_mcq":
     case "mcq":
-      let valueInstruction = component.instructionList.find(
+      let valueInstruction = component.instructionList?.find(
         (it) => it.code == "value"
       );
+      if (!valueInstruction) {
+        break;
+      }
       if (component.children && component.children.length) {
         valueInstruction.returnType = {
           type: "list",
@@ -433,7 +439,7 @@ export const changeInstruction = (componentState, instruction) => {
   }
 };
 
-// there is always an assumption that instructionList exists!!!
+// Precondition: componentState.instructionList must be initialized before calling directly. changeInstruction() ensures this.
 export const removeInstruction = (componentState, code) => {
   if (componentState.instructionList.length) {
     const index = componentState.instructionList.findIndex(
@@ -712,10 +718,13 @@ const addValidationEquation = (state, qualifiedCode, rule) => {
     rule,
     component["validation"][rule]
   );
+  if (!validationInstruction) {
+    return;
+  }
   changeInstruction(component, validationInstruction);
 };
 
-// there is always an assumption that instructionList exists!!!
+// Precondition: componentState.instructionList must be initialized before calling directly. changeInstruction() ensures this.
 const editInstruction = (componentState, instruction) => {
   const index = componentState.instructionList.findIndex(
     (el) => el.code === instruction.code
@@ -924,7 +933,8 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         )}].filter(x=>x).length ` + `!== ${validation.count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     default:
-      break;
+      console.warn("Unhandled validation rule:", key);
+      return null;
   }
 };
 
@@ -1205,7 +1215,7 @@ export const conditionalRelevanceEquation = (logic, rule, state) => {
       returnType: "boolean",
     };
   } else {
-    throw "WTF";
+    throw new Error("Unsupported relevance rule: " + rule);
   }
 };
 
@@ -1311,7 +1321,7 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
           )} || ${leftOperand}>${capture(value[2], type)})`
         );
       } else {
-        throw "WTF";
+        throw new Error("Unsupported comparison operator: " + key);
       }
     case "startsWith":
       return wrapIfNested(

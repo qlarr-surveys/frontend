@@ -8,7 +8,10 @@ export const applyAddSkipRule = (state, { code }) => {
 };
 
 export const applyUpdateSkipRule = (state, { code, ruleIndex, updates }) => {
-  const rule = state[code].skip_logic[ruleIndex];
+  const rule = state[code].skip_logic?.[ruleIndex];
+  if (!rule) {
+    return;
+  }
   Object.assign(rule, updates);
   // Reset toEnd/disqualify if destination is not a group
   if (updates.skipTo && !updates.skipTo.startsWith("G")) {

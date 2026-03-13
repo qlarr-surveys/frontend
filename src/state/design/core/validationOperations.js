@@ -29,13 +29,19 @@ export const applyAddCustomValidationRule = (state, { code }) => {
 };
 
 export const applyUpdateCustomValidationRuleText = (state, { code, ruleCode, text }) => {
-  state[code].instructionList.find((i) => i.code === ruleCode).text = text;
+  const instruction = state[code].instructionList?.find((i) => i.code === ruleCode);
+  if (instruction) {
+    instruction.text = text;
+  }
 };
 
 export const applyRenameCustomValidationRule = (state, { code, ruleCode, newCode }) => {
-  const instruction = state[code].instructionList.find(
+  const instruction = state[code].instructionList?.find(
     (i) => i.code === ruleCode
   );
+  if (!instruction) {
+    return;
+  }
   instruction.code = newCode;
   const content = state[code].content || {};
   Object.keys(content).forEach((lang) => {

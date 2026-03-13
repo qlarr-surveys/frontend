@@ -46,13 +46,13 @@ export const addAnswer = (state, answer) => {
   const lang = state.langInfo.mainLang;
   const label = answer.label;
   const qualifiedCode = answer.qualifiedCode;
-  state[qualifiedCode] = {};
   const codes = splitQuestionCodes(qualifiedCode);
   const parentCode = codes.slice(0, codes.length - 1).join("");
   const questionCode = codes[0];
   if (!insertAnswer(state, answer, parentCode, answer.index)) {
     return;
   }
+  state[qualifiedCode] = {};
   if (label) {
     state[qualifiedCode].content = { [lang]: { label: label } };
   }
@@ -99,7 +99,7 @@ export const addNewAnswerToState = (state, { questionCode, type, index, focus, l
   let nextAnswerIndex = 1;
   let code = "";
   let qualifiedCode = "";
-  const shouldFocus = focus || true;
+  const shouldFocus = focus ?? true;
   switch (type) {
     case "column":
       nextAnswerIndex = nextId(

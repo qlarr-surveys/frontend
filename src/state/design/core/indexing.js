@@ -1,44 +1,43 @@
-import cloneDeep from "lodash.clonedeep";
-
 export const buildIndex = (state) => {
-  let retrunRestult = [];
+  let result = [];
   state.Survey.children?.forEach((group) => {
-    retrunRestult.push(group.code);
+    result.push(group.code);
     let groupObj = state[group.code];
     if (groupObj.children && !groupObj.collapsed) {
       groupObj.children.forEach((question) => {
         if (question?.code) {
-          retrunRestult.push(question.code);
+          result.push(question.code);
         }
       });
     }
   });
-  return retrunRestult;
+  return result;
 };
 
+
 export const buildCodeIndex = (state) => {
-  let retrunRestult = {};
+  let result = {};
   let groupCount = 0;
   let questionCount = 0;
   state.Survey.children?.forEach((group) => {
     groupCount++;
-    retrunRestult[group.code] = "P" + groupCount;
+    result[group.code] = "P" + groupCount;
     let groupObj = state[group.code];
     if (groupObj.children) {
       groupObj.children.forEach((question) => {
         questionCount++;
-        retrunRestult[question.code] = "Q" + questionCount;
+        result[question.code] = "Q" + questionCount;
         let questionObj = state[question.code];
         if (questionObj.children) {
           questionObj.children.forEach((answer) => {
-            retrunRestult[answer.qualifiedCode] =
+            result[answer.qualifiedCode] =
               "Q" + questionCount + answer.code;
           });
         }
       });
     }
   });
-  return retrunRestult;
+  return result;
 };
 
 export const splitQuestionCodes = (code) => {
@@ -46,14 +45,10 @@ export const splitQuestionCodes = (code) => {
 };
 
 export const mapCodeToUserFriendlyOrder = (code, index) => {
-  let newCode = cloneDeep(code);
-  // Pattern for G followed by alphanumeric characters
+  let newCode = code;
   const gPattern = /G[a-zA-Z0-9]+/g;
-
-  // Pattern for Q followed by alphanumeric characters
   const qPattern = /Q[a-zA-Z0-9]+/g;
 
-  // Find all G matches
   const gMatches = code.match(gPattern);
   if (gMatches) {
     gMatches.forEach((match) => {
@@ -61,13 +56,11 @@ export const mapCodeToUserFriendlyOrder = (code, index) => {
     });
   }
 
-  // Find all Q matches
   const qMatches = code.match(qPattern);
   if (qMatches) {
     qMatches.forEach((match) => {
       newCode = newCode.replace(match, index[match]);
     });
   }
-  // Return counts for reference
   return newCode;
 };

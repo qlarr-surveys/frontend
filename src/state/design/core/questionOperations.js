@@ -84,6 +84,9 @@ export const deleteGroupFromState = (state, groupCode) => {
   }
   const survey = state.Survey;
   const index = survey.children?.findIndex((x) => x.code === groupCode);
+  if (index == null || index < 0) {
+    return;
+  }
   survey.children.splice(index, 1);
   delete state[groupCode];
   cleanupRandomRules(survey);
