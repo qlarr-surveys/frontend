@@ -51,7 +51,6 @@ const getResponseMetrics = ({ responses = [], totalResponses, incompleteResponse
     skipped,
     incomplete,
     preview,
-    responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
   };
 };
 

@@ -9,13 +9,12 @@ export default function FileUploadVisualization({ question }) {
 
   const stats = [
     { label: 'Uploaded', value: data.answered },
-    { label: 'Upload Rate', value: `${data.responseRate}%` },
   ];
 
   return (
     <ChartContainer>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <StatsRow stats={stats} columns={2} />
+        <StatsRow stats={stats} columns={1} />
         <FrequencyTable data={data.extensionData} valueLabel="Extension" countLabel="Count" />
       </Box>
     </ChartContainer>
