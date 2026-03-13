@@ -9,7 +9,7 @@ let buffer = [];
 let debounceTime = 500;
 let rollbackState = null;
 
-export const saveDebounce = (store) => {
+const saveDebounce = (store) => {
   if (saveTimer) {
     clearTimeout(saveTimer);
   }
@@ -51,7 +51,7 @@ export const dataSaver = (store) => (next) => (action) => {
   return next(action);
 };
 
-export const MUTATING = [
+const MUTATING = [
   "designState/onBaseLangChanged",
   "designState/onAdditionalLangAdded",
   "designState/onAdditionalLangRemoved",
@@ -83,7 +83,7 @@ export const MUTATING = [
   "designState/setDefaultValue",
 ];
 
-export const setState = (store, state) => {
+const setState = (store, state) => {
   store.dispatch(setUpdating(false));
   store.dispatch(designStateReceived(state));
   store.dispatch(setSaving(false));
@@ -97,7 +97,7 @@ export const setState = (store, state) => {
   buffer = [];
 };
 
-export const setError = (store, error) => {
+const setError = (store, error) => {
   // Rollback optimistic updates on error
   if (rollbackState) {
     store.dispatch(
@@ -130,7 +130,7 @@ export const setError = (store, error) => {
   buffer = [];
 };
 
-export const reservedKeys = [
+const reservedKeys = [
   "skipScroll",
   "langInfo",
   "reorder_refresh_code",
@@ -146,7 +146,7 @@ export const reservedKeys = [
   "globalSetup",
 ];
 
-export function getDiff(currentState, latestState) {
+function getDiff(currentState, latestState) {
   const changes = {};
 
   // Get all keys from both objects and filter out reserved keys
