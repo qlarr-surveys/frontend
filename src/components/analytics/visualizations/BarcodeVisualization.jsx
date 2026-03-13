@@ -31,7 +31,7 @@ export default function BarcodeVisualization({ question }) {
               All Scanned Codes
             </Typography>
             <FrequencyTable
-              data={data.frequencyData.slice(0, 20)}
+              data={data.frequencyData}
               valueLabel="Barcode"
               countLabel="Scans"
             />

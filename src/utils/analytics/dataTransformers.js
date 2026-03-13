@@ -12,7 +12,6 @@ import {
 import { getChartColor, NPS_COLORS, STATUS_COLORS } from './colors';
 import { BACKEND_BASE_URL } from '~/constants/networking';
 
-const MAX_FREQUENCY_ITEMS = 20;
 const MAX_CHART_BAR_ITEMS = 10;
 const MAX_DOMAIN_ITEMS = 10;
 
@@ -326,15 +325,28 @@ export const transformTextData = (question) => {
     : 0;
 
   return {
-    frequencyData: frequency.slice(0, MAX_FREQUENCY_ITEMS),
+    frequencyData: frequency,
     uniqueCount: frequency.length,
     ...metrics,
     avgLength,
   };
 };
 
-// Transform Paragraph data — identical to Text
-export const transformParagraphData = transformTextData;
+// Transform Paragraph data — show all raw text values (not frequency-grouped)
+export const transformParagraphData = (question) => {
+  const { responses } = question;
+  const metrics = getResponseMetrics(question);
+
+  const avgLength = metrics.answered > 0
+    ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
+    : 0;
+
+  return {
+    responses,
+    ...metrics,
+    avgLength,
+  };
+};
 
 // Transform Email data
 export const transformEmailData = (question) => {
@@ -669,7 +681,7 @@ export const transformBarcodeData = (question) => {
   const barData = applyRoundedPercentages(allItems, metrics.total);
 
   return {
-    frequencyData: frequency.slice(0, MAX_FREQUENCY_ITEMS),
+    frequencyData: frequency,
     barData,
     uniqueCount: frequency.length,
     duplicateCount: duplicates.length,
