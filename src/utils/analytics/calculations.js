@@ -95,15 +95,7 @@ export const calculateRankingAverages = (rankings, options) => {
     counts[opt] = 0;
   });
 
-  const parsed = rankings.map((ranking) => {
-    if (Array.isArray(ranking)) return ranking;
-    if (typeof ranking === 'string') {
-      try { return JSON.parse(ranking); } catch { return []; }
-    }
-    return [];
-  });
-
-  parsed.forEach((ranking) => {
+  rankings.forEach((ranking) => {
     ranking.forEach((opt, index) => {
       totals[opt] += index + 1; // 1-based ranking
       counts[opt]++;
@@ -113,8 +105,8 @@ export const calculateRankingAverages = (rankings, options) => {
   return options.map((opt) => ({
     option: opt,
     averageRank: counts[opt] > 0 ? Math.round((totals[opt] / counts[opt]) * 100) / 100 : 0,
-    firstPlaceCount: parsed.filter((r) => r[0] === opt).length,
-    lastPlaceCount: parsed.filter((r) => r[r.length - 1] === opt).length,
+    firstPlaceCount: rankings.filter((r) => r[0] === opt).length,
+    lastPlaceCount: rankings.filter((r) => r[r.length - 1] === opt).length,
   })).sort((a, b) => a.averageRank - b.averageRank);
 };
 
@@ -141,6 +133,8 @@ export const calculateMCQFrequency = (responses, options) => {
 export const calculateMatrixData = (responses, rows, columns) => {
   if (!rows || !columns) return [];
 
+  const rowIdx = new Map(rows.map((r, i) => [r, i]));
+
   const matrix = rows.map((row) => {
     const rowData = { row };
     columns.forEach((col) => (rowData[col] = 0));
@@ -149,8 +143,8 @@ export const calculateMatrixData = (responses, rows, columns) => {
 
   responses.forEach((response) => {
     Object.entries(response).forEach(([row, col]) => {
-      const rowIndex = rows.indexOf(row);
-      if (rowIndex >= 0) {
+      const rowIndex = rowIdx.get(row);
+      if (rowIndex !== undefined) {
         if (Array.isArray(col)) {
           col.forEach((c) => (matrix[rowIndex][c] = (matrix[rowIndex][c] || 0) + 1));
         } else {

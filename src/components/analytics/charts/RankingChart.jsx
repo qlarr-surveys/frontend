@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+import useIsFirstRender from '~/hooks/useIsFirstRender';
 import {
   BarChart,
   Bar,
@@ -58,14 +60,15 @@ export default function RankingChart({
   height = 300,
   showFirstLast = true,
 }) {
+  const isFirstRender = useIsFirstRender();
   // Sort by average rank (lower is better)
-  const sortedData = [...data].sort((a, b) => a.averageRank - b.averageRank);
+  const sortedData = useMemo(() => [...data].sort((a, b) => a.averageRank - b.averageRank), [data]);
 
-  const legendPayload = sortedData.map((entry, index) => ({
+  const legendPayload = useMemo(() => sortedData.map((entry, index) => ({
     value: entry.name,
     type: 'square',
     color: getChartColor(index),
-  }));
+  })), [sortedData]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -93,6 +96,7 @@ export default function RankingChart({
           <Legend content={renderLegend} payload={legendPayload} />
           <Bar
             dataKey="averageRank"
+            isAnimationActive={isFirstRender}
             animationBegin={0}
             animationDuration={800}
             barSize={25}

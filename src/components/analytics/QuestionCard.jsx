@@ -1,31 +1,33 @@
-import SCQVisualization from './visualizations/SCQVisualization';
-import MCQVisualization from './visualizations/MCQVisualization';
-import NPSVisualization from './visualizations/NPSVisualization';
-import RankingVisualization from './visualizations/RankingVisualization';
-import NumberVisualization from './visualizations/NumberVisualization';
-import DateVisualization from './visualizations/DateVisualization';
-import TimeVisualization from './visualizations/TimeVisualization';
-import DateTimeVisualization from './visualizations/DateTimeVisualization';
-import MatrixSCQVisualization from './visualizations/MatrixSCQVisualization';
-import MatrixMCQVisualization from './visualizations/MatrixMCQVisualization';
-import TextVisualization from './visualizations/TextVisualization';
-import ParagraphVisualization from './visualizations/ParagraphVisualization';
-import EmailVisualization from './visualizations/EmailVisualization';
-import MultipleTextVisualization from './visualizations/MultipleTextVisualization';
-import AutocompleteVisualization from './visualizations/AutocompleteVisualization';
-import ImageRankingVisualization from './visualizations/ImageRankingVisualization';
-import ImageSCQVisualization from './visualizations/ImageSCQVisualization';
-import ImageMCQVisualization from './visualizations/ImageMCQVisualization';
-import IconSCQVisualization from './visualizations/IconSCQVisualization';
-import IconMCQVisualization from './visualizations/IconMCQVisualization';
-import IconMatrixSCQVisualization from './visualizations/IconMatrixSCQVisualization';
-import IconMatrixMCQVisualization from './visualizations/IconMatrixMCQVisualization';
-import FileUploadVisualization from './visualizations/FileUploadVisualization';
-import SignatureVisualization from './visualizations/SignatureVisualization';
-import MediaCaptureVisualization from './visualizations/MediaCaptureVisualization';
-import BarcodeVisualization from './visualizations/BarcodeVisualization';
-import { Paper, Typography } from '@mui/material';
+import React, { Suspense, lazy, useMemo } from 'react';
+import { Box, CircularProgress, Paper, Typography } from '@mui/material';
 import NoResponsesMessage from './common/NoResponsesMessage';
+
+const SCQVisualization = lazy(() => import('./visualizations/SCQVisualization'));
+const MCQVisualization = lazy(() => import('./visualizations/MCQVisualization'));
+const NPSVisualization = lazy(() => import('./visualizations/NPSVisualization'));
+const RankingVisualization = lazy(() => import('./visualizations/RankingVisualization'));
+const NumberVisualization = lazy(() => import('./visualizations/NumberVisualization'));
+const DateVisualization = lazy(() => import('./visualizations/DateVisualization'));
+const TimeVisualization = lazy(() => import('./visualizations/TimeVisualization'));
+const DateTimeVisualization = lazy(() => import('./visualizations/DateTimeVisualization'));
+const MatrixSCQVisualization = lazy(() => import('./visualizations/MatrixSCQVisualization'));
+const MatrixMCQVisualization = lazy(() => import('./visualizations/MatrixMCQVisualization'));
+const TextVisualization = lazy(() => import('./visualizations/TextVisualization'));
+const ParagraphVisualization = lazy(() => import('./visualizations/ParagraphVisualization'));
+const EmailVisualization = lazy(() => import('./visualizations/EmailVisualization'));
+const MultipleTextVisualization = lazy(() => import('./visualizations/MultipleTextVisualization'));
+const AutocompleteVisualization = lazy(() => import('./visualizations/AutocompleteVisualization'));
+const ImageRankingVisualization = lazy(() => import('./visualizations/ImageRankingVisualization'));
+const ImageSCQVisualization = lazy(() => import('./visualizations/ImageSCQVisualization'));
+const ImageMCQVisualization = lazy(() => import('./visualizations/ImageMCQVisualization'));
+const IconSCQVisualization = lazy(() => import('./visualizations/IconSCQVisualization'));
+const IconMCQVisualization = lazy(() => import('./visualizations/IconMCQVisualization'));
+const IconMatrixSCQVisualization = lazy(() => import('./visualizations/IconMatrixSCQVisualization'));
+const IconMatrixMCQVisualization = lazy(() => import('./visualizations/IconMatrixMCQVisualization'));
+const FileUploadVisualization = lazy(() => import('./visualizations/FileUploadVisualization'));
+const SignatureVisualization = lazy(() => import('./visualizations/SignatureVisualization'));
+const MediaCaptureVisualization = lazy(() => import('./visualizations/MediaCaptureVisualization'));
+const BarcodeVisualization = lazy(() => import('./visualizations/BarcodeVisualization'));
 
 const QUESTION_TYPE_MAP = {
   SCQ: SCQVisualization,
@@ -56,17 +58,22 @@ const QUESTION_TYPE_MAP = {
   BARCODE: BarcodeVisualization,
 };
 
-export default function QuestionCard({ question }) {
-  let VisualizationComponent = QUESTION_TYPE_MAP[question.type];
+const ICON_UPGRADE_MAP = {
+  SCQ_ARRAY: IconMatrixSCQVisualization,
+  MCQ_ARRAY: IconMatrixMCQVisualization,
+};
+
+function QuestionCard({ question, totalResponses, incompleteResponses, previewResponses }) {
+  const enrichedQuestion = useMemo(() => ({
+    ...question,
+    totalResponses,
+    incompleteResponses,
+    previewResponses,
+  }), [question, totalResponses, incompleteResponses, previewResponses]);
 
   // Auto-upgrade matrix visualizations to icon variants when images are available
-  if (question.images?.length > 0) {
-    if (VisualizationComponent === MatrixSCQVisualization) {
-      VisualizationComponent = IconMatrixSCQVisualization;
-    } else if (VisualizationComponent === MatrixMCQVisualization) {
-      VisualizationComponent = IconMatrixMCQVisualization;
-    }
-  }
+  const VisualizationComponent = (question.images?.length > 0 && ICON_UPGRADE_MAP[enrichedQuestion.type])
+    || QUESTION_TYPE_MAP[enrichedQuestion.type];
 
   if (!VisualizationComponent) {
     return (
@@ -81,9 +88,15 @@ export default function QuestionCard({ question }) {
     );
   }
 
-  if (!question.responses || question.responses.length === 0) {
+  if (!enrichedQuestion.responses || enrichedQuestion.responses.length === 0) {
     return <NoResponsesMessage />;
   }
 
-  return <VisualizationComponent question={question} />;
+  return (
+    <Suspense fallback={<Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}><CircularProgress size={28} /></Box>}>
+      <VisualizationComponent question={enrichedQuestion} />
+    </Suspense>
+  );
 }
+
+export default React.memo(QuestionCard);

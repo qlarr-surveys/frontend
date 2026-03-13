@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box } from '@mui/material';
 import CompletionCard from '../charts/CompletionCard';
 import ChartContainer from '../common/ChartContainer';
@@ -5,7 +6,7 @@ import { StatsRow } from '../common/StatCard';
 import { transformMediaCaptureData } from '~/utils/analytics/dataTransformers';
 
 export default function MediaCaptureVisualization({ question }) {
-  const data = transformMediaCaptureData(question);
+  const data = useMemo(() => transformMediaCaptureData(question), [question]);
 
   const stats = [
     { label: 'Captured', value: data.captured },

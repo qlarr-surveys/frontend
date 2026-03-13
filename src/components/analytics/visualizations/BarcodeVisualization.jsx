@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
@@ -6,7 +7,7 @@ import FrequencyTable from '../common/FrequencyTable';
 import { transformBarcodeData } from '~/utils/analytics/dataTransformers';
 
 export default function BarcodeVisualization({ question }) {
-  const data = transformBarcodeData(question);
+  const data = useMemo(() => transformBarcodeData(question), [question]);
 
   const stats = [
     { label: 'Scanned', value: data.answered },

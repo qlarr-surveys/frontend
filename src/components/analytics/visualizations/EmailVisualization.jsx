@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box, Typography, Grid } from '@mui/material';
 import PieDonutChart from '../charts/PieDonutChart';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
@@ -8,7 +9,7 @@ import DataTable from '../common/DataTable';
 import { transformEmailData } from '~/utils/analytics/dataTransformers';
 
 export default function EmailVisualization({ question }) {
-  const data = transformEmailData(question);
+  const data = useMemo(() => transformEmailData(question), [question]);
 
   const stats = [
     ...buildBaseStats(data),

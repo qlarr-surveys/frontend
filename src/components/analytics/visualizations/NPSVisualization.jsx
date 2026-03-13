@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box } from '@mui/material';
 import NPSChart from '../charts/NPSChart';
 import ChartContainer from '../common/ChartContainer';
@@ -12,7 +13,7 @@ const getNPSBenchmarkLabel = (score) => {
 };
 
 export default function NPSVisualization({ question }) {
-  const data = transformNPSData(question);
+  const data = useMemo(() => transformNPSData(question), [question]);
 
   const stats = [
     {

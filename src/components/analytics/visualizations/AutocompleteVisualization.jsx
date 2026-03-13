@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Box } from '@mui/material';
 import PieDonutChart from '../charts/PieDonutChart';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
@@ -10,7 +10,7 @@ import { transformAutocompleteData } from '~/utils/analytics/dataTransformers';
 
 export default function AutocompleteVisualization({ question }) {
   const [chartType, setChartType] = useState('bar');
-  const data = transformAutocompleteData(question);
+  const data = useMemo(() => transformAutocompleteData(question), [question]);
 
   const tabs = [
     { value: 'bar', label: 'Bar Chart' },

@@ -1,4 +1,5 @@
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import useIsFirstRender from '~/hooks/useIsFirstRender';
 
 const RADIAN = Math.PI / 180;
 
@@ -54,6 +55,7 @@ export default function PieDonutChart({
   height = 300,
   outerRadius = 100,
 }) {
+  const isFirstRender = useIsFirstRender();
   const actualInnerRadius = outerRadius * 0.6;
 
   return (
@@ -69,6 +71,7 @@ export default function PieDonutChart({
           outerRadius={outerRadius}
           fill="#8884d8"
           dataKey="value"
+          isAnimationActive={isFirstRender}
           animationBegin={0}
           animationDuration={800}
         >

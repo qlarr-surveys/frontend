@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box } from '@mui/material';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
@@ -13,7 +14,7 @@ export default function MultipleTextVisualization({ question }) {
     return <NoResponsesMessage />;
   }
 
-  const data = transformMultipleTextData(question);
+  const data = useMemo(() => transformMultipleTextData(question), [question]);
 
   const avgCompletion = data.fieldStats.length > 0
     ? Math.round(data.fieldStats.reduce((sum, f) => sum + f.completionRate, 0) / data.fieldStats.length)

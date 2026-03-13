@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Box } from '@mui/material';
 import PieDonutChart from '../charts/PieDonutChart';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
@@ -10,7 +10,7 @@ import { transformSCQData } from '~/utils/analytics/dataTransformers';
 
 export default function SCQVisualization({ question }) {
   const [chartType, setChartType] = useState('donut');
-  const data = transformSCQData(question);
+  const data = useMemo(() => transformSCQData(question), [question]);
 
   const tabs = [
     { value: 'donut', label: 'Donut' },

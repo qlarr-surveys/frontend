@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+import useIsFirstRender from '~/hooks/useIsFirstRender';
 import {
   BarChart,
   Bar,
@@ -60,15 +62,16 @@ export default function HorizontalBarChart({
   barSize = 20,
   maxBarSize = 40,
 }) {
+  const isFirstRender = useIsFirstRender();
   // Calculate dynamic height based on data length
   const dynamicHeight = Math.max(height, data.length * 50);
 
   // Build legend payload from data entries
-  const legendPayload = data.map((entry) => ({
+  const legendPayload = useMemo(() => data.map((entry) => ({
     value: entry.name,
     type: 'square',
     color: entry.fill,
-  }));
+  })), [data]);
 
   return (
     <ResponsiveContainer width="100%" height={dynamicHeight}>
@@ -90,6 +93,7 @@ export default function HorizontalBarChart({
           dataKey={dataKey}
           barSize={barSize}
           maxBarSize={maxBarSize}
+          isAnimationActive={isFirstRender}
           animationBegin={0}
           animationDuration={800}
         >

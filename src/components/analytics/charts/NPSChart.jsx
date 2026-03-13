@@ -1,3 +1,4 @@
+import useIsFirstRender from '~/hooks/useIsFirstRender';
 import { Box, Typography } from '@mui/material';
 import {
   BarChart,
@@ -18,6 +19,7 @@ import { NPS_COLORS } from '~/utils/analytics/colors';
 
 // Distribution Chart Component (score 0-10 histogram)
 function NPSDistributionChart({ data, height = 250 }) {
+  const isFirstRender = useIsFirstRender();
   return (
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={data} margin={{ top: 20, right: 10, left: 0, bottom: 0 }}>
@@ -55,7 +57,7 @@ function NPSDistributionChart({ data, height = 250 }) {
         />
         <ReferenceLine x="6" stroke="#ef4444" strokeDasharray="3 3" />
         <ReferenceLine x="8" stroke="#f59e0b" strokeDasharray="3 3" />
-        <Bar dataKey="count" animationBegin={0} animationDuration={800}>
+        <Bar dataKey="count" isAnimationActive={isFirstRender} animationBegin={0} animationDuration={800}>
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.fill} />
           ))}

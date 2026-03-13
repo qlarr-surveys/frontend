@@ -7,7 +7,7 @@ import { transformNumberData } from '~/utils/analytics/dataTransformers';
 import { formatNumber } from '~/utils/analytics/formatting';
 
 export default function NumberVisualization({ question }) {
-  const data = transformNumberData(question);
+  const data = useMemo(() => transformNumberData(question), [question]);
   const hasOutliers = data.outlierData.outliersCount > 0;
 
   // Build table data

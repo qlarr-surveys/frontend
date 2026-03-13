@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Box } from '@mui/material';
 import PieDonutChart from '../charts/PieDonutChart';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
@@ -12,7 +12,7 @@ import { transformIconSCQData, resolveImageUrl } from '~/utils/analytics/dataTra
 
 export default function IconSCQVisualization({ question }) {
   const [viewType, setViewType] = useState('gallery');
-  const data = transformIconSCQData(question);
+  const data = useMemo(() => transformIconSCQData(question), [question]);
   const images = question.images || [];
 
   const tabs = [

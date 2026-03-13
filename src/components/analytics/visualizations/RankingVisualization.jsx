@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import RankingChart from '../charts/RankingChart';
 import ChartContainer from '../common/ChartContainer';
@@ -6,7 +7,7 @@ import { buildBaseStats } from '../common/buildBaseStats';
 import { transformRankingData } from '~/utils/analytics/dataTransformers';
 
 export default function RankingVisualization({ question }) {
-  const data = transformRankingData(question);
+  const data = useMemo(() => transformRankingData(question), [question]);
 
   const topItem = data.averageRankData[0];
   const bottomItem = data.averageRankData[data.averageRankData.length - 1];

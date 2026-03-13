@@ -81,19 +81,29 @@ export const resolveImageUrl = (url) => {
   return BACKEND_BASE_URL + url.replace(/^\//, '');
 };
 
-// Match response codes or labels to images — tries ID exact, ID suffix, then label match
-const resolveIconImage = (images, responseValue) => {
-  if (!images || !responseValue) return null;
-  return images.find((img) => img.id === responseValue)
-    || images.find((img) => img.id.endsWith(responseValue))
-    || images.find((img) => img.label === responseValue)
-    || null;
+// Build a fast lookup for matching response codes/labels to images
+const buildImageLookup = (images) => {
+  if (!images || images.length === 0) return () => null;
+  const byId = new Map();
+  const bySuffix = new Map();
+  const byLabel = new Map();
+  images.forEach((img) => {
+    byId.set(img.id, img);
+    if (img.label) byLabel.set(img.label, img);
+    const suffix = img.id.match(/([A-Za-z]\d+)$/)?.[1];
+    if (suffix) bySuffix.set(suffix, img);
+  });
+  return (responseValue) => {
+    if (!responseValue) return null;
+    return byId.get(responseValue) || bySuffix.get(responseValue) || byLabel.get(responseValue) || null;
+  };
 };
 
 // Attach icon info to matrix rows and columns
 const attachIconsToMatrixData = (baseData, images) => {
+  const resolveIcon = buildImageLookup(images);
   const attachIcons = (items) => items.map((item) => {
-    const image = resolveIconImage(images, item);
+    const image = resolveIcon(item);
     return { key: item, label: image?.label || item, iconUrl: resolveImageUrl(image?.url) };
   });
   return {
@@ -193,14 +203,13 @@ export const transformRankingData = (question) => {
   const metrics = getResponseMetrics(question);
   const labelMap = buildLabelMap(options);
   const optionCodes = extractCodes(options);
-  const parsed = responses.map((r) => Array.isArray(r) ? r : (() => { try { return JSON.parse(r); } catch { return []; } })());
-  const rankings = calculateRankingAverages(parsed, optionCodes);
+  const rankings = calculateRankingAverages(responses, optionCodes);
 
   // Calculate rank distribution for stacked chart
   const rankDistribution = optionCodes.map((code) => {
     const data = { option: labelMap[code] || code };
     for (let rank = 1; rank <= optionCodes.length; rank++) {
-      data[`Rank ${rank}`] = parsed.filter((r) => r.indexOf(code) === rank - 1).length;
+      data[`Rank ${rank}`] = responses.filter((r) => r.indexOf(code) === rank - 1).length;
     }
     return data;
   });
@@ -228,19 +237,6 @@ export const transformNumberData = (question) => {
   return { stats, outlierData, ...metrics };
 };
 
-// Extract rows and columns from response objects when metadata is null
-const extractMatrixDimensions = (responses, rowCodes, colCodes, isMultiSelect = false) => {
-  const rows = rowCodes?.length ? rowCodes : responses.length > 0
-    ? [...new Set(responses.flatMap((r) => Object.keys(r)))].sort()
-    : [];
-  const columns = colCodes?.length ? colCodes : responses.length > 0
-    ? [...new Set(responses.flatMap((r) =>
-        isMultiSelect ? Object.values(r).flat() : Object.values(r)
-      ))].sort()
-    : [];
-  return { rows, columns };
-};
-
 // Remap matrix data from codes to labels for display
 const remapMatrixToLabels = (matrix, rowLabelMap, colLabelMap, colCodes) => {
   return matrix.map((rowData) => {
@@ -256,18 +252,18 @@ const remapMatrixToLabels = (matrix, rowLabelMap, colLabelMap, colCodes) => {
 // Transform Matrix SCQ data for heatmap
 export const transformMatrixSCQData = (question) => {
   const responses = question.responses || [];
-  const metrics = getResponseMetrics({ responses, totalResponses: question.totalResponses, incompleteResponses: question.incompleteResponses, previewResponses: question.previewResponses });
-  const rowCodes = extractCodes(question.rows);
-  const colCodes = extractCodes(question.columns);
+  const metrics = getResponseMetrics(question);
+  const rows = extractCodes(question.rows);
+  const columns = extractCodes(question.columns);
   const rowLabelMap = buildLabelMap(question.rows);
   const colLabelMap = buildLabelMap(question.columns);
-  const { rows, columns } = extractMatrixDimensions(responses, rowCodes, colCodes);
   const matrix = calculateMatrixData(responses, rows, columns);
   const displayMatrix = remapMatrixToLabels(matrix, rowLabelMap, colLabelMap, columns);
   const displayRows = rows.map((r) => rowLabelMap[r] || r);
   const displayColumns = columns.map((c) => colLabelMap[c] || c);
 
   // Calculate row averages (for Likert scale)
+
   const rowAverages = displayMatrix.map((rowData) => {
     let sum = 0;
     let count = 0;
@@ -296,12 +292,11 @@ export const transformMatrixSCQData = (question) => {
 // Transform Matrix MCQ data for heatmap
 export const transformMatrixMCQData = (question) => {
   const responses = question.responses || [];
-  const metrics = getResponseMetrics({ responses, totalResponses: question.totalResponses, incompleteResponses: question.incompleteResponses, previewResponses: question.previewResponses });
-  const rowCodes = extractCodes(question.rows);
-  const colCodes = extractCodes(question.columns);
+  const metrics = getResponseMetrics(question);
+  const rows = extractCodes(question.rows);
+  const columns = extractCodes(question.columns);
   const rowLabelMap = buildLabelMap(question.rows);
   const colLabelMap = buildLabelMap(question.columns);
-  const { rows, columns } = extractMatrixDimensions(responses, rowCodes, colCodes, true);
   const matrix = calculateMatrixData(responses, rows, columns);
   const displayMatrix = remapMatrixToLabels(matrix, rowLabelMap, colLabelMap, columns);
   const displayRows = rows.map((r) => rowLabelMap[r] || r);
@@ -432,9 +427,10 @@ export const transformImageRankingData = (question) => {
     return entries.sort((a, b) => a[1] - b[1]).map(([key]) => key);
   });
   const rankings = calculateRankingAverages(parsed, optionCodes);
+  const resolveIcon = buildImageLookup(images);
 
   const rankedImages = rankings.map((item, i) => {
-    const image = resolveIconImage(images, item.option);
+    const image = resolveIcon(item.option);
     return {
       ...item,
       name: image?.label || labelMap[item.option] || `Image ${i + 1}`,
@@ -455,9 +451,10 @@ export const transformImageSCQData = (question) => {
   const frequency = calculateFrequency(responses);
 
   // Build lookup: imageId -> frequency entry, bridging short codes ("A2") to full IDs ("Q309vcaA2")
+  const resolveIcon = buildImageLookup(images);
   const freqByImageId = {};
   frequency.forEach((item) => {
-    const image = resolveIconImage(images, item.value);
+    const image = resolveIcon(item.value);
     if (image) {
       freqByImageId[image.id] = item;
     }
@@ -497,8 +494,9 @@ export const transformImageMCQData = (question) => {
     : images.map((img) => img.label);
   const freq = calculateMCQFrequency(responses, options);
 
+  const resolveIcon = buildImageLookup(images);
   const rawItems = freq.map((item, i) => {
-    const image = resolveIconImage(images, item.option);
+    const image = resolveIcon(item.option);
     return {
       name: image?.label || `Image ${i + 1}`,
       value: item.count,
@@ -525,8 +523,9 @@ export const transformIconSCQData = (question) => {
   const images = question.images || [];
   const frequency = calculateFrequency(responses);
 
+  const resolveIcon = buildImageLookup(images);
   const rawItems = frequency.map((item, i) => {
-    const image = resolveIconImage(images, item.value);
+    const image = resolveIcon(item.value);
     return {
       name: image?.label || `Option ${i + 1}`,
       value: item.count,
@@ -562,8 +561,9 @@ export const transformIconMCQData = (question) => {
     ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
     : 0;
 
+  const resolveIcon = buildImageLookup(images);
   const rawItems = freq.map((item, i) => {
-    const image = resolveIconImage(images, item.option);
+    const image = resolveIcon(item.option);
     return {
       name: image?.label || `Option ${i + 1}`,
       value: item.count,

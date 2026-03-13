@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box } from '@mui/material';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
@@ -6,7 +7,7 @@ import FrequencyTable from '../common/FrequencyTable';
 import { transformTextData } from '~/utils/analytics/dataTransformers';
 
 export default function TextVisualization({ question }) {
-  const data = transformTextData(question);
+  const data = useMemo(() => transformTextData(question), [question]);
 
   const stats = [
     ...buildBaseStats(data),

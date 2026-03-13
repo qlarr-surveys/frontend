@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import PieDonutChart from '../charts/PieDonutChart';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
@@ -11,7 +11,7 @@ import { transformMCQData } from '~/utils/analytics/dataTransformers';
 
 export default function MCQVisualization({ question }) {
   const [chartType, setChartType] = useState('donut');
-  const data = transformMCQData(question);
+  const data = useMemo(() => transformMCQData(question), [question]);
 
   const tabs = [
     { value: 'donut', label: 'Donut' },

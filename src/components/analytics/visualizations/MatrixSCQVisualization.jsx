@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import HeatmapChart from '../charts/HeatmapChart';
 import ChartContainer from '../common/ChartContainer';
@@ -6,7 +7,7 @@ import { buildBaseStats } from '../common/buildBaseStats';
 import { transformMatrixSCQData } from '~/utils/analytics/dataTransformers';
 
 export default function MatrixSCQVisualization({ question }) {
-  const data = transformMatrixSCQData(question);
+  const data = useMemo(() => transformMatrixSCQData(question), [question]);
 
   const stats = [
     ...buildBaseStats(data),

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
@@ -7,7 +8,7 @@ import CategoryLegend from '../common/CategoryLegend';
 import { transformImageMCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
 
 export default function ImageMCQVisualization({ question }) {
-  const data = transformImageMCQData(question);
+  const data = useMemo(() => transformImageMCQData(question), [question]);
 
   const stats = [
     ...buildBaseStats(data),

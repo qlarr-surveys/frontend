@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import RankingChart from '../charts/RankingChart';
 import ChartContainer from '../common/ChartContainer';
@@ -7,7 +8,7 @@ import { RankedImageGallery } from '../common/ImageGallery';
 import { transformImageRankingData } from '~/utils/analytics/dataTransformers';
 
 export default function ImageRankingVisualization({ question }) {
-  const data = transformImageRankingData(question);
+  const data = useMemo(() => transformImageRankingData(question), [question]);
 
   const topItem = data.rankedImages[0];
   const bottomItem = data.rankedImages[data.rankedImages.length - 1];
