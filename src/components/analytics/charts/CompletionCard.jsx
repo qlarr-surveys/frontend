@@ -1,13 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
+import { grey, success, warning, error } from '~/theme/palette';
 
 function CompletionCard({
   rate,
   completed,
   total,
   label,
-  color = '#22c55e',
+  color = success.main,
   size = 'medium',
 }) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
@@ -30,9 +31,9 @@ function CompletionCard({
   const strokeDashoffset = circumference * (1 - safeRate / 100);
 
   const getColor = () => {
-    if (rate >= 80) return '#22c55e'; // green
-    if (rate >= 50) return '#f59e0b'; // amber
-    return '#ef4444'; // red
+    if (rate >= 80) return success.main;
+    if (rate >= 50) return warning.main;
+    return error.dark;
   };
 
   const finalColor = color === 'auto' ? getColor() : color;
@@ -49,7 +50,7 @@ function CompletionCard({
             cy="50%"
             r={radius}
             fill="none"
-            stroke="#e5e7eb"
+            stroke={grey[300]}
             strokeWidth={strokeWidth}
           />
           {/* Progress circle */}
@@ -77,11 +78,11 @@ function CompletionCard({
           <span style={{ fontWeight: 'bold', fontSize: fonts.rate, color: finalColor }}>
             {rate}%
           </span>
-          <span style={{ color: '#6b7280', fontSize: fonts.label }}>{label || t('analytics.completion_rate')}</span>
+          <span style={{ color: grey[600], fontSize: fonts.label }}>{label || t('analytics.completion_rate')}</span>
         </div>
       </div>
       <div style={{ marginTop: 8, textAlign: 'center', fontSize: fonts.count }}>
-        <span style={{ color: '#6b7280' }}>
+        <span style={{ color: grey[600] }}>
           {t('analytics.completed_count', { completed, total })}
         </span>
       </div>

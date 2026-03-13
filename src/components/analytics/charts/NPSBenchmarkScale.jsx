@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
+import { grey } from '~/theme/palette';
 import { NPS_BENCHMARK_COLORS } from '~/utils/analytics/colors';
 
 function NPSBenchmarkScale({ score }) {
@@ -52,7 +53,7 @@ function NPSBenchmarkScale({ score }) {
               height: 0,
               borderLeft: '6px solid transparent',
               borderRight: '6px solid transparent',
-              borderTop: '7px solid #111827',
+              borderTop: `7px solid ${grey[900]}`,
             }}
           />
         </Box>

@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
+import { grey, success, error } from '~/theme/palette';
 import { getChartColor } from '~/utils/analytics/colors';
 import ChartTooltip, { titleStyle, detailStyle, detailStyleLast, renderLegend } from '../common/ChartTooltip';
 
@@ -84,7 +85,7 @@ function RankingChart({
             <LabelList
               dataKey="averageRank"
               position="right"
-              fill="#374151"
+              fill={grey[700]}
               fontSize={12}
             />
           </Bar>
@@ -94,28 +95,28 @@ function RankingChart({
       {/* First/Last Place Summary */}
       {showFirstLast && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginTop: 16 }}>
-          <div style={{ backgroundColor: '#f0fdf4', borderRadius: 8, padding: 16 }}>
-            <h4 style={{ fontSize: 14, fontWeight: 500, color: '#166534', marginBottom: 8 }}>{t('analytics.most_first_place_votes')}</h4>
+          <div style={{ backgroundColor: success.lighter, borderRadius: 8, padding: 16 }}>
+            <h4 style={{ fontSize: 14, fontWeight: 500, color: success.dark, marginBottom: 8 }}>{t('analytics.most_first_place_votes')}</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
               {sortedData
                 .sort((a, b) => b.firstPlace - a.firstPlace)
                 .slice(0, 3)
                 .map((item, i) => (
-                  <li key={i} style={{ fontSize: 14, color: '#15803d', display: 'flex', justifyContent: 'space-between' }}>
+                  <li key={i} style={{ fontSize: 14, color: success.dark, display: 'flex', justifyContent: 'space-between' }}>
                     <span>{item.name}</span>
                     <span style={{ fontWeight: 500 }}>{item.firstPlace}</span>
                   </li>
                 ))}
             </ul>
           </div>
-          <div style={{ backgroundColor: '#fef2f2', borderRadius: 8, padding: 16 }}>
-            <h4 style={{ fontSize: 14, fontWeight: 500, color: '#991b1b', marginBottom: 8 }}>{t('analytics.most_last_place_votes')}</h4>
+          <div style={{ backgroundColor: error.lighter, borderRadius: 8, padding: 16 }}>
+            <h4 style={{ fontSize: 14, fontWeight: 500, color: error.darker, marginBottom: 8 }}>{t('analytics.most_last_place_votes')}</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
               {sortedData
                 .sort((a, b) => b.lastPlace - a.lastPlace)
                 .slice(0, 3)
                 .map((item, i) => (
-                  <li key={i} style={{ fontSize: 14, color: '#b91c1c', display: 'flex', justifyContent: 'space-between' }}>
+                  <li key={i} style={{ fontSize: 14, color: error.dark, display: 'flex', justifyContent: 'space-between' }}>
                     <span>{item.name}</span>
                     <span style={{ fontWeight: 500 }}>{item.lastPlace}</span>
                   </li>

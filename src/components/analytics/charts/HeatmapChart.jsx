@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Box, Typography, Pagination } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
+import { grey, common, info } from '~/theme/palette';
 import { getHeatmapColor } from '~/utils/analytics/colors';
 
 function HeatmapChart({
@@ -12,7 +13,7 @@ function HeatmapChart({
   height = 'auto',
   cellSize = 50,
   showValues = true,
-  colorScale = { low: '#dbeafe', high: '#1d4ed8' },
+  colorScale = { low: info.lighter, high: info.dark },
   paginated = true,
   rowsPerPage = 10,
 }) {
@@ -42,7 +43,7 @@ function HeatmapChart({
 
   const getTextColor = (value) => {
     const intensity = maxValue > 0 ? value / maxValue : 0;
-    return intensity > 0.5 ? '#ffffff' : '#1f2937';
+    return intensity > 0.5 ? common.white : grey[800];
   };
 
   const totalPages = Math.ceil(data.length / rowsPerPage);
@@ -72,8 +73,8 @@ function HeatmapChart({
                 textAlign: 'left',
                 fontSize: 14,
                 fontWeight: 500,
-                color: '#374151',
-                backgroundColor: '#f9fafb'
+                color: grey[700],
+                backgroundColor: grey[100]
               }}></th>
               {columns.map((col, i) => {
                 const label = typeof col === 'object' ? col.label : col;
@@ -86,8 +87,8 @@ function HeatmapChart({
                       textAlign: 'center',
                       fontSize: 14,
                       fontWeight: 500,
-                      color: '#374151',
-                      backgroundColor: '#f9fafb',
+                      color: grey[700],
+                      backgroundColor: grey[100],
                       minWidth: cellSize
                     }}
                   >
@@ -113,8 +114,8 @@ function HeatmapChart({
                   padding: 8,
                   fontSize: 14,
                   fontWeight: 500,
-                  color: '#374151',
-                  backgroundColor: '#f9fafb',
+                  color: grey[700],
+                  backgroundColor: grey[100],
                   whiteSpace: 'nowrap'
                 }}>
                   {(() => {
@@ -177,7 +178,7 @@ function HeatmapChart({
         marginTop: 16,
         gap: 8
       }}>
-        <span style={{ fontSize: 12, color: '#6b7280' }}>{t('analytics.low')}</span>
+        <span style={{ fontSize: 12, color: grey[600] }}>{t('analytics.low')}</span>
         <div
           style={{
             width: 96,
@@ -186,7 +187,7 @@ function HeatmapChart({
             background: `linear-gradient(to right, ${colorScale.low}, ${colorScale.high})`
           }}
         />
-        <span style={{ fontSize: 12, color: '#6b7280' }}>{t('analytics.high')}</span>
+        <span style={{ fontSize: 12, color: grey[600] }}>{t('analytics.high')}</span>
       </div>
 
       {paginated && totalPages > 1 && (

@@ -345,7 +345,7 @@ function ResponsesList() {
   };
 
   const onSurveyorClicked = (response) => {
-    setCompleteResponses("all");
+    setStatus("all");
     setSurveyor(response.surveyorID || null);
   };
 

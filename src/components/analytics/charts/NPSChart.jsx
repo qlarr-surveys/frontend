@@ -18,6 +18,7 @@ import {
 import PieDonutChart from './PieDonutChart';
 import NPSBenchmarkScale from './NPSBenchmarkScale';
 import CategoryLegend from '../common/CategoryLegend';
+import { grey } from '~/theme/palette';
 import { NPS_COLORS } from '~/utils/analytics/colors';
 
 import ChartTooltip, { titleStyle, detailStyle } from '../common/ChartTooltip';
@@ -53,13 +54,13 @@ function NPSDistributionChart({ data, height = 250 }) {
         <XAxis dataKey="score" tick={{ fontSize: 12 }} />
         <YAxis hide />
         <Tooltip content={<NPSDistributionTooltip />} />
-        <ReferenceLine x="6" stroke="#ef4444" strokeDasharray="3 3" />
-        <ReferenceLine x="8" stroke="#f59e0b" strokeDasharray="3 3" />
+        <ReferenceLine x="6" stroke={NPS_COLORS.detractor} strokeDasharray="3 3" />
+        <ReferenceLine x="8" stroke={NPS_COLORS.passive} strokeDasharray="3 3" />
         <Bar dataKey="count" isAnimationActive={isFirstRender} animationBegin={0} animationDuration={800}>
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.fill} />
           ))}
-          <LabelList dataKey="count" position="top" fill="#374151" fontSize={12} />
+          <LabelList dataKey="count" position="top" fill={grey[700]} fontSize={12} />
         </Bar>
       </BarChart>
     </ResponsiveContainer>

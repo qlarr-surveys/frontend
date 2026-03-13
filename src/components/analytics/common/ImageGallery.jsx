@@ -3,9 +3,10 @@ import { Box, Grid, Typography, Card } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
+import { grey, warning, info } from '~/theme/palette';
 
 // Placeholder SVG for mock images
-const PlaceholderImage = ({ label, color = '#3b82f6' }) => (
+const PlaceholderImage = ({ label, color = info.main }) => (
   <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
     <rect width="100" height="100" fill={`${color}20`} />
     <rect x="20" y="20" width="60" height="60" fill={color} rx="5" />
@@ -162,10 +163,10 @@ export default function ImageGallery({
 export function RankedImageGallery({ images, showAverageRank = true }) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const getRankColor = (index) => {
-    if (index === 0) return '#eab308'; // gold
-    if (index === 1) return '#9ca3af'; // silver
-    if (index === 2) return '#d97706'; // bronze
-    return '#d1d5db'; // gray
+    if (index === 0) return warning.main; // gold
+    if (index === 1) return grey[500]; // silver
+    if (index === 2) return warning.dark; // bronze
+    return grey[300]; // gray
   };
 
   return (

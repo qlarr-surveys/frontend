@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
+import { grey } from '~/theme/palette';
 import ChartTooltip, { titleStyle, detailStyle, detailStyleLast, renderLegend } from '../common/ChartTooltip';
 
 function BarTooltip(props) {
@@ -83,7 +84,7 @@ function HorizontalBarChart({
             <LabelList
               dataKey={dataKey}
               position="right"
-              fill="#374151"
+              fill={grey[700]}
               fontSize={12}
             />
           )}
