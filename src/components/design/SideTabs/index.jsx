@@ -132,7 +132,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
         {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.ANALYTICS) && (
           <SideTab
             tooltip={t("analytics")}
-            style={getTabButtonStyle(
+            style={getTabButtonSx(
               selectedPage == MANAGE_SURVEY_LANDING_PAGES.ANALYTICS
             )}
             link={routes.analytics.replace(":surveyId", surveyId)}

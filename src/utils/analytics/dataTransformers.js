@@ -9,7 +9,7 @@ import {
   calculateEmailDomains,
   detectOutliers,
 } from './calculations';
-import { getChartColor, NPS_COLORS } from './colors';
+import { getChartColor, NPS_COLORS, STATUS_COLORS } from './colors';
 import { BACKEND_BASE_URL } from '~/constants/networking';
 
 const MAX_FREQUENCY_ITEMS = 20;
@@ -23,16 +23,57 @@ const buildLabelMap = (options) =>
 // Extract just the code strings from AnalyticsOption arrays
 const extractCodes = (options) => (options ?? []).map((o) => o.code);
 
-// Shared helper: extract total/answered/skipped/responseRate from any question
-const getResponseMetrics = ({ responses = [], totalResponses }) => {
+// Largest-remainder rounding: ensures percentages sum to exactly 100
+const largestRemainderRound = (items, getCount, total) => {
+  if (total === 0) return items.map(() => 0);
+  const rawPcts = items.map((item) => (getCount(item) / total) * 100);
+  const floored = rawPcts.map(Math.floor);
+  let remainder = 100 - floored.reduce((a, b) => a + b, 0);
+  const remainders = rawPcts.map((raw, i) => ({ i, frac: raw - floored[i] }));
+  remainders.sort((a, b) => b.frac - a.frac);
+  for (let j = 0; j < remainder; j++) {
+    floored[remainders[j].i]++;
+  }
+  return floored;
+};
+
+// Shared helper: extract total/answered/skipped/incomplete/preview from any question
+const getResponseMetrics = ({ responses = [], totalResponses, incompleteResponses = 0, previewResponses = 0 }) => {
   const total = totalResponses ?? responses.length;
   const answered = responses.length;
+  const incomplete = incompleteResponses;
+  const preview = previewResponses;
+  const completed = total - incomplete - preview;
+  const skipped = Math.max(0, completed - answered);
   return {
     total,
     answered,
-    skipped: Math.max(0, total - answered),
+    skipped,
+    incomplete,
+    preview,
     responseRate: total > 0 ? Math.round((answered / total) * 100) : 0,
   };
+};
+
+// Build status chart entries (Skipped, Incomplete, Preview) to append to chart data
+const buildStatusEntries = (metrics) => {
+  const entries = [];
+  if (metrics.skipped > 0) {
+    entries.push({ name: 'Skipped', value: metrics.skipped, count: metrics.skipped, fill: '#e5e7eb' });
+  }
+  if (metrics.incomplete > 0) {
+    entries.push({ name: 'Incomplete', value: metrics.incomplete, count: metrics.incomplete, fill: STATUS_COLORS.incomplete });
+  }
+  if (metrics.preview > 0) {
+    entries.push({ name: 'Preview', value: metrics.preview, count: metrics.preview, fill: STATUS_COLORS.preview });
+  }
+  return entries;
+};
+
+// Apply largest-remainder rounding to chart data items, returns new array with percentage field
+const applyRoundedPercentages = (items, total) => {
+  const percentages = largestRemainderRound(items, (item) => item.count, total);
+  return items.map((item, i) => ({ ...item, percentage: percentages[i] }));
 };
 
 // Resolve relative API image URLs to full URLs
@@ -71,17 +112,18 @@ export const transformSCQData = (question) => {
   const frequency = calculateFrequency(responses);
   const labelMap = buildLabelMap(question.options);
 
-  const mapItem = (item, i) => ({
+  const rawItems = frequency.map((item, i) => ({
     name: labelMap[item.value] || item.value,
     value: item.count,
     count: item.count,
-    percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
     fill: getChartColor(i),
-  });
+  }));
+  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
+  const chartData = applyRoundedPercentages(allItems, metrics.total);
 
   return {
-    pieData: frequency.map(mapItem),
-    barData: frequency.map(mapItem),
+    pieData: chartData,
+    barData: chartData,
     ...metrics,
     mode: labelMap[frequency[0]?.value] || frequency[0]?.value,
     modeCount: frequency[0]?.count,
@@ -99,13 +141,14 @@ export const transformMCQData = (question) => {
     ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
     : 0;
 
-  const chartData = freq.map((item, i) => ({
+  const rawItems = freq.map((item, i) => ({
     name: labelMap[item.option] || item.option,
     value: item.count,
     count: item.count,
-    percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
     fill: getChartColor(i),
   }));
+  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
+  const chartData = applyRoundedPercentages(allItems, metrics.total);
 
   return {
     pieData: chartData,
@@ -125,13 +168,17 @@ export const transformNPSData = (question) => {
   const distribution = Array(11).fill(0);
   responses.forEach((score) => distribution[score]++);
 
+  const rawCategoryData = [
+    { name: 'Detractors', value: nps.detractors, count: nps.detractors, fill: NPS_COLORS.detractor },
+    { name: 'Passives', value: nps.passives, count: nps.passives, fill: NPS_COLORS.passive },
+    { name: 'Promoters', value: nps.promoters, count: nps.promoters, fill: NPS_COLORS.promoter },
+  ];
+  const allCategoryItems = [...rawCategoryData, ...buildStatusEntries(metrics)];
+  const categoryData = applyRoundedPercentages(allCategoryItems, metrics.total);
+
   return {
     score: nps.score,
-    categoryData: [
-      { name: 'Detractors', value: nps.detractors, percentage: nps.detractorPct, fill: NPS_COLORS.detractor },
-      { name: 'Passives', value: nps.passives, percentage: nps.passivePct, fill: NPS_COLORS.passive },
-      { name: 'Promoters', value: nps.promoters, percentage: nps.promoterPct, fill: NPS_COLORS.promoter },
-    ],
+    categoryData,
     distributionData: distribution.map((count, score) => ({
       score: score.toString(),
       count,
@@ -211,7 +258,7 @@ const remapMatrixToLabels = (matrix, rowLabelMap, colLabelMap, colCodes) => {
 // Transform Matrix SCQ data for heatmap
 export const transformMatrixSCQData = (question) => {
   const responses = question.responses || [];
-  const metrics = getResponseMetrics({ responses, totalResponses: question.totalResponses });
+  const metrics = getResponseMetrics({ responses, totalResponses: question.totalResponses, incompleteResponses: question.incompleteResponses, previewResponses: question.previewResponses });
   const rowCodes = extractCodes(question.rows);
   const colCodes = extractCodes(question.columns);
   const rowLabelMap = buildLabelMap(question.rows);
@@ -251,7 +298,7 @@ export const transformMatrixSCQData = (question) => {
 // Transform Matrix MCQ data for heatmap
 export const transformMatrixMCQData = (question) => {
   const responses = question.responses || [];
-  const metrics = getResponseMetrics({ responses, totalResponses: question.totalResponses });
+  const metrics = getResponseMetrics({ responses, totalResponses: question.totalResponses, incompleteResponses: question.incompleteResponses, previewResponses: question.previewResponses });
   const rowCodes = extractCodes(question.rows);
   const colCodes = extractCodes(question.columns);
   const rowLabelMap = buildLabelMap(question.rows);
@@ -406,20 +453,23 @@ export const transformImageSCQData = (question) => {
     }
   });
 
+  const rawItems = images.map((img, i) => {
+    const freq = freqByImageId[img.id];
+    const count = freq?.count || 0;
+    return {
+      name: img.label || `Image ${i + 1}`,
+      value: count,
+      count,
+      imageUrl: resolveImageUrl(img.url),
+      imageId: img.id,
+      fill: getChartColor(i),
+    };
+  }).sort((a, b) => b.value - a.value);
+  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
+  const pieData = applyRoundedPercentages(allItems, metrics.total);
+
   return {
-    pieData: images.map((img, i) => {
-      const freq = freqByImageId[img.id];
-      const count = freq?.count || 0;
-      const percentage = metrics.total > 0 ? Math.round((count / metrics.total) * 100) : 0;
-      return {
-        name: img.label || `Image ${i + 1}`,
-        value: count,
-        percentage,
-        imageUrl: resolveImageUrl(img.url),
-        imageId: img.id,
-        fill: getChartColor(i),
-      };
-    }).sort((a, b) => b.value - a.value),
+    pieData,
     images,
     ...metrics,
   };
@@ -434,18 +484,22 @@ export const transformImageMCQData = (question) => {
     : images.map((img) => img.label);
   const freq = calculateMCQFrequency(responses, options);
 
+  const rawItems = freq.map((item, i) => {
+    const image = resolveIconImage(images, item.option);
+    return {
+      name: image?.label || `Image ${i + 1}`,
+      value: item.count,
+      count: item.count,
+      imageUrl: resolveImageUrl(image?.url),
+      imageId: image?.id,
+      fill: getChartColor(i),
+    };
+  });
+  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
+  const barData = applyRoundedPercentages(allItems, metrics.total);
+
   return {
-    barData: freq.map((item, i) => {
-      const image = resolveIconImage(images, item.option);
-      return {
-        name: image?.label || `Image ${i + 1}`,
-        count: item.count,
-        percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
-        imageUrl: resolveImageUrl(image?.url),
-        imageId: image?.id,
-        fill: getChartColor(i),
-      };
-    }),
+    barData,
     images,
     ...metrics,
   };
@@ -458,25 +512,24 @@ export const transformIconSCQData = (question) => {
   const images = question.images || [];
   const frequency = calculateFrequency(responses);
 
-  const mapItem = (item, i) => {
+  const rawItems = frequency.map((item, i) => {
     const image = resolveIconImage(images, item.value);
     return {
       name: image?.label || `Option ${i + 1}`,
       value: item.count,
       count: item.count,
-      percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
       iconUrl: resolveImageUrl(image?.url),
       fill: getChartColor(i),
     };
-  };
-
-  const pieData = frequency.map(mapItem);
+  });
+  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
+  const chartData = applyRoundedPercentages(allItems, metrics.total);
 
   return {
-    pieData,
-    barData: pieData,
+    pieData: chartData,
+    barData: chartData,
     ...metrics,
-    mode: pieData[0]?.name,
+    mode: chartData[0]?.name,
     modeCount: frequency[0]?.count,
   };
 };
@@ -496,17 +549,21 @@ export const transformIconMCQData = (question) => {
     ? (responses.reduce((sum, r) => sum + r.length, 0) / metrics.answered).toFixed(1)
     : 0;
 
+  const rawItems = freq.map((item, i) => {
+    const image = resolveIconImage(images, item.option);
+    return {
+      name: image?.label || `Option ${i + 1}`,
+      value: item.count,
+      count: item.count,
+      iconUrl: resolveImageUrl(image?.url),
+      fill: getChartColor(i),
+    };
+  });
+  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
+  const barData = applyRoundedPercentages(allItems, metrics.total);
+
   return {
-    barData: freq.map((item, i) => {
-      const image = resolveIconImage(images, item.option);
-      return {
-        name: image?.label || `Option ${i + 1}`,
-        count: item.count,
-        percentage: metrics.total > 0 ? Math.round((item.count / metrics.total) * 100) : 0,
-        iconUrl: resolveImageUrl(image?.url),
-        fill: getChartColor(i),
-      };
-    }),
+    barData,
     ...metrics,
     avgSelections,
   };
@@ -533,14 +590,14 @@ export const transformFileUploadData = (question) => {
     }
   });
 
+  const rawItems = Object.entries(extCounts)
+    .map(([name, count]) => ({ name, count, value: count }))
+    .sort((a, b) => b.count - a.count);
+  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
+  const extensionData = applyRoundedPercentages(allItems, metrics.total);
+
   return {
-    extensionData: Object.entries(extCounts)
-      .map(([name, count]) => ({
-        name,
-        count,
-        percentage: metrics.total > 0 ? Math.round((count / metrics.total) * 100) : 0,
-      }))
-      .sort((a, b) => b.count - a.count),
+    extensionData,
     ...metrics,
   };
 };
@@ -550,11 +607,20 @@ export const transformSignatureData = (question) => {
   const { responses } = question;
   const metrics = getResponseMetrics(question);
   const signed = responses.filter((r) => r === true).length;
+  const unsigned = Math.max(0, metrics.answered - signed);
+
+  const rawItems = [
+    { name: 'Signed', value: signed, count: signed },
+    { name: 'Unsigned', value: unsigned, count: unsigned },
+  ];
+  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
+  const chartData = applyRoundedPercentages(allItems, metrics.total);
 
   return {
     completionRate: metrics.total > 0 ? Math.round((signed / metrics.total) * 100) : 0,
     signed,
-    unsigned: metrics.total - signed,
+    unsigned,
+    chartData,
     ...metrics,
   };
 };
@@ -564,14 +630,23 @@ export const transformPhotoCaptureData = (question) => {
   const { responses } = question;
   const metrics = getResponseMetrics(question);
   const captured = responses.filter((r) => r.captured);
+  const notCaptured = Math.max(0, metrics.answered - captured.length);
   const sizes = captured.map((r) => r.fileSize);
   const stats = calculateStats(sizes);
+
+  const rawItems = [
+    { name: 'Captured', value: captured.length, count: captured.length },
+    { name: 'Not Captured', value: notCaptured, count: notCaptured },
+  ];
+  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
+  const chartData = applyRoundedPercentages(allItems, metrics.total);
 
   return {
     completionRate: metrics.total > 0 ? Math.round((captured.length / metrics.total) * 100) : 0,
     captured: captured.length,
-    notCaptured: metrics.total - captured.length,
+    notCaptured,
     sizeStats: stats,
+    chartData,
     ...metrics,
   };
 };
@@ -583,13 +658,18 @@ export const transformBarcodeData = (question) => {
   const frequency = calculateFrequency(responses);
   const duplicates = frequency.filter((f) => f.count > 1);
 
+  const rawItems = frequency.slice(0, MAX_CHART_BAR_ITEMS).map((item, i) => ({
+    name: item.value,
+    value: item.count,
+    count: item.count,
+    fill: getChartColor(i),
+  }));
+  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
+  const barData = applyRoundedPercentages(allItems, metrics.total);
+
   return {
     frequencyData: frequency.slice(0, MAX_FREQUENCY_ITEMS),
-    barData: frequency.slice(0, MAX_CHART_BAR_ITEMS).map((item, i) => ({
-      name: item.value,
-      count: item.count,
-      fill: getChartColor(i),
-    })),
+    barData,
     uniqueCount: frequency.length,
     duplicateCount: duplicates.length,
     ...metrics,

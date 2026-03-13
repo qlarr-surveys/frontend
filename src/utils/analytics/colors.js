@@ -13,6 +13,11 @@ const CHART_COLORS = [
   '#6366f1', // indigo
 ];
 
+export const STATUS_COLORS = {
+  incomplete: '#4b5563', // dark gray
+  preview: '#6b7280',   // medium gray
+};
+
 export const NPS_COLORS = {
   detractor: '#ef4444', // red (0-6)
   passive: '#f59e0b',   // amber (7-8)

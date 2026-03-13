@@ -63,12 +63,13 @@ export default function StatCard({
 }
 
 // Stats row component for displaying multiple stats
-export function StatsRow({ stats, columns = 4 }) {
+export function StatsRow({ stats, columns }) {
+  const cols = columns ?? stats.length;
   return (
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: `repeat(${columns}, 1fr)`,
+        gridTemplateColumns: `repeat(${cols}, 1fr)`,
         gap: 2,
       }}
     >
