@@ -1,6 +1,7 @@
+import React from 'react';
 import { Box, Typography } from '@mui/material';
 
-export default function ChartContainer({
+function ChartContainer({
   title,
   subtitle,
   children,
@@ -32,3 +33,5 @@ export default function ChartContainer({
     </Box>
   );
 }
+
+export default React.memo(ChartContainer);

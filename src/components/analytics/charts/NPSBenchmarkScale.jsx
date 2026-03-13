@@ -1,10 +1,10 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import { NPS_BENCHMARK_COLORS } from '~/utils/analytics/colors';
 
-export default function NPSBenchmarkScale({ score }) {
+function NPSBenchmarkScale({ score }) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const ZONES = useMemo(() => [
@@ -112,3 +112,5 @@ export default function NPSBenchmarkScale({ score }) {
     </Box>
   );
 }
+
+export default React.memo(NPSBenchmarkScale);

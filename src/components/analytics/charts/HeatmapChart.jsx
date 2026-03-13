@@ -1,10 +1,10 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Box, Typography, Pagination } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import { getHeatmapColor } from '~/utils/analytics/colors';
 
-export default function HeatmapChart({
+function HeatmapChart({
   data,
   rows,
   columns,
@@ -207,3 +207,5 @@ export default function HeatmapChart({
     </div>
   );
 }
+
+export default React.memo(HeatmapChart);

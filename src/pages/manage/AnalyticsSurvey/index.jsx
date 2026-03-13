@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { startTransition, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
@@ -8,6 +8,7 @@ import LoadingDots from '~/components/common/LoadingDots';
 import QuestionCard from '~/components/analytics/QuestionCard';
 import LazyRender from '~/components/common/LazyRender';
 import { getQuestionTypeLabel } from '~/components/analytics/questionTypes';
+import useProgressiveList from '~/hooks/useProgressiveList';
 
 function AnalyticsSurvey() {
   const { t } = useTranslation(NAMESPACES.MANAGE);
@@ -16,13 +17,16 @@ function AnalyticsSurvey() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const visibleQuestions = useProgressiveList(data?.questions ?? [], 5);
 
   useEffect(() => {
     setLoading(true);
     surveyService
       .getAnalytics(surveyId)
       .then((data) => {
-        setData(data);
+        startTransition(() => {
+          setData(data);
+        });
         setError(null);
       })
       .catch((err) => {
@@ -110,8 +114,8 @@ function AnalyticsSurvey() {
         </Typography>
       </Paper>
 
-      {/* All question cards */}
-      {data.questions.map((question) => (
+      {/* Question cards — rendered progressively */}
+      {visibleQuestions.map((question) => (
         <Paper key={question.id} variant="outlined" sx={{ mb: 3, p: 3, borderRadius: 3 }}>
           <Typography variant="h6" gutterBottom>
             {question.title}

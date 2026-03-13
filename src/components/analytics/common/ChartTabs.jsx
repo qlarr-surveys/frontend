@@ -1,6 +1,7 @@
+import React from 'react';
 import { ToggleButtonGroup, ToggleButton } from '@mui/material';
 
-export default function ChartTabs({ tabs, activeTab, onChange }) {
+function ChartTabs({ tabs, activeTab, onChange }) {
   return (
     <ToggleButtonGroup
       value={activeTab}
@@ -34,3 +35,5 @@ export default function ChartTabs({ tabs, activeTab, onChange }) {
     </ToggleButtonGroup>
   );
 }
+
+export default React.memo(ChartTabs);

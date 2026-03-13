@@ -1,6 +1,7 @@
+import React from 'react';
 import { Box, Typography } from '@mui/material';
 
-export default function StatCard({
+const StatCard = React.memo(function StatCard({
   label,
   value,
   suffix = '',
@@ -60,10 +61,12 @@ export default function StatCard({
       )}
     </Box>
   );
-}
+});
+
+export default StatCard;
 
 // Stats row component for displaying multiple stats
-export function StatsRow({ stats, columns, minColumns = 4 }) {
+export const StatsRow = React.memo(function StatsRow({ stats, columns, minColumns = 4 }) {
   const cols = Math.max(columns ?? stats.length, minColumns);
   return (
     <Box
@@ -78,4 +81,4 @@ export function StatsRow({ stats, columns, minColumns = 4 }) {
       ))}
     </Box>
   );
-}
+});

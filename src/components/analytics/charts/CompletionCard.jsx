@@ -1,7 +1,8 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 
-export default function CompletionCard({
+function CompletionCard({
   rate,
   completed,
   total,
@@ -87,3 +88,5 @@ export default function CompletionCard({
     </div>
   );
 }
+
+export default React.memo(CompletionCard);

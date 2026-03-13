@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import useIsFirstRender from '~/hooks/useIsFirstRender';
 import {
   BarChart,
@@ -30,7 +30,35 @@ const renderLegend = (props) => {
   );
 };
 
-export default function RankingChart({
+function RankingTooltip({ active, payload }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div style={{
+        backgroundColor: '#fff',
+        boxShadow: '0 4px 6px rgba(0,0,0,.1)',
+        borderRadius: 8,
+        padding: 12,
+        border: '1px solid #e5e7eb'
+      }}>
+        <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>{data.name}</p>
+        <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
+          {t('analytics.average_rank_label', { rank: data.averageRank })}
+        </p>
+        <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
+          {t('analytics.first_place_label', { count: data.firstPlace })}
+        </p>
+        <p style={{ fontSize: 14, color: '#6b7280', margin: 0 }}>
+          {t('analytics.last_place_label', { count: data.lastPlace })}
+        </p>
+      </div>
+    );
+  }
+  return null;
+}
+
+function RankingChart({
   data,
   height = 300,
   showFirstLast = true,
@@ -39,33 +67,6 @@ export default function RankingChart({
   const isFirstRender = useIsFirstRender();
   // Sort by average rank (lower is better)
   const sortedData = useMemo(() => [...data].sort((a, b) => a.averageRank - b.averageRank), [data]);
-
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div style={{
-          backgroundColor: '#fff',
-          boxShadow: '0 4px 6px rgba(0,0,0,.1)',
-          borderRadius: 8,
-          padding: 12,
-          border: '1px solid #e5e7eb'
-        }}>
-          <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>{data.name}</p>
-          <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
-            {t('analytics.average_rank_label', { rank: data.averageRank })}
-          </p>
-          <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
-            {t('analytics.first_place_label', { count: data.firstPlace })}
-          </p>
-          <p style={{ fontSize: 14, color: '#6b7280', margin: 0 }}>
-            {t('analytics.last_place_label', { count: data.lastPlace })}
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
 
   const legendPayload = useMemo(() => sortedData.map((entry, index) => ({
     value: entry.name,
@@ -95,7 +96,7 @@ export default function RankingChart({
             dataKey="name"
             hide
           />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<RankingTooltip />} />
           <Legend content={renderLegend} payload={legendPayload} />
           <Bar
             dataKey="averageRank"
@@ -153,3 +154,5 @@ export default function RankingChart({
     </div>
   );
 }
+
+export default React.memo(RankingChart);

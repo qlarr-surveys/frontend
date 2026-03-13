@@ -1,3 +1,4 @@
+import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import useIsFirstRender from '~/hooks/useIsFirstRender';
 import { useTranslation } from 'react-i18next';
@@ -26,40 +27,40 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
-export default function PieDonutChart({
+function PieTooltip({ active, payload }) {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div style={{
+        backgroundColor: '#fff',
+        boxShadow: '0 4px 6px rgba(0,0,0,.1)',
+        borderRadius: 8,
+        padding: 12,
+        border: '1px solid #e5e7eb'
+      }}>
+        <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>{data.name}</p>
+        <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
+          {t('analytics.count_label', { count: data.value })}
+        </p>
+        <p style={{ fontSize: 14, color: '#6b7280', margin: 0 }}>
+          {t('analytics.percentage_label', { percentage: data.percentage })}
+        </p>
+      </div>
+    );
+  }
+  return null;
+}
+
+function PieDonutChart({
   data,
   showLabels = true,
   showLegend = true,
   height = 300,
   outerRadius = 100,
 }) {
-  const { t } = useTranslation(NAMESPACES.MANAGE);
   const isFirstRender = useIsFirstRender();
   const actualInnerRadius = outerRadius * 0.6;
-
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div style={{
-          backgroundColor: '#fff',
-          boxShadow: '0 4px 6px rgba(0,0,0,.1)',
-          borderRadius: 8,
-          padding: 12,
-          border: '1px solid #e5e7eb'
-        }}>
-          <p style={{ fontWeight: 500, color: '#111827', margin: '0 0 4px 0' }}>{data.name}</p>
-          <p style={{ fontSize: 14, color: '#6b7280', margin: '0 0 4px 0' }}>
-            {t('analytics.count_label', { count: data.value })}
-          </p>
-          <p style={{ fontSize: 14, color: '#6b7280', margin: 0 }}>
-            {t('analytics.percentage_label', { percentage: data.percentage })}
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <ResponsiveContainer width="100%" height={height}>
@@ -82,7 +83,7 @@ export default function PieDonutChart({
             <Cell key={`cell-${index}`} fill={entry.fill} />
           ))}
         </Pie>
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip content={<PieTooltip />} />
         {showLegend && (
           <Legend
             layout="horizontal"
@@ -95,3 +96,5 @@ export default function PieDonutChart({
     </ResponsiveContainer>
   );
 }
+
+export default React.memo(PieDonutChart);
