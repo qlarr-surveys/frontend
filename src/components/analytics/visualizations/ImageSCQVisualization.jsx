@@ -1,35 +1,32 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
 import PieDonutChart from '../charts/PieDonutChart';
+import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import ImageGallery from '../common/ImageGallery';
+import CategoryLegend from '../common/CategoryLegend';
 import { transformImageSCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
 
 export default function ImageSCQVisualization({ question }) {
   const [viewType, setViewType] = useState('gallery');
   const data = transformImageSCQData(question);
+  const images = question.images || [];
 
   const tabs = [
     { value: 'gallery', label: 'Gallery' },
-    { value: 'pie', label: 'Pie Chart' },
+    { value: 'donut', label: 'Donut' },
+    { value: 'bar', label: 'Bar' },
   ];
-
-  const topChoice = data.pieData[0];
 
   const stats = [
     ...buildBaseStats(data),
-    {
-      label: 'Most Selected',
-      value: topChoice?.name || '-',
-      description: `${topChoice?.percentage}%`,
-    },
+    { label: 'Most Selected', value: data.mode || '-' },
   ];
 
-  // Prepare gallery data with stats
-  const galleryImages = question.images.map((img, i) => {
+  const galleryImages = images.map((img, i) => {
     const pieItem = data.pieData.find((p) => p.imageId === img.id);
     return {
       ...img,
@@ -46,21 +43,21 @@ export default function ImageSCQVisualization({ question }) {
       actions={<ChartTabs tabs={tabs} activeTab={viewType} onChange={setViewType} />}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        {/* Stats Row */}
         <StatsRow stats={stats} columns={2} />
 
-        {/* Visualization */}
         {viewType === 'gallery' && (
-          <ImageGallery
-            images={galleryImages}
-            columns={4}
-            showLabels={true}
-            showStats={true}
-          />
+          <ImageGallery images={galleryImages} columns={3} showLabels={true} showStats={true} />
         )}
 
-        {viewType === 'pie' && (
-          <PieDonutChart data={data.pieData} height={350} />
+        {viewType === 'donut' && (
+          <>
+            <PieDonutChart data={data.pieData} height={350} showLegend={false} />
+            <CategoryLegend items={data.pieData} />
+          </>
+        )}
+
+        {viewType === 'bar' && (
+          <HorizontalBarChart data={data.barData} height={Math.max(300, data.barData.length * 50)} />
         )}
       </Box>
     </ChartContainer>

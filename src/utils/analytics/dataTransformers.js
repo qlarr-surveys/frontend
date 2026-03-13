@@ -468,8 +468,11 @@ export const transformImageSCQData = (question) => {
 
   return {
     pieData,
+    barData: pieData,
     images,
     ...metrics,
+    mode: pieData[0]?.name,
+    modeCount: pieData[0]?.count,
   };
 };
 
