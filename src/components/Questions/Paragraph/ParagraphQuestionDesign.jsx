@@ -3,15 +3,21 @@ import React from "react";
 import styles from "./ParagraphQuestionDesign.module.css";
 import { useSelector } from "react-redux";
 import { TextField } from '@mui/material';
+import { useEditableHint } from "~/hooks/useEditableHint";
+import { useTheme } from '@emotion/react';
 
-function ParagraphQuestionDesign({ code, t }) {
+function ParagraphQuestionDesign({ code, t, designMode }) {
   const state = useSelector((state) => {
     return state.designState[code];
   });
 
+  const theme = useTheme();
+
   const lang = useSelector((state) => {
     return state.designState.langInfo.lang;
   });
+
+  const { hintText, isEditable, handleHintChange } = useEditableHint(code, designMode);
 
   return (
     <div className={styles.questionItem}>
@@ -21,11 +27,12 @@ function ParagraphQuestionDesign({ code, t }) {
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
-        placeholder={state.showHint && (state.content?.[lang]?.hint || "")}
+        value={isEditable ? hintText : ""}
+        onChange={isEditable ? handleHintChange : undefined}
         minRows={state.minRows || 4}
-        value={""}
         sx={{
-          pointerEvents: 'none',
+          pointerEvents: isEditable ? "auto" : "none",
+          textarea: { color: theme.palette.text.disabled },
         }}
       />
       {state.showWordCount ? (

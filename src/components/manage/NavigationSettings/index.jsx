@@ -131,7 +131,6 @@ const NavigationSettings = () => {
   return (
     <Box className={styles.mainContainer}>
       <RHFSelect
-        labelId="navigation-mode-label"
         value={mode}
         disabled={isDisabled}
         label={t("navigation_mode")}
@@ -149,7 +148,6 @@ const NavigationSettings = () => {
       </RHFSelect>
 
       <RHFSelect
-        labelId="resume-expiry-label"
         value={resumePresetKey}
         disabled={isDisabled}
         label={t("response_expiry")}

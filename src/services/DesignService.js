@@ -79,6 +79,15 @@ class DesignService extends BaseService {
     );
     return response.data;
   }
+  async getAutoCompleteValues(componentId, surveyId = null) {
+    if (!surveyId) {
+      surveyId = sessionStorage.getItem("surveyId");
+    }
+    const response = await authenticatedApi.get(
+      `/autocomplete/${surveyId}/${componentId}`
+    );
+    return response.data;
+  }
 }
 
 export default DesignService;

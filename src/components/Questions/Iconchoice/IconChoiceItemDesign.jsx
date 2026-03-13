@@ -1,4 +1,5 @@
 import styles from "./IconChoiceItemDesign.module.css";
+import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
 import { alpha, Box, Grid, IconButton, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
@@ -25,6 +26,7 @@ import { contentEditable, inDesign } from "~/routes";
 import { setupOptions } from "~/constants/design";
 import { Build } from "@mui/icons-material";
 import ContentEditor from "~/components/design/ContentEditor";
+import InlineCodeEditor from "~/components/design/InlineCodeEditor";
 
 function IconChoiceItemDesign({
   parentCode,
@@ -247,40 +249,50 @@ function IconChoiceItemDesign({
           className={styles.imageContainer}
         >
           {inDesign(designMode) && (
-            <div className={styles.buttonContainers}>
-              <IconButton
-                className={styles.imageHoverIconButton}
-                onClick={() => {
-                  onDelete();
-                }}
-              >
-                <DeleteOutlineIcon />
-              </IconButton>
-
-              <IconButton
-                className={styles.imageHoverIconButton}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  dispatch(
-                    setup({
-                      code: qualifiedCode,
-                      rules: setupOptions("options"),
-                    })
-                  );
-                }}
-              >
-                <Build />
-              </IconButton>
-              <IconButton
-                component="label"
-                className={styles.imageHoverIconButton}
-                onClick={() => setIconSelectorOpen(true)}
-              >
-                <PhotoCamera />
-              </IconButton>
-              <IconButton ref={drag} className={styles.imageIconButton}>
-                <DragIndicatorIcon color="action" />
-              </IconButton>
+            <div className={btnStyles.buttonContainers}>
+              <div className={btnStyles.leftZone}>
+                <IconButton ref={drag} className={btnStyles.iconButton}>
+                  <DragIndicatorIcon color="action" />
+                </IconButton>
+                <div className={btnStyles.codeWrapper}>
+                  <InlineCodeEditor
+                    qualifiedCode={qualifiedCode}
+                    designMode={designMode}
+                    compact
+                  />
+                </div>
+              </div>
+              <div className={btnStyles.rightZone}>
+                <IconButton
+                  className={btnStyles.iconButton}
+                  onClick={() => {
+                    onDelete();
+                  }}
+                >
+                  <DeleteOutlineIcon />
+                </IconButton>
+                <IconButton
+                  className={btnStyles.iconButton}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(
+                      setup({
+                        code: qualifiedCode,
+                        rules: setupOptions("options"),
+                      })
+                    );
+                  }}
+                >
+                  <Build />
+                </IconButton>
+                <IconButton
+                  component="label"
+                  className={btnStyles.iconButton}
+                  onClick={() => setIconSelectorOpen(true)}
+                >
+                  <PhotoCamera />
+                </IconButton>
+              </div>
             </div>
           )}
           <div

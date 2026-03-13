@@ -1,0 +1,40 @@
+.iconButton {
+  border-radius: 0 !important;
+  padding: 4px !important;
+  margin: 4px !important;
+}
+
+.hoverIconButton {
+  display: none;
+  border-radius: 0 !important;
+  padding: 4px !important;
+  margin: 4px !important;
+}
+
+.buttonContainers {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.leftZone {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.rightZone {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.codeWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.rightZone:hover .hoverIconButton {
+  display: flex;
+}
