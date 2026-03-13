@@ -282,7 +282,9 @@
     "events": "Events",
     "voice_recordings": "Voice Recordings",
     "locations": "Locations",
-    "recording": "Recording"
+    "recording": "Recording",
+    "tab_individual": "Individual Responses",
+    "tab_analytics": "Analytics"
   },
   "responses_count": "Responses",
   "roles_required": "Roles is Required",

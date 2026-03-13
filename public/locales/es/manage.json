@@ -282,7 +282,9 @@
     "events": "Eventos",
     "voice_recordings": "Grabaciones de Voz",
     "locations": "Ubicaciones",
-    "recording": "Grabación"
+    "recording": "Grabación",
+    "tab_individual": "Respuestas Individuales",
+    "tab_analytics": "Analíticas"
   },
   "responses_count": "Respuestas",
   "roles_required": "Los Roles son Requeridos",

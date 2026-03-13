@@ -312,7 +312,9 @@
     "events": "Ereignisse",
     "voice_recordings": "Sprachaufnahmen",
     "locations": "Standorte",
-    "recording": "Aufnahme"
+    "recording": "Aufnahme",
+    "tab_individual": "Einzelne Antworten",
+    "tab_analytics": "Analytik"
   },
   "responses_count": "Antworten",
   "responses_export": {

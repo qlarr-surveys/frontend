@@ -282,7 +282,9 @@
     "events": "الأحداث",
     "voice_recordings": "التسجيلات الصوتية",
     "locations": "المواقع",
-    "recording": "تسجيل"
+    "recording": "تسجيل",
+    "tab_individual": "الاستجابات الفردية",
+    "tab_analytics": "التحليلات"
   },
   "responses_count": "الردود",
   "roles_required": "الأدوار مطلوبة",

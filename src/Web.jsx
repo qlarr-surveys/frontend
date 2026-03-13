@@ -144,16 +144,8 @@ function Web() {
         }
       />
       <Route
-        path={routes.analytics}
-        element={
-          <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY_NO_PREVIEW}>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.ANALYTICS}
-              />
-            </ManagePageWrapper>
-          </Suspense>
-        }
+        path="/analytics/:surveyId"
+        element={<AnalyticsRedirect />}
       />
       <Route
         path={routes.manageUsers}
@@ -353,6 +345,11 @@ const PreviewSurveyWrapper = ({ resume = false }) => {
       navigationMode={navigationMode}
     />
   );
+};
+
+const AnalyticsRedirect = () => {
+  const { surveyId } = useParams();
+  return <Navigate to={`/responses/${surveyId}`} replace />;
 };
 
 export default Web;

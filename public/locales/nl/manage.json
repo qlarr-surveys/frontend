@@ -282,7 +282,9 @@
     "events": "Gebeurtenissen",
     "voice_recordings": "Spraakopnamen",
     "locations": "Locaties",
-    "recording": "Opname"
+    "recording": "Opname",
+    "tab_individual": "Individuele Reacties",
+    "tab_analytics": "Analyse"
   },
   "responses_count": "Reacties",
   "roles_required": "Rollen zijn Verplicht",
