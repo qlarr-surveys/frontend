@@ -1,8 +1,15 @@
 import { createSlice, current } from "@reduxjs/toolkit";
-import { firstIndexInArray, isEquivalent, nextId } from "~/utils/design/utils";
-import { createGroup } from "~/components/design/NewComponentsPanel";
-
-import { lastIndexInArray } from "~/utils/design/utils";
+import {
+  firstIndexInArray,
+  isEquivalent,
+  nextId,
+  lastIndexInArray,
+} from "~/utils/design/pureFunctions";
+import {
+  createGroup,
+  createQuestion,
+  questionDesignError,
+} from "./componentFactories";
 import cloneDeep from "lodash.clonedeep";
 import {
   buildValidationDefaultData,
@@ -12,10 +19,7 @@ import {
   buildReferenceInstruction,
 } from "./stateUtils";
 import { languageSetup, setupOptions, themeSetup } from "~/constants/design";
-import {
-  createQuestion,
-  questionDesignError,
-} from "~/components/Questions/utils";
+import { LANGUAGE_DEF } from "~/constants/language";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import {
   addAnswerInstructions,

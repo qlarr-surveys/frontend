@@ -1,4 +1,4 @@
-import { colorToThemeMode } from "~/components/Questions/utils";
+import { colorToThemeMode } from "~/utils/design/colorUtils";
 
 export const BG_COLOR = "#dfe2ef";
 export const TEXT_COLOR = "#091133";
