@@ -79,6 +79,7 @@ export default function RankingChart({
           <CartesianGrid strokeDasharray="3 3" horizontal={false} />
           <XAxis
             type="number"
+            allowDecimals={false}
             domain={[1, sortedData.length]}
             tick={{ fontSize: 12 }}
             label={{ value: 'Average Rank (lower is better)', position: 'bottom', fontSize: 12 }}
