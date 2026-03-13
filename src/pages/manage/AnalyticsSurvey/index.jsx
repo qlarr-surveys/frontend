@@ -6,6 +6,7 @@ import { Box, Paper, Typography } from '@mui/material';
 import { useService } from '~/hooks/use-service';
 import LoadingDots from '~/components/common/LoadingDots';
 import QuestionCard from '~/components/analytics/QuestionCard';
+import LazyRender from '~/components/common/LazyRender';
 import { getQuestionTypeLabel } from '~/components/analytics/questionTypes';
 
 function AnalyticsSurvey() {
@@ -118,7 +119,9 @@ function AnalyticsSurvey() {
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
             {getQuestionTypeLabel(question.type, t)}
           </Typography>
-          <QuestionCard question={question} totalResponses={data.totalResponses} incompleteResponses={data.incompleteResponses} previewResponses={data.previewResponses} />
+          <LazyRender>
+            <QuestionCard question={question} totalResponses={data.totalResponses} incompleteResponses={data.incompleteResponses} previewResponses={data.previewResponses} />
+          </LazyRender>
         </Paper>
       ))}
     </Box>
