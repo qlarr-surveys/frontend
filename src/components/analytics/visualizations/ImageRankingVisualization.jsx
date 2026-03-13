@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
@@ -7,11 +6,13 @@ import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import { RankedImageGallery } from '../common/ImageGallery';
-import { transformImageRankingData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function ImageRankingVisualization({ question }) {
-  const data = useMemo(() => transformImageRankingData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformImageRankingData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
+
+  if (loading || !data) return null;
 
   const topItem = data.rankedImages[0];
   const bottomItem = data.rankedImages[data.rankedImages.length - 1];

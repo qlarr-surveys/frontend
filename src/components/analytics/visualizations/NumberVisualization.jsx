@@ -7,22 +7,17 @@ import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import DataTable from '../common/DataTable';
 import HistogramChart from '../charts/HistogramChart';
-import { transformNumberData } from '~/utils/analytics/dataTransformers';
 import { formatNumber } from '~/utils/analytics/formatting';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function NumberVisualization({ question }) {
-  const data = useMemo(() => transformNumberData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformNumberData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const [viewType, setViewType] = useState('chart');
-  const hasOutliers = data.outlierData.outliersCount > 0;
-
-  const tabs = [
-    { value: 'chart', label: t('analytics.tab_chart') },
-    { value: 'table', label: t('analytics.tab_table') },
-  ];
 
   // Build table data
   const tableData = useMemo(() => {
+    if (!data) return [];
     const valueCounts = {};
 
     question.responses.forEach((value) => {
@@ -35,7 +30,16 @@ export default function NumberVisualization({ question }) {
       frequency: count,
       percentage: `${((count / data.stats.count) * 100).toFixed(1)}%`,
     }));
-  }, [question.responses, data.stats.count]);
+  }, [question.responses, data]);
+
+  if (loading || !data) return null;
+
+  const hasOutliers = data.outlierData.outliersCount > 0;
+
+  const tabs = [
+    { value: 'chart', label: t('analytics.tab_chart') },
+    { value: 'table', label: t('analytics.tab_table') },
+  ];
 
   const columns = [
     { key: 'value', label: t('analytics.col_value'), sortable: true, align: 'right' },

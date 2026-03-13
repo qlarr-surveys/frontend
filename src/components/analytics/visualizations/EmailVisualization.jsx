@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Box, Typography, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
@@ -8,11 +7,12 @@ import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import DataTable from '../common/DataTable';
-import { transformEmailData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function EmailVisualization({ question }) {
-  const data = useMemo(() => transformEmailData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformEmailData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
+  if (loading || !data) return null;
 
   const stats = [
     ...buildBaseStats(data, t),

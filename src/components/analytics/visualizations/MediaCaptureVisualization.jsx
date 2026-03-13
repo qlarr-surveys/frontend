@@ -1,15 +1,16 @@
-import { useMemo } from 'react';
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import CompletionCard from '../charts/CompletionCard';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
-import { transformMediaCaptureData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function MediaCaptureVisualization({ question }) {
-  const data = useMemo(() => transformMediaCaptureData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformMediaCaptureData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
+
+  if (loading || !data) return null;
 
   const stats = [
     { label: t('analytics.stat_captured'), value: data.captured },

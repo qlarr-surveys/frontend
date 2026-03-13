@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
@@ -7,11 +6,13 @@ import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import ImageGallery from '../common/ImageGallery';
 import IconLegend from '../common/IconLegend';
-import { transformIconMCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
+import { resolveImageUrl } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function IconMCQVisualization({ question }) {
-  const data = useMemo(() => transformIconMCQData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformIconMCQData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
+  if (loading || !data) return null;
   const images = question.images || [];
 
   const stats = [

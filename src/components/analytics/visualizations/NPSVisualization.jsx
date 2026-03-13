@@ -1,15 +1,15 @@
-import { useMemo } from 'react';
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import NPSChart from '../charts/NPSChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
-import { transformNPSData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function NPSVisualization({ question }) {
-  const data = useMemo(() => transformNPSData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformNPSData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
+  if (loading || !data) return null;
 
   const getNPSBenchmarkLabel = (score) => {
     if (score >= 70) return t('analytics.excellent');

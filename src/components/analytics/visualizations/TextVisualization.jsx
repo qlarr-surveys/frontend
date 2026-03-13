@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
@@ -9,12 +9,13 @@ import { buildBaseStats } from '../common/buildBaseStats';
 import FrequencyTable from '../common/FrequencyTable';
 import HorizontalBarChart from '../charts/HorizontalBarChart';
 import HistogramChart from '../charts/HistogramChart';
-import { transformTextData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function TextVisualization({ question }) {
-  const data = useMemo(() => transformTextData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformTextData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const [viewType, setViewType] = useState('frequency');
+  if (loading || !data) return null;
 
   const tabs = [
     { value: 'frequency', label: t('analytics.tab_frequency') },

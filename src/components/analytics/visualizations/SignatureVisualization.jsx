@@ -1,13 +1,14 @@
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
-import { transformSignatureData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function SignatureVisualization({ question }) {
-  const data = useMemo(() => transformSignatureData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformSignatureData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
+
+  if (loading || !data) return null;
 
   const stats = [
     { label: t('analytics.stat_signed'), value: data.signed },

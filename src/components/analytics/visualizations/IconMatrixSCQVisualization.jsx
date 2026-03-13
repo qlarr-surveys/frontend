@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
@@ -6,11 +5,13 @@ import HeatmapChart from '../charts/HeatmapChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
-import { transformIconMatrixSCQData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function IconMatrixSCQVisualization({ question }) {
-  const data = useMemo(() => transformIconMatrixSCQData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformIconMatrixSCQData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
+
+  if (loading || !data) return null;
 
   const stats = [
     ...buildBaseStats(data, t),

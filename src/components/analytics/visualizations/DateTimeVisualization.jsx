@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
@@ -8,12 +8,13 @@ import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import FrequencyTable from '../common/FrequencyTable';
 import HistogramChart from '../charts/HistogramChart';
-import { transformDateTimeData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function DateTimeVisualization({ question }) {
-  const data = useMemo(() => transformDateTimeData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformDateTimeData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const [viewType, setViewType] = useState('timeline');
+  if (loading || !data) return null;
 
   const tabs = [
     { value: 'timeline', label: t('analytics.tab_timeline') },

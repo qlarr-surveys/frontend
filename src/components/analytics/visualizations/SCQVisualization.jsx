@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
@@ -8,12 +8,14 @@ import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
-import { transformSCQData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function SCQVisualization({ question }) {
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const [chartType, setChartType] = useState('donut');
-  const data = useMemo(() => transformSCQData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformSCQData', question);
+
+  if (loading || !data) return null;
 
   const tabs = [
     { value: 'donut', label: t('analytics.tab_donut') },

@@ -1,15 +1,16 @@
-import { useMemo } from 'react';
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import FrequencyTable from '../common/FrequencyTable';
 import { StatsRow } from '../common/StatCard';
-import { transformFileUploadData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function FileUploadVisualization({ question }) {
-  const data = useMemo(() => transformFileUploadData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformFileUploadData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
+
+  if (loading || !data) return null;
 
   const stats = [
     { label: t('analytics.stat_uploaded'), value: data.answered },

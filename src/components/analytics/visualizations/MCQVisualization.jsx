@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
@@ -9,12 +9,13 @@ import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import DataTable from '../common/DataTable';
-import { transformMCQData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function MCQVisualization({ question }) {
   const [chartType, setChartType] = useState('donut');
   const { t } = useTranslation(NAMESPACES.MANAGE);
-  const data = useMemo(() => transformMCQData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformMCQData', question);
+  if (loading || !data) return null;
 
   const tabs = [
     { value: 'donut', label: t('analytics.tab_donut') },

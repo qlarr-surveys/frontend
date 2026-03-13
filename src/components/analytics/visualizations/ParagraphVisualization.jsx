@@ -17,22 +17,25 @@ import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import HistogramChart from '../charts/HistogramChart';
-import { transformParagraphData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 const ROWS_PER_PAGE = 10;
 
 export default function ParagraphVisualization({ question }) {
-  const data = useMemo(() => transformParagraphData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformParagraphData', question);
   const [currentPage, setCurrentPage] = useState(1);
   const { t } = useTranslation(NAMESPACES.MANAGE);
 
-  const totalPages = Math.ceil(data.responses.length / ROWS_PER_PAGE);
+  const totalPages = data ? Math.ceil(data.responses.length / ROWS_PER_PAGE) : 0;
   const safePage = Math.min(currentPage, totalPages || 1);
 
   const displayData = useMemo(() => {
+    if (!data) return [];
     const start = (safePage - 1) * ROWS_PER_PAGE;
     return data.responses.slice(start, start + ROWS_PER_PAGE);
-  }, [data.responses, safePage]);
+  }, [data, safePage]);
+
+  if (loading || !data) return null;
 
   const stats = [
     ...buildBaseStats(data, t),

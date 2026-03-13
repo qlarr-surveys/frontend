@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
@@ -8,12 +8,14 @@ import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
-import { transformAutocompleteData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function AutocompleteVisualization({ question }) {
   const [chartType, setChartType] = useState('bar');
-  const data = useMemo(() => transformAutocompleteData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformAutocompleteData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
+
+  if (loading || !data) return null;
 
   const tabs = [
     { value: 'bar', label: t('analytics.tab_bar_chart') },

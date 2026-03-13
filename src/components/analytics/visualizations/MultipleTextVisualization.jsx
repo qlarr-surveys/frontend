@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
@@ -7,17 +6,17 @@ import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import DataTable from '../common/DataTable';
 import NoResponsesMessage from '../common/NoResponsesMessage';
-import { transformMultipleTextData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function MultipleTextVisualization({ question }) {
   const { fields = [], responses = [] } = question;
   const { t } = useTranslation(NAMESPACES.MANAGE);
+  const { data, loading } = useWorkerTransform('transformMultipleTextData', question);
 
+  if (loading || !data) return null;
   if (responses.length === 0) {
     return <NoResponsesMessage />;
   }
-
-  const data = useMemo(() => transformMultipleTextData(question), [question]);
 
   const avgCompletion = data.fieldStats.length > 0
     ? Math.round(data.fieldStats.reduce((sum, f) => sum + f.completionRate, 0) / data.fieldStats.length)

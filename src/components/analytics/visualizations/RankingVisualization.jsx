@@ -8,12 +8,20 @@ import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
-import { transformRankingData } from '~/utils/analytics/dataTransformers';
+import { useWorkerTransform } from '~/hooks/useWorkerTransform';
 
 export default function RankingVisualization({ question }) {
-  const data = useMemo(() => transformRankingData(question), [question]);
+  const { data, loading } = useWorkerTransform('transformRankingData', question);
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const [chartType, setChartType] = useState('avgRank');
+
+  // Extract rank keys from distribution data
+  const ranks = useMemo(() => {
+    if (!data || data.rankDistribution.length === 0) return [];
+    return Object.keys(data.rankDistribution[0]).filter((k) => k !== 'option');
+  }, [data]);
+
+  if (loading || !data) return null;
 
   const topItem = data.averageRankData[0];
   const bottomItem = data.averageRankData[data.averageRankData.length - 1];
@@ -36,12 +44,6 @@ export default function RankingVisualization({ question }) {
       description: t('analytics.avg_rank_colon', { rank: bottomItem?.averageRank }),
     },
   ];
-
-  // Extract rank keys from distribution data
-  const ranks = useMemo(() => {
-    if (data.rankDistribution.length === 0) return [];
-    return Object.keys(data.rankDistribution[0]).filter((k) => k !== 'option');
-  }, [data.rankDistribution]);
 
   return (
     <ChartContainer
