@@ -44,6 +44,7 @@ export const runState = createSlice({
     },
     previewModeChange: (state, action) => {
       state.navigation = {
+        events: state.timings,
         values: getValues(state.values),
         mode: action.payload.mode,
         navigationMode: action.payload.navigationMode,
@@ -137,6 +138,7 @@ function next(state) {
 
 function previous(state) {
   state.navigation = {
+    events: state.timings,
     values: getValues(state.values),
     navigationDirection: { name: "PREV" },
   };
