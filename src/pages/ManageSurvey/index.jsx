@@ -26,6 +26,7 @@ const ResponsesSurvey = React.lazy(() => import("../manage/ResponsesSurvey"));
 const EditSurvey = React.lazy(() => import("../manage/EditSurvey"));
 const DesignSurvey = React.lazy(() => import("../DesignSurvey"));
 
+
 function ManageSurvey({ landingPage }) {
   const surveyService = useService("survey");
   const designService = useService("design");
@@ -98,6 +99,7 @@ function ManageSurvey({ landingPage }) {
   const shouldShowEditSurvey = () =>
     selectedPage == MANAGE_SURVEY_LANDING_PAGES.SETTINGS;
 
+
   const changePage = useCallback((tab) => {
     setSelectedTab(tab);
   }, []);
@@ -140,11 +142,12 @@ export default React.memo(ManageSurvey);
 
 export const landingTab = (landingPage, user) => {
   if (isAnalyst(user) && landingPage == MANAGE_SURVEY_LANDING_PAGES.RESPONSES) {
-    return MANAGE_SURVEY_LANDING_PAGES.RESPONSES;
+    return landingPage;
   } else if (
     isSurveyAdmin(user) &&
     (landingPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN ||
-      landingPage == MANAGE_SURVEY_LANDING_PAGES.SETTINGS)
+      landingPage == MANAGE_SURVEY_LANDING_PAGES.SETTINGS ||
+      landingPage == MANAGE_SURVEY_LANDING_PAGES.RESPONSES)
   ) {
     return landingPage;
   } else {

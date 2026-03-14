@@ -144,6 +144,10 @@ function Web() {
         }
       />
       <Route
+        path="/analytics/:surveyId"
+        element={<AnalyticsRedirect />}
+      />
+      <Route
         path={routes.manageUsers}
         element={
           <Suspense fallback={<LoadingIndicator />}>
@@ -341,6 +345,11 @@ const PreviewSurveyWrapper = ({ resume = false }) => {
       navigationMode={navigationMode}
     />
   );
+};
+
+const AnalyticsRedirect = () => {
+  const { surveyId } = useParams();
+  return <Navigate to={`/responses/${surveyId}`} replace />;
 };
 
 export default Web;
