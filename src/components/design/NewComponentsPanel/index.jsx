@@ -31,7 +31,7 @@ function NewComponentsPanel({ t }) {
   return (
     <div className={styles.leftContent}>
       {groups.map((item, index) => (
-        <div className={styles.leftPanelGroupItem} key={index}>
+        <div data-tour="add-page" className={styles.leftPanelGroupItem} key={index}>
           <div className={styles.groupTitle}>{t(item.name)}</div>
           <div className={styles.leftItems}>
             {item.items.map((question, index) => {
@@ -56,35 +56,37 @@ function NewComponentsPanel({ t }) {
           </div>
         </div>
       ))}
-      {QUESTION_TYPES.map((item, index) => (
-        <div className={styles.leftPanelGroupItem} key={index}>
-          <div className={styles.groupTitle}>{t(item.name)}</div>
-          {item.items.map((question, index) => {
-            const dragItem = {
-              type: "new-questions",
-              itemType: question.type,
-              offlineOnly: question.offlineOnly || false,
-              droppableId: "new-questions",
-              draggableId: question.type,
-              icon: question.icon,
-            };
+      <div data-tour="question-types-list">
+        {QUESTION_TYPES.map((item, index) => (
+          <div data-tour="question-types" className={styles.leftPanelGroupItem} key={index}>
+            <div className={styles.groupTitle}>{t(item.name)}</div>
+            {item.items.map((question, index) => {
+              const dragItem = {
+                type: "new-questions",
+                itemType: question.type,
+                offlineOnly: question.offlineOnly || false,
+                droppableId: "new-questions",
+                draggableId: question.type,
+                icon: question.icon,
+              };
 
-            return (
-              <div key={`draggable-${index}`}>
-                <div className={"Draggable"}>
-                  <NewComponentsItem
-                    t={t}
-                    item={dragItem}
-                    onClick={() =>
-                      handleAddComponent("question", question.type)
-                    }
-                  />
+              return (
+                <div key={`draggable-${index}`}>
+                  <div className={"Draggable"}>
+                    <NewComponentsItem
+                      t={t}
+                      item={dragItem}
+                      onClick={() =>
+                        handleAddComponent("question", question.type)
+                      }
+                    />
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      ))}
+              );
+            })}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

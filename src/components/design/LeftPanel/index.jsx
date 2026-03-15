@@ -19,7 +19,7 @@ function LeftPanel({ t }) {
 
 
   return (
-    <Box sx={{width:"22rem", flex:"0 0 auto"}}>
+    <Box data-tour="left-panel" sx={{width:"22rem", flex:"0 0 auto"}}>
       {show &&  <NewComponentsPanel t={t} />}
       {hasSetup &&  <SetupPanel t={t} />}
     </Box>
