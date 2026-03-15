@@ -135,10 +135,7 @@ export const designState = createSlice({
       );
     },
     resetSetup(state) {
-      const isInTranslationMode =
-        state.designMode === DESIGN_SURVEY_MODE.LANGUAGES;
-
-      if (state.langInfo && !isInTranslationMode) {
+      if (state.langInfo) {
         state.langInfo.lang = state.langInfo.mainLang;
         state.langInfo.onMainLang = true;
       }
@@ -146,10 +143,6 @@ export const designState = createSlice({
         state.globalSetup = {};
       }
       delete state["setup"];
-
-      if (!isInTranslationMode) {
-        state.designMode = DESIGN_SURVEY_MODE.DESIGN;
-      }
     },
     setDesignModeToDesign(state) {
       designState.caseReducers.resetSetup(state);
