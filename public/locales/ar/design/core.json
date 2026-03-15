@@ -430,5 +430,11 @@
     "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
     "allow_jump": "Allow respondents to jump to any page using a survey index/table of contents.",
     "skip_invalid": "Skip validation errors while navigating and only enforce them when the survey is submitted."
+  },
+  "processed_errors": {
+    "unidentified_error": "حدث خطأ غير متوقع ، يرجى إبلاغ support@qlarr.com",
+    "code_changed_after_publish": "لا يمكن تغيير رمز المكون بعد نشره",
+    "duplicate_to_code": "هذا الرمز ينتمي إلى مجموعة أو سؤال آخر",
+    "code_invalid": "الرمز غير صالح. يرجى المحاولة مرة أخرى."
   }
 }

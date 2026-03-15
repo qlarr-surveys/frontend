@@ -430,5 +430,11 @@
     "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
     "allow_jump": "Allow respondents to jump to any page using a survey index/table of contents.",
     "skip_invalid": "Skip validation errors while navigating and only enforce them when the survey is submitted."
+  },
+  "processed_errors": {
+    "unidentified_error": "Une Erreur Inattendue s'est produite, veuillez signaler à support@qlarr.com",
+    "code_changed_after_publish": "Impossible de modifier le code du composant après sa publication",
+    "duplicate_to_code": "Ce code appartient à un autre groupe ou question",
+    "code_invalid": "Code invalide. Veuillez réessayer."
   }
 }

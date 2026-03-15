@@ -430,5 +430,11 @@
     "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
     "allow_jump": "Allow respondents to jump to any page using a survey index/table of contents.",
     "skip_invalid": "Skip validation errors while navigating and only enforce them when the survey is submitted."
+  },
+  "processed_errors": {
+    "unidentified_error": "Unexpected Error occurred, please report to support@qlarr.com",
+    "code_changed_after_publish": "Cannot change component code after it was published",
+    "duplicate_to_code": "This code belongs to another group or question",
+    "code_invalid": "Invalid code. Please try again."
   }
 }
