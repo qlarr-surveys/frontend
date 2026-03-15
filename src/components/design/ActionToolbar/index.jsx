@@ -216,7 +216,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
           </IconButton>
         </CustomTooltip>
       )}
-      {(isGroup || showActions) && (
+      {(isGroup || showActions) && type !== "end" && (
         <>
           <CustomTooltip title={t("delete")} showIcon={false}>
             <IconButton

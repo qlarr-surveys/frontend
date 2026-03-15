@@ -87,6 +87,12 @@
   "disqualify": "Diskwalificeren",
   "drop_page_here": "Nieuwe pagina hier neerzetten",
   "drop_question_here": "Vraag hier neerzetten",
+  "empty_group_hint": "Sleep een vraag hierheen.",
+  "empty_group_hint_last": "Sleep een vraag hierheen of kies er een uit het linkerpaneel.",
+  "end_page_empty_hint": "Deze pagina <strong>kan alleen</strong> informatievragen bevatten (Tekst, Afbeelding of Video)",
+  "add_a_text": "Tekst toevoegen",
+  "add_a_image": "Afbeelding toevoegen",
+  "add_video": "Video toevoegen",
   "edit_priority_rule": "Prioriteitsregel Bewerken",
   "edit_random_rule": "Willekeurige Regel Bewerken",
   "entity_code": "Elementcode",
@@ -122,6 +128,9 @@
   "fullday_format": "Volledige Dag Formaat",
   "general": "Algemeen",
   "group": "Pagina",
+  "page_label": "Pagina {{number}}",
+  "welcome_page_label": "Welkomstpagina",
+  "thank_you_page_label": "Bedankpagina (Laatste pagina)",
   "group_by_group": "Pagina per Pagina",
   "group_title": "Paginatitel",
   "groups_order": "Volgorde van Pagina's",
@@ -255,6 +264,11 @@
   "upload_image": "Afbeelding Uploaden",
   "upload_video": "Video Uploaden",
   "uploading_autocomplete": "Autocomplete JSON-bestand wordt geüpload",
+  "manual_entry": "Handmatige invoer",
+  "loading_values": "Waarden laden...",
+  "upload_file": "Bestand uploaden",
+  "manual_entry_placeholder": "Voer één waarde per regel in",
+  "submit_values": "Verzenden",
   "uploading_image": "Afbeelding Uploaden",
   "uploading_video": "Video Uploaden",
   "upper_bound_hint": "Bovengrens hint",
@@ -382,7 +396,8 @@
     "from": "Van",
     "to": "Tot",
     "search": "Zoeken...",
-    "no_options": "Geen opties gevonden"
+    "no_options": "Geen opties gevonden",
+    "range_error": "Ongeldig bereik: minimum overschrijdt maximum"
   },
   "tour_step_counter": "Stap {{current}} van {{total}}",
   "tour_next": "Volgende",
@@ -409,5 +424,11 @@
   "tour_step6_next": "Volgende: Zijmenu",
   "tour_step7_title": "Beheer uw enquête vanaf hier",
   "tour_step7_intro": "Gebruik het zijmenu om elk onderdeel op elk moment te beheren tijdens het bouwen van uw enquête.\n<b>Ontwerp</b> \u2013 Maak en bewerk uw enquêtevragen.\n<b>Thema & stijl</b> \u2013 Wijzig kleuren, achtergrond en algehele uitstraling.\n<b>Talen</b> \u2013 Maak en beheer meertalige versies.\n<b>Instellingen</b> \u2013 Pas enquêtegedrag, privacy en antwoordregels aan.\n<b>Antwoorden</b> \u2013 Bekijk, beheer en exporteer verzamelde antwoorden.",
-  "tour_step7_next": "Aan de slag"
+  "tour_step7_next": "Aan de slag",
+  "tooltips": {
+    "allow_previous": "Allow respondents to go back to previous pages during the survey.",
+    "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
+    "allow_jump": "Allow respondents to jump to any page using a survey index/table of contents.",
+    "skip_invalid": "Skip validation errors while navigating and only enforce them when the survey is submitted."
+  }
 }

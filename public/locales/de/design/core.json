@@ -88,6 +88,12 @@
   "edit_random_rule": "Zufallsregel bearbeiten",
   "drop_question_here": "Frage hier ablegen",
   "drop_page_here": "Neue Seite hier ablegen",
+  "empty_group_hint": "Ziehen Sie eine Frage hierher.",
+  "empty_group_hint_last": "Ziehen Sie eine Frage hierher oder wählen Sie eine aus dem linken Bereich.",
+  "end_page_empty_hint": "Diese Seite <strong>kann nur</strong> Info-Fragen enthalten (Text-, Bild- oder Videoanzeige)",
+  "add_a_text": "Text hinzufügen",
+  "add_a_image": "Bild hinzufügen",
+  "add_video": "Video hinzufügen",
   "err_duplicate_code": "Diese {{component_name}} hat einen doppelten Code",
   "err_duplicate_priority_group_items": "Diese Elemente sind in mehr als einer Prioritätsgruppe vorhanden: <strong>{{iterms}}</strong>",
   "err_duplicate_random_group_items": "Diese Artikel sind in mehr als einer Zufallsgruppe vorhanden: <strong>{{items}}</strong>",
@@ -120,6 +126,9 @@
   "text_color": "Textfarbe",
   "fullday_format": "Ganztägiges Format",
   "group": "Seite",
+  "page_label": "Seite {{number}}",
+  "welcome_page_label": "Willkommensseite",
+  "thank_you_page_label": "Dankesseite (Letzte Seite)",
   "group_by_group": "Seite für Seite",
   "group_title": "Titel der Seite",
   "font": "Schriftart",
@@ -228,6 +237,11 @@
   "upload_video": "Video hochladen",
   "uploading_image": "Bild wird hochgeladen",
   "uploading_autocomplete": "Autocomplete-JSON-Datei wird hochgeladen",
+  "manual_entry": "Manuelle Eingabe",
+  "loading_values": "Werte werden geladen...",
+  "upload_file": "Datei hochladen",
+  "manual_entry_placeholder": "Einen Wert pro Zeile eingeben",
+  "submit_values": "Absenden",
   "uploading_video": "Video hochladen",
   "upper_bound_hint": "Hinweis zur oberen Grenze",
   "validation": "Validierung",
@@ -382,7 +396,8 @@
     "from": "Von",
     "to": "Bis",
     "search": "Suchen...",
-    "no_options": "Keine Optionen gefunden"
+    "no_options": "Keine Optionen gefunden",
+    "range_error": "Ungültiger Bereich: Minimum überschreitet Maximum"
   },
   "tour_step_counter": "Schritt {{current}} von {{total}}",
   "tour_next": "Weiter",
@@ -409,5 +424,11 @@
   "tour_step6_next": "Weiter: Seitenmenü",
   "tour_step7_title": "Verwalten Sie Ihre Umfrage von hier",
   "tour_step7_intro": "Nutzen Sie das Seitenmenü, um jeden Teil Ihrer Umfrage jederzeit zu steuern.\n<b>Design</b> \u2013 Erstellen und bearbeiten Sie Ihre Umfragefragen.\n<b>Theme & Stil</b> \u2013 Ändern Sie Farben, Hintergrund und das allgemeine Erscheinungsbild.\n<b>Sprachen</b> \u2013 Erstellen und verwalten Sie mehrsprachige Versionen.\n<b>Einstellungen</b> \u2013 Passen Sie Umfrageverhalten, Datenschutz und Antwortregeln an.\n<b>Antworten</b> \u2013 Sehen, verwalten und exportieren Sie gesammelte Antworten.",
-  "tour_step7_next": "Los geht's"
+  "tour_step7_next": "Los geht's",
+  "tooltips": {
+    "allow_previous": "Allow respondents to go back to previous pages during the survey.",
+    "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
+    "allow_jump": "Allow respondents to jump to any page using a survey index/table of contents.",
+    "skip_invalid": "Skip validation errors while navigating and only enforce them when the survey is submitted."
+  }
 }

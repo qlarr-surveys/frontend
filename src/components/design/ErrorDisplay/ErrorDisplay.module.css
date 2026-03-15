@@ -1,12 +1,33 @@
 .errorDisplay {
-  margin-bottom: 15px;
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.errorItem {
   border: 1px solid orange;
   background-color: rgba(255, 166, 0, 0.13);
   border-radius: 4px;
-  margin: 8px;
   padding: 8px;
 }
 
 .clickable {
   cursor: pointer;
+}
+
+.errorCode {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 0.7rem;
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin-inline-end: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.03em;
+}
+
+.errorMessage {
+  vertical-align: middle;
 }

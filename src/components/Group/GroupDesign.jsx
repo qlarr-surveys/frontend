@@ -4,14 +4,14 @@ import styles from "./GroupDesign.module.css";
 import { useSelector } from "react-redux";
 import { QuestionDropArea } from "../design/DropArea/DropArea";
 import GroupHeader from "./GroupHeader";
-import {  Box, decomposeColor, recomposeColor } from "@mui/material";
+import { Box, Divider, decomposeColor, recomposeColor } from "@mui/material";
 import { useDrag, useDrop } from "react-dnd";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
 import { onDrag, setup } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { setupOptions } from "~/constants/design";
-function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
+function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGroup }) {
   const dispatch = useDispatch();
   const group = useSelector((state) => {
     return state.designState[code];
@@ -201,6 +201,9 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
                 parentType={type}
                 t={t}
               />
+              {childIndex < children.length - 1 && (
+                <Divider sx={{ mt: "12px", mb: "12px" }} />
+              )}
             </React.Fragment>
           );
         })}
@@ -211,6 +214,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent }) {
             parentCode={code}
             parentType={type}
             emptyGroup={true}
+            isLastGroup={isLastGroup}
           />
         )}
       </>

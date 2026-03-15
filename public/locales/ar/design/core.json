@@ -90,6 +90,12 @@
   "edit_random_rule": "تحرير القاعدة العشوائية",
   "drop_question_here": "أسقط السؤال هنا",
   "drop_page_here": "أسقط صفحة جديدة هنا",
+  "empty_group_hint": "اسحب سؤالاً هنا.",
+  "empty_group_hint_last": "اسحب سؤالاً هنا أو اختر واحداً من اللوحة اليسرى.",
+  "end_page_empty_hint": "هذه الصفحة <strong>يمكنها فقط</strong> احتواء أسئلة معلوماتية (نص أو صورة أو عرض فيديو)",
+  "add_a_text": "إضافة نص",
+  "add_a_image": "إضافة صورة",
+  "add_video": "إضافة فيديو",
   "err_duplicate_code": "يحتوي {{component_name}} هذا على رمز مكرر",
   "err_duplicate_priority_group_items": "هذه العناصر موجودة في أكثر من مجموعة ذات أولوية: <strong>{{iterms}}</strong>",
   "err_duplicate_random_group_items": "هذه العناصر موجودة في أكثر من مجموعة عشوائية: <strong>{{items}}</strong>",
@@ -122,6 +128,9 @@
   "text_color": "لون النص",
   "fullday_format": "تنسيق Fullday",
   "group": "الصفحة",
+  "page_label": "الصفحة {{number}}",
+  "welcome_page_label": "صفحة الترحيب",
+  "thank_you_page_label": "صفحة الشكر (الصفحة الأخيرة)",
   "group_by_group": "صفحة بصفحة",
   "group_title": "عنوان الصفحة",
   "font": "الخط",
@@ -228,6 +237,11 @@
   "upload_video": "تحميل فيديو",
   "uploading_image": "جاري تحميل الصورة",
   "uploading_autocomplete": "تحميل ملف JSON للإكمال التلقائي",
+  "manual_entry": "إدخال يدوي",
+  "loading_values": "جاري تحميل القيم...",
+  "upload_file": "رفع ملف",
+  "manual_entry_placeholder": "أدخل قيمة واحدة في كل سطر",
+  "submit_values": "إرسال",
   "uploading_video": "جاري تحميل الفيديو",
   "upper_bound_hint": "تلميح الحد العلوي",
   "validation": "التحقق من الصحة",
@@ -382,7 +396,8 @@
     "from": "من",
     "to": "إلى",
     "search": "بحث...",
-    "no_options": "لا توجد خيارات"
+    "no_options": "لا توجد خيارات",
+    "range_error": "نطاق غير صالح: الحد الأدنى يتجاوز الحد الأقصى"
   },
   "tour_step_counter": "الخطوة {{current}} من {{total}}",
   "tour_next": "التالي",
@@ -409,5 +424,11 @@
   "tour_step6_next": "التالي: القائمة الجانبية",
   "tour_step7_title": "أدِر استبيانك من هنا",
   "tour_step7_intro": "استخدم القائمة الجانبية للتحكم في كل جزء أثناء بناء استبيانك.\n<b>التصميم</b> \u2013 أنشئ وعدّل أسئلة الاستبيان.\n<b>المظهر والنمط</b> \u2013 غيّر الألوان والخلفية والمظهر العام.\n<b>اللغات</b> \u2013 أنشئ وأدِر نسخًا بلغات متعددة.\n<b>الإعدادات</b> \u2013 اضبط سلوك الاستبيان والخصوصية وقواعد الاستجابة.\n<b>الاستجابات</b> \u2013 اعرض وأدِر وصدّر الإجابات المجمّعة.",
-  "tour_step7_next": "هيا نبدأ"
+  "tour_step7_next": "هيا نبدأ",
+  "tooltips": {
+    "allow_previous": "Allow respondents to go back to previous pages during the survey.",
+    "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
+    "allow_jump": "Allow respondents to jump to any page using a survey index/table of contents.",
+    "skip_invalid": "Skip validation errors while navigating and only enforce them when the survey is submitted."
+  }
 }

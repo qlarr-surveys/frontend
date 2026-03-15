@@ -1,73 +1,53 @@
-.groupDropArea {
+.dropAreaBase {
   display: flex;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-  height: 6rem;
   padding: 0;
   max-width: 800px;
   min-width: 350px;
   width: 100%;
-  color: rgba(0, 0, 0, 0.5);
-  margin: auto;
-  color: rgba(0, 0, 0, 0.5);
-  background-color: #f9f9f9;
   border: 1px dotted #16205b;
   border-radius: 6px;
   opacity: 1;
+}
+
+.groupDropArea {
+  composes: dropAreaBase;
+  height: 6rem;
+  margin: 20px auto 35px;
+  color: rgba(0, 0, 0, 0.5);
+  background-color: #f9f9f9;
   transition: padding 200ms, background-color 200ms, height 200ms ease-in-out,
     opacity 200ms;
-  margin-top: 20px;
-  margin-bottom: 35px;
 }
 
 .groupDragging {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
+  composes: dropAreaBase;
   height: 50px;
-  padding: 0;
-  max-width: 800px;
-  min-width: 350px;
-  width: 100%;
-  margin: auto;
+  margin: 20px auto 35px;
   color: rgba(0, 0, 0, 0.5);
   background-color: #f9f9f9;
-  border: 1px dotted #16205b;
-  border-radius: 6px;
-  opacity: 1;
   transition: padding 200ms, background-color 200ms, opacity 200ms;
-  margin-top: 20px;
-  margin-bottom: 35px;
 }
 
 .questionDropArea {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
+  composes: dropAreaBase;
   height: 6rem;
-  max-width: 800px;
-  min-width: 350px;
-  padding: 0;
-  width: 100%;
   margin: auto;
   font-size: 2rem;
   color: rgba(0, 0, 0, 0.5);
   background-color: rgba(0, 0, 0, 0.1);
-  border: 1px dotted #16205b;
-  border-radius: 6px;
-  opacity: 1;
   transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
 }
 
-/* .groupDropArea {
-  margin: auto;
-  width: 100%;
-  max-width: 800px;
-  min-width: 350px;
-} */
+.isDragging {
+  composes: dropAreaBase;
+  height: 50px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
+}
 
 .groupDropAreaWrapper {
   padding: 1rem 0;
@@ -89,18 +69,6 @@
   transition: height 200ms, padding 200ms;
 }
 
-.isDragging {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px dotted #16205b;
-  height: 50px;
-  margin: 0;
-  background-color: #f9f9f9;
-  opacity: 1;
-  transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
-}
-
 .groupHidden {
   height: 6rem;
   margin: auto;
@@ -108,29 +76,141 @@
   min-width: 350px;
 }
 
-.groupEmptyHint {
+.emptyHintBase {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-top: 20px;
-  margin-bottom: 35px;
-  height: 50px;
   margin: auto;
   max-width: 800px;
   width: 100%;
   min-width: 350px;
   color: gray;
-  border: 1px dotted #16205b;
-  border-radius: 6px;
+  border: none;
+  border-radius: 8px;
+  background-image:
+    repeating-linear-gradient(to right, #c0c4d0 0, #c0c4d0 10px, transparent 10px, transparent 20px),
+    repeating-linear-gradient(to right, #c0c4d0 0, #c0c4d0 10px, transparent 10px, transparent 20px),
+    repeating-linear-gradient(to bottom, #c0c4d0 0, #c0c4d0 10px, transparent 10px, transparent 20px),
+    repeating-linear-gradient(to bottom, #c0c4d0 0, #c0c4d0 10px, transparent 10px, transparent 20px);
+  background-size:
+    100% 1px,
+    100% 1px,
+    1px 100%,
+    1px 100%;
+  background-position:
+    0 0,
+    0 100%,
+    0 0,
+    100% 0;
+  background-repeat: no-repeat;
   background-color: rgba(0, 0, 0, 0);
   transition: background-color 200ms;
+}
+
+.groupEmptyHint {
+  composes: emptyHintBase;
+  height: 150px;
 }
 
 .groupEmptyHintHover {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
+.endPageEmptyHint {
+  composes: emptyHintBase;
+  height: 220px;
+}
+
+.questionDropAreaEmptyGroup {
+  composes: dropAreaBase;
+  height: 150px;
+  margin: auto;
+  font-size: 2rem;
+  color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
+}
+
+.questionDropAreaEmptyEnd {
+  composes: dropAreaBase;
+  height: 220px;
+  margin: auto;
+  font-size: 2rem;
+  color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
+}
+
+.isDraggingEmptyGroup {
+  composes: dropAreaBase;
+  height: 150px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
+}
+
+.isDraggingEmptyEnd {
+  composes: dropAreaBase;
+  height: 220px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
+}
+
 .dropText {
   font-size: 20px;
+}
+
+.emptyGroupContent {
+  pointer-events: none;
+}
+
+.emptyGroupText {
+  font-family: Rubik, sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: 0px;
+  text-align: center;
+  color: #16205B;
+  opacity: 0.7;
+}
+
+.endPageText {
+  font-family: Rubik, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-align: center;
+  color: #16205B;
+  opacity: 0.7;
+}
+
+.endPageActions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  pointer-events: auto;
+}
+
+.endPageActionItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #16205b;
+  cursor: pointer;
+}
+
+.endPageActionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f1f4;
+  border-radius: 8px;
+  padding: 12px;
 }

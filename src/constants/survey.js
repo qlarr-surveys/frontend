@@ -21,4 +21,8 @@ export const SURVEY = {
   ALLOW_INCOMPLETE: "allowIncomplete",
   ALLOW_JUMP: "allowJump",
   SKIP_INVALID: "skipInvalid",
+  BACKGROUND_AUDIO: "backgroundAudio",
+  RECORD_GPS: "recordGps",
+  SAVE_IP: "saveIp",
+  SAVE_TIMINGS: "saveTimings",
 };

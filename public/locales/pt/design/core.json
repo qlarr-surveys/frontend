@@ -87,6 +87,12 @@
   "disqualify": "Desqualificar",
   "drop_page_here": "Solte uma nova página aqui",
   "drop_question_here": "Solte a pergunta aqui",
+  "empty_group_hint": "Arraste uma pergunta para cá.",
+  "empty_group_hint_last": "Arraste uma pergunta para cá ou escolha uma no painel esquerdo.",
+  "end_page_empty_hint": "Esta página <strong>só pode</strong> conter perguntas informativas (Texto, Imagem ou Vídeo)",
+  "add_a_text": "Adicionar texto",
+  "add_a_image": "Adicionar imagem",
+  "add_video": "Adicionar vídeo",
   "edit_priority_rule": "Editar Regra de Prioridade",
   "edit_random_rule": "Editar Regra Aleatória",
   "entity_code": "Código de elemento",
@@ -122,6 +128,9 @@
   "fullday_format": "Formato de Dia Completo",
   "general": "Geral",
   "group": "Página",
+  "page_label": "Página {{number}}",
+  "welcome_page_label": "Página de boas-vindas",
+  "thank_you_page_label": "Página de agradecimento (Página final)",
   "group_by_group": "Página por Página",
   "group_title": "Título da Página",
   "groups_order": "Ordem das Páginas",
@@ -255,6 +264,11 @@
   "upload_image": "Enviar Imagem",
   "upload_video": "Enviar Vídeo",
   "uploading_autocomplete": "Enviando arquivo JSON de autocompletar",
+  "manual_entry": "Entrada manual",
+  "loading_values": "Carregando valores...",
+  "upload_file": "Carregar arquivo",
+  "manual_entry_placeholder": "Insira um valor por linha",
+  "submit_values": "Enviar",
   "uploading_image": "Enviando Imagem",
   "uploading_video": "Enviando Vídeo",
   "upper_bound_hint": "Dica de Limite Superior",
@@ -382,7 +396,8 @@
     "from": "De",
     "to": "Até",
     "search": "Pesquisar...",
-    "no_options": "Nenhuma opção encontrada"
+    "no_options": "Nenhuma opção encontrada",
+    "range_error": "Intervalo inválido: mínimo excede o máximo"
   },
   "tour_step_counter": "Passo {{current}} de {{total}}",
   "tour_next": "Próximo",
@@ -409,5 +424,11 @@
   "tour_step6_next": "Próximo: Menu lateral",
   "tour_step7_title": "Gerencie sua pesquisa daqui",
   "tour_step7_intro": "Use o menu lateral para controlar cada parte a qualquer momento enquanto constrói sua pesquisa.\n<b>Design</b> \u2013 Crie e edite as perguntas da sua pesquisa.\n<b>Tema e estilo</b> \u2013 Altere cores, fundo e aparência geral.\n<b>Idiomas</b> \u2013 Crie e gerencie versões em vários idiomas.\n<b>Configurações</b> \u2013 Ajuste comportamento, privacidade e regras de resposta.\n<b>Respostas</b> \u2013 Visualize, gerencie e exporte respostas coletadas.",
-  "tour_step7_next": "Vamos lá"
+  "tour_step7_next": "Vamos lá",
+  "tooltips": {
+    "allow_previous": "Allow respondents to go back to previous pages during the survey.",
+    "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
+    "allow_jump": "Allow respondents to jump to any page using a survey index/table of contents.",
+    "skip_invalid": "Skip validation errors while navigating and only enforce them when the survey is submitted."
+  }
 }

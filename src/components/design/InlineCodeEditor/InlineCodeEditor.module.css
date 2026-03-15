@@ -1,0 +1,52 @@
+.codeLabel {
+  font-family: monospace;
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: background-color 0.15s ease;
+  line-height: 1.4;
+  display: inline-block;
+  width: fit-content;
+  box-sizing: content-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.codeLabel:hover {
+  filter: brightness(0.92);
+}
+
+.codeLabelReadOnly {
+  cursor: default;
+}
+
+.codeLabelReadOnly:hover {
+  filter: none;
+}
+
+.editingContainer {
+  display: inline-flex;
+  align-items: center;
+}
+
+.prefixLabel {
+  font-family: monospace;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.codeInputNative {
+  font-family: monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  width: 8ch;
+  color: inherit;
+}

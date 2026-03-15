@@ -88,6 +88,12 @@
   "edit_random_rule": "Edit Random Rule",
   "drop_question_here": "Drop question here",
   "drop_page_here": "Drop new page here",
+  "empty_group_hint": "Drag a question here.",
+  "empty_group_hint_last": "Drag a question here or choose one from the left panel.",
+  "end_page_empty_hint": "This page <strong>can only</strong> contain Info Questions (Text, Image or Video Display)",
+  "add_a_text": "Add a Text",
+  "add_a_image": "Add a Image",
+  "add_video": "Add video",
   "err_duplicate_code": "This {{component_name}} has a duplicate code",
   "err_duplicate_priority_group_items": "Those items are present in more than one priority Group: <strong>{{iterms}}</strong>",
   "err_duplicate_random_group_items": "Those items are present in more than one random group: <strong>{{items}}</strong>",
@@ -120,6 +126,9 @@
   "text_color": "Text Color",
   "fullday_format": "FullDay Format",
   "group": "Page",
+  "page_label": "Page {{number}}",
+  "welcome_page_label": "Welcome Page",
+  "thank_you_page_label": "Thank You Page (Final Page)",
   "group_by_group": "Page By Page",
   "group_title": "Page Title",
   "font": "Font",
@@ -233,6 +242,11 @@
   "upload_video": "Upload Video",
   "uploading_image": "Uploading Image",
   "uploading_autocomplete": "Uploading Autocomplete JSON file",
+  "manual_entry": "Manual Entry",
+  "loading_values": "Loading values...",
+  "upload_file": "Upload File",
+  "manual_entry_placeholder": "Enter one value per line",
+  "submit_values": "Submit",
   "uploading_video": "Uploading Video",
   "upper_bound_hint": "Upper Bound hint",
   "validation": "Validation",
@@ -382,7 +396,8 @@
     "from": "From",
     "to": "To",
     "search": "Search...",
-    "no_options": "No options found"
+    "no_options": "No options found",
+    "range_error": "Invalid range: min exceeds max"
   },
   "tour_step_counter": "Step {{current}} of {{total}}",
   "tour_next": "Next",
@@ -409,5 +424,11 @@
   "tour_step6_next": "Next: Side Menu",
   "tour_step7_title": "Manage Your Survey from Here",
   "tour_step7_intro": "Use the side menu to control every part anytime while building your survey.\n<b>Design</b> \u2013 Build and edit your survey questions.\n<b>Theme & Style</b> \u2013 Change colors, background, and overall look.\n<b>Languages</b> \u2013 Create and manage multiple language versions.\n<b>Settings</b> \u2013 Adjust survey behavior, privacy, and response rules.\n<b>Responses</b> \u2013 View, manage, and export collected answers.",
-  "tour_step7_next": "Let's go"
+  "tour_step7_next": "Let's go",
+  "tooltips": {
+    "allow_previous": "Allow respondents to go back to previous pages during the survey.",
+    "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
+    "allow_jump": "Allow respondents to jump to any page using a survey index/table of contents.",
+    "skip_invalid": "Skip validation errors while navigating and only enforce them when the survey is submitted."
+  }
 }

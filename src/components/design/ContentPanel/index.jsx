@@ -42,12 +42,33 @@ function ContentPanel({ designMode }, ref) {
       list.push({ name: ELEMENTS.DROP_AREA, index: 0 });
     }
 
+    let pageNumber = 1;
+    // Find the last regular group index (right before the end page)
+    let lastRegularIndex = -1;
+    for (let i = groups.length - 1; i >= 0; i--) {
+      const gt = (groups[i].type || groups[i].groupType || "").toLowerCase();
+      if (gt !== "welcome" && gt !== "end") {
+        lastRegularIndex = i;
+        break;
+      }
+    }
+
     for (let i = 0; i < groups.length; i++) {
-      list.push({ name: ELEMENTS.GROUP, group: groups[i], index: i });
-      if (
-        groups[i].type !== "end" &&
-        groups[i].groupType?.toLowerCase() !== "end"
-      ) {
+      const groupType = (groups[i].type || groups[i].groupType || "").toLowerCase();
+      let label = null;
+
+      if (groupType === "welcome") {
+        label = t("welcome_page_label");
+      } else if (groupType === "end") {
+        label = t("thank_you_page_label");
+      } else {
+        label = t("page_label", { number: pageNumber });
+        pageNumber++;
+      }
+
+      const isLastGroup = i === lastRegularIndex;
+      list.push({ name: ELEMENTS.GROUP, group: groups[i], index: i, label, isLastGroup });
+      if (groupType !== "end") {
         list.push({ name: ELEMENTS.DROP_AREA, group: groups[i], index: i + 1 });
       }
     }
@@ -155,14 +176,18 @@ function ContentPanel({ designMode }, ref) {
                 );
               case ELEMENTS.GROUP:
                 return (
-                  <GroupDesign
-                    t={t}
-                    key={item.group.code}
-                    designMode={designMode}
-                    code={item.group.code}
-                    index={item.index}
-                    lastAddedComponent={lastAddedComponent}
-                  />
+                  <>
+                    <div className={styles.groupLabel}>{item.label}</div>
+                    <GroupDesign
+                      t={t}
+                      key={item.group.code}
+                      designMode={designMode}
+                      code={item.group.code}
+                      index={item.index}
+                      lastAddedComponent={lastAddedComponent}
+                      isLastGroup={item.isLastGroup}
+                    />
+                  </>
                 );
               case ELEMENTS.FOOTER:
                 return <div className={styles.footer} />;

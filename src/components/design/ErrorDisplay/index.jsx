@@ -3,204 +3,54 @@ import { memo } from "react";
 import styles from "./ErrorDisplay.module.css";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import { isGroup, isQuestion } from "~/utils/design/utils";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { surveySetup, setupOptions } from "~/constants/design";
-import { setup } from "~/state/design/designState";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
-import { createSelector } from "@reduxjs/toolkit";
+import { mapComponentError, mapInstructionError, getHighlighted } from "~/utils/design/errorDisplay.jsx";
+import useErrorDisplay from "./useErrorDisplay";
 
 function ErrorDisplay(props) {
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
-  const dispatch = useDispatch();
-
-  const selectDesignState = (state) => state.designState[props.code] || {};
-
-  const selectErrorsAndInstructions = createSelector(
-    [selectDesignState],
-    (designState) => {
-      const instructionsWithErrors = designState.instructionList?.filter(
-        (instruction) => instruction.errors?.length > 0
-      );
-
-      return {
-        errors: designState.errors,
-        designErrors: designState.designErrors,
-        instructions: instructionsWithErrors?.length
-          ? instructionsWithErrors
-          : undefined,
-      };
-    }
-  );
-
-  const { errors, designErrors, instructions } = useSelector(
-    selectErrorsAndInstructions
-  );
-
-  const hasErrors =
-    errors?.length > 0 || designErrors?.length > 0 || instructions?.length > 0;
-
-  const type = useSelector((state) => {
-    return props.code == "Survey"
-      ? ""
-      : isGroup(props.code)
-      ? state.designState[props.code].groupType?.toLowerCase() || "group"
-      : state.designState[props.code].type;
-  });
-
-  const onErrClick = (instruction) => {
-    if (instruction.code === "conditional_relevance") {
-      dispatch(
-        setup({
-          code: props.code,
-          rules: setupOptions(type),
-          highlighted: "relevance"
-        })
-      );
-    } else if (
-      instruction.code === "random_group" ||
-      instruction.code === "priority_groups"
-    ) {
-      if (props.code == "Survey") {
-        dispatch(setup({ ...surveySetup, highlighted: "random" }));
-      } else {
-        dispatch(
-          setup({
-            code: props.code,
-            rules: setupOptions(type),
-            highlighted: "random"
-          })
-        );
-      }
-    } else if (instruction.code.startsWith("skip_to")) {
-      dispatch(
-        setup({
-          code: props.code,
-          rules: setupOptions(type),
-          highlighted: "skip_logic"
-        })
-      );
-    }
-    return "";
-  };
-
-  const isClickable = (instruction) => {
-    return (
-      instruction.code === "conditional_relevance" ||
-      instruction.code === "random_group" ||
-      instruction.code === "priority_groups" ||
-      instruction.code.startsWith("skip_to")
-    );
-  };
+  const { errors, designErrors, instructions, hasErrors, onErrClick } =
+    useErrorDisplay(props.code);
 
   return hasErrors ? (
     <Box className={styles.errorDisplay}>
       {errors &&
         errors.map((el) => {
+          const { label, message } = mapComponentError(props.code, el, t);
           return (
-            <div key={el}>
+            <div key={el} className={styles.errorItem}>
               <CloseIcon style={{ verticalAlign: "middle" }} />
-              {mapComponentError(props.code, el, t)}
+              <span className={styles.errorCode}>{label}</span>
+              {message && <span className={styles.errorMessage}>{message}</span>}
             </div>
           );
         })}
       {designErrors &&
-        designErrors.map((el) => {
-          return (
-            <div key={el.code}>
-              <CloseIcon style={{ verticalAlign: "middle" }} />
-              {el.message}
-            </div>
-          );
-        })}
+        designErrors.map((el) => (
+          <div key={el.code} className={styles.errorItem}>
+            <CloseIcon style={{ verticalAlign: "middle" }} />
+            <span className={styles.errorCode}>{el.code}</span>
+            {el.message && <span className={styles.errorMessage}>{el.message}</span>}
+          </div>
+        ))}
       {instructions &&
         instructions.map((el) => {
+          const { label, message } = mapInstructionError(el, t);
           return (
             <div
-              className={isClickable(el) ? styles.clickable : ""}
+              className={`${styles.errorItem}${getHighlighted(el.code) ? ` ${styles.clickable}` : ""}`}
               onClick={() => onErrClick(el)}
               key={el.code}
             >
               <ErrorOutlineIcon style={{ verticalAlign: "middle" }} />
-              {mapInstructionError(el, t)}
+              <span className={styles.errorCode}>{label}</span>
+              {message && <span className={styles.errorMessage}>{message}</span>}
             </div>
           );
         })}
     </Box>
-  ) : (
-    <></>
-  );
+  ) : null;
 }
-
-const mapComponentError = (code, error, t) => {
-  if (error === "EMPTY_PARENT") {
-    return t("err_empty_parent", {
-      component_name: componentName(code, t),
-      child_name: componentChildName(code, t),
-    });
-  } else if (error === "DUPLICATE_CODE") {
-    return t("err_duplicate_code"), { component_name: componentName(code, t) };
-  } else if (error === "NO_END_GROUP") {
-    return t("err_no_end_group");
-  } else if (error === "MISPLACED_END_GROUP") {
-    return t("err_misplaced_end_group");
-  } else if (error === "MISPLACED_WELCOME_GROUP") {
-    return t("err_misplaced_welcome_group");
-  }
-  return "";
-};
-
-const mapInstructionError = (instruction, t) => {
-  if (
-    instruction.code === "value" &&
-    instruction.errors[0].name == "InvalidInstructionInEndGroup"
-  ) {
-    return t("err_value_in_end_group");
-  } else if (instruction.code === "conditional_relevance") {
-    return t("err_relevance");
-  } else if (instruction.code === "random_group") {
-    return t("err_random");
-  } else if (instruction.code === "priority_groups") {
-    return t("err_priority");
-  } else if (instruction.code.startsWith("reference")) {
-    return (
-      <Trans
-        t={t}
-        values={{
-          codes: instruction.errors
-            .map((error) => error.dependency?.componentCode)
-            .join(", "),
-          lang: instruction.lang,
-        }}
-        i18nKey="err_reference"
-      />
-    );
-  } else if (instruction.code.startsWith("skip_to")) {
-    return t("err_skip");
-  }
-  return "";
-};
-
-const componentName = (code, t) => {
-  if (code == "Survey") {
-    return t("survey");
-  } else if (isQuestion(code)) {
-    return t("question");
-  } else if (isGroup(code)) {
-    return t("group");
-  }
-  return t("option");
-};
-
-const componentChildName = (code, t) => {
-  if (isGroup(code)) {
-    return t("question");
-  } else if (code == "Survey") {
-    return t("group");
-  }
-  return t("option");
-};
 
 export default memo(ErrorDisplay);
