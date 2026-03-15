@@ -509,7 +509,7 @@ export const designState = createSlice({
         (instruction) => !instruction.code.startsWith(prefixToRemove)
       );
       const referenceInstructions = buildReferenceInstruction(
-        payload.value,
+        "content",
         payload.key,
         payload.lang,
         [payload.value, payload.key, payload.lang]
