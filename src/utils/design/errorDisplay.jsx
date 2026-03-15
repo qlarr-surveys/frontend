@@ -1,6 +1,15 @@
 import { Trans } from "react-i18next";
 import { isGroup, isQuestion } from "~/utils/design/utils";
 
+const extractInstructionLang = (code) => {
+  const match = code.match(/_([a-z]{2,3})_\d+$/);
+  return match ? match[1] : null;
+};
+export const isLabelInstruction = (code) =>
+  code.startsWith("format_") &&
+  !code.startsWith("format_custom_css_") &&
+  !/^format_validation_/.test(code);
+
 export const getHighlighted = (code) => {
   if (code === "conditional_relevance") return "relevance";
   if (code === "random_group" || code === "priority_groups") return "random";
@@ -25,7 +34,9 @@ export const mapComponentError = (code, error, t) => {
   } else if (error === "DUPLICATE_CODE") {
     return {
       label: error,
-      message: t("err_duplicate_code", { component_name: componentName(code, t) }),
+      message: t("err_duplicate_code", {
+        component_name: componentName(code, t),
+      }),
     };
   } else if (error === "NO_END_GROUP") {
     return { label: error, message: t("err_no_end_group") };
@@ -37,8 +48,7 @@ export const mapComponentError = (code, error, t) => {
   return { label: error, message: null };
 };
 
-
-export const mapInstructionError = (instruction, t) => {
+export const mapInstructionError = (instruction, t, currentLang) => {
   const rawMessage = instruction.errors[0]?.message;
   if (
     instruction.code === "value" &&
@@ -84,7 +94,12 @@ export const mapInstructionError = (instruction, t) => {
       .replace(/^format_/, "")
       .replace(/_[a-z]{2,3}_\d+$/, "")
       .replace(/_/g, " ");
-    return { label: field, message: rawMessage };
+    const lang = extractInstructionLang(instruction.code);
+    const showLang = lang && lang !== currentLang;
+    return {
+      label: showLang ? `${field} (${lang})` : field,
+      message: rawMessage,
+    };
   }
   return { label: instruction.code, message: rawMessage };
 };

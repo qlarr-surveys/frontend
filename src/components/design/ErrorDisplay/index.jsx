@@ -10,7 +10,7 @@ import useErrorDisplay from "./useErrorDisplay";
 
 function ErrorDisplay(props) {
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
-  const { errors, designErrors, instructions, hasErrors, onErrClick } =
+  const { errors, designErrors, instructions, hasErrors, onErrClick, currentLang } =
     useErrorDisplay(props.code);
 
   return hasErrors ? (
@@ -36,7 +36,7 @@ function ErrorDisplay(props) {
         ))}
       {instructions &&
         instructions.map((el) => {
-          const { label, message } = mapInstructionError(el, t);
+          const { label, message } = mapInstructionError(el, t, currentLang);
           return (
             <div
               className={`${styles.errorItem}${getHighlighted(el.code) ? ` ${styles.clickable}` : ""}`}
