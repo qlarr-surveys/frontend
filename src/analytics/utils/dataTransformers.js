@@ -3,7 +3,7 @@ import {
   calculateFrequency,
   calculateEmailDomains,
 } from './calculations';
-import { getChartColor, NPS_COLORS, STATUS_COLORS } from './colors';
+import { getChartColor, NPS_COLORS } from './colors';
 import { BACKEND_BASE_URL } from '~/constants/networking';
 
 const MAX_CHART_BAR_ITEMS = 10;
@@ -48,20 +48,15 @@ const getResponseMetrics = ({ answeredCount, responses, totalResponses, incomple
     skipped,
     incomplete,
     preview,
+    completed,
   };
 };
 
-// Build status chart entries (Skipped, Incomplete, Preview) to append to chart data
+// Build status chart entries (Skipped) to append to chart data
 const buildStatusEntries = (metrics) => {
   const entries = [];
   if (metrics.skipped > 0) {
     entries.push({ name: 'Skipped', value: metrics.skipped, count: metrics.skipped, fill: '#e5e7eb' });
-  }
-  if (metrics.incomplete > 0) {
-    entries.push({ name: 'Incomplete', value: metrics.incomplete, count: metrics.incomplete, fill: STATUS_COLORS.incomplete });
-  }
-  if (metrics.preview > 0) {
-    entries.push({ name: 'Preview', value: metrics.preview, count: metrics.preview, fill: STATUS_COLORS.preview });
   }
   return entries;
 };
@@ -155,7 +150,7 @@ export const transformSCQData = (question) => {
     fill: getChartColor(i),
   }));
   const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const chartData = applyRoundedPercentages(allItems, metrics.total);
+  const chartData = applyRoundedPercentages(allItems, metrics.completed);
 
   return {
     pieData: chartData,
@@ -184,7 +179,7 @@ export const transformMCQData = (question) => {
     fill: getChartColor(i),
   }));
   const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const chartData = applyRoundedPercentages(allItems, metrics.total);
+  const chartData = applyRoundedPercentages(allItems, metrics.completed);
 
   return {
     pieData: chartData,
@@ -210,7 +205,7 @@ export const transformNPSData = (question) => {
     { name: 'Promoters', value: nps.promoters, count: nps.promoters, fill: NPS_COLORS.promoter },
   ];
   const allCategoryItems = [...rawCategoryData, ...buildStatusEntries(metrics)];
-  const categoryData = applyRoundedPercentages(allCategoryItems, metrics.total);
+  const categoryData = applyRoundedPercentages(allCategoryItems, metrics.completed);
 
   const distribution = nps.distribution || Array(11).fill(0);
 
@@ -482,7 +477,7 @@ export const transformImageSCQData = (question) => {
     };
   }).sort((a, b) => b.value - a.value);
   const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const pieData = applyRoundedPercentages(allItems, metrics.total);
+  const pieData = applyRoundedPercentages(allItems, metrics.completed);
 
   return {
     pieData,
@@ -515,7 +510,7 @@ export const transformImageMCQData = (question) => {
     };
   });
   const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const barData = applyRoundedPercentages(allItems, metrics.total);
+  const barData = applyRoundedPercentages(allItems, metrics.completed);
 
   return {
     barData,
@@ -542,7 +537,7 @@ export const transformIconSCQData = (question) => {
     };
   });
   const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const chartData = applyRoundedPercentages(allItems, metrics.total);
+  const chartData = applyRoundedPercentages(allItems, metrics.completed);
 
   const sorted = [...counts].sort((a, b) => b.count - a.count);
 
@@ -578,7 +573,7 @@ export const transformIconMCQData = (question) => {
     };
   });
   const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const barData = applyRoundedPercentages(allItems, metrics.total);
+  const barData = applyRoundedPercentages(allItems, metrics.completed);
 
   return {
     barData,
@@ -612,7 +607,7 @@ export const transformFileUploadData = (question) => {
     .map(([name, count]) => ({ name, count, value: count }))
     .sort((a, b) => b.count - a.count);
   const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const extensionData = applyRoundedPercentages(allItems, metrics.total);
+  const extensionData = applyRoundedPercentages(allItems, metrics.completed);
 
   return {
     extensionData,
@@ -632,10 +627,10 @@ const transformPresenceData = (question, presentLabel, absentLabel, presentKey, 
     { name: absentLabel, value: absentCount, count: absentCount },
   ];
   const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const chartData = applyRoundedPercentages(allItems, metrics.total);
+  const chartData = applyRoundedPercentages(allItems, metrics.completed);
 
   return {
-    completionRate: metrics.total > 0 ? Math.round((presentCount / metrics.total) * 100) : 0,
+    completionRate: metrics.completed > 0 ? Math.round((presentCount / metrics.completed) * 100) : 0,
     [presentKey]: presentCount,
     [absentKey]: absentCount,
     chartData,
@@ -665,7 +660,7 @@ export const transformBarcodeData = (question) => {
     fill: getChartColor(i),
   }));
   const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const barData = applyRoundedPercentages(allItems, metrics.total);
+  const barData = applyRoundedPercentages(allItems, metrics.completed);
 
   return {
     frequencyData: frequency,
