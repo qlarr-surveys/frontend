@@ -19,7 +19,7 @@ import PieDonutChart from './PieDonutChart';
 import NPSBenchmarkScale from './NPSBenchmarkScale';
 import CategoryLegend from '../common/CategoryLegend';
 import { grey } from '~/theme/palette';
-import { NPS_COLORS } from '~/utils/analytics/colors';
+import { NPS_COLORS } from '~/analytics/utils/colors';
 
 import ChartTooltip, { titleStyle, detailStyle } from '../common/ChartTooltip';
 

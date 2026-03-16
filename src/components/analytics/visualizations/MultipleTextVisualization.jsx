@@ -7,7 +7,7 @@ import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import DataTable from '../common/DataTable';
 import NoResponsesMessage from '../common/NoResponsesMessage';
-import { transformMultipleTextData } from '~/utils/analytics/dataTransformers';
+import { transformMultipleTextData } from '~/analytics/utils/dataTransformers';
 
 export default function MultipleTextVisualization({ question }) {
   const { fields = [], responses = [] } = question;

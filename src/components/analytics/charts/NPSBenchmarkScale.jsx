@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import { grey } from '~/theme/palette';
-import { NPS_BENCHMARK_COLORS } from '~/utils/analytics/colors';
+import { NPS_BENCHMARK_COLORS } from '~/analytics/utils/colors';
 
 function NPSBenchmarkScale({ score }) {
   const { t } = useTranslation(NAMESPACES.MANAGE);

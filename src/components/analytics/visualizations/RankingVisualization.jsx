@@ -6,7 +6,7 @@ import RankingChart from '../charts/RankingChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
-import { transformRankingData } from '~/utils/analytics/dataTransformers';
+import { transformRankingData } from '~/analytics/utils/dataTransformers';
 
 export default function RankingVisualization({ question }) {
   const data = useMemo(() => transformRankingData(question), [question]);

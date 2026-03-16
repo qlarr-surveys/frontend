@@ -5,7 +5,7 @@ import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import FrequencyTable from '../common/FrequencyTable';
 import { StatsRow } from '../common/StatCard';
-import { transformFileUploadData } from '~/utils/analytics/dataTransformers';
+import { transformFileUploadData } from '~/analytics/utils/dataTransformers';
 
 export default function FileUploadVisualization({ question }) {
   const data = useMemo(() => transformFileUploadData(question), [question]);

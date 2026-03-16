@@ -3,7 +3,7 @@ import { Box, Typography, Pagination } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import { grey, common, info } from '~/theme/palette';
-import { getHeatmapColor } from '~/utils/analytics/colors';
+import { getHeatmapColor } from '~/analytics/utils/colors';
 
 function HeatmapChart({
   data,

@@ -1,4 +1,4 @@
-import { transformIconMatrixSCQData } from '~/utils/analytics/dataTransformers';
+import { transformIconMatrixSCQData } from '~/analytics/utils/dataTransformers';
 import MatrixVisualization from './MatrixVisualization';
 
 export default function IconMatrixSCQVisualization({ question }) {

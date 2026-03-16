@@ -8,7 +8,7 @@ import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
-import { transformAutocompleteData } from '~/utils/analytics/dataTransformers';
+import { transformAutocompleteData } from '~/analytics/utils/dataTransformers';
 
 export default function AutocompleteVisualization({ question }) {
   const [chartType, setChartType] = useState('bar');

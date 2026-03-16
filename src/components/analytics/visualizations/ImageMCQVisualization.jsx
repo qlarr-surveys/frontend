@@ -7,7 +7,7 @@ import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import ImageGallery from '../common/ImageGallery';
 import CategoryLegend from '../common/CategoryLegend';
-import { transformImageMCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
+import { transformImageMCQData, resolveImageUrl } from '~/analytics/utils/dataTransformers';
 
 export default function ImageMCQVisualization({ question }) {
   const data = useMemo(() => transformImageMCQData(question), [question]);

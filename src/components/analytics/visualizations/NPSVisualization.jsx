@@ -5,7 +5,7 @@ import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import NPSChart from '../charts/NPSChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
-import { transformNPSData } from '~/utils/analytics/dataTransformers';
+import { transformNPSData } from '~/analytics/utils/dataTransformers';
 
 export default function NPSVisualization({ question }) {
   const data = useMemo(() => transformNPSData(question), [question]);

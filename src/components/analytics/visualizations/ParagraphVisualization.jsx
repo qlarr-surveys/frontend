@@ -17,7 +17,7 @@ import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import { TABLE_HEADER_CELL_SX, EMPTY_STATE_SX } from '../common/styles';
-import { transformParagraphData } from '~/utils/analytics/dataTransformers';
+import { transformParagraphData } from '~/analytics/utils/dataTransformers';
 import usePagination from '~/hooks/usePagination';
 
 const ROWS_PER_PAGE = 10;

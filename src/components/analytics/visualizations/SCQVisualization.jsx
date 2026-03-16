@@ -8,7 +8,7 @@ import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
-import { transformSCQData } from '~/utils/analytics/dataTransformers';
+import { transformSCQData } from '~/analytics/utils/dataTransformers';
 
 export default function SCQVisualization({ question }) {
   const { t } = useTranslation(NAMESPACES.MANAGE);

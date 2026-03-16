@@ -7,7 +7,7 @@ import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import { RankedImageGallery } from '../common/ImageGallery';
-import { transformImageRankingData } from '~/utils/analytics/dataTransformers';
+import { transformImageRankingData } from '~/analytics/utils/dataTransformers';
 
 export default function ImageRankingVisualization({ question }) {
   const data = useMemo(() => transformImageRankingData(question), [question]);

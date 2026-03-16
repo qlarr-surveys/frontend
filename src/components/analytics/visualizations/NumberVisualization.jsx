@@ -5,8 +5,8 @@ import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import DataTable from '../common/DataTable';
-import { transformNumberData } from '~/utils/analytics/dataTransformers';
-import { formatNumber } from '~/utils/analytics/formatting';
+import { transformNumberData } from '~/analytics/utils/dataTransformers';
+import { formatNumber } from '~/analytics/utils/formatting';
 
 export default function NumberVisualization({ question }) {
   const data = useMemo(() => transformNumberData(question), [question]);

@@ -15,7 +15,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import { grey, success, error } from '~/theme/palette';
-import { getChartColor } from '~/utils/analytics/colors';
+import { getChartColor } from '~/analytics/utils/colors';
 import ChartTooltip, { titleStyle, detailStyle, detailStyleLast, renderLegend } from '../common/ChartTooltip';
 
 function RankingTooltip(props) {

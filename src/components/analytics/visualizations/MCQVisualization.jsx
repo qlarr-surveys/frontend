@@ -9,7 +9,7 @@ import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import DataTable from '../common/DataTable';
-import { transformMCQData } from '~/utils/analytics/dataTransformers';
+import { transformMCQData } from '~/analytics/utils/dataTransformers';
 
 export default function MCQVisualization({ question }) {
   const [chartType, setChartType] = useState('donut');

@@ -6,7 +6,7 @@ import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import FrequencyTable from '../common/FrequencyTable';
-import { transformTextData } from '~/utils/analytics/dataTransformers';
+import { transformTextData } from '~/analytics/utils/dataTransformers';
 
 export default function TextVisualization({ question }) {
   const data = useMemo(() => transformTextData(question), [question]);

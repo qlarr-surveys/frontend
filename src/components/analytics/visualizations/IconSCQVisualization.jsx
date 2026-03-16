@@ -10,7 +10,7 @@ import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import ImageGallery from '../common/ImageGallery';
 import IconLegend from '../common/IconLegend';
-import { transformIconSCQData, resolveImageUrl } from '~/utils/analytics/dataTransformers';
+import { transformIconSCQData, resolveImageUrl } from '~/analytics/utils/dataTransformers';
 
 export default function IconSCQVisualization({ question }) {
   const [viewType, setViewType] = useState('gallery');

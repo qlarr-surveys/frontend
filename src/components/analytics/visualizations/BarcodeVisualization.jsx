@@ -6,7 +6,7 @@ import HorizontalBarChart from '../charts/HorizontalBarChart';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import FrequencyTable from '../common/FrequencyTable';
-import { transformBarcodeData } from '~/utils/analytics/dataTransformers';
+import { transformBarcodeData } from '~/analytics/utils/dataTransformers';
 
 export default function BarcodeVisualization({ question }) {
   const data = useMemo(() => transformBarcodeData(question), [question]);

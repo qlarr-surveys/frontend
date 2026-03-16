@@ -5,7 +5,7 @@ import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import CompletionCard from '../charts/CompletionCard';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
-import { transformMediaCaptureData } from '~/utils/analytics/dataTransformers';
+import { transformMediaCaptureData } from '~/analytics/utils/dataTransformers';
 
 export default function MediaCaptureVisualization({ question }) {
   const data = useMemo(() => transformMediaCaptureData(question), [question]);

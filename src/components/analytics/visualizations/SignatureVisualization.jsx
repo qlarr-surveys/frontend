@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
-import { transformSignatureData } from '~/utils/analytics/dataTransformers';
+import { transformSignatureData } from '~/analytics/utils/dataTransformers';
 
 export default function SignatureVisualization({ question }) {
   const data = useMemo(() => transformSignatureData(question), [question]);

@@ -8,7 +8,7 @@ import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
 import DataTable from '../common/DataTable';
-import { transformEmailData } from '~/utils/analytics/dataTransformers';
+import { transformEmailData } from '~/analytics/utils/dataTransformers';
 
 export default function EmailVisualization({ question }) {
   const data = useMemo(() => transformEmailData(question), [question]);
