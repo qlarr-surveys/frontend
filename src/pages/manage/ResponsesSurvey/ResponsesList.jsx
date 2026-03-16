@@ -311,6 +311,8 @@ function ResponsesList() {
 
   useEffect(() => {
     firstFetchThisVisitRef.current = true;
+    setResponseId(null);
+    setSelected(null);
   }, [surveyId]);
 
   useEffect(() => {
