@@ -8,14 +8,15 @@ import AnalyticsSurvey from "~/pages/manage/AnalyticsSurvey";
 
 function ResponsesSurvey() {
   const { t } = useTranslation(NAMESPACES.MANAGE);
-  const [activeTab, setActiveTab] = useState(() => {
-    return sessionStorage.getItem("responsesActiveTab") || "individual";
-  });
+  const [activeTab, setActiveTab] = useState("responses");
+  const hasVisitedResponses = useRef(activeTab === "responses");
   const hasVisitedAnalytics = useRef(activeTab === "analytics");
 
   const handleTabChange = (_, newValue) => {
     setActiveTab(newValue);
-    sessionStorage.setItem("responsesActiveTab", newValue);
+    if (newValue === "responses") {
+      hasVisitedResponses.current = true;
+    }
     if (newValue === "analytics") {
       hasVisitedAnalytics.current = true;
     }
@@ -30,7 +31,7 @@ function ResponsesSurvey() {
       >
         <Tab
           label={t("responses.tab_individual", "Individual Responses")}
-          value="individual"
+          value="responses"
         />
         <Tab
           label={t("responses.tab_analytics", "Analytics")}
@@ -38,17 +39,19 @@ function ResponsesSurvey() {
         />
       </Tabs>
 
-      <Box
-        sx={{
-          display: activeTab === "individual" ? "flex" : "none",
-          flexDirection: "column",
-          flex: 1,
-          overflow: "hidden",
-          pt: 2,
-        }}
-      >
-        <ResponsesList />
-      </Box>
+      {hasVisitedResponses.current && (
+        <Box
+          sx={{
+            display: activeTab === "responses" ? "flex" : "none",
+            flexDirection: "column",
+            flex: 1,
+            overflow: "hidden",
+            pt: 2,
+          }}
+        >
+          <ResponsesList />
+        </Box>
+      )}
 
       {hasVisitedAnalytics.current && (
         <Box
