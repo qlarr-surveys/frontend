@@ -29,7 +29,8 @@ function SkipLogic({ code, t }) {
 
   // === SELECTORS ===
   const skipLogic = useSelector((state) => {
-    return state.designState[code].skip_logic || [];
+    const sl = state.designState[code].skip_logic;
+    return Array.isArray(sl) ? sl : [];
   });
 
   const componentIndex = useSelector(

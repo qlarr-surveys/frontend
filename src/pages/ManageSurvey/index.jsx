@@ -21,6 +21,7 @@ import styles from "./ManageSurvey.module.css";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import SideTabs from "~/components/design/SideTabs";
+import DesignTourProvider from "~/components/design/DesignTour";
 
 const ResponsesSurvey = React.lazy(() => import("../manage/ResponsesSurvey"));
 const EditSurvey = React.lazy(() => import("../manage/EditSurvey"));
@@ -108,7 +109,7 @@ function ManageSurvey({ landingPage }) {
     return availablePages(user);
   }, [user]);
 
-  return (
+  const content = (
     <>
       <Box sx={{ display: "flex" }}>
         {availablePagesMemo.length > 0 && (
@@ -137,6 +138,12 @@ function ManageSurvey({ landingPage }) {
       </Box>
     </>
   );
+
+  if (shouldShowDesign()) {
+    return <DesignTourProvider>{content}</DesignTourProvider>;
+  }
+
+  return content;
 }
 export default React.memo(ManageSurvey);
 

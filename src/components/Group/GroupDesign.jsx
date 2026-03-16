@@ -4,7 +4,7 @@ import styles from "./GroupDesign.module.css";
 import { useSelector } from "react-redux";
 import { QuestionDropArea } from "../design/DropArea/DropArea";
 import GroupHeader from "./GroupHeader";
-import {  Box, decomposeColor, recomposeColor } from "@mui/material";
+import { Box, Divider, decomposeColor, recomposeColor } from "@mui/material";
 import { useDrag, useDrop } from "react-dnd";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
@@ -130,6 +130,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
     lastAddedComponent?.type === "group" && lastAddedComponent.index === index;
   return (
     <Box
+      data-tour={type === "end" ? "thank-you-page" : (type !== "welcome" && index === 0 ? "page-group" : undefined)}
       onClick={(event) => {
         event.stopPropagation();
         event.preventDefault();
@@ -200,6 +201,9 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
                 parentType={type}
                 t={t}
               />
+              {childIndex < children.length - 1 && (
+                <Divider sx={{ mt: "12px", mb: "12px" }} />
+              )}
             </React.Fragment>
           );
         })}

@@ -398,5 +398,43 @@
     "search": "Search...",
     "no_options": "No options found",
     "range_error": "Invalid range: min exceeds max"
+  },
+  "tour_step_counter": "Step {{current}} of {{total}}",
+  "tour_next": "Next",
+  "tour_back": "Back",
+  "tour_done": "Let's go \u2713",
+  "tour_remind_me_later": "Remind me later",
+  "tour_step1_title": "Your Survey Workspace",
+  "tour_step1_intro": "This is your survey's home.\nAdd pages, build questions, and shape the experience for your respondents.",
+  "tour_step1_next": "Next: Drag Questions",
+  "tour_step2_title": "Drag Questions Here",
+  "tour_step2_intro": "Drag question types from the left panel and drop them here to build your page.",
+  "tour_step2_next": "Next: Choose a Question Type",
+  "tour_step3_title": "Choose a Question Type",
+  "tour_step3_intro": "Select a question type, then drag it into your page to add it to your survey.",
+  "tour_step3_next": "Next: Add a New Page",
+  "tour_step4_title": "Add a New Page",
+  "tour_step4_intro": "Add a new page to organize your questions, help you group content and improve the user flow.",
+  "tour_step4_next": "Next: Customize Thank You Page",
+  "tour_step5_title": "Customize Your Thank You Page",
+  "tour_step5_intro": "This is the final page respondents see after submitting your survey.\nPersonalize it with a Text, Image, or Video.",
+  "tour_step5_next": "Next: Review Your Survey",
+  "tour_step6_title": "Review Your Survey",
+  "tour_step6_intro": "Take a final look at your survey before sharing it.\nPreview it exactly as your respondents will see it.",
+  "tour_step6_next": "Next: Side Menu",
+  "tour_step7_title": "Manage Your Survey from Here",
+  "tour_step7_intro": "Use the side menu to control every part anytime while building your survey.\n<b>Design</b> \u2013 Build and edit your survey questions.\n<b>Theme & Style</b> \u2013 Change colors, background, and overall look.\n<b>Languages</b> \u2013 Create and manage multiple language versions.\n<b>Settings</b> \u2013 Adjust survey behavior, privacy, and response rules.\n<b>Responses</b> \u2013 View, manage, and export collected answers.",
+  "tour_step7_next": "Let's go",
+  "tooltips": {
+    "allow_previous": "Allow respondents to go back to previous pages during the survey.",
+    "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
+    "allow_jump": "Allow respondents to jump to any page using a survey index/table of contents.",
+    "skip_invalid": "Skip validation errors while navigating and only enforce them when the survey is submitted."
+  },
+  "processed_errors": {
+    "unidentified_error": "Unexpected Error occurred, please report to support@qlarr.com",
+    "code_changed_after_publish": "Cannot change component code after it was published",
+    "duplicate_to_code": "This code belongs to another group or question",
+    "code_invalid": "Invalid code. Please try again."
   }
 }

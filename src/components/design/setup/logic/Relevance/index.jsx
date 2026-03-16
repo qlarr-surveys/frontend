@@ -29,6 +29,7 @@ function Relevance({ code, t }) {
   );
   const errors = instruction?.errors || [];
   const hasErrors = errors.length > 0;
+  const hasRelevance = state?.relevance || false;
 
   const rule = state?.relevance?.rule ?? "show_always";
   const logic = state?.relevance?.logic;
@@ -84,7 +85,7 @@ function Relevance({ code, t }) {
         />
       </div>
 
-      {hasErrors ? (
+      {hasRelevance && hasErrors ? (
         <div className={styles.errorContainer}>
           <span className={styles.errorText}>
             <Trans t={t} i18nKey="wrong_logic_err" />

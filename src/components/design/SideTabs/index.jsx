@@ -56,7 +56,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
 
   function component() {
     return (
-      <List>
+      <List data-tour="side-tabs">
         {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.DESIGN) && (
           <>
             <SideTab

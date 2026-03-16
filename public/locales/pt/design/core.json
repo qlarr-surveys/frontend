@@ -398,5 +398,43 @@
     "search": "Pesquisar...",
     "no_options": "Nenhuma opção encontrada",
     "range_error": "Intervalo inválido: mínimo excede o máximo"
+  },
+  "tour_step_counter": "Passo {{current}} de {{total}}",
+  "tour_next": "Próximo",
+  "tour_back": "Voltar",
+  "tour_done": "Vamos lá \u2713",
+  "tour_remind_me_later": "Lembrar mais tarde",
+  "tour_step1_title": "Seu espaço de trabalho da pesquisa",
+  "tour_step1_intro": "Esta é a página inicial da sua pesquisa.\nAdicione páginas, crie perguntas e molde a experiência para seus respondentes.",
+  "tour_step1_next": "Próximo: Arrastar perguntas",
+  "tour_step2_title": "Arraste perguntas para cá",
+  "tour_step2_intro": "Arraste os tipos de perguntas do painel esquerdo e solte-os aqui para construir sua página.",
+  "tour_step2_next": "Próximo: Escolher tipo de pergunta",
+  "tour_step3_title": "Escolha um tipo de pergunta",
+  "tour_step3_intro": "Selecione um tipo de pergunta e arraste-o para sua página para adicioná-lo à pesquisa.",
+  "tour_step3_next": "Próximo: Adicionar nova página",
+  "tour_step4_title": "Adicionar nova página",
+  "tour_step4_intro": "Adicione uma nova página para organizar suas perguntas, agrupar conteúdo e melhorar o fluxo do usuário.",
+  "tour_step4_next": "Próximo: Personalizar página de agradecimento",
+  "tour_step5_title": "Personalize sua página de agradecimento",
+  "tour_step5_intro": "Esta é a última página que os respondentes veem após enviar sua pesquisa.\nPersonalize-a com texto, imagem ou vídeo.",
+  "tour_step5_next": "Próximo: Revisar sua pesquisa",
+  "tour_step6_title": "Revise sua pesquisa",
+  "tour_step6_intro": "Dê uma última olhada na sua pesquisa antes de compartilhá-la.\nVisualize-a exatamente como seus respondentes a verão.",
+  "tour_step6_next": "Próximo: Menu lateral",
+  "tour_step7_title": "Gerencie sua pesquisa daqui",
+  "tour_step7_intro": "Use o menu lateral para controlar cada parte a qualquer momento enquanto constrói sua pesquisa.\n<b>Design</b> \u2013 Crie e edite as perguntas da sua pesquisa.\n<b>Tema e estilo</b> \u2013 Altere cores, fundo e aparência geral.\n<b>Idiomas</b> \u2013 Crie e gerencie versões em vários idiomas.\n<b>Configurações</b> \u2013 Ajuste comportamento, privacidade e regras de resposta.\n<b>Respostas</b> \u2013 Visualize, gerencie e exporte respostas coletadas.",
+  "tour_step7_next": "Vamos lá",
+  "tooltips": {
+    "allow_previous": "Allow respondents to go back to previous pages during the survey.",
+    "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
+    "allow_jump": "Allow respondents to jump to any page using a survey index/table of contents.",
+    "skip_invalid": "Skip validation errors while navigating and only enforce them when the survey is submitted."
+  },
+  "processed_errors": {
+    "unidentified_error": "Ocorreu um Erro Inesperado, por favor reporte para support@qlarr.com",
+    "code_changed_after_publish": "Não é possível alterar o código do componente após ser publicado",
+    "duplicate_to_code": "Este código pertence a outro grupo ou pergunta",
+    "code_invalid": "Código inválido. Por favor tente novamente."
   }
 }
