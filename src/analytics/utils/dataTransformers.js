@@ -52,15 +52,6 @@ const getResponseMetrics = ({ answeredCount, responses, totalResponses, incomple
   };
 };
 
-// Build status chart entries (Skipped) to append to chart data
-const buildStatusEntries = (metrics) => {
-  const entries = [];
-  if (metrics.skipped > 0) {
-    entries.push({ name: 'Skipped', value: metrics.skipped, count: metrics.skipped, fill: '#e5e7eb' });
-  }
-  return entries;
-};
-
 // Apply largest-remainder rounding to chart data items, returns new array with percentage field
 const applyRoundedPercentages = (items, total) => {
   const percentages = largestRemainderRound(items, (item) => item.count, total);
@@ -149,8 +140,7 @@ export const transformSCQData = (question) => {
     count: item.count,
     fill: getChartColor(i),
   }));
-  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const chartData = applyRoundedPercentages(allItems, metrics.completed);
+  const chartData = applyRoundedPercentages(rawItems, metrics.completed);
 
   return {
     pieData: chartData,
@@ -206,8 +196,7 @@ export const transformNPSData = (question) => {
     { name: 'Passives', value: nps.passives, count: nps.passives, fill: NPS_COLORS.passive },
     { name: 'Promoters', value: nps.promoters, count: nps.promoters, fill: NPS_COLORS.promoter },
   ];
-  const allCategoryItems = [...rawCategoryData, ...buildStatusEntries(metrics)];
-  const categoryData = applyRoundedPercentages(allCategoryItems, metrics.completed);
+  const categoryData = applyRoundedPercentages(rawCategoryData, metrics.completed);
 
   const distribution = nps.distribution || Array(11).fill(0);
 
@@ -478,8 +467,7 @@ export const transformImageSCQData = (question) => {
       fill: getChartColor(i),
     };
   }).sort((a, b) => b.value - a.value);
-  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const pieData = applyRoundedPercentages(allItems, metrics.completed);
+  const pieData = applyRoundedPercentages(rawItems, metrics.completed);
 
   return {
     pieData,
@@ -542,8 +530,7 @@ export const transformIconSCQData = (question) => {
       fill: getChartColor(i),
     };
   });
-  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const chartData = applyRoundedPercentages(allItems, metrics.completed);
+  const chartData = applyRoundedPercentages(rawItems, metrics.completed);
 
   const sorted = [...counts].sort((a, b) => b.count - a.count);
 
@@ -614,10 +601,9 @@ export const transformFileUploadData = (question) => {
   });
 
   const rawItems = Object.entries(extCounts)
-    .map(([name, count]) => ({ name, count, value: count }))
+    .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count);
-  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const extensionData = applyRoundedPercentages(allItems, metrics.completed);
+  const extensionData = applyRoundedPercentages(rawItems, responses.length);
 
   return {
     extensionData,
@@ -636,8 +622,7 @@ const transformPresenceData = (question, presentLabel, absentLabel, presentKey, 
     { name: presentLabel, value: presentCount, count: presentCount },
     { name: absentLabel, value: absentCount, count: absentCount },
   ];
-  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const chartData = applyRoundedPercentages(allItems, metrics.completed);
+  const chartData = applyRoundedPercentages(rawItems, metrics.completed);
 
   return {
     completionRate: metrics.completed > 0 ? Math.round((presentCount / metrics.completed) * 100) : 0,
@@ -669,8 +654,7 @@ export const transformBarcodeData = (question) => {
     count: item.count,
     fill: getChartColor(i),
   }));
-  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const barData = applyRoundedPercentages(allItems, metrics.completed);
+  const barData = applyRoundedPercentages(rawItems, metrics.completed);
 
   return {
     frequencyData: frequency,

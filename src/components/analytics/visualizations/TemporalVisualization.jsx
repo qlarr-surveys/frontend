@@ -9,7 +9,7 @@ export default function TemporalVisualization({ question, extractor, valueLabel 
       const key = extractor(r);
       counts[key] = (counts[key] || 0) + 1;
     });
-    const total = question.totalResponses ?? question.responses.length;
+    const total = question.responses.length;
     return Object.entries(counts)
       .map(([value, count]) => ({ value, count, percentage: Math.round((count / total) * 100) }))
       .sort((a, b) => b.count - a.count);
