@@ -7,7 +7,6 @@ import {
   Palette,
   Settings,
   Translate,
-  Visibility,
 } from "@mui/icons-material";
 import {
   DESIGN_SURVEY_MODE,
@@ -19,7 +18,6 @@ import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-  resetSetup,
   setDesignModeToDesign,
   setDesignModeToLang,
   setDesignModeToTheme,

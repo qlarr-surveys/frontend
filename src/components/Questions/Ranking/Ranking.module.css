@@ -1,13 +1,90 @@
-.dragContainer {
-  border: 1px solid transparent;
-  border-radius: 4px;
-  height: 100%;
+.column {
   display: flex;
   flex-direction: column;
-  margin: auto 8px;
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 8px 4px;
+}
+
+.dragContainer {
+  border: 1px solid transparent;
+  border-radius: 12px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  transition: background-color 0.2s ease;
 }
 
 .rankingItem {
-  margin: 0px 8px 0px 8px;
-  padding: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: grab;
+  transition: box-shadow 0.2s ease, opacity 0.2s ease, transform 0.15s ease;
+}
+
+.rankingItem:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rankingItem:active {
+  cursor: grabbing;
+}
+
+.rankingItemDragging {
+  composes: rankingItem;
+  opacity: 0.2;
+}
+
+.dragHandle {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  cursor: grab;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.itemContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.rankBadge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+}
+
+.actionButton {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 80px;
+  border: 2px dashed;
+  border-radius: 8px;
+  padding: 24px;
 }

@@ -7,7 +7,9 @@
 }
 
 .buttonContainer {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
   margin-top: 24px;
 }
 
