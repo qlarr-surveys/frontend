@@ -16,7 +16,7 @@ export default function IconMCQVisualization({ question }) {
 
   const stats = [
     ...buildBaseStats(data, t),
-    { label: t('analytics.most_popular'), value: data.barData[0]?.name || '-' },
+    { label: t('analytics.most_popular'), value: data.mostPopular || '-' },
   ];
 
   const galleryImages = images.map((img, i) => {

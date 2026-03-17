@@ -172,20 +172,22 @@ export const transformMCQData = (question) => {
     ? (totalSelections / metrics.answered).toFixed(1)
     : 0;
 
+  const sorted = [...counts].sort((a, b) => b.count - a.count);
+
   const rawItems = counts.map((item, i) => ({
     name: labelMap[item.code] || item.code,
     value: item.count,
     count: item.count,
     fill: getChartColor(i),
   }));
-  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const chartData = applyRoundedPercentages(allItems, metrics.completed);
+  const chartData = applyRoundedPercentages(rawItems, totalSelections);
 
   return {
     pieData: chartData,
     barData: chartData,
     ...metrics,
     avgSelections,
+    mostPopular: labelMap[sorted[0]?.code] || sorted[0]?.code,
   };
 };
 
@@ -497,6 +499,10 @@ export const transformImageMCQData = (question) => {
 
   const countByCode = new Map(counts.map((fc) => [fc.code, fc.count]));
   const resolveIcon = buildImageLookup(images);
+  const totalSelections = counts.reduce((sum, item) => sum + item.count, 0);
+
+  const sorted = [...counts].sort((a, b) => b.count - a.count);
+  const topImage = sorted[0] ? resolveIcon(sorted[0].code) : null;
 
   const rawItems = counts.map((item, i) => {
     const image = resolveIcon(item.code);
@@ -509,13 +515,13 @@ export const transformImageMCQData = (question) => {
       fill: getChartColor(i),
     };
   });
-  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const barData = applyRoundedPercentages(allItems, metrics.completed);
+  const barData = applyRoundedPercentages(rawItems, totalSelections);
 
   return {
     barData,
     images,
     ...metrics,
+    mostPopular: topImage?.label || sorted[0]?.code || '-',
   };
 };
 
@@ -562,6 +568,10 @@ export const transformIconMCQData = (question) => {
     : 0;
 
   const resolveIcon = buildImageLookup(images);
+
+  const sorted = [...counts].sort((a, b) => b.count - a.count);
+  const topIcon = sorted[0] ? resolveIcon(sorted[0].code) : null;
+
   const rawItems = counts.map((item, i) => {
     const image = resolveIcon(item.code);
     return {
@@ -572,13 +582,13 @@ export const transformIconMCQData = (question) => {
       fill: getChartColor(i),
     };
   });
-  const allItems = [...rawItems, ...buildStatusEntries(metrics)];
-  const barData = applyRoundedPercentages(allItems, metrics.completed);
+  const barData = applyRoundedPercentages(rawItems, totalSelections);
 
   return {
     barData,
     ...metrics,
     avgSelections,
+    mostPopular: topIcon?.label || sorted[0]?.code || '-',
   };
 };
 

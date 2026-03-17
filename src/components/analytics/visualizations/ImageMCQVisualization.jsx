@@ -15,7 +15,7 @@ export default function ImageMCQVisualization({ question }) {
 
   const stats = [
     ...buildBaseStats(data, t),
-    { label: t('analytics.most_popular'), value: data.barData[0]?.name || '-' },
+    { label: t('analytics.most_popular'), value: data.mostPopular || '-' },
     { label: t('analytics.stat_images'), value: question.images.length },
   ];
 
