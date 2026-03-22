@@ -11,6 +11,17 @@ import { useDispatch } from "react-redux";
 import { onDrag, setup } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { setupOptions } from "~/constants/design";
+function QuestionDivider({ currentCode, nextCode }) {
+  const isCurrentHidden = useSelector(
+    (state) => state.designState[currentCode]?.relevance?.rule === "hide_always"
+  );
+  const isNextHidden = useSelector(
+    (state) => state.designState[nextCode]?.relevance?.rule === "hide_always"
+  );
+  if (isCurrentHidden || isNextHidden) return null;
+  return <Divider sx={{ mt: "12px", mb: "12px" }} />;
+}
+
 function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGroup }) {
   const dispatch = useDispatch();
   const group = useSelector((state) => {
@@ -202,7 +213,10 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
                 t={t}
               />
               {childIndex < children.length - 1 && (
-                <Divider sx={{ mt: "12px", mb: "12px" }} />
+                <QuestionDivider
+                  currentCode={quest.code}
+                  nextCode={children[childIndex + 1].code}
+                />
               )}
             </React.Fragment>
           );

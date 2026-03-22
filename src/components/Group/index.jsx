@@ -10,15 +10,26 @@ import { Box, Divider, useTheme } from "@mui/material";
 function Group(props) {
   const theme = useTheme();
 
-  const state = useSelector((state) => {
+  const showGroup = useSelector((state) => {
     let groupState = state.runState.values[props.group.code];
-    return {
-      showGroup:
-        typeof groupState?.relevance === "undefined" || groupState.relevance,
-    };
+    return typeof groupState?.relevance === "undefined" || groupState.relevance;
+  });
+
+  const visibleQuestionCodes = useSelector((state) => {
+    return (props.group?.questions ?? [])
+      .filter((quest) => {
+        if (!quest.inCurrentNavigation) return false;
+        const q = state.runState.values[quest.qualifiedCode];
+        return typeof q?.relevance === "undefined" || !!q?.relevance;
+      })
+      .map((q) => q.qualifiedCode);
   }, shallowEqual);
 
-  const showGroup = () => {
+  const showGroup_ = () => {
+    const visibleCodesSet = new Set(visibleQuestionCodes);
+    const visibleQuestions = (props.group?.questions ?? []).filter((quest) =>
+      visibleCodesSet.has(quest.qualifiedCode)
+    );
     return (
       <>
         <Box
@@ -55,26 +66,19 @@ function Group(props) {
               )}
           </div>
 
-          {props.group && props.group.questions
-            ? (() => {
-                const visibleQuestions = props.group.questions.filter(
-                  (quest) => quest.inCurrentNavigation
-                );
-                return visibleQuestions.map((quest, idx) => (
-                  <React.Fragment key={quest.code}>
-                    <Question component={quest} />
-                    {idx < visibleQuestions.length - 1 && (
-                      <Divider sx={{ mt: "12px", mb: "12px" }} />
-                    )}
-                  </React.Fragment>
-                ));
-              })()
-            : ""}
+          {visibleQuestions.map((quest, idx) => (
+            <React.Fragment key={quest.code}>
+              <Question component={quest} />
+              {idx < visibleQuestions.length - 1 && (
+                <Divider sx={{ mt: "12px", mb: "12px" }} />
+              )}
+            </React.Fragment>
+          ))}
         </Box>
       </>
     );
   };
-  return state.showGroup && (props.group ? showGroup() : "");
+  return showGroup && (props.group ? showGroup_() : "");
 }
 
 export default React.memo(Group);
