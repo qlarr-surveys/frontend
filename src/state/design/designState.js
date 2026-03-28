@@ -490,6 +490,67 @@ export const designState = createSlice({
       cleanupRandomRules(group);
       cleanupSkipDestinations(state, questionCode);
     },
+    convertQuestion: (state, action) => {
+      const { questionCode, newType } = action.payload;
+
+      // MVP guard: only scq <-> mcq supported for now
+      const supportedTypes = ["scq", "mcq"];
+      const currentQuestion = state[questionCode];
+      if (!currentQuestion) return;
+      const currentType = currentQuestion.type;
+      if (
+        !supportedTypes.includes(currentType) ||
+        !supportedTypes.includes(newType) ||
+        currentType === newType
+      )
+        return;
+
+      // Update type in question state
+      state[questionCode].type = newType;
+
+      // Update type in the group children entry
+      const survey = state.Survey;
+      survey.children
+        .map((g) => state[g.code])
+        .forEach((group) => {
+          const child = group.children?.find((c) => c.code === questionCode);
+          if (child) child.type = newType;
+        });
+
+      // Remove skip_logic config when converting away from scq
+      if (state[questionCode].skip_logic) {
+        delete state[questionCode].skip_logic;
+      }
+
+      // Re-initialize question instructions for the new type (resets instructionList)
+      addQuestionInstructions(state[questionCode]);
+
+      // Re-initialize answer instructions for each child
+      (state[questionCode].children || []).forEach((child) => {
+        addAnswerInstructions(
+          state,
+          state[child.qualifiedCode],
+          questionCode,
+          questionCode
+        );
+      });
+
+      // Clean up type-specific validation and default value
+      cleanupValidation(state, questionCode);
+      cleanupDefaultValue(state[questionCode]);
+
+      // Refresh return type (enum for scq, list for mcq)
+      refreshEnumForSingleChoice(state[questionCode], state);
+      refreshListForMultipleChoice(state[questionCode], state);
+
+      // Re-apply masked value instructions
+      addMaskedValuesInstructions(questionCode, state[questionCode], state);
+
+      // Update setup panel to the new type's options
+      designState.caseReducers.setup(state, {
+        payload: { code: questionCode, rules: setupOptions(newType) },
+      });
+    },
     changeContent: (state, action) => {
       let payload = action.payload;
       if (!state[payload.code].content) {
@@ -805,6 +866,7 @@ export const {
   changeResources,
   deleteQuestion,
   cloneQuestion,
+  convertQuestion,
   deleteGroup,
   onNewLine,
   resetFocus,

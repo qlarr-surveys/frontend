@@ -26,6 +26,7 @@ import ScqDefaultValue from "../ScqDefaultValue";
 import DisabledToggle from "../Disabled";
 import EntityCodeEditor from "../EntityCodeEditor";
 import CustomCSS from '../CustomCss';
+import ConvertQuestionType from "../ConvertQuestionType";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -161,6 +162,8 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
           code={code}
         />
       );
+    case "convert_question_type":
+      return <ConvertQuestionType key={code + rule} code={code} t={t} />;
     case "scq_default_value":
       return <ScqDefaultValue key={code + rule} code={code} />;
     case "showWordCount":

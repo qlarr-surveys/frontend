@@ -672,6 +672,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "scq_default_value",
           ],
         },
@@ -780,6 +781,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
           ],
         },
         {

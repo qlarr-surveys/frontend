@@ -81,6 +81,7 @@ const MUTATING = [
   "designState/changeCustomCss",
   "designState/onDrag",
   "designState/setDefaultValue",
+  "designState/convertQuestion",
 ];
 
 const setState = (store, state) => {
