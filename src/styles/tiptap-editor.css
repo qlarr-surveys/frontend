@@ -366,6 +366,11 @@
   text-align: right !important;
 }
 
+.array-column-header .content-editor.rtl,
+.array-column-header .content-editor.ltr {
+  text-align: center !important;
+}
+
 .content-editor .tiptap-image,
 .content-editor .tiptap-image img {
   max-width: 100%;
