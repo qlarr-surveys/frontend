@@ -49,6 +49,7 @@ function Array(props) {
                   sx={{
                     color: "inherit",
                     padding: "2px",
+                    textAlign: "center",
                     width: header + "px",
                   }}
                   key={option.qualifiedCode}
