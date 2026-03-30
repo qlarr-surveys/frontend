@@ -49,16 +49,17 @@ function Array(props) {
                   sx={{
                     color: "inherit",
                     padding: "2px",
-                    textAlign: "center",
                     width: header + "px",
                   }}
                   key={option.qualifiedCode}
                 >
-                  <Content
-                    elementCode={option.qualifiedCode}
-                    name="label"
-                    content={option.content?.label}
-                  />
+                  <div className="tiptap-centered">
+                    <Content
+                      elementCode={option.qualifiedCode}
+                      name="label"
+                      content={option.content?.label}
+                    />
+                  </div>
                 </TableCell>
               );
             })}
