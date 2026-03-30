@@ -1,10 +1,6 @@
 import { Trans } from "react-i18next";
 import { isGroup, isQuestion } from "~/utils/design/utils";
 
-const extractInstructionLang = (code) => {
-  const match = code.match(/_([a-z]{2,3})_\d+$/);
-  return match ? match[1] : null;
-};
 export const isLabelInstruction = (code) =>
   code.startsWith("format_") &&
   !code.startsWith("format_custom_css_") &&
@@ -94,7 +90,7 @@ export const mapInstructionError = (instruction, t, currentLang) => {
       .replace(/^format_/, "")
       .replace(/_[a-z]{2,3}_\d+$/, "")
       .replace(/_/g, " ");
-    const lang = extractInstructionLang(instruction.code);
+    const lang = instruction.lang;
     const showLang = lang && lang !== currentLang;
     return {
       label: showLang ? `${field} (${lang})` : field,

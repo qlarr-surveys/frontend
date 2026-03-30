@@ -14,7 +14,7 @@ import styles from "./SetupPanel.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { resetSetup } from "~/state/design/designState";
+import { resetSetup, clearHighlighted } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import Theming from "../Theming";
@@ -449,6 +449,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
 });
 
 const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
+  const dispatch = useDispatch();
   const [highlightedEl, setHighlightedEl] = React.useState(highlighted);
 
   const targetTabIndex = React.useMemo(() => {
@@ -466,7 +467,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const [selectedTab, setSelectedTab] = React.useState(() => targetTabIndex);
 
   React.useEffect(() => {
-    setSelectedTab(targetTabIndex);
+    if (highlighted) setSelectedTab(targetTabIndex);
   }, [targetTabIndex]);
 
   const handleTabChange = (_, newValue) => setSelectedTab(newValue);
@@ -477,7 +478,10 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
     if (!highlighted) return;
 
     setHighlightedEl(highlighted);
-    const timer = setTimeout(() => setHighlightedEl(null), 2000);
+    const timer = setTimeout(() => {
+      setHighlightedEl(null);
+      dispatch(clearHighlighted());
+    }, 2000);
     return () => clearTimeout(timer);
   }, [highlighted]);
 

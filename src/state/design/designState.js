@@ -112,6 +112,11 @@ export const designState = createSlice({
         state.setup = action.payload;
       }
     },
+    clearHighlighted(state) {
+      if (state.setup) {
+        delete state.setup.highlighted;
+      }
+    },
     newVersionReceived(state, action) {
       const payload = action.payload;
       state.versionDto = payload;
@@ -808,6 +813,7 @@ export const {
   setDesignModeToTheme,
   removeAnswer,
   setup,
+  clearHighlighted,
   resetSetup,
   changeValidationValue,
   updateRandom,
