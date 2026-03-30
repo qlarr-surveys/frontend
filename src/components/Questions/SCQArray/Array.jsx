@@ -53,13 +53,11 @@ function Array(props) {
                   }}
                   key={option.qualifiedCode}
                 >
-                  <div className="tiptap-centered">
-                    <Content
-                      elementCode={option.qualifiedCode}
-                      name="label"
-                      content={option.content?.label}
-                    />
-                  </div>
+                  <Content
+                    elementCode={option.qualifiedCode}
+                    name="label"
+                    content={option.content?.label}
+                  />
                 </TableCell>
               );
             })}
