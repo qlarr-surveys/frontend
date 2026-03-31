@@ -460,24 +460,26 @@ function ArrayHeaderDesign({
           </div>
         </div>
       )}
-      <ContentEditor
-        code={item.qualifiedCode}
-        showToolbar={false}
-        editable={contentEditable(designMode)}
-        extended={false}
-        centerText
-        placeholder={
-          onMainLang
-            ? t("content_editor_placeholder_option", {
-                lng: langInfo.mainLang,
-              })
-            : mainContent ||
-              t("content_editor_placeholder_option", {
-                lng: langInfo.mainLang,
-              })
-        }
-        contentKey="label"
-      />
+      <div className="array-column-header">
+        <ContentEditor
+          code={item.qualifiedCode}
+          showToolbar={false}
+          editable={contentEditable(designMode)}
+          extended={false}
+          centerText
+          placeholder={
+            onMainLang
+              ? t("content_editor_placeholder_option", {
+                  lng: langInfo.mainLang,
+                })
+              : mainContent ||
+                t("content_editor_placeholder_option", {
+                  lng: langInfo.mainLang,
+                })
+          }
+          contentKey="label"
+        />
+      </div>
     </TableCell>
   );
 }
