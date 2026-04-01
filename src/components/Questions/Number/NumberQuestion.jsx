@@ -94,7 +94,10 @@ function NumberQuestion(props) {
         label={(props.component.showHint && props.component.content?.hint )|| ""}
         onChange={handleChange}
         onBlur={lostFocus}
-        inputProps={{ maxLength: props.component.maxChars || undefined }}
+        inputProps={{
+          maxLength: props.component.maxChars || undefined,
+          inputMode: props.component.decimal_separator ? "decimal" : "numeric",
+        }}
         value={formatValue(state.value)}
         error={state.invalid}
       />
