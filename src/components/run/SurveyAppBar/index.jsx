@@ -101,21 +101,19 @@ function SurveyAppBar({ toggleDrawer, preview }) {
         >
           <MenuIcon />
         </IconButton>
-        {!isAndroid && (
-          <Box display="flex" gap={2}>
-            {canSave && (
-              <Button
-                variant="contained"
-                size="small"
-                onClick={() => setSaveOpen(true)}
-                sx={{ minWidth: "fit-content", whiteSpace: "nowrap" }}
-              >
-                {t("save")}
-              </Button>
-            )}
-            <ChangeLang lang={lang} additionalLang={additionalLang} />
-          </Box>
-        )}
+        <Box display="flex" gap={2}>
+          {!isAndroid && canSave && (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => setSaveOpen(true)}
+              sx={{ minWidth: "fit-content", whiteSpace: "nowrap" }}
+            >
+              {t("save")}
+            </Button>
+          )}
+          <ChangeLang lang={lang} additionalLang={additionalLang} />
+        </Box>
       </Toolbar>
 
       <Dialog
