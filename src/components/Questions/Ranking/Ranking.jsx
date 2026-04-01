@@ -190,13 +190,7 @@ function Ranking(props) {
   };
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: "16px",
-      }}
-    >
+    <div className={styles.grid}>
       <div className={styles.column}>
         <div className={styles.columnHeader}>
           <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
