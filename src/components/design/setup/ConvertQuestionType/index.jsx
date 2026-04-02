@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { convertQuestion } from "~/state/design/designState";
 import {
   Button,
@@ -19,11 +19,11 @@ import {
   mediaGroup,
 } from "~/constants/design";
 
-function computeLostAttributes(question, answers, currentType, newType) {
+function computeLostAttributes(question, answers, newType) {
   const lost = [];
-  const srcSingle = isSingleSelect(currentType);
+  const srcSingle = isSingleSelect(question.type);
   const dstSingle = isSingleSelect(newType);
-  const srcGroup = mediaGroup(currentType);
+  const srcGroup = mediaGroup(question.type);
   const dstGroup = mediaGroup(newType);
 
   if (srcSingle && !dstSingle) {
@@ -74,15 +74,15 @@ export default function ConvertQuestionType({ code, t }) {
 
   const question = useSelector((s) => s.designState[code]);
   const type = question?.type;
-  const answers = useSelector((s) => {
-    const q = s.designState[code];
-    return (q?.children || []).map((c) => s.designState[c.qualifiedCode]);
-  });
+  const answers = useSelector(
+    (s) => (question?.children || []).map((c) => s.designState[c.qualifiedCode]),
+    shallowEqual
+  );
 
   const handleChange = (e) => {
     const newType = e.target.value;
-    if (!newType || newType === type) return;
-    const lost = computeLostAttributes(question, answers, type, newType);
+    if (!type || newType === type) return;
+    const lost = computeLostAttributes(question, answers, newType);
     if (lost.length > 0) {
       setLostAttributes(lost);
       setPendingType(newType);
