@@ -512,52 +512,53 @@ export const designState = createSlice({
 
       const srcGroup = mediaGroup(currentType);
       const dstGroup = mediaGroup(newType);
+      const srcSingle = isSingleSelect(currentType);
+      const dstSingle = isSingleSelect(newType);
 
       // Update type in question state
-      state[questionCode].type = newType;
+      currentQuestion.type = newType;
 
       // Update type in the group children entry
       const survey = state.Survey;
-      survey.children
-        .map((g) => state[g.code])
-        .forEach((group) => {
-          const child = group.children?.find((c) => c.code === questionCode);
-          if (child) child.type = newType;
-        });
+      survey.children.forEach((g) => {
+        const group = state[g.code];
+        const child = group.children?.find((c) => c.code === questionCode);
+        if (child) child.type = newType;
+      });
 
       // Remove skip_logic when converting from single-select to multi-select
-      if (isSingleSelect(currentType) && !isSingleSelect(newType)) {
-        delete state[questionCode].skip_logic;
+      if (srcSingle && !dstSingle) {
+        delete currentQuestion.skip_logic;
       }
 
       // Remove validation rules incompatible with the target selection model
-      if (state[questionCode].validation) {
-        const singleOnlyRules = ["validation_required"];
-        const multiOnlyRules = [
+      if (currentQuestion.validation) {
+        const rulesNotSupportedInMulti = ["validation_required"];
+        const rulesNotSupportedInSingle = [
           "validation_min_option_count",
           "validation_max_option_count",
           "validation_option_count",
         ];
-        const rulesToRemove = isSingleSelect(newType)
-          ? multiOnlyRules
-          : singleOnlyRules;
+        const rulesToRemove = dstSingle
+          ? rulesNotSupportedInSingle
+          : rulesNotSupportedInMulti;
         rulesToRemove.forEach((rule) => {
-          if (rule in state[questionCode].validation) {
-            delete state[questionCode].validation[rule];
-            removeInstruction(state[questionCode], rule);
+          if (rule in currentQuestion.validation) {
+            delete currentQuestion.validation[rule];
+            removeInstruction(currentQuestion, rule);
           }
         });
       }
 
       // Answer-level resource cleanup — remove resources irrelevant to target type
       if (srcGroup === "icon" && dstGroup !== "icon") {
-        (state[questionCode].children || []).forEach((child) => {
+        (currentQuestion.children || []).forEach((child) => {
           const answer = state[child.qualifiedCode];
           if (answer?.resources) delete answer.resources.icon;
         });
       }
       if (srcGroup === "image" && dstGroup !== "image") {
-        (state[questionCode].children || []).forEach((child) => {
+        (currentQuestion.children || []).forEach((child) => {
           const answer = state[child.qualifiedCode];
           if (answer?.resources) delete answer.resources.image;
         });
@@ -565,53 +566,51 @@ export const designState = createSlice({
 
       // Visual property transitions
       if (dstGroup === "plain") {
-        delete state[questionCode].columns;
-        delete state[questionCode].iconSize;
-        delete state[questionCode].imageAspectRatio;
-        delete state[questionCode].spacing;
-        delete state[questionCode].hideText;
+        delete currentQuestion.columns;
+        delete currentQuestion.iconSize;
+        delete currentQuestion.imageAspectRatio;
+        delete currentQuestion.spacing;
+        delete currentQuestion.hideText;
       } else if (dstGroup === "icon") {
         if (srcGroup === "image") {
-          delete state[questionCode].imageAspectRatio;
-          if (!state[questionCode].iconSize)
-            state[questionCode].iconSize = "150";
+          delete currentQuestion.imageAspectRatio;
+          if (!currentQuestion.iconSize) currentQuestion.iconSize = "150";
         } else if (srcGroup === "plain") {
-          if (!state[questionCode].columns) state[questionCode].columns = 3;
-          if (!state[questionCode].iconSize)
-            state[questionCode].iconSize = "150";
-          if (!state[questionCode].spacing) state[questionCode].spacing = 8;
+          if (currentQuestion.columns == null) currentQuestion.columns = 3;
+          if (currentQuestion.iconSize == null) currentQuestion.iconSize = "150";
+          if (currentQuestion.spacing == null) currentQuestion.spacing = 8;
         }
       } else if (dstGroup === "image") {
         if (srcGroup === "icon") {
-          delete state[questionCode].iconSize;
-          if (!state[questionCode].imageAspectRatio)
-            state[questionCode].imageAspectRatio = 1;
+          delete currentQuestion.iconSize;
+          if (currentQuestion.imageAspectRatio == null)
+            currentQuestion.imageAspectRatio = 1;
         } else if (srcGroup === "plain") {
-          if (!state[questionCode].columns) state[questionCode].columns = 3;
-          if (!state[questionCode].imageAspectRatio)
-            state[questionCode].imageAspectRatio = 1;
-          if (!state[questionCode].spacing) state[questionCode].spacing = 8;
+          if (currentQuestion.columns == null) currentQuestion.columns = 3;
+          if (currentQuestion.imageAspectRatio == null)
+            currentQuestion.imageAspectRatio = 1;
+          if (currentQuestion.spacing == null) currentQuestion.spacing = 8;
         }
       }
 
       // Preserve conditional_relevance — it lives only in instructionList with no
       // backing data property, so it must be saved before the list is wiped
-      const conditionalRelevanceInstruction = state[questionCode].instructionList?.find(
+      const conditionalRelevanceInstruction = currentQuestion.instructionList?.find(
         (i) => i.code === "conditional_relevance"
       );
 
       // Re-initialize question instructions for the new type
-      addQuestionInstructions(state[questionCode]);
+      addQuestionInstructions(currentQuestion);
       addSkipInstructions(state, questionCode);
 
       // Restore conditional_relevance if it was set before conversion
       if (conditionalRelevanceInstruction) {
-        changeInstruction(state[questionCode], conditionalRelevanceInstruction);
+        changeInstruction(currentQuestion, conditionalRelevanceInstruction);
       }
 
       // Re-initialize answer instructions for each child and grandchild
       // (grandchildren cover other_text, which is nested inside Aother)
-      (state[questionCode].children || []).forEach((child) => {
+      (currentQuestion.children || []).forEach((child) => {
         addAnswerInstructions(
           state,
           state[child.qualifiedCode],
@@ -632,13 +631,13 @@ export const designState = createSlice({
       cleanupValidation(state, questionCode);
 
       // Refresh return type (enum for single-select, list for multi-select)
-      refreshEnumForSingleChoice(state[questionCode], state);
-      refreshListForMultipleChoice(state[questionCode], state);
+      refreshEnumForSingleChoice(currentQuestion, state);
+      refreshListForMultipleChoice(currentQuestion, state);
 
       // Re-apply masked value instructions
-      addMaskedValuesInstructions(questionCode, state[questionCode], state);
+      addMaskedValuesInstructions(questionCode, currentQuestion, state);
 
-      state[questionCode].designErrors = questionDesignError(state[questionCode]);
+      currentQuestion.designErrors = questionDesignError(currentQuestion);
 
       // Update setup panel to the new type's options
       designState.caseReducers.setup(state, {
