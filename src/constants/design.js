@@ -1,4 +1,4 @@
-export const CONVERTIBLE_QUESTION_TYPES = [
+export const CONVERTIBLE_CHOICE_TYPES = [
   "scq",
   "mcq",
   "icon_scq",
@@ -7,6 +7,7 @@ export const CONVERTIBLE_QUESTION_TYPES = [
   "image_mcq",
 ];
 
+export const CONVERTIBLE_ARRAY_TYPES = ["scq_array", "mcq_array", "scq_icon_array"];
 export const isSingleSelect = (type) =>
   ["scq", "icon_scq", "image_scq"].includes(type);
 
@@ -15,6 +16,15 @@ export const mediaGroup = (type) => {
   if (["image_scq", "image_mcq"].includes(type)) return "image";
   return "plain";
 };
+
+export const isArrayType = (type) => CONVERTIBLE_ARRAY_TYPES.includes(type);
+
+export const ARRAY_MIN_WIDTH_KEYS = [
+  "minHeaderMobile",
+  "minHeaderDesktop",
+  "minRowLabelMobile",
+  "minRowLabelDesktop",
+];
 
 export const surveySetup = {
   code: "Survey",
@@ -1038,6 +1048,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
           ],
         },
         {
@@ -1070,6 +1081,7 @@ export const setupOptions = (type) => {
           rules: [
             "changeCode",
             "showDescription",
+            "convert_question_type",
             "disabled",
             "minHeaderMobile",
             "minHeaderDesktop",
