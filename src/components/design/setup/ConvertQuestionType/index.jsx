@@ -14,58 +14,14 @@ import {
 } from "@mui/material";
 import styles from "./ConvertQuestionType.module.css";
 import {
-  CONVERTIBLE_QUESTION_TYPES,
-  isSingleSelect,
-  mediaGroup,
+  CONVERTIBLE_CHOICE_TYPES,
+  CONVERTIBLE_ARRAY_TYPES,
+  isArrayType,
 } from "~/constants/design";
-
-function computeLostAttributes(question, answers, newType) {
-  const lost = [];
-  const srcSingle = isSingleSelect(question.type);
-  const dstSingle = isSingleSelect(newType);
-  const srcGroup = mediaGroup(question.type);
-  const dstGroup = mediaGroup(newType);
-
-  if (srcSingle && !dstSingle) {
-    if (question?.skip_logic?.length > 0) {
-      lost.push("lost_skip_logic");
-    }
-    if (question?.validation?.validation_required?.isActive) {
-      lost.push("lost_validation_required");
-    }
-    const defaultValueInstruction = question?.instructionList?.find(
-      (i) => i.code === "value" && i.text
-    );
-    if (defaultValueInstruction) {
-      lost.push("lost_default_value");
-    }
-  }
-
-  if (!srcSingle && dstSingle) {
-    const hasActiveCountValidation = [
-      "validation_min_option_count",
-      "validation_max_option_count",
-      "validation_option_count",
-    ].some((r) => question?.validation?.[r]?.isActive);
-    if (hasActiveCountValidation) {
-      lost.push("lost_validation_option_count");
-    }
-  }
-
-  if (srcGroup === "icon" && dstGroup !== "icon") {
-    if (answers.some((a) => a?.resources?.icon)) {
-      lost.push("lost_answer_icons");
-    }
-  }
-
-  if (srcGroup === "image" && dstGroup !== "image") {
-    if (answers.some((a) => a?.resources?.image)) {
-      lost.push("lost_answer_images");
-    }
-  }
-
-  return lost;
-}
+import {
+  computeChoiceLostAttributes,
+  computeArrayLostAttributes,
+} from "./utils";
 
 export default function ConvertQuestionType({ code, t }) {
   const dispatch = useDispatch();
@@ -74,15 +30,34 @@ export default function ConvertQuestionType({ code, t }) {
 
   const question = useSelector((s) => s.designState[code]);
   const type = question?.type;
+  const isArray = isArrayType(type);
+
   const answers = useSelector(
-    (s) => (question?.children || []).map((c) => s.designState[c.qualifiedCode]),
+    (s) =>
+      isArray
+        ? []
+        : (question?.children || []).map((c) => s.designState[c.qualifiedCode]),
     shallowEqual
   );
+
+  const columns = useSelector(
+    (s) =>
+      isArray
+        ? (question?.children || [])
+            .filter((c) => c.type === "column")
+            .map((c) => s.designState[c.qualifiedCode])
+        : [],
+    shallowEqual
+  );
+
+  const convertibleTypes = isArray ? CONVERTIBLE_ARRAY_TYPES : CONVERTIBLE_CHOICE_TYPES;
 
   const handleChange = (e) => {
     const newType = e.target.value;
     if (!type || newType === type) return;
-    const lost = computeLostAttributes(question, answers, newType);
+    const lost = isArray
+      ? computeArrayLostAttributes(question, columns, newType)
+      : computeChoiceLostAttributes(question, answers, newType);
     if (lost.length > 0) {
       setLostAttributes(lost);
       setPendingType(newType);
@@ -107,7 +82,7 @@ export default function ConvertQuestionType({ code, t }) {
       <Typography fontWeight={700}>{t("question_type")}</Typography>
       <FormControl size="small">
         <Select value={type} onChange={handleChange}>
-          {CONVERTIBLE_QUESTION_TYPES.map((qt) => (
+          {convertibleTypes.map((qt) => (
             <MenuItem key={qt} value={qt}>
               {t(qt)}
             </MenuItem>
