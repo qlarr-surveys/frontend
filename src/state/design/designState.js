@@ -70,10 +70,10 @@ export const designState = createSlice({
       }
 
       const newKeys = Object.keys(newState).filter(
-        (el) => !reservedKeys.includes(el)
+        (el) => !reservedKeys.includes(el),
       );
       const toBeRemoved = Object.keys(state).filter(
-        (el) => !reservedKeys.includes(el) && !newKeys.includes(el)
+        (el) => !reservedKeys.includes(el) && !newKeys.includes(el),
       );
 
       if (!state.langInfo || response.overWriteLang) {
@@ -81,7 +81,7 @@ export const designState = createSlice({
         const mainLang = defaultLang.code;
         const lang = defaultLang.code;
         const languagesList = [defaultLang].concat(
-          newState.Survey.additionalLang || []
+          newState.Survey.additionalLang || [],
         );
         state.langInfo = {
           languagesList,
@@ -144,7 +144,7 @@ export const designState = createSlice({
         state,
         payload.code,
         payload.rule,
-        payload.rule != "content"
+        payload.rule != "content",
       );
     },
     resetSetup(state) {
@@ -207,7 +207,7 @@ export const designState = createSlice({
         updateRandomByRule(
           state[payload.code],
           action.payload.key,
-          !originalValue || originalValue == "NONE"
+          !originalValue || originalValue == "NONE",
         );
       }
     },
@@ -223,7 +223,7 @@ export const designState = createSlice({
       const { code, selectedValue } = action.payload;
       const component = state[code];
       const valueInstruction = component.instructionList?.find(
-        (instruction) => instruction.code == "value"
+        (instruction) => instruction.code == "value",
       );
       if (valueInstruction) {
         changeInstruction(component, {
@@ -241,7 +241,7 @@ export const designState = createSlice({
         ?.filter(
           (group) =>
             group.children &&
-            group.children.findIndex((child) => child.code == code) !== -1
+            group.children.findIndex((child) => child.code == code) !== -1,
         )?.[0];
       if (!group) {
         return;
@@ -257,7 +257,7 @@ export const designState = createSlice({
       group.children.splice(
         group.children.indexOf(questionChild) + 1,
         0,
-        newQuestion
+        newQuestion,
       );
       designState.caseReducers.setup(state, {
         payload: { code: newQuestionId, rules: setupOptions(newQuestion.type) },
@@ -271,7 +271,7 @@ export const designState = createSlice({
       const codes = splitQuestionCodes(answerQualifiedCode);
       let question = state[codes[0]];
       question.children = question.children.filter(
-        (el) => el.code !== codes[1]
+        (el) => el.code !== codes[1],
       );
       delete state[answerQualifiedCode];
       // could be otherText
@@ -296,7 +296,7 @@ export const designState = createSlice({
       const question = state[questionCode];
       const children =
         question.children?.filter(
-          (it) => state[it.qualifiedCode].type == type
+          (it) => state[it.qualifiedCode].type == type,
         ) || [];
       data.forEach((item, itemIndex) => {
         if (item) {
@@ -338,7 +338,7 @@ export const designState = createSlice({
       const type = action.payload.type;
       const answers = state[questionCode].children || [];
       const nextAnswerOfSameType = answers.filter(
-        (answer) => answer.type == type
+        (answer) => answer.type == type,
       )[index + 1];
       if (nextAnswerOfSameType && nextAnswerOfSameType.qualifiedCode) {
         state.focus = nextAnswerOfSameType.qualifiedCode;
@@ -365,7 +365,7 @@ export const designState = createSlice({
       switch (type) {
         case "column":
           nextAnswerIndex = nextId(
-            answers.filter((el) => el.type === "column")
+            answers.filter((el) => el.type === "column"),
           );
 
           code = "Ac" + nextAnswerIndex;
@@ -478,13 +478,13 @@ export const designState = createSlice({
           (group) =>
             group.children &&
             group.children.findIndex((child) => child.code == questionCode) !==
-              -1
+              -1,
         )?.[0];
       if (!group) {
         return;
       }
       const questionIndex = group.children.findIndex(
-        (x) => x.code === questionCode
+        (x) => x.code === questionCode,
       );
       let children = [...group.children];
       if (children.length === 1) {
@@ -528,7 +528,7 @@ export const designState = createSlice({
           questionCode,
           currentQuestion,
           currentType,
-          newType
+          newType,
         );
       } else if (inArrayGroup) {
         convertArrayQuestion(
@@ -536,7 +536,7 @@ export const designState = createSlice({
           questionCode,
           currentQuestion,
           currentType,
-          newType
+          newType,
         );
       }
 
@@ -556,7 +556,7 @@ export const designState = createSlice({
       }
       const prefixToRemove = `format_${payload.key}_${payload.lang}`;
       const toRemove = state[payload.code].instructionList?.filter(
-        (instruction) => instruction.code.startsWith(prefixToRemove)
+        (instruction) => instruction.code.startsWith(prefixToRemove),
       );
       toRemove?.forEach((instruction) => {
         console.log(instruction.code);
@@ -569,23 +569,23 @@ export const designState = createSlice({
       state[payload.code].instructionList = state[
         payload.code
       ].instructionList?.filter(
-        (instruction) => !instruction.code.startsWith(prefixToRemove)
+        (instruction) => !instruction.code.startsWith(prefixToRemove),
       );
       const referenceInstructions = buildReferenceInstruction(
-        "content",
+        payload.value,
         payload.key,
         payload.lang,
-        [payload.value, payload.key, payload.lang]
+        ["content", payload.lang, payload.key],
       );
       referenceInstructions?.forEach((instruction) =>
-        changeInstruction(state[payload.code], instruction)
+        changeInstruction(state[payload.code], instruction),
       );
 
       saveContentResources(
         state[payload.code],
         payload.value,
         payload.lang,
-        payload.key
+        payload.key,
       );
 
       state[payload.code].content[payload.lang][payload.key] = payload.value;
@@ -596,11 +596,11 @@ export const designState = createSlice({
         payload.value,
         "custom",
         "css",
-        ["customCss"]
+        ["customCss"],
       );
       state[payload.code].customCss = payload.value;
       referenceInstructions?.forEach((instruction) =>
-        changeInstruction(state[payload.code], instruction)
+        changeInstruction(state[payload.code], instruction),
       );
     },
     changeResources: (state, action) => {
@@ -628,11 +628,12 @@ export const designState = createSlice({
         ?.map((el) => el.code);
       const randomInstruction = instructionByCode(
         componentState,
-        "random_group"
+        "random_group",
       );
       const otherRandomOrders =
         randomInstruction?.groups?.filter(
-          (x) => x.length && x.some((elem) => otherChildrenCodes.includes(elem))
+          (x) =>
+            x.length && x.some((elem) => otherChildrenCodes.includes(elem)),
         ) || [];
       const groups = payload.groups.concat(otherRandomOrders);
       if (groups) {
@@ -694,7 +695,7 @@ export const designState = createSlice({
     renameCustomValidationRule: (state, action) => {
       const { code, ruleCode, newCode } = action.payload;
       const instruction = state[code].instructionList.find(
-        (i) => i.code === ruleCode
+        (i) => i.code === ruleCode,
       );
       instruction.code = newCode;
       const content = state[code].content || {};
@@ -740,28 +741,28 @@ export const designState = createSlice({
       state.langInfo.mainLang = action.payload.code;
       state.Survey.defaultLang = action.payload;
       state.Survey.additionalLang = state.Survey.additionalLang?.filter(
-        (language) => language.code !== action.payload.code
+        (language) => language.code !== action.payload.code,
       );
       state.langInfo.lang = action.payload.code;
       state.langInfo.onMainLang = true;
       state.langInfo.languagesList = [action.payload].concat(
-        state.Survey.additionalLang || []
+        state.Survey.additionalLang || [],
       );
     },
     onAdditionalLangAdded: (state, action) => {
       state.Survey.additionalLang = (state.Survey.additionalLang || []).concat(
-        action.payload
+        action.payload,
       );
       state.langInfo.languagesList = [state.Survey.defaultLang].concat(
-        state.Survey.additionalLang || []
+        state.Survey.additionalLang || [],
       );
     },
     onAdditionalLangRemoved: (state, action) => {
       state.Survey.additionalLang = state.Survey.additionalLang.filter(
-        (language) => language.code !== action.payload.code
+        (language) => language.code !== action.payload.code,
       );
       state.langInfo.languagesList = [state.Survey.defaultLang].concat(
-        state.Survey.additionalLang || []
+        state.Survey.additionalLang || [],
       );
     },
     changeLang: (state, action) => {
@@ -917,11 +918,11 @@ const cleanupSkipDestinations = (state, deletedCode) => {
     const component = state[key];
     if (Array.isArray(component?.skip_logic)) {
       const hadRules = component.skip_logic.some(
-        (rule) => rule.skipTo === deletedCode
+        (rule) => rule.skipTo === deletedCode,
       );
       if (hadRules) {
         component.skip_logic = component.skip_logic.filter(
-          (rule) => rule.skipTo !== deletedCode
+          (rule) => rule.skipTo !== deletedCode,
         );
         addSkipInstructions(state, key);
       }
@@ -933,12 +934,12 @@ const saveContentResources = (
   component,
   contentValue,
   contentLang,
-  contentKey
+  contentKey,
 ) => {
   const regex = /data-resource-name="([^"]+)"/g;
   const resources = Array.from(
     contentValue.matchAll(regex),
-    (match) => match[1]
+    (match) => match[1],
   ).filter((name) => name && name.trim());
 
   if (!component.resources) {
@@ -961,7 +962,7 @@ const reparentQuestion = (state, survey, payload) => {
   const sourceGroup = state[payload.source];
   const destinationGroup = state[payload.destination];
   const sourceQuestionIndex = sourceGroup.children.findIndex(
-    (question) => question.code == payload.id
+    (question) => question.code == payload.id,
   );
   const destinationQuestionIndex =
     index.indexOf(payload.destination) > index.indexOf(payload.source)
@@ -986,7 +987,7 @@ const reorderQuestions = (state, survey, payload) => {
   const sourceGroup = state[payload.source];
   const destinationGroup = state[payload.destination];
   const sourceQuestionIndex = sourceGroup.children.findIndex(
-    (question) => question.code == payload.id
+    (question) => question.code == payload.id,
   );
   const destinationQuestionIndex = payload.toIndex - 1;
   const question = sourceGroup.children[sourceQuestionIndex];
@@ -1007,7 +1008,7 @@ const newQuestion = (state, payload) => {
   const questionObject = createQuestion(
     payload.questionType,
     questionId,
-    state.langInfo.mainLang
+    state.langInfo.mainLang,
   );
   const destinationGroup = state[payload.destination];
   const destinationQuestionIndex = payload.toIndex;
@@ -1027,7 +1028,7 @@ const newQuestion = (state, payload) => {
       state,
       state[element.qualifiedCode],
       newCode,
-      newCode
+      newCode,
     );
   });
   cleanupValidation(state, newCode);
@@ -1038,11 +1039,11 @@ const newQuestion = (state, payload) => {
   destinationGroup.children.splice(
     destinationQuestionIndex,
     0,
-    questionObject.question
+    questionObject.question,
   );
 
   const groupIndex = survey.children.findIndex(
-    (group) => group.code === payload.destination
+    (group) => group.code === payload.destination,
   );
   state.lastAddedComponent = {
     type: "question",
@@ -1073,7 +1074,7 @@ const newGroup = (state, payload) => {
   state[group.newGroup.code] = group.state;
 
   const lastGroupIndex = survey.children.findIndex(
-    (child) => child.code === group.newGroup.code
+    (child) => child.code === group.newGroup.code,
   );
   state.lastAddedComponent = {
     type: "group",
@@ -1095,7 +1096,7 @@ const specialGroup = (state, payload) => {
     survey.children = [];
   }
   const index = survey.children.findIndex(
-    (group) => state[group.code].groupType?.toLowerCase() === payload.groupType
+    (group) => state[group.code].groupType?.toLowerCase() === payload.groupType,
   );
   if (index !== -1) {
     state.error = {
@@ -1158,7 +1159,7 @@ const reorderGroups = (survey, payload) => {
   survey.children = reorder(
     survey.children,
     payload.fromIndex,
-    payload.toIndex
+    payload.toIndex,
   );
 };
 const reorderAnswers = (state, payload) => {
@@ -1168,7 +1169,7 @@ const reorderAnswers = (state, payload) => {
   component.children = reorder(
     component.children,
     payload.fromIndex,
-    payload.toIndex
+    payload.toIndex,
   );
 };
 const reorderAnswersByType = (state, payload) => {
@@ -1177,10 +1178,10 @@ const reorderAnswersByType = (state, payload) => {
   const component = state[parentCode];
   const type = state[payload.id].type;
   const filteredChildren = component.children.filter(
-    (child) => child.type == type
+    (child) => child.type == type,
   );
   const fromIndex = component.children.indexOf(
-    filteredChildren[payload.fromIndex]
+    filteredChildren[payload.fromIndex],
   );
   const toIndex = component.children.indexOf(filteredChildren[payload.toIndex]);
   component.children = reorder(component.children, fromIndex, toIndex);
@@ -1198,12 +1199,12 @@ const insertAnswer = (state, answer, parentCode, index) => {
           ? index +
             firstIndexInArray(
               component.children,
-              (child) => child.type == answer.type
+              (child) => child.type == answer.type,
             )
           : index
         : lastIndexInArray(
             component.children,
-            (child) => child.type == answer.type || !child.type
+            (child) => child.type == answer.type || !child.type,
           );
     component.children.splice(insertIndex + 1, 0, answer);
     component.designErrors = questionDesignError(component);
@@ -1273,7 +1274,7 @@ const addRelevanceInstructions = (state, code, relevance) => {
   const instruction = conditionalRelevanceEquation(
     relevance.logic,
     relevance.rule,
-    state
+    state,
   );
   changeInstruction(state[code], instruction);
 };
@@ -1310,13 +1311,13 @@ const creatNewState = (
   toBeCopied,
   newStateCode,
   oldQuestionCode,
-  newQuestionCode
+  newQuestionCode,
 ) => {
   const newState = cloneDeep(toBeCopied);
   if (newState.relevance) {
     delete newState.relevance;
     const index = newState.instructionList?.findIndex(
-      (instruction) => instruction.code == "conditional_relevance"
+      (instruction) => instruction.code == "conditional_relevance",
     );
     if (index) {
       newState.instructionList?.splice(index, 1);
@@ -1325,7 +1326,7 @@ const creatNewState = (
   if (newState.skip_logic) {
     delete newState.skip_logic;
     newState.instructionList = newState.instructionList.filter(
-      (eq) => !eq.code.startsWith("skip_to_on_")
+      (eq) => !eq.code.startsWith("skip_to_on_"),
     );
   }
   newState.instructionList?.forEach((eq) => {
@@ -1336,7 +1337,7 @@ const creatNewState = (
     let oldChildCode = child.qualifiedCode;
     let newChildCode = child.qualifiedCode.replaceAll(
       oldQuestionCode,
-      newQuestionCode
+      newQuestionCode,
     );
     child.qualifiedCode = newChildCode;
     creatNewState(
@@ -1344,7 +1345,7 @@ const creatNewState = (
       state[oldChildCode],
       newChildCode,
       oldQuestionCode,
-      newQuestionCode
+      newQuestionCode,
     );
   });
 };
