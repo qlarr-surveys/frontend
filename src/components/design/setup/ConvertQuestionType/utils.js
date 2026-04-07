@@ -1,4 +1,17 @@
-import { isSingleSelect, mediaGroup, ARRAY_MIN_WIDTH_KEYS } from "~/constants/design";
+import { isSingleSelect, mediaGroup, ARRAY_MIN_WIDTH_KEYS, setupOptions } from "~/constants/design";
+
+const getValidationRules = (type) => {
+  const sections = setupOptions(type);
+  return sections?.find((s) => s.key === "validation")?.rules || [];
+};
+
+export function computeTextLostAttributes(question, newType) {
+  const srcRules = getValidationRules(question.type);
+  const dstRules = getValidationRules(newType);
+  const willBeLost = srcRules.filter((r) => !dstRules.includes(r));
+  const hasActiveLost = willBeLost.some((r) => question?.validation?.[r]?.isActive);
+  return hasActiveLost ? ["lost_text_validations"] : [];
+}
 
 export function computeChoiceLostAttributes(question, answers, newType) {
   const lost = [];
