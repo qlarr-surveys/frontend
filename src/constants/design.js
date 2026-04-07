@@ -6,8 +6,9 @@ export const CONVERTIBLE_CHOICE_TYPES = [
   "image_scq",
   "image_mcq",
 ];
-
+export const CONVERTIBLE_TEXT_TYPES = ["text", "number", "email", "paragraph", "autocomplete"];
 export const CONVERTIBLE_ARRAY_TYPES = ["scq_array", "mcq_array", "scq_icon_array"];
+
 export const isSingleSelect = (type) =>
   ["scq", "icon_scq", "image_scq"].includes(type);
 
@@ -16,8 +17,10 @@ export const mediaGroup = (type) => {
   if (["image_scq", "image_mcq"].includes(type)) return "image";
   return "plain";
 };
-
 export const isArrayType = (type) => CONVERTIBLE_ARRAY_TYPES.includes(type);
+export const isTextType = (type) => CONVERTIBLE_TEXT_TYPES.includes(type);
+
+
 
 export const ARRAY_MIN_WIDTH_KEYS = [
   "minHeaderMobile",
@@ -173,6 +176,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "maxChars",
             "hint",
           ],
@@ -257,6 +261,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "maxChars",
             "decimal_separator",
             "hint",
@@ -304,6 +309,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "maxChars",
             "hint",
           ],
@@ -345,6 +351,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
           ],
         },
         {
@@ -378,6 +385,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "minRows",
             "showWordCount",
             "hint",

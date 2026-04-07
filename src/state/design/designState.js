@@ -14,12 +14,14 @@ import {
 import {
   CONVERTIBLE_CHOICE_TYPES,
   CONVERTIBLE_ARRAY_TYPES,
+  CONVERTIBLE_TEXT_TYPES,
   languageSetup,
   setupOptions,
   themeSetup,
 } from "~/constants/design";
 import { convertChoiceQuestion } from "./convertChoiceQuestion";
 import { convertArrayQuestion } from "./convertArrayQuestion";
+import { convertTextQuestion } from "./convertTextQuestion";
 import {
   createQuestion,
   questionDesignError,
@@ -511,7 +513,10 @@ export const designState = createSlice({
       const inArrayGroup =
         CONVERTIBLE_ARRAY_TYPES.includes(currentType) &&
         CONVERTIBLE_ARRAY_TYPES.includes(newType);
-      if ((!inChoiceGroup && !inArrayGroup) || currentType === newType) return;
+      const inTextGroup =
+        CONVERTIBLE_TEXT_TYPES.includes(currentType) &&
+        CONVERTIBLE_TEXT_TYPES.includes(newType);
+      if ((!inChoiceGroup && !inArrayGroup && !inTextGroup) || currentType === newType) return;
 
       // Update type in question state
       currentQuestion.type = newType;
@@ -540,6 +545,8 @@ export const designState = createSlice({
           currentType,
           newType
         );
+      } else if (inTextGroup) {
+        convertTextQuestion(currentQuestion, newType);
       }
 
       cleanupValidation(state, questionCode);

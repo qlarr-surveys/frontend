@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { convertQuestion } from "~/state/design/designState";
+import React from "react";
 import {
   Button,
   Dialog,
@@ -13,75 +11,24 @@ import {
   Typography,
 } from "@mui/material";
 import styles from "./ConvertQuestionType.module.css";
-import {
-  CONVERTIBLE_CHOICE_TYPES,
-  CONVERTIBLE_ARRAY_TYPES,
-  isArrayType,
-} from "~/constants/design";
-import {
-  computeChoiceLostAttributes,
-  computeArrayLostAttributes,
-} from "./utils";
+import { useConvertQuestionType } from "./useConvertQuestionType";
 
 export default function ConvertQuestionType({ code, t }) {
-  const dispatch = useDispatch();
-  const [pendingType, setPendingType] = useState(null);
-  const [lostAttributes, setLostAttributes] = useState([]);
-
-  const question = useSelector((s) => s.designState[code]);
-  const type = question?.type;
-  const isArray = isArrayType(type);
-
-  const answers = useSelector(
-    (s) =>
-      isArray
-        ? []
-        : (question?.children || []).map((c) => s.designState[c.qualifiedCode]),
-    shallowEqual
-  );
-
-  const columns = useSelector(
-    (s) =>
-      isArray
-        ? (question?.children || [])
-            .filter((c) => c.type === "column")
-            .map((c) => s.designState[c.qualifiedCode])
-        : [],
-    shallowEqual
-  );
-
-  const convertibleTypes = isArray ? CONVERTIBLE_ARRAY_TYPES : CONVERTIBLE_CHOICE_TYPES;
-
-  const handleChange = (e) => {
-    const newType = e.target.value;
-    if (!type || newType === type) return;
-    const lost = isArray
-      ? computeArrayLostAttributes(question, columns, newType)
-      : computeChoiceLostAttributes(question, answers, newType);
-    if (lost.length > 0) {
-      setLostAttributes(lost);
-      setPendingType(newType);
-    } else {
-      dispatch(convertQuestion({ questionCode: code, newType }));
-    }
-  };
-
-  const handleConfirm = () => {
-    dispatch(convertQuestion({ questionCode: code, newType: pendingType }));
-    setPendingType(null);
-    setLostAttributes([]);
-  };
-
-  const handleCancel = () => {
-    setPendingType(null);
-    setLostAttributes([]);
-  };
+  const {
+    type,
+    convertibleTypes,
+    pendingType,
+    lostAttributes,
+    handleChange,
+    handleConfirm,
+    handleCancel,
+  } = useConvertQuestionType(code);
 
   return (
     <div className={styles.container}>
       <Typography fontWeight={700}>{t("question_type")}</Typography>
       <FormControl size="small">
-        <Select value={type} onChange={handleChange}>
+        <Select value={type} onChange={(e) => handleChange(e.target.value)}>
           {convertibleTypes.map((qt) => (
             <MenuItem key={qt} value={qt}>
               {t(qt)}
