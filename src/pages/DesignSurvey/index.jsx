@@ -67,12 +67,12 @@ function DesignSurvey() {
   }, [lang, contentElement]);
 
   useEffect(() => {
-    if (designMode == DESIGN_SURVEY_MODE.DESIGN) {
-      dispatch(setDesignModeToDesign());
-    } else if (designMode == DESIGN_SURVEY_MODE.LANGUAGES) {
+    if (designMode == DESIGN_SURVEY_MODE.LANGUAGES) {
       dispatch(setDesignModeToLang());
     } else if (designMode == DESIGN_SURVEY_MODE.THEME) {
       dispatch(setDesignModeToTheme());
+    } else {
+      dispatch(setDesignModeToDesign());
     }
   }, []);
 
