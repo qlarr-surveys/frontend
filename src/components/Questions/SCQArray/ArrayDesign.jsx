@@ -11,7 +11,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   useTheme,
 } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -21,7 +20,6 @@ import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
   addNewAnswer,
   addNewAnswers,
-  changeContent,
   onDrag,
   onNewLine,
   removeAnswer,
@@ -154,7 +152,7 @@ function ArrayDesign(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      {props.onMainLang && (
+      {inDesign(props.designMode)  && (
         <div className={styles.addRow}>
           <Button
             size="small"
@@ -462,24 +460,26 @@ function ArrayHeaderDesign({
           </div>
         </div>
       )}
-      <ContentEditor
-        code={item.qualifiedCode}
-        showToolbar={false}
-        editable={contentEditable(designMode)}
-        extended={false}
-        centerText
-        placeholder={
-          onMainLang
-            ? t("content_editor_placeholder_option", {
-                lng: langInfo.mainLang,
-              })
-            : mainContent ||
-              t("content_editor_placeholder_option", {
-                lng: langInfo.mainLang,
-              })
-        }
-        contentKey="label"
-      />
+      <div className="array-column-header">
+        <ContentEditor
+          code={item.qualifiedCode}
+          showToolbar={false}
+          editable={contentEditable(designMode)}
+          extended={false}
+          centerText
+          placeholder={
+            onMainLang
+              ? t("content_editor_placeholder_option", {
+                  lng: langInfo.mainLang,
+                })
+              : mainContent ||
+                t("content_editor_placeholder_option", {
+                  lng: langInfo.mainLang,
+                })
+          }
+          contentKey="label"
+        />
+      </div>
     </TableCell>
   );
 }

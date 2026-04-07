@@ -4,7 +4,7 @@ import styles from "./DesignSurvey.module.css";
 
 import { defualtTheme } from "~/constants/theme";
 import { useTranslation } from "react-i18next";
-import { NAMESPACES } from "~/hooks/useNamespaceLoader";
+import useNamespaceLoader, { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { CacheProvider } from "@emotion/react";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +28,7 @@ const ContentPanel = React.lazy(() =>
 const LeftPanel = React.lazy(() => import("~/components/design/LeftPanel"));
 
 function DesignSurvey() {
+  useNamespaceLoader();
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const [contentElement, setContentElement] = React.useState(null);
   const dispatch = useDispatch();

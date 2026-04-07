@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,8 +13,22 @@ import { resetSetup } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 
 function ContentPanel({ designMode }, ref) {
-  const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
+  const { i18n } = useTranslation(NAMESPACES.DESIGN_CORE);
   const theme = useTheme();
+  const lang = useSelector((state) => state.designState.langInfo?.lang);
+  const [langReady, setLangReady] = useState(false);
+
+  useEffect(() => {
+    if (lang) {
+      setLangReady(false);
+      i18n.loadLanguages([lang]).then(() => setLangReady(true));
+    }
+  }, [lang, i18n]);
+
+  const t = useCallback(
+    (key, options) => i18n.getFixedT(lang, NAMESPACES.DESIGN_CORE)(key, options),
+    [lang, i18n, langReady]
+  );
 
   const groups = useSelector((state) => {
     return state.designState["Survey"]?.children || [];
@@ -177,7 +191,7 @@ function ContentPanel({ designMode }, ref) {
               case ELEMENTS.GROUP:
                 return (
                   <>
-                    <div className={styles.groupLabel}>{item.label}</div>
+                    <div className={styles.groupLabel} dir="auto">{item.label}</div>
                     <GroupDesign
                       t={t}
                       key={item.group.code}

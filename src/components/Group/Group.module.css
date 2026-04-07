@@ -27,6 +27,7 @@
   padding: 10px;
   margin: auto;
   position: relative;
+  overflow: hidden;
 }
 
 @media (min-width: 600px) {

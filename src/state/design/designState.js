@@ -11,7 +11,15 @@ import {
   reorder,
   buildReferenceInstruction,
 } from "./stateUtils";
-import { languageSetup, setupOptions, themeSetup } from "~/constants/design";
+import {
+  CONVERTIBLE_CHOICE_TYPES,
+  CONVERTIBLE_ARRAY_TYPES,
+  languageSetup,
+  setupOptions,
+  themeSetup,
+} from "~/constants/design";
+import { convertChoiceQuestion } from "./convertChoiceQuestion";
+import { convertArrayQuestion } from "./convertArrayQuestion";
 import {
   createQuestion,
   questionDesignError,
@@ -488,6 +496,56 @@ export const designState = createSlice({
       cleanupRandomRules(group);
       cleanupSkipDestinations(state, questionCode);
     },
+    convertQuestion: (state, action) => {
+      const { questionCode, newType } = action.payload;
+
+      const currentQuestion = state[questionCode];
+      if (!currentQuestion) return;
+      const currentType = currentQuestion.type;
+
+      const inChoiceGroup =
+        CONVERTIBLE_CHOICE_TYPES.includes(currentType) &&
+        CONVERTIBLE_CHOICE_TYPES.includes(newType);
+      const inArrayGroup =
+        CONVERTIBLE_ARRAY_TYPES.includes(currentType) &&
+        CONVERTIBLE_ARRAY_TYPES.includes(newType);
+      if ((!inChoiceGroup && !inArrayGroup) || currentType === newType) return;
+
+      // Update type in question state
+      currentQuestion.type = newType;
+
+      // Update type in the group children entry
+      const survey = state.Survey;
+      survey.children.forEach((g) => {
+        const group = state[g.code];
+        const child = group.children?.find((c) => c.code === questionCode);
+        if (child) child.type = newType;
+      });
+
+      if (inChoiceGroup) {
+        convertChoiceQuestion(
+          state,
+          questionCode,
+          currentQuestion,
+          currentType,
+          newType
+        );
+      } else if (inArrayGroup) {
+        convertArrayQuestion(
+          state,
+          questionCode,
+          currentQuestion,
+          currentType,
+          newType
+        );
+      }
+
+      cleanupValidation(state, questionCode);
+      currentQuestion.designErrors = questionDesignError(currentQuestion);
+      designState.caseReducers.setup(state, {
+        payload: { code: questionCode, rules: setupOptions(newType) },
+      });
+    },
     changeContent: (state, action) => {
       let payload = action.payload;
       if (!state[payload.code].content) {
@@ -540,7 +598,7 @@ export const designState = createSlice({
         "css",
         ["customCss"]
       );
-      state[payload.code].customCss = payload.value
+      state[payload.code].customCss = payload.value;
       referenceInstructions?.forEach((instruction) =>
         changeInstruction(state[payload.code], instruction)
       );
@@ -803,6 +861,7 @@ export const {
   changeResources,
   deleteQuestion,
   cloneQuestion,
+  convertQuestion,
   deleteGroup,
   onNewLine,
   resetFocus,

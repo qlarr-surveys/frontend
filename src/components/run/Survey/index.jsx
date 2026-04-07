@@ -23,6 +23,7 @@ function Survey() {
     <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
       <form
         id={FORM_ID}
+        onSubmit={(e) => e.preventDefault()}
         style={{
           marginTop: "4rem",
           marginRight: "6px",

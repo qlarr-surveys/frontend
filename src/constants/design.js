@@ -1,3 +1,31 @@
+export const CONVERTIBLE_CHOICE_TYPES = [
+  "scq",
+  "mcq",
+  "icon_scq",
+  "icon_mcq",
+  "image_scq",
+  "image_mcq",
+];
+
+export const CONVERTIBLE_ARRAY_TYPES = ["scq_array", "mcq_array", "scq_icon_array"];
+export const isSingleSelect = (type) =>
+  ["scq", "icon_scq", "image_scq"].includes(type);
+
+export const mediaGroup = (type) => {
+  if (["icon_scq", "icon_mcq"].includes(type)) return "icon";
+  if (["image_scq", "image_mcq"].includes(type)) return "image";
+  return "plain";
+};
+
+export const isArrayType = (type) => CONVERTIBLE_ARRAY_TYPES.includes(type);
+
+export const ARRAY_MIN_WIDTH_KEYS = [
+  "minHeaderMobile",
+  "minHeaderDesktop",
+  "minRowLabelMobile",
+  "minRowLabelDesktop",
+];
+
 export const surveySetup = {
   code: "Survey",
   rules: [
@@ -672,6 +700,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "scq_default_value",
           ],
         },
@@ -706,6 +735,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "hideText",
             "columns",
             "iconSize",
@@ -743,6 +773,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "hideText",
             "columns",
             "imageAspectRatio",
@@ -780,6 +811,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
           ],
         },
         {
@@ -931,6 +963,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "hideText",
             "columns",
             "iconSize",
@@ -973,6 +1006,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "hideText",
             "columns",
             "imageAspectRatio",
@@ -1014,6 +1048,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
           ],
         },
         {
@@ -1046,6 +1081,7 @@ export const setupOptions = (type) => {
           rules: [
             "changeCode",
             "showDescription",
+            "convert_question_type",
             "disabled",
             "minHeaderMobile",
             "minHeaderDesktop",

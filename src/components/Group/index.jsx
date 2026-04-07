@@ -18,6 +18,16 @@ function Group(props) {
     };
   }, shallowEqual);
 
+  const visibleQuestionCodes = useSelector((state) => {
+    return (props.group?.questions ?? [])
+      .filter((quest) => {
+        if (!quest.inCurrentNavigation) return false;
+        const q = state.runState.values[quest.qualifiedCode];
+        return typeof q?.relevance === "undefined" || !!q?.relevance;
+      })
+      .map((q) => q.qualifiedCode);
+  }, shallowEqual);
+
   const showGroup = () => {
     return (
       <>
@@ -63,7 +73,7 @@ function Group(props) {
                 return visibleQuestions.map((quest, idx) => (
                   <React.Fragment key={quest.code}>
                     <Question component={quest} />
-                    {idx < visibleQuestions.length - 1 && (
+                    {visibleQuestionCodes.indexOf(quest.code) >= 0 && (
                       <Divider sx={{ mt: "12px", mb: "12px" }} />
                     )}
                   </React.Fragment>
