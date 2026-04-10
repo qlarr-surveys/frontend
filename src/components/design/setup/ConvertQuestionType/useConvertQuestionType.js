@@ -5,13 +5,16 @@ import {
   CONVERTIBLE_CHOICE_TYPES,
   CONVERTIBLE_ARRAY_TYPES,
   CONVERTIBLE_TEXT_TYPES,
+  CONVERTIBLE_DATE_TIME_TYPES,
   isArrayType,
   isTextType,
+  isDateTimeType,
 } from "~/constants/design";
 import {
   computeChoiceLostAttributes,
   computeArrayLostAttributes,
   computeTextLostAttributes,
+  computeDateTimeLostAttributes,
 } from "./utils";
 
 export function useConvertQuestionType(code) {
@@ -23,10 +26,11 @@ export function useConvertQuestionType(code) {
   const type = question?.type;
   const isArray = isArrayType(type);
   const isText = isTextType(type);
+  const isDateTime = isDateTimeType(type);
 
   const answers = useSelector(
     (s) =>
-      isArray || isText
+      isArray || isText || isDateTime
         ? []
         : (question?.children || []).map((c) => s.designState[c.qualifiedCode]),
     shallowEqual
@@ -46,6 +50,8 @@ export function useConvertQuestionType(code) {
     ? CONVERTIBLE_ARRAY_TYPES
     : isText
     ? CONVERTIBLE_TEXT_TYPES
+    : isDateTime
+    ? CONVERTIBLE_DATE_TIME_TYPES
     : CONVERTIBLE_CHOICE_TYPES;
 
   const handleChange = (newType) => {
@@ -54,6 +60,8 @@ export function useConvertQuestionType(code) {
       ? computeArrayLostAttributes(question, columns, newType)
       : isText
       ? computeTextLostAttributes(question, newType)
+      : isDateTime
+      ? computeDateTimeLostAttributes(question, newType)
       : computeChoiceLostAttributes(question, answers, newType);
     if (lost.length > 0) {
       setLostAttributes(lost);
