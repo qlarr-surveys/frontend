@@ -12,7 +12,9 @@ import Relevance from "../logic/Relevance";
 import SkipLogic from "../SkipLogic";
 import styles from "./SetupPanel.module.css";
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Box, Button, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { resetSetup, clearHighlighted } from "~/state/design/designState";
 import { useSelector } from "react-redux";
@@ -454,6 +456,11 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
 const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const dispatch = useDispatch();
   const [highlightedEl, setHighlightedEl] = React.useState(highlighted);
+  const [showAdvanced, setShowAdvanced] = React.useState(false);
+
+  React.useEffect(() => {
+    setShowAdvanced(false);
+  }, [code]);
 
   const targetTabIndex = React.useMemo(() => {
     if (!rules?.length) return 0;
@@ -476,6 +483,12 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const handleTabChange = (_, newValue) => setSelectedTab(newValue);
 
   const hasTitles = rules?.some((rule) => !!rule.title);
+
+  const normalRules = React.useMemo(() => {
+    const flat = rules?.flatMap((r) => r.rules || []) || [];
+    return ['disabled', 'showDescription', 'validation_required', 'hint']
+      .filter((r) => flat.includes(r));
+  }, [rules]);
 
   React.useEffect(() => {
     if (!highlighted) return;
@@ -511,50 +524,116 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
 
   return (
     <>
-      <Tabs
-        className={styles.tabContainer}
-        value={selectedTab}
-        onChange={handleTabChange}
-        variant="standard"
-        TabIndicatorProps={{ sx: { display: "none" } }}
-        sx={{
-          "& .MuiTabs-flexContainer": {
-            flexWrap: "wrap",
-          },
-        }}
-      >
-        {rules.map((rule) => (
-          <Tab
-            className={styles.tabStyle}
+      {!showAdvanced && (
+        <Box>
+          {normalRules.map((rule) => (
+            <div className={styles.setupContainer} key={rule}>
+              <SetupComponent code={code} rule={rule} t={t} />
+            </div>
+          ))}
+        </Box>
+      )}
+
+      {!showAdvanced && (
+        <Box sx={{ backgroundColor: '#04BDF314', p: 1.5 }}>
+          <Button
+            variant="text"
+            size="small"
+            fullWidth
+            endIcon={<ArrowForwardIcon />}
+            onClick={() => setShowAdvanced(true)}
             sx={{
-              px: 1.5,
-              borderBottom: "2px solid transparent",
-              "&.Mui-selected": {
-                borderBottom: "2px solid #000",
+              textTransform: 'none',
+              color: '#1a237e',
+              textDecoration: 'underline',
+              fontWeight: 500,
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              py: 1,
+              '&:hover': {
+                textDecoration: 'underline',
+                backgroundColor: 'white',
               },
             }}
-            key={rule.key}
-            label={t(rule.title)}
-          />
-        ))}
-      </Tabs>
-      <Divider />
-      <Box
-        sx={{
-          backgroundColor:
-            rules[selectedTab]?.key === highlighted
-              ? "#fff"
-              : "background.paper",
-        }}
-      >
-        {rules[selectedTab]?.rules?.map((el) => (
-          <div className={styles.setupContainer} key={el}>
-            <Box sx={rowSx(el)}>
-              <SetupComponent key={el} code={code} rule={el} t={t} />
-            </Box>
-          </div>
-        ))}
-      </Box>
+          >
+            {t('show_advanced_settings')}
+          </Button>
+        </Box>
+      )}
+
+      {showAdvanced && (
+        <>
+          <Divider />
+          <Tabs
+            className={styles.tabContainer}
+            value={selectedTab}
+            onChange={handleTabChange}
+            variant="standard"
+            TabIndicatorProps={{ sx: { display: "none" } }}
+            sx={{
+              "& .MuiTabs-flexContainer": {
+                flexWrap: "wrap",
+              },
+            }}
+          >
+            {rules.map((rule) => (
+              <Tab
+                className={styles.tabStyle}
+                sx={{
+                  px: 1.5,
+                  borderBottom: "2px solid transparent",
+                  "&.Mui-selected": {
+                    borderBottom: "2px solid #000",
+                  },
+                }}
+                key={rule.key}
+                label={t(rule.title)}
+              />
+            ))}
+          </Tabs>
+          <Divider />
+          <Box
+            sx={{
+              backgroundColor:
+                rules[selectedTab]?.key === highlighted
+                  ? "#fff"
+                  : "background.paper",
+            }}
+          >
+            {rules[selectedTab]?.rules?.map((el) => (
+              <div className={styles.setupContainer} key={el}>
+                <Box sx={rowSx(el)}>
+                  <SetupComponent key={el} code={code} rule={el} t={t} />
+                </Box>
+              </div>
+            ))}
+          </Box>
+          <Box sx={{ backgroundColor: '#04BDF314', p: 1.5 }}>
+            <Button
+              variant="text"
+              size="small"
+              fullWidth
+              startIcon={<ArrowBackIcon />}
+              onClick={() => setShowAdvanced(false)}
+              sx={{
+                textTransform: 'none',
+                color: '#1a237e',
+                textDecoration: 'underline',
+                fontWeight: 500,
+                backgroundColor: 'white',
+                borderRadius: '8px',
+                py: 1,
+                '&:hover': {
+                  textDecoration: 'underline',
+                  backgroundColor: 'white',
+                },
+              }}
+            >
+              {t('hide_advanced_settings')}
+            </Button>
+          </Box>
+        </>
+      )}
     </>
   );
 });

@@ -11,6 +11,8 @@
   "add_random_rule": "Agregar Regla Aleatoria",
   "add_row": "Agregar Fila",
   "advanced": "Avanzado",
+  "show_advanced_settings": "Mostrar configuración avanzada",
+  "hide_advanced_settings": "Ocultar configuración avanzada",
   "all_in_one": "Todo en Uno",
   "allow_incomplete": "Permitir Incompleto/Reanudar",
   "allow_jump": "Permitir Salto/Mostrar Índice de Encuesta",
