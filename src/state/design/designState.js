@@ -306,9 +306,7 @@ export const designState = createSlice({
           if (
             nextAnswer &&
             nextAnswer.qualifiedCode &&
-            state[nextAnswer.qualifiedCode] &&
-            (!state[nextAnswer.qualifiedCode].content ||
-              !state[nextAnswer.qualifiedCode].content[state.langInfo.lang])
+            state[nextAnswer.qualifiedCode]
           ) {
             designState.caseReducers.changeContent(state, {
               payload: {
@@ -318,7 +316,7 @@ export const designState = createSlice({
                 lang: state.langInfo.lang,
               },
             });
-          } else {
+          } else if (state.designMode === DESIGN_SURVEY_MODE.DESIGN) {
             designState.caseReducers.addNewAnswer(state, {
               payload: {
                 questionCode,
