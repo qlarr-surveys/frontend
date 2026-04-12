@@ -121,12 +121,7 @@ function SkipLogic({ code, t }) {
       <Typography fontWeight={700}>{t("skip_logic")}</Typography>
       <Divider sx={{ my: 1 }} />
 
-      {skipLogic.length == 0 ? (
-        <Typography color="text.secondary" sx={{ my: 2 }}>
-          {t("no_skip_rules")}
-        </Typography>
-      ) : (
-        skipLogic.map((rule, ruleIndex) => {
+      {skipLogic.map((rule, ruleIndex) => {
           const usedCodes = getUsedAnswerCodes(ruleIndex);
           const availableOptions = children?.filter(
             (child) =>
@@ -300,8 +295,7 @@ function SkipLogic({ code, t }) {
               )}
             </Box>
           );
-        })
-      )}
+        })}
 
       <Button
         variant="outlined"
