@@ -458,10 +458,6 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const [highlightedEl, setHighlightedEl] = React.useState(highlighted);
   const [showAdvanced, setShowAdvanced] = React.useState(false);
 
-  React.useEffect(() => {
-    setShowAdvanced(false);
-  }, [code]);
-
   const targetTabIndex = React.useMemo(() => {
     if (!rules?.length) return 0;
 
