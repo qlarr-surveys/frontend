@@ -59,7 +59,7 @@ export function SetupTextInput({ code, objectName, title, t }) {
         {objectName !== "hint" && (
           <CustomTooltip body={tTooltips(title)} />
         )}
-        {title && <h4>{t(title)}</h4>}
+        {title && <Typography fontWeight={700}>{t(`${title}`)}</Typography>}
       </div>
       {languagesList.map((lang) => {
         return (
