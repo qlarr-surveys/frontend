@@ -5,12 +5,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
   MenuItem,
   Select,
   Typography,
 } from "@mui/material";
-import styles from "./ConvertQuestionType.module.css";
 import { useConvertQuestionType } from "./useConvertQuestionType";
 
 export default function ConvertQuestionType({ code, t }) {
@@ -25,17 +23,21 @@ export default function ConvertQuestionType({ code, t }) {
   } = useConvertQuestionType(code);
 
   return (
-    <div className={styles.container}>
-      <Typography fontWeight={700}>{t("question_type")}</Typography>
-      <FormControl size="small">
-        <Select value={type} onChange={(e) => handleChange(e.target.value)}>
-          {convertibleTypes.map((qt) => (
-            <MenuItem key={qt} value={qt}>
-              {t(qt)}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+    <div>
+      <Typography fontWeight={700} style={{ marginBottom: "8px" }}>
+        {t("question_type")}
+      </Typography>
+      <Select
+        fullWidth
+        value={type}
+        onChange={(e) => handleChange(e.target.value)}
+      >
+        {convertibleTypes.map((qt) => (
+          <MenuItem key={qt} value={qt}>
+            {t(qt)}
+          </MenuItem>
+        ))}
+      </Select>
       <Dialog open={!!pendingType} onClose={handleCancel}>
         <DialogTitle>{t("convert_warning_title")}</DialogTitle>
         <DialogContent>

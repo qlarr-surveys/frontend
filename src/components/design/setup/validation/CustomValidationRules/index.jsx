@@ -1,5 +1,5 @@
 import { AddOutlined } from "@mui/icons-material";
-import { Box, Button, Divider, Typography } from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
 import React from "react";
 import { useCustomValidationRules } from "./useCustomValidationRules";
 import RuleCard from "./RuleCard";
@@ -23,26 +23,20 @@ function CustomValidationRules({ code, t }) {
       </Typography>
       <Divider sx={{ my: 1 }} />
 
-      {customRules.length === 0 ? (
-        <Typography color="text.secondary" sx={{ my: 2 }}>
-          {t("no_custom_validation_rules")}
-        </Typography>
-      ) : (
-        customRules.map((rule, ruleIndex) => (
-          <RuleCard
-            key={rule.code}
-            rule={rule}
-            ruleIndex={ruleIndex}
-            languagesList={languagesList}
-            t={t}
-            validateRuleIdSuffix={validateRuleIdSuffix}
-            onRemoveRule={onRemoveRule}
-            onRuleChange={onRuleChange}
-            onRuleIdChange={onRuleIdChange}
-            onErrorMessageChange={onErrorMessageChange}
-          />
-        ))
-      )}
+      {customRules.map((rule, ruleIndex) => (
+        <RuleCard
+          key={rule.code}
+          rule={rule}
+          ruleIndex={ruleIndex}
+          languagesList={languagesList}
+          t={t}
+          validateRuleIdSuffix={validateRuleIdSuffix}
+          onRemoveRule={onRemoveRule}
+          onRuleChange={onRuleChange}
+          onRuleIdChange={onRuleIdChange}
+          onErrorMessageChange={onErrorMessageChange}
+        />
+      ))}
 
       <Button
         variant="outlined"

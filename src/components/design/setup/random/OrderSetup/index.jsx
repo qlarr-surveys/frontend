@@ -1,5 +1,5 @@
 import React from "react";
-import { Checkbox, FormControl, MenuItem, Select } from "@mui/material";
+import { Checkbox, MenuItem, Select } from "@mui/material";
 import { shallowEqual, useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeAttribute, updateRandom } from "~/state/design/designState";
@@ -150,24 +150,22 @@ export default function OrderSetup({ t, rule, code }) {
       <div className={styles.label}>
         <CustomTooltip body={tTooltips(title)} /> <h4>{t(`${title}`)}</h4>
       </div>
-      <FormControl variant="standard" fullWidth>
-        <Select
-          id="select-value"
-          value={value}
-          label={t("select_value")}
-          onChange={(e) => {
-            onChange(e.target.value);
-          }}
-        >
-          {labels.map((element, index) => {
-            return (
-              <MenuItem key={element} value={values[index]}>
-                {element}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
+      <Select
+        fullWidth
+        id="select-value"
+        value={value}
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
+      >
+        {labels.map((element, index) => {
+          return (
+            <MenuItem key={element} value={values[index]}>
+              {element}
+            </MenuItem>
+          );
+        })}
+      </Select>
 
       {value != "NONE" && value != undefined && (
         <ul className={styles.list}>
