@@ -31,13 +31,13 @@ function VideoCapture(props) {
       (component.validation?.validation_max_file_size?.isActive &&
         component.validation?.validation_max_file_size?.max_size) ||
       -1;
-    
-    // Limit to validation value or 10MB (10240 KB), whichever is smaller
-    const IMAGE_MAX_SIZE_KB = 10240; // 10MB
-    const maxFileSize = validationMaxSize > 0 
-      ? Math.min(validationMaxSize, IMAGE_MAX_SIZE_KB)
-      : IMAGE_MAX_SIZE_KB;
-    
+
+    // Limit to validation value or 30MB (30720 KB), whichever is smaller
+    const VIDEO_MAX_SIZE_KB = 30720; // 30MB
+    const maxFileSize = validationMaxSize > 0
+      ? Math.min(validationMaxSize, VIDEO_MAX_SIZE_KB)
+      : VIDEO_MAX_SIZE_KB;
+
     if (preview && mode == "offline") {
       getFileFromPath("/dummy_video.mp4").then((response) => {
         uploadFile(runService, code, preview, response)
