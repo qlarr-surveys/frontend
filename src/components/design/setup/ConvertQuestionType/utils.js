@@ -80,3 +80,21 @@ export function computeArrayLostAttributes(question, columns, newType) {
 
   return lost;
 }
+
+export function computeDateTimeLostAttributes(question, newType) {
+  const lost = [];
+
+  if (newType === "time") {
+    if (question?.minDate || question?.maxDate) {
+      lost.push("lost_date_bounds");
+    }
+  }
+
+  if (newType === "date") {
+    if (question?.fullDayFormat === true) {
+      lost.push("lost_fullday_format");
+    }
+  }
+
+  return lost;
+}
