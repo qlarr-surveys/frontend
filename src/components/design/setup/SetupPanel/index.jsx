@@ -14,7 +14,15 @@ import styles from "./SetupPanel.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { Box, Button, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { useDispatch } from "react-redux";
 import { resetSetup, clearHighlighted } from "~/state/design/designState";
 import { useSelector } from "react-redux";
@@ -27,7 +35,7 @@ import OrderSetup from "../random/OrderSetup";
 import ScqDefaultValue from "../ScqDefaultValue";
 import DisabledToggle from "../Disabled";
 import EntityCodeEditor from "../EntityCodeEditor";
-import CustomCSS from '../CustomCss';
+import CustomCSS from "../CustomCss";
 import ConvertQuestionType from "../ConvertQuestionType";
 
 function SetupPanel({ t }) {
@@ -482,8 +490,12 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
 
   const normalRules = React.useMemo(() => {
     const flat = rules?.flatMap((r) => r.rules || []) || [];
-    return ['disabled', 'showDescription', 'validation_required', 'hint']
-      .filter((r) => flat.includes(r));
+    return [
+      "disabled",
+      "showDescription",
+      "validation_required",
+      "hint",
+    ].filter((r) => flat.includes(r));
   }, [rules]);
 
   React.useEffect(() => {
@@ -512,7 +524,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
             <div className={styles.setupContainer} key={el}>
               <SetupComponent key={el} code={code} rule={el} t={t} />
             </div>
-          ))
+          )),
         )}
       </Box>
     );
@@ -531,28 +543,14 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
       )}
 
       {!showAdvanced && (
-        <Box sx={{ backgroundColor: '#04BDF314', p: 1.5 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2em" }}>
           <Button
-            variant="text"
-            size="small"
-            fullWidth
+            variant="contained"
+            size="medium"
             endIcon={<ArrowForwardIcon />}
             onClick={() => setShowAdvanced(true)}
-            sx={{
-              textTransform: 'none',
-              color: '#1a237e',
-              textDecoration: 'underline',
-              fontWeight: 500,
-              backgroundColor: 'white',
-              borderRadius: '8px',
-              py: 1,
-              '&:hover': {
-                textDecoration: 'underline',
-                backgroundColor: 'white',
-              },
-            }}
           >
-            {t('show_advanced_settings')}
+            {t("show_advanced_settings")}
           </Button>
         </Box>
       )}
@@ -604,28 +602,15 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
               </div>
             ))}
           </Box>
-          <Box sx={{ backgroundColor: '#04BDF314', p: 1.5 }}>
+
+          <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2em" }}>
             <Button
-              variant="text"
-              size="small"
-              fullWidth
+              variant="contained"
+              size="medium"
               startIcon={<ArrowBackIcon />}
               onClick={() => setShowAdvanced(false)}
-              sx={{
-                textTransform: 'none',
-                color: '#1a237e',
-                textDecoration: 'underline',
-                fontWeight: 500,
-                backgroundColor: 'white',
-                borderRadius: '8px',
-                py: 1,
-                '&:hover': {
-                  textDecoration: 'underline',
-                  backgroundColor: 'white',
-                },
-              }}
             >
-              {t('hide_advanced_settings')}
+              {t("hide_advanced_settings")}
             </Button>
           </Box>
         </>
