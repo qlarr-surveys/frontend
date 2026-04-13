@@ -8,6 +8,7 @@ export const CONVERTIBLE_CHOICE_TYPES = [
 ];
 export const CONVERTIBLE_TEXT_TYPES = ["text", "number", "email", "paragraph", "autocomplete"];
 export const CONVERTIBLE_ARRAY_TYPES = ["scq_array", "mcq_array", "scq_icon_array"];
+export const CONVERTIBLE_DATE_TIME_TYPES = ["date", "date_time", "time"];
 
 export const isSingleSelect = (type) =>
   ["scq", "icon_scq", "image_scq"].includes(type);
@@ -19,6 +20,7 @@ export const mediaGroup = (type) => {
 };
 export const isArrayType = (type) => CONVERTIBLE_ARRAY_TYPES.includes(type);
 export const isTextType = (type) => CONVERTIBLE_TEXT_TYPES.includes(type);
+export const isDateTimeType = (type) => CONVERTIBLE_DATE_TIME_TYPES.includes(type);
 
 
 
@@ -599,6 +601,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "dateFormat",
             "fullDayFormat",
             "maxDate",
@@ -637,6 +640,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "dateFormat",
             "maxDate",
             "minDate",
@@ -674,6 +678,7 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
+            "convert_question_type",
             "fullDayFormat",
             "hint",
           ],

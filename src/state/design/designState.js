@@ -15,6 +15,7 @@ import {
   CONVERTIBLE_CHOICE_TYPES,
   CONVERTIBLE_ARRAY_TYPES,
   CONVERTIBLE_TEXT_TYPES,
+  CONVERTIBLE_DATE_TIME_TYPES,
   languageSetup,
   setupOptions,
   themeSetup,
@@ -22,6 +23,7 @@ import {
 import { convertChoiceQuestion } from "./convertChoiceQuestion";
 import { convertArrayQuestion } from "./convertArrayQuestion";
 import { convertTextQuestion } from "./convertTextQuestion";
+import { convertDateTimeQuestion } from "./convertDateTimeQuestion";
 import {
   createQuestion,
   questionDesignError,
@@ -512,7 +514,10 @@ export const designState = createSlice({
       const inTextGroup =
         CONVERTIBLE_TEXT_TYPES.includes(currentType) &&
         CONVERTIBLE_TEXT_TYPES.includes(newType);
-      if ((!inChoiceGroup && !inArrayGroup && !inTextGroup) || currentType === newType) return;
+      const inDateTimeGroup =
+        CONVERTIBLE_DATE_TIME_TYPES.includes(currentType) &&
+        CONVERTIBLE_DATE_TIME_TYPES.includes(newType);
+      if ((!inChoiceGroup && !inArrayGroup && !inTextGroup && !inDateTimeGroup) || currentType === newType) return;
 
       // Update type in question state
       currentQuestion.type = newType;
@@ -543,6 +548,9 @@ export const designState = createSlice({
         );
       } else if (inTextGroup) {
         convertTextQuestion(currentQuestion, newType);
+      } else if (inDateTimeGroup) {
+        convertDateTimeQuestion(currentQuestion, currentType, newType);
+        addMaskedValuesInstructions(questionCode, currentQuestion, state);
       }
 
       cleanupValidation(state, questionCode);
