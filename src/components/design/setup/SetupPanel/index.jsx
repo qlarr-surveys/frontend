@@ -104,10 +104,10 @@ function SetupPanel({ t }) {
 
 export default React.memo(SetupPanel);
 
-const SetupComponent = React.memo(({ code, rule, t }) => {
+const SetupComponent = React.memo(({ code, rule, t, isQuickOptions }) => {
   if (rule.startsWith("validation_")) {
     return (
-      <ValidationSetupItem t={t} rule={rule} key={code + rule} code={code} />
+      <ValidationSetupItem t={t} rule={rule} key={code + rule} code={code} isQuickOptions={isQuickOptions} />
     );
   }
 
@@ -461,10 +461,18 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
   }
 });
 
+const SETUP_SHOW_ADVANCED = "setup_show_advanced";
+
 const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const dispatch = useDispatch();
   const [highlightedEl, setHighlightedEl] = React.useState(highlighted);
-  const [showAdvanced, setShowAdvanced] = React.useState(false);
+  const [showAdvanced, setShowAdvanced] = React.useState(
+    () => localStorage.getItem(SETUP_SHOW_ADVANCED) === "true"
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem(SETUP_SHOW_ADVANCED, showAdvanced);
+  }, [showAdvanced]);
 
   const targetTabIndex = React.useMemo(() => {
     if (!rules?.length) return 0;
@@ -481,7 +489,10 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const [selectedTab, setSelectedTab] = React.useState(() => targetTabIndex);
 
   React.useEffect(() => {
-    if (highlighted) setSelectedTab(targetTabIndex);
+    if (highlighted) {
+      setShowAdvanced(true);
+      setSelectedTab(targetTabIndex);
+    }
   }, [targetTabIndex]);
 
   const handleTabChange = (_, newValue) => setSelectedTab(newValue);
@@ -536,7 +547,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
         <Box>
           {normalRules.map((rule) => (
             <div className={styles.setupContainer} key={rule}>
-              <SetupComponent code={code} rule={rule} t={t} />
+              <SetupComponent code={code} rule={rule} t={t} isQuickOptions />
             </div>
           ))}
         </Box>
