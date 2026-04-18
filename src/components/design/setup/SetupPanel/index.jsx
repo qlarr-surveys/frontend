@@ -481,7 +481,10 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const [selectedTab, setSelectedTab] = React.useState(() => targetTabIndex);
 
   React.useEffect(() => {
-    if (highlighted) setSelectedTab(targetTabIndex);
+    if (highlighted) {
+      setShowAdvanced(true);
+      setSelectedTab(targetTabIndex);
+    }
   }, [targetTabIndex]);
 
   const handleTabChange = (_, newValue) => setSelectedTab(newValue);
