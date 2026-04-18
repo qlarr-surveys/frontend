@@ -104,10 +104,10 @@ function SetupPanel({ t }) {
 
 export default React.memo(SetupPanel);
 
-const SetupComponent = React.memo(({ code, rule, t }) => {
+const SetupComponent = React.memo(({ code, rule, t, isQuickOptions }) => {
   if (rule.startsWith("validation_")) {
     return (
-      <ValidationSetupItem t={t} rule={rule} key={code + rule} code={code} />
+      <ValidationSetupItem t={t} rule={rule} key={code + rule} code={code} isQuickOptions={isQuickOptions} />
     );
   }
 
@@ -547,7 +547,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
         <Box>
           {normalRules.map((rule) => (
             <div className={styles.setupContainer} key={rule}>
-              <SetupComponent code={code} rule={rule} t={t} />
+              <SetupComponent code={code} rule={rule} t={t} isQuickOptions />
             </div>
           ))}
         </Box>
