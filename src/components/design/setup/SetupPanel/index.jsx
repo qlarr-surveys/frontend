@@ -464,7 +464,13 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
 const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const dispatch = useDispatch();
   const [highlightedEl, setHighlightedEl] = React.useState(highlighted);
-  const [showAdvanced, setShowAdvanced] = React.useState(false);
+  const [showAdvanced, setShowAdvanced] = React.useState(
+    () => localStorage.getItem("setup_show_advanced") === "true"
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem("setup_show_advanced", showAdvanced);
+  }, [showAdvanced]);
 
   const targetTabIndex = React.useMemo(() => {
     if (!rules?.length) return 0;
