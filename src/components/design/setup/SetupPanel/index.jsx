@@ -461,15 +461,17 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
   }
 });
 
+const SETUP_SHOW_ADVANCED = SETUP_SHOW_ADVANCED;
+
 const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const dispatch = useDispatch();
   const [highlightedEl, setHighlightedEl] = React.useState(highlighted);
   const [showAdvanced, setShowAdvanced] = React.useState(
-    () => localStorage.getItem("setup_show_advanced") === "true"
+    () => localStorage.getItem(SETUP_SHOW_ADVANCED) === "true"
   );
 
   React.useEffect(() => {
-    localStorage.setItem("setup_show_advanced", showAdvanced);
+    localStorage.setItem(SETUP_SHOW_ADVANCED, showAdvanced);
   }, [showAdvanced]);
 
   const targetTabIndex = React.useMemo(() => {
