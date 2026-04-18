@@ -344,6 +344,8 @@
   "general": "Allgemein",
   "logic": "Logik",
   "advanced": "Erweitert",
+  "show_advanced_settings": "Erweiterte Einstellungen anzeigen",
+  "hide_advanced_settings": "Erweiterte Einstellungen ausblenden",
   "order_instruction_placeholder": "Reihenfolge-Ausdruck eingeben",
   "add_conditional_relevance": "Bedingte Relevanz hinzufügen",
   "conditional_relevance_text_placeholder": "Bedingte Relevanz-Ausdruck eingeben",

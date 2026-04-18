@@ -12,7 +12,17 @@ import Relevance from "../logic/Relevance";
 import SkipLogic from "../SkipLogic";
 import styles from "./SetupPanel.module.css";
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Divider, IconButton, Tab, Tabs, Typography } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { useDispatch } from "react-redux";
 import { resetSetup, clearHighlighted } from "~/state/design/designState";
 import { useSelector } from "react-redux";
@@ -25,7 +35,7 @@ import OrderSetup from "../random/OrderSetup";
 import ScqDefaultValue from "../ScqDefaultValue";
 import DisabledToggle from "../Disabled";
 import EntityCodeEditor from "../EntityCodeEditor";
-import CustomCSS from '../CustomCss';
+import CustomCSS from "../CustomCss";
 import ConvertQuestionType from "../ConvertQuestionType";
 
 function SetupPanel({ t }) {
@@ -94,10 +104,10 @@ function SetupPanel({ t }) {
 
 export default React.memo(SetupPanel);
 
-const SetupComponent = React.memo(({ code, rule, t }) => {
+const SetupComponent = React.memo(({ code, rule, t, isQuickOptions }) => {
   if (rule.startsWith("validation_")) {
     return (
-      <ValidationSetupItem t={t} rule={rule} key={code + rule} code={code} />
+      <ValidationSetupItem t={t} rule={rule} key={code + rule} code={code} isQuickOptions={isQuickOptions} />
     );
   }
 
@@ -451,9 +461,18 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
   }
 });
 
+const SETUP_SHOW_ADVANCED = "setup_show_advanced";
+
 const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const dispatch = useDispatch();
   const [highlightedEl, setHighlightedEl] = React.useState(highlighted);
+  const [showAdvanced, setShowAdvanced] = React.useState(
+    () => localStorage.getItem(SETUP_SHOW_ADVANCED) === "true"
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem(SETUP_SHOW_ADVANCED, showAdvanced);
+  }, [showAdvanced]);
 
   const targetTabIndex = React.useMemo(() => {
     if (!rules?.length) return 0;
@@ -470,12 +489,25 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const [selectedTab, setSelectedTab] = React.useState(() => targetTabIndex);
 
   React.useEffect(() => {
-    if (highlighted) setSelectedTab(targetTabIndex);
+    if (highlighted) {
+      setShowAdvanced(true);
+      setSelectedTab(targetTabIndex);
+    }
   }, [targetTabIndex]);
 
   const handleTabChange = (_, newValue) => setSelectedTab(newValue);
 
   const hasTitles = rules?.some((rule) => !!rule.title);
+
+  const normalRules = React.useMemo(() => {
+    const flat = rules?.flatMap((r) => r.rules || []) || [];
+    return [
+      "disabled",
+      "showDescription",
+      "validation_required",
+      "hint",
+    ].filter((r) => flat.includes(r));
+  }, [rules]);
 
   React.useEffect(() => {
     if (!highlighted) return;
@@ -503,7 +535,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
             <div className={styles.setupContainer} key={el}>
               <SetupComponent key={el} code={code} rule={el} t={t} />
             </div>
-          ))
+          )),
         )}
       </Box>
     );
@@ -511,50 +543,89 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
 
   return (
     <>
-      <Tabs
-        className={styles.tabContainer}
-        value={selectedTab}
-        onChange={handleTabChange}
-        variant="standard"
-        TabIndicatorProps={{ sx: { display: "none" } }}
-        sx={{
-          "& .MuiTabs-flexContainer": {
-            flexWrap: "wrap",
-          },
-        }}
-      >
-        {rules.map((rule) => (
-          <Tab
-            className={styles.tabStyle}
+      {!showAdvanced && (
+        <Box>
+          {normalRules.map((rule) => (
+            <div className={styles.setupContainer} key={rule}>
+              <SetupComponent code={code} rule={rule} t={t} isQuickOptions />
+            </div>
+          ))}
+        </Box>
+      )}
+
+      {!showAdvanced && (
+        <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2em" }}>
+          <Button
+            variant="contained"
+            size="medium"
+            endIcon={<ArrowForwardIcon />}
+            onClick={() => setShowAdvanced(true)}
+          >
+            {t("show_advanced_settings")}
+          </Button>
+        </Box>
+      )}
+
+      {showAdvanced && (
+        <>
+          <Divider />
+          <Tabs
+            className={styles.tabContainer}
+            value={selectedTab}
+            onChange={handleTabChange}
+            variant="standard"
+            TabIndicatorProps={{ sx: { display: "none" } }}
             sx={{
-              px: 1.5,
-              borderBottom: "2px solid transparent",
-              "&.Mui-selected": {
-                borderBottom: "2px solid #000",
+              "& .MuiTabs-flexContainer": {
+                flexWrap: "wrap",
               },
             }}
-            key={rule.key}
-            label={t(rule.title)}
-          />
-        ))}
-      </Tabs>
-      <Divider />
-      <Box
-        sx={{
-          backgroundColor:
-            rules[selectedTab]?.key === highlighted
-              ? "#fff"
-              : "background.paper",
-        }}
-      >
-        {rules[selectedTab]?.rules?.map((el) => (
-          <div className={styles.setupContainer} key={el}>
-            <Box sx={rowSx(el)}>
-              <SetupComponent key={el} code={code} rule={el} t={t} />
-            </Box>
-          </div>
-        ))}
-      </Box>
+          >
+            {rules.map((rule) => (
+              <Tab
+                className={styles.tabStyle}
+                sx={{
+                  px: 1.5,
+                  borderBottom: "2px solid transparent",
+                  "&.Mui-selected": {
+                    borderBottom: "2px solid #000",
+                  },
+                }}
+                key={rule.key}
+                label={t(rule.title)}
+              />
+            ))}
+          </Tabs>
+          <Divider />
+          <Box
+            sx={{
+              backgroundColor:
+                rules[selectedTab]?.key === highlighted
+                  ? "#fff"
+                  : "background.paper",
+            }}
+          >
+            {rules[selectedTab]?.rules?.map((el) => (
+              <div className={styles.setupContainer} key={el}>
+                <Box sx={rowSx(el)}>
+                  <SetupComponent key={el} code={code} rule={el} t={t} />
+                </Box>
+              </div>
+            ))}
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2em" }}>
+            <Button
+              variant="contained"
+              size="medium"
+              startIcon={<ArrowBackIcon />}
+              onClick={() => setShowAdvanced(false)}
+            >
+              {t("hide_advanced_settings")}
+            </Button>
+          </Box>
+        </>
+      )}
     </>
   );
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import { Checkbox, MenuItem, Select } from "@mui/material";
+import { Checkbox, MenuItem, Select, Typography } from "@mui/material";
 import { shallowEqual, useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeAttribute, updateRandom } from "~/state/design/designState";
@@ -148,7 +148,7 @@ export default function OrderSetup({ t, rule, code }) {
   return (
     <>
       <div className={styles.label}>
-        <CustomTooltip body={tTooltips(title)} /> <h4>{t(`${title}`)}</h4>
+        <CustomTooltip body={tTooltips(title)} />  <Typography fontWeight={700}>{t(`${title}`)}</Typography>
       </div>
       <Select
         fullWidth
