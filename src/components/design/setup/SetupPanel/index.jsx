@@ -461,7 +461,7 @@ const SetupComponent = React.memo(({ code, rule, t }) => {
   }
 });
 
-const SETUP_SHOW_ADVANCED = SETUP_SHOW_ADVANCED;
+const SETUP_SHOW_ADVANCED = "setup_show_advanced";
 
 const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const dispatch = useDispatch();
