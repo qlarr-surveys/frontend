@@ -11,12 +11,6 @@ This is the backend application for qlarr, built using React to
 
 ## Operations
 
-[![Deploy to Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/qlarr-surveys/frontend&envVars=)
-
-For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
-
-If you wish to run this project for a production environment, we recommend you to use our [docker-compose](https://github.com/qlarr-surveys/backend/blob/main/docker-compose.yml) file that deploys both frontend and backend
-
 To run this locally, follow these steps:
 
 1. **Prerequisites**:

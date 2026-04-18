@@ -1,5 +1,5 @@
 # 80 -> 443 redirect by default, unless CADDY_PORT is set to anything other than 443
-{$CADDY_HOSTNAME}:{$CADDY_PORT} {
+{$CADDY_FRONTEND_HOSTNAME}:{$CADDY_PORT} {
 	root * {$CADDY_DIST:/usr/share/caddy}
 	try_files {path} {path}/ /index.html
 	file_server
@@ -20,4 +20,8 @@
 			style-src 'self' 'unsafe-inline'
 		"
 	}
+}
+
+{$CADDY_API_HOSTNAME}:{$CADDY_PORT} {
+	reverse_proxy backend-app:8080
 }
