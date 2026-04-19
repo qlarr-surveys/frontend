@@ -1,4 +1,4 @@
-import { isSingleSelect, mediaGroup } from "~/constants/design";
+import { isSingleSelect, mediaGroup } from "../../constants/design.js";
 import {
   addAnswerInstructions,
   addMaskedValuesInstructions,
@@ -8,7 +8,7 @@ import {
   refreshEnumForSingleChoice,
   refreshListForMultipleChoice,
   removeInstruction,
-} from "./addInstructions";
+} from "./addInstructions.js";
 
 export function convertChoiceQuestion(
   state,

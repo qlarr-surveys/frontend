@@ -1,10 +1,10 @@
-import { ARRAY_MIN_WIDTH_KEYS } from "~/constants/design";
+import { ARRAY_MIN_WIDTH_KEYS } from "../../constants/design.js";
 import {
   addAnswerInstructions,
   changeInstruction,
   refreshEnumForSingleChoice,
   refreshListForMultipleChoice,
-} from "./addInstructions";
+} from "./addInstructions.js";
 
 export function convertArrayQuestion(
   state,

@@ -1,8 +1,8 @@
 import { createSlice, current } from "@reduxjs/toolkit";
-import { firstIndexInArray, isEquivalent, nextId } from "~/utils/design/utils";
-import { createGroup } from "~/components/design/NewComponentsPanel";
+import { firstIndexInArray, isEquivalent, nextId } from "../../utils/design/utils.js";
+import { createGroup } from "../../components/design/NewComponentsPanel/index.jsx";
 
-import { lastIndexInArray } from "~/utils/design/utils";
+import { lastIndexInArray } from "../../utils/design/utils.js";
 import cloneDeep from "lodash.clonedeep";
 import {
   buildValidationDefaultData,
@@ -10,7 +10,7 @@ import {
   nextQuestionId,
   reorder,
   buildReferenceInstruction,
-} from "./stateUtils";
+} from "./stateUtils.js";
 import {
   CONVERTIBLE_CHOICE_TYPES,
   CONVERTIBLE_ARRAY_TYPES,
@@ -19,16 +19,16 @@ import {
   languageSetup,
   setupOptions,
   themeSetup,
-} from "~/constants/design";
-import { convertChoiceQuestion } from "./convertChoiceQuestion";
-import { convertArrayQuestion } from "./convertArrayQuestion";
-import { convertTextQuestion } from "./convertTextQuestion";
-import { convertDateTimeQuestion } from "./convertDateTimeQuestion";
+} from "../../constants/design.js";
+import { convertChoiceQuestion } from "./convertChoiceQuestion.js";
+import { convertArrayQuestion } from "./convertArrayQuestion.js";
+import { convertTextQuestion } from "./convertTextQuestion.js";
+import { convertDateTimeQuestion } from "./convertDateTimeQuestion.js";
 import {
   createQuestion,
   questionDesignError,
-} from "~/components/Questions/utils";
-import { DESIGN_SURVEY_MODE } from "~/routes";
+} from "../../components/Questions/utils.jsx";
+import { DESIGN_SURVEY_MODE } from "../../routes.js";
 import {
   addAnswerInstructions,
   addMaskedValuesInstructions,
@@ -43,8 +43,8 @@ import {
   processValidation,
   removeInstruction,
   updateRandomByRule,
-} from "./addInstructions";
-import { defaultSurveyTheme } from "~/constants/theme";
+} from "./addInstructions.js";
+import { defaultSurveyTheme } from "../../constants/theme.js";
 
 const reservedKeys = [
   "setup",

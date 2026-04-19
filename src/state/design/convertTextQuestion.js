@@ -1,5 +1,5 @@
-import { setupOptions } from "~/constants/design";
-import { removeInstruction } from "./addInstructions";
+import { setupOptions } from "../../constants/design.js";
+import { removeInstruction } from "./addInstructions.js";
 
 export function convertTextQuestion(currentQuestion, newType) {
   if (!currentQuestion.validation) return;
