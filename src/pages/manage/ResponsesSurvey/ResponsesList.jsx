@@ -78,10 +78,7 @@ function ResponsesList() {
   const [surveyor, setSurveyor] = useState(null);
 
   const [allResponse, setAllResponse] = useState(null);
-  const [responseId, setResponseId] = useState(() => {
-    const stored = sessionStorage.getItem("responseId");
-    return stored ? stored : null;
-  });
+  const [responseId, setResponseId] = useState(null);
   const [selected, setSelected] = useState(null);
   const [canExportFiles, setCanExportFiles] = useState(false);
   const [askedAboutFiles, setAskedAboutFiles] = useState(false);
@@ -320,11 +317,7 @@ function ResponsesList() {
   }, [page, rowsPerPage, status, surveyor]);
 
   useEffect(() => {
-    if (!responseId) {
-      sessionStorage.removeItem("responseId");
-      return;
-    }
-    sessionStorage.setItem("responseId", responseId);
+    if (!responseId) return;
     surveyService
       .getResponseById(responseId)
       .then((data) => {
