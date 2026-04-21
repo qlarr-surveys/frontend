@@ -117,6 +117,10 @@ function ResponsesList() {
             setCanExportFiles(data.canExportFiles);
           }
           setAllResponse(data);
+          if (responseId && !data.responses?.some((r) => r.id === responseId)) {
+            setResponseId(null);
+            setSelected(null);
+          }
         }
         setFetching(false);
       })
@@ -325,6 +329,8 @@ function ResponsesList() {
       })
       .catch((err) => {
         console.error(err);
+        setResponseId(null);
+        setSelected(null);
       });
   }, [responseId]);
 
@@ -332,10 +338,17 @@ function ResponsesList() {
   const onCloseModal = () => setResponseToDelete(null);
   const deleteResponse = () => {
     if (!responseToDelete) return;
+    const deletedId = responseToDelete.id;
     onCloseModal();
     surveyService
-      .deleteResponse(surveyId, responseToDelete.id)
-      .then(() => fetchResponses(true))
+      .deleteResponse(surveyId, deletedId)
+      .then(() => {
+        if (responseId === deletedId) {
+          setResponseId(null);
+          setSelected(null);
+        }
+        fetchResponses(true);
+      })
       .catch(processApirror);
   };
 

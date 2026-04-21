@@ -68,8 +68,9 @@ class SurveyService extends BaseService {
   }
 
   async getResponseById(responseId) {
-    const response = await this.handleRequest(() =>
-      authenticatedApi.get(`/response/${responseId}`)
+    const response = await this.handleRequest(
+      () => authenticatedApi.get(`/response/${responseId}`),
+      { silent: true }
     );
     return response.data;
   }
