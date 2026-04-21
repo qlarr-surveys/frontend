@@ -75,6 +75,7 @@ function EditSurvey({ onPublish }) {
       <Box
         display="flex"
         flexWrap={{ xs: "wrap", sm: "wrap", md: "nowrap" }}
+        alignItems="flex-start"
         gap={4}
         width="100%"
       >
