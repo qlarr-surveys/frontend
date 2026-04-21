@@ -90,11 +90,10 @@ function Web() {
         path={routes.designSurvey}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.DESIGN}
-              />
-            </ManagePageWrapper>
+            <PrivateDesignSurvey
+              landingPage={MANAGE_SURVEY_LANDING_PAGES.DESIGN}
+              headerOptions={HEADER_OPTIONS.SURVEY}
+            />
           </Suspense>
         }
       />
@@ -122,11 +121,10 @@ function Web() {
         path={routes.editSurvey}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.SETTINGS}
-              />
-            </ManagePageWrapper>
+            <PrivateDesignSurvey
+              landingPage={MANAGE_SURVEY_LANDING_PAGES.SETTINGS}
+              headerOptions={HEADER_OPTIONS.SURVEY}
+            />
           </Suspense>
         }
       />
@@ -135,11 +133,10 @@ function Web() {
         path={routes.responses}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY_NO_PREVIEW}>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.RESPONSES}
-              />
-            </ManagePageWrapper>
+            <PrivateDesignSurvey
+              landingPage={MANAGE_SURVEY_LANDING_PAGES.RESPONSES}
+              headerOptions={HEADER_OPTIONS.SURVEY_NO_PREVIEW}
+            />
           </Suspense>
         }
       />
@@ -256,14 +253,20 @@ function Web() {
   );
 }
 
-const PrivateDesignSurvey = ({ landingPage }) => {
+const PrivateDesignSurvey = ({ landingPage, headerOptions }) => {
   const params = useParams();
-  sessionStorage.setItem("surveyId", params.surveyId);
   const location = useLocation();
-  return TokenService.isAuthenticated() ? (
-    <ManageSurvey landingPage={landingPage} />
-  ) : (
-    <Navigate to="/login" replace state={{ from: location }} />
+
+  if (!TokenService.isAuthenticated()) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  sessionStorage.setItem("surveyId", params.surveyId);
+
+  return (
+    <ManagePageWrapper headerOptions={headerOptions}>
+      <ManageSurvey landingPage={landingPage} />
+    </ManagePageWrapper>
   );
 };
 
@@ -290,23 +293,19 @@ const PrivateComponent = ({ children }) => {
 
 const PrivateManageUsers = ({ roles, children }) => {
   const location = useLocation();
+
+  if (!TokenService.isAuthenticated()) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
   const user = TokenService.getUser();
-  let hasCorrectRole = false;
-  user.roles.forEach((el) => {
-    if (roles.indexOf(el) > -1) {
-      hasCorrectRole = true;
-    }
-  });
+  const hasCorrectRole = user.roles.some((el) => roles.indexOf(el) > -1);
 
   if (!hasCorrectRole) {
     return <Navigate to="/" replace />;
   }
 
-  return TokenService.isAuthenticated() ? (
-    children
-  ) : (
-    <Navigate to="/login" replace state={{ from: location }} />
-  );
+  return children;
 };
 
 const PublicOnlyRoute = ({ children }) => {

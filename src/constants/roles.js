@@ -9,7 +9,8 @@ export const ROLES = {
 };
 
 export const isSurveyAdmin = () => {
-  const roles = TokenService.getUser().roles;
+  const roles = TokenService.getUser()?.roles;
+  if (!roles) return false;
   return (
     roles.indexOf(ROLES.SUPER_ADMIN) != -1 ||
     roles.indexOf(ROLES.SURVEY_ADMIN) != -1
@@ -33,7 +34,8 @@ export const availablePages = (user) => {
 };
 
 export const isSuperAdmin = () => {
-  const roles = TokenService.getUser().roles;
+  const roles = TokenService.getUser()?.roles;
+  if (!roles) return false;
   return (
     roles.indexOf(ROLES.SUPER_ADMIN) != -1
   );
@@ -55,6 +57,7 @@ export const isAnalyst = (user) => {
 };
 
 export const isSurveyorOnly = () => {
-  const roles = TokenService.getUser().roles;
+  const roles = TokenService.getUser()?.roles;
+  if (!roles) return false;
   return roles.length == 1 && roles.indexOf(ROLES.SURVEYOR) != -1;
 };
