@@ -58,14 +58,17 @@ function EditSurvey({ onPublish }) {
       <Accordion className={styles.accordionContainer} defaultExpanded={true}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
+          aria-controls="panel-launch-content"
+          id="panel-launch-header"
         >
           <Typography fontWeight="600" color="#1a2052" variant="h5">
             {t("edit_survey.launch")}
           </Typography>
         </AccordionSummary>
-        <AccordionDetails className={styles.accordionDetails}>
+        <AccordionDetails
+          id="panel-launch-content"
+          className={styles.accordionDetails}
+        >
           <LaunchPage onPublish={onPublish} />
         </AccordionDetails>
       </Accordion>
@@ -84,8 +87,8 @@ function EditSurvey({ onPublish }) {
             >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
+                aria-controls={`panel-${section.id}-content`}
+                id={`panel-${section.id}-header`}
               >
                 <Box display="flex" alignItems="center" gap=".5rem">
                   {section.tooltip && (
@@ -96,7 +99,10 @@ function EditSurvey({ onPublish }) {
                   </Typography>
                 </Box>
               </AccordionSummary>
-              <AccordionDetails className={styles.accordionDetails}>
+              <AccordionDetails
+                id={`panel-${section.id}-content`}
+                className={styles.accordionDetails}
+              >
                 {section.component}
               </AccordionDetails>
             </Accordion>
@@ -113,14 +119,17 @@ function EditSurvey({ onPublish }) {
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
+              aria-controls={`panel-${section.id}-content`}
+              id={`panel-${section.id}-header`}
             >
               <Typography fontWeight="600" color="#1a2052" variant="h5">
                 {section.title}
               </Typography>
             </AccordionSummary>
-            <AccordionDetails className={styles.accordionDetails}>
+            <AccordionDetails
+              id={`panel-${section.id}-content`}
+              className={styles.accordionDetails}
+            >
               {section.component}
             </AccordionDetails>
           </Accordion>
