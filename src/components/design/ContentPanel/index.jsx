@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,8 +25,8 @@ function ContentPanel({ designMode }, ref) {
     }
   }, [lang, i18n]);
 
-  const t = useCallback(
-    (key, options) => i18n.getFixedT(lang, NAMESPACES.DESIGN_CORE)(key, options),
+  const t = useMemo(
+    () => i18n.getFixedT(lang, NAMESPACES.DESIGN_CORE),
     [lang, i18n, langReady]
   );
 
