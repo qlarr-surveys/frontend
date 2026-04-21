@@ -50,11 +50,9 @@ function NumberQuestion(props) {
   };
 
   const formatValue = (value) => {
-    return value === undefined
-      ? ""
-      : props.component.decimal_separator == ","
-        ? value.toString().replace(".", ",")
-        : value;
+    if (value === undefined) return "";
+    const str = value.toString();
+    return props.component.decimal_separator == "," ? str.replace(".", ",") : str;
   };
 
   const handleChange = (event) => {
@@ -68,15 +66,6 @@ function NumberQuestion(props) {
 
   const lostFocus = (event) => {
     dispatch(setDirty(event.target.name));
-    let processed = +state.value;
-    if (!isNaN(processed)) {
-      dispatch(
-        valueChange({
-          componentCode: props.component.qualifiedCode,
-          value: processed,
-        })
-      );
-    }
   };
 
   return (
