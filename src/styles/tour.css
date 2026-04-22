@@ -1,4 +1,17 @@
-.preview-tour-tooltip.introjs-tooltip {
+/* Shared styles for intro.js-based product tours.
+ * Applied by both DesignTour and PreviewSurveyTour (and any future tour).
+ * Step-specific overrides live in each tour's own tour.css.
+ *
+ * Convention: every tour must add the `tour-tooltip` class to intro.js's
+ * `tooltipClass` option, `tour-highlight` to `highlightClass`, and wrap
+ * the step body content in `<div class="tour-step-body">…</div>`.
+ *
+ * The × close button's horizontal corner is re-positioned at runtime by
+ * `positionSkipButtonAwayFromArrow` in ~/utils/tour.js so it never
+ * overlaps the tooltip arrow; the CSS below is only the directional
+ * default it starts from. */
+
+.tour-tooltip.introjs-tooltip {
   border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.14);
   min-width: 280px;
@@ -6,13 +19,13 @@
   overflow: visible;
 }
 
-.preview-tour-tooltip .introjs-tooltip-header {
+.tour-tooltip .introjs-tooltip-header {
   padding: 0;
   min-height: 0;
   position: static;
 }
 
-.preview-tour-tooltip .introjs-tooltip-title {
+.tour-tooltip .introjs-tooltip-title {
   font-family: Rubik, sans-serif;
   font-weight: 500;
   font-size: 14px;
@@ -21,7 +34,7 @@
   color: #000000;
 }
 
-.preview-tour-step-body {
+.tour-step-body {
   font-size: 12px;
   color: #6b7280;
   white-space: pre-line;
@@ -29,25 +42,25 @@
   margin-bottom: 6px;
 }
 
-.preview-tour-step-body b {
+.tour-step-body b {
   font-weight: 700;
   color: #000000;
 }
 
-.preview-tour-tooltip .introjs-tooltiptext {
+.tour-tooltip .introjs-tooltiptext {
   padding: 0;
 }
 
-.preview-tour-tooltip .introjs-bullets,
-.preview-tour-tooltip .introjs-progress {
+.tour-tooltip .introjs-bullets,
+.tour-tooltip .introjs-progress {
   display: none;
 }
 
-.preview-tour-highlight.introjs-helperLayer {
+.tour-highlight.introjs-helperLayer {
   border-radius: 8px;
 }
 
-.preview-tour-tooltip .introjs-tooltipbuttons {
+.tour-tooltip .introjs-tooltipbuttons {
   border-top: none;
   display: flex;
   align-items: center;
@@ -56,7 +69,7 @@
   padding: 0;
 }
 
-.preview-tour-tooltip .introjs-nextbutton {
+.tour-tooltip .introjs-nextbutton {
   text-transform: none;
   font-size: 11px;
   font-weight: 600;
@@ -70,13 +83,13 @@
   white-space: nowrap;
 }
 
-.preview-tour-tooltip .introjs-nextbutton:hover,
-.preview-tour-tooltip .introjs-nextbutton:focus {
+.tour-tooltip .introjs-nextbutton:hover,
+.tour-tooltip .introjs-nextbutton:focus {
   background-color: #141842;
   box-shadow: none;
 }
 
-.preview-tour-tooltip .introjs-prevbutton {
+.tour-tooltip .introjs-prevbutton {
   text-transform: none;
   font-size: 11px;
   font-weight: 500;
@@ -93,13 +106,13 @@
   gap: 3px;
 }
 
-.preview-tour-tooltip .introjs-prevbutton:hover,
-.preview-tour-tooltip .introjs-prevbutton:focus {
+.tour-tooltip .introjs-prevbutton:hover,
+.tour-tooltip .introjs-prevbutton:focus {
   background-color: #f3f4f6;
   box-shadow: none;
 }
 
-.preview-tour-tooltip .introjs-skipbutton {
+.tour-tooltip .introjs-skipbutton {
   position: absolute;
   top: -10px;
   right: -10px;
@@ -118,10 +131,7 @@
   background-position: center;
 }
 
-/* Keep × on the right in RTL too — in RTL the intro.js arrow can render
-   on the top-left of the tooltip (tooltip offset right of target), which
-   would overlap a left-corner close button. */
-[dir="rtl"] .preview-tour-tooltip .introjs-skipbutton {
-  right: -10px;
-  left: auto;
+[dir="rtl"] .tour-tooltip .introjs-skipbutton {
+  right: auto;
+  left: -10px;
 }

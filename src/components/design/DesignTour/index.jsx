@@ -6,6 +6,8 @@ import "intro.js/introjs.css";
 import { getDesignTourSteps } from "./steps";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { isSessionRtl } from "~/utils/common";
+import { positionSkipButtonAwayFromArrow } from "~/utils/tour";
+import "~/styles/tour.css";
 import "./tour.css";
 
 const RTL_POSITION_MAP = {
@@ -104,8 +106,8 @@ export default function DesignTourProvider({ children }) {
         nextLabel: t("tour_next"),
         prevLabel: t("tour_back"),
         doneLabel: t("tour_done"),
-        tooltipClass: "design-tour-tooltip",
-        highlightClass: "design-tour-highlight",
+        tooltipClass: "tour-tooltip",
+        highlightClass: "tour-highlight",
         scrollToElement: false,
         scrollPadding: 0,
         helperElementPadding: 0,
@@ -136,6 +138,8 @@ export default function DesignTourProvider({ children }) {
 
         // Delay to ensure intro.js has finished its DOM updates
         setTimeout(() => {
+          positionSkipButtonAwayFromArrow();
+
           const nextBtn = document.querySelector(".introjs-nextbutton");
           const prevBtn = document.querySelector(".introjs-prevbutton");
 
@@ -198,5 +202,5 @@ function buildStepTitle(stepIndex, tourSteps, t) {
 }
 
 function buildStepIntro(step) {
-  return `<div class="design-tour-step-body">${step.intro}</div>`;
+  return `<div class="tour-step-body">${step.intro}</div>`;
 }

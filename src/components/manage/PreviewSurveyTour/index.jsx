@@ -5,7 +5,8 @@ import "intro.js/introjs.css";
 import { getPreviewTourSteps } from "./steps";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { isSessionRtl } from "~/utils/common";
-import "./tour.css";
+import { positionSkipButtonAwayFromArrow } from "~/utils/tour";
+import "~/styles/tour.css";
 
 const RTL_POSITION_MAP = {
   left: "right",
@@ -51,8 +52,8 @@ export default function PreviewSurveyTourProvider({ children }) {
         nextLabel: t("preview_page_tour.step1_next"),
         prevLabel: t("preview_page_tour.tour_back"),
         doneLabel: t("preview_page_tour.step2_next"),
-        tooltipClass: "preview-tour-tooltip",
-        highlightClass: "preview-tour-highlight",
+        tooltipClass: "tour-tooltip",
+        highlightClass: "tour-highlight",
         scrollToElement: false,
         scrollPadding: 0,
         helperElementPadding: 0,
@@ -64,6 +65,8 @@ export default function PreviewSurveyTourProvider({ children }) {
         if (!step) return;
 
         setTimeout(() => {
+          positionSkipButtonAwayFromArrow();
+
           const nextBtn = document.querySelector(".introjs-nextbutton");
           const prevBtn = document.querySelector(".introjs-prevbutton");
           const backText = t("preview_page_tour.tour_back");
@@ -75,20 +78,17 @@ export default function PreviewSurveyTourProvider({ children }) {
 
           if (!prevBtn) return;
 
+          if (stepIndex === 0) {
+            prevBtn.style.display = "none";
+            prevBtn.onclick = null;
+            return;
+          }
+
           prevBtn.classList.remove("introjs-disabled", "introjs-hidden");
           prevBtn.removeAttribute("style");
           prevBtn.style.display = "inline-flex";
           prevBtn.textContent = rtl ? `→ ${backText}` : `← ${backText}`;
-
-          if (stepIndex === 0) {
-            prevBtn.onclick = (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              intro.exit();
-            };
-          } else {
-            prevBtn.onclick = null;
-          }
+          prevBtn.onclick = null;
         }, 0);
       });
 
@@ -118,5 +118,5 @@ export default function PreviewSurveyTourProvider({ children }) {
 }
 
 function buildStepIntro(step) {
-  return `<div class="preview-tour-step-body">${step.intro}</div>`;
+  return `<div class="tour-step-body">${step.intro}</div>`;
 }

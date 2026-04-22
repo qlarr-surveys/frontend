@@ -3,7 +3,7 @@ export function getPreviewTourSteps(t) {
     {
       element: '[data-tour="preview-mode-tabs"]',
       position: "bottom",
-      tooltipClass: "preview-tour-tooltip",
+      tooltipClass: "tour-tooltip",
       title: t("preview_page_tour.step1_title"),
       intro: t("preview_page_tour.step1_intro"),
       nextButtonText: t("preview_page_tour.step1_next"),
@@ -11,7 +11,7 @@ export function getPreviewTourSteps(t) {
     {
       element: '[data-tour="navigation-mode-select"]',
       position: "bottom-right-aligned",
-      tooltipClass: "preview-tour-tooltip",
+      tooltipClass: "tour-tooltip",
       title: t("preview_page_tour.step2_title"),
       intro: t("preview_page_tour.step2_intro"),
       nextButtonText: t("preview_page_tour.step2_next"),
