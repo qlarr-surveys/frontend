@@ -1,10 +1,12 @@
 import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import {
+  Alert,
   Box,
   Button,
   Container,
   Fade,
   IconButton,
+  Snackbar,
   Stack,
   TablePagination,
   Typography,
@@ -16,6 +18,7 @@ import { setLoading } from "~/state/edit/editState";
 import { useDispatch } from "react-redux";
 
 import CreateSurvey from "~/components/manage/CreateSurvey/CreateSurvey";
+import { PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
@@ -55,6 +58,7 @@ function Dashboard() {
   const [openImportModal, setOpenImportModal] = useState(false);
   const [recentlyUpdatedSurveyName, setRecentlyUpdatedSurveyName] =
     useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -187,6 +191,12 @@ function Dashboard() {
       });
   };
 
+  const handleSurveyActionError = (processedError) => {
+    if (processedError?.name === PROCESSED_ERRORS.INVALID_SURVEY_DATES.name) {
+      setErrorMessage(t(`processed_errors.${processedError.name}`));
+    }
+  };
+
   const closeSurvey = (id) => {
     dispatch(setLoading(true));
     surveyService
@@ -194,7 +204,7 @@ function Dashboard() {
       .then(() => {
         handleSurveyStatusChange(id, "closed");
       })
-      .catch(() => {})
+      .catch(handleSurveyActionError)
       .finally(() => {
         dispatch(setLoading(false));
       });
@@ -225,7 +235,7 @@ function Dashboard() {
           ),
         }));
       })
-      .catch(() => {})
+      .catch(handleSurveyActionError)
       .finally(() => {
         dispatch(setLoading(false));
       });
@@ -484,6 +494,15 @@ function Dashboard() {
           }}
         />
       )}
+      <Snackbar
+        open={Boolean(errorMessage)}
+        autoHideDuration={6000}
+        onClose={() => setErrorMessage(null)}
+      >
+        <Alert onClose={() => setErrorMessage(null)} severity="error">
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
