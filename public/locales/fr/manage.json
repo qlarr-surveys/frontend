@@ -384,6 +384,15 @@
     "group_by_group": "Page par Page",
     "question_by_question": "Question par Question"
   },
+  "preview_page_tour": {
+    "step1_title": "Aperçu sur différents appareils",
+    "step1_intro": "Basculez entre les modes Bureau, Mobile et Hors ligne pour vous assurer que votre sondage est parfait partout.",
+    "step1_next": "Suivant : Mode de Navigation",
+    "step2_title": "Mode de Navigation",
+    "step2_intro": "Contrôlez la façon dont les utilisateurs naviguent dans votre sondage en choisissant comment les répondants progressent :\n\n<b>Tout en Un :</b> Toutes les questions sur une seule page.\n<b>Page par Page :</b> Une section par page.\n<b>Question par Question :</b> Expérience pas à pas (une seule question par page).",
+    "step2_next": "C'est parti ✓",
+    "tour_back": "retour"
+  },
   "empty_state": {
     "welcome": "Bienvenue {{firstName}} {{lastName}}",
     "subtitle": "Découvrez des insights plus profonds pour des décisions plus intelligentes.",
