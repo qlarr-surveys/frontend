@@ -251,7 +251,7 @@ function ChoiceItemDesign(props) {
                 : mainContent || props.t("content_editor_placeholder_option")
             }
             InputProps={{
-              endAdornment: (
+              endAdornment: inDesign(props.designMode) ? (
                 <BuildIcon
                   key="setup"
                   color="action"
@@ -268,7 +268,7 @@ function ChoiceItemDesign(props) {
                     );
                   }}
                 />
-              ),
+              ) : undefined,
             }}
           />
         ) : (
@@ -303,23 +303,27 @@ function ChoiceItemDesign(props) {
             />
           </>
         )}
-        <span style={{ margin: "8px" }} />
-        <BuildIcon
-          key="setup"
-          color="action"
-          sx={{ fontSize: 18 }}
-          className={styles.answerIconSettings}
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            dispatch(
-              setup({
-                code: props.qualifiedCode,
-                rules: setupOptions("options"),
-              })
-            );
-          }}
-        />
+        {inDesign(props.designMode) && (
+          <>
+            <span style={{ margin: "8px" }} />
+            <BuildIcon
+              key="setup"
+              color="action"
+              sx={{ fontSize: 18 }}
+              className={styles.answerIconSettings}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                dispatch(
+                  setup({
+                    code: props.qualifiedCode,
+                    rules: setupOptions("options"),
+                  })
+                );
+              }}
+            />
+          </>
+        )}
         {inDesign(props.designMode) && (
           <CloseIcon
             key="close"
