@@ -60,3 +60,92 @@ export function positionSkipButtonAwayFromArrow() {
   requestAnimationFrame(applySkipButtonPosition);
   setTimeout(applySkipButtonPosition, 150);
 }
+
+export const RTL_POSITION_MAP = {
+  left: "right",
+  right: "left",
+  "bottom-right-aligned": "bottom-left-aligned",
+  "bottom-left-aligned": "bottom-right-aligned",
+};
+
+export function mirrorPositionForRtl(position, rtl) {
+  if (!rtl) return position;
+  return RTL_POSITION_MAP[position] || position;
+}
+
+export function buildStepIntroHtml(introText) {
+  return `<div class="tour-step-body">${introText}</div>`;
+}
+
+export function buildIntroOptions({ steps, labels }) {
+  return {
+    steps,
+    showBullets: false,
+    showStepNumbers: false,
+    exitOnOverlayClick: false,
+    showSkipButton: false,
+    disableInteraction: true,
+    autoPosition: false,
+    hidePrev: false,
+    nextLabel: labels.next,
+    prevLabel: labels.back,
+    doneLabel: labels.done,
+    tooltipClass: "tour-tooltip",
+    highlightClass: "tour-highlight",
+    scrollToElement: false,
+    scrollPadding: 0,
+    helperElementPadding: 0,
+  };
+}
+
+export function setNextButtonText({ rtl, text }) {
+  const nextBtn = document.querySelector(".introjs-nextbutton");
+  if (nextBtn && text) {
+    nextBtn.textContent = rtl ? `${text} ←` : `${text} →`;
+  }
+  return nextBtn;
+}
+
+export function setPrevButtonText({ rtl, text }) {
+  const prevBtn = document.querySelector(".introjs-prevbutton");
+  if (!prevBtn) return null;
+  prevBtn.classList.remove("introjs-disabled", "introjs-hidden");
+  prevBtn.removeAttribute("style");
+  prevBtn.style.display = "inline-flex";
+  prevBtn.onclick = null;
+  if (text) {
+    prevBtn.textContent = rtl ? `→ ${text}` : `← ${text}`;
+  }
+  return prevBtn;
+}
+
+export function clearHighlightedElementClasses() {
+  document
+    .querySelector(".introjs-showElement")
+    ?.classList.remove("introjs-showElement", "introjs-relativePosition");
+}
+
+const TOUR_COMPLETED_VALUE = "true";
+
+// Storage format:
+//   missing  → fresh start at step 0
+//   "true"   → tour completed, don't show
+//   numeric  → resume at that step index
+export function readTourProgress(storageKey) {
+  const raw = localStorage.getItem(storageKey);
+  if (raw === TOUR_COMPLETED_VALUE) return { completed: true, startStep: 0 };
+  const parsed = parseInt(raw, 10);
+  if (Number.isFinite(parsed) && parsed > 0) {
+    return { completed: false, startStep: parsed };
+  }
+  return { completed: false, startStep: 0 };
+}
+
+export function markTourCompleted(storageKey) {
+  localStorage.setItem(storageKey, TOUR_COMPLETED_VALUE);
+}
+
+export function saveTourStep(storageKey, stepIndex) {
+  if (localStorage.getItem(storageKey) === TOUR_COMPLETED_VALUE) return;
+  localStorage.setItem(storageKey, String(Math.max(0, stepIndex | 0)));
+}
