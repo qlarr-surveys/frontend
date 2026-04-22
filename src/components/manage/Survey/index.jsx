@@ -306,10 +306,10 @@ const Survey = ({
           <div className={styles.surveyDates}>
             <DateItem label={t("edit_survey.metadata.created")} value={fDate(survey.creationDate)} />
             <DateItem label={t("edit_survey.metadata.last_modified")} value={fDate(survey.lastModified)} />
-            {survey.startDate && (
+            {[STATUS.DRAFT, STATUS.CLOSED, STATUS.SCHEDULED].includes(surveyStatus) && survey.startDate && (
               <DateItem label={t("edit_survey.metadata.start_date")} value={fDate(survey.startDate)} />
             )}
-            {survey.endDate && (
+            {[STATUS.ACTIVE, STATUS.EXPIRED].includes(surveyStatus) && survey.endDate && (
               <DateItem label={t("edit_survey.metadata.end_date")} value={fDate(survey.endDate)} />
             )}
           </div>
