@@ -6,6 +6,8 @@ import { useTheme } from "@mui/material/styles";
 import { valueChange } from "~/state/runState";
 import { setDirty } from "~/state/templateState";
 
+const SAFE_NUMBER_MAX_CHARS = 15;
+
 function NumberQuestion(props) {
   const theme = useTheme();
   const state = useSelector((state) => {
@@ -66,7 +68,23 @@ function NumberQuestion(props) {
 
   const lostFocus = (event) => {
     dispatch(setDirty(event.target.name));
+    const current = state.value;
+    if (typeof current !== "string") return;
+    const num = +current;
+    if (!Number.isNaN(num)) {
+      dispatch(
+        valueChange({
+          componentCode: event.target.name,
+          value: num,
+        })
+      );
+    }
   };
+
+  const maxLength = Math.min(
+    props.component.maxChars || SAFE_NUMBER_MAX_CHARS,
+    SAFE_NUMBER_MAX_CHARS
+  );
 
   return (
     <div className={styles.questionItem}>
@@ -84,7 +102,7 @@ function NumberQuestion(props) {
         onChange={handleChange}
         onBlur={lostFocus}
         inputProps={{
-          maxLength: props.component.maxChars || undefined,
+          maxLength,
           inputMode: props.component.decimal_separator ? "decimal" : "numeric",
         }}
         value={formatValue(state.value)}
