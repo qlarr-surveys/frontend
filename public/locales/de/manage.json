@@ -88,6 +88,27 @@
   "edit_user": {
     "title": "Benutzer bearbeiten"
   },
+  "stop_survey": {
+    "title": "Diese Umfrage stoppen",
+    "description": "Wählen Sie, wie Sie die Erfassung von Antworten beenden möchten. Sie können die Umfrage entweder dauerhaft schließen (nur Daten kopieren oder exportieren) oder vorübergehend ablaufen lassen.",
+    "close_column_title": "Umfrage schließen:",
+    "close_bullets": [
+      "Es können keine neuen Antworten erfasst werden",
+      "Die Umfrage wird schreibgeschützt",
+      "Sie können nur Daten exportieren oder duplizieren",
+      "Diese Aktion kann nicht rückgängig gemacht werden"
+    ],
+    "close_button": "Schließen",
+    "expire_column_title": "Umfrage ablaufen lassen:",
+    "expire_bullets": [
+      "Diese Umfrage vorübergehend pausieren",
+      "Es werden keine neuen Antworten erfasst",
+      "Sie können sie jederzeit wieder aktivieren",
+      "Sie können die Umfrage weiterhin bearbeiten und verwenden"
+    ],
+    "expire_button": "Ablaufen lassen",
+    "cancel": "Abbrechen"
+  },
   "email": {
     "check": "Prüfen Sie Ihre E-Mail",
     "code_characters": "Der Code muss aus mindestens 6 Zahlen bestehen",

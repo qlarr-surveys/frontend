@@ -86,6 +86,27 @@
   "edit_user": {
     "title": "Modifier l'Utilisateur"
   },
+  "stop_survey": {
+    "title": "Arrêter ce sondage",
+    "description": "Choisissez comment arrêter la collecte des réponses. Vous pouvez soit fermer le sondage de façon permanente (copier ou exporter les données uniquement), soit le faire expirer temporairement.",
+    "close_column_title": "Fermer le sondage :",
+    "close_bullets": [
+      "Aucune nouvelle réponse ne peut être collectée",
+      "Le sondage devient en lecture seule",
+      "Vous pouvez uniquement exporter les données ou le dupliquer",
+      "Cette action ne peut pas être annulée"
+    ],
+    "close_button": "Fermer",
+    "expire_column_title": "Expirer le sondage :",
+    "expire_bullets": [
+      "Mettre ce sondage temporairement en pause",
+      "Aucune nouvelle réponse ne sera collectée",
+      "Vous pouvez le réactiver à tout moment",
+      "Vous pouvez continuer à éditer et utiliser le sondage"
+    ],
+    "expire_button": "Expirer",
+    "cancel": "Annuler"
+  },
   "email_required": "L'E-mail est Requis",
   "error_title": "Erreur",
   "error": {
