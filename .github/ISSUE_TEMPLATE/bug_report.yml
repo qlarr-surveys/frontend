@@ -1,9 +1,8 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+description: Create a report to help us improve
 title: '[Bug] '
 labels: 'bug'
-assignees: ''
 
 body:
   - type: dropdown
@@ -65,7 +64,7 @@ body:
       label: OS Version
       description: e.g., Windows 11, macOS 14, Ubuntu 22.04
       placeholder: ''
-  - type: select
+  - type: dropdown
     id: frequency
     attributes:
       label: Frequency
