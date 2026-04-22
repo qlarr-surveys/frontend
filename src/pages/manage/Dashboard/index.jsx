@@ -212,15 +212,13 @@ function Dashboard() {
 
   const expireSurvey = (survey) => {
     dispatch(setLoading(true));
-    const newEndDate = localDateToServerDateTime(
-      new Date(Date.now() - 60 * 1000)
-    );
+    const pastCutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const newEndDate = localDateToServerDateTime(pastCutoff);
     const updatedSurvey = { ...survey, endDate: newEndDate };
 
     if (
       survey.startDate &&
-      serverDateTimeToLocalDateTime(survey.startDate) >=
-        new Date(Date.now() - 60 * 1000)
+      serverDateTimeToLocalDateTime(survey.startDate) >= pastCutoff
     ) {
       updatedSurvey.startDate = null;
     }
