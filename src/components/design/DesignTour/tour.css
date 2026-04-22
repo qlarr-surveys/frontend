@@ -168,10 +168,12 @@
 
 /* ── RTL overrides ── */
 
-/* Skip button: flip to left corner */
+/* Keep × on the right in RTL too — in RTL the intro.js arrow can render
+   on the top-left of the tooltip (tooltip offset right of target), which
+   would overlap a left-corner close button. */
 [dir="rtl"] .design-tour-tooltip .introjs-skipbutton {
-  right: auto;
-  left: -10px;
+  right: -10px;
+  left: auto;
 }
 
 /* Preview step arrow: mirror to left side */
