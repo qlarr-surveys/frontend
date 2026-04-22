@@ -12,7 +12,13 @@ import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import styles from "./StopSurveyModal.module.css";
 
-const StopSurveyModal = ({ open, onCancel, onClose, onExpire }) => {
+const StopSurveyModal = ({
+  open,
+  canExpire = true,
+  onCancel,
+  onClose,
+  onExpire,
+}) => {
   const { t } = useTranslation(NAMESPACES.MANAGE);
 
   const closeBullets = t("stop_survey.close_bullets", { returnObjects: true });
@@ -52,11 +58,13 @@ const StopSurveyModal = ({ open, onCancel, onClose, onExpire }) => {
         <Stack
           direction={{ xs: "column", md: "row" }}
           divider={
-            <Divider
-              orientation="vertical"
-              flexItem
-              className={styles.divider}
-            />
+            canExpire ? (
+              <Divider
+                orientation="vertical"
+                flexItem
+                className={styles.divider}
+              />
+            ) : null
           }
           className={styles.columns}
         >
@@ -90,27 +98,29 @@ const StopSurveyModal = ({ open, onCancel, onClose, onExpire }) => {
             </Button>
           </Box>
 
-          <Box className={styles.column}>
-            <Typography variant="subtitle1" className={styles.columnTitle}>
-              {t("stop_survey.expire_column_title")}
-            </Typography>
-            {Array.isArray(expireBullets) && (
-              <ul className={styles.bullets}>
-                {expireBullets.map((bullet, idx) => (
-                  <li key={idx}>{bullet}</li>
-                ))}
-              </ul>
-            )}
-            <Button
-              variant="outlined"
-              size="medium"
-              startIcon={<WarningAmber />}
-              onClick={handleClick(onExpire)}
-              className={styles.columnButton}
-            >
-              {t("stop_survey.expire_button")}
-            </Button>
-          </Box>
+          {canExpire && (
+            <Box className={styles.column}>
+              <Typography variant="subtitle1" className={styles.columnTitle}>
+                {t("stop_survey.expire_column_title")}
+              </Typography>
+              {Array.isArray(expireBullets) && (
+                <ul className={styles.bullets}>
+                  {expireBullets.map((bullet, idx) => (
+                    <li key={idx}>{bullet}</li>
+                  ))}
+                </ul>
+              )}
+              <Button
+                variant="outlined"
+                size="medium"
+                startIcon={<WarningAmber />}
+                onClick={handleClick(onExpire)}
+                className={styles.columnButton}
+              >
+                {t("stop_survey.expire_button")}
+              </Button>
+            </Box>
+          )}
         </Stack>
 
         <Box className={styles.footer}>

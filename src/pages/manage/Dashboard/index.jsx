@@ -469,6 +469,10 @@ function Dashboard() {
       {actionType === "close" && (
         <StopSurveyModal
           open={open}
+          canExpire={
+            !selectedSurvey?.endDate ||
+            serverDateTimeToLocalDateTime(selectedSurvey.endDate) >= Date.now()
+          }
           onCancel={() => setOpen(false)}
           onClose={() => {
             closeSurvey(selectedSurvey.id);
