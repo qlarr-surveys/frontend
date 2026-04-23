@@ -384,6 +384,15 @@
     "group_by_group": "Página por Página",
     "question_by_question": "Pregunta por Pregunta"
   },
+  "preview_page_tour": {
+    "step1_title": "Vista previa en distintos dispositivos",
+    "step1_intro": "Cambia entre los modos Escritorio, Móvil y Sin conexión para asegurarte de que tu encuesta se vea bien en todas partes.",
+    "step1_next": "Siguiente: Modo de Navegación",
+    "step2_title": "Modo de Navegación",
+    "step2_intro": "Controla cómo los usuarios navegan por tu encuesta eligiendo cómo avanzan los encuestados:\n\n<b>Todo en Uno:</b> Todas las preguntas en una sola página.\n<b>Página por Página:</b> Una sección por página.\n<b>Pregunta por Pregunta:</b> Experiencia paso a paso (solo una pregunta por página).",
+    "step2_next": "Vamos ✓",
+    "tour_back": "atrás"
+  },
   "empty_state": {
     "welcome": "Bienvenido {{firstName}} {{lastName}}",
     "subtitle": "Descubre información más profunda para tomar decisiones más inteligentes.",

@@ -384,6 +384,15 @@
     "group_by_group": "Pagina per Pagina",
     "question_by_question": "Vraag per Vraag"
   },
+  "preview_page_tour": {
+    "step1_title": "Voorbeeld op verschillende apparaten",
+    "step1_intro": "Schakel tussen Desktop-, Mobiele en Offline-modus om er zeker van te zijn dat uw enquête er overal goed uitziet.",
+    "step1_next": "Volgende: Navigatiemodus",
+    "step2_title": "Navigatiemodus",
+    "step2_intro": "Bepaal hoe gebruikers door uw enquête navigeren door te kiezen hoe respondenten erdoorheen bewegen:\n\n<b>Alles in Een:</b> Alle vragen op één pagina.\n<b>Pagina per Pagina:</b> Één sectie per pagina.\n<b>Vraag per Vraag:</b> Stapsgewijze ervaring (slechts één vraag per pagina).",
+    "step2_next": "Laten we gaan ✓",
+    "tour_back": "terug"
+  },
   "empty_state": {
     "welcome": "Welkom {{firstName}} {{lastName}}",
     "subtitle": "Ontdek diepere inzichten voor slimmere beslissingen.",
