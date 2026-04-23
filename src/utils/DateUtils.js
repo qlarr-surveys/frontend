@@ -1,15 +1,10 @@
 export const serverDateTimeToLocalDateTime = (serverDate) => {
-  const dateInUTC = new Date(serverDate);
-  return new Date(
-    dateInUTC.getTime() - dateInUTC.getTimezoneOffset() * 60 * 1000
-  );
+  const iso = serverDate.includes("T") ? serverDate : serverDate.replace(" ", "T");
+  return new Date(iso.endsWith("Z") ? iso : iso + "Z");
 };
 
 export const localDateToServerDateTime = (date) => {
-  const adjustedDate = new Date(
-    date.getTime() - date.getTimezoneOffset() * 60 * 1000
-  );
-  return adjustedDate.toISOString().split(".")[0].replace("T", " ");
+  return date.toISOString().split(".")[0].replace("T", " ");
 };
 
 export const formatlocalDateTime = (date) => {
