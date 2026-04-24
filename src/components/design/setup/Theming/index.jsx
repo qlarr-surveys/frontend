@@ -495,6 +495,14 @@ function Theming({ t }) {
           {t("upload_background")}
         </Typography>
         <Stack flexDirection="row" alignItems="center" gap={1}>
+          {backgroundImage && (
+            <IconButton
+              className={styles.resetButton}
+              onClick={handleBackgroundReset}
+            >
+              <Close />
+            </IconButton>
+          )}
           <Button component="label" className={styles.chooseImage}>
             <ImageIcon />
             <input
@@ -504,14 +512,6 @@ function Theming({ t }) {
               onChange={handleBackgroundUpload}
             />
           </Button>
-          {backgroundImage && (
-            <IconButton
-              className={styles.resetButton}
-              onClick={handleBackgroundReset}
-            >
-              <Close />
-            </IconButton>
-          )}
         </Stack>
       </Stack>
       <Stack
