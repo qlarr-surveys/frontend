@@ -179,13 +179,15 @@ function ContentPanel({ designMode }, ref) {
     if (file) startLogoUpload(file);
   };
 
-  const isDesignMode = designMode === DESIGN_SURVEY_MODE.DESIGN;
+  const canEditLogo =
+    designMode === DESIGN_SURVEY_MODE.DESIGN ||
+    designMode === DESIGN_SURVEY_MODE.THEME;
   const isUploading = uploadProgress !== null;
 
   const virtuosoContext = useMemo(
     () => ({
       logoImage,
-      isDesignMode,
+      canEditLogo,
       isDragOver,
       isUploading,
       uploadProgress,
@@ -198,7 +200,7 @@ function ContentPanel({ designMode }, ref) {
       t,
     }),
     // handlers are stable enough — only re-emit context when visible state changes
-    [logoImage, isDesignMode, isDragOver, isUploading, uploadProgress, t]
+    [logoImage, canEditLogo, isDragOver, isUploading, uploadProgress, t]
   );
 
   const virtuosoComponents = useMemo(() => ({ Header: LogoHeader }), []);
@@ -328,7 +330,7 @@ const ELEMENTS = {
 function LogoHeader({ context }) {
   const {
     logoImage,
-    isDesignMode,
+    canEditLogo,
     isDragOver,
     isUploading,
     uploadProgress,
@@ -350,15 +352,24 @@ function LogoHeader({ context }) {
             src={buildResourceUrl(logoImage)}
             alt=""
           />
-          <IconButton
-            className={styles.logoRemove}
-            onClick={handleLogoReset}
-            size="small"
-            aria-label="remove logo"
-          >
-            <CloseIcon fontSize="small" />
-          </IconButton>
+          {canEditLogo && (
+            <IconButton
+              className={styles.logoRemove}
+              onClick={handleLogoReset}
+              size="small"
+              aria-label="remove logo"
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          )}
         </div>
+      </div>
+    );
+  }
+  if (!canEditLogo) {
+    return (
+      <div className={`${styles.logoDropZone} ${styles.logoDropZoneDisabled}`}>
+        <img src={addImageIcon} className={styles.logoDropIcon} alt="" />
       </div>
     );
   }
@@ -391,6 +402,7 @@ function LogoHeader({ context }) {
             {isDragOver ? t("drop_logo_here") : t("upload_logo")}
           </span>
           <span className={styles.logoDropHint}>{t("upload_logo_hint")}</span>
+          <span className={styles.logoDropNote}>{t("upload_logo_note")}</span>
         </>
       )}
       <input

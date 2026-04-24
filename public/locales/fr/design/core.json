@@ -297,6 +297,7 @@
   "upload_background": "Télécharger l'arrière-plan",
   "upload_logo": "Télécharger le logo",
   "upload_logo_hint": "Affiché en haut de chaque page · PNG ou JPG",
+  "upload_logo_note": "Note : cet emplacement est masqué pour les répondants tant que vous n'avez pas téléversé de logo",
   "drop_logo_here": "Déposez l'image à téléverser",
   "uploading_logo": "Téléversement du logo…",
   "upload_image": "Télécharger une Image",

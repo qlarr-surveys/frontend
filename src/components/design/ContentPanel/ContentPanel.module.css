@@ -95,6 +95,18 @@
   background-color: rgba(0, 0, 0, 0.04);
 }
 
+.logoDropZoneDisabled.logoDropZoneDisabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.logoDropZoneDisabled.logoDropZoneDisabled:hover {
+  background-color: transparent;
+}
+.logoDropZoneDisabled .logoDropIcon {
+  width: 64px;
+  height: 64px;
+}
+
 .logoDropZoneDragOver.logoDropZoneDragOver {
   background-color: rgba(22, 32, 91, 0.06);
 }
@@ -143,6 +155,17 @@
   color: #3d4775;
   text-align: center;
   margin-top: -4px;
+}
+
+.logoDropNote {
+  font-family: Rubik, sans-serif;
+  font-size: 11px;
+  font-style: italic;
+  font-weight: 400;
+  color: #6b73a0;
+  text-align: center;
+  margin-top: 6px;
+  max-width: 480px;
 }
 
 .contentPanel {

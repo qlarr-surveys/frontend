@@ -297,6 +297,7 @@
   "upload_background": "Subir fondo",
   "upload_logo": "Subir logo",
   "upload_logo_hint": "Se muestra en la parte superior de cada página · PNG o JPG",
+  "upload_logo_note": "Nota: este marcador está oculto para los encuestados hasta que subas un logo",
   "drop_logo_here": "Suelta la imagen para subirla",
   "uploading_logo": "Subiendo logo…",
   "upload_image": "Subir Imagen",

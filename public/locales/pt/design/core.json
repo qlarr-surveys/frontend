@@ -297,6 +297,7 @@
   "upload_background": "Enviar fundo",
   "upload_logo": "Enviar logótipo",
   "upload_logo_hint": "Exibido no topo de cada página · PNG ou JPG",
+  "upload_logo_note": "Nota: este espaço reservado fica oculto para os respondentes até enviar um logótipo",
   "drop_logo_here": "Solte a imagem para enviar",
   "uploading_logo": "Enviando logótipo…",
   "upload_image": "Enviar Imagem",

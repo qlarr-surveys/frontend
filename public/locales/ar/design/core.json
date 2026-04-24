@@ -263,6 +263,7 @@
   "upload_background": "تحميل الخلفية",
   "upload_logo": "تحميل الشعار",
   "upload_logo_hint": "يظهر في أعلى كل صفحة · PNG أو JPG",
+  "upload_logo_note": "ملاحظة: هذا العنصر النائب مخفي عن المستجيبين حتى ترفع شعارًا",
   "drop_logo_here": "أفلِت الصورة للرفع",
   "uploading_logo": "جاري رفع الشعار…",
   "theme_text": "نص",
