@@ -30,6 +30,121 @@
   height: 100px;
 }
 
+.surveyLogo {
+  display: block;
+  margin: 0 auto;
+  max-height: 240px;
+  max-width: 240px;
+  object-fit: contain;
+}
+
+.logoHeader {
+  max-width: min(800px, calc(100% - 32px));
+  min-width: 350px;
+  margin: 16px auto 8px;
+  margin-top: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoFrame {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+  padding: 3px;
+  border-radius: 8px;
+}
+
+.logoRemove.logoRemove {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  left: auto;
+  padding: 4px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  transition: background-color 150ms;
+}
+.logoRemove.logoRemove svg {
+  font-size: 18px;
+}
+.logoRemove.logoRemove:hover {
+  background-color: #f4f4f6;
+}
+
+.logoDropZone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  max-width: min(800px, calc(100% - 32px));
+  min-width: 350px;
+  min-height: 120px;
+  margin: 16px auto 8px;
+  margin-top: 6rem;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: transparent;
+  transition: background-color 200ms;
+}
+.logoDropZone:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.logoDropZoneDragOver.logoDropZoneDragOver {
+  background-color: rgba(22, 32, 91, 0.06);
+}
+.logoDropZoneDragOver .logoDropIcon,
+.logoDropZoneDragOver .logoDropText,
+.logoDropZoneDragOver .logoDropHint {
+  color: #16205b;
+}
+
+.logoUploading {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 10px;
+  width: min(480px, 80%);
+}
+
+.logoProgressBar.logoProgressBar {
+  height: 6px;
+  border-radius: 3px;
+  background-color: rgba(22, 32, 91, 0.12);
+}
+.logoProgressBar.logoProgressBar :global(.MuiLinearProgress-bar) {
+  background-color: #16205b;
+}
+
+.logoDropIcon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.logoDropText {
+  font-family: Rubik, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #16205b;
+  text-align: center;
+}
+
+.logoDropHint {
+  font-family: Rubik, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #3d4775;
+  text-align: center;
+  margin-top: -4px;
+}
+
 .contentPanel {
   position: relative;
   overflow-y: auto;
