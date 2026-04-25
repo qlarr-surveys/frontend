@@ -69,7 +69,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "randomize_questions", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "randomize_questions", "order_instructions"],
         },
         {
           title: "design",
@@ -91,7 +91,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "order_instructions"],
         },
         {
           title: "design",
@@ -115,7 +115,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "order_instructions"],
         },
         {
           title: "design",
@@ -140,7 +140,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "order_instructions"],
         },
         {
           title: "design",
@@ -166,7 +166,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "order_instructions"],
         },
         {
           title: "validation",
@@ -193,7 +193,7 @@ export const setupOptions = (type) => {
         {
           title: "",
           key: "",
-          rules: ["changeCode", "disabled", "relevance", "conditional_relevance"],
+          rules: ["changeCode", "disabled", "relevance"],
         },
       ];
 
@@ -202,7 +202,7 @@ export const setupOptions = (type) => {
         {
           title: "general",
           key: "general",
-          rules: ["maxChars", "conditional_relevance"],
+          rules: ["maxChars"],
         },
         {
           title: "validation",
@@ -237,7 +237,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "order_instructions"],
         },
         {
           title: "validation",
@@ -279,7 +279,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "order_instructions"],
         },
         {
           title: "validation",
@@ -314,7 +314,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "order_instructions"],
         },
         {
           title: "validation",
@@ -346,7 +346,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "order_instructions"],
         },
         {
           title: "validation",
@@ -381,7 +381,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "order_instructions"],
         },
         {
           title: "validation",
@@ -414,7 +414,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "order_instructions"],
         },
         {
           title: "validation",
@@ -442,7 +442,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "order_instructions"],
         },
         {
           title: "validation",
@@ -470,7 +470,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "order_instructions"],
         },
         {
           title: "validation",
@@ -498,7 +498,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "order_instructions"],
         },
         {
           title: "validation",
@@ -532,7 +532,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "order_instructions"],
         },
         {
           title: "validation",
@@ -565,7 +565,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "order_instructions"],
         },
         {
           title: "validation",
@@ -596,7 +596,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "order_instructions"],
         },
         {
           title: "validation",
@@ -625,7 +625,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "randomize_options", "skip_logic", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "randomize_options", "skip_logic", "order_instructions"],
         },
         {
           title: "validation",
@@ -658,7 +658,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "randomize_options", "skip_logic", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "randomize_options", "skip_logic", "order_instructions"],
         },
         {
           title: "validation",
@@ -691,7 +691,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "randomize_options", "skip_logic", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "randomize_options", "skip_logic", "order_instructions"],
         },
         {
           title: "validation",
@@ -720,7 +720,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "randomize_options", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "randomize_options", "order_instructions"],
         },
         {
           title: "validation",
@@ -753,7 +753,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "randomize_options", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "randomize_options", "order_instructions"],
         },
         {
           title: "validation",
@@ -781,7 +781,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "randomize_options", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "randomize_options", "order_instructions"],
         },
         {
           title: "validation",
@@ -818,7 +818,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "randomize_options", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "randomize_options", "order_instructions"],
         },
         {
           title: "validation",
@@ -856,7 +856,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "randomize_options", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "randomize_options", "order_instructions"],
         },
         {
           title: "validation",
@@ -894,7 +894,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "randomize_options", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "randomize_options", "order_instructions"],
         },
         {
           title: "validation",
@@ -927,7 +927,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "randomize_rows", "randomize_columns", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "randomize_rows", "randomize_columns", "order_instructions"],
         },
         {
           title: "validation",
@@ -960,7 +960,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "randomize_rows", "randomize_columns", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "randomize_rows", "randomize_columns", "order_instructions"],
         },
         {
           title: "validation",
@@ -989,7 +989,7 @@ export const setupOptions = (type) => {
         {
           title: "logic",
           key: "logic",
-          rules: ["relevance", "prefill", "order_instructions", "conditional_relevance"],
+          rules: ["relevance", "prefill", "order_instructions"],
         },
         {
           title: "validation",
