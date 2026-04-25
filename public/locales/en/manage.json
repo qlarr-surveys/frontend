@@ -86,6 +86,27 @@
   "edit_user": {
     "title": "Edit User"
   },
+  "stop_survey": {
+    "title": "Stop this survey",
+    "description": "Choose how you want to stop collecting responses. You can either close the survey permanently (only copy or export data) or expire it temporarily.",
+    "close_column_title": "Close Survey:",
+    "close_bullets": [
+      "No new responses can be collected",
+      "Survey becomes read-only",
+      "You can only export data or duplicate it",
+      "This action cannot be undone"
+    ],
+    "close_button": "Close",
+    "expire_column_title": "Expire survey:",
+    "expire_bullets": [
+      "Temporarily pause this survey",
+      "No new responses will be collected",
+      "You can reactivate it anytime",
+      "You can continue editing and using the survey"
+    ],
+    "expire_button": "Expire",
+    "cancel": "Cancel"
+  },
   "email_required": "Email is Required",
   "error": {
     "invalid_email": "Invalid Email",

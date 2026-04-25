@@ -86,6 +86,27 @@
   "edit_user": {
     "title": "Gebruiker Bewerken"
   },
+  "stop_survey": {
+    "title": "Deze enquête stoppen",
+    "description": "Kies hoe je het verzamelen van antwoorden wilt stoppen. Je kunt de enquête permanent sluiten (alleen gegevens kopiëren of exporteren) of tijdelijk laten verlopen.",
+    "close_column_title": "Enquête sluiten:",
+    "close_bullets": [
+      "Er kunnen geen nieuwe antwoorden worden verzameld",
+      "De enquête wordt alleen-lezen",
+      "Je kunt alleen gegevens exporteren of dupliceren",
+      "Deze actie kan niet ongedaan worden gemaakt"
+    ],
+    "close_button": "Sluiten",
+    "expire_column_title": "Enquête laten verlopen:",
+    "expire_bullets": [
+      "Pauzeer deze enquête tijdelijk",
+      "Er worden geen nieuwe antwoorden verzameld",
+      "Je kunt hem op elk moment opnieuw activeren",
+      "Je kunt de enquête blijven bewerken en gebruiken"
+    ],
+    "expire_button": "Laten verlopen",
+    "cancel": "Annuleren"
+  },
   "email_required": "E-mail is Verplicht",
   "error_title": "Fout",
   "error": {
