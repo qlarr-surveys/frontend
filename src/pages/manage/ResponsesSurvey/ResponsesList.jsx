@@ -247,36 +247,30 @@ function ResponsesList() {
   const formatEventTime = (time) => {
     if (!time) return "—";
 
+    let date = null;
+
     // Handle array format: [year, month, day, hour, minute, second]
     if (Array.isArray(time) && time.length >= 6) {
-      return formatlocalDateTime(
-        new Date(time[0], time[1] - 1, time[2], time[3], time[4], time[5]),
-      );
+      date = new Date(time[0], time[1] - 1, time[2], time[3], time[4], time[5]);
     }
-
     // Handle object format (Java LocalDateTime serialization)
-    if (typeof time === "object" && time.year !== undefined) {
-      return formatlocalDateTime(
-        new Date(
-          time.year,
-          (time.monthValue || time.month) - 1,
-          time.dayOfMonth || time.day,
-          time.hour || 0,
-          time.minute || 0,
-          time.second || 0,
-        ),
+    else if (typeof time === "object" && time.year !== undefined) {
+      date = new Date(
+        time.year,
+        (time.monthValue || time.month) - 1,
+        time.dayOfMonth || time.day,
+        time.hour || 0,
+        time.minute || 0,
+        time.second || 0,
       );
     }
-
     // Handle ISO string format
-    if (typeof time === "string") {
-      const date = new Date(time);
-      if (!isNaN(date.getTime())) {
-        return formatlocalDateTime(date);
-      }
+    else if (typeof time === "string") {
+      date = new Date(time);
     }
 
-    return "—";
+    if (!date || isNaN(date.getTime())) return "—";
+    return formatlocalDateTime(serverDateTimeToLocalDateTime(date));
   };
 
   const renderVoiceRecordings = (respId, events) => {
