@@ -38,7 +38,10 @@ import { useService } from "~/hooks/use-service";
 import ResponsesDownload from "~/components/manage/ResponsesDownload";
 import ResponsesExport from "~/components/manage/ResponsesExport";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
-import { previewUrlByFilename, previewUrlByResponseIdAndCode } from "~/networking/run";
+import {
+  previewUrlByFilename,
+  previewUrlByResponseIdAndCode,
+} from "~/networking/run";
 
 function InfoItem({ label, value }) {
   return (
@@ -107,7 +110,7 @@ function ResponsesList() {
         rowsPerPage,
         status,
         surveyor,
-        !askedAboutFiles
+        !askedAboutFiles,
       )
       .then((data) => {
         if (data) {
@@ -120,6 +123,10 @@ function ResponsesList() {
             setCanExportFiles(data.canExportFiles);
           }
           setAllResponse(data);
+          if (responseId && !data.responses?.some((r) => r.id === responseId)) {
+            setResponseId(null);
+            setSelected(null);
+          }
         }
         setFetching(false);
       })
@@ -243,7 +250,7 @@ function ResponsesList() {
     // Handle array format: [year, month, day, hour, minute, second]
     if (Array.isArray(time) && time.length >= 6) {
       return formatlocalDateTime(
-        new Date(time[0], time[1] - 1, time[2], time[3], time[4], time[5])
+        new Date(time[0], time[1] - 1, time[2], time[3], time[4], time[5]),
       );
     }
 
@@ -256,8 +263,8 @@ function ResponsesList() {
           time.dayOfMonth || time.day,
           time.hour || 0,
           time.minute || 0,
-          time.second || 0
-        )
+          time.second || 0,
+        ),
       );
     }
 
@@ -280,14 +287,18 @@ function ResponsesList() {
         {recordings.map((recording, index) => (
           <Box key={recording.fileName || index}>
             <Typography variant="body2" color="text.secondary" mb={0.5}>
-              {t("responses.recording")} {index + 1} — {formatEventTime(recording.time)}
+              {t("responses.recording")} {index + 1} —{" "}
+              {formatEventTime(recording.time)}
             </Typography>
             <audio controls style={{ width: "100%", maxWidth: 300 }}>
               <source
                 src={previewUrlByFilename(recording.fileName)}
                 type="audio/mp4"
               />
-              {t("responses.audio_not_supported", "Your browser does not support audio playback")}
+              {t(
+                "responses.audio_not_supported",
+                "Your browser does not support audio playback",
+              )}
             </audio>
           </Box>
         ))}
@@ -302,7 +313,8 @@ function ResponsesList() {
       <Box display="flex" flexDirection="column" gap={0.5}>
         {locations.map((location, index) => (
           <Typography key={index} sx={{ wordBreak: "break-word" }}>
-            {formatEventTime(location.time)} — <strong>Lat:</strong> {location.latitude}, <strong>Long:</strong> {location.longitude}
+            {formatEventTime(location.time)} — <strong>Lat:</strong>{" "}
+            {location.latitude}, <strong>Long:</strong> {location.longitude}
           </Typography>
         ))}
       </Box>
@@ -311,8 +323,6 @@ function ResponsesList() {
 
   useEffect(() => {
     firstFetchThisVisitRef.current = true;
-    setResponseId(null);
-    setSelected(null);
   }, [surveyId]);
 
   useEffect(() => {
@@ -320,29 +330,35 @@ function ResponsesList() {
   }, [page, rowsPerPage, status, surveyor]);
 
   useEffect(() => {
-    if (!responseId) {
-      sessionStorage.removeItem("responseId");
-      return;
-    }
-    sessionStorage.setItem("responseId", responseId);
+    if (!responseId || !allResponse || selected?.id == responseId) return;
     surveyService
       .getResponseById(responseId)
       .then((data) => {
         setSelected(data);
+        sessionStorage.setItem("responseId", responseId);
       })
       .catch((err) => {
         console.error(err);
+        setResponseId(null);
+        setSelected(null);
       });
-  }, [responseId]);
+  }, [responseId, allResponse]);
 
   const [responseToDelete, setResponseToDelete] = useState(null);
   const onCloseModal = () => setResponseToDelete(null);
   const deleteResponse = () => {
     if (!responseToDelete) return;
+    const deletedId = responseToDelete.id;
     onCloseModal();
     surveyService
-      .deleteResponse(surveyId, responseToDelete.id)
-      .then(() => fetchResponses(true))
+      .deleteResponse(surveyId, deletedId)
+      .then(() => {
+        if (responseId === deletedId) {
+          setResponseId(null);
+          setSelected(null);
+        }
+        fetchResponses(true);
+      })
       .catch(processApirror);
   };
 
@@ -458,7 +474,14 @@ function ResponsesList() {
         t={t}
       />
 
-      <Box sx={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        }}
+      >
         {surveyor && (
           <Box mb={1}>
             <Button sx={{ m: 1 }} onClick={() => setSurveyor(null)}>
@@ -569,7 +592,10 @@ function ResponsesList() {
                       <ListItemButton
                         key={r.id}
                         selected={isSelected}
-                        onClick={() => setResponseId(r.id)}
+                        onClick={() => {
+                          console.log("setResponseId", r.id)
+                          setResponseId(r.id)
+                        }}
                         sx={{ alignItems: "flex-start" }}
                       >
                         <ListItemText
@@ -602,7 +628,7 @@ function ResponsesList() {
                             <>
                               <Typography variant="body2">
                                 {formatlocalDateTime(
-                                  serverDateTimeToLocalDateTime(r.startDate)
+                                  serverDateTimeToLocalDateTime(r.startDate),
                                 )}
                               </Typography>
                               {r.surveyorName && (
@@ -661,7 +687,11 @@ function ResponsesList() {
             )}
           </Paper>
 
-          <Paper elevation={0} variant="outlined" sx={{ p: 2, overflow: "auto" }}>
+          <Paper
+            elevation={0}
+            variant="outlined"
+            sx={{ p: 2, overflow: "auto" }}
+          >
             {!selected ? (
               <Box p={4} textAlign="center">
                 <Typography color="text.secondary">
@@ -700,7 +730,7 @@ function ResponsesList() {
                   <InfoItem
                     label={t("responses.start_date")}
                     value={formatlocalDateTime(
-                      serverDateTimeToLocalDateTime(selected.startDate)
+                      serverDateTimeToLocalDateTime(selected.startDate),
                     )}
                   />
                   <InfoItem
@@ -708,7 +738,7 @@ function ResponsesList() {
                     value={
                       selected.submitDate
                         ? formatlocalDateTime(
-                            serverDateTimeToLocalDateTime(selected.submitDate)
+                            serverDateTimeToLocalDateTime(selected.submitDate),
                           )
                         : "—"
                     }
@@ -828,7 +858,7 @@ function ResponsesList() {
                                         {renderAnswerClamped(
                                           val.code,
                                           selected.id,
-                                          val.value
+                                          val.value,
                                         )}
                                       </Box>
                                     </CustomTooltip>
@@ -837,7 +867,7 @@ function ResponsesList() {
                                       {renderAnswerClamped(
                                         val.code,
                                         selected.id,
-                                        val.value
+                                        val.value,
                                       )}
                                     </Box>
                                   )}

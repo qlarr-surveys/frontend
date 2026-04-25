@@ -11,7 +11,7 @@ import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
-function ValidationSetupItem({ rule, t, code }) {
+function ValidationSetupItem({ rule, t, code, isQuickOptions }) {
   console.debug("ValidationSetupItem: " + code);
 
   const dispatch = useDispatch();
@@ -47,7 +47,7 @@ function ValidationSetupItem({ rule, t, code }) {
           onChange={(event) => checkedValidationItem(event.target.checked)}
         />
       </div>
-      {isActive && (
+      {isActive && !isQuickOptions && (
         <Box className={styles.boxContainer}>
           <ValidationSetupValue
             code={code}

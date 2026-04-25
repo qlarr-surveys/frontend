@@ -1,0 +1,80 @@
+---
+name: Bug report
+description: Create a report to help us improve
+title: '[Bug] '
+labels: 'bug'
+
+body:
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component affected
+      description: Which part of the application is this bug in?
+      options:
+        - Editor (survey design)
+        - Runner (survey execution)
+        - Dashboard
+        - Authentication
+        - API integration
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: browser
+    attributes:
+      label: Browser(s)
+      description: Which browsers have you tested with?
+      options:
+        - label: Chrome
+        - label: Firefox
+        - label: Safari
+        - label: Edge
+        - label: Other
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: '1. Step one&#10;2. Step two&#10;3. Step three'
+      placeholder: 'Include a survey export if possible. Be specific about steps.'
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should happen?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happens?
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: desktop / mobile / tablet
+      placeholder: desktop
+  - type: input
+    id: os
+    attributes:
+      label: OS Version
+      description: e.g., Windows 11, macOS 14, Ubuntu 22.04
+      placeholder: ''
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: Frequency
+      options:
+        - Always
+        - Sometimes
+        - Once
+  - type: textarea
+    id: logs
+    attributes:
+      label: Browser Console / Network Logs
+      description: Any relevant errors from console or network tab
+      placeholder: Paste relevant error messages here

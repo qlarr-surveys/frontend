@@ -385,6 +385,15 @@
     "group_by_group": "Seite für Seite",
     "question_by_question": "Frage für Frage"
   },
+  "preview_page_tour": {
+    "step1_title": "Vorschau auf verschiedenen Geräten",
+    "step1_intro": "Wechseln Sie zwischen Desktop-, Mobil- und Offline-Modus, um sicherzustellen, dass Ihre Umfrage überall gut aussieht.",
+    "step1_next": "Weiter: Navigationsmodus",
+    "step2_title": "Navigationsmodus",
+    "step2_intro": "Steuern Sie, wie Nutzer durch Ihre Umfrage navigieren, indem Sie festlegen, wie Befragte sich durch die Umfrage bewegen:\n\n<b>Alles in einem:</b> Alle Fragen auf einer Seite.\n<b>Seite für Seite:</b> Ein Abschnitt pro Seite.\n<b>Frage für Frage:</b> Schrittweise Erfahrung (nur eine Frage pro Seite).",
+    "step2_next": "Los geht's ✓",
+    "tour_back": "zurück"
+  },
   "empty_state": {
     "welcome": "Willkommen {{firstName}} {{lastName}}",
     "subtitle": "Gewinnen Sie tiefere Einblicke für klügere Entscheidungen.",

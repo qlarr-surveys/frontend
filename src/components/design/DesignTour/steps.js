@@ -3,7 +3,7 @@ export function getDesignTourSteps(t) {
     {
       element: '[data-tour="content-panel"]',
       position: "left",
-      tooltipClass: "design-tour-tooltip design-tour-step-workspace",
+      tooltipClass: "tour-tooltip design-tour-step-workspace",
       title: t("tour_step1_title"),
       intro: t("tour_step1_intro"),
       nextButtonText: t("tour_step1_next"),
@@ -11,7 +11,7 @@ export function getDesignTourSteps(t) {
     {
       element: '[data-tour="page-group"]',
       position: "left",
-      tooltipClass: "design-tour-tooltip design-tour-step-workspace",
+      tooltipClass: "tour-tooltip design-tour-step-workspace",
       title: t("tour_step2_title"),
       intro: t("tour_step2_intro"),
       nextButtonText: t("tour_step2_next"),
@@ -26,7 +26,7 @@ export function getDesignTourSteps(t) {
     {
       element: '[data-tour="add-page"]',
       position: "right",
-      tooltipClass: "design-tour-tooltip design-tour-step-addpage",
+      tooltipClass: "tour-tooltip design-tour-step-addpage",
       title: t("tour_step4_title"),
       intro: t("tour_step4_intro"),
       nextButtonText: t("tour_step4_next"),
@@ -41,7 +41,7 @@ export function getDesignTourSteps(t) {
     {
       element: '[data-tour="preview-button"]',
       position: "bottom-right-aligned",
-      tooltipClass: "design-tour-tooltip design-tour-step-preview",
+      tooltipClass: "tour-tooltip design-tour-step-preview",
       title: t("tour_step6_title"),
       intro: t("tour_step6_intro"),
       nextButtonText: t("tour_step6_next"),

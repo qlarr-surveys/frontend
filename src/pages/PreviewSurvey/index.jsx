@@ -16,6 +16,7 @@ import { BG_COLOR } from "~/constants/theme";
 import { PREVIEW_MODE, routes } from "~/routes";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
+import PreviewSurveyTourProvider from "~/components/manage/PreviewSurveyTour";
 
 function PreviewSurvey({ responseId = null }) {
   const [searchParams] = useSearchParams();
@@ -112,7 +113,7 @@ function PreviewSurvey({ responseId = null }) {
   };
 
   return (
-    <>
+    <PreviewSurveyTourProvider>
       <Box
         display="flex"
         position="relative"
@@ -121,6 +122,7 @@ function PreviewSurvey({ responseId = null }) {
         alignItems="center"
       >
         <Tabs
+          data-tour="preview-mode-tabs"
           value={previewMode}
           onChange={handleChange}
           aria-label={t("aria.preview_mode_tabs")}
@@ -136,7 +138,7 @@ function PreviewSurvey({ responseId = null }) {
           />
         </Tabs>
 
-        <Box position="absolute" right="16px" top="0px">
+        <Box data-tour="navigation-mode-select" position="absolute" right="16px" top="0px">
           <FormControl sx={{ minWidth: 200 }}>
             <InputLabel id="navigation-mode-select-label">
               {t("preview_page.navigation_mode")}
@@ -190,7 +192,7 @@ function PreviewSurvey({ responseId = null }) {
           />
         </div>
       </div>
-    </>
+    </PreviewSurveyTourProvider>
   );
 }
 

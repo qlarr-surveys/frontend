@@ -534,6 +534,15 @@
     "group_by_group": "Page By Page",
     "question_by_question": "Question By Question"
   },
+  "preview_page_tour": {
+    "step1_title": "Preview on different devices",
+    "step1_intro": "Switch between Desktop, Mobile, and Offline modes to ensure your survey looks great everywhere.",
+    "step1_next": "Next: navigation Mode",
+    "step2_title": "Navigation Mode",
+    "step2_intro": "Control how users navigate your survey by Choosing how respondents move through your survey:\n\n<b>All in One:</b> All questions on one page.\n<b>Page by Page:</b> One section per page.\n<b>Question by Question:</b> Step-by-step experience (only one question per page).",
+    "step2_next": "Let's go ✓",
+    "tour_back": "back"
+  },
   "empty_state": {
     "welcome": "Welcome {{firstName}} {{lastName}}",
     "subtitle": "Unlock deeper insights that drive smarter decisions.",

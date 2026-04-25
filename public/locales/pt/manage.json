@@ -384,6 +384,15 @@
     "group_by_group": "Página por Página",
     "question_by_question": "Pergunta por Pergunta"
   },
+  "preview_page_tour": {
+    "step1_title": "Pré-visualização em diferentes dispositivos",
+    "step1_intro": "Alterne entre os modos Desktop, Móvel e Offline para garantir que sua pesquisa fique ótima em qualquer lugar.",
+    "step1_next": "Próximo: Modo de Navegação",
+    "step2_title": "Modo de Navegação",
+    "step2_intro": "Controle como os usuários navegam na sua pesquisa escolhendo como os respondentes avançam:\n\n<b>Tudo em Um:</b> Todas as perguntas em uma página.\n<b>Página por Página:</b> Uma seção por página.\n<b>Pergunta por Pergunta:</b> Experiência passo a passo (apenas uma pergunta por página).",
+    "step2_next": "Vamos lá ✓",
+    "tour_back": "voltar"
+  },
   "empty_state": {
     "welcome": "Bem-vindo {{firstName}} {{lastName}}",
     "subtitle": "Descubra insights mais profundos para decisões mais inteligentes.",

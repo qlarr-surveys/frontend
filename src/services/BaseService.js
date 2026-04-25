@@ -6,15 +6,17 @@ class BaseService {
     this.dispatch = dispatch;
   }
 
-  async handleRequest(apiCall) {
+  async handleRequest(apiCall, { silent = false } = {}) {
     try {
       return await apiCall();
     } catch (error) {
       throw processApiError({
         error: error,
-        globalErrorHandler: (processedError) => {
-          this.dispatch(onError(processedError));
-        },
+        globalErrorHandler: silent
+          ? () => {}
+          : (processedError) => {
+              this.dispatch(onError(processedError));
+            },
       });
     }
   }

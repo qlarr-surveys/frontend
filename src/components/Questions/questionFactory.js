@@ -11,7 +11,7 @@ export const createQuestion = (type, qId, lang) => {
       state.showHint = true;
       break;
     case "number":
-      state.maxChars = 30;
+      state.maxChars = 15;
       state.showHint = true;
       break;
     case "email":
