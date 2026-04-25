@@ -349,6 +349,7 @@
   "general": "General",
   "logic": "Logic",
   "advanced": "Advanced",
+  "order_instructions_title": "Order Instructions",
   "order_instruction_placeholder": "Enter order expression",
   "add_conditional_relevance": "Add Conditional Relevance",
   "conditional_relevance_text_placeholder": "Enter conditional relevance expression",

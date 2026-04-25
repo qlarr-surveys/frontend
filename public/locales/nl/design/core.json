@@ -177,6 +177,7 @@
   "image_icon_size": "Pictogram Grootte in px",
   "image_width": "Afbeelding Breedte",
   "invalid_skip_destination_err": "<strong>{{code}}</strong> is geen geldige Overslaan Bestemming...",
+  "order_instructions_title": "Volgorde-instructies",
   "order_instruction_placeholder": "Voer volgorde-expressie in",
   "add_conditional_relevance": "Voorwaardelijke Relevantie Toevoegen",
   "conditional_relevance_text_placeholder": "Voer voorwaardelijke relevantie-expressie in",

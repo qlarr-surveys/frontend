@@ -177,6 +177,7 @@
   "image_icon_size": "Taille de l'Icône en px",
   "image_width": "Largeur de l'Image",
   "invalid_skip_destination_err": "<strong>{{code}}</strong> n'est pas une Destination de Saut valide...",
+  "order_instructions_title": "Instructions d'ordre",
   "order_instruction_placeholder": "Entrez l'expression d'ordre",
   "add_conditional_relevance": "Ajouter une Pertinence Conditionnelle",
   "conditional_relevance_text_placeholder": "Entrez l'expression de pertinence conditionnelle",

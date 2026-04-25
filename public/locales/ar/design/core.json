@@ -344,6 +344,7 @@
   "general": "عام",
   "logic": "منطق",
   "advanced": "متقدم",
+  "order_instructions_title": "تعليمات الترتيب",
   "order_instruction_placeholder": "أدخل تعبير الترتيب",
   "add_conditional_relevance": "إضافة صلة شرطية",
   "conditional_relevance_text_placeholder": "أدخل تعبير الصلة الشرطية",

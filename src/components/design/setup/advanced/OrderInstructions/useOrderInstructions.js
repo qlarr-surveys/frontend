@@ -6,37 +6,45 @@ export function useOrderInstructions(code) {
 
   const orderInstruction = useSelector((state) => {
     const instructionList = state.designState[code]?.instructionList || [];
-    return instructionList.find((instruction) => instruction.code === "order");
+    return instructionList.find(
+      (instruction) => instruction.code === "order" && instruction.returnType === "string"
+    );
   });
 
+  const isActive = orderInstruction?.isActive === true;
+
+  const onToggle = (checked) => {
+    dispatch(
+      updateInstruction({
+        code,
+        instruction: {
+          code: "order",
+          returnType: "string",
+          isActive: checked,
+          text: checked ? (orderInstruction?.text || "") : "",
+        },
+      })
+    );
+  };
+
   const onTextChange = (newText) => {
-    if (orderInstruction) {
-      dispatch(
-        updateInstruction({
-          code,
-          instruction: {
-            ...orderInstruction,
-            text: newText,
-            isActive: true,
-          },
-        })
-      );
-    } else {
-      dispatch(
-        updateInstruction({
-          code,
-          instruction: {
-            code: "order",
-            remove: true,
-          },
-        })
-      );
-    }
+    dispatch(
+      updateInstruction({
+        code,
+        instruction: {
+          ...orderInstruction,
+          text: newText,
+          isActive: true,
+        },
+      })
+    );
   };
 
   return {
+    isActive,
     orderInstruction,
     errors: orderInstruction?.errors || [],
+    onToggle,
     onTextChange,
   };
 }

@@ -344,6 +344,7 @@
   "general": "Allgemein",
   "logic": "Logik",
   "advanced": "Erweitert",
+  "order_instructions_title": "Reihenfolge-Anweisungen",
   "order_instruction_placeholder": "Reihenfolge-Ausdruck eingeben",
   "add_conditional_relevance": "Bedingte Relevanz hinzufügen",
   "conditional_relevance_text_placeholder": "Bedingte Relevanz-Ausdruck eingeben",

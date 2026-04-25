@@ -177,6 +177,7 @@
   "image_icon_size": "Tamaño de Icono en px",
   "image_width": "Ancho de Imagen",
   "invalid_skip_destination_err": "<strong>{{code}}</strong> no es un Destino de Salto válido...",
+  "order_instructions_title": "Instrucciones de orden",
   "order_instruction_placeholder": "Ingrese expresión de orden",
   "add_conditional_relevance": "Agregar Relevancia Condicional",
   "conditional_relevance_text_placeholder": "Ingrese la expresión de relevancia condicional",
