@@ -109,7 +109,6 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
-            "imageWidth",
           ],
         },
         {
@@ -120,7 +119,7 @@ export const setupOptions = (type) => {
         {
           title: "design",
           key: "design",
-          rules: ["customCss"],
+          rules: ["imageWidth", "customCss"],
         },
       ];
 
@@ -649,10 +648,6 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "convert_question_type",
-            "hideText",
-            "columns",
-            "iconSize",
-            "spacing",
           ],
         },
         {
@@ -668,7 +663,7 @@ export const setupOptions = (type) => {
         {
           title: "design",
           key: "design",
-          rules: ["customCss"],
+          rules: ["hideText", "columns", "iconSize", "spacing", "customCss"],
         },
       ];
 
@@ -682,10 +677,6 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "convert_question_type",
-            "hideText",
-            "columns",
-            "imageAspectRatio",
-            "spacing",
           ],
         },
         {
@@ -701,7 +692,7 @@ export const setupOptions = (type) => {
         {
           title: "design",
           key: "design",
-          rules: ["customCss"],
+          rules: ["hideText", "columns", "imageAspectRatio", "spacing", "customCss"],
         },
       ];
 
@@ -809,10 +800,6 @@ export const setupOptions = (type) => {
             "changeCode",
             "disabled",
             "showDescription",
-            "hideText",
-            "columns",
-            "imageAspectRatio",
-            "spacing",
           ],
         },
         {
@@ -833,7 +820,7 @@ export const setupOptions = (type) => {
         {
           title: "design",
           key: "design",
-          rules: ["customCss"],
+          rules: ["hideText", "columns", "imageAspectRatio", "spacing", "customCss"],
         },
       ];
 
@@ -847,10 +834,6 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "convert_question_type",
-            "hideText",
-            "columns",
-            "iconSize",
-            "spacing",
           ],
         },
         {
@@ -871,7 +854,7 @@ export const setupOptions = (type) => {
         {
           title: "design",
           key: "design",
-          rules: ["customCss"],
+          rules: ["hideText", "columns", "iconSize", "spacing", "customCss"],
         },
       ];
 
@@ -885,10 +868,6 @@ export const setupOptions = (type) => {
             "disabled",
             "showDescription",
             "convert_question_type",
-            "hideText",
-            "columns",
-            "imageAspectRatio",
-            "spacing",
           ],
         },
         {
@@ -909,7 +888,7 @@ export const setupOptions = (type) => {
         {
           title: "design",
           key: "design",
-          rules: ["customCss"],
+          rules: ["hideText", "columns", "imageAspectRatio", "spacing", "customCss"],
         },
       ];
     case "scq_icon_array":
@@ -951,10 +930,6 @@ export const setupOptions = (type) => {
             "showDescription",
             "convert_question_type",
             "disabled",
-            "minHeaderMobile",
-            "minHeaderDesktop",
-            "minRowLabelMobile",
-            "minRowLabelDesktop",
           ],
         },
         {
@@ -970,7 +945,7 @@ export const setupOptions = (type) => {
         {
           title: "design",
           key: "design",
-          rules: ["customCss"],
+          rules: ["minHeaderMobile", "minHeaderDesktop", "minRowLabelMobile", "minRowLabelDesktop", "customCss"],
         },
       ];
     case "nps":
