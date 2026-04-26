@@ -270,7 +270,7 @@ function ResponsesList() {
     }
 
     if (!date || isNaN(date.getTime())) return "—";
-    return formatlocalDateTime(serverDateTimeToLocalDateTime(date));
+    return formatlocalDateTime(date);
   };
 
   const renderVoiceRecordings = (respId, events) => {
