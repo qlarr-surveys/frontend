@@ -422,7 +422,8 @@
    ============================================== */
 .surveyDates {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 2rem;
   font-size: 0.8rem;
   color: var(--color-gray-light, #B3B7CB);
   margin-bottom: 25px;

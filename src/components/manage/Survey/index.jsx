@@ -62,6 +62,35 @@ const status = (survey) => {
   }
 };
 
+const PAST_STATUSES = [STATUS.EXPIRED, STATUS.CLOSED];
+
+const getDatesToShow = (survey, surveyStatus) => {
+  const { creationDate, lastModified, startDate, endDate } = survey;
+
+  if (startDate && endDate) {
+    const anchor = PAST_STATUSES.includes(surveyStatus)
+      ? { key: "created", labelKey: "edit_survey.metadata.created", value: creationDate }
+      : { key: "last_modified", labelKey: "edit_survey.metadata.last_modified", value: lastModified };
+    return [
+      anchor,
+      { key: "start_date", labelKey: "edit_survey.metadata.start_date", value: startDate },
+      { key: "end_date", labelKey: "edit_survey.metadata.end_date", value: endDate },
+    ].filter((d) => d.value);
+  }
+
+  const dates = [
+    { key: "created", labelKey: "edit_survey.metadata.created", value: creationDate },
+    { key: "last_modified", labelKey: "edit_survey.metadata.last_modified", value: lastModified },
+  ];
+  if ([STATUS.DRAFT, STATUS.CLOSED, STATUS.SCHEDULED].includes(surveyStatus) && startDate) {
+    dates.push({ key: "start_date", labelKey: "edit_survey.metadata.start_date", value: startDate });
+  }
+  if ([STATUS.ACTIVE, STATUS.EXPIRED].includes(surveyStatus) && endDate) {
+    dates.push({ key: "end_date", labelKey: "edit_survey.metadata.end_date", value: endDate });
+  }
+  return dates.filter((d) => d.value);
+};
+
 // Constants
 const ICON_SIZE = { fontSize: 16 };
 const ICON_SIZE_ACTION = { fontSize: 18 };
@@ -304,14 +333,9 @@ const Survey = ({
           </Stack>
 
           <div className={styles.surveyDates}>
-            <DateItem label={t("edit_survey.metadata.created")} value={fDate(survey.creationDate)} />
-            <DateItem label={t("edit_survey.metadata.last_modified")} value={fDate(survey.lastModified)} />
-            {survey.startDate && (
-              <DateItem label={t("edit_survey.metadata.start_date")} value={fDate(survey.startDate)} />
-            )}
-            {survey.endDate && (
-              <DateItem label={t("edit_survey.metadata.end_date")} value={fDate(survey.endDate)} />
-            )}
+            {getDatesToShow(survey, surveyStatus).map(({ key, labelKey, value }) => (
+              <DateItem key={key} label={t(labelKey)} value={fDate(value)} />
+            ))}
           </div>
         </Stack>
 

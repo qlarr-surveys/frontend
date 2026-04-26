@@ -1,10 +1,12 @@
 import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import {
+  Alert,
   Box,
   Button,
   Container,
   Fade,
   IconButton,
+  Snackbar,
   Stack,
   TablePagination,
   Typography,
@@ -25,10 +27,15 @@ import { ImportSurvey } from "~/components/manage/ImportSurvey";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import DeleteModal from "~/components/common/DeleteModal";
+import StopSurveyModal from "~/components/manage/StopSurveyModal";
 import { Add, Close, Description, FileUpload } from "@mui/icons-material";
 import { getDirFromSession } from "~/utils/common";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import DashboardEmptyState from "~/components/manage/DashboardEmptyState";
+import {
+  localDateToServerDateTime,
+  serverDateTimeToLocalDateTime,
+} from "~/utils/DateUtils";
 
 const Survey = lazy(() => import("~/components/manage/Survey"));
 const DASHBOARD_FILTERS_KEY = "dashboard_filters";
@@ -51,6 +58,7 @@ function Dashboard() {
   const [openImportModal, setOpenImportModal] = useState(false);
   const [recentlyUpdatedSurveyName, setRecentlyUpdatedSurveyName] =
     useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -141,18 +149,13 @@ function Dashboard() {
 
   const onCloseSurvey = (survey) => {
     setActionType("close");
-    setTitle(t("action_btn.close"));
     setSelectedSurvey(survey);
-    setDescription(t("edit_survey.close_survey", { survey_name: survey.name }));
     setOpen(true);
   };
 
   const handleAction = () => {
     if (actionType === "delete") {
       deleteSurvey(selectedSurvey.id);
-      setOpen(false);
-    } else if (actionType === "close") {
-      closeSurvey(selectedSurvey.id);
       setOpen(false);
     }
   };
@@ -188,18 +191,49 @@ function Dashboard() {
       });
   };
 
+  const handleSurveyActionError = (processedError) => {
+    if (processedError?.name === PROCESSED_ERRORS.INVALID_SURVEY_DATES.name) {
+      setErrorMessage(t(`processed_errors.${processedError.name}`));
+    }
+  };
+
   const closeSurvey = (id) => {
     dispatch(setLoading(true));
     surveyService
       .closeSurvey(id)
-      .then((data) => {
+      .then(() => {
         handleSurveyStatusChange(id, "closed");
       })
-      .catch((processedError) => {
-        if (processedError.name == PROCESSED_ERRORS.INVALID_SURVEY_DATES.name) {
-          setSurveyDateError(t(`processed_errors.${processed.name}`));
-        }
+      .catch(handleSurveyActionError)
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  };
+
+  const expireSurvey = (survey) => {
+    dispatch(setLoading(true));
+    const pastCutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const newEndDate = localDateToServerDateTime(pastCutoff);
+    const updatedSurvey = { ...survey, endDate: newEndDate };
+
+    if (
+      survey.startDate &&
+      serverDateTimeToLocalDateTime(survey.startDate) >= pastCutoff
+    ) {
+      updatedSurvey.startDate = null;
+    }
+
+    surveyService
+      .putSurvey(updatedSurvey, survey.id)
+      .then(() => {
+        setSurveys((prev) => ({
+          ...prev,
+          surveys: prev.surveys.map((s) =>
+            s.id === survey.id ? updatedSurvey : s
+          ),
+        }));
       })
+      .catch(handleSurveyActionError)
       .finally(() => {
         dispatch(setLoading(false));
       });
@@ -431,13 +465,42 @@ function Dashboard() {
           }
         }}
       />
-      <DeleteModal
-        open={open}
-        description={description}
-        handleClose={() => setOpen(false)}
-        handleDelete={handleAction}
-        title={title}
-      />
+      {actionType === "delete" && (
+        <DeleteModal
+          open={open}
+          description={description}
+          handleClose={() => setOpen(false)}
+          handleDelete={handleAction}
+          title={title}
+        />
+      )}
+      {actionType === "close" && (
+        <StopSurveyModal
+          open={open}
+          canExpire={
+            !selectedSurvey?.endDate ||
+            serverDateTimeToLocalDateTime(selectedSurvey.endDate) >= Date.now()
+          }
+          onCancel={() => setOpen(false)}
+          onClose={() => {
+            closeSurvey(selectedSurvey.id);
+            setOpen(false);
+          }}
+          onExpire={() => {
+            expireSurvey(selectedSurvey);
+            setOpen(false);
+          }}
+        />
+      )}
+      <Snackbar
+        open={Boolean(errorMessage)}
+        autoHideDuration={6000}
+        onClose={() => setErrorMessage(null)}
+      >
+        <Alert onClose={() => setErrorMessage(null)} severity="error">
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

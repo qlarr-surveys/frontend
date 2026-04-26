@@ -40,6 +40,10 @@ function SurveyAppBar({ toggleDrawer, preview }) {
     return state.runState.data.navigationData.allowIncomplete;
   }, shallowEqual);
 
+  const mode = useSelector((state) => {
+    return state.runState.values.Survey.mode;
+  });
+
   const theme = useTheme();
 
   const [saveOpen, setSaveOpen] = useState(false);
@@ -102,7 +106,7 @@ function SurveyAppBar({ toggleDrawer, preview }) {
           <MenuIcon />
         </IconButton>
         <Box display="flex" gap={2}>
-          {!isAndroid && canSave && (
+          {!isAndroid && canSave && !(preview && mode == "offline") && (
             <Button
               variant="contained"
               size="small"

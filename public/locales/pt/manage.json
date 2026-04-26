@@ -86,6 +86,27 @@
   "edit_user": {
     "title": "Editar Usuário"
   },
+  "stop_survey": {
+    "title": "Parar esta pesquisa",
+    "description": "Escolha como deseja parar de coletar respostas. Você pode fechar a pesquisa permanentemente (apenas copiar ou exportar dados) ou expirá-la temporariamente.",
+    "close_column_title": "Fechar Pesquisa:",
+    "close_bullets": [
+      "Nenhuma nova resposta pode ser coletada",
+      "A pesquisa fica somente leitura",
+      "Você só pode exportar dados ou duplicá-la",
+      "Esta ação não pode ser desfeita"
+    ],
+    "close_button": "Fechar",
+    "expire_column_title": "Expirar pesquisa:",
+    "expire_bullets": [
+      "Pausar temporariamente esta pesquisa",
+      "Nenhuma nova resposta será coletada",
+      "Você pode reativá-la a qualquer momento",
+      "Você pode continuar editando e usando a pesquisa"
+    ],
+    "expire_button": "Expirar",
+    "cancel": "Cancelar"
+  },
   "email_required": "O E-mail é Obrigatório",
   "error_title": "Erro",
   "error": {
