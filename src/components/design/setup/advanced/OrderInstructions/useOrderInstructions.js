@@ -1,29 +1,23 @@
 import { useDispatch, useSelector } from "react-redux";
-import { updateInstruction } from "~/state/design/designState";
+import { changeAttribute, updateInstruction } from "~/state/design/designState";
 
 export function useOrderInstructions(code) {
   const dispatch = useDispatch();
 
   const orderInstruction = useSelector((state) => {
     const instructionList = state.designState[code]?.instructionList || [];
-    return instructionList.find(
-      (instruction) => instruction.code === "order" && instruction.returnType === "string"
-    );
+    return instructionList.find((instruction) => instruction.code === "order");
   });
 
-  const isActive = orderInstruction?.isActive === true;
+  const isOpen = useSelector((state) => state.designState[code].customOrder);
 
   const onToggle = (checked) => {
     dispatch(
-      updateInstruction({
+      changeAttribute({
         code,
-        instruction: {
-          code: "order",
-          returnType: "string",
-          isActive: checked,
-          text: checked ? (orderInstruction?.text || "") : "",
-        },
-      })
+        key: "customOrder",
+        value: checked,
+      }),
     );
   };
 
@@ -36,12 +30,12 @@ export function useOrderInstructions(code) {
           text: newText,
           isActive: true,
         },
-      })
+      }),
     );
   };
 
   return {
-    isActive,
+    isOpen,
     orderInstruction,
     errors: orderInstruction?.errors || [],
     onToggle,

@@ -1,22 +1,21 @@
 import { Box, Switch, TextField, Typography } from "@mui/material";
-import React from "react";
 import { useOrderInstructions } from "./useOrderInstructions";
 import styles from "../shared.module.css";
 
 function OrderInstructions({ code, t }) {
-  const { isActive, orderInstruction, errors, onToggle, onTextChange } = useOrderInstructions(code);
+  const { isOpen, orderInstruction, errors, onToggle, onTextChange } = useOrderInstructions(code);
 
   return (
     <Box>
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <Typography fontWeight={700}>{t("order_instructions_title")}</Typography>
         <Switch
-          checked={isActive}
+          checked={isOpen}
           onChange={(e) => onToggle(e.target.checked)}
           inputProps={{ "aria-label": "order instructions" }}
         />
       </Box>
-      {isActive && (
+      {isOpen && (
         <Box className={styles.instructionCard}>
           <TextField
             fullWidth
