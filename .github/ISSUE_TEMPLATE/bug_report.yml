@@ -63,7 +63,7 @@ body:
     attributes:
       label: OS Version
       description: e.g., Windows 11, macOS 14, Ubuntu 22.04
-      placeholder: ''
+      placeholder: 'Windows 11'
   - type: dropdown
     id: frequency
     attributes:
