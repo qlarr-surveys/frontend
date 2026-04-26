@@ -5,12 +5,15 @@ import {
   Alert,
   Autocomplete,
   Button,
+  ButtonBase,
+  Box,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
   TextField,
+  Typography,
 } from "@mui/material";
 import StorageIcon from "@mui/icons-material/Storage";
 import EditIcon from "@mui/icons-material/Edit";
@@ -172,32 +175,33 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         </div>
       ) : onMainLang ? (
         <div className={styles.buttonContainer}>
-          <Button
-            variant="outlined"
+          <ButtonBase
             component="label"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
+            onClick={(e) => e.stopPropagation()}
+            className={styles.optionCard}
           >
-            <StorageIcon className="mr-10" />
-            {state.autoComplete
-              ? t("replace_autocomplete")
-              : t("upload_autocomplete")}
-            <input
-              hidden
-              accept="application/json,.json"
-              type="file"
-              onChange={handleUpload}
-            />
-          </Button>
-          <Button
-            variant="outlined"
+            <StorageIcon className={styles.cardIcon} />
+            <Typography className={styles.cardTitle}>
+              {state.autoComplete ? t("replace_autocomplete") : t("upload_autocomplete")}
+            </Typography>
+            <Typography className={styles.cardHint}>
+              {t("upload_autocomplete_hint")}
+            </Typography>
+            <input hidden accept="application/json,.json" type="file" onChange={handleUpload} />
+          </ButtonBase>
+          <ButtonBase
             onClick={handleManualEntryClick}
             disabled={isFetchingValues}
+            className={styles.optionCard}
           >
-            <EditIcon className="mr-10" />
-            {isFetchingValues ? t("loading_values") : t("manual_entry")}
-          </Button>
+            <EditIcon className={styles.cardIcon} />
+            <Typography className={styles.cardTitle}>
+              {isFetchingValues ? t("loading_values") : t("manual_entry")}
+            </Typography>
+            <Typography className={styles.cardHint}>
+              {t("manual_entry_hint")}
+            </Typography>
+          </ButtonBase>
         </div>
       ) : (
         <></>
