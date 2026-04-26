@@ -266,7 +266,7 @@
   "disqualify": "Disqualifizieren",
   "upload_image": "Bild hochladen",
   "upload_autocomplete": "Autocomplete-JSON-Datei hochladen",
-  "upload_autocomplete_hint": "Laden Sie eine JSON-Datei hoch, um Dropdown-Optionen automatisch zu befüllen (Ideal für große Listen)",
+  "upload_autocomplete_hint": "Laden Sie eine JSON-Datei mit einem kommagetrennten String-Array hoch, um Dropdown-Optionen automatisch zu befüllen (Ideal für große Listen)",
   "upload_video": "Video hochladen",
   "uploading_image": "Bild wird hochgeladen",
   "uploading_autocomplete": "Autocomplete-JSON-Datei wird hochgeladen",

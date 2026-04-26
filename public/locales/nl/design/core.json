@@ -299,7 +299,7 @@
   "translation": "Vertaling",
   "unspecified": "Niet Gespecificeerd",
   "upload_autocomplete": "Autocomplete JSON-bestand uploaden",
-  "upload_autocomplete_hint": "Upload een JSON-bestand om dropdown-opties automatisch in te vullen (Geschikt voor grote lijsten)",
+  "upload_autocomplete_hint": "Upload een JSON-bestand met een kommagescheiden string-array om dropdown-opties automatisch in te vullen (Geschikt voor grote lijsten)",
   "upload_background": "Achtergrond uploaden",
   "upload_image": "Afbeelding Uploaden",
   "upload_video": "Video Uploaden",

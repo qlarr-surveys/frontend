@@ -15,8 +15,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import StorageIcon from "@mui/icons-material/Storage";
-import EditIcon from "@mui/icons-material/Edit";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -175,33 +175,37 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         </div>
       ) : onMainLang ? (
         <div className={styles.buttonContainer}>
-          <ButtonBase
-            component="label"
-            onClick={(e) => e.stopPropagation()}
-            className={styles.optionCard}
-          >
-            <StorageIcon className={styles.cardIcon} />
-            <Typography className={styles.cardTitle}>
-              {state.autoComplete ? t("replace_autocomplete") : t("upload_autocomplete")}
-            </Typography>
+          <div className={styles.optionWrapper}>
+            <ButtonBase
+              component="label"
+              onClick={(e) => e.stopPropagation()}
+              className={styles.optionCard}
+            >
+              <UploadFileIcon className={styles.cardIcon} />
+              <Typography className={styles.cardTitle}>
+                {state.autoComplete ? t("replace_autocomplete") : t("upload_autocomplete")}
+              </Typography>
+              <input hidden accept="application/json,.json" type="file" onChange={handleUpload} />
+            </ButtonBase>
             <Typography className={styles.cardHint}>
               {t("upload_autocomplete_hint")}
             </Typography>
-            <input hidden accept="application/json,.json" type="file" onChange={handleUpload} />
-          </ButtonBase>
-          <ButtonBase
-            onClick={handleManualEntryClick}
-            disabled={isFetchingValues}
-            className={styles.optionCard}
-          >
-            <EditIcon className={styles.cardIcon} />
-            <Typography className={styles.cardTitle}>
-              {isFetchingValues ? t("loading_values") : t("manual_entry")}
-            </Typography>
+          </div>
+          <div className={styles.optionWrapper}>
+            <ButtonBase
+              onClick={handleManualEntryClick}
+              disabled={isFetchingValues}
+              className={styles.optionCard}
+            >
+              <ContentPasteIcon className={styles.cardIcon} />
+              <Typography className={styles.cardTitle}>
+                {isFetchingValues ? t("loading_values") : t("manual_entry")}
+              </Typography>
+            </ButtonBase>
             <Typography className={styles.cardHint}>
               {t("manual_entry_hint")}
             </Typography>
-          </ButtonBase>
+          </div>
         </div>
       ) : (
         <></>

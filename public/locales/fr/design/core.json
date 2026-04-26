@@ -299,7 +299,7 @@
   "translation": "Traduction",
   "unspecified": "Non Spécifié",
   "upload_autocomplete": "Télécharger un fichier JSON d'autocomplétion",
-  "upload_autocomplete_hint": "Téléchargez un fichier JSON pour remplir automatiquement les options de la liste déroulante (Idéal pour les grandes listes)",
+  "upload_autocomplete_hint": "Téléchargez un fichier JSON contenant un tableau de chaînes séparées par des virgules pour remplir automatiquement les options de la liste déroulante (Idéal pour les grandes listes)",
   "upload_background": "Télécharger l'arrière-plan",
   "upload_image": "Télécharger une Image",
   "upload_video": "Télécharger une Vidéo",

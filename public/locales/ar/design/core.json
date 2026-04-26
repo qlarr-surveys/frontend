@@ -266,7 +266,7 @@
   "disqualify": "استبعاد",
   "upload_image": "رفع الصورة",
   "upload_autocomplete": "رفع ملف JSON للإكمال التلقائي",
-  "upload_autocomplete_hint": "ارفع ملف JSON لملء خيارات القائمة المنسدلة تلقائيًا (الأفضل للقوائم الكبيرة)",
+  "upload_autocomplete_hint": "ارفع ملف JSON يحتوي على مصفوفة نصية مفصولة بفواصل لملء خيارات القائمة المنسدلة تلقائيًا (الأفضل للقوائم الكبيرة)",
   "upload_video": "تحميل فيديو",
   "uploading_image": "جاري تحميل الصورة",
   "uploading_autocomplete": "تحميل ملف JSON للإكمال التلقائي",
