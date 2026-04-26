@@ -86,6 +86,27 @@
   "edit_user": {
     "title": "Editar Usuario"
   },
+  "stop_survey": {
+    "title": "Detener esta encuesta",
+    "description": "Elige cómo quieres dejar de recopilar respuestas. Puedes cerrar la encuesta permanentemente (solo copiar o exportar datos) o hacer que expire temporalmente.",
+    "close_column_title": "Cerrar encuesta:",
+    "close_bullets": [
+      "No se pueden recopilar nuevas respuestas",
+      "La encuesta queda en solo lectura",
+      "Solo puedes exportar datos o duplicarla",
+      "Esta acción no se puede deshacer"
+    ],
+    "close_button": "Cerrar",
+    "expire_column_title": "Expirar encuesta:",
+    "expire_bullets": [
+      "Pausar temporalmente esta encuesta",
+      "No se recopilarán nuevas respuestas",
+      "Puedes reactivarla en cualquier momento",
+      "Puedes seguir editando y usando la encuesta"
+    ],
+    "expire_button": "Expirar",
+    "cancel": "Cancelar"
+  },
   "email_required": "El Correo Electrónico es Requerido",
   "error_title": "Error",
   "error": {

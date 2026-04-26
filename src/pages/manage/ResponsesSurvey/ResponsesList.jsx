@@ -102,6 +102,7 @@ function ResponsesList() {
     setFetching(true);
 
     const confirmFilesExport = firstFetchThisVisitRef.current === true;
+    console.log(surveyId)
 
     surveyService
       .allResponse(
@@ -249,28 +250,24 @@ function ResponsesList() {
 
     let date = null;
 
-    // Handle array format: [year, month, day, hour, minute, second] — UTC components
+    // Handle array format: [year, month, day, hour, minute, second]
     if (Array.isArray(time) && time.length >= 6) {
-      date = new Date(
-        Date.UTC(time[0], time[1] - 1, time[2], time[3], time[4], time[5]),
-      );
+      date = new Date(time[0], time[1] - 1, time[2], time[3], time[4], time[5]);
     }
-    // Handle object format (Java LocalDateTime serialization) — UTC components
+    // Handle object format (Java LocalDateTime serialization)
     else if (typeof time === "object" && time.year !== undefined) {
       date = new Date(
-        Date.UTC(
-          time.year,
-          (time.monthValue || time.month) - 1,
-          time.dayOfMonth || time.day,
-          time.hour || 0,
-          time.minute || 0,
-          time.second || 0,
-        ),
+        time.year,
+        (time.monthValue || time.month) - 1,
+        time.dayOfMonth || time.day,
+        time.hour || 0,
+        time.minute || 0,
+        time.second || 0,
       );
     }
-    // Handle ISO / server string format
+    // Handle ISO string format
     else if (typeof time === "string") {
-      date = serverDateTimeToLocalDateTime(time);
+      date = new Date(time);
     }
 
     if (!date || isNaN(date.getTime())) return "—";
