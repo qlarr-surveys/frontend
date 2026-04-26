@@ -11,7 +11,6 @@ import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 function Relevance({ code, t }) {
   const dispatch = useDispatch();
   const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
-  const { t: tCore } = useTranslation(NAMESPACES.DESIGN_CORE);
 
   const designState = useSelector((s) => s.designState);
   const state = designState[code];
@@ -117,7 +116,7 @@ function Relevance({ code, t }) {
               <Trans t={t} i18nKey="wrong_logic_err" />
             </span>
             <Button variant="contained" size="small" onClick={resetToShowAlways}>
-              {tCore("ok")}
+              {t("ok")}
             </Button>
           </div>
         ) : isRawMode ? (
@@ -145,7 +144,7 @@ function Relevance({ code, t }) {
                   {t("switch_to_visual_warning")}
                 </Typography>
                 <Button size="small" onClick={() => setShowResetWarning(false)}>
-                  {tCore("cancel")}
+                  {t("cancel")}
                 </Button>
                 <Button size="small" variant="contained" onClick={handleConfirmSwitchToVisual}>
                   {t("confirm_switch")}
@@ -175,7 +174,7 @@ function Relevance({ code, t }) {
               designState={designState}
               mainLang={mainLang}
               langList={langList}
-              t={tCore}
+              t={t}
             />
             <Box sx={{ mt: 0.5, textAlign: "right" }}>
               <Link

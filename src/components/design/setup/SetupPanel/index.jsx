@@ -3,7 +3,6 @@ import ShowHint, { SetupTextInput } from "~/components/design/setup/ShowHint";
 import ValidationSetupItem from "~/components/design/setup/validation/ValidationSetupItem";
 import CustomValidationRules from "../validation/CustomValidationRules";
 import OrderInstructions from "../advanced/OrderInstructions";
-import ConditionalRelevance from "../advanced/ConditionalRelevance";
 import React from "react";
 import ToggleValue from "../ToggleValue";
 import SelectValue from "../SelectValue";
@@ -116,8 +115,6 @@ const SetupComponent = React.memo(({ code, rule, t, isQuickOptions }) => {
       return <CustomValidationRules code={code} t={t} key={code + rule} />;
     case "order_instructions":
       return <OrderInstructions code={code} t={t} key={code + rule} />;
-    case "conditional_relevance":
-      return <ConditionalRelevance code={code} t={t} key={code + rule} />;
     case "changeCode":
       return <EntityCodeEditor code={code} />;
     case "theme":

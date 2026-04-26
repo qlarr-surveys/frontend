@@ -21,7 +21,7 @@ export function useOrderInstructions(code) {
           code: "order",
           returnType: "string",
           isActive: checked,
-          text: checked ? (orderInstruction?.text || "") : "",
+          text: orderInstruction?.text || "",
         },
       })
     );
