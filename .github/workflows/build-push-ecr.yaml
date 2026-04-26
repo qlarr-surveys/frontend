@@ -2,7 +2,7 @@ name: build & push to public ecr
 
 on:
   push:
-    branches: [main]
+    branches: [main, "feat_auto-https-docker"]
   workflow_dispatch: {}
 
 env:
