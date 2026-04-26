@@ -472,8 +472,7 @@
   "tour_step9_next": "التالي: الاستجابات",
   "tour_step10_title": "الاستجابات",
   "tour_step10_intro": "تتبّع الاستجابات والتحليلات وراجع النتائج وأدِر بياناتك أو صدّرها.",
-  "tour_step10_next": "هيا نبدأ!",
-  "tooltips": {
+"tooltips": {
     "allow_previous": "Allow respondents to go back to previous pages during the survey.",
     "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
     "allow_jump": "Allow respondents to jump to any page using a survey index/table of contents.",

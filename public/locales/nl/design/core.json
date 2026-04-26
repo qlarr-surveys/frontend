@@ -443,7 +443,6 @@
   "tour_back": "Terug",
   "tour_done": "Aan de slag!",
   "tour_remind_me_later": "Herinner me later",
-  "tour_step1_title": "Uw enquête-werkruimte",
   "tooltips": {
     "allow_previous": "Allow respondents to go back to previous pages during the survey.",
     "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
@@ -456,6 +455,7 @@
     "duplicate_to_code": "Deze code behoort tot een andere groep of vraag",
     "code_invalid": "Ongeldige code. Probeer het opnieuw."
   },
+  "tour_step1_title": "Uw enquête-werkruimte",
   "tour_step1_intro": "Dit is uw enquête-werkruimte. Gebruik het tabblad Ontwerp om vragen toe te voegen, logica op te bouwen en uw enquêtestroom vorm te geven.",
   "tour_step1_next": "Volgende: Eerste pagina",
   "tour_step2_title": "Begin met uw eerste pagina",
@@ -483,6 +483,5 @@
   "tour_step9_intro": "Stel gegevensverzameling, enquêtetoegang, navigatie, quota's en antwoordregels in vóór publicatie.",
   "tour_step9_next": "Volgende: Antwoorden",
   "tour_step10_title": "Antwoorden",
-  "tour_step10_intro": "Volg antwoorden en analyses, bekijk resultaten en beheer of exporteer uw gegevens.",
-  "tour_step10_next": "Aan de slag!"
+  "tour_step10_intro": "Volg antwoorden en analyses, bekijk resultaten en beheer of exporteer uw gegevens."
 }

@@ -443,7 +443,6 @@
   "tour_back": "Zurück",
   "tour_done": "Los geht's!",
   "tour_remind_me_later": "Später erinnern",
-  "tour_step1_title": "Ihr Umfrage-Arbeitsbereich",
   "tooltips": {
     "allow_previous": "Allow respondents to go back to previous pages during the survey.",
     "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
@@ -456,6 +455,7 @@
     "duplicate_to_code": "Dieser Code gehört zu einer anderen Gruppe oder Frage",
     "code_invalid": "Ungültiger Code. Bitte versuchen Sie es erneut."
   },
+  "tour_step1_title": "Ihr Umfrage-Arbeitsbereich",
   "tour_step1_intro": "Dies ist Ihr Umfrage-Arbeitsbereich. Verwenden Sie den Design-Tab, um Fragen hinzuzufügen, Logik aufzubauen und Ihren Umfrageablauf zu gestalten.",
   "tour_step1_next": "Weiter: Erste Seite",
   "tour_step2_title": "Beginnen Sie mit Ihrer ersten Seite",
@@ -483,6 +483,5 @@
   "tour_step9_intro": "Richten Sie Datenerfassung, Umfragezugang, Navigation, Kontingente und Antwortregeln vor der Veröffentlichung ein.",
   "tour_step9_next": "Weiter: Antworten",
   "tour_step10_title": "Antworten",
-  "tour_step10_intro": "Verfolgen Sie Antworten und Analysen, überprüfen Sie Ergebnisse und verwalten oder exportieren Sie Ihre Daten.",
-  "tour_step10_next": "Los geht's!"
+  "tour_step10_intro": "Verfolgen Sie Antworten und Analysen, überprüfen Sie Ergebnisse und verwalten oder exportieren Sie Ihre Daten."
 }

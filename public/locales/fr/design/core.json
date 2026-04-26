@@ -443,7 +443,6 @@
   "tour_back": "Retour",
   "tour_done": "C'est parti !",
   "tour_remind_me_later": "Me rappeler plus tard",
-  "tour_step1_title": "Votre espace de travail d'enquête",
   "tooltips": {
     "allow_previous": "Allow respondents to go back to previous pages during the survey.",
     "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
@@ -456,6 +455,7 @@
     "duplicate_to_code": "Ce code appartient à un autre groupe ou question",
     "code_invalid": "Code invalide. Veuillez réessayer."
   },
+  "tour_step1_title": "Votre espace de travail d'enquête",
   "tour_step1_intro": "Voici votre espace de travail d'enquête. Utilisez l'onglet Conception pour ajouter des questions, créer de la logique et façonner le flux de votre enquête.",
   "tour_step1_next": "Suivant : Première page",
   "tour_step2_title": "Commencez par votre première page",
@@ -483,6 +483,5 @@
   "tour_step9_intro": "Configurez la collecte de données, l'accès à l'enquête, la navigation, les quotas et les règles de réponse avant la publication.",
   "tour_step9_next": "Suivant : Réponses",
   "tour_step10_title": "Réponses",
-  "tour_step10_intro": "Suivez les réponses et les analyses, examinez les résultats et gérez ou exportez vos données.",
-  "tour_step10_next": "C'est parti !"
+  "tour_step10_intro": "Suivez les réponses et les analyses, examinez les résultats et gérez ou exportez vos données."
 }

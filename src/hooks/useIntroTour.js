@@ -68,10 +68,13 @@ export function useIntroTour({
         setTimeout(() => {
           positionSkipButtonAwayFromArrow();
 
-          setNextButtonText({
-            rtl,
-            text: step.nextButtonText || labels.next,
-          });
+          const isLastStep = stepIndex === tourSteps.length - 1;
+          if (!isLastStep) {
+            setNextButtonText({
+              rtl,
+              text: step.nextButtonText || labels.next,
+            });
+          }
 
           if (stepIndex === 0) {
             if (customizePrevOnFirstStep) {

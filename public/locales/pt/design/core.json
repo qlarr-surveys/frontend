@@ -443,7 +443,6 @@
   "tour_back": "Voltar",
   "tour_done": "Vamos lá!",
   "tour_remind_me_later": "Lembrar mais tarde",
-  "tour_step1_title": "Seu espaço de trabalho da pesquisa",
   "tooltips": {
     "allow_previous": "Allow respondents to go back to previous pages during the survey.",
     "allow_incomplete": "Allow respondents to save their progress and resume the survey later.",
@@ -456,6 +455,7 @@
     "duplicate_to_code": "Este código pertence a outro grupo ou pergunta",
     "code_invalid": "Código inválido. Por favor tente novamente."
   },
+  "tour_step1_title": "Seu espaço de trabalho da pesquisa",
   "tour_step1_intro": "Este é o seu espaço de trabalho da pesquisa. Use a guia Design para adicionar perguntas, criar lógica e moldar o fluxo da sua pesquisa.",
   "tour_step1_next": "Próximo: Primeira página",
   "tour_step2_title": "Comece com sua primeira página",
@@ -483,6 +483,5 @@
   "tour_step9_intro": "Configure coleta de dados, acesso à pesquisa, navegação, cotas e regras de resposta antes de publicar.",
   "tour_step9_next": "Próximo: Respostas",
   "tour_step10_title": "Respostas",
-  "tour_step10_intro": "Acompanhe respostas e análises, revise resultados e gerencie ou exporte seus dados.",
-  "tour_step10_next": "Vamos lá!"
+  "tour_step10_intro": "Acompanhe respostas e análises, revise resultados e gerencie ou exporte seus dados."
 }

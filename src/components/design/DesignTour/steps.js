@@ -73,7 +73,6 @@ export function getDesignTourSteps(t) {
       position: "right",
       title: t("tour_step10_title"),
       intro: t("tour_step10_intro"),
-      nextButtonText: t("tour_step10_next"),
     },
   ];
 }
