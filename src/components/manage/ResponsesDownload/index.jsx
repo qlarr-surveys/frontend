@@ -18,6 +18,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { saveAs } from "file-saver";
 import FormProvider from "~/components/hook-form";
 import { useParams } from "react-router-dom";
 import { useService } from "~/hooks/use-service";
@@ -84,6 +85,7 @@ export default function ResponsesDownload({
         reset({
           from: currentFrom,
           to: currentTo,
+          filter: "all",
         });
       }
     }, [open, currentFrom, currentTo, reset]);
@@ -101,6 +103,7 @@ export default function ResponsesDownload({
     surveyService
       .downloadResponseFiles(surveyId, from, to, complete)
       .then((blob) => {
+        console.log("here!!!")
         if (!blob || blob.size === 0) {
           setSnackbar({
             open: true,
@@ -118,7 +121,7 @@ export default function ResponsesDownload({
               : "incomplete";
           const fileName = `${surveyId}-responses_${from}-${to}_${suffix}.zip`;
           const file = new File([blob], fileName, { type: "application/zip" });
-          FileSaver.saveAs(file);
+          saveAs(file);
         }
         onClose?.();
       });
