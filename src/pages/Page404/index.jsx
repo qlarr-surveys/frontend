@@ -18,8 +18,8 @@ export function Unauthorized() {
   const { t } = useTranslation(NAMESPACES.MANAGE);
   return (
     <div className={styles.pageWarper}>
-      <div className={styles.pageTitle}>{t("error.unauthorized")}</div>
-      <div className={styles.pageSubTitle}>{t("error.unauthorized_message")}</div>
+      <div className={styles.pageTitle}>Unauthorized</div>
+      <div className={styles.pageSubTitle}>You are not authorized to access this page</div>
     </div>
   );
 }
