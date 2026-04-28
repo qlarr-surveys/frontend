@@ -14,6 +14,7 @@ import {
   Radio,
   Snackbar,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -33,6 +34,7 @@ export default function ResponsesDownload({
   const { surveyId } = useParams();
   const surveyService = useService("survey");
 
+  const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -100,6 +102,7 @@ export default function ResponsesDownload({
     const complete =
       data.filter === "all" ? null : data.filter === "complete" ? true : false;
 
+    setLoading(true);
     surveyService
       .downloadResponseFiles(surveyId, from, to, complete)
       .then((blob) => {
@@ -124,6 +127,19 @@ export default function ResponsesDownload({
           saveAs(file);
         }
         onClose?.();
+      })
+      .catch((error) => {
+        console.log(error)
+        if (error?.name === "size_limit_exceeded") {
+          setSnackbar({
+            open: true,
+            message: t("processed_errors.size_limit_exceeded"),
+            severity: "error",
+          });
+        }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   });
 
@@ -203,8 +219,17 @@ export default function ResponsesDownload({
           </DialogContent>
 
           <DialogActions>
-            <Button onClick={onClose}>{t("action_btn.cancel")}</Button>
-            <Button type="submit" variant="contained">
+            <Button onClick={onClose} disabled={loading}>
+              {t("action_btn.cancel")}
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={loading}
+              endIcon={
+                loading ? <CircularProgress size={20} color="inherit" /> : null
+              }
+            >
               {t("action_btn.download")}
             </Button>
           </DialogActions>

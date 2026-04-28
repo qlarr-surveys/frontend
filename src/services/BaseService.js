@@ -10,7 +10,7 @@ class BaseService {
     try {
       return await apiCall();
     } catch (error) {
-      throw processApiError({
+      throw await processApiError({
         error: error,
         globalErrorHandler: silent
           ? () => {}
