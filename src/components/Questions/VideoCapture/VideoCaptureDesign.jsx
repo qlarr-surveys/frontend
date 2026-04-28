@@ -1,5 +1,6 @@
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import React from "react";
+import VideocamIcon from "@mui/icons-material/Videocam";
 
 import styles from "./VideoCaptureDesign.module.css";
 import { useTheme } from "@emotion/react";
@@ -18,12 +19,11 @@ function VideoCaptureDesign({ code }) {
 
   return (
     <Box className={styles.container}>
-      <img
-        src="/video.png"
-        style={{
-          maxHeight: "200px",
-        }}
-      />
+      <IconButton
+        color="primary"
+      >
+        <VideocamIcon sx={{ fontSize: "48px" }} />
+      </IconButton>
       <br />
       {state.showHint && <span>{state.content?.[lang]?.hint || ""}</span>}
     </Box>

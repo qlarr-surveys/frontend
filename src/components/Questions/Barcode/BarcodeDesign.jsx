@@ -1,6 +1,6 @@
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import React from "react";
-
+import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 
 import styles from "./BarcodeDesign.module.css";
 import { useTheme } from "@emotion/react";
@@ -19,12 +19,11 @@ function BarcodeDesign({ code }) {
 
   return (
     <Box className={styles.container}>
-      <img
-        src="/barcode.png"
-        style={{
-          maxHeight: "200px",
-        }}
-      />
+      <IconButton
+        color="primary"
+      >
+        <QrCodeScannerIcon sx={{ fontSize: "48px" }} />
+      </IconButton>
       <br />
       {state.showHint && <span>{state.content?.[lang]?.hint || ""}</span>}
     </Box>

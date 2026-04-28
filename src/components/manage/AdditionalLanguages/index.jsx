@@ -6,6 +6,7 @@ import {
   FormLabel,
   FormControlLabel,
   Checkbox,
+  FormHelperText,
 } from "@mui/material";
 import { LANGUAGE_DEF } from "~/constants/language";
 
@@ -19,9 +20,12 @@ export const AdditionalLanguages = ({
 
   return (
     <FormControl sx={{ marginTop: "16px" }}>
-      <FormLabel id="additional-languages-label">
+      <FormLabel id="additional-languages-label" sx={{ fontWeight: 600, fontSize: "1.1rem", marginBottom: "4px", color: "text.primary" }}>
         {t("label.additional_languages")}
       </FormLabel>
+      <FormHelperText sx={{ marginTop: 0, marginBottom: "8px" }}>
+        {t("label.additional_languages_description")}
+      </FormHelperText>
       {Object.keys(LANGUAGE_DEF).map((key) => {
         const el = LANGUAGE_DEF[key];
         return (

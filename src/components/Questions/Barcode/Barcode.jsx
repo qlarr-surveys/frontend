@@ -3,8 +3,9 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { valueChange } from "~/state/runState";
 import styles from "./Barcode.module.css";
-import { TextField } from "@mui/material";
+import { TextField, IconButton } from "@mui/material";
 import { useTheme } from "@emotion/react";
+import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 
 function Barcode(props) {
   const theme = useTheme();
@@ -49,13 +50,12 @@ function Barcode(props) {
 
   return (
     <Box className={styles.container}>
-      <img
+      <IconButton
         onClick={onImageClick}
-        src="/barcode.png"
-        style={{
-          maxHeight: "200px",
-        }}
-      />
+        color="primary"
+      >
+        <QrCodeScannerIcon sx={{ fontSize: "48px" }} />
+      </IconButton>
       <br />
       {component.showHint && <span>{component.content?.hint}</span>}
       <TextField

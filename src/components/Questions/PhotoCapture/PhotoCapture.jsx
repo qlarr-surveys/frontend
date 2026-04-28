@@ -6,6 +6,8 @@ import { valueChange } from "~/state/runState";
 import styles from "./PhotoCapture.module.css";
 import { getFileFromPath } from '~/networking/common';
 import { useService } from "~/hooks/use-service";
+import { IconButton } from "@mui/material";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 
 function PhotoCapture(props) {
   const runService = useService("run");
@@ -66,14 +68,12 @@ function PhotoCapture(props) {
   return (
     <Box className={styles.container} sx={{ maxHeight: "400px" }}>
       {!state.value || !state.value.stored_filename ? (
-        <img
+        <IconButton
           onClick={onImageClick}
-          src="/camera.png"
-          style={{
-            maxHeight: "200px",
-            maxWidth: "100%",
-          }}
-        />
+          color="primary"
+        >
+          <PhotoCameraIcon sx={{ fontSize: "48px" }} />
+        </IconButton>
       ) : (
         <img
           onClick={onImageClick}

@@ -1,6 +1,6 @@
-import { Box, Icon } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import React from "react";
-
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 
 import styles from "./PhotoCaptureDesign.module.css";
 import { useTheme } from "@emotion/react";
@@ -19,12 +19,11 @@ function PhotoCaptureDesign({ code }) {
 
   return (
     <Box className={styles.container}>
-      <img
-        src="/camera.png"
-        style={{
-          maxHeight: "200px",
-        }}
-      />
+      <IconButton
+        color="primary"
+      >
+        <PhotoCameraIcon sx={{ fontSize: "48px" }} />
+      </IconButton>
       <br />
       {state.showHint && <span>{state.content?.[lang]?.hint || ""}</span>}
     </Box>

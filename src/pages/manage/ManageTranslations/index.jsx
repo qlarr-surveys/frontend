@@ -5,10 +5,10 @@ import {
   DialogTitle,
   FormControl,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography,
+  ToggleButtonGroup,
+  ToggleButton,
+  FormLabel,
+  FormHelperText,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
@@ -105,30 +105,30 @@ export function ManageLanguages() {
         baseLanguage={langInfo.mainLang}
       />
       {allLang.length > 1 && (
-        <>
-          <Typography
-            sx={{ marginTop: "16px", marginBottom: "8px", fontSize: "1em" }}
+        <FormControl sx={{ marginTop: "24px" }}>
+          <FormLabel id="edit-translation-label" sx={{ fontWeight: 600, fontSize: "1.1rem", marginBottom: "4px", color: "text.primary" }}>
+            {t("label.edit_translation")}
+          </FormLabel>
+          <FormHelperText sx={{ marginTop: 0, marginBottom: "12px" }}>
+            {t("label.edit_translation_description")}
+          </FormHelperText>
+          <ToggleButtonGroup
+            value={lang}
+            exclusive
+            onChange={(_, newLang) => {
+              if (newLang !== null) {
+                dispatch(changeLang(newLang));
+              }
+            }}
+            aria-label="edit translation language"
           >
-            {t("translations.translate_to")}
-          </Typography>
-          <FormControl fullWidth>
-            <InputLabel id="label-base-language">{t("translations.language")}</InputLabel>
-            <Select
-              id="ChangeLang"
-              value={lang}
-              label={t("translations.design_language")}
-              onChange={(event) => {
-                dispatch(changeLang(event.target.value));
-              }}
-            >
-              {allLang.map((lang, index) => (
-                <MenuItem key={index} value={lang.code}>
-                  {lang.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </>
+            {allLang.map((language, index) => (
+              <ToggleButton key={index} value={language.code}>
+                {language.name}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        </FormControl>
       )}
     </Box>
   );
