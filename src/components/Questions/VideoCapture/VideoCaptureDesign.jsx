@@ -1,4 +1,4 @@
-import { Box, IconButton } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import React from "react";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
@@ -19,11 +19,12 @@ function VideoCaptureDesign({ code }) {
 
   return (
     <Box className={styles.container}>
-      <IconButton
+      <Button
+        variant="contained"
         color="primary"
       >
         <VideocamIcon sx={{ fontSize: "48px" }} />
-      </IconButton>
+      </Button>
       <br />
       {state.showHint && <span>{state.content?.[lang]?.hint || ""}</span>}
     </Box>

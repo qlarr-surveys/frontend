@@ -1,6 +1,7 @@
-import { Box, IconButton } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import React from "react";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+
 
 import styles from "./PhotoCaptureDesign.module.css";
 import { useTheme } from "@emotion/react";
@@ -19,11 +20,12 @@ function PhotoCaptureDesign({ code }) {
 
   return (
     <Box className={styles.container}>
-      <IconButton
+      <Button
+        variant="contained"
         color="primary"
       >
         <PhotoCameraIcon sx={{ fontSize: "48px" }} />
-      </IconButton>
+      </Button>
       <br />
       {state.showHint && <span>{state.content?.[lang]?.hint || ""}</span>}
     </Box>

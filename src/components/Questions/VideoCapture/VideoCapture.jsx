@@ -7,7 +7,7 @@ import styles from "./VideoCapture.module.css";
 import ReactPlayer from "react-player";
 import { getFileFromPath } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
-import { IconButton } from "@mui/material";
+import { Button } from "@mui/material";
 import VideocamIcon from "@mui/icons-material/Videocam";
 
 function VideoCapture(props) {
@@ -73,12 +73,13 @@ function VideoCapture(props) {
   return (
     <Box className={styles.container}>
       {!state.value || !state.value.stored_filename ? (
-        <IconButton
+        <Button
           onClick={onImageClick}
+          variant="contained"
           color="primary"
         >
           <VideocamIcon sx={{ fontSize: "48px" }} />
-        </IconButton>
+        </Button>
       ) : (
         <div
           style={{
