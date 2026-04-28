@@ -122,7 +122,9 @@
     "at_least_one_role": "Au moins un rôle doit être sélectionné.",
     "roles_required": "Les rôles sont requis.",
     "survey_expired": "Sondage Expiré",
-    "page_not_found": "Page non trouvée"
+    "page_not_found": "Page non trouvée",
+    "unauthorized": "Non autorisé",
+    "unauthorized_message": "Vous n'êtes pas autorisé à accéder à cette page"
   },
   "event_response": {
     "details": "Détails",

@@ -122,7 +122,9 @@
     "at_least_one_role": "Ten minste één rol moet worden geselecteerd.",
     "roles_required": "Rollen zijn verplicht.",
     "survey_expired": "Enquête Verlopen",
-    "page_not_found": "Pagina niet gevonden"
+    "page_not_found": "Pagina niet gevonden",
+    "unauthorized": "Niet geautoriseerd",
+    "unauthorized_message": "U bent niet geautoriseerd om deze pagina te bekijken"
   },
   "event_response": {
     "details": "Details",

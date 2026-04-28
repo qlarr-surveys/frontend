@@ -1,8 +1,7 @@
 export const MANAGE_SURVEY_LANDING_PAGES = {
   DESIGN: "design-survey",
   RESPONSES: "responses",
-  SETTINGS: "edit-survey",
-  RESPONSE: "response",
+  SETTINGS: "edit-survey"
 };
 
 export const DESIGN_SURVEY_MODE = {
@@ -44,6 +43,5 @@ export const routes = {
   addUser: "/add-user",
   editUser: "/edit-user/:userId",
   profile: "/profile",
-  createSurvey: "/create-survey",
   page404: "*",
 };

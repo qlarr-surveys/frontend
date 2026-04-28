@@ -122,7 +122,9 @@
     "last_name_too_long": "يجب أن يكون الاسم الأخير 50 حرفًا أو أقل.",
     "required": "مطلوب",
     "survey_expired": "انتهت صلاحية الاستبيان",
-    "page_not_found": "الصفحة غير موجودة"
+    "page_not_found": "الصفحة غير موجودة",
+    "unauthorized": "غير مصرح",
+    "unauthorized_message": "غير مصرح لك بالوصول إلى هذه الصفحة"
   },
   "event_response": {
     "details": "تفاصيل",

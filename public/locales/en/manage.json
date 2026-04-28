@@ -59,7 +59,7 @@
     "offline": "Offline",
     "privacy": "Privacy",
     "quotas": "Quotas",
-    "responses": "responses",
+    "responses": "Responses",
     "sharing": "Sharing",
     "social_sharing": "Social Sharing",
     "status": "Status",
@@ -121,7 +121,9 @@
     "at_least_one_role": "At least one role must be selected.",
     "roles_required": "Roles are required.",
     "survey_expired": "Survey Expired",
-    "page_not_found": "Page not found"
+    "page_not_found": "Page not found",
+    "unauthorized": "Unauthorized",
+    "unauthorized_message": "You are not authorized to access this page"
   },
   "event_response": {
     "details": "Details",

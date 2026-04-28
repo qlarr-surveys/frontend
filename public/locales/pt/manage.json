@@ -122,7 +122,9 @@
     "at_least_one_role": "Pelo menos uma função deve ser selecionada.",
     "roles_required": "As funções são obrigatórias.",
     "survey_expired": "Pesquisa Expirada",
-    "page_not_found": "Página não encontrada"
+    "page_not_found": "Página não encontrada",
+    "unauthorized": "Não autorizado",
+    "unauthorized_message": "Você não está autorizado a acessar esta página"
   },
   "event_response": {
     "details": "Detalhes",

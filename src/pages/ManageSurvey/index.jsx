@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { designStateReceived, resetSetup } from "~/state/design/designState";
 import { GetData } from "~/networking/design";
 import { setLoading, surveyReceived } from "~/state/edit/editState";
@@ -148,8 +148,8 @@ function ManageSurvey({ landingPage }) {
 export default React.memo(ManageSurvey);
 
 export const landingTab = (landingPage, user) => {
-  if (isAnalyst(user) && landingPage == MANAGE_SURVEY_LANDING_PAGES.RESPONSES) {
-    return landingPage;
+  if (isAnalyst(user) && !isSurveyAdmin(user)) {
+    return MANAGE_SURVEY_LANDING_PAGES.RESPONSES;
   } else if (
     isSurveyAdmin(user) &&
     (landingPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN ||

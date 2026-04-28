@@ -134,7 +134,9 @@
     "at_least_one_role": "Mindestens eine Rolle muss ausgewählt werden.",
     "roles_required": "Rollen sind erforderlich.",
     "survey_expired": "Umfrage abgelaufen",
-    "page_not_found": "Seite nicht gefunden"
+    "page_not_found": "Seite nicht gefunden",
+    "unauthorized": "Nicht autorisiert",
+    "unauthorized_message": "Sie sind nicht berechtigt, auf diese Seite zuzugreifen"
   },
   "error_title": "Fehler",
   "event_response": {

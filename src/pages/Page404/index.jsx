@@ -14,4 +14,14 @@ function Page404() {
   );
 }
 
+export function Unauthorized() {
+  const { t } = useTranslation(NAMESPACES.MANAGE);
+  return (
+    <div className={styles.pageWarper}>
+      <div className={styles.pageTitle}>{t("error.unauthorized")}</div>
+      <div className={styles.pageSubTitle}>{t("error.unauthorized_message")}</div>
+    </div>
+  );
+}
+
 export default Page404;

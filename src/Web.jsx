@@ -17,7 +17,8 @@ import { getparam } from "./networking/run";
 
 import LoadingIndicator from "./components/common/LoadingIndicator";
 import { ROLES } from "./constants/roles";
-import { HEADER_OPTIONS } from './pages/ManagePageWrapper/headerOptions';
+import { HEADER_OPTIONS } from "./pages/ManagePageWrapper/headerOptions";
+import { Unauthorized } from "./pages/Page404";
 
 const AuthIllustrationLayout = lazy(() => import("./layouts/authlayout"));
 const ManagePageWrapper = lazy(() => import("./pages/ManagePageWrapper"));
@@ -30,7 +31,6 @@ const Dashboard = lazy(() => import("./pages/manage/Dashboard"));
 const LoginView = lazy(() => import("./pages/manage/Login"));
 const ManageUsers = lazy(() => import("./pages/manage/ManageUsers"));
 const ProfileView = lazy(() => import("./pages/manage/Profile"));
-const CreateSurvey = lazy(() => import("./pages/manage/CreateSurvey"));
 const RunSurvey = lazy(() => import("./pages/RunSurvey"));
 
 function Web() {
@@ -90,11 +90,15 @@ function Web() {
         path={routes.designSurvey}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.DESIGN}
-              />
-            </ManagePageWrapper>
+            <PrivateComponent>
+              <ForceRole roles={[ROLES.SUPER_ADMIN, ROLES.SURVEY_ADMIN]}>
+                <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
+                  <ManageSurvey
+                    landingPage={MANAGE_SURVEY_LANDING_PAGES.DESIGN}
+                  />
+                </ManagePageWrapper>
+              </ForceRole>
+            </PrivateComponent>
           </Suspense>
         }
       />
@@ -102,9 +106,11 @@ function Web() {
         path={routes.preview}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper  headerOptions={HEADER_OPTIONS.NONE}>
-              <PrivatePreviewSurvey />
-            </ManagePageWrapper>
+            <PrivateComponent>
+              <ManagePageWrapper headerOptions={HEADER_OPTIONS.NONE}>
+                <PreviewSurveyResolveResponse />
+              </ManagePageWrapper>
+            </PrivateComponent>
           </Suspense>
         }
       />
@@ -112,9 +118,11 @@ function Web() {
         path={routes.resumePreview}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.NONE}>
-              <PrivatePreviewSurvey />
-            </ManagePageWrapper>
+            <PrivateComponent>
+              <ManagePageWrapper headerOptions={HEADER_OPTIONS.NONE}>
+                <PreviewSurveyResolveResponse />
+              </ManagePageWrapper>
+            </PrivateComponent>
           </Suspense>
         }
       />
@@ -122,11 +130,17 @@ function Web() {
         path={routes.editSurvey}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.SETTINGS}
-              />
-            </ManagePageWrapper>
+            <PrivateComponent>
+              <ForceRole
+                roles={[ROLES.SUPER_ADMIN, ROLES.ANALYST, ROLES.SURVEY_ADMIN]}
+              >
+                <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
+                  <ManageSurvey
+                    landingPage={MANAGE_SURVEY_LANDING_PAGES.SETTINGS}
+                  />
+                </ManagePageWrapper>
+              </ForceRole>
+            </PrivateComponent>
           </Suspense>
         }
       />
@@ -135,11 +149,19 @@ function Web() {
         path={routes.responses}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY_NO_PREVIEW}>
-              <PrivateDesignSurvey
-                landingPage={MANAGE_SURVEY_LANDING_PAGES.RESPONSES}
-              />
-            </ManagePageWrapper>
+            <PrivateComponent>
+              <ForceRole
+                roles={[ROLES.SUPER_ADMIN, ROLES.ANALYST, ROLES.SURVEY_ADMIN]}
+              >
+                <ManagePageWrapper
+                  headerOptions={HEADER_OPTIONS.SURVEY_NO_PREVIEW}
+                >
+                  <ManageSurvey
+                    landingPage={MANAGE_SURVEY_LANDING_PAGES.RESPONSES}
+                  />
+                </ManagePageWrapper>
+              </ForceRole>
+            </PrivateComponent>
           </Suspense>
         }
       />
@@ -147,11 +169,13 @@ function Web() {
         path={routes.manageUsers}
         element={
           <Suspense fallback={<LoadingIndicator />}>
-            <PrivateManageUsers roles={[ROLES.SUPER_ADMIN]}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
-                <ManageUsers />
-              </ManagePageWrapper>
-            </PrivateManageUsers>
+            <PrivateComponent>
+              <ForceRole roles={[ROLES.SUPER_ADMIN]}>
+                <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
+                  <ManageUsers />
+                </ManagePageWrapper>
+              </ForceRole>
+            </PrivateComponent>
           </Suspense>
         }
       />
@@ -164,18 +188,6 @@ function Web() {
                 <ProfileView />
               </ManagePageWrapper>
             </PrivateComponent>
-          </Suspense>
-        }
-      />
-      <Route
-        path={routes.createSurvey}
-        element={
-          <Suspense fallback={<LoadingIndicator />}>
-            <PrivateManageUsers roles={[ROLES.SUPER_ADMIN, ROLES.SUPER_ADMIN]}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.GENERAL}>
-                <CreateSurvey />
-              </ManagePageWrapper>
-            </PrivateManageUsers>
           </Suspense>
         }
       />
@@ -217,66 +229,44 @@ function Web() {
       <Route
         path={routes.forgotPassword}
         element={
-          <PublicOnlyRoute>
-            <Suspense fallback={<LoadingIndicator />}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
-                <AuthIllustrationLayout>
-                  <ForgotPasswordView />
-                </AuthIllustrationLayout>
-              </ManagePageWrapper>
-            </Suspense>
-          </PublicOnlyRoute>
+          <Suspense fallback={<LoadingIndicator />}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
+              <AuthIllustrationLayout>
+                <ForgotPasswordView />
+              </AuthIllustrationLayout>
+            </ManagePageWrapper>
+          </Suspense>
         }
       />
       <Route
         path={routes.resetPassword}
         element={
-          <PublicOnlyRoute>
-            <Suspense fallback={<LoadingIndicator />}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
-                <ResetPasswordView />
-              </ManagePageWrapper>
-            </Suspense>
-          </PublicOnlyRoute>
+          <Suspense fallback={<LoadingIndicator />}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
+              <ResetPasswordView />
+            </ManagePageWrapper>
+          </Suspense>
         }
       />
       <Route
         path={routes.confirmNewUser}
         element={
-          <PublicOnlyRoute>
-            <Suspense fallback={<LoadingIndicator />}>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
-                <ResetPasswordView confirmNewUser={true} />
-              </ManagePageWrapper>
-            </Suspense>
-          </PublicOnlyRoute>
+          <Suspense fallback={<LoadingIndicator />}>
+            <ManagePageWrapper headerOptions={HEADER_OPTIONS.AUTH}>
+              <ResetPasswordView confirmNewUser={true} />
+            </ManagePageWrapper>
+          </Suspense>
         }
       />
     </Routes>
   );
 }
 
-const PrivateDesignSurvey = ({ landingPage }) => {
+const PreviewSurveyResolveResponse = () => {
   const params = useParams();
   sessionStorage.setItem("surveyId", params.surveyId);
-  const location = useLocation();
-  return TokenService.isAuthenticated() ? (
-    <ManageSurvey landingPage={landingPage} />
-  ) : (
-    <Navigate to="/login" replace state={{ from: location }} />
-  );
-};
-
-const PrivatePreviewSurvey = () => {
-  const params = useParams();
-  sessionStorage.setItem("surveyId", params.surveyId);
-  const location = useLocation();
   const responseId = getparam(useParams(), "responseId");
-  return TokenService.isAuthenticated() ? (
-    <PreviewSurvey responseId={responseId} />
-  ) : (
-    <Navigate to="/login" replace state={{ from: location }} />
-  );
+  return <PreviewSurvey responseId={responseId} />;
 };
 
 const PrivateComponent = ({ children }) => {
@@ -288,8 +278,7 @@ const PrivateComponent = ({ children }) => {
   );
 };
 
-const PrivateManageUsers = ({ roles, children }) => {
-  const location = useLocation();
+const ForceRole = ({ roles, children }) => {
   const user = TokenService.getUser();
   let hasCorrectRole = false;
   user.roles.forEach((el) => {
@@ -299,14 +288,10 @@ const PrivateManageUsers = ({ roles, children }) => {
   });
 
   if (!hasCorrectRole) {
-    return <Navigate to="/" replace />;
+    return <Unauthorized />;
+  } else {
+    return children;
   }
-
-  return TokenService.isAuthenticated() ? (
-    children
-  ) : (
-    <Navigate to="/login" replace state={{ from: location }} />
-  );
 };
 
 const PublicOnlyRoute = ({ children }) => {
