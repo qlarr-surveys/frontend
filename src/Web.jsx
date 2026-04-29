@@ -92,7 +92,7 @@ function Web() {
           <Suspense fallback={<LoadingIndicator />}>
             <PrivateComponent>
               <ForceRole roles={[ROLES.SUPER_ADMIN, ROLES.SURVEY_ADMIN]}>
-                <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
+                <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY} resolveSurveyId={true}>
                   <ManageSurvey
                     landingPage={MANAGE_SURVEY_LANDING_PAGES.DESIGN}
                   />
@@ -107,7 +107,7 @@ function Web() {
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <PrivateComponent>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.NONE}>
+              <ManagePageWrapper headerOptions={HEADER_OPTIONS.NONE} resolveSurveyId={true}>
                 <PreviewSurveyResolveResponse />
               </ManagePageWrapper>
             </PrivateComponent>
@@ -119,7 +119,7 @@ function Web() {
         element={
           <Suspense fallback={<LoadingIndicator />}>
             <PrivateComponent>
-              <ManagePageWrapper headerOptions={HEADER_OPTIONS.NONE}>
+              <ManagePageWrapper headerOptions={HEADER_OPTIONS.NONE} resolveSurveyId={true}>
                 <PreviewSurveyResolveResponse />
               </ManagePageWrapper>
             </PrivateComponent>
@@ -134,7 +134,7 @@ function Web() {
               <ForceRole
                 roles={[ROLES.SUPER_ADMIN, ROLES.ANALYST, ROLES.SURVEY_ADMIN]}
               >
-                <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY}>
+                <ManagePageWrapper headerOptions={HEADER_OPTIONS.SURVEY} resolveSurveyId={true}>
                   <ManageSurvey
                     landingPage={MANAGE_SURVEY_LANDING_PAGES.SETTINGS}
                   />
@@ -155,6 +155,7 @@ function Web() {
               >
                 <ManagePageWrapper
                   headerOptions={HEADER_OPTIONS.SURVEY_NO_PREVIEW}
+                   resolveSurveyId={true}
                 >
                   <ManageSurvey
                     landingPage={MANAGE_SURVEY_LANDING_PAGES.RESPONSES}
