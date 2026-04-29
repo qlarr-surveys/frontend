@@ -124,7 +124,8 @@
     "survey_expired": "Enquête Verlopen",
     "page_not_found": "Pagina niet gevonden",
     "unauthorized": "Niet geautoriseerd",
-    "unauthorized_message": "U bent niet geautoriseerd om deze pagina te bekijken"
+    "unauthorized_message": "U bent niet geautoriseerd om deze pagina te bekijken",
+    "go_home": "Ga naar Home"
   },
   "event_response": {
     "details": "Details",

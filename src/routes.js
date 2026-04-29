@@ -43,5 +43,6 @@ export const routes = {
   addUser: "/add-user",
   editUser: "/edit-user/:userId",
   profile: "/profile",
+  unauthorized: "/unauthorized",
   page404: "*",
 };

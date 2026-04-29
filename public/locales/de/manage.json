@@ -136,7 +136,8 @@
     "survey_expired": "Umfrage abgelaufen",
     "page_not_found": "Seite nicht gefunden",
     "unauthorized": "Nicht autorisiert",
-    "unauthorized_message": "Sie sind nicht berechtigt, auf diese Seite zuzugreifen"
+    "unauthorized_message": "Sie sind nicht berechtigt, auf diese Seite zuzugreifen",
+    "go_home": "Zur Startseite"
   },
   "error_title": "Fehler",
   "event_response": {

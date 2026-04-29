@@ -123,7 +123,8 @@
     "survey_expired": "Survey Expired",
     "page_not_found": "Page not found",
     "unauthorized": "Unauthorized",
-    "unauthorized_message": "You are not authorized to access this page"
+    "unauthorized_message": "You are not authorized to access this page",
+    "go_home": "Go to Home"
   },
   "event_response": {
     "details": "Details",

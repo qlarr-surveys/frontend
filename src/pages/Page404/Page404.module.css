@@ -5,15 +5,37 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  padding: 2rem;
+}
+
+.logoContainer {
+  margin-bottom: 5rem;
+}
+
+.logo {
+  height: 60px;
+  width: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .pageTitle {
   font-size: 100px;
   line-height: 1.1;
   font-weight: bold;
+  color: #16205b;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .pageSubTitle {
   font-size: 20px;
   line-height: 1.2;
+  color: #555;
+  text-align: center;
+  max-width: 600px;
+}
+
+.homeButton {
+  margin-top: 2rem;
 }

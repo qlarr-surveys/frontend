@@ -124,7 +124,8 @@
     "survey_expired": "انتهت صلاحية الاستبيان",
     "page_not_found": "الصفحة غير موجودة",
     "unauthorized": "غير مصرح",
-    "unauthorized_message": "غير مصرح لك بالوصول إلى هذه الصفحة"
+    "unauthorized_message": "غير مصرح لك بالوصول إلى هذه الصفحة",
+    "go_home": "الذهاب إلى الصفحة الرئيسية"
   },
   "event_response": {
     "details": "تفاصيل",

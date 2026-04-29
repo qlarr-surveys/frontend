@@ -124,7 +124,8 @@
     "survey_expired": "Pesquisa Expirada",
     "page_not_found": "Página não encontrada",
     "unauthorized": "Não autorizado",
-    "unauthorized_message": "Você não está autorizado a acessar esta página"
+    "unauthorized_message": "Você não está autorizado a acessar esta página",
+    "go_home": "Ir para Início"
   },
   "event_response": {
     "details": "Detalhes",

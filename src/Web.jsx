@@ -193,6 +193,14 @@ function Web() {
         }
       />
       <Route
+        path={routes.unauthorized}
+        element={
+          <Suspense fallback={<LoadingIndicator />}>
+            <Unauthorized />
+          </Suspense>
+        }
+      />
+      <Route
         path={routes.page404}
         element={
           <Suspense fallback={<LoadingIndicator />}>
