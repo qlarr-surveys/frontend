@@ -154,6 +154,35 @@ function Theming({ t }) {
     );
   };
 
+  function handleLogoUpload(e) {
+    e.preventDefault();
+    const file = e.target.files[0];
+    designService
+      .uploadResource(file)
+      .then((response) => {
+        dispatch(
+          changeResources({
+            code: "Survey",
+            key: "logoImage",
+            value: response.name,
+          })
+        );
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    e.target.value = "";
+  }
+  const handleLogoReset = () => {
+    dispatch(
+      changeResources({
+        code: "Survey",
+        key: "logoImage",
+        value: null,
+      })
+    );
+  };
+
   const showPrimaryPicker = useBoolean();
   const showBgPicker = useBoolean();
   const showPaperPicker = useBoolean();
@@ -201,6 +230,9 @@ function Theming({ t }) {
 
   const backgroundImage = useSelector(
     (state) => state.designState["Survey"]?.resources?.backgroundImage
+  );
+  const logoImage = useSelector(
+    (state) => state.designState["Survey"]?.resources?.logoImage
   );
   return (
     <div className={styles.theming}>
@@ -458,28 +490,58 @@ function Theming({ t }) {
         justifyContent="space-between"
         width="100%"
         flexDirection="row"
-        gap={1}
       >
         <Typography variant="subtitle2" alignSelf="center">
           {t("upload_background")}
         </Typography>
-        <Button component="label" className={styles.chooseImage}>
-          <ImageIcon />
-          <input
-            hidden
-            accept="image/*"
-            type="file"
-            onChange={handleBackgroundUpload}
-          />
-        </Button>
-        {backgroundImage && (
-          <IconButton
-            className={styles.resetButton}
-            onClick={handleBackgroundReset}
-          >
-            <Close />
-          </IconButton>
-        )}
+        <Stack flexDirection="row" alignItems="center" gap={1}>
+          {backgroundImage && (
+            <IconButton
+              className={styles.resetButton}
+              onClick={handleBackgroundReset}
+            >
+              <Close />
+            </IconButton>
+          )}
+          <Button component="label" className={styles.chooseImage}>
+            <ImageIcon />
+            <input
+              hidden
+              accept="image/*"
+              type="file"
+              onChange={handleBackgroundUpload}
+            />
+          </Button>
+        </Stack>
+      </Stack>
+      <Stack
+        display="flex"
+        justifyContent="space-between"
+        width="100%"
+        flexDirection="row"
+      >
+        <Typography variant="subtitle2" alignSelf="center">
+          {t("upload_logo")}
+        </Typography>
+        <Stack flexDirection="row" alignItems="center" gap={1}>
+          {logoImage && (
+            <IconButton
+              className={styles.resetButton}
+              onClick={handleLogoReset}
+            >
+              <Close />
+            </IconButton>
+          )}
+          <Button component="label" className={styles.chooseImage}>
+            <ImageIcon />
+            <input
+              hidden
+              accept="image/*"
+              type="file"
+              onChange={handleLogoUpload}
+            />
+          </Button>
+        </Stack>
       </Stack>
     </div>
   );

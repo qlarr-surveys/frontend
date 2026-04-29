@@ -40,7 +40,7 @@ class DesignService extends BaseService {
     );
     return response.data;
   }
-  async uploadResource(file, surveyId = null) {
+  async uploadResource(file, surveyId = null, onUploadProgress = null) {
     if (!surveyId) {
       surveyId = sessionStorage.getItem("surveyId");
     }
@@ -54,6 +54,7 @@ class DesignService extends BaseService {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",
         },
+        onUploadProgress,
       })
     );
     return response.data;

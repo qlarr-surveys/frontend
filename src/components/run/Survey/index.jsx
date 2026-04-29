@@ -9,6 +9,7 @@ import styles from "./Survey.module.css";
 import { shallowEqual, useSelector } from "react-redux";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { isTouchDevice } from "~/utils/isTouchDevice";
+import { buildResourceUrl } from "~/networking/common";
 function Survey() {
   const theme = useTheme();
 
@@ -18,6 +19,9 @@ function Survey() {
   const survey = useSelector((state) => {
     return state.runState.data?.survey;
   }, shallowEqual);
+  const logoImage = useSelector((state) => {
+    return state.runState.data?.survey?.resources?.logoImage;
+  });
 
   return (
     <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
@@ -30,6 +34,13 @@ function Survey() {
           marginLeft: "6px"
         }}
       >
+        {logoImage && (
+          <img
+            className={styles.surveyLogo}
+            src={buildResourceUrl(logoImage)}
+            alt=""
+          />
+        )}
         <div className={styles.surveyGroups}>
           {survey && survey.groups
             ? survey.groups

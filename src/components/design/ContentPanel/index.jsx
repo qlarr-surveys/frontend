@@ -2,15 +2,19 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, css } from "@mui/material";
+import { Box, css, IconButton, LinearProgress } from "@mui/material";
+import addImageIcon from "~/assets/icons/add-image.svg";
+import CloseIcon from "@mui/icons-material/Close";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { GroupDropArea } from "~/components/design/DropArea/DropArea";
 import { Virtuoso } from "react-virtuoso";
 import useDragNearViewportEdge from "~/utils/useDragEdgeDetection";
-import { resetSetup } from "~/state/design/designState";
+import { resetSetup, changeResources } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
+import { buildResourceUrl } from "~/networking/common";
+import { useService } from "~/hooks/use-service";
 
 function ContentPanel({ designMode }, ref) {
   const { i18n } = useTranslation(NAMESPACES.DESIGN_CORE);
@@ -33,6 +37,9 @@ function ContentPanel({ designMode }, ref) {
   const groups = useSelector((state) => {
     return state.designState["Survey"]?.children || [];
   });
+  const logoImage = useSelector(
+    (state) => state.designState["Survey"]?.resources?.logoImage
+  );
 
   const groupsEmpty = !groups.length;
 
@@ -100,6 +107,103 @@ function ContentPanel({ designMode }, ref) {
   );
   const skipScroll = useSelector((state) => state.designState.skipScroll);
   const dispatch = useDispatch();
+  const designService = useService("design");
+  const [uploadProgress, setUploadProgress] = useState(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const dragCounterRef = useRef(0);
+
+  const startLogoUpload = (file) => {
+    if (!file || !file.type?.startsWith("image/")) return;
+    setUploadProgress(0);
+    designService
+      .uploadResource(file, null, (event) => {
+        if (!event.total) return;
+        const percent = Math.round((event.loaded / event.total) * 100);
+        setUploadProgress(percent);
+      })
+      .then((response) => {
+        dispatch(
+          changeResources({
+            code: "Survey",
+            key: "logoImage",
+            value: response.name,
+          })
+        );
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setUploadProgress(null);
+      });
+  };
+
+  const handleLogoFileInput = (e) => {
+    const file = e.target.files[0];
+    startLogoUpload(file);
+    e.target.value = "";
+  };
+
+  const handleLogoReset = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(
+      changeResources({ code: "Survey", key: "logoImage", value: null })
+    );
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current += 1;
+    if (e.dataTransfer?.types?.includes("Files")) {
+      setIsDragOver(true);
+    }
+  };
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current = Math.max(0, dragCounterRef.current - 1);
+    if (dragCounterRef.current === 0) setIsDragOver(false);
+  };
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current = 0;
+    setIsDragOver(false);
+    const file = e.dataTransfer?.files?.[0];
+    if (file) startLogoUpload(file);
+  };
+
+  const canEditLogo =
+    designMode === DESIGN_SURVEY_MODE.DESIGN ||
+    designMode === DESIGN_SURVEY_MODE.THEME;
+  const isUploading = uploadProgress !== null;
+
+  const virtuosoContext = useMemo(
+    () => ({
+      logoImage,
+      canEditLogo,
+      isDragOver,
+      isUploading,
+      uploadProgress,
+      handleLogoFileInput,
+      handleLogoReset,
+      handleDragEnter,
+      handleDragOver,
+      handleDragLeave,
+      handleDrop,
+      t,
+    }),
+    // handlers are stable enough — only re-emit context when visible state changes
+    [logoImage, canEditLogo, isDragOver, isUploading, uploadProgress, t]
+  );
+
+  const virtuosoComponents = useMemo(() => ({ Header: LogoHeader }), []);
 
   useEffect(() => {
     let animationFrameId;
@@ -176,6 +280,8 @@ function ContentPanel({ designMode }, ref) {
         <Virtuoso
           ref={virtuosoRef}
           data={items}
+          components={virtuosoComponents}
+          context={virtuosoContext}
           className={styles.virtuosoStyle}
           itemContent={(index, item) => {
             switch (item.name) {
@@ -220,3 +326,91 @@ const ELEMENTS = {
   DROP_AREA: "DROP_AREA",
   FOOTER: "FOOTER",
 };
+
+function LogoHeader({ context }) {
+  const {
+    logoImage,
+    canEditLogo,
+    isDragOver,
+    isUploading,
+    uploadProgress,
+    handleLogoFileInput,
+    handleLogoReset,
+    handleDragEnter,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+    t,
+  } = context;
+
+  if (logoImage && !isUploading) {
+    return (
+      <div className={styles.logoHeader}>
+        <div className={styles.logoFrame}>
+          <img
+            className={styles.surveyLogo}
+            src={buildResourceUrl(logoImage)}
+            alt=""
+          />
+          {canEditLogo && (
+            <IconButton
+              className={styles.logoRemove}
+              onClick={handleLogoReset}
+              size="small"
+              aria-label="remove logo"
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          )}
+        </div>
+      </div>
+    );
+  }
+  if (!canEditLogo) {
+    return (
+      <div className={`${styles.logoDropZone} ${styles.logoDropZoneDisabled}`}>
+        <img src={addImageIcon} className={styles.logoDropIcon} alt="" />
+      </div>
+    );
+  }
+  const dropZoneClass = `${styles.logoDropZone}${
+    isDragOver ? " " + styles.logoDropZoneDragOver : ""
+  }`;
+  return (
+    <label
+      className={dropZoneClass}
+      onDragEnter={handleDragEnter}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      {isUploading ? (
+        <div className={styles.logoUploading}>
+          <span className={styles.logoDropText}>
+            {t("uploading_logo")} {uploadProgress}%
+          </span>
+          <LinearProgress
+            variant="determinate"
+            value={uploadProgress}
+            className={styles.logoProgressBar}
+          />
+        </div>
+      ) : (
+        <>
+          <img src={addImageIcon} className={styles.logoDropIcon} alt="" />
+          <span className={styles.logoDropText}>
+            {isDragOver ? t("drop_logo_here") : t("upload_logo")}
+          </span>
+          <span className={styles.logoDropHint}>{t("upload_logo_hint")}</span>
+          <span className={styles.logoDropNote}>{t("upload_logo_note")}</span>
+        </>
+      )}
+      <input
+        hidden
+        accept="image/*"
+        type="file"
+        onChange={handleLogoFileInput}
+      />
+    </label>
+  );
+}
