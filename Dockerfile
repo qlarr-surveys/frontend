@@ -1,37 +1,26 @@
-# Stage 1: Build the React app
-FROM node:18-alpine AS build
+FROM --platform=$BUILDPLATFORM node:24-alpine AS xx-node
 
-# Set working directory
+
+FROM xx-node AS builder
+
 WORKDIR /app
 
-# Define build-time environment variables
-ARG VITE_FRONT_END_HOST
-ARG VITE_PROTOCOL
-ARG VITE_BE_URL
-
-# Copy package.json and package-lock.json to the container
 COPY package*.json ./
+RUN npm ci
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application code
 COPY . .
+RUN  npm run build
 
-# Build the app for production, passing the environment variables
-RUN VITE_FRONT_END_HOST=$VITE_FRONT_END_HOST VITE_PROTOCOL=$VITE_PROTOCOL VITE_BE_URL=$VITE_BE_URL npm run build
 
-# Stage 2: Serve the React app with Nginx
-FROM nginx:alpine
+FROM caddy:alpine
 
-# Copy the ngnix.conf to the container
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY Caddyfile /etc/caddy/Caddyfile
 
-# Copy the build output to the Nginx HTML directory
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=builder /app/build /usr/share/caddy
 
-# Expose port 80
 EXPOSE 80
+EXPOSE 443
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+COPY --chmod=755 entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
