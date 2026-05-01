@@ -15,7 +15,7 @@ function Validation(props) {
         .filter((e) => e.startsWith("validation_"))
         .forEach((key) => {
           var value = selectedState[key];
-          if (value) {
+          if (value === false) {
             obj[key] = value;
           }
         });

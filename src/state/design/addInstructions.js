@@ -1,10 +1,11 @@
+
 export const cleanupDefaultValue = (component) => {
   // Check if this is a single choice question type that supports default values
   if (
     !component.type ||
     !["scq", "icon_scq", "image_scq"].includes(component.type)
   ) {
-    return;
+     return;
   }
 
   // Find the value instruction that contains the default value
@@ -796,7 +797,7 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
       return booleanActiveInstruction(key, instructionText);
     case "validation_contains":
       instructionText =
-        `${qualifiedCode}.value.includes("${validation.contains || ""}")`;
+        `${qualifiedCode}.value.includes("${validation.contains}")`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_not_contains":
       instructionText =
@@ -834,7 +835,7 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_word_count":
       instructionText =
-        `QlarrScripts.wordCount(${qualifiedCode}.value) > ${
+        `QlarrScripts.wordCount(${qualifiedCode}.value) >= ${
           validation.min_count || 0
         }`;
       return booleanActiveInstruction(key, instructionText);
@@ -1570,7 +1571,7 @@ export const processValidation = (state, code, rule, modifyEquation = true) => {
     rule == "validation_required"
   ) {
     component.children
-      .filter((child) => child.type == "row")
+      .filter((child) => child.type == "row" || component.type == "multiple_text")
       .forEach((row) => {
         const child = state[row.qualifiedCode];
         if (!child.validation) {

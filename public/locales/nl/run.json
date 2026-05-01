@@ -43,7 +43,7 @@
     "validation_not_contains": "Moet \"{{not_contains}}\" niet bevatten",
     "validation_not_equal": "Moet niet {{number}} zijn",
     "validation_one_response_per_col": "Selecteer niet meer dan één reactie per kolom",
-    "validation_option_count": "Kies maximaal {{count}} opties",
+    "validation_option_count": "Kies precies {{count}} opties",
     "validation_pattern": "Moet overeenkomen met patroon",
     "validation_pattern_email": "Moet eruitzien als een e-mail",
     "validation_ranking_count": "Rangschik maximaal {{count}} opties",

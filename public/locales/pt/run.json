@@ -43,7 +43,7 @@
     "validation_not_contains": "Não deve conter \"{{not_contains}}\"",
     "validation_not_equal": "Não deve ser {{number}}",
     "validation_one_response_per_col": "Por favor não selecione mais de uma resposta por coluna",
-    "validation_option_count": "Por favor escolha no máximo {{count}} opções",
+    "validation_option_count": "Por favor escolha exatamente {{count}} opções",
     "validation_pattern": "Deve corresponder ao padrão",
     "validation_pattern_email": "Deve parecer um e-mail",
     "validation_ranking_count": "Por favor classifique no máximo {{count}} opções",

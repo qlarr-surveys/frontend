@@ -43,7 +43,7 @@
     "validation_not_contains": "Must not contain \"{{not_contains}}\"",
     "validation_not_equal": "Must not be {{number}}",
     "validation_one_response_per_col": "Please don't select more than one response per column",
-    "validation_option_count": "Please choose at most {{count}} options",
+    "validation_option_count": "Please exactly {{count}} options",
     "validation_pattern": "Must match pattern",
     "validation_pattern_email": "Should look like an email",
     "validation_ranking_count": "Please rank at most {{count}} options",
