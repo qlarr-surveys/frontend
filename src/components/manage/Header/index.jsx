@@ -50,10 +50,6 @@ export const Header = ({ headerOptions }) => {
   const open = Boolean(anchorEl);
   const dropdownRef = useRef(null);
 
-  const showSurveyTitle = useMemo(() => {
-    return showTitle(location);
-  }, [location]);
-
   if (headerOptions.showSurveyHeader) {
     return <SurveyHeader showPreview={headerOptions.showPreview} />;
   }
@@ -65,20 +61,20 @@ export const Header = ({ headerOptions }) => {
   };
 
   // Handle click outside to close dropdown
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        handleClose();
-      }
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  //       handleClose();
+  //     }
+  //   };
 
-    if (open) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [open]);
+  //   if (open) {
+  //     document.addEventListener('mousedown', handleClickOutside);
+  //     return () => {
+  //       document.removeEventListener('mousedown', handleClickOutside);
+  //     };
+  //   }
+  // }, [open]);
 
   return (
     <Box className={styles.header}>

@@ -122,7 +122,10 @@
     "at_least_one_role": "Pelo menos uma função deve ser selecionada.",
     "roles_required": "As funções são obrigatórias.",
     "survey_expired": "Pesquisa Expirada",
-    "page_not_found": "Página não encontrada"
+    "page_not_found": "Página não encontrada",
+    "unauthorized": "Não autorizado",
+    "unauthorized_message": "Você não está autorizado a acessar esta página",
+    "go_home": "Ir para Início"
   },
   "event_response": {
     "details": "Detalhes",
@@ -141,10 +144,14 @@
   },
   "label": {
     "additional_languages": "Idiomas Adicionais",
+    "additional_languages_description": "Escolha em quais idiomas os entrevistados podem fazer a pesquisa.",
     "analyst": "Analista",
     "apply_quota": "Aplicar Cota",
     "base_language": "Idioma Base",
+    "base_language_description": "O idioma principal em que sua pesquisa está escrita.",
     "code": "Código",
+    "edit_translation": "Editar tradução",
+    "edit_translation_description": "Alterne entre idiomas para preencher ou revisar o conteúdo traduzido.",
     "confirm_new_password": "Confirmar Nova Senha",
     "current_password": "Senha Atual",
     "email": "E-mail",
@@ -212,6 +219,7 @@
     "duplicate_survey_name": "Nome de Pesquisa Duplicado",
     "autocomplete_malformed_input": "Entrada Malformada: O arquivo deve ser um array JSON contendo apenas strings",
     "max_upload_size_exceeded": "O tamanho do arquivo excede o limite máximo de upload.",
+    "size_limit_exceeded": "Os arquivos em massa excedem 200MB. Por favor, reduza o intervalo ou filtre por respostas completas/incompletas.",
     "expired_confirmation_token": "Token de Confirmação Expirado, Por favor Registre-se Mais Uma Vez",
     "expired_reset_token": "Token de Confirmação Expirado, Por favor Clique em Esqueci minha Senha Mais Uma Vez",
     "invalid_survey_dates": "A Data de Início deve ser anterior à data de finalização",

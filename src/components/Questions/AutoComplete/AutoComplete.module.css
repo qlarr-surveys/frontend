@@ -9,12 +9,49 @@
 .buttonContainer {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
   margin-top: 24px;
 }
 
-.buttonContainer > * {
-  margin: 10px;
+.optionWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.optionCard {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 16px !important;
+  background-color: #dfe2ef !important;
+  border-radius: 8px !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+.optionCard:hover {
+  background-color: #ebebeb !important;
+}
+
+.cardIcon {
+  color: #555;
+}
+
+.cardTitle {
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  color: #212121;
+}
+
+.cardHint {
+  font-size: 0.75rem !important;
+  color: #757575 !important;
+  line-height: 1.4 !important;
+  padding: 0 4px !important;
 }
 
 .imageContainer {

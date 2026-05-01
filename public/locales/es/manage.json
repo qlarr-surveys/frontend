@@ -122,7 +122,10 @@
     "at_least_one_role": "Debe seleccionarse al menos un rol.",
     "roles_required": "Los roles son requeridos.",
     "survey_expired": "Encuesta Expirada",
-    "page_not_found": "Página no encontrada"
+    "page_not_found": "Página no encontrada",
+    "unauthorized": "No autorizado",
+    "unauthorized_message": "No está autorizado para acceder a esta página",
+    "go_home": "Ir a Inicio"
   },
   "event_response": {
     "details": "Detalles",
@@ -141,10 +144,14 @@
   },
   "label": {
     "additional_languages": "Idiomas Adicionales",
+    "additional_languages_description": "Elija en qué idiomas los encuestados pueden realizar la encuesta.",
     "analyst": "Analista",
     "apply_quota": "Aplicar Cuota",
     "base_language": "Idioma Base",
+    "base_language_description": "El idioma principal en el que está escrita su encuesta.",
     "code": "Código",
+    "edit_translation": "Editar traducción",
+    "edit_translation_description": "Cambie entre idiomas para completar o revisar el contenido traducido.",
     "confirm_new_password": "Confirmar Nueva Contraseña",
     "current_password": "Contraseña Actual",
     "email": "Correo Electrónico",
@@ -212,6 +219,7 @@
     "duplicate_survey_name": "Nombre de Encuesta Duplicado",
     "autocomplete_malformed_input": "Entrada Malformada: El archivo debe ser un array JSON que contenga solo cadenas de texto",
     "max_upload_size_exceeded": "El tamaño del archivo excede el límite máximo de carga.",
+    "size_limit_exceeded": "Los archivos en masa exceden 200MB. Por favor, reduce el rango o filtra por respuestas completas/incompletas.",
     "expired_confirmation_token": "Token de Confirmación Expirado, Por favor Regístrate Una Vez Más",
     "expired_reset_token": "Token de Confirmación Expirado, Por favor Haz Clic en Olvidé mi Contraseña Una Vez Más",
     "invalid_survey_dates": "La Fecha de Inicio debe ser anterior a la fecha de finalización",

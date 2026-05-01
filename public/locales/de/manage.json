@@ -134,7 +134,10 @@
     "at_least_one_role": "Mindestens eine Rolle muss ausgewählt werden.",
     "roles_required": "Rollen sind erforderlich.",
     "survey_expired": "Umfrage abgelaufen",
-    "page_not_found": "Seite nicht gefunden"
+    "page_not_found": "Seite nicht gefunden",
+    "unauthorized": "Nicht autorisiert",
+    "unauthorized_message": "Sie sind nicht berechtigt, auf diese Seite zuzugreifen",
+    "go_home": "Zur Startseite"
   },
   "error_title": "Fehler",
   "event_response": {
@@ -157,10 +160,14 @@
   "import_survey": "Umfrage importieren",
   "label": {
     "additional_languages": "Weitere Sprachen",
+    "additional_languages_description": "Wählen Sie, in welchen Sprachen Befragte die Umfrage durchführen können.",
     "analyst": "Analytikerin",
     "apply_quota": "Keine Quote",
     "base_language": "Basissprache",
+    "base_language_description": "Die Hauptsprache, in der Ihre Umfrage verfasst ist.",
     "code": "Code",
+    "edit_translation": "Übersetzung bearbeiten",
+    "edit_translation_description": "Wechseln Sie zwischen Sprachen, um die übersetzten Inhalte auszufüllen oder zu überprüfen.",
     "confirm_new_password": "Bestätige neues Passwort",
     "current_password": "Aktuelles Passwort",
     "email": "Email",
@@ -237,6 +244,7 @@
   "processed_errors": {
     "autocomplete_malformed_input": "Fehlerhaft formatierte Eingabe: Datei muss ein JSON-Array sein, das nur Zeichenketten enthält",
     "max_upload_size_exceeded": "Die Dateigröße überschreitet das maximale Upload-Limit.",
+    "size_limit_exceeded": "Die Massendateien überschreiten 200 MB. Bitte reduzieren Sie den Bereich oder filtern Sie nach vollständigen/unvollständigen Antworten.",
     "backend_down": "Backend ist nicht erreichbar... Bitte versuchen Sie es später erneut",
     "component_deleted": "Umfrageelemente können nicht gelöscht werden, nachdem die Umfrage veröffentlicht wurde",
     "design_out_of_sync": "Jemand anderes bearbeitet das Umfragedesign",

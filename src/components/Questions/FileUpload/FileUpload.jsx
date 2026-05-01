@@ -132,9 +132,9 @@ function FileUpload(props) {
 
   return (
     <div>
-      <label htmlFor="contained-button-file">
+      <label htmlFor={`upload-file-${props.component.qualifiedCode}`}>
         <Input
-          id="contained-button-file"
+          id={`upload-file-${props.component.qualifiedCode}`}
           type="file"
           accept={accepted ? accepted.join(",") : undefined}
           onChange={changeHandler}

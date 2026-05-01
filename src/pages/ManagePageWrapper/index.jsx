@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo, useState } from "react";
 import { cacheRtl, setLangFromSession } from "~/utils/common";
 import { CacheProvider } from "@emotion/react";
@@ -12,8 +11,16 @@ import ThemeProvider from "~/theme";
 import UnsupportedView from "../UnsupportedView";
 import useNamespaceLoader, { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { HEADER_OPTIONS } from "./headerOptions";
+import { useParams } from "react-router-dom";
 
-const ManagePageWrapper = ({ headerOptions = HEADER_OPTIONS.GENERAL, children }) => {
+const ManagePageWrapper = ({
+  headerOptions = HEADER_OPTIONS.GENERAL,
+  children,
+  resolveSurveyId = false,
+}) => {
+  if (resolveSurveyId) {
+    sessionStorage.setItem("surveyId", useParams().surveyId);
+  }
   const lang = localStorage.getItem("lang");
 
   const { i18n } = useTranslation(NAMESPACES.MANAGE);

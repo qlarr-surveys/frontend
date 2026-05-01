@@ -122,7 +122,10 @@
     "at_least_one_role": "Au moins un rôle doit être sélectionné.",
     "roles_required": "Les rôles sont requis.",
     "survey_expired": "Sondage Expiré",
-    "page_not_found": "Page non trouvée"
+    "page_not_found": "Page non trouvée",
+    "unauthorized": "Non autorisé",
+    "unauthorized_message": "Vous n'êtes pas autorisé à accéder à cette page",
+    "go_home": "Aller à l'Accueil"
   },
   "event_response": {
     "details": "Détails",
@@ -141,10 +144,14 @@
   },
   "label": {
     "additional_languages": "Langues Supplémentaires",
+    "additional_languages_description": "Choisissez dans quelles langues les répondants peuvent répondre à l'enquête.",
     "analyst": "Analyste",
     "apply_quota": "Appliquer le Quota",
     "base_language": "Langue de Base",
+    "base_language_description": "La langue principale dans laquelle votre enquête est rédigée.",
     "code": "Code",
+    "edit_translation": "Modifier la traduction",
+    "edit_translation_description": "Basculez entre les langues pour remplir ou réviser le contenu traduit.",
     "confirm_new_password": "Confirmer le Nouveau Mot de Passe",
     "current_password": "Mot de Passe Actuel",
     "email": "E-mail",
@@ -212,6 +219,7 @@
     "duplicate_survey_name": "Nom de Sondage en Double",
     "autocomplete_malformed_input": "Entrée Malformée : Le fichier doit être un tableau JSON contenant uniquement des chaînes de caractères",
     "max_upload_size_exceeded": "La taille du fichier dépasse la limite maximale de téléchargement.",
+    "size_limit_exceeded": "Les fichiers en masse dépassent 200 Mo. Veuillez réduire la plage ou filtrer par réponses complètes/incomplètes.",
     "expired_confirmation_token": "Jeton de Confirmation Expiré, Veuillez Vous Inscrire à Nouveau",
     "expired_reset_token": "Jeton de Confirmation Expiré, Veuillez Cliquer sur Mot de Passe Oublié à Nouveau",
     "invalid_survey_dates": "La Date de Début doit être antérieure à la date de fin",

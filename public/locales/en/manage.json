@@ -59,7 +59,7 @@
     "offline": "Offline",
     "privacy": "Privacy",
     "quotas": "Quotas",
-    "responses": "responses",
+    "responses": "Responses",
     "sharing": "Sharing",
     "social_sharing": "Social Sharing",
     "status": "Status",
@@ -121,7 +121,10 @@
     "at_least_one_role": "At least one role must be selected.",
     "roles_required": "Roles are required.",
     "survey_expired": "Survey Expired",
-    "page_not_found": "Page not found"
+    "page_not_found": "Page not found",
+    "unauthorized": "Unauthorized",
+    "unauthorized_message": "You are not authorized to access this page",
+    "go_home": "Go to Home"
   },
   "event_response": {
     "details": "Details",
@@ -140,10 +143,14 @@
   },
   "label": {
     "additional_languages": "Additional Languages",
+    "additional_languages_description": "Choose which languages respondents can take the survey in.",
     "analyst": "Analyst",
     "apply_quota": "Apply Quota",
     "base_language": "Base Language",
+    "base_language_description": "The primary language your survey is written in.",
     "code": "Code",
+    "edit_translation": "Edit translation",
+    "edit_translation_description": "Switch between languages to fill in or review the translated content.",
     "confirm_new_password": "Confirm New Password",
     "current_password": "Current Password",
     "email": "Email",
@@ -211,6 +218,7 @@
     "duplicate_email": "Email address is already registered.",
     "autocomplete_malformed_input": "Malformed Input: File must be a JSON array containing only strings",
     "max_upload_size_exceeded": "File size exceeds the maximum upload limit.",
+    "size_limit_exceeded": "The bulk files exceed 200MB. Please reduce the range or filter by complete/incomplete responses.",
     "duplicate_survey_name": "Duplicate Survey Name",
     "expired_confirmation_token": "Expired Confirmation Token, Please Register Once more",
     "expired_reset_token": "Expired Confirmation Token, Please Click on Forgot password once more",

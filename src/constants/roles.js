@@ -39,6 +39,13 @@ export const isSuperAdmin = () => {
   );
 };
 
+export const isUserAnalyst = () => {
+  const roles = TokenService.getUser().roles;
+  return (
+    roles.indexOf(ROLES.SUPER_ADMIN) != -1 || roles.indexOf(ROLES.ANALYST) != -1 || roles.indexOf(ROLES.SURVEY_ADMIN) != -1
+  );
+};
+
 export const isSurveyor = (user) => {
   const roles = user.roles;
   return (

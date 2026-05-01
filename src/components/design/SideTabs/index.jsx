@@ -72,6 +72,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
               }}
             />
             <SideTab
+              dataTour="side-tab-theme"
               tooltip={t("theme")}
               buttonSx={getTabButtonSx(selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.THEME)}
               icon={<Palette sx={{ color: "#fff" }} />}
@@ -82,6 +83,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
               }}
             />
             <SideTab
+              dataTour="side-tab-translation"
               tooltip={t("translation")}
               link={routes.designSurvey.replace(":surveyId", surveyId)}
               buttonSx={getTabButtonSx(
@@ -97,6 +99,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
         )}
         {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.SETTINGS) && (
           <SideTab
+            dataTour="side-tab-settings"
             tooltip={t("settings")}
             buttonSx={getTabButtonSx(
               selectedPage == MANAGE_SURVEY_LANDING_PAGES.SETTINGS
@@ -117,6 +120,7 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
         )}
         {tabAvailable(MANAGE_SURVEY_LANDING_PAGES.RESPONSES) && (
           <SideTab
+            dataTour="side-tab-responses"
             tooltip={t("responses")}
             buttonSx={getTabButtonSx(
               selectedPage == MANAGE_SURVEY_LANDING_PAGES.RESPONSES
@@ -137,19 +141,19 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
 
 export default React.memo(SideTabs);
 
-function SideTab({ tooltip, buttonSx, link, onClick, icon, isLink = true }) {
+function SideTab({ tooltip, buttonSx, link, onClick, icon, isLink = true, dataTour }) {
   return (
     <CustomTooltip showIcon={false} title={tooltip} placement="right">
       {isLink ? (
         <Link to={link} onClick={() => onClick()}>
-          <ListItem disablePadding>
+          <ListItem disablePadding data-tour={dataTour}>
             <ListItemButton sx={buttonSx}>
               <ListItemIcon sx={{ minWidth: "auto", justifyContent: "center", marginRight: 0 }}>{icon}</ListItemIcon>
             </ListItemButton>
           </ListItem>
         </Link>
       ) : (
-        <ListItem disablePadding>
+        <ListItem disablePadding data-tour={dataTour}>
           <ListItemButton sx={buttonSx} onClick={() => onClick()}>
             <ListItemIcon sx={{ minWidth: "auto", justifyContent: "center", marginRight: 0 }}>{icon}</ListItemIcon>
           </ListItemButton>

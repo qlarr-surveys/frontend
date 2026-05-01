@@ -35,6 +35,13 @@ instance.interceptors.response.use(
   },
   async (err) => {
     const originalConfig = err.config;
+
+    // Handle 403 Forbidden - Redirect to Unauthorized page
+    if (err.response && err.response.status === 403) {
+      window.location.href = "/unauthorized";
+      return Promise.reject(err);
+    }
+
     // Access Token was expired
     if (
       originalConfig.url !== REFRESH_URL &&

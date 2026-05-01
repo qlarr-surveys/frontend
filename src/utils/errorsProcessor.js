@@ -31,6 +31,10 @@ export const PROCESSED_ERRORS = {
     name: "max_upload_size_exceeded",
     handleGlobally: false,
   },
+  SIZE_LIMIT_EXCEEDED: {
+    name: "size_limit_exceeded",
+    handleGlobally: false,
+  },
   DUPLICATE_SURVEY_NAME: {
     name: "duplicate_survey_name",
     handleGlobally: false,
@@ -69,10 +73,23 @@ export const onApiError = ({
   return processed;
 };
 
-export const processApiError = ({
+export const processApiError = async ({
   error,
   globalErrorHandler = (processed) => {},
 }) => {
+  // Convert blob errors to JSON for proper error processing
+  if (
+    error?.response?.data instanceof Blob &&
+    error.response.data.type === "application/json"
+  ) {
+    try {
+      const text = await error.response.data.text();
+      error.response.data = JSON.parse(text);
+    } catch (e) {
+      // If parsing fails, leave the blob as is
+    }
+  }
+
   const processed = !error
     ? PROCESSED_ERRORS.UNIDENTIFIED_ERROR
     : processError(error);
@@ -95,6 +112,8 @@ export const processError = (e) => {
         return PROCESSED_ERRORS.AUTOCOMPLETE_MALFORMED_INPUT;
       case "MaxUploadSizeExceededException":
         return PROCESSED_ERRORS.MAX_UPLOAD_SIZE_EXCEEDED;
+      case "SizeLimitExceededException":
+        return PROCESSED_ERRORS.SIZE_LIMIT_EXCEEDED;
       case "DuplicateEmailException":
         return PROCESSED_ERRORS.DUPLICATE_EMAIL;
       case "DesignNotAvailableException":

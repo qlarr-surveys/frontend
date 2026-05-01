@@ -20,7 +20,7 @@ import TableRowsIcon from "@mui/icons-material/TableRows";
 import WarningIcon from "@mui/icons-material/Warning";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { isSurveyAdmin, isSurveyorOnly } from "~/constants/roles";
+import { isSurveyAdmin, isUserAnalyst } from "~/constants/roles";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
@@ -33,7 +33,7 @@ import { EditableSurveyTitle } from "./EditableSurveyTitle";
 import { EditableSurveyDescription } from "./EditableSurveyDescription";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import NumbersIcon from "@mui/icons-material/Numbers";
-import { setDesignModeToDesign } from '~/state/design/designState';
+import { setDesignModeToDesign } from "~/state/design/designState";
 
 import { STATUS } from "./status";
 
@@ -69,24 +69,59 @@ const getDatesToShow = (survey, surveyStatus) => {
 
   if (startDate && endDate) {
     const anchor = PAST_STATUSES.includes(surveyStatus)
-      ? { key: "created", labelKey: "edit_survey.metadata.created", value: creationDate }
-      : { key: "last_modified", labelKey: "edit_survey.metadata.last_modified", value: lastModified };
+      ? {
+          key: "created",
+          labelKey: "edit_survey.metadata.created",
+          value: creationDate,
+        }
+      : {
+          key: "last_modified",
+          labelKey: "edit_survey.metadata.last_modified",
+          value: lastModified,
+        };
     return [
       anchor,
-      { key: "start_date", labelKey: "edit_survey.metadata.start_date", value: startDate },
-      { key: "end_date", labelKey: "edit_survey.metadata.end_date", value: endDate },
+      {
+        key: "start_date",
+        labelKey: "edit_survey.metadata.start_date",
+        value: startDate,
+      },
+      {
+        key: "end_date",
+        labelKey: "edit_survey.metadata.end_date",
+        value: endDate,
+      },
     ].filter((d) => d.value);
   }
 
   const dates = [
-    { key: "created", labelKey: "edit_survey.metadata.created", value: creationDate },
-    { key: "last_modified", labelKey: "edit_survey.metadata.last_modified", value: lastModified },
+    {
+      key: "created",
+      labelKey: "edit_survey.metadata.created",
+      value: creationDate,
+    },
+    {
+      key: "last_modified",
+      labelKey: "edit_survey.metadata.last_modified",
+      value: lastModified,
+    },
   ];
-  if ([STATUS.DRAFT, STATUS.CLOSED, STATUS.SCHEDULED].includes(surveyStatus) && startDate) {
-    dates.push({ key: "start_date", labelKey: "edit_survey.metadata.start_date", value: startDate });
+  if (
+    [STATUS.DRAFT, STATUS.CLOSED, STATUS.SCHEDULED].includes(surveyStatus) &&
+    startDate
+  ) {
+    dates.push({
+      key: "start_date",
+      labelKey: "edit_survey.metadata.start_date",
+      value: startDate,
+    });
   }
   if ([STATUS.ACTIVE, STATUS.EXPIRED].includes(surveyStatus) && endDate) {
-    dates.push({ key: "end_date", labelKey: "edit_survey.metadata.end_date", value: endDate });
+    dates.push({
+      key: "end_date",
+      labelKey: "edit_survey.metadata.end_date",
+      value: endDate,
+    });
   }
   return dates.filter((d) => d.value);
 };
@@ -94,7 +129,9 @@ const getDatesToShow = (survey, surveyStatus) => {
 // Constants
 const ICON_SIZE = { fontSize: 16 };
 const ICON_SIZE_ACTION = { fontSize: 18 };
-const BADGE_SX = { '& .MuiBadge-badge': { fontSize: 10, minWidth: 18, height: 18 } };
+const BADGE_SX = {
+  "& .MuiBadge-badge": { fontSize: 10, minWidth: 18, height: 18 },
+};
 
 // Helper Components
 const DateItem = ({ label, value }) => (
@@ -109,7 +146,9 @@ const ActionButton = ({ tooltip, onClick, variant, iconOnly, children }) => {
     styles.actionBtn,
     styles[`actionBtn${variant}`],
     iconOnly && styles.actionBtnIconOnly,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const button = (
     <button className={classNames} onClick={onClick}>
@@ -121,7 +160,9 @@ const ActionButton = ({ tooltip, onClick, variant, iconOnly, children }) => {
     <CustomTooltip showIcon={false} title={tooltip}>
       {button}
     </CustomTooltip>
-  ) : button;
+  ) : (
+    button
+  );
 };
 
 const Survey = ({
@@ -146,7 +187,6 @@ const Survey = ({
 
   // Cache role checks
   const isAdmin = isSurveyAdmin();
-  const isSurveyorView = isSurveyorOnly();
 
   const handleChangeTitle = (newTitle, revertTitle) => {
     dispatch(setLoading(true));
@@ -294,7 +334,10 @@ const Survey = ({
             />
 
             <div className={styles.surveyMeta}>
-              <CustomTooltip showIcon={false} title={t(`edit_survey.${surveyStatus}_mode`)}>
+              <CustomTooltip
+                showIcon={false}
+                title={t(`edit_survey.${surveyStatus}_mode`)}
+              >
                 <div className={`${styles.statusPill} ${styles[surveyStatus]}`}>
                   <span className={styles.statusDot} />
                   {t(`status.${surveyStatus}`)}
@@ -302,17 +345,30 @@ const Survey = ({
               </CustomTooltip>
 
               <div className={styles.surveyIconsContainer}>
-                {survey.status !== "closed" && survey.latestVersion.published === false && (
-                  <CustomTooltip title={t("label.unpublished_changes")} showIcon={false}>
-                    <div className={styles.surveyIcon}>
-                      <WarningIcon sx={ICON_SIZE} />
-                    </div>
-                  </CustomTooltip>
-                )}
+                {survey.status !== "closed" &&
+                  survey.latestVersion.published === false && (
+                    <CustomTooltip
+                      title={t("label.unpublished_changes")}
+                      showIcon={false}
+                    >
+                      <div className={styles.surveyIcon}>
+                        <WarningIcon sx={ICON_SIZE} />
+                      </div>
+                    </CustomTooltip>
+                  )}
 
-                <CustomTooltip showIcon={false} title={t("label.responses", { count: survey.completeResponseCount })}>
+                <CustomTooltip
+                  showIcon={false}
+                  title={t("label.responses", {
+                    count: survey.completeResponseCount,
+                  })}
+                >
                   <div className={styles.surveyIcon}>
-                    <Badge badgeContent={survey.completeResponseCount} color="primary" sx={BADGE_SX}>
+                    <Badge
+                      badgeContent={survey.completeResponseCount}
+                      color="primary"
+                      sx={BADGE_SX}
+                    >
                       <TableRowsIcon sx={ICON_SIZE} />
                     </Badge>
                   </div>
@@ -320,10 +376,20 @@ const Survey = ({
 
                 <CustomTooltip
                   showIcon={false}
-                  title={survey.surveyQuota > 0 ? t("label.quota", { count: survey.surveyQuota }) : t("label.no_quota")}
+                  title={
+                    survey.surveyQuota > 0
+                      ? t("label.quota", { count: survey.surveyQuota })
+                      : t("label.no_quota")
+                  }
                 >
                   <div className={styles.surveyIcon}>
-                    <Badge badgeContent={survey.surveyQuota > 0 ? survey.surveyQuota : 0} color="primary" sx={BADGE_SX}>
+                    <Badge
+                      badgeContent={
+                        survey.surveyQuota > 0 ? survey.surveyQuota : 0
+                      }
+                      color="primary"
+                      sx={BADGE_SX}
+                    >
                       <NumbersIcon sx={ICON_SIZE} />
                     </Badge>
                   </div>
@@ -333,58 +399,90 @@ const Survey = ({
           </Stack>
 
           <div className={styles.surveyDates}>
-            {getDatesToShow(survey, surveyStatus).map(({ key, labelKey, value }) => (
-              <DateItem key={key} label={t(labelKey)} value={fDate(value)} />
-            ))}
+            {getDatesToShow(survey, surveyStatus).map(
+              ({ key, labelKey, value }) => (
+                <DateItem key={key} label={t(labelKey)} value={fDate(value)} />
+              ),
+            )}
           </div>
         </Stack>
 
         <div className={styles.surveyActionsNew}>
-          <ActionButton
-            variant="Primary"
-            onClick={(e) => {
-              dispatch(setDesignModeToDesign());
-              e.stopPropagation();
-              isSurveyorView
-                ? window.open(`/preview/${survey.id}`, "_blank")
-                : navigate(`/design-survey/${survey.id}`);
-            }}
-          >
-            {isSurveyorView ? <VisibilityIcon sx={ICON_SIZE_ACTION} /> : <ArticleIcon sx={ICON_SIZE_ACTION} />}
-            {t(isSurveyorView ? "preview" : "edit_survey.title")}
-          </ActionButton>
+          {isAdmin ? (
+            <>
+              <ActionButton
+                variant="Primary"
+                onClick={(e) => {
+                  dispatch(setDesignModeToDesign());
+                  e.stopPropagation();
 
-          {isAdmin && survey.status === "active" && (
-            <ActionButton
-              tooltip={t("edit_survey.close_title")}
-              variant="Secondary"
-              iconOnly
-              onClick={() => onClose(survey.id)}
-            >
-              <Cancel sx={ICON_SIZE_ACTION} />
-            </ActionButton>
-          )}
+                  navigate(`/design-survey/${survey.id}`);
+                }}
+              >
+                <ArticleIcon sx={ICON_SIZE_ACTION} />
+                {t("edit_survey.title")}
+              </ActionButton>
 
-          {isAdmin && (
-            <ActionButton
-              tooltip={t("edit_survey.clone_survey")}
-              variant="Secondary"
-              iconOnly
-              onClick={onClone}
-            >
-              <FileCopyIcon sx={ICON_SIZE_ACTION} />
-            </ActionButton>
-          )}
+              {survey.status === "active" && (
+                <ActionButton
+                  tooltip={t("edit_survey.close_title")}
+                  variant="Secondary"
+                  iconOnly
+                  onClick={() => onClose(survey.id)}
+                >
+                  <Cancel sx={ICON_SIZE_ACTION} />
+                </ActionButton>
+              )}
 
-          {isAdmin && survey.status !== STATUS.ACTIVE && (
-            <ActionButton
-              tooltip={t("action_btn.delete")}
-              variant="Danger"
-              iconOnly
-              onClick={() => onDelete(survey.id)}
-            >
-              <DeleteIcon sx={ICON_SIZE_ACTION} />
-            </ActionButton>
+              <ActionButton
+                tooltip={t("edit_survey.clone_survey")}
+                variant="Secondary"
+                iconOnly
+                onClick={onClone}
+              >
+                <FileCopyIcon sx={ICON_SIZE_ACTION} />
+              </ActionButton>
+
+              {survey.status !== STATUS.ACTIVE && (
+                <ActionButton
+                  tooltip={t("action_btn.delete")}
+                  variant="Danger"
+                  iconOnly
+                  onClick={() => onDelete(survey.id)}
+                >
+                  <DeleteIcon sx={ICON_SIZE_ACTION} />
+                </ActionButton>
+              )}
+            </>
+          ) : (
+            <>
+              {isUserAnalyst() && (
+                <ActionButton
+                  variant="Primary"
+                  onClick={(e) => {
+                    dispatch(setDesignModeToDesign());
+                    e.stopPropagation();
+                     navigate(`/responses/${survey.id}`);
+                  }}
+                >
+                  <TableRowsIcon sx={ICON_SIZE_ACTION} />
+
+                  {t("edit_survey.responses")}
+                </ActionButton>
+              )}
+              <ActionButton
+                variant="Primary"
+                onClick={(e) => {
+                  dispatch(setDesignModeToDesign());
+                  e.stopPropagation();
+                  window.open(`/preview/${survey.id}`, "_blank");
+                }}
+              >
+                <VisibilityIcon sx={ICON_SIZE_ACTION} />
+
+                {t("preview")}
+              </ActionButton>
+            </>
           )}
         </div>
       </Card>

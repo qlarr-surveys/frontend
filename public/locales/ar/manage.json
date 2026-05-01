@@ -122,7 +122,10 @@
     "last_name_too_long": "يجب أن يكون الاسم الأخير 50 حرفًا أو أقل.",
     "required": "مطلوب",
     "survey_expired": "انتهت صلاحية الاستبيان",
-    "page_not_found": "الصفحة غير موجودة"
+    "page_not_found": "الصفحة غير موجودة",
+    "unauthorized": "غير مصرح",
+    "unauthorized_message": "غير مصرح لك بالوصول إلى هذه الصفحة",
+    "go_home": "الذهاب إلى الصفحة الرئيسية"
   },
   "event_response": {
     "details": "تفاصيل",
@@ -141,10 +144,14 @@
   },
   "label": {
     "additional_languages": "لغات إضافية",
+    "additional_languages_description": "اختر اللغات التي يمكن للمستجيبين إجراء الاستبيان بها.",
     "analyst": "المحلل",
     "apply_quota": "تطبيق الحصة النسبية",
     "base_language": "لغة الأساس",
+    "base_language_description": "اللغة الأساسية التي تمت كتابة الاستبيان بها.",
     "code": "كود",
+    "edit_translation": "تحرير الترجمة",
+    "edit_translation_description": "التبديل بين اللغات لملء أو مراجعة المحتوى المترجم.",
     "confirm_new_password": "تأكيد كلمة المرور الجديدة",
     "current_password": "كلمة السر الحالية",
     "email": "البريد الإلكتروني",
@@ -212,6 +219,7 @@
     "duplicate_survey_name": "تكرار اسم الاستطلاع",
     "autocomplete_malformed_input": "إدخال غير صحيح: يجب أن يكون الملف عبارة عن مصفوفة JSON تحتوي على نصوص فقط",
     "max_upload_size_exceeded": "حجم الملف يتجاوز الحد الأقصى المسموح به للرفع.",
+    "size_limit_exceeded": "تتجاوز الملفات المجمعة 200 ميجابايت. يرجى تقليل النطاق أو التصفية حسب الإجابات الكاملة/غير الكاملة.",
     "expired_confirmation_token": "رمز التأكيد منتهي الصلاحية , الرجاء التسجيل مرة أخرى",
     "expired_reset_token": "رمز التأكيد منتهي الصلاحية , الرجاء النقر فوق نسيت كلمة المرور مرة أخرى",
     "invalid_survey_dates": "يجب أن يكون تاريخ البدء قبل تاريخ الانتهاء",

@@ -4,14 +4,12 @@ import { createSelector } from "@reduxjs/toolkit";
 import ValidationItem from "~/components/run/ValidationItem";
 
 function Validation(props) {
-  const selectValidation = (state) =>
-    (props.component.validation
-      ? state.runState.values[props.component.qualifiedCode]
-      : {}) || {};
+  const selectValidation = (state) => state.runState.values[props.component.qualifiedCode] || {};
 
   const captureValidation = createSelector(
     [selectValidation],
     (selectedState) => {
+      console.log(selectedState)
       var obj = {};
       Object.keys(selectedState)
         .filter((e) => e.startsWith("validation_"))
@@ -28,6 +26,7 @@ function Validation(props) {
   const validation = useSelector(captureValidation);
 
   const messages = () => {
+    console.log(validation)
     let array = Object.keys(validation);
     let limit = props.limit ? props.limit : array.length;
     return array.slice(0, limit).map((key, index) => {
@@ -37,7 +36,7 @@ function Validation(props) {
           name={key}
           componentCode={props.component.qualifiedCode}
           content={props.component.content?.[key]}
-          validation={props.component.validation[key]}
+          validation={props.component.validation?.[key]}
         />
       );
     });

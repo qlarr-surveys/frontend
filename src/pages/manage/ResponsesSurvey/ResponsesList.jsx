@@ -23,9 +23,9 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  Grid,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { FileDownloadOutlined, FileUploadOutlined } from "@mui/icons-material";
 import styles from "./ResponsesSurvey.module.css";
 import {
   formatlocalDateTime,
@@ -503,56 +503,55 @@ function ResponsesList() {
             <Box
               px={2}
               py={1.5}
-              display="flex"
-              alignItems="center"
-              gap={1}
-              justifyContent="space-between"
-              flexWrap="wrap"
             >
-              <Box display="flex" gap={1} flexWrap="wrap">
-                <FormControl size="small" sx={{ width: 300 }}>
-                  <RHFSelect
-                    label={t("responses.filter_by_type")}
-                    value={status}
-                    onChange={(e) => {
-                      setPage(1);
-                      setStatus(e.target.value);
-                    }}
-                  >
-                    <MenuItem value="all">
-                      {t("responses.filter_completed_show_all")}
-                    </MenuItem>
-                    <MenuItem value="preview">
-                      {t("responses.filter_preview_show_preview")}
-                    </MenuItem>
-                    <MenuItem value="complete">
-                      {t("responses.filter_completed_show_completed")}
-                    </MenuItem>
-                    <MenuItem value="incomplete">
-                      {t("responses.filter_completed_show_incomplete")}
-                    </MenuItem>
-                  </RHFSelect>
-                </FormControl>
-              </Box>
-              <Box display="flex" alignItems="center" gap={1}>
-                <Button
-                  size="small"
-                  variant="contained"
-                  onClick={() => setExportDlgOpen(true)}
-                >
-                  <FileUploadOutlined />
-                </Button>
+              <Grid container spacing={2} alignItems="flex-start">
+                <Grid item xs={12} sm={6}>
+                  <FormControl size="small" fullWidth>
+                    <RHFSelect
+                      label={t("responses.filter_by_type")}
+                      value={status}
+                      onChange={(e) => {
+                        setPage(1);
+                        setStatus(e.target.value);
+                      }}
+                    >
+                      <MenuItem value="all">
+                        {t("responses.filter_completed_show_all")}
+                      </MenuItem>
+                      <MenuItem value="preview">
+                        {t("responses.filter_preview_show_preview")}
+                      </MenuItem>
+                      <MenuItem value="complete">
+                        {t("responses.filter_completed_show_completed")}
+                      </MenuItem>
+                      <MenuItem value="incomplete">
+                        {t("responses.filter_completed_show_incomplete")}
+                      </MenuItem>
+                    </RHFSelect>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Box display="flex" flexDirection="column" gap={1}>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      onClick={() => setExportDlgOpen(true)}
+                    >
+                      {t("responses.export")}
+                    </Button>
 
-                {canExportFiles && (
-                  <Button
-                    size="small"
-                    variant="contained"
-                    onClick={() => setDownloadDlgOpen(true)}
-                  >
-                    <FileDownloadOutlined />
-                  </Button>
-                )}
-              </Box>
+                    {canExportFiles && (
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={() => setDownloadDlgOpen(true)}
+                      >
+                        {t("responses.download")}
+                      </Button>
+                    )}
+                  </Box>
+                </Grid>
+              </Grid>
             </Box>
             <Divider />
             {fetching ? (
@@ -605,16 +604,21 @@ function ResponsesList() {
                                   label={t("responses.preview")}
                                 />
                               ) : r.submitDate ? (
-                                <Chip
-                                  size="small"
-                                  label={t("responses.complete_response")}
-                                />
+                                <Typography
+                                  variant="body2"
+                                  color="success.main"
+                                  fontWeight={500}
+                                >
+                                  {t("responses.complete_response")}
+                                </Typography>
                               ) : (
-                                <Chip
-                                  size="small"
-                                  color="secondary"
-                                  label={t("responses.incomplete_response")}
-                                />
+                                <Typography
+                                  variant="body2"
+                                  color="warning.main"
+                                  fontWeight={500}
+                                >
+                                  {t("responses.incomplete_response")}
+                                </Typography>
                               )}
                             </Box>
                           }
@@ -751,16 +755,21 @@ function ResponsesList() {
                           label={t("responses.preview")}
                         />
                       ) : selected.submitDate ? (
-                        <Chip
-                          size="small"
-                          label={t("responses.complete_response")}
-                        />
+                        <Typography
+                          variant="body2"
+                          color="success.main"
+                          fontWeight={500}
+                        >
+                          {t("responses.complete_response")}
+                        </Typography>
                       ) : (
-                        <Chip
-                          size="small"
-                          color="secondary"
-                          label={t("responses.incomplete_response")}
-                        />
+                        <Typography
+                          variant="body2"
+                          color="warning.main"
+                          fontWeight={500}
+                        >
+                          {t("responses.incomplete_response")}
+                        </Typography>
                       )
                     }
                   />
