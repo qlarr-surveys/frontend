@@ -517,7 +517,11 @@ export const designState = createSlice({
       const inDateTimeGroup =
         CONVERTIBLE_DATE_TIME_TYPES.includes(currentType) &&
         CONVERTIBLE_DATE_TIME_TYPES.includes(newType);
-      if ((!inChoiceGroup && !inArrayGroup && !inTextGroup && !inDateTimeGroup) || currentType === newType) return;
+      if (
+        (!inChoiceGroup && !inArrayGroup && !inTextGroup && !inDateTimeGroup) ||
+        currentType === newType
+      )
+        return;
 
       // Update type in question state
       currentQuestion.type = newType;
@@ -722,6 +726,13 @@ export const designState = createSlice({
 
     updateCustomValidationRuleError: (state, action) => {
       const { code, ruleCode, lang, value } = action.payload;
+      console.log(code, ruleCode, lang, value);
+      if (!state[code].content) {
+        state[code].content = {};
+      }
+      if (!state[code].content[lang]) {
+        state[code].content[lang] = {};
+      }
       if (value) {
         state[code].content[lang][ruleCode] = value;
       } else {

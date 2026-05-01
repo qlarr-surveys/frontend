@@ -2,14 +2,12 @@ import React from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import TextField from "@mui/material/TextField";
 import styles from "./NumberQuestion.module.css";
-import { useTheme } from "@mui/material/styles";
 import { valueChange } from "~/state/runState";
 import { setDirty } from "~/state/templateState";
 
 const SAFE_NUMBER_MAX_CHARS = 15;
 
 function NumberQuestion(props) {
-  const theme = useTheme();
   const state = useSelector((state) => {
     let questionState = state.runState.values[props.component.qualifiedCode];
     let show_errors = state.runState.values.Survey.show_errors;
@@ -36,7 +34,7 @@ function NumberQuestion(props) {
     if (regex.test(newValue)) {
       let withDecimal = convertToDecimal(newValue)
       let processed = +withDecimal;
-      let returning = isNaN(processed) ? oldValue : withDecimal;
+      let returning = isNaN(processed) ? oldValue : processed;
       return returning;
     } else {
       return oldValue;
@@ -58,6 +56,7 @@ function NumberQuestion(props) {
   };
 
   const handleChange = (event) => {
+    dispatch(setDirty(event.target.name));
     dispatch(
       valueChange({
         componentCode: event.target.name,
@@ -66,20 +65,6 @@ function NumberQuestion(props) {
     );
   };
 
-  const lostFocus = (event) => {
-    dispatch(setDirty(event.target.name));
-    const current = state.value;
-    if (typeof current !== "string") return;
-    const num = +current;
-    if (!Number.isNaN(num)) {
-      dispatch(
-        valueChange({
-          componentCode: event.target.name,
-          value: num,
-        })
-      );
-    }
-  };
 
   const maxLength = Math.min(
     props.component.maxChars || SAFE_NUMBER_MAX_CHARS,
@@ -100,7 +85,6 @@ function NumberQuestion(props) {
         name={props.component.qualifiedCode}
         label={(props.component.showHint && props.component.content?.hint )|| ""}
         onChange={handleChange}
-        onBlur={lostFocus}
         inputProps={{
           maxLength,
           inputMode: props.component.decimal_separator ? "decimal" : "numeric",
