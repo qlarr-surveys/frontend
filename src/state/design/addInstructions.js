@@ -783,8 +783,7 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_char_length":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& ${qualifiedCode}.value.length < ${validation.min_length || 0}`;
+        `${qualifiedCode}.value.length >= ${validation.min_length || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_one_response_per_col":
       instructionText = `QlarrScripts.hasDuplicates([${component.children
@@ -793,24 +792,20 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_char_length":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& ${qualifiedCode}.value.length > ${validation.max_length || 0}`;
+        `${qualifiedCode}.value.length <= ${validation.max_length || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_contains":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& !${qualifiedCode}.value.includes("${validation.contains || ""}")`;
+        `${qualifiedCode}.value.includes("${validation.contains || ""}")`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_not_contains":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& ${qualifiedCode}.value.includes("${validation.not_contains}")`;
+        `!${qualifiedCode}.value.includes("${validation.not_contains}")`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_file_types":
       const mimes = fileTypesToMimesArray(validation.fileTypes);
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& ![${mimes
+        `[${mimes
           .map((el) => '"' + el + '"')
           .join(
             ","
@@ -818,110 +813,97 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_file_size":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& QlarrScripts.safeAccess(${qualifiedCode}.value,"size")/ 1024 > ${validation.max_size}`;
+        `QlarrScripts.safeAccess(${qualifiedCode}.value,"size")/ 1024 < ${validation.max_size}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_pattern":
       if (!isValidRegex(validation.pattern)) {
         return { code: key, remove: true };
       }
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& !(new RegExp("${validation.pattern}").test(${qualifiedCode}.value))`;
+        `(new RegExp("${validation.pattern}").test(${qualifiedCode}.value))`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_pattern_email":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&&  !/^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/.test(${qualifiedCode}.value)`;
+        `/^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/.test(${qualifiedCode}.value)`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_word_count":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&&  QlarrScripts.wordCount(${qualifiedCode}.value) > ${
+        `QlarrScripts.wordCount(${qualifiedCode}.value) <= ${
           validation.max_count || 0
         }`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_word_count":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&&  QlarrScripts.wordCount(${qualifiedCode}.value) < ${
+        `QlarrScripts.wordCount(${qualifiedCode}.value) > ${
           validation.min_count || 0
         }`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_between":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& (${qualifiedCode}.value < ${validation.lower_limit || 0} ` +
-        `|| ${qualifiedCode}.value > ${validation.upper_limit || 0})`;
+        `${qualifiedCode}.value > ${validation.lower_limit || 0} ` +
+        `&& ${qualifiedCode}.value < ${validation.upper_limit || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_not_between":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& (${qualifiedCode}.value >= ${validation.lower_limit || 0} ` +
-        `&& ${qualifiedCode}.value <= ${validation.upper_limit || 0})`;
+        `${qualifiedCode}.value < ${validation.lower_limit || 0} ` +
+        `|| ${qualifiedCode}.value > ${validation.upper_limit || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_lt":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& ${qualifiedCode}.value >= ${validation.number || 0}`;
+        `${qualifiedCode}.value < ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_lte":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& ${qualifiedCode}.value > ${validation.number || 0}`;
+        `${qualifiedCode}.value <= ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_gt":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& ${qualifiedCode}.value <= ${validation.number || 0}`;
+        `${qualifiedCode}.value > ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_gte":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& ${qualifiedCode}.value < ${validation.number || 0}`;
+        `${qualifiedCode}.value >= ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_equals":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& ${qualifiedCode}.value != ${validation.number || 0}`;
+        `${qualifiedCode}.value == ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_not_equal":
       instructionText =
-        `QlarrScripts.isNotVoid(${qualifiedCode}.value) ` +
-        `&& ${qualifiedCode}.value == ${validation.number || 0}`;
+        `${qualifiedCode}.value != ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_option_count":
       instructionText =
         `(${qualifiedCode}.value || []).length ` +
-        `< ${validation.min_count || 0}`;
+        `>= ${validation.min_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_ranking_count":
       instructionText =
         `[${component.children.map(
           (answer) => answer.qualifiedCode + ".value"
-        )}].filter(x=>x).length ` + `< ${validation.min_count || 0}`;
+        )}].filter(x=>x).length ` + `>= ${validation.min_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_option_count":
       instructionText =
         `(${qualifiedCode}.value || []).length ` +
-        `> ${validation.max_count || 0}`;
+        `<= ${validation.max_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_ranking_count":
       instructionText =
         `[${component.children.map(
           (answer) => answer.qualifiedCode + ".value"
-        )}].filter(x=>x).length ` + `> ${validation.max_count || 0}`;
+        )}].filter(x=>x).length ` + `<= ${validation.max_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_option_count":
       instructionText =
         `(${qualifiedCode}.value || []).length ` +
-        `!== ${validation.count || 0}`;
+        `== ${validation.count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_ranking_count":
       instructionText =
         `[${component.children.map(
           (answer) => answer.qualifiedCode + ".value"
-        )}].filter(x=>x).length ` + `!== ${validation.count || 0}`;
+        )}].filter(x=>x).length ` + `== ${validation.count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     default:
       break;
@@ -944,7 +926,7 @@ const requiredText = (qualifiedCode, component) => {
     component.type == "photo_capture" ||
     component.type == "video_capture"
   ) {
-    return `QlarrScripts.isVoid(${qualifiedCode}.value) || !QlarrScripts.safeAccess(${qualifiedCode}.value,"size") || !QlarrScripts.safeAccess(${qualifiedCode}.value,"stored_filename")`;
+    return `QlarrScripts.isNotVoid(${qualifiedCode}.value) || QlarrScripts.safeAccess(${qualifiedCode}.value,"size") || QlarrScripts.safeAccess(${qualifiedCode}.value,"stored_filename")`;
   } else if (
     component.type == "scq_array" ||
     component.type == "scq_icon_array"
@@ -954,7 +936,7 @@ const requiredText = (qualifiedCode, component) => {
       `[${rows.map(
         (answer) => answer.qualifiedCode + ".value"
       )}].filter(x=>x).length ` +
-      ` < ` +
+      ` == ` +
       rows.length
     );
   } else if (component.type == "mcq_array") {
@@ -963,7 +945,7 @@ const requiredText = (qualifiedCode, component) => {
       `[${rows.map(
         (answer) => answer.qualifiedCode + ".value"
       )}].filter(x=>x && x.length > 0).length ` +
-      ` < ` +
+      ` == ` +
       rows.length
     );
   } else if (component.type == "multiple_text") {
@@ -972,11 +954,11 @@ const requiredText = (qualifiedCode, component) => {
       `[${rows.map(
         (answer) => answer.qualifiedCode + ".value"
       )}].filter(x=>x).length ` +
-      ` < ` +
+      ` == ` +
       rows.length
     );
   } else {
-    return `QlarrScripts.isVoid(${qualifiedCode}.value)`;
+    return `QlarrScripts.isNotVoid(${qualifiedCode}.value)`;
   }
 };
 
