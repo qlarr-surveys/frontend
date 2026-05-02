@@ -916,7 +916,7 @@ export const setupOptions = (type) => {
         {
           title: "design",
           key: "design",
-          rules: ["customCss"],
+          rules: ["hideText", "columns", "iconSize", "spacing", "customCss"],
         },
       ];
     case "mcq_array":
