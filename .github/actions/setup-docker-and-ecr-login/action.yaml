@@ -1,0 +1,30 @@
+name: 'Setup Docker and ECR Login'
+description: 'Sets up Docker Buildx, AWS credentials, and logs into Amazon ECR'
+
+inputs:
+  role-to-assume:
+    description: 'IAM Role ARN to assume'
+    required: true
+
+outputs:
+  registry:
+    description: "The ECR registry URI"
+    value: ${{ steps.login-ecr.outputs.registry }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: us-east-1 # public ecr is only accessible through us-east-1 API endpoint
+        role-to-assume: ${{ inputs.role-to-assume }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        registry-type: public

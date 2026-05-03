@@ -1,0 +1,27 @@
+# 80 -> 443 redirect by default, unless CADDY_PORT is set to anything other than 443
+{$CADDY_FRONTEND_HOSTNAME}:{$CADDY_PORT} {
+	root * {$CADDY_DIST:/usr/share/caddy}
+	try_files {path} {path}/ /index.html
+	file_server
+
+	# standard security headers
+	header {
+		Server "Qlarr Surveys"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		X-XSS-Protection "1; mode=block"
+		-Referrer-Policy
+		Referrer-Policy "strict-origin-when-cross-origin"
+
+		# `script-src` really shouldn't have any `unsafe-*` directives!!
+		Content-Security-Policy "
+			default-src 'self';
+			script-src 'self' 'unsafe-inline' 'unsafe-eval';
+			style-src 'self' 'unsafe-inline'
+		"
+	}
+}
+
+{$CADDY_API_HOSTNAME}:{$CADDY_PORT} {
+	reverse_proxy backend-app:8080
+}
