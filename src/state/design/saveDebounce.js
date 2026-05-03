@@ -68,6 +68,7 @@ const MUTATING = [
   "designState/updateRandom",
   "designState/updateRandomByType",
   "designState/addSkipRule",
+  "designState/refreshDsl",
   "designState/updateSkipRule",
   "designState/removeSkipRule",
   "designState/addCustomValidationRule",

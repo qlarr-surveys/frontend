@@ -6,13 +6,14 @@ import styles from "./ValidationItem.module.css";
 import { ErrorOutlineOutlined } from "@mui/icons-material";
 import { Box } from "@mui/material";
 import Content from "../Content";
+import { useTheme } from '@emotion/react';
 
 function ValidationItem({ name, validation, componentCode, content }) {
-  console.log(name, validation, componentCode, content)
+  const theme = useTheme();
   if (content && validation?.isCustomErrorActive !== false) {
     return (
-      <Box sx={{ color: "error.main" }} className={styles.wrapper}>
-        <ErrorOutlineOutlined />
+      <Box sx={{ color: "error.main", fontSize: `${theme.textStyles.text.size}px` }} className={styles.wrapper}>
+        <ErrorOutlineOutlined sx={{ fontSize: "inherit" }} />
         <Content name={name} elementCode={componentCode} content={content} />
       </Box>
     );
@@ -22,8 +23,8 @@ function ValidationItem({ name, validation, componentCode, content }) {
     const validationMessage = t(translationKey, { ...validation });
     if (validationMessage) {
       return (
-        <Box sx={{ color: "error.main" }} className={styles.wrapper}>
-          <ErrorOutlineOutlined />
+        <Box sx={{ color: "error.main", fontSize: `${theme.textStyles.text.size}px` }} className={styles.wrapper}>
+          <ErrorOutlineOutlined sx={{ fontSize: "inherit" }} />
           {validationMessage}
         </Box>
       );

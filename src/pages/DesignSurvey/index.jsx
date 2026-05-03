@@ -8,6 +8,7 @@ import useNamespaceLoader, { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { cacheRtl, rtlLanguage } from "~/utils/common";
 import { CacheProvider } from "@emotion/react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -19,6 +20,7 @@ import {
   setDesignModeToDesign,
   setDesignModeToLang,
   setDesignModeToTheme,
+  refreshDsl,
 } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 
@@ -32,6 +34,7 @@ function DesignSurvey() {
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const [contentElement, setContentElement] = React.useState(null);
   const dispatch = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const contentRef = React.useCallback((node) => {
     if (node) {
@@ -47,6 +50,9 @@ function DesignSurvey() {
 
   const designMode = useSelector((state) => {
     return state.designState.designMode;
+  });
+  const designStateReceived = useSelector((state) => {
+    return state.designState.designStateReceived || false;
   });
 
   const lang = langInfo?.lang;
@@ -75,6 +81,14 @@ function DesignSurvey() {
       dispatch(setDesignModeToDesign());
     }
   }, []);
+
+  useEffect(() => {
+    if (designStateReceived && searchParams.get("refresh") === "true") {
+      dispatch(refreshDsl());
+      searchParams.delete("refresh");
+      setSearchParams(searchParams);
+    }
+  }, [designStateReceived]);
 
   const cacheRtlMemo = useMemo(() => cacheRtl(lang), [lang]);
 

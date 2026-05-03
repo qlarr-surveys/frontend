@@ -111,6 +111,7 @@ export const designState = createSlice({
       state["latest"] = structuredClone(newState);
       state.lastAddedComponent = null;
       state.index = buildCodeIndex(state);
+      state.designStateReceived = true
     },
     setup(state, action) {
       const payload = action.payload;
@@ -800,6 +801,42 @@ export const designState = createSlice({
     setSaving: (state, action) => {
       state.isSaving = action.payload;
     },
+    refreshDsl: (state, action) => {
+      const survey = state.Survey;
+      if (!survey?.children) {
+        return;
+      }
+
+      survey.children.forEach((group) => {
+        const groupObj = state[group.code];
+        console.log(group.code, current(group))
+
+        groupObj.children?.forEach((questionChild) => {
+          const questionCode = questionChild.code;
+          const question = state[questionCode];
+          if (!question) {
+            return;
+          }
+
+          addQuestionInstructions(question);
+
+          question.children?.forEach((element) => {
+            addAnswerInstructions(
+              state,
+              state[element.qualifiedCode],
+              questionCode,
+              questionCode,
+            );
+          });
+
+          cleanupValidation(state, questionCode);
+          cleanupDefaultValue(question);
+          refreshEnumForSingleChoice(question, state);
+          refreshListForMultipleChoice(question, state);
+          addMaskedValuesInstructions(questionCode, question, state);
+        });
+      });
+    },
     setUpdating: (state, action) => {
       state.isUpdating = action.payload;
     },
@@ -917,6 +954,7 @@ export const {
   onDrag,
   addComponent,
   setSaving,
+  refreshDsl,
   setUpdating,
 } = designState.actions;
 

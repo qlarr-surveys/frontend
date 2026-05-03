@@ -5,6 +5,7 @@ import { valueChange } from "~/state/runState";
 import { Box } from "@mui/material";
 import { setDirty } from "~/state/templateState";
 import Content from "~/components/run/Content";
+import Validation from "~/components/run/Validation";
 
 function MultipleText(props) {
   return (
@@ -16,12 +17,7 @@ function MultipleText(props) {
       }}
     >
       {props.component.answers.map((option) => {
-        return (
-          <MultipleTextItem
-            key={option.qualifiedCode}
-            item={option}
-          />
-        );
+        return <MultipleTextItem key={option.qualifiedCode} item={option} />;
       })}
     </Box>
   );
@@ -47,7 +43,7 @@ function MultipleTextItem({ item }) {
       valueChange({
         componentCode: event.target.name,
         value: event.target.value,
-      })
+      }),
     );
   };
   const lostFocus = (event) => {
@@ -57,7 +53,7 @@ function MultipleTextItem({ item }) {
         valueChange({
           componentCode: event.target.name,
           value: trimmed,
-        })
+        }),
       );
     }
     dispatch(setDirty(event.target.name));
@@ -70,15 +66,20 @@ function MultipleTextItem({ item }) {
         display: "flex",
       }}
     >
-      <Content
-        customStyle={`
-        flex: 1 !important;
-        font-size: ${theme.textStyles.text.size}px;
-        `}
-        elementCode={item.code}
-        name="label"
-        content={item.content?.label}
-      />
+      <div
+        style={{
+          flex: "1",
+          fontSize: `${theme.textStyles.text.size}px`,
+        }}
+      >
+        <Content
+          elementCode={item.code}
+          name="label"
+          content={item.content?.label}
+        />
+        {state.invalid && <Validation component={item} />}
+      </div>
+
       <TextField
         variant="outlined"
         size="small"
