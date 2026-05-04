@@ -809,7 +809,6 @@ export const designState = createSlice({
 
       survey.children.forEach((group) => {
         const groupObj = state[group.code];
-        console.log(group.code, current(group))
 
         groupObj.children?.forEach((questionChild) => {
           const questionCode = questionChild.code;
