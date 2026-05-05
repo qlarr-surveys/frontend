@@ -1,6 +1,7 @@
 import publicApi from "./publicApi";
 import authenticatedApi from "./authenticatedApi";
 import BaseService from "./BaseService";
+import { localDateToServerDateTime } from '~/utils/DateUtils';
 
 class RunService extends BaseService {
   async start(lang, preview = false, mode = "online", navigationMode) {
@@ -9,7 +10,7 @@ class RunService extends BaseService {
       const response = await this.handleRequest(() =>
         authenticatedApi.post(
           `/survey/${surveyId}/preview/start?mode=${mode}`,
-          { lang, navigationMode }
+          { lang, navigationMode, clientUTCTime:localDateToServerDateTime(new Date()) }
         )
       );
       return response.data;
@@ -18,6 +19,7 @@ class RunService extends BaseService {
         publicApi.post(`/survey/${surveyId}/run/start`, {
           lang,
           navigationMode,
+          clientUTCTime:localDateToServerDateTime(new Date())
         })
       );
       return response.data;
@@ -30,13 +32,13 @@ class RunService extends BaseService {
     if (preview) {
       const response = await authenticatedApi.post(
         `/survey/${surveyId}/preview/navigate?mode=${mode}`,
-        payload
+        {...payload,  clientUTCTime:localDateToServerDateTime(new Date())}
       );
       return response.data;
     } else {
       const response_1 = await publicApi.post(
         `/survey/${surveyId}/run/navigate`,
-        payload
+        {...payload,  clientUTCTime:localDateToServerDateTime(new Date())}
       );
       return response_1.data;
     }

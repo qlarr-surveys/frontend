@@ -24,6 +24,8 @@ import {
   TableCell,
   TableBody,
   Grid,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import styles from "./ResponsesSurvey.module.css";
@@ -37,6 +39,7 @@ import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import ResponsesDownload from "~/components/manage/ResponsesDownload";
 import ResponsesExport from "~/components/manage/ResponsesExport";
+import ResponseEvents from "~/components/manage/ResponseEvents";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import {
   previewUrlByFilename,
@@ -45,7 +48,12 @@ import {
 
 function InfoItem({ label, value }) {
   return (
-    <Box display="grid" gridTemplateColumns="160px 1fr" gap={1} py={0.5}>
+    <Box
+      display="grid"
+      gridTemplateColumns={{ xs: "1fr 2fr", sm: "1fr 2fr", md: "160px 1fr" }}
+      gap={1}
+      py={0.5}
+    >
       <Typography color="text.secondary" fontWeight={500}>
         {label}
       </Typography>
@@ -86,6 +94,9 @@ function ResponsesList() {
     return stored ? stored : null;
   });
   const [selected, setSelected] = useState(null);
+  const [activeTab, setActiveTab] = useState(0);
+  const [eventsData, setEventsData] = useState(null);
+  const [loadingEvents, setLoadingEvents] = useState(false);
   const [canExportFiles, setCanExportFiles] = useState(false);
   const [askedAboutFiles, setAskedAboutFiles] = useState(false);
 
@@ -165,7 +176,7 @@ function ResponsesList() {
 
   const renderAnswerClamped = (code, respId, val) => {
     if (val === null || val === undefined || val === "") {
-      return <Typography>—</Typography>;
+      return <Typography variant="body2">—</Typography>;
     }
 
     if (Array.isArray(val) && val.every(isFileObj)) {
@@ -196,7 +207,7 @@ function ResponsesList() {
     if (typeof val === "object") {
       return (
         <ClampTwoLines>
-          <Typography sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+          <Typography variant="body2" sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
             {JSON.stringify(val)}
           </Typography>
         </ClampTwoLines>
@@ -205,7 +216,7 @@ function ResponsesList() {
 
     return (
       <ClampTwoLines>
-        <Typography sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+        <Typography variant="body2" sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
           {String(val)}
         </Typography>
       </ClampTwoLines>
@@ -266,7 +277,7 @@ function ResponsesList() {
     }
     // Handle ISO string format
     else if (typeof time === "string") {
-      date = new Date(time);
+      date = serverDateTimeToLocalDateTime(time);
     }
 
     if (!date || isNaN(date.getTime())) return "—";
@@ -337,6 +348,27 @@ function ResponsesList() {
         setSelected(null);
       });
   }, [responseId, allResponse]);
+
+  useEffect(() => {
+    if (activeTab === 1 && responseId && !eventsData) {
+      setLoadingEvents(true);
+      surveyService
+        .getResponseWithEvents(responseId)
+        .then((data) => {
+          setEventsData(data);
+          setLoadingEvents(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          setLoadingEvents(false);
+        });
+    }
+  }, [activeTab, responseId]);
+
+  useEffect(() => {
+    setEventsData(null);
+    setActiveTab(0);
+  }, [responseId]);
 
   const [responseToDelete, setResponseToDelete] = useState(null);
   const onCloseModal = () => setResponseToDelete(null);
@@ -500,10 +532,7 @@ function ResponsesList() {
               flexDirection: "column",
             }}
           >
-            <Box
-              px={2}
-              py={1.5}
-            >
+            <Box px={2} py={1.5}>
               <Grid container spacing={2} alignItems="flex-start">
                 <Grid item xs={12} sm={6}>
                   <FormControl size="small" fullWidth>
@@ -586,8 +615,8 @@ function ResponsesList() {
                         key={r.id}
                         selected={isSelected}
                         onClick={() => {
-                          console.log("setResponseId", r.id)
-                          setResponseId(r.id)
+                          console.log("setResponseId", r.id);
+                          setResponseId(r.id);
                         }}
                         sx={{ alignItems: "flex-start" }}
                       >
@@ -700,7 +729,7 @@ function ResponsesList() {
               <Box display="flex" flexDirection="column" gap={3}>
                 <Box
                   display="grid"
-                  gridTemplateColumns={{ xs: "1fr", lg: "500px 1fr" }}
+                  gridTemplateColumns={{ xs: "1fr", lg: "1fr 1fr" }}
                 >
                   <InfoItem label="ID" value={`#${selected.index}`} />
                   <InfoItem
@@ -790,104 +819,124 @@ function ResponsesList() {
                     value={renderLocations(selected.events)}
                   />
                 </Box>
-                {selected.values && Object.keys(selected.values).length > 0 && (
-                  <Box sx={{ minWidth: 0 }}>
-                    <Typography
-                      variant="subtitle2"
-                      color="text.secondary"
-                      gutterBottom
+
+                <Box sx={{ minWidth: 0 }}>
+                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <Tabs
+                      value={activeTab}
+                      onChange={(_, newValue) => setActiveTab(newValue)}
                     >
-                      {t("responses.answers", "Answers")}
-                    </Typography>
+                      <Tab label={t("responses.answers", "Answers")} />
+                      <Tab label={t("responses.events", "Events")} />
+                    </Tabs>
+                  </Box>
 
-                    <TableContainer component={Paper} variant="outlined">
-                      <Table size="small" aria-label={t("aria.answers_table")}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell sx={{ width: "33%" }}>
-                              {t("responses.question")}
-                            </TableCell>
-                            <TableCell sx={{ width: "33%" }}>
-                              {t("responses.answer")}
-                            </TableCell>
-                            <TableCell sx={{ width: "33%" }}>
-                              {t("responses.events")}
-                            </TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {selected.values.map((val) => {
-                            const answerTooltip = getTooltipString(val.value);
-                            const questionTooltip = getTooltipString(val.key);
-                            return (
-                              <TableRow key={val.code} hover>
-                                <TableCell
-                                  sx={{
-                                    verticalAlign: "top",
-                                    maxWidth: 0,
-                                  }}
-                                >
-                                  <ClampTwoLines>
-                                    <CustomTooltip
-                                      showIcon={false}
-                                      title={questionTooltip}
-                                    >
-                                      <Typography
-                                        color="text.secondary"
-                                        fontWeight={500}
-                                        sx={{
-                                          wordBreak: "break-word",
-                                          whiteSpace: "pre-wrap",
-                                        }}
-                                      >
-                                        {val.key}
-                                      </Typography>
-                                    </CustomTooltip>
-                                  </ClampTwoLines>
+                  {activeTab === 0 && (
+                    <Box sx={{ py: 2 }}>
+                      {selected.values && selected.values.length > 0 ? (
+                        <TableContainer component={Paper} variant="outlined">
+                          <Table size="small" aria-label={t("aria.answers_table")}>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell sx={{ width: "50%", backgroundColor: "#212B36", color: "white" }}>
+                                  {t("responses.question")}
                                 </TableCell>
-
-                                <TableCell
-                                  sx={{
-                                    verticalAlign: "top",
-                                    maxWidth: 0,
-                                  }}
-                                >
-                                  {answerTooltip.length > 20 ? (
-                                    <CustomTooltip
-                                      showIcon={false}
-                                      title={answerTooltip}
-                                    >
-                                      <Box>
-                                        {renderAnswerClamped(
-                                          val.code,
-                                          selected.id,
-                                          val.value,
-                                        )}
-                                      </Box>
-                                    </CustomTooltip>
-                                  ) : (
-                                    <Box>
-                                      {renderAnswerClamped(
-                                        val.code,
-                                        selected.id,
-                                        val.value,
-                                      )}
-                                    </Box>
-                                  )}
-                                </TableCell>
-                                <TableCell
-                                  sx={{ verticalAlign: "top", maxWidth: 0 }}
-                                >
-                                  {renderEventsCell(val.events)}
+                                <TableCell sx={{ width: "50%", backgroundColor: "#212B36", color: "white" }}>
+                                  {t("responses.answer")}
                                 </TableCell>
                               </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Box>
-                )}
+                            </TableHead>
+                            <TableBody>
+                              {selected.values.map((val) => {
+                                const answerTooltip = getTooltipString(val.value);
+                                const questionTooltip = getTooltipString(val.key);
+                                return (
+                                  <TableRow
+                                    key={val.code}
+                                    hover
+                                    sx={{
+                                      backgroundColor: val.code.startsWith("G") ? "action.hover" : "transparent",
+                                    }}
+                                  >
+                                    <TableCell
+                                      colSpan={val.code.startsWith("G") ? 2 : 1}
+                                      sx={{
+                                        verticalAlign: "top",
+                                        maxWidth: 0,
+                                      }}
+                                    >
+                                      <ClampTwoLines>
+                                        <CustomTooltip
+                                          showIcon={false}
+                                          title={questionTooltip}
+                                        >
+                                          <Typography
+                                            variant="body2"
+                                            color="text.secondary"
+                                            fontWeight={val.code.startsWith("G") ? 700 : 400}
+                                            sx={{
+                                              wordBreak: "break-word",
+                                              whiteSpace: "pre-wrap",
+                                            }}
+                                          >
+                                            {val.key}
+                                          </Typography>
+                                        </CustomTooltip>
+                                      </ClampTwoLines>
+                                    </TableCell>
+                                    {!val.code.startsWith("G") && (
+                                      <TableCell
+                                        sx={{
+                                          verticalAlign: "top",
+                                          maxWidth: 0,
+                                        }}
+                                      >
+                                        {answerTooltip.length > 20 ? (
+                                          <CustomTooltip
+                                            showIcon={false}
+                                            title={answerTooltip}
+                                          >
+                                            <Box>
+                                              {renderAnswerClamped(
+                                                val.code,
+                                                selected.id,
+                                                val.value,
+                                              )}
+                                            </Box>
+                                          </CustomTooltip>
+                                        ) : (
+                                          <Box>
+                                            {renderAnswerClamped(
+                                              val.code,
+                                              selected.id,
+                                              val.value,
+                                            )}
+                                          </Box>
+                                        )}
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                );
+                              })}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      ) : (
+                        <Box p={4} textAlign="center">
+                          <Typography color="text.secondary">
+                            {t("responses.no_answers", "No answers found")}
+                          </Typography>
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+
+                  {activeTab === 1 && (
+                    <Box sx={{ py: 2 }}>
+                      <ResponseEvents events={eventsData} loading={loadingEvents} />
+                    </Box>
+                  )}
+                </Box>
               </Box>
             )}
           </Paper>

@@ -6,6 +6,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { DateTimePicker } from "@mui/x-date-pickers";
+import { serverDateTimeToLocalDateTime } from "~/utils/DateUtils";
 
 const renderInput = (props) => {
   return (
@@ -40,15 +41,28 @@ export const SurveyActiveFromTo = ({
   disabled,
 }) => {
   const { t } = useTranslation(NAMESPACES.MANAGE);
+
+  const convertUTCToLocal = (utcDateString) => {
+    if (!utcDateString) return null;
+    try {
+      const localDate = serverDateTimeToLocalDateTime(utcDateString);
+      return dayjs(localDate);
+    } catch {
+      return utcDateString;
+    }
+  };
+
   const [surveyActiveFrom, setSurveyActiveFrom] = useState(
-    initialSurveyActiveFrom
+    convertUTCToLocal(initialSurveyActiveFrom)
   );
-  const [surveyActiveTo, setSurveyActiveTo] = useState(initialSurveyActiveTo);
+  const [surveyActiveTo, setSurveyActiveTo] = useState(
+    convertUTCToLocal(initialSurveyActiveTo)
+  );
   const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
-    setSurveyActiveFrom(initialSurveyActiveFrom);
-    setSurveyActiveTo(initialSurveyActiveTo);
+    setSurveyActiveFrom(convertUTCToLocal(initialSurveyActiveFrom));
+    setSurveyActiveTo(convertUTCToLocal(initialSurveyActiveTo));
   }, [initialSurveyActiveFrom, initialSurveyActiveTo]);
 
   const handleSurveyActiveFromChange = (newValue) => {

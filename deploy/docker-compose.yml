@@ -16,7 +16,6 @@ services:
       VITE_PROTOCOL: "http"
       VITE_FRONT_END_HOST: "${CADDY_FRONTEND_HOSTNAME}"
       VITE_BE_URL: "https://${CADDY_API_HOSTNAME}"
-      VITE_CLOUD_URL: ""
     depends_on:
       - backend-app
     ports:

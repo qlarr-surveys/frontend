@@ -75,6 +75,14 @@ class SurveyService extends BaseService {
     return response.data;
   }
 
+  async getResponseWithEvents(responseId) {
+    const response = await this.handleRequest(
+      () => authenticatedApi.get(`/response_with_event/${responseId}`),
+      { silent: true }
+    );
+    return response.data;
+  }
+
   async exportResponses(
     surveyId,
     { format = "csv", from, to, dbValues = true, complete, timezone }

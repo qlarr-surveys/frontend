@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Box, Button, Tooltip, Typography, Select, MenuItem, FormControl, Dialog, IconButton, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Button, Typography, Select, MenuItem, FormControl, Dialog, IconButton, DialogContent, DialogTitle } from "@mui/material";
 import styles from "./Launch.module.css";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import { useSelector } from "react-redux";
@@ -15,7 +15,6 @@ import { SurveyActiveFromTo } from "~/components/manage/SurveyActiveFromTo";
 import { isSurveyAdmin } from "~/constants/roles";
 import { SURVEY_STATUS } from "~/constants/survey";
 import { localDateToServerDateTime } from "~/utils/DateUtils";
-import { HelpOutline } from "@mui/icons-material";
 import SuccessSnackbar from "~/components/manage/SuccessSnackbar";
 import { sharingUrl } from "~/networking/common";
 import QRCode from "react-qr-code";
