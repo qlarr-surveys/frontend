@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import styles from "./DateTimeQuestion.module.css";
 import { useTheme } from "@mui/system";
 import { valueChange } from "~/state/runState";
+import { setDirty } from "~/state/templateState";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function DateTimeQuestion(props) {
@@ -33,6 +34,7 @@ function DateTimeQuestion(props) {
 
   const handleDateChange = (date) => {
     let finalDate = date === null ? undefined : date.toDate();
+    dispatch(setDirty(props.component.qualifiedCode));
     dispatch(
       valueChange({
         componentCode: props.component.qualifiedCode,
@@ -73,6 +75,7 @@ function DateTimeQuestion(props) {
                   {...params}
                   size="small"
                   label={hintLabel}
+                  error={state.invalid}
                   onKeyDown={(e) => e.preventDefault()} />
               )}
               margin="normal"
@@ -124,6 +127,7 @@ function DateTimeQuestion(props) {
                 {...params}
                 size="small"
                 label={hintLabel}
+                error={state.invalid}
                 onKeyDown={(e) => e.preventDefault()} />
             )}
             margin="normal"
@@ -151,6 +155,7 @@ function DateTimeQuestion(props) {
                 {...params}
                 size="small"
                 label={hintLabel}
+                error={state.invalid}
                 onKeyDown={(e) => e.preventDefault()} />
             )}
             margin="normal"
