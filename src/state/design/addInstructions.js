@@ -1310,7 +1310,7 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
       ) {
         return `[${value[1].map(
           (el) => "'" + el + "'",
-        )}].filter((el) => ${code}.value?.indexOf(el) > -1).length == 0`;
+        )}].filter((el) => ${code1}.value?.indexOf(el) > -1).length == 0`;
       } else {
         return `[${value[1].map(
           (el) => '"' + el + '"',
