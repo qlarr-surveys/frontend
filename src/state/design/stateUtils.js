@@ -159,7 +159,7 @@ export const nextQuestionId = (state, groups) => {
   return generateId(existing);
 };
 
-export const buildReferenceInstruction = (content, name, key, contentPath) => {
+export const buildFormatInstruction = (content, name, key, contentPath) => {
   const allMatches = getAllMatches(content);
   return allMatches.map((match, index) =>{
     return {

@@ -9,7 +9,7 @@ import {
   nextGroupId,
   nextQuestionId,
   reorder,
-  buildReferenceInstruction,
+  buildFormatInstruction,
 } from "./stateUtils";
 import {
   CONVERTIBLE_CHOICE_TYPES,
@@ -34,7 +34,7 @@ import {
   addMaskedValuesInstructions,
   refreshEnumForSingleChoice,
   refreshListForMultipleChoice,
-  addQuestionInstructions,
+  addQuestionValueInstruction,
   addSkipInstructions,
   changeInstruction,
   cleanupDefaultValue,
@@ -111,7 +111,7 @@ export const designState = createSlice({
       state["latest"] = structuredClone(newState);
       state.lastAddedComponent = null;
       state.index = buildCodeIndex(state);
-      state.designStateReceived = true
+      state.designStateReceived = true;
     },
     setup(state, action) {
       const payload = action.payload;
@@ -577,7 +577,6 @@ export const designState = createSlice({
         (instruction) => instruction.code.startsWith(prefixToRemove),
       );
       toRemove?.forEach((instruction) => {
-        console.log(instruction.code);
         changeInstruction(state[payload.code], {
           code: instruction.code,
           remove: true,
@@ -589,7 +588,7 @@ export const designState = createSlice({
       ].instructionList?.filter(
         (instruction) => !instruction.code.startsWith(prefixToRemove),
       );
-      const referenceInstructions = buildReferenceInstruction(
+      const referenceInstructions = buildFormatInstruction(
         payload.value,
         payload.key,
         payload.lang,
@@ -610,7 +609,7 @@ export const designState = createSlice({
     },
     changeCustomCss: (state, action) => {
       let payload = action.payload;
-      const referenceInstructions = buildReferenceInstruction(
+      const referenceInstructions = buildFormatInstruction(
         payload.value,
         "custom",
         "css",
@@ -810,6 +809,8 @@ export const designState = createSlice({
       survey.children.forEach((group) => {
         const groupObj = state[group.code];
 
+        cleanupFormatInstructions(groupObj);
+
         groupObj.children?.forEach((questionChild) => {
           const questionCode = questionChild.code;
           const question = state[questionCode];
@@ -817,7 +818,8 @@ export const designState = createSlice({
             return;
           }
 
-          addQuestionInstructions(question);
+          addQuestionValueInstruction(question);
+          cleanupFormatInstructions(question);
 
           question.children?.forEach((element) => {
             addAnswerInstructions(
@@ -826,6 +828,7 @@ export const designState = createSlice({
               questionCode,
               questionCode,
             );
+            cleanupFormatInstructions(state[element.qualifiedCode]);
           });
 
           cleanupValidation(state, questionCode);
@@ -973,6 +976,44 @@ const cleanupRandomRules = (componentState) => {
   }
 };
 
+const cleanupFormatInstructions = (componentState) => {
+  const prefixToRemove = `format_`;
+  const toRemove = componentState.instructionList?.filter((instruction) =>
+    instruction.code.startsWith(prefixToRemove),
+  );
+  toRemove?.forEach((instruction) => {
+    changeInstruction(componentState, {
+      code: instruction.code,
+      remove: true,
+    });
+  });
+  if (componentState.customCss) {
+    const referenceInstructions = buildFormatInstruction(
+      componentState.customCss,
+      "custom",
+      "css",
+      ["customCss"],
+    );
+    referenceInstructions?.forEach((instruction) =>
+      changeInstruction(componentState, instruction),
+    );
+  }
+
+  Object.keys(componentState.content).forEach((lang) => {
+    Object.keys(componentState.content[lang]).forEach((key) => {
+      const referenceInstructions = buildFormatInstruction(
+        componentState.content[lang][key],
+        key,
+        lang,
+        ["content", lang, key],
+      );
+      referenceInstructions?.forEach((instruction) =>
+        changeInstruction(componentState, instruction),
+      );
+    });
+  });
+};
+
 // Clean up skip_logic rules that point to a deleted destination
 const cleanupSkipDestinations = (state, deletedCode) => {
   Object.keys(state).forEach((key) => {
@@ -1083,7 +1124,7 @@ const newQuestion = (state, payload) => {
       state[key] = questionObject[key];
     });
   const newCode = `Q${questionId}`;
-  addQuestionInstructions(state[newCode]);
+  addQuestionValueInstruction(state[newCode]);
   state[newCode].children?.forEach((element) => {
     addAnswerInstructions(
       state,

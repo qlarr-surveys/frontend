@@ -2,7 +2,7 @@ import { isSingleSelect, mediaGroup } from "~/constants/design";
 import {
   addAnswerInstructions,
   addMaskedValuesInstructions,
-  addQuestionInstructions,
+  addQuestionValueInstruction,
   addSkipInstructions,
   changeInstruction,
   refreshEnumForSingleChoice,
@@ -96,7 +96,7 @@ export function convertChoiceQuestion(
   );
 
   // Re-initialize question instructions for the new type
-  addQuestionInstructions(currentQuestion);
+  addQuestionValueInstruction(currentQuestion);
   addSkipInstructions(state, questionCode);
 
   // Restore conditional_relevance if it was set before conversion

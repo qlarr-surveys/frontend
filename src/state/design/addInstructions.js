@@ -1,16 +1,15 @@
-
 export const cleanupDefaultValue = (component) => {
   // Check if this is a single choice question type that supports default values
   if (
     !component.type ||
     !["scq", "icon_scq", "image_scq"].includes(component.type)
   ) {
-     return;
+    return;
   }
 
   // Find the value instruction that contains the default value
   const valueInstruction = component.instructionList?.find(
-    (instruction) => instruction.code === "value"
+    (instruction) => instruction.code === "value",
   );
 
   if (!valueInstruction || !valueInstruction.text) {
@@ -44,14 +43,16 @@ export const addSkipInstructions = (state, code) => {
 
   // Clean up skip_logic conditions to remove invalid answer codes
   if (component.skip_logic && Array.isArray(component.skip_logic)) {
-    const validAnswerCodes = component.children?.map(child => child.code) || [];
+    const validAnswerCodes =
+      component.children?.map((child) => child.code) || [];
 
     component.skip_logic = component.skip_logic
       .map((rule) => ({
         ...rule,
-        condition: rule.condition?.filter((answerCode) =>
-          validAnswerCodes.includes(answerCode)
-        ) || [],
+        condition:
+          rule.condition?.filter((answerCode) =>
+            validAnswerCodes.includes(answerCode),
+          ) || [],
       }))
       .filter((rule) => rule.condition.length > 0);
   }
@@ -66,7 +67,7 @@ export const refreshEnumForSingleChoice = (component, state) => {
   if (
     !component.type ||
     !["scq", "icon_scq", "image_scq", "scq_icon_array", "scq_array"].includes(
-      component.type
+      component.type,
     )
   ) {
     return;
@@ -76,7 +77,7 @@ export const refreshEnumForSingleChoice = (component, state) => {
     case "icon_scq":
     case "scq":
       let valueInstruction = component.instructionList.find(
-        (it) => it.code == "value"
+        (it) => it.code == "value",
       );
       if (component.children && component.children.length) {
         valueInstruction.returnType = {
@@ -102,7 +103,7 @@ export const refreshEnumForSingleChoice = (component, state) => {
           .forEach((el) => {
             const row = state[el.qualifiedCode];
             const valueInstruction = row.instructionList.find(
-              (it) => it.code == "value"
+              (it) => it.code == "value",
             );
             if (valueInstruction) {
               valueInstruction.returnType = {
@@ -123,7 +124,7 @@ export const refreshEnumForSingleChoice = (component, state) => {
           .forEach((el) => {
             const row = state[el.qualifiedCode];
             const valueInstruction = row.instructionList.find(
-              (it) => it.code == "value"
+              (it) => it.code == "value",
             );
             if (valueInstruction) {
               valueInstruction.returnType = "string";
@@ -147,7 +148,7 @@ export const refreshListForMultipleChoice = (component, state) => {
     case "icon_mcq":
     case "mcq":
       let valueInstruction = component.instructionList.find(
-        (it) => it.code == "value"
+        (it) => it.code == "value",
       );
       if (component.children && component.children.length) {
         valueInstruction.returnType = {
@@ -172,7 +173,7 @@ export const refreshListForMultipleChoice = (component, state) => {
           .forEach((el) => {
             const row = state[el.qualifiedCode];
             const valueInstruction = row.instructionList.find(
-              (it) => it.code == "value"
+              (it) => it.code == "value",
             );
             if (valueInstruction) {
               valueInstruction.returnType = {
@@ -193,7 +194,7 @@ export const refreshListForMultipleChoice = (component, state) => {
           .forEach((el) => {
             const row = state[el.qualifiedCode];
             const valueInstruction = row.instructionList.find(
-              (it) => it.code == "value"
+              (it) => it.code == "value",
             );
             if (valueInstruction) {
               valueInstruction.returnType = "list";
@@ -208,7 +209,7 @@ export const refreshListForMultipleChoice = (component, state) => {
 export const addMaskedValuesInstructions = (
   qualifiedCode,
   component,
-  state
+  state,
 ) => {
   if (
     !component.type ||
@@ -292,7 +293,7 @@ export const addMaskedValuesInstructions = (
             .map((el) =>
               el.type == "other"
                 ? `"${el.code}": ${el.qualifiedCode}Atext.value`
-                : `"${el.code}": QlarrScripts.stripTags(${el.qualifiedCode}.label)`
+                : `"${el.code}": QlarrScripts.stripTags(${el.qualifiedCode}.label)`,
             )
             .join(",") +
           "}";
@@ -346,7 +347,7 @@ export const addMaskedValuesInstructions = (
             .filter((el) => el.type == "column")
             .map(
               (el) =>
-                `"${el.code}": QlarrScripts.stripTags(${el.qualifiedCode}.label)`
+                `"${el.code}": QlarrScripts.stripTags(${el.qualifiedCode}.label)`,
             )
             .join(",") +
           "}";
@@ -389,7 +390,7 @@ export const addMaskedValuesInstructions = (
             .filter((el) => el.type == "column")
             .map(
               (el) =>
-                `"${el.code}": QlarrScripts.stripTags(${el.qualifiedCode}.label)`
+                `"${el.code}": QlarrScripts.stripTags(${el.qualifiedCode}.label)`,
             )
             .join(",") +
           "}";
@@ -438,7 +439,7 @@ export const changeInstruction = (componentState, instruction) => {
 export const removeInstruction = (componentState, code) => {
   if (componentState.instructionList.length) {
     const index = componentState.instructionList.findIndex(
-      (el) => el.code === code
+      (el) => el.code === code,
     );
     if (index < 0) {
       return;
@@ -450,181 +451,155 @@ export const removeInstruction = (componentState, code) => {
   }
 };
 
-export const addQuestionInstructions = (question) => {
+export const addQuestionValueInstruction = (question) => {
+  if (!question.instructionList) {
+    question.instructionList = [];
+  }
   let type = question.type;
   switch (type) {
     case "text":
     case "paragraph":
     case "email":
     case "autocomplete":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "string",
+        text: "",
+      });
+
       break;
     case "number":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "double",
-          text: "",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "double",
+        text: "",
+      });
       break;
     case "barcode":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-        {
-          code: "mode",
-          isActive: false,
-          returnType: "string",
-          text: "offline",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "string",
+        text: "",
+      });
+      editInstruction(question, {
+        code: "mode",
+        isActive: false,
+        returnType: "string",
+        text: "offline",
+      });
       break;
     case "scq":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "string",
+        text: "",
+      });
       break;
     case "icon_mcq":
     case "image_mcq":
     case "mcq":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "list",
-          text: "",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "list",
+        text: "",
+      });
       break;
     case "icon_scq":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "string",
+        text: "",
+      });
       break;
     case "image_scq":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "string",
-          text: "",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "string",
+        text: "",
+      });
       break;
     case "nps":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "int",
-          text: "",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "int",
+        text: "",
+      });
       break;
     case "file_upload":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "file",
-          text: "",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "file",
+        text: "",
+      });
       break;
     case "signature":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "file",
-          text: "",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "file",
+        text: "",
+      });
       break;
     case "photo_capture":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "file",
-          text: "",
-        },
-        {
-          code: "mode",
-          isActive: false,
-          returnType: "string",
-          text: "offline",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "file",
+        text: "",
+      });
+      editInstruction(question, {
+        code: "mode",
+        isActive: false,
+        returnType: "string",
+        text: "offline",
+      });
       break;
     case "video_capture":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "file",
-          text: "",
-        },
-        {
-          code: "mode",
-          isActive: false,
-          returnType: "string",
-          text: "offline",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "file",
+        text: "",
+      });
+      editInstruction(question, {
+        code: "mode",
+        isActive: false,
+        returnType: "string",
+        text: "offline",
+      });
       break;
     case "date":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "date",
-          text: "",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "date",
+        text: "",
+      });
       break;
     case "date_time":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "date",
-          text: "",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "date",
+        text: "",
+      });
       break;
     case "time":
-      question.instructionList = [
-        {
-          code: "value",
-          isActive: false,
-          returnType: "date",
-          text: "",
-        },
-      ];
+      editInstruction(question, {
+        code: "value",
+        isActive: false,
+        returnType: "date",
+        text: "",
+      });
       break;
     case "text_display":
     case "video_display":
@@ -643,7 +618,7 @@ export const addAnswerInstructions = (
   state,
   answer,
   parentCode,
-  questionCode
+  questionCode,
 ) => {
   const questionType = state[questionCode].type;
   const type = answer.type;
@@ -656,8 +631,8 @@ export const addAnswerInstructions = (
       questionType == "image_ranking"
         ? "int"
         : questionType == "mcq_array"
-        ? "list"
-        : "string",
+          ? "list"
+          : "string",
     text: "",
   };
   switch (type) {
@@ -711,7 +686,7 @@ const addValidationEquation = (state, qualifiedCode, rule) => {
     qualifiedCode,
     component,
     rule,
-    component["validation"][rule]
+    component["validation"][rule],
   );
   changeInstruction(component, validationInstruction);
 };
@@ -719,7 +694,7 @@ const addValidationEquation = (state, qualifiedCode, rule) => {
 // there is always an assumption that instructionList exists!!!
 const editInstruction = (componentState, instruction) => {
   const index = componentState.instructionList.findIndex(
-    (el) => el.code === instruction.code
+    (el) => el.code === instruction.code,
   );
   if (index < 0) {
     componentState.instructionList.push(instruction);
@@ -783,8 +758,7 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
       instructionText = requiredText(qualifiedCode, component);
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_char_length":
-      instructionText =
-        `${qualifiedCode}.value.length >= ${validation.min_length || 0}`;
+      instructionText = `${qualifiedCode}.value.length >= ${validation.min_length || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_one_response_per_col":
       instructionText = `QlarrScripts.hasDuplicates([${component.children
@@ -792,52 +766,43 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         .map((el) => el.qualifiedCode + ".value")}].filter(x=>x))`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_char_length":
-      instructionText =
-        `${qualifiedCode}.value.length <= ${validation.max_length || 0}`;
+      instructionText = `${qualifiedCode}.value.length <= ${validation.max_length || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_contains":
-      instructionText =
-        `${qualifiedCode}.value.includes("${validation.contains}")`;
+      instructionText = `${qualifiedCode}.value.includes("${validation.contains}")`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_not_contains":
-      instructionText =
-        `!${qualifiedCode}.value.includes("${validation.not_contains}")`;
+      instructionText = `!${qualifiedCode}.value.includes("${validation.not_contains}")`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_file_types":
       const mimes = fileTypesToMimesArray(validation.fileTypes);
-      instructionText =
-        `[${mimes
-          .map((el) => '"' + el + '"')
-          .join(
-            ","
-          )}].includes(QlarrScripts.safeAccess(${qualifiedCode}.value,"type"))`;
+      instructionText = `[${mimes
+        .map((el) => '"' + el + '"')
+        .join(
+          ",",
+        )}].includes(QlarrScripts.safeAccess(${qualifiedCode}.value,"type"))`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_file_size":
-      instructionText =
-        `QlarrScripts.safeAccess(${qualifiedCode}.value,"size")/ 1024 < ${validation.max_size}`;
+      instructionText = `QlarrScripts.safeAccess(${qualifiedCode}.value,"size")/ 1024 < ${validation.max_size}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_pattern":
       if (!isValidRegex(validation.pattern)) {
         return { code: key, remove: true };
       }
-      instructionText =
-        `(new RegExp("${validation.pattern}").test(${qualifiedCode}.value))`;
+      instructionText = `(new RegExp("${validation.pattern}").test(${qualifiedCode}.value))`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_pattern_email":
-      instructionText =
-        `/^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/.test(${qualifiedCode}.value)`;
+      instructionText = `/^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/.test(${qualifiedCode}.value)`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_word_count":
-      instructionText =
-        `QlarrScripts.wordCount(${qualifiedCode}.value) <= ${
-          validation.max_count || 0
-        }`;
+      instructionText = `QlarrScripts.wordCount(${qualifiedCode}.value) <= ${
+        validation.max_count || 0
+      }`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_word_count":
-      instructionText =
-        `QlarrScripts.wordCount(${qualifiedCode}.value) >= ${
-          validation.min_count || 0
-        }`;
+      instructionText = `QlarrScripts.wordCount(${qualifiedCode}.value) >= ${
+        validation.min_count || 0
+      }`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_between":
       instructionText =
@@ -850,28 +815,22 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
         `|| ${qualifiedCode}.value > ${validation.upper_limit || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_lt":
-      instructionText =
-        `${qualifiedCode}.value < ${validation.number || 0}`;
+      instructionText = `${qualifiedCode}.value < ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_lte":
-      instructionText =
-        `${qualifiedCode}.value <= ${validation.number || 0}`;
+      instructionText = `${qualifiedCode}.value <= ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_gt":
-      instructionText =
-        `${qualifiedCode}.value > ${validation.number || 0}`;
+      instructionText = `${qualifiedCode}.value > ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_gte":
-      instructionText =
-        `${qualifiedCode}.value >= ${validation.number || 0}`;
+      instructionText = `${qualifiedCode}.value >= ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_equals":
-      instructionText =
-        `${qualifiedCode}.value == ${validation.number || 0}`;
+      instructionText = `${qualifiedCode}.value == ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_not_equal":
-      instructionText =
-        `${qualifiedCode}.value != ${validation.number || 0}`;
+      instructionText = `${qualifiedCode}.value != ${validation.number || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_min_option_count":
       instructionText =
@@ -881,7 +840,7 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
     case "validation_min_ranking_count":
       instructionText =
         `[${component.children.map(
-          (answer) => answer.qualifiedCode + ".value"
+          (answer) => answer.qualifiedCode + ".value",
         )}].filter(x=>x).length ` + `>= ${validation.min_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_max_option_count":
@@ -892,7 +851,7 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
     case "validation_max_ranking_count":
       instructionText =
         `[${component.children.map(
-          (answer) => answer.qualifiedCode + ".value"
+          (answer) => answer.qualifiedCode + ".value",
         )}].filter(x=>x).length ` + `<= ${validation.max_count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     case "validation_option_count":
@@ -903,7 +862,7 @@ const validationEquation = (qualifiedCode, component, key, validation) => {
     case "validation_ranking_count":
       instructionText =
         `[${component.children.map(
-          (answer) => answer.qualifiedCode + ".value"
+          (answer) => answer.qualifiedCode + ".value",
         )}].filter(x=>x).length ` + `== ${validation.count || 0}`;
       return booleanActiveInstruction(key, instructionText);
     default:
@@ -935,7 +894,7 @@ const requiredText = (qualifiedCode, component) => {
     const rows = component.children.filter((child) => child.type == "row");
     return (
       `[${rows.map(
-        (answer) => answer.qualifiedCode + ".value"
+        (answer) => answer.qualifiedCode + ".value",
       )}].filter(x=>x).length ` +
       ` == ` +
       rows.length
@@ -944,7 +903,7 @@ const requiredText = (qualifiedCode, component) => {
     const rows = component.children.filter((child) => child.type == "row");
     return (
       `[${rows.map(
-        (answer) => answer.qualifiedCode + ".value"
+        (answer) => answer.qualifiedCode + ".value",
       )}].filter(x=>x && x.length > 0).length ` +
       ` == ` +
       rows.length
@@ -953,7 +912,7 @@ const requiredText = (qualifiedCode, component) => {
     const rows = component.children;
     return (
       `[${rows.map(
-        (answer) => answer.qualifiedCode + ".value"
+        (answer) => answer.qualifiedCode + ".value",
       )}].filter(x=>x).length ` +
       ` == ` +
       rows.length
@@ -978,18 +937,18 @@ const isValidRegex = (regex) => {
 export const updateRandomByRule = (
   componentState,
   randomRule,
-  initialSetup = false
+  initialSetup = false,
 ) => {
   if (
     ["randomize_questions", "randomize_groups", "randomize_options"].indexOf(
-      randomRule
+      randomRule,
     ) > -1
   ) {
     const childCodes = componentState.children
       ?.filter((it) =>
         it.groupType?.toLowerCase() != "end" && initialSetup
           ? ["other", "none", "all"].indexOf(it.type?.toLowerCase()) == -1
-          : true
+          : true,
       )
       ?.map((it) => it.code);
     if (childCodes.length == 0 || !componentState[randomRule]) {
@@ -1010,7 +969,7 @@ export const updateRandomByRule = (
       instruction.groups = instruction.groups
         .map((group) => {
           const newCodes = group.codes.filter((code) =>
-            childCodes.includes(code)
+            childCodes.includes(code),
           );
           if (newCodes.length > 0) {
             group.codes = newCodes;
@@ -1172,7 +1131,7 @@ export const conditionalRelevanceEquation = (logic, rule, state) => {
     logic,
     false,
     (code) => state[code].type,
-    (code) => getQuestionType(state, code)
+    (code) => getQuestionType(state, code),
   );
   // If no valid logic yet (empty text), treat as "show_always" to avoid validation errors
   if (!text) {
@@ -1204,14 +1163,14 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
         nested,
         value
           .map((el) => jsonToJs(el, true, getComponentType, getQuestionType))
-          .join(" && ")
+          .join(" && "),
       );
     case "or":
       return wrapIfNested(
         nested,
         value
           .map((el) => jsonToJs(el, true, getComponentType, getQuestionType))
-          .join(" || ")
+          .join(" || "),
       );
     case "!":
       return (
@@ -1219,7 +1178,7 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
         wrapIfNested(
           nested,
           jsonToJs(value, true, getComponentType, getQuestionType) +
-            (nested ? ")" : "")
+            (nested ? ")" : ""),
         )
       );
     case "is_relevant":
@@ -1238,12 +1197,12 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
       const qCode1 = capture(value);
       if (
         ["file_upload", "signature", "photo_capture", "video_capture"].indexOf(
-          getComponentType(qCode1)
+          getComponentType(qCode1),
         ) > -1
       ) {
         return wrapIfNested(
           nested,
-          `Object.keys(${qCode1}.value).length == 0 || !QlarrScripts.safeAccess(${qCode1}.value,"size") || !QlarrScripts.safeAccess(${qCode1}.value,"stored_filename")`
+          `Object.keys(${qCode1}.value).length == 0 || !QlarrScripts.safeAccess(${qCode1}.value,"size") || !QlarrScripts.safeAccess(${qCode1}.value,"stored_filename")`,
         );
       } else {
         return `QlarrScripts.isVoid(${capture(qCode1)}.value)`;
@@ -1252,12 +1211,12 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
       const qCode = capture(value);
       if (
         ["file_upload", "signature", "photo_capture", "video_capture"].indexOf(
-          getComponentType(qCode)
+          getComponentType(qCode),
         ) > -1
       ) {
         return wrapIfNested(
           nested,
-          `Object.keys(${qCode}.value).length > 0 && QlarrScripts.safeAccess(${qCode}.value,"size") && QlarrScripts.safeAccess(${qCode}.value,"stored_filename")`
+          `Object.keys(${qCode}.value).length > 0 && QlarrScripts.safeAccess(${qCode}.value,"size") && QlarrScripts.safeAccess(${qCode}.value,"stored_filename")`,
         );
       } else {
         return `QlarrScripts.isNotVoid(${capture(value)}.value)`;
@@ -1282,16 +1241,16 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
           nested,
           `(${leftOperand}>=${capture(
             value[1],
-            type
-          )} && ${leftOperand}<=${capture(value[2], type)})`
+            type,
+          )} && ${leftOperand}<=${capture(value[2], type)})`,
         );
       } else if (key == "not_between") {
         return wrapIfNested(
           nested,
           `(${leftOperand}<${capture(
             value[1],
-            type
-          )} || ${leftOperand}>${capture(value[2], type)})`
+            type,
+          )} || ${leftOperand}>${capture(value[2], type)})`,
         );
       } else {
         throw "WTF";
@@ -1299,30 +1258,30 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
     case "startsWith":
       return wrapIfNested(
         nested,
-        `${capture(value[0])}.value?.startsWith(${capture(value[1])})`
+        `${capture(value[0])}.value?.startsWith(${capture(value[1])})`,
       );
     case "endsWith":
       return wrapIfNested(
         nested,
-        `${capture(value[0])}.value?.endsWith(${capture(value[1])})`
+        `${capture(value[0])}.value?.endsWith(${capture(value[1])})`,
       );
     case "contains":
       return wrapIfNested(
         nested,
-        `${capture(value[0])}.value?.indexOf(${capture(value[1])}) > -1`
+        `${capture(value[0])}.value?.indexOf(${capture(value[1])}) > -1`,
       );
     case "not_contains":
       return wrapIfNested(
         nested,
         `!${capture(value[0])}.value || ${capture(
-          value[0]
-        )}.value?.indexOf(${capture(value[1])}) == -1`
+          value[0],
+        )}.value?.indexOf(${capture(value[1])}) == -1`,
       );
     case "in":
       const code = capture(value[0]);
       if (code == "survey_lang") {
         return `[${value[1].map(
-          (el) => '"' + el + '"'
+          (el) => '"' + el + '"',
         )}].indexOf(Survey.lang) !== -1`;
       } else if (getComponentType(code) == "nps") {
         return `[${value[1].map((el) => +el)}].indexOf(${code}.value) !== -1`;
@@ -1331,18 +1290,18 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
         getQuestionType(code) == "mcq_array"
       ) {
         return `[${value[1].map(
-          (el) => "'" + el + "'"
+          (el) => "'" + el + "'",
         )}].filter((el) => ${code}.value?.indexOf(el) > -1).length > 0`;
       } else {
         return `[${value[1].map(
-          (el) => '"' + el + '"'
+          (el) => '"' + el + '"',
         )}].indexOf(${code}.value) !== -1`;
       }
     case "not_in":
       const code1 = capture(value[0]);
       if (code1 == "survey_lang") {
         return `[${value[1].map(
-          (el) => '"' + el + '"'
+          (el) => '"' + el + '"',
         )}].indexOf(Survey.lang) == -1`;
       } else if (getComponentType(code1) == "nps") {
         return `[${value[1].map((el) => +el)}].indexOf(${code1}.value) == -1`;
@@ -1350,11 +1309,11 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
         ["mcq", "image_mcq", "icon_mcq"].indexOf(getComponentType(code1)) > -1
       ) {
         return `[${value[1].map(
-          (el) => "'" + el + "'"
+          (el) => "'" + el + "'",
         )}].filter((el) => ${code}.value?.indexOf(el) > -1).length == 0`;
       } else {
         return `[${value[1].map(
-          (el) => '"' + el + '"'
+          (el) => '"' + el + '"',
         )}].indexOf(${code1}.value) == -1`;
       }
 
@@ -1370,7 +1329,7 @@ const wrapIfNested = (nested, text) => {
 const capture = (value, type) => {
   if (type == "time") {
     return `QlarrScripts.sqlDateTimeToDate(\"1970-01-01 ${integerToTime(
-      value
+      value,
     )}\")`;
   } else if (
     typeof value === "object" &&
@@ -1559,7 +1518,7 @@ export const processValidation = (state, code, rule, modifyEquation = true) => {
   component.validation[rule] = cleanupValidationData(
     component,
     rule,
-    component.validation[rule]
+    component.validation[rule],
   );
   // we have this special situation that the SCQ array validation is copied to its children
   // This is specifically important when an SCQ array is implemented at SCQ in smaller screens
@@ -1571,7 +1530,9 @@ export const processValidation = (state, code, rule, modifyEquation = true) => {
     rule == "validation_required"
   ) {
     component.children
-      .filter((child) => child.type == "row" || component.type == "multiple_text")
+      .filter(
+        (child) => child.type == "row" || component.type == "multiple_text",
+      )
       .forEach((row) => {
         const child = state[row.qualifiedCode];
         if (!child.validation) {
