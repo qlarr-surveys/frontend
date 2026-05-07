@@ -998,20 +998,21 @@ const cleanupFormatInstructions = (componentState) => {
       changeInstruction(componentState, instruction),
     );
   }
-
-  Object.keys(componentState.content).forEach((lang) => {
-    Object.keys(componentState.content[lang]).forEach((key) => {
-      const referenceInstructions = buildFormatInstruction(
-        componentState.content[lang][key],
-        key,
-        lang,
-        ["content", lang, key],
-      );
-      referenceInstructions?.forEach((instruction) =>
-        changeInstruction(componentState, instruction),
-      );
+  if (componentState.content) {
+    Object.keys(componentState.content).forEach((lang) => {
+      Object.keys(componentState.content[lang]).forEach((key) => {
+        const referenceInstructions = buildFormatInstruction(
+          componentState.content[lang][key],
+          key,
+          lang,
+          ["content", lang, key],
+        );
+        referenceInstructions?.forEach((instruction) =>
+          changeInstruction(componentState, instruction),
+        );
+      });
     });
-  });
+  }
 };
 
 // Clean up skip_logic rules that point to a deleted destination
