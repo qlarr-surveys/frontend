@@ -68,8 +68,8 @@ function Survey() {
             className={styles.surveyLogoWrapper}
             style={{
               justifyContent: ALIGNMENT_TO_FLEX[logoAlignment] || "center",
-              marginTop: `${logoSpacing}px`,
-              marginBottom: `${logoSpacing / 2}px`,
+              marginTop: `${logoSpacing / 2}px`,
+              marginBottom: `calc(2rem + ${logoSpacing / 2}px)`,
             }}
           >
             <img

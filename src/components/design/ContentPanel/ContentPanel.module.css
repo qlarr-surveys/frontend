@@ -144,7 +144,7 @@
   cursor: pointer;
   max-width: min(800px, calc(100% - 32px));
   min-width: 350px;
-  margin: 2rem auto 1rem;
+  margin: 2rem auto;
   padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(22, 32, 91, 0.08);
