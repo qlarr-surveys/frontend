@@ -29,7 +29,7 @@ function Survey() {
         id={FORM_ID}
         onSubmit={(e) => e.preventDefault()}
         style={{
-          marginTop: "4rem",
+          paddingTop: "2rem",
           marginRight: "6px",
           marginLeft: "6px"
         }}

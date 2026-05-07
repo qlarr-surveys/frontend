@@ -14,7 +14,7 @@
 
 .surveyLogo {
   display: block;
-  margin: 2rem auto 6rem;
+  margin: 0 auto 1rem;
   max-height: 240px;
   max-width: 240px;
   object-fit: contain;

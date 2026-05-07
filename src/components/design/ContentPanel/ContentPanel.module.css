@@ -19,7 +19,7 @@
   max-width: min(800px, calc(100% - 32px));
   min-width: 350px;
   margin: 0 auto;
-  padding: 16px 0 4px;
+  padding: 0 0 4px;
   padding-inline-start: 4px;
   font-size: 13px;
   font-weight: 600;
@@ -41,8 +41,7 @@
 .logoHeader {
   max-width: min(800px, calc(100% - 32px));
   min-width: 350px;
-  margin: 16px auto 8px;
-  margin-top: 6rem;
+  margin: 2rem auto 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,7 +73,7 @@
   background-color: #f4f4f6;
 }
 
-.logoDropZone {
+.logoPlaceholder {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,89 +82,49 @@
   cursor: pointer;
   max-width: min(800px, calc(100% - 32px));
   min-width: 350px;
-  min-height: 120px;
-  margin: 16px auto 8px;
-  margin-top: 6rem;
-  padding: 16px;
-  border-radius: 8px;
-  background-color: transparent;
-  transition: background-color 200ms;
-}
-.logoDropZone:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  margin: 2rem auto 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(22, 32, 91, 0.08);
 }
 
-.logoDropZoneDisabled.logoDropZoneDisabled {
+.logoPlaceholderDisabled.logoPlaceholderDisabled {
   cursor: default;
-  opacity: 0.5;
-}
-.logoDropZoneDisabled.logoDropZoneDisabled:hover {
-  background-color: transparent;
-}
-.logoDropZoneDisabled .logoDropIcon {
-  width: 64px;
-  height: 64px;
-}
-
-.logoDropZoneDragOver.logoDropZoneDragOver {
-  background-color: rgba(22, 32, 91, 0.06);
-}
-.logoDropZoneDragOver .logoDropIcon,
-.logoDropZoneDragOver .logoDropText,
-.logoDropZoneDragOver .logoDropHint {
-  color: #16205b;
 }
 
 .logoUploading {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
   justify-content: center;
   gap: 10px;
-  width: min(480px, 80%);
 }
 
-.logoProgressBar.logoProgressBar {
-  height: 6px;
-  border-radius: 3px;
-  background-color: rgba(22, 32, 91, 0.12);
-}
-.logoProgressBar.logoProgressBar :global(.MuiLinearProgress-bar) {
-  background-color: #16205b;
-}
-
-.logoDropIcon {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-}
-
-.logoDropText {
+.logoPlaceholderText {
   font-family: Rubik, sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #16205b;
   text-align: center;
 }
 
-.logoDropHint {
+.logoPlaceholderHint {
   font-family: Rubik, sans-serif;
   font-size: 12px;
   font-weight: 400;
-  color: #3d4775;
   text-align: center;
   margin-top: -4px;
+  opacity: 0.75;
 }
 
-.logoDropNote {
+.logoPlaceholderNote {
   font-family: Rubik, sans-serif;
   font-size: 11px;
   font-style: italic;
   font-weight: 400;
-  color: #6b73a0;
   text-align: center;
   margin-top: 6px;
   max-width: 480px;
+  opacity: 0.6;
 }
 
 .contentPanel {

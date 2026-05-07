@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, css, IconButton, LinearProgress } from "@mui/material";
-import addImageIcon from "~/assets/icons/add-image.svg";
+import { Box, css, CircularProgress, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
@@ -108,19 +108,13 @@ function ContentPanel({ designMode }, ref) {
   const skipScroll = useSelector((state) => state.designState.skipScroll);
   const dispatch = useDispatch();
   const designService = useService("design");
-  const [uploadProgress, setUploadProgress] = useState(null);
-  const [isDragOver, setIsDragOver] = useState(false);
-  const dragCounterRef = useRef(0);
+  const [isUploading, setIsUploading] = useState(false);
 
   const startLogoUpload = (file) => {
     if (!file || !file.type?.startsWith("image/")) return;
-    setUploadProgress(0);
+    setIsUploading(true);
     designService
-      .uploadResource(file, null, (event) => {
-        if (!event.total) return;
-        const percent = Math.round((event.loaded / event.total) * 100);
-        setUploadProgress(percent);
-      })
+      .uploadResource(file)
       .then((response) => {
         dispatch(
           changeResources({
@@ -134,7 +128,7 @@ function ContentPanel({ designMode }, ref) {
         console.error(err);
       })
       .finally(() => {
-        setUploadProgress(null);
+        setIsUploading(false);
       });
   };
 
@@ -152,55 +146,18 @@ function ContentPanel({ designMode }, ref) {
     );
   };
 
-  const handleDragEnter = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    dragCounterRef.current += 1;
-    if (e.dataTransfer?.types?.includes("Files")) {
-      setIsDragOver(true);
-    }
-  };
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    dragCounterRef.current = Math.max(0, dragCounterRef.current - 1);
-    if (dragCounterRef.current === 0) setIsDragOver(false);
-  };
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    dragCounterRef.current = 0;
-    setIsDragOver(false);
-    const file = e.dataTransfer?.files?.[0];
-    if (file) startLogoUpload(file);
-  };
-
-  const canEditLogo =
-    designMode === DESIGN_SURVEY_MODE.DESIGN ||
-    designMode === DESIGN_SURVEY_MODE.THEME;
-  const isUploading = uploadProgress !== null;
+  const canEditLogo = designMode === DESIGN_SURVEY_MODE.DESIGN;
 
   const virtuosoContext = useMemo(
     () => ({
       logoImage,
       canEditLogo,
-      isDragOver,
       isUploading,
-      uploadProgress,
       handleLogoFileInput,
       handleLogoReset,
-      handleDragEnter,
-      handleDragOver,
-      handleDragLeave,
-      handleDrop,
       t,
     }),
-    // handlers are stable enough — only re-emit context when visible state changes
-    [logoImage, canEditLogo, isDragOver, isUploading, uploadProgress, t]
+    [logoImage, canEditLogo, isUploading, t]
   );
 
   const virtuosoComponents = useMemo(() => ({ Header: LogoHeader }), []);
@@ -331,17 +288,15 @@ function LogoHeader({ context }) {
   const {
     logoImage,
     canEditLogo,
-    isDragOver,
     isUploading,
-    uploadProgress,
     handleLogoFileInput,
     handleLogoReset,
-    handleDragEnter,
-    handleDragOver,
-    handleDragLeave,
-    handleDrop,
     t,
   } = context;
+  const theme = useTheme();
+  const textColor = theme.textStyles?.text?.color || "#16205b";
+  const cardStyle = { backgroundColor: theme.palette.background.paper };
+  const textStyle = { color: textColor };
 
   if (logoImage && !isUploading) {
     return (
@@ -366,44 +321,43 @@ function LogoHeader({ context }) {
       </div>
     );
   }
+
+  const placeholderInner = (
+    <>
+      <ImageOutlinedIcon sx={{ fontSize: 36, color: textColor }} />
+      <span className={styles.logoPlaceholderText} style={textStyle}>
+        {t("upload_logo")}
+      </span>
+      <span className={styles.logoPlaceholderHint} style={textStyle}>
+        {t("upload_logo_hint")}
+      </span>
+      <span className={styles.logoPlaceholderNote} style={textStyle}>
+        {t("upload_logo_note")}
+      </span>
+    </>
+  );
+
   if (!canEditLogo) {
     return (
-      <div className={`${styles.logoDropZone} ${styles.logoDropZoneDisabled}`}>
-        <img src={addImageIcon} className={styles.logoDropIcon} alt="" />
+      <div
+        className={`${styles.logoPlaceholder} ${styles.logoPlaceholderDisabled}`}
+        style={cardStyle}
+      >
+        {placeholderInner}
       </div>
     );
   }
-  const dropZoneClass = `${styles.logoDropZone}${
-    isDragOver ? " " + styles.logoDropZoneDragOver : ""
-  }`;
   return (
-    <label
-      className={dropZoneClass}
-      onDragEnter={handleDragEnter}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-    >
+    <label className={styles.logoPlaceholder} style={cardStyle}>
       {isUploading ? (
         <div className={styles.logoUploading}>
-          <span className={styles.logoDropText}>
-            {t("uploading_logo")} {uploadProgress}%
+          <CircularProgress size={36} sx={{ color: textColor }} />
+          <span className={styles.logoPlaceholderText} style={textStyle}>
+            {t("uploading_logo")}
           </span>
-          <LinearProgress
-            variant="determinate"
-            value={uploadProgress}
-            className={styles.logoProgressBar}
-          />
         </div>
       ) : (
-        <>
-          <img src={addImageIcon} className={styles.logoDropIcon} alt="" />
-          <span className={styles.logoDropText}>
-            {isDragOver ? t("drop_logo_here") : t("upload_logo")}
-          </span>
-          <span className={styles.logoDropHint}>{t("upload_logo_hint")}</span>
-          <span className={styles.logoDropNote}>{t("upload_logo_note")}</span>
-        </>
+        placeholderInner
       )}
       <input
         hidden
