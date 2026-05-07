@@ -39,6 +39,8 @@ import CustomCSS from "../CustomCss";
 import ConvertQuestionType from "../ConvertQuestionType";
 import LogoSetup from "../LogoSetup";
 
+const FULL_BLEED_SETUP_RULES = new Set(["logo_setup"]);
+
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
 
@@ -534,11 +536,15 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
     return (
       <Box>
         {rules?.flatMap((rule) =>
-          rule.rules?.map((el) => (
-            <div className={styles.setupContainer} key={el}>
+          rule.rules?.map((el) =>
+            FULL_BLEED_SETUP_RULES.has(el) ? (
               <SetupComponent key={el} code={code} rule={el} t={t} />
-            </div>
-          )),
+            ) : (
+              <div className={styles.setupContainer} key={el}>
+                <SetupComponent key={el} code={code} rule={el} t={t} />
+              </div>
+            ),
+          ),
         )}
       </Box>
     );
@@ -548,11 +554,21 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
     <>
       {!showAdvanced && (
         <Box>
-          {normalRules.map((rule) => (
-            <div className={styles.setupContainer} key={rule}>
-              <SetupComponent code={code} rule={rule} t={t} isQuickOptions />
-            </div>
-          ))}
+          {normalRules.map((rule) =>
+            FULL_BLEED_SETUP_RULES.has(rule) ? (
+              <SetupComponent
+                key={rule}
+                code={code}
+                rule={rule}
+                t={t}
+                isQuickOptions
+              />
+            ) : (
+              <div className={styles.setupContainer} key={rule}>
+                <SetupComponent code={code} rule={rule} t={t} isQuickOptions />
+              </div>
+            ),
+          )}
         </Box>
       )}
 
@@ -608,13 +624,19 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
                   : "background.paper",
             }}
           >
-            {rules[selectedTab]?.rules?.map((el) => (
-              <div className={styles.setupContainer} key={el}>
-                <Box sx={rowSx(el)}>
+            {rules[selectedTab]?.rules?.map((el) =>
+              FULL_BLEED_SETUP_RULES.has(el) ? (
+                <Box sx={rowSx(el)} key={el}>
                   <SetupComponent key={el} code={code} rule={el} t={t} />
                 </Box>
-              </div>
-            ))}
+              ) : (
+                <div className={styles.setupContainer} key={el}>
+                  <Box sx={rowSx(el)}>
+                    <SetupComponent key={el} code={code} rule={el} t={t} />
+                  </Box>
+                </div>
+              ),
+            )}
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2em" }}>
