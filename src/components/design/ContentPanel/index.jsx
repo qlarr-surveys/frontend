@@ -2,8 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, css, CircularProgress, IconButton } from "@mui/material";
+import { Box, css, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import SettingsIcon from "@mui/icons-material/Settings";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
@@ -11,10 +12,27 @@ import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { GroupDropArea } from "~/components/design/DropArea/DropArea";
 import { Virtuoso } from "react-virtuoso";
 import useDragNearViewportEdge from "~/utils/useDragEdgeDetection";
-import { resetSetup, changeResources } from "~/state/design/designState";
+import {
+  resetSetup,
+  changeResources,
+  setup,
+} from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { buildResourceUrl } from "~/networking/common";
-import { useService } from "~/hooks/use-service";
+import { useLogoUpload } from "~/hooks/useLogoUpload";
+import {
+  logoSetup,
+  LOGO_ALIGNMENT_DEFAULT,
+  LOGO_SIZE_DEFAULT,
+  LOGO_SIZE_DIMENSIONS,
+  LOGO_SPACING_DEFAULT,
+} from "~/constants/design";
+
+const ALIGNMENT_TO_FLEX = {
+  left: "flex-start",
+  center: "center",
+  right: "flex-end",
+};
 
 function ContentPanel({ designMode }, ref) {
   const { i18n } = useTranslation(NAMESPACES.DESIGN_CORE);
@@ -40,6 +58,19 @@ function ContentPanel({ designMode }, ref) {
   const logoImage = useSelector(
     (state) => state.designState["Survey"]?.resources?.logoImage
   );
+  const logoAlignment = useSelector(
+    (state) =>
+      state.designState["Survey"]?.resources?.logoAlignment ||
+      LOGO_ALIGNMENT_DEFAULT
+  );
+  const logoSize = useSelector(
+    (state) =>
+      state.designState["Survey"]?.resources?.logoSize || LOGO_SIZE_DEFAULT
+  );
+  const logoSpacing = useSelector((state) => {
+    const val = state.designState["Survey"]?.resources?.logoSpacing;
+    return typeof val === "number" ? val : LOGO_SPACING_DEFAULT;
+  });
 
   const groupsEmpty = !groups.length;
 
@@ -107,36 +138,7 @@ function ContentPanel({ designMode }, ref) {
   );
   const skipScroll = useSelector((state) => state.designState.skipScroll);
   const dispatch = useDispatch();
-  const designService = useService("design");
-  const [isUploading, setIsUploading] = useState(false);
-
-  const startLogoUpload = (file) => {
-    if (!file || !file.type?.startsWith("image/")) return;
-    setIsUploading(true);
-    designService
-      .uploadResource(file)
-      .then((response) => {
-        dispatch(
-          changeResources({
-            code: "Survey",
-            key: "logoImage",
-            value: response.name,
-          })
-        );
-      })
-      .catch((err) => {
-        console.error(err);
-      })
-      .finally(() => {
-        setIsUploading(false);
-      });
-  };
-
-  const handleLogoFileInput = (e) => {
-    const file = e.target.files[0];
-    startLogoUpload(file);
-    e.target.value = "";
-  };
+  const { isUploading, handleFileInput: handleLogoFileInput } = useLogoUpload();
 
   const handleLogoReset = (e) => {
     e.preventDefault();
@@ -144,6 +146,13 @@ function ContentPanel({ designMode }, ref) {
     dispatch(
       changeResources({ code: "Survey", key: "logoImage", value: null })
     );
+    dispatch(resetSetup());
+  };
+
+  const handleLogoCustomize = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(setup(logoSetup));
   };
 
   const canEditLogo = designMode === DESIGN_SURVEY_MODE.DESIGN;
@@ -151,13 +160,25 @@ function ContentPanel({ designMode }, ref) {
   const virtuosoContext = useMemo(
     () => ({
       logoImage,
+      logoAlignment,
+      logoSize,
+      logoSpacing,
       canEditLogo,
       isUploading,
       handleLogoFileInput,
       handleLogoReset,
+      handleLogoCustomize,
       t,
     }),
-    [logoImage, canEditLogo, isUploading, t]
+    [
+      logoImage,
+      logoAlignment,
+      logoSize,
+      logoSpacing,
+      canEditLogo,
+      isUploading,
+      t,
+    ]
   );
 
   const virtuosoComponents = useMemo(() => ({ Header: LogoHeader }), []);
@@ -287,10 +308,14 @@ const ELEMENTS = {
 function LogoHeader({ context }) {
   const {
     logoImage,
+    logoAlignment,
+    logoSize,
+    logoSpacing,
     canEditLogo,
     isUploading,
     handleLogoFileInput,
     handleLogoReset,
+    handleLogoCustomize,
     t,
   } = context;
   const theme = useTheme();
@@ -298,24 +323,76 @@ function LogoHeader({ context }) {
   const cardStyle = { backgroundColor: theme.palette.background.paper };
   const textStyle = { color: textColor };
 
+  const logoHeaderStyle = {
+    justifyContent: ALIGNMENT_TO_FLEX[logoAlignment] || "center",
+    marginTop: `${logoSpacing}px`,
+    marginBottom: `${logoSpacing / 2}px`,
+  };
+  const logoSizePx =
+    LOGO_SIZE_DIMENSIONS[logoSize] || LOGO_SIZE_DIMENSIONS.medium;
+  const logoImgStyle = {
+    maxWidth: `${logoSizePx}px`,
+    maxHeight: `${logoSizePx}px`,
+  };
+
   if (logoImage && !isUploading) {
+    const frameClass = canEditLogo
+      ? `${styles.logoFrame} ${styles.logoFrameInteractive}`
+      : styles.logoFrame;
+    const toolbarStyle = {
+      backgroundColor: theme.palette.background.paper,
+    };
+    const toolbarButtonStyle = { color: textColor };
     return (
-      <div className={styles.logoHeader}>
-        <div className={styles.logoFrame}>
+      <div className={styles.logoHeader} style={logoHeaderStyle}>
+        <div
+          className={frameClass}
+          onClick={canEditLogo ? handleLogoCustomize : undefined}
+          role={canEditLogo ? "button" : undefined}
+          tabIndex={canEditLogo ? 0 : undefined}
+          onKeyDown={
+            canEditLogo
+              ? (e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleLogoCustomize(e);
+                  }
+                }
+              : undefined
+          }
+          aria-label={canEditLogo ? t("customize_logo") : undefined}
+        >
           <img
             className={styles.surveyLogo}
             src={buildResourceUrl(logoImage)}
             alt=""
+            style={logoImgStyle}
           />
           {canEditLogo && (
-            <IconButton
-              className={styles.logoRemove}
-              onClick={handleLogoReset}
-              size="small"
-              aria-label="remove logo"
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
+            <div className={styles.logoToolbar} style={toolbarStyle}>
+              <Tooltip title={t("customize_logo")} placement="top" arrow>
+                <IconButton
+                  className={styles.logoToolbarButton}
+                  onClick={handleLogoCustomize}
+                  size="small"
+                  aria-label={t("customize_logo")}
+                  style={toolbarButtonStyle}
+                >
+                  <SettingsIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={t("remove_logo")} placement="top" arrow>
+                <IconButton
+                  className={styles.logoToolbarButton}
+                  onClick={handleLogoReset}
+                  size="small"
+                  aria-label={t("remove_logo")}
+                  style={toolbarButtonStyle}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </div>
           )}
         </div>
       </div>

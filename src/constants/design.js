@@ -50,6 +50,20 @@ export const languageSetup = {
   code: "Survey",
   rules: [{ title: "", rules: ["language"] }],
 };
+export const logoSetup = {
+  code: "Survey",
+  rules: [{ title: "", key: "", rules: ["logo_setup"] }],
+};
+
+export const LOGO_ALIGNMENT_DEFAULT = "center";
+export const LOGO_SIZE_DEFAULT = "medium";
+export const LOGO_SPACING_DEFAULT = 48;
+
+export const LOGO_SIZE_DIMENSIONS = {
+  small: 120,
+  medium: 240,
+  large: 360,
+};
 
 export const setupOptions = (type) => {
   switch (type) {

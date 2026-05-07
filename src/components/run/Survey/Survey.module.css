@@ -12,11 +12,16 @@
   gap: 2rem;
 }
 
+.surveyLogoWrapper {
+  margin: auto;
+  max-width: 800px;
+  min-width: 300px;
+  display: flex;
+  align-items: center;
+}
+
 .surveyLogo {
   display: block;
-  margin: 0 auto 1rem;
-  max-height: 240px;
-  max-width: 240px;
   object-fit: contain;
 }
 

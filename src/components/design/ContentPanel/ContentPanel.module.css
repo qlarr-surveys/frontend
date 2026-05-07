@@ -32,16 +32,14 @@
 
 .surveyLogo {
   display: block;
-  margin: 0 auto;
-  max-height: 240px;
-  max-width: 240px;
   object-fit: contain;
 }
 
 .logoHeader {
   max-width: min(800px, calc(100% - 32px));
   min-width: 350px;
-  margin: 2rem auto 1rem;
+  margin: 0 auto 1rem;
+  padding-top: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,22 +53,86 @@
   border-radius: 8px;
 }
 
-.logoRemove.logoRemove {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  left: auto;
-  padding: 4px;
-  background-color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  z-index: 2;
-  transition: background-color 150ms;
+.logoFrameInteractive {
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 150ms ease;
 }
-.logoRemove.logoRemove svg {
+
+.logoFrameInteractive:hover,
+.logoFrameInteractive:focus-visible {
+  outline-color: rgba(22, 32, 91, 0.35);
+}
+
+.logoOverlay {
+  position: absolute;
+  inset: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(22, 32, 91, 0.55);
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.logoFrame:hover .logoOverlay {
+  opacity: 1;
+}
+
+.logoOverlayButton.logoOverlayButton {
+  text-transform: none;
+  font-weight: 500;
+  background-color: #ffffff;
+  color: #16205b;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+}
+
+.logoOverlayButton.logoOverlayButton:hover {
+  background-color: #f4f4f6;
+}
+
+.logoToolbar {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 150ms ease, transform 150ms ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.logoFrame:hover .logoToolbar,
+.logoFrame:focus-within .logoToolbar {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.logoToolbarButton.logoToolbarButton {
+  padding: 5px;
+  border-radius: 999px;
+  transition: background-color 120ms ease;
+}
+
+.logoToolbarButton.logoToolbarButton svg {
   font-size: 18px;
 }
-.logoRemove.logoRemove:hover {
-  background-color: #f4f4f6;
+
+.logoToolbarButton.logoToolbarButton:hover {
+  background-color: rgba(0, 0, 0, 0.06);
 }
 
 .logoPlaceholder {
