@@ -278,6 +278,7 @@
   "logo_spacing": "Abstand",
   "replace_logo": "Logo ersetzen",
   "remove_logo": "Logo entfernen",
+  "logo_text_placeholder": "Tagline hinzufügen (optional)",
   "theme_text": "Text",
   "to_group_end": "Zum Seitenende",
   "disqualify": "Disqualifizieren",

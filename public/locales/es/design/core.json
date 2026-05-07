@@ -312,6 +312,7 @@
   "logo_spacing": "Espaciado",
   "replace_logo": "Reemplazar logo",
   "remove_logo": "Quitar logo",
+  "logo_text_placeholder": "Añade un eslogan (opcional)",
   "upload_image": "Subir Imagen",
   "upload_video": "Subir Video",
   "uploading_autocomplete": "Subiendo archivo JSON de autocompletado",

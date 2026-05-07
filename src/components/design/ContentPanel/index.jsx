@@ -20,6 +20,7 @@ import {
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { buildResourceUrl } from "~/networking/common";
 import { useLogoUpload } from "~/hooks/useLogoUpload";
+import ContentEditor from "~/components/design/ContentEditor";
 import {
   logoSetup,
   LOGO_ALIGNMENT_DEFAULT,
@@ -156,6 +157,9 @@ function ContentPanel({ designMode }, ref) {
   };
 
   const canEditLogo = designMode === DESIGN_SURVEY_MODE.DESIGN;
+  const canEditLogoText =
+    designMode === DESIGN_SURVEY_MODE.DESIGN ||
+    designMode === DESIGN_SURVEY_MODE.LANGUAGES;
 
   const virtuosoContext = useMemo(
     () => ({
@@ -164,6 +168,7 @@ function ContentPanel({ designMode }, ref) {
       logoSize,
       logoSpacing,
       canEditLogo,
+      canEditLogoText,
       isUploading,
       handleLogoFileInput,
       handleLogoReset,
@@ -176,6 +181,7 @@ function ContentPanel({ designMode }, ref) {
       logoSize,
       logoSpacing,
       canEditLogo,
+      canEditLogoText,
       isUploading,
       t,
     ]
@@ -312,6 +318,7 @@ function LogoHeader({ context }) {
     logoSize,
     logoSpacing,
     canEditLogo,
+    canEditLogoText,
     isUploading,
     handleLogoFileInput,
     handleLogoReset,
@@ -324,7 +331,8 @@ function LogoHeader({ context }) {
   const textStyle = { color: textColor };
 
   const logoHeaderStyle = {
-    justifyContent: ALIGNMENT_TO_FLEX[logoAlignment] || "center",
+    flexDirection: "column",
+    alignItems: ALIGNMENT_TO_FLEX[logoAlignment] || "center",
     marginTop: `${logoSpacing}px`,
     marginBottom: `${logoSpacing / 2}px`,
   };
@@ -333,6 +341,12 @@ function LogoHeader({ context }) {
   const logoImgStyle = {
     maxWidth: `${logoSizePx}px`,
     maxHeight: `${logoSizePx}px`,
+  };
+  const logoTextStyle = {
+    fontSize: `${theme.textStyles?.text?.size || 14}px`,
+    color: textColor,
+    fontFamily: theme.textStyles?.text?.font,
+    textAlign: logoAlignment || "center",
   };
 
   if (logoImage && !isUploading) {
@@ -394,6 +408,15 @@ function LogoHeader({ context }) {
               </Tooltip>
             </div>
           )}
+        </div>
+        <div className={styles.logoTextBlock} style={logoTextStyle}>
+          <ContentEditor
+            code="Survey"
+            contentKey="logoText"
+            extended={true}
+            editable={canEditLogoText}
+            placeholder={t("logo_text_placeholder")}
+          />
         </div>
       </div>
     );

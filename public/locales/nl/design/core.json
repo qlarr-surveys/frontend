@@ -312,6 +312,7 @@
   "logo_spacing": "Tussenruimte",
   "replace_logo": "Logo vervangen",
   "remove_logo": "Logo verwijderen",
+  "logo_text_placeholder": "Voeg een tagline toe (optioneel)",
   "upload_image": "Afbeelding Uploaden",
   "upload_video": "Video Uploaden",
   "uploading_autocomplete": "Autocomplete JSON-bestand wordt geüpload",

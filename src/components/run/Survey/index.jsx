@@ -1,7 +1,6 @@
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useTheme } from "@mui/material";
 import { FORM_ID } from "~/constants/run";
 import Group from "~/components/Group";
 import Navigation from "~/components/run/Navigation";
@@ -10,6 +9,7 @@ import { shallowEqual, useSelector } from "react-redux";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { isTouchDevice } from "~/utils/isTouchDevice";
 import { buildResourceUrl } from "~/networking/common";
+import Content from "~/components/run/Content";
 import {
   LOGO_ALIGNMENT_DEFAULT,
   LOGO_SIZE_DEFAULT,
@@ -24,8 +24,6 @@ const ALIGNMENT_TO_FLEX = {
 };
 
 function Survey() {
-  const theme = useTheme();
-
   const navigationIndex = useSelector((state) => {
     return state.runState.data?.navigationIndex;
   }, shallowEqual);
@@ -48,6 +46,9 @@ function Survey() {
     const val = state.runState.data?.survey?.resources?.logoSpacing;
     return typeof val === "number" ? val : LOGO_SPACING_DEFAULT;
   });
+  const logoText = useSelector(
+    (state) => state.runState.data?.survey?.content?.logoText
+  );
 
   const logoSizePx =
     LOGO_SIZE_DIMENSIONS[logoSize] || LOGO_SIZE_DIMENSIONS.medium;
@@ -67,7 +68,8 @@ function Survey() {
           <div
             className={styles.surveyLogoWrapper}
             style={{
-              justifyContent: ALIGNMENT_TO_FLEX[logoAlignment] || "center",
+              flexDirection: "column",
+              alignItems: ALIGNMENT_TO_FLEX[logoAlignment] || "center",
               marginTop: `${logoSpacing}px`,
               marginBottom: `${logoSpacing / 2}px`,
             }}
@@ -81,6 +83,18 @@ function Survey() {
                 maxHeight: `${logoSizePx}px`,
               }}
             />
+            {logoText && (
+              <div
+                className={styles.surveyLogoText}
+                style={{ textAlign: logoAlignment || "center" }}
+              >
+                <Content
+                  elementCode="Survey"
+                  name="logoText"
+                  content={logoText}
+                />
+              </div>
+            )}
           </div>
         )}
         <div className={styles.surveyGroups}>
