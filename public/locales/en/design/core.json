@@ -283,6 +283,7 @@
   "logo_spacing": "Spacing",
   "replace_logo": "Replace logo",
   "remove_logo": "Remove logo",
+  "logo_text_placeholder": "Add a tagline (optional)",
   "theme_text": "Text",
   "to_group_end": "To Page End",
   "disqualify": "Disqualify",

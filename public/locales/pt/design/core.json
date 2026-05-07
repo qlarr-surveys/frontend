@@ -312,6 +312,7 @@
   "logo_spacing": "Espaçamento",
   "replace_logo": "Substituir logótipo",
   "remove_logo": "Remover logótipo",
+  "logo_text_placeholder": "Adicionar um lema (opcional)",
   "upload_image": "Enviar Imagem",
   "upload_video": "Enviar Vídeo",
   "uploading_autocomplete": "Enviando arquivo JSON de autocompletar",

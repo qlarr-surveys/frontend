@@ -41,8 +41,13 @@
   margin: 0 auto 1rem;
   padding-top: 2rem;
   display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+.logoTextBlock {
+  width: 100%;
+  max-width: min(800px, calc(100% - 32px));
+  margin-top: 12px;
+  text-align: inherit;
 }
 
 .logoFrame {

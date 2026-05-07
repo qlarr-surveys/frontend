@@ -17,12 +17,17 @@
   max-width: 800px;
   min-width: 300px;
   display: flex;
-  align-items: center;
 }
 
 .surveyLogo {
   display: block;
   object-fit: contain;
+}
+
+.surveyLogoText {
+  width: 100%;
+  max-width: min(800px, calc(100% - 32px));
+  margin-top: 12px;
 }
 
 .cardImage {
