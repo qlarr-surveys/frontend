@@ -1,18 +1,60 @@
 <!-- markdownlint-disable line-length table-column-style -->
 <!-- cspell: words qlarr namecheap vcpu usermod newgrp STARTTLS psql -->
-# Qlarr Deployment Guide
+# Qlarr Deployment
 
-## Overview
+Qlarr can be deployed locally for development and testing, or on a cloud server for production use. Both options use Docker Compose to run the full stack (frontend, backend, and PostgreSQL).
 
-This guide covers deploying Qlarr (frontend + backend + PostgreSQL) on a cloud server with a custom domain name and automatic TLS via Caddy.
+- **[Local Deployment](#local-development)** -- Run Qlarr on your machine with a single command. Includes Mailhog for email testing and pre-configured default credentials.
+- **[Cloud Deployment](#production-deployment)** -- Deploy to a cloud server (AWS, DigitalOcean, etc.) with a custom domain and automatic TLS via Caddy.
 
-## Production Deployment (EC2 / DigitalOcean)
+---
+
+## Local Development
+
+### Prerequisites
+
+- Docker and Docker Compose installed
+
+### Start
+
+```bash
+cd deploy
+docker compose -f docker-compose.local.yml up -d
+```
+
+| Service | URL |
+|---------|-----|
+| Frontend | http://localhost:3000 |
+| Backend API | http://localhost:8080 |
+| Mailhog UI | http://localhost:8025 |
+
+### Default Login
+
+- **Email**: `admin@admin.admin`
+- **Password**: `admin`
+
+### Stop
+
+```bash
+docker compose -f docker-compose.local.yml down
+```
+
+### Reset Database
+
+```bash
+docker compose -f docker-compose.local.yml down -v
+docker compose -f docker-compose.local.yml up -d
+```
+
+---
+
+## Production Deployment
 
 ### Prerequisites
 
 - **Domain name** registered (e.g., from GoDaddy, Namecheap, Cloudflare)
 - **Server**: AWS EC2 (t3.small+) or DigitalOcean droplet (basic-2vcpu)
-- **DNS**: A record pointing to your server's public IP
+- **DNS**: A records pointing to your server's public IP for both frontend and API subdomains
 
 ### Step 1: Provision Server
 
@@ -54,7 +96,7 @@ sudo usermod -aG docker ubuntu
 newgrp docker
 ```
 
-### Step 5: Ensure Docker compose is installed
+### Step 5: Ensure Docker Compose is installed
 
 ```bash
 docker compose version
@@ -126,7 +168,7 @@ docker compose ps
 - First run: Caddy provisions TLS certificate (may take ~30 seconds)
 - Access `https://your-domain.com`
 
-## Environment Variables
+### Environment Variables
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
@@ -144,6 +186,8 @@ docker compose ps
 | `MAIL_PASSWORD` | No* | SMTP password | `password` |
 
 *Mail variables are optional but required if sending emails.
+
+---
 
 ## Maintenance
 
@@ -209,56 +253,6 @@ sudo lsof -i :443
 
 ```bash
 docker exec qlarr-caddy caddy list-certificates
-```
-
-## Single Container (Frontend Only)
-
-If you already have a backend running elsewhere, you can run just the frontend:
-
-```bash
-docker run -p 80:80 -p 443:443 -p 443:443/udp \
-  -e CADDY_FRONTEND_HOSTNAME="app.example.com" \
-  -e VITE_PROTOCOL="https" \
-  -e VITE_FRONT_END_HOST="app.example.com" \
-  -e VITE_BE_URL="http://your-backend.com:8080" \
-  -v caddy-config:/config \
-  -v caddy-data:/data \
-  public.ecr.aws/qlarr/frontend:ee4df20d551b761b169449864382c9abe9aec686
-```
-
-## Local Development
-
-### Prerequisites
-
-- Docker and Docker Compose installed
-
-### Start
-
-```bash
-cd deploy
-docker compose -f docker-compose.local.yml up -d
-```
-
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8080
-- **Mailhog UI**: http://localhost:8025
-
-### Default Login
-
-- **Email**: `admin@admin.admin`
-- **Password**: `admin`
-
-### Stop
-
-```bash
-docker compose -f docker-compose.local.yml down
-```
-
-### Reset Database
-
-```bash
-docker compose -f docker-compose.local.yml down -v
-docker compose -f docker-compose.local.yml up -d
 ```
 
 ## Security Recommendations

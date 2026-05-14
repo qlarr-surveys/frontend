@@ -3,7 +3,7 @@
 Qlarr Surveys is a framework to create and run customizable, scientific & offline-first **[surveys as code](https://github.com/qlarr-surveys/survey-engine)** on all platforms. Surveys are defined using JSON to represent ui agnostic survey components and [Javascript instructions](https://github.com/qlarr-surveys/survey-engine-script) to represent complex survey logic.
 
 
-This is the backend application for qlarr, built using React to
+This is the frontend application for qlarr, built using React to
 1. Provide a WYSIWYG editor to create and edit surveys, in Qlarr [Survey Engnine](https://github.com/qlarr-surveys/survey-engine) DSL
 2. Render surveys that are executed by Qlarr Survey Engnine (used both in Web and [Android](https://github.com/qlarr-surveys/android) Apps)
 3. GUI for Survey management and administrive functionalities exposed by our open source backend, like login, adding using, cloning surveys....etc.
@@ -45,6 +45,10 @@ To run this locally, follow these steps:
    ```
 
 
+
+## Deployment
+
+See the [deployment guide](deploy/README.md) for instructions on running Qlarr locally with Docker or deploying to a cloud server.
 
 ## Contributing
 We welcome contributors, the easiest way to contribute to this project is to join our [Discored server](https://discord.gg/3exUNKwsET) and talk to us directly
