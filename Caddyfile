@@ -15,7 +15,7 @@
 
 		# `script-src` really shouldn't have any `unsafe-*` directives!!
 		Content-Security-Policy "
-			default-src 'self';
+			default-src 'self' https://{$CADDY_API_HOSTNAME};
 			script-src 'self' 'unsafe-inline' 'unsafe-eval';
 			style-src 'self' 'unsafe-inline'
 		"

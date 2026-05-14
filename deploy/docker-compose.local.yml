@@ -11,17 +11,24 @@ services:
     container_name: 'qlarr-caddy'
     image: public.ecr.aws/qlarr/frontend:d4aaf542b5eebe10620b2918c34358d43fb7fc16
     environment:
-      CADDY_FRONTEND_HOSTNAME: "${CADDY_FRONTEND_HOSTNAME}"
-      CADDY_API_HOSTNAME: "${CADDY_API_HOSTNAME}"
       VITE_PROTOCOL: "http"
-      VITE_FRONT_END_HOST: "${CADDY_FRONTEND_HOSTNAME}"
-      VITE_BE_URL: "https://${CADDY_API_HOSTNAME}"
+      VITE_FRONT_END_HOST: "localhost:3000"
+      VITE_BE_URL: "http://localhost:8080"
     depends_on:
       - backend-app
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
+      - "3000:3000"
+    volumes:
+      - ./Caddyfile.local:/etc/caddy/Caddyfile:ro
+    networks:
+      - docker-local_net
+
+  mailhog:
+    container_name: 'qlarr-mailhog'
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
     networks:
       - docker-local_net
 
@@ -39,19 +46,19 @@ services:
     volumes:
       - survey-files:/var/qlarr/resources
     environment:
-      JWT_SECRET: "${JWT_SECRET}"
-      MAIL_HOST: "${MAIL_HOST}"
-      MAIL_PORT: "${MAIL_PORT}"
-      MAIL_SMTP_SSL: "${MAIL_SMTP_SSL}"
-      MAIL_SMTP_STARTTLS: "${MAIL_SMTP_STARTTLS}"
-      MAIL_USERNAME: "${MAIL_USERNAME}"
-      MAIL_PASSWORD: "${MAIL_PASSWORD}"
+      JWT_SECRET: "bG9jYWwtZGV2LXNlY3JldC1jaGFuZ2UtbWUtbmVlZHMtdG8tYmUtbG9uZy1lbm91Z2g="
+      MAIL_HOST: "mailhog"
+      MAIL_PORT: "1025"
+      MAIL_SMTP_SSL: "false"
+      MAIL_SMTP_STARTTLS: "false"
+      MAIL_USERNAME: "noreply@qlarr.local"
+      MAIL_PASSWORD: ""
       SPRING_PROFILES_ACTIVE: "docker"
       DB_URL: "jdbc:postgresql://postgres-db:5432/qlarr"
-      DB_USER: "${POSTGRES_USER}"
+      DB_USER: "qlarr"
       FILE_SYSTEM_ROOT_FOLDER: "/var/qlarr/resources"
-      DB_PASSWORD: "${POSTGRES_PASSWORD}"
-      FRONTEND_URL: "https://${CADDY_FRONTEND_HOSTNAME}"
+      DB_PASSWORD: "qlarr"
+      FRONTEND_URL: "http://localhost:3000"
 
   postgres-db:
     container_name: 'postgres-db'
@@ -59,15 +66,15 @@ services:
     networks:
       - docker-local_net
     environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRES_DB: "${POSTGRES_DB:-qlarr}"
+      POSTGRES_USER: "qlarr"
+      POSTGRES_PASSWORD: "qlarr"
+      POSTGRES_DB: "qlarr"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     restart: unless-stopped
     volumes:
       - db:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U qlarr"]
       interval: 10s
       timeout: 5s
       retries: 5

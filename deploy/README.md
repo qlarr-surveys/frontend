@@ -226,6 +226,41 @@ docker run -p 80:80 -p 443:443 -p 443:443/udp \
   public.ecr.aws/qlarr/frontend:ee4df20d551b761b169449864382c9abe9aec686
 ```
 
+## Local Development
+
+### Prerequisites
+
+- Docker and Docker Compose installed
+
+### Start
+
+```bash
+cd deploy
+docker compose -f docker-compose.local.yml up -d
+```
+
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8080
+- **Mailhog UI**: http://localhost:8025
+
+### Default Login
+
+- **Email**: `admin@admin.admin`
+- **Password**: `admin`
+
+### Stop
+
+```bash
+docker compose -f docker-compose.local.yml down
+```
+
+### Reset Database
+
+```bash
+docker compose -f docker-compose.local.yml down -v
+docker compose -f docker-compose.local.yml up -d
+```
+
 ## Security Recommendations
 
 1. **Enable automatic security updates**: `sudo apt install unattended-upgrades`
