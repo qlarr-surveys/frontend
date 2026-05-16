@@ -232,8 +232,8 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
           <DeleteModal
             open={deleteModalOpen}
             description={t(isGroup ? "delete_page" : "delete_question")}
-            handleClose={() => setDeleteModalOpen(false)}
-            handleDelete={() => {
+            onClose={() => setDeleteModalOpen(false)}
+            onConfirm={() => {
               setDeleteModalOpen(false);
               onDelete();
             }}
