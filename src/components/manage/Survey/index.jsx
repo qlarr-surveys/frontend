@@ -187,6 +187,7 @@ const Survey = ({
 
   // Cache role checks
   const isAdmin = isSurveyAdmin();
+  const isDefaultLogo = !survey.image;
 
   const handleChangeTitle = (newTitle, revertTitle) => {
     dispatch(setLoading(true));
@@ -303,19 +304,35 @@ const Survey = ({
                   />
                   <Box className={styles.imageOverlay} />
 
-                  {isAdmin && (
-                    <Box
-                      className={styles.photoIcon}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        document
-                          .getElementById(`imageInput-${survey.id}`)
-                          .click();
-                      }}
-                    >
-                      <ImageIcon className={styles.cameraIcon} />
-                    </Box>
-                  )}
+                  {isAdmin &&
+                    (isDefaultLogo ? (
+                      <Box
+                        className={`${styles.photoIcon} ${styles.addLogoCta}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          document
+                            .getElementById(`imageInput-${survey.id}`)
+                            .click();
+                        }}
+                      >
+                        <ImageIcon className={styles.addLogoIcon} />
+                        <span className={styles.addLogoLabel}>
+                          {t("edit_survey.add_logo")}
+                        </span>
+                      </Box>
+                    ) : (
+                      <Box
+                        className={styles.photoIcon}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          document
+                            .getElementById(`imageInput-${survey.id}`)
+                            .click();
+                        }}
+                      >
+                        <ImageIcon className={styles.cameraIcon} />
+                      </Box>
+                    ))}
                 </Box>
                 <input
                   id={`imageInput-${survey.id}`}
