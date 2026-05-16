@@ -17,7 +17,7 @@ import {
   TableSortLabel,
 } from "@mui/material";
 import styles from "./UsersTable.module.css";
-import { UserDelete } from "../UserDelete";
+import DeleteModal from "~/components/common/DeleteModal";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { useDispatch } from "react-redux";
@@ -287,11 +287,13 @@ export const UsersTable = () => {
       </TableContainer>
 
       {Boolean(userToDelete) && (
-        <UserDelete
-          deleteUser={deleteUser}
-          name={userToDelete.firstName + " " + userToDelete.lastName}
+        <DeleteModal
           open={Boolean(userToDelete)}
           onClose={onCloseModal}
+          onConfirm={deleteUser}
+          description={t("users_manage.delete_title", {
+            name: userToDelete.firstName + " " + userToDelete.lastName,
+          })}
           isLoading={deleteLoading}
         />
       )}
