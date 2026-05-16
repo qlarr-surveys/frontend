@@ -458,29 +458,28 @@ function Theming({ t }) {
         justifyContent="space-between"
         width="100%"
         flexDirection="row"
+        gap={1}
       >
         <Typography variant="subtitle2" alignSelf="center">
           {t("upload_background")}
         </Typography>
-        <Stack flexDirection="row" alignItems="center" gap={1}>
-          {backgroundImage && (
-            <IconButton
-              className={styles.resetButton}
-              onClick={handleBackgroundReset}
-            >
-              <Close />
-            </IconButton>
-          )}
-          <Button component="label" className={styles.chooseImage}>
-            <ImageIcon />
-            <input
-              hidden
-              accept="image/*"
-              type="file"
-              onChange={handleBackgroundUpload}
-            />
-          </Button>
-        </Stack>
+        <Button component="label" className={styles.chooseImage}>
+          <ImageIcon />
+          <input
+            hidden
+            accept="image/*"
+            type="file"
+            onChange={handleBackgroundUpload}
+          />
+        </Button>
+        {backgroundImage && (
+          <IconButton
+            className={styles.resetButton}
+            onClick={handleBackgroundReset}
+          >
+            <Close />
+          </IconButton>
+        )}
       </Stack>
     </div>
   );
