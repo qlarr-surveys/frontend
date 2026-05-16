@@ -2,15 +2,37 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, css } from "@mui/material";
+import { Box, css, CircularProgress, IconButton, Tooltip } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import GroupDesign from "~/components/Group/GroupDesign";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { GroupDropArea } from "~/components/design/DropArea/DropArea";
 import { Virtuoso } from "react-virtuoso";
 import useDragNearViewportEdge from "~/utils/useDragEdgeDetection";
-import { resetSetup } from "~/state/design/designState";
+import {
+  resetSetup,
+  changeResources,
+  setup,
+} from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
+import { buildResourceUrl } from "~/networking/common";
+import { useLogoUpload } from "~/hooks/useLogoUpload";
+import {
+  logoSetup,
+  LOGO_ALIGNMENT_DEFAULT,
+  LOGO_SIZE_DEFAULT,
+  LOGO_SIZE_DIMENSIONS,
+  LOGO_SPACING_DEFAULT,
+} from "~/constants/design";
+
+const ALIGNMENT_TO_FLEX = {
+  left: "flex-start",
+  center: "center",
+  right: "flex-end",
+};
 
 function ContentPanel({ designMode }, ref) {
   const { i18n } = useTranslation(NAMESPACES.DESIGN_CORE);
@@ -32,6 +54,22 @@ function ContentPanel({ designMode }, ref) {
 
   const groups = useSelector((state) => {
     return state.designState["Survey"]?.children || [];
+  });
+  const logoImage = useSelector(
+    (state) => state.designState["Survey"]?.resources?.logoImage
+  );
+  const logoAlignment = useSelector(
+    (state) =>
+      state.designState["Survey"]?.resources?.logoAlignment ||
+      LOGO_ALIGNMENT_DEFAULT
+  );
+  const logoSize = useSelector(
+    (state) =>
+      state.designState["Survey"]?.resources?.logoSize || LOGO_SIZE_DEFAULT
+  );
+  const logoSpacing = useSelector((state) => {
+    const val = state.designState["Survey"]?.resources?.logoSpacing;
+    return typeof val === "number" ? val : LOGO_SPACING_DEFAULT;
   });
 
   const groupsEmpty = !groups.length;
@@ -100,6 +138,50 @@ function ContentPanel({ designMode }, ref) {
   );
   const skipScroll = useSelector((state) => state.designState.skipScroll);
   const dispatch = useDispatch();
+  const { isUploading, handleFileInput: handleLogoFileInput } = useLogoUpload();
+
+  const handleLogoReset = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(
+      changeResources({ code: "Survey", key: "logoImage", value: null })
+    );
+    dispatch(resetSetup());
+  };
+
+  const handleLogoCustomize = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(setup(logoSetup));
+  };
+
+  const canEditLogo = designMode === DESIGN_SURVEY_MODE.DESIGN;
+
+  const virtuosoContext = useMemo(
+    () => ({
+      logoImage,
+      logoAlignment,
+      logoSize,
+      logoSpacing,
+      canEditLogo,
+      isUploading,
+      handleLogoFileInput,
+      handleLogoReset,
+      handleLogoCustomize,
+      t,
+    }),
+    [
+      logoImage,
+      logoAlignment,
+      logoSize,
+      logoSpacing,
+      canEditLogo,
+      isUploading,
+      t,
+    ]
+  );
+
+  const virtuosoComponents = useMemo(() => ({ Header: LogoHeader }), []);
 
   useEffect(() => {
     let animationFrameId;
@@ -176,6 +258,8 @@ function ContentPanel({ designMode }, ref) {
         <Virtuoso
           ref={virtuosoRef}
           data={items}
+          components={virtuosoComponents}
+          context={virtuosoContext}
           className={styles.virtuosoStyle}
           itemContent={(index, item) => {
             switch (item.name) {
@@ -220,3 +304,145 @@ const ELEMENTS = {
   DROP_AREA: "DROP_AREA",
   FOOTER: "FOOTER",
 };
+
+function LogoHeader({ context }) {
+  const {
+    logoImage,
+    logoAlignment,
+    logoSize,
+    logoSpacing,
+    canEditLogo,
+    isUploading,
+    handleLogoFileInput,
+    handleLogoReset,
+    handleLogoCustomize,
+    t,
+  } = context;
+  const theme = useTheme();
+  const textColor = theme.textStyles?.text?.color || "#16205b";
+  const cardStyle = { backgroundColor: theme.palette.background.paper };
+  const textStyle = { color: textColor };
+
+  const logoHeaderStyle = {
+    justifyContent: ALIGNMENT_TO_FLEX[logoAlignment] || "center",
+    marginTop: `${logoSpacing / 2}px`,
+    marginBottom: `${logoSpacing / 2}px`,
+  };
+  const logoSizePx =
+    LOGO_SIZE_DIMENSIONS[logoSize] || LOGO_SIZE_DIMENSIONS.medium;
+  const logoImgStyle = {
+    height: `${logoSizePx}px`,
+    width: "auto",
+    maxWidth: "100%",
+  };
+
+  if (logoImage && !isUploading) {
+    const frameClass = canEditLogo
+      ? `${styles.logoFrame} ${styles.logoFrameInteractive}`
+      : styles.logoFrame;
+    const toolbarStyle = {
+      backgroundColor: theme.palette.background.paper,
+    };
+    const toolbarButtonStyle = { color: textColor };
+    return (
+      <div className={styles.logoHeader} style={logoHeaderStyle}>
+        <div
+          className={frameClass}
+          onClick={canEditLogo ? handleLogoCustomize : undefined}
+          role={canEditLogo ? "button" : undefined}
+          tabIndex={canEditLogo ? 0 : undefined}
+          onKeyDown={
+            canEditLogo
+              ? (e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleLogoCustomize(e);
+                  }
+                }
+              : undefined
+          }
+          aria-label={canEditLogo ? t("customize_logo") : undefined}
+        >
+          <img
+            className={styles.surveyLogo}
+            src={buildResourceUrl(logoImage)}
+            alt=""
+            style={logoImgStyle}
+          />
+          {canEditLogo && (
+            <div className={styles.logoToolbar} style={toolbarStyle}>
+              <Tooltip title={t("customize_logo")} placement="top" arrow>
+                <IconButton
+                  className={styles.logoToolbarButton}
+                  onClick={handleLogoCustomize}
+                  size="small"
+                  aria-label={t("customize_logo")}
+                  style={toolbarButtonStyle}
+                >
+                  <SettingsIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={t("remove_logo")} placement="top" arrow>
+                <IconButton
+                  className={styles.logoToolbarButton}
+                  onClick={handleLogoReset}
+                  size="small"
+                  aria-label={t("remove_logo")}
+                  style={toolbarButtonStyle}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  const placeholderInner = (
+    <>
+      <ImageOutlinedIcon sx={{ fontSize: 36, color: textColor }} />
+      <span className={styles.logoPlaceholderText} style={textStyle}>
+        {t("upload_logo")}
+      </span>
+      <span className={styles.logoPlaceholderHint} style={textStyle}>
+        {t("upload_logo_hint")}
+      </span>
+      <span className={styles.logoPlaceholderNote} style={textStyle}>
+        {t("upload_logo_note")}
+      </span>
+    </>
+  );
+
+  if (!canEditLogo) {
+    return (
+      <div
+        className={`${styles.logoPlaceholder} ${styles.logoPlaceholderDisabled}`}
+        style={cardStyle}
+      >
+        {placeholderInner}
+      </div>
+    );
+  }
+  return (
+    <label className={styles.logoPlaceholder} style={cardStyle}>
+      {isUploading ? (
+        <div className={styles.logoUploading}>
+          <CircularProgress size={36} sx={{ color: textColor }} />
+          <span className={styles.logoPlaceholderText} style={textStyle}>
+            {t("uploading_logo")}
+          </span>
+        </div>
+      ) : (
+        placeholderInner
+      )}
+      <input
+        hidden
+        accept="image/*"
+        type="file"
+        onChange={handleLogoFileInput}
+      />
+    </label>
+  );
+}

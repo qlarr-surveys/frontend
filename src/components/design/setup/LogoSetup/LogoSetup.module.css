@@ -1,0 +1,74 @@
+.logoSetup {
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rowInline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.toggleGroup.toggleGroup {
+  align-self: stretch;
+}
+
+.toggleGroup.toggleGroup .MuiToggleButton-root {
+  flex: 1;
+  text-transform: none;
+  padding: 6px 12px;
+  color: #16205b;
+  border-color: rgba(22, 32, 91, 0.24);
+}
+
+.toggleGroup.toggleGroup .Mui-selected {
+  background-color: rgba(22, 32, 91, 0.08);
+  color: #16205b;
+}
+
+.spacingValue {
+  min-width: 36px;
+  text-align: end;
+  color: #6b7280;
+  font-variant-numeric: tabular-nums;
+}
+
+.actionButton.actionButton {
+  text-transform: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 500;
+}
+
+.actionRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin: 0.75rem -16px;
+}

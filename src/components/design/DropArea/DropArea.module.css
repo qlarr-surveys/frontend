@@ -76,6 +76,11 @@
   min-width: 350px;
 }
 
+.groupHiddenFirst {
+  composes: groupHidden;
+  height: 2rem;
+}
+
 .emptyHintBase {
   display: flex;
   justify-content: center;
@@ -88,6 +93,7 @@
   color: gray;
   border: none;
   border-radius: 8px;
+  padding: 6px;
   background-image:
     repeating-linear-gradient(to right, #c0c4d0 0, #c0c4d0 10px, transparent 10px, transparent 20px),
     repeating-linear-gradient(to right, #c0c4d0 0, #c0c4d0 10px, transparent 10px, transparent 20px),

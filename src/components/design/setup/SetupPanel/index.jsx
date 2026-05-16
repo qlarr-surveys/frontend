@@ -37,6 +37,7 @@ import DisabledToggle from "../Disabled";
 import EntityCodeEditor from "../EntityCodeEditor";
 import CustomCSS from "../CustomCss";
 import ConvertQuestionType from "../ConvertQuestionType";
+import LogoSetup from "../LogoSetup";
 
 function SetupPanel({ t }) {
   const dispatch = useDispatch();
@@ -122,6 +123,8 @@ const SetupComponent = React.memo(({ code, rule, t, isQuickOptions }) => {
       return <EntityCodeEditor code={code} />;
     case "theme":
       return <Theming t={t} key={code + rule} />;
+    case "logo_setup":
+      return <LogoSetup t={t} key={code + rule} />;
     case "language":
       return <ManageLanguages t={t} key={code + rule} />;
     case "maxChars":
