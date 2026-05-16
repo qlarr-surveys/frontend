@@ -33,7 +33,7 @@ import {
   formatlocalDateTime,
   serverDateTimeToLocalDateTime,
 } from "~/utils/DateUtils";
-import { ResponseDelete } from "~/components/manage/ResponseDelete";
+import DeleteModal from "~/components/common/DeleteModal";
 import { RHFSelect } from "~/components/hook-form";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
@@ -941,10 +941,11 @@ function ResponsesList() {
             )}
           </Paper>
           {Boolean(responseToDelete) && (
-            <ResponseDelete
-              onDelete={deleteResponse}
+            <DeleteModal
               open={Boolean(responseToDelete)}
               onClose={onCloseModal}
+              onConfirm={deleteResponse}
+              title={t("responses.title_delete_response")}
             />
           )}
         </Box>

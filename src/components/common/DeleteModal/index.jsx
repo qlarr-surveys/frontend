@@ -1,28 +1,38 @@
 import React from "react";
-import { Modal, Box, Typography, Button, createTheme } from "@mui/material";
+import { Modal, Box, Typography, Button } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import SurveyIcon from "../SurveyIcons/SurveyIcon";
 import styles from "./DeleteModal.module.css";
-import { palette } from "~/theme/palette";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 const DeleteModal = ({
   title,
   open,
-  handleClose,
-  handleDelete,
+  onClose,
+  onConfirm,
   description,
+  isLoading = false,
 }) => {
-  const theme = createTheme({
-    palette: palette("light"),
-  });
-
   const { t } = useTranslation(NAMESPACES.MANAGE);
-  const { t: tDesign } = useTranslation(NAMESPACES.DESIGN_CORE);
   const modalTitle = title || t("action_btn.delete");
 
+  const handleClose = (event, reason) => {
+    if (isLoading) return;
+    onClose?.(event, reason);
+  };
+
   return (
-    <Modal open={open} onClose={handleClose} aria-labelledby="delete-modal">
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="delete-modal"
+      sx={{
+        ".MuiBackdrop-root": {
+          backgroundColor: "rgba(0, 0, 0, 0.3)",
+        },
+      }}
+    >
       <Box className={styles.modalBox}>
         <Box display="flex" gap={2} justifyContent="center" alignItems="center">
           {!title && (
@@ -38,42 +48,52 @@ const DeleteModal = ({
           </Typography>
         </Box>
 
-        <Typography
-          id="modal-description"
-          sx={{ mt: 2, overflowWrap: "break-word" }}
-        >
-          {description}
-        </Typography>
-        <Box display="flex" justifyContent="center" mt={4} gap={3}>
+        {description && (
+          <Typography
+            id="modal-description"
+            sx={{ mt: 2, overflowWrap: "break-word" }}
+          >
+            {description}
+          </Typography>
+        )}
+
+        <Box display="flex" justifyContent="center" mt={4} gap={2}>
           <Button
-            sx={{
-              backgroundColor: theme.palette.primary.main,
-              color: theme.palette.primary.contrastText,
-              textTransform: "capitalize",
-            }}
+            variant="text"
             size="medium"
-            variant="contained"
+            disabled={isLoading}
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
-              handleClose();
+              onClose?.();
+            }}
+            sx={{
+              textTransform: "capitalize",
+              color: "text.secondary",
+              "&:hover": { backgroundColor: "action.hover" },
             }}
           >
-            {tDesign("cancel")}
+            {t("action_btn.cancel")}
           </Button>
-          <Button
-            sx={{ textTransform: "capitalize" }}
+          <LoadingButton
+            variant="contained"
             size="medium"
             type="submit"
-            variant="secondary"
+            loading={isLoading}
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
-              handleDelete();
+              onConfirm?.();
+            }}
+            sx={{
+              textTransform: "capitalize",
+              backgroundColor: "error.dark",
+              color: "common.white",
+              "&:hover": { backgroundColor: "error.darker" },
             }}
           >
-            {tDesign("confirm")}
-          </Button>
+            {t("action_btn.delete")}
+          </LoadingButton>
         </Box>
       </Box>
     </Modal>

@@ -469,8 +469,8 @@ function Dashboard() {
         <DeleteModal
           open={open}
           description={description}
-          handleClose={() => setOpen(false)}
-          handleDelete={handleAction}
+          onClose={() => setOpen(false)}
+          onConfirm={handleAction}
           title={title}
         />
       )}
