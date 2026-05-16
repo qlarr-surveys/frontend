@@ -1,11 +1,9 @@
 .logoSetup {
-  padding: 0.25rem 0 1rem;
   display: flex;
   flex-direction: column;
 }
 
 .section {
-  padding: 0 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -72,5 +70,5 @@
 .divider {
   border: none;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
-  margin: 0.75rem 0;
+  margin: 0.75rem -16px;
 }
