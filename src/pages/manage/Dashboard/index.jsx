@@ -1,11 +1,9 @@
-import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import {
   Alert,
   Box,
   Button,
   Container,
-  Fade,
-  IconButton,
   Snackbar,
   Stack,
   TablePagination,
@@ -28,8 +26,7 @@ import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import DeleteModal from "~/components/common/DeleteModal";
 import StopSurveyModal from "~/components/manage/StopSurveyModal";
-import { Add, Close, Description, FileUpload } from "@mui/icons-material";
-import { getDirFromSession } from "~/utils/common";
+import { Add, Description, FileUpload } from "@mui/icons-material";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import DashboardEmptyState from "~/components/manage/DashboardEmptyState";
 import {
@@ -76,7 +73,6 @@ function Dashboard() {
         if (data) {
           setFetchingSurveys(false);
           setSurveys(data);
-          setCreateSurveyOpen(false);
         }
       })
       .catch((e) => processApirror(e));
@@ -105,36 +101,14 @@ function Dashboard() {
   const [selectedSurvey, setSelectedSurvey] = useState(null);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState(t("action_btn.delete"));
-  const [isCreateSurveyOpen, setCreateSurveyOpen] = useState(false);
-  const [importSurvey, setImportSurvey] = useState(false);
-  const mainContainerRef = useRef(null);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
 
-  const scrollToTop = () => {
-    if (mainContainerRef.current) {
-      mainContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
-    }
+  const handleCreateSurveyClick = () => {
+    setOpenCreateModal(true);
   };
-
-  const handleButtonClick = () => {
-    if (isCreateSurveyOpen) {
-      scrollToTop();
-    } else {
-      setCreateSurveyOpen(true);
-    }
-  };
-
-  useEffect(() => {
-    if (isCreateSurveyOpen) {
-      scrollToTop();
-    }
-  }, [isCreateSurveyOpen]);
 
   const handleImportSurveyClick = () => {
     setOpenImportModal(true);
-  };
-
-  const handleCloseClick = () => {
-    setCreateSurveyOpen(false);
   };
 
   const onDelete = (survey) => {
@@ -277,10 +251,8 @@ function Dashboard() {
     });
   };
 
-  const isRtl = getDirFromSession();
-
   return (
-    <Box ref={mainContainerRef} className={styles.mainContainer}>
+    <Box className={styles.mainContainer}>
       <Container sx={{ marginBottom: "48px" }}>
         <Box className={styles.content}>
           {(surveys?.surveys?.length > 0 || status !== "all") && (
@@ -289,7 +261,7 @@ function Dashboard() {
             direction="row"
             spacing={2}
           >
-            {isSurveyAdmin() && !isCreateSurveyOpen && (
+            {isSurveyAdmin() && (
               <CustomTooltip
                 title={t("tooltips.create_new_survey")}
                 showIcon={false}
@@ -298,7 +270,7 @@ function Dashboard() {
                   variant="contained"
                   color="primary"
                   startIcon={<Add />}
-                  onClick={handleButtonClick}
+                  onClick={handleCreateSurveyClick}
                 >
                   {t("create_new_survey")}
                 </Button>
@@ -320,27 +292,6 @@ function Dashboard() {
               </CustomTooltip>
             )}
           </Stack>
-          )}
-
-          {isCreateSurveyOpen && (
-            <Fade in={isCreateSurveyOpen} timeout={300}>
-              <div style={{ position: "relative" }}>
-                <IconButton
-                  onClick={handleCloseClick}
-                  aria-label="close"
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    ...(isRtl === "ltr" ? { right: 0 } : { left: 0 }),
-                    color: "black",
-                    zIndex: 1,
-                  }}
-                >
-                  <Close color="#000" />
-                </IconButton>
-                <CreateSurvey />
-              </div>
-            </Fade>
           )}
 
           {(surveys?.surveys?.length > 0 || status != "all") && (
@@ -421,7 +372,7 @@ function Dashboard() {
                   </div>
                 ) : (
                   <DashboardEmptyState
-                    onCreateSurvey={handleButtonClick}
+                    onCreateSurvey={handleCreateSurveyClick}
                     onImportTemplate={handleImportSurveyClick}
                     canCreate={isSurveyAdmin()}
                   />
@@ -460,6 +411,15 @@ function Dashboard() {
         open={openImportModal}
         onResult={(success) => {
           setOpenImportModal(false);
+          if (success) {
+            fetchSurveys();
+          }
+        }}
+      />
+      <CreateSurvey
+        open={openCreateModal}
+        onResult={(success) => {
+          setOpenCreateModal(false);
           if (success) {
             fetchSurveys();
           }
