@@ -20,6 +20,7 @@ import { ChromePicker } from "react-color";
 import { useBoolean } from "~/hooks/use-boolean";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useRef } from "react";
+import DeleteModal from "~/components/common/DeleteModal";
 
 const listFont = [
   "Merriweather",
@@ -154,6 +155,26 @@ function Theming({ t }) {
     );
   };
 
+  const showResetConfirm = useBoolean();
+
+  const handleResetTheme = () => {
+    dispatch(
+      changeAttribute({
+        code: "Survey",
+        key: "theme",
+        value: defaultSurveyTheme,
+      })
+    );
+    dispatch(
+      changeResources({
+        code: "Survey",
+        key: "backgroundImage",
+        value: null,
+      })
+    );
+    showResetConfirm.onFalse();
+  };
+
   const showPrimaryPicker = useBoolean();
   const showBgPicker = useBoolean();
   const showPaperPicker = useBoolean();
@@ -204,6 +225,16 @@ function Theming({ t }) {
   );
   return (
     <div className={styles.theming}>
+      <Box className={styles.resetThemeContainer}>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={showResetConfirm.onTrue}
+          className={styles.resetThemeButton}
+        >
+          {t("reset_theme")}
+        </Button>
+      </Box>
       <span className={styles.fontText}> {t("font")}</span>
       <Select
         key="fontFamily"
@@ -481,6 +512,13 @@ function Theming({ t }) {
           </IconButton>
         )}
       </Stack>
+      <DeleteModal
+        open={showResetConfirm.value}
+        title={t("reset_theme_title")}
+        description={t("reset_theme_description")}
+        handleClose={showResetConfirm.onFalse}
+        handleDelete={handleResetTheme}
+      />
     </div>
   );
 }
