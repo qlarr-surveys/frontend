@@ -77,8 +77,9 @@ function Survey() {
               src={buildResourceUrl(logoImage)}
               alt=""
               style={{
-                maxWidth: `${logoSizePx}px`,
-                maxHeight: `${logoSizePx}px`,
+                height: `${logoSizePx}px`,
+                width: "auto",
+                maxWidth: "100%",
               }}
             />
           </div>

@@ -76,6 +76,11 @@
   min-width: 350px;
 }
 
+.groupHiddenFirst {
+  composes: groupHidden;
+  height: 2rem;
+}
+
 .emptyHintBase {
   display: flex;
   justify-content: center;

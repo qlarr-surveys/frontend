@@ -325,14 +325,15 @@ function LogoHeader({ context }) {
 
   const logoHeaderStyle = {
     justifyContent: ALIGNMENT_TO_FLEX[logoAlignment] || "center",
-    marginTop: `${logoSpacing}px`,
+    marginTop: `${logoSpacing / 2}px`,
     marginBottom: `${logoSpacing / 2}px`,
   };
   const logoSizePx =
     LOGO_SIZE_DIMENSIONS[logoSize] || LOGO_SIZE_DIMENSIONS.medium;
   const logoImgStyle = {
-    maxWidth: `${logoSizePx}px`,
-    maxHeight: `${logoSizePx}px`,
+    height: `${logoSizePx}px`,
+    width: "auto",
+    maxWidth: "100%",
   };
 
   if (logoImage && !isUploading) {
