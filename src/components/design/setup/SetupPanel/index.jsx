@@ -505,7 +505,15 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
 
   React.useEffect(() => {
     if (highlighted) {
-      handleShowAdvanced(true);
+      const isBasicMode = !(advancedByCode.current[code] ?? false);
+      const visibleInBasic =
+        normalRules.includes(highlighted) ||
+        rules?.some(
+          (tab) => tab.key === highlighted && tab.rules?.some((r) => normalRules.includes(r))
+        );
+      if (!(isBasicMode && visibleInBasic)) {
+        handleShowAdvanced(true);
+      }
       setSelectedTab(targetTabIndex);
     }
   }, [targetTabIndex]);
@@ -527,7 +535,17 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   React.useEffect(() => {
     if (!highlighted) return;
 
-    setHighlightedEl(highlighted);
+    const isBasicMode = !(advancedByCode.current[code] ?? false);
+    if (isBasicMode) {
+      const tab = rules?.find((t) => t.key === highlighted);
+      const basicRule = tab
+        ? tab.rules?.find((r) => normalRules.includes(r))
+        : highlighted;
+      setHighlightedEl(basicRule ?? highlighted);
+    } else {
+      setHighlightedEl(highlighted);
+    }
+
     const timer = setTimeout(() => {
       setHighlightedEl(null);
       dispatch(clearHighlighted());
@@ -562,7 +580,9 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
         <Box>
           {normalRules.map((rule) => (
             <div className={styles.setupContainer} key={rule}>
-              <SetupComponent code={code} rule={rule} t={t} isQuickOptions />
+              <Box sx={rowSx(rule)}>
+                <SetupComponent code={code} rule={rule} t={t} isQuickOptions />
+              </Box>
             </div>
           ))}
         </Box>
