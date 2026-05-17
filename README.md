@@ -1,60 +1,102 @@
-<!-- markdownlint-disable line-length -->
 # Qlarr Frontend
-Qlarr Surveys is a framework to create and run customizable, scientific & offline-first **[surveys as code](https://github.com/qlarr-surveys/survey-engine)** on all platforms. Surveys are defined using JSON to represent ui agnostic survey components and [Javascript instructions](https://github.com/qlarr-surveys/survey-engine-script) to represent complex survey logic.
 
+[Discord](https://discord.gg/9mbRh6SpGj) | [Demo](https://console.qlarr.com/) | [Docs](https://qlarr-surveys.github.io/docs/) | [Deploy Locally in 30 Sec!](https://qlarr-surveys.github.io/docs/guides/deployment/local)
 
-This is the frontend application for qlarr, built using React to
-1. Provide a WYSIWYG editor to create and edit surveys, in Qlarr [Survey Engnine](https://github.com/qlarr-surveys/survey-engine) DSL
-2. Render surveys that are executed by Qlarr Survey Engnine (used both in Web and [Android](https://github.com/qlarr-surveys/android) Apps)
-3. GUI for Survey management and administrive functionalities exposed by our open source backend, like login, adding using, cloning surveys....etc.
+The frontend application for **[Qlarr](https://github.com/qlarr-surveys)** — an open-source framework for creating and running customizable, scientific, and offline-first surveys as code on all platforms. Surveys are defined using JSON to represent UI-agnostic survey components and [JavaScript instructions](https://github.com/qlarr-surveys/survey-engine-script) to represent complex survey logic.
 
+## Key Features
 
-## Operations
+- **Survey As Code** — Write survey structure in JSON, and survey logic in JavaScript
+- **Offline-First Design** — Collect data anywhere without internet connectivity
+- **Conditional Logic & Skip Logic** — Advanced branching based on user responses
+- **Input Validation** — Ensure data quality with built-in validation checks
+- **Randomization & Sampling** — Randomize questions and options with weighted priorities
+- **Multilingual Surveys** — Support for multiple languages
+- **Piping** — Reference and display values from previous answers
+- **Flexible Navigation** — All questions, page-by-page, or question-by-question
+- **Conditional Formatting** — Dynamic styling based on responses
+- **Time Limits & Scoring** (WIP) — Perfect for quizzes and timed assessments
 
-To run this locally, follow these steps:
+## What It Does
 
-1. **Prerequisites**:
-   - Ensure you have [Node.js](https://nodejs.org/) (version 16 or later) and [npm](https://www.npmjs.com/) installed.
+- **WYSIWYG Survey Editor** — Create and edit surveys using the Qlarr [Survey Engine](https://github.com/qlarr-surveys/survey-engine-kmp) DSL
+- **Survey Renderer** — Render and run surveys powered by the Survey Engine (used in both Web and [Android](https://github.com/qlarr-surveys/android) apps)
+- **Admin GUI** — Survey management, user management, login, cloning, and other administrative functionalities exposed by the [backend](https://github.com/qlarr-surveys/backend)
 
-2. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/qlarr-surveys/frontend
-   cd frontend
-   ```
+## Tech Stack
 
-3. **Install Dependencies**:
-   Run the following command to install all necessary dependencies:
-   ```bash
-   npm install
-   ```
+- React 18
+- Vite 5
+- MUI v5
+- Redux Toolkit
+- React Router v6
+- i18next (en, ar, de, es, pt, fr, nl)
 
-4. **Set Up Development Environment**:
-   - Edit [`./public/config.js`](./public/config.js) to configure environment variables as needed (e.g., API endpoints, environment settings).
+## Quick Start
 
-5. **Run the Development Server**:
-   Start the development server with:
-   ```bash
-   npm run start
-   ```
-   This will start the application on `http://localhost:3000`.
+### Using Docker (Recommended)
 
-6. **Build for Production** (optional):
-   To create a production build locally:
-   ```bash
-   npm run build
-   ```
+The easiest way to run Qlarr is using Docker Compose from the backend repo, which deploys both frontend and backend:
 
+```bash
+git clone https://github.com/qlarr-surveys/backend.git
+cd backend
+docker-compose up
+```
 
+See the [deployment guide](https://qlarr-surveys.github.io/docs/guides/deployment/local) for more details.
 
-## Deployment
+### Local Development
 
-See the [deployment guide](deploy/README.md) for instructions on running Qlarr locally with Docker or deploying to a cloud server.
+**Prerequisites:** Node.js 16+, npm
+
+```bash
+# Clone the repository
+git clone https://github.com/qlarr-surveys/frontend.git
+cd frontend
+
+# Install dependencies
+npm install
+
+# Configure environment
+# Edit public/config.js to set BE_URL to point to the backend API
+
+# Run the development server
+npm start
+```
+
+The application will be available at `http://localhost:3000`.
+
+### Build
+
+```bash
+# Production build
+npm run build
+
+# Staging build (ES2018, sourcemaps)
+npm run build-staging
+
+# Android build (ES2015, minified)
+npm run build-android
+```
+
+## Architecture
+
+This frontend is one component of the Qlarr ecosystem:
+
+1. **[Survey Engine (KMP)](https://github.com/qlarr-surveys/survey-engine-kmp)** — Core UI-agnostic engine that parses survey definitions, generates state machines, and manages survey execution
+2. **[Survey Engine Script](https://github.com/qlarr-surveys/survey-engine-script)** — JavaScript validation library for dynamic survey instructions
+3. **[Backend](https://github.com/qlarr-surveys/backend)** — Spring Boot application exposing REST APIs for survey CRUD, offline sync, auth, and administration
+4. **Frontend** (this repo) — React web application for survey editing, rendering, and management
 
 ## Contributing
-We welcome contributors, the easiest way to contribute to this project is to join our [Discored server](https://discord.gg/3exUNKwsET) and talk to us directly
 
+We welcome contributors! The easiest way to get involved:
 
-## Support
-If you are interested in a new feature, please start a Discussion/ Idea
-To report a bug, please raise an issue with clear steps to reproduce... Export the survey with the issue and import it as part of your bug report
+1. Join our [Discord server](https://discord.gg/9mbRh6SpGj) and talk to us directly
+2. For new features: start a Discussion / Idea
+3. For bugs: raise an issue with clear steps to reproduce — export the survey with the issue and include it in your bug report
 
+## License
+
+Open-source — see [LICENSE](LICENSE) for details.
