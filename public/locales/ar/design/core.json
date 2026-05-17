@@ -369,6 +369,7 @@
   "order_instruction_placeholder": "أدخل تعبير الترتيب",
   "add_conditional_relevance": "إضافة صلة شرطية",
   "conditional_relevance_text_placeholder": "أدخل تعبير الصلة الشرطية",
+  "manual_expression": "التعبير اليدوي",
   "use_manual_expression": "استخدام التعبير اليدوي",
   "use_visual_builder": "استخدام المنشئ المرئي",
   "switch_to_visual_warning": "سيؤدي هذا إلى مسح تعبيرك وإعادة ضبط المنشئ المرئي.",
