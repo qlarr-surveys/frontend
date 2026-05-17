@@ -7,7 +7,7 @@
   "columns_number": "Définir combien d'options apparaissent par ligne.",
   "columns_order": "Choisir l'ordre d'affichage des colonnes—tel quel, aléatoire, inversé ou personnalisé.",
   "columns_priority": "Attribuer des poids pour prioriser les colonnes dans la question.",
-  "custom_css": "Ajouter des styles CSS personnalisés pour modifier l'apparence et le comportement de cette question. Utilisez les propriétés CSS standard pour personnaliser les couleurs, les polices, les espacements et la mise en page.",
+  "custom_css": "Ajoutez du CSS personnalisé pour styliser le conteneur de cette question. Utilisez des propriétés standard pour des styles statiques, ou intégrez des expressions dynamiques avec <code>{{ }}</code> pour réagir à l'état du sondage.\n\nVariables disponibles :\n● <code>Qthis</code> — cette question (ex. <code>Qthis.value</code>, <code>Qthis.relevance</code>, <code>Qthis.validity</code>)\n● <code>Qcode</code> — toute autre question par son code (ex. <code>Q1.value</code>)\n● <code>Survey.lang</code> — langue actuelle\n\nExemples :\n<code>background-color: {{Qthis.value ? 'lightyellow' : 'inherit'}};</code>\n<code>border: {{Q1.value === 'yes' ? '2px solid red' : 'none'}};</code>\n<code>opacity: {{Qthis.validity === false ? '0.5' : '1'}};</code>",
   "date": "Collecter une saisie au format date",
   "date_format": "Définir le format de date pour la saisie de date",
   "date_time": "Collecter la date et l'heure ensemble",

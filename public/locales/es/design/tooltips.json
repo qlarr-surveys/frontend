@@ -7,7 +7,7 @@
   "columns_number": "Establecer cuántas opciones aparecen por fila.",
   "columns_order": "Elegir el orden de visualización de las columnas—tal como está, aleatorio, invertido o personalizado.",
   "columns_priority": "Asignar pesos para priorizar columnas en la pregunta.",
-  "custom_css": "Agregar estilos CSS personalizados para modificar la apariencia y el comportamiento de esta pregunta. Usar propiedades CSS estándar para personalizar colores, fuentes, espaciado y diseño.",
+  "custom_css": "Añade CSS personalizado para estilizar el contenedor de esta pregunta. Usa propiedades estándar para estilos estáticos, o incrusta expresiones dinámicas con <code>{{ }}</code> para reaccionar al estado de la encuesta.\n\nVariables disponibles:\n● <code>Qthis</code> — esta pregunta (ej. <code>Qthis.value</code>, <code>Qthis.relevance</code>, <code>Qthis.validity</code>)\n● <code>Qcode</code> — cualquier otra pregunta por su código (ej. <code>Q1.value</code>)\n● <code>Survey.lang</code> — idioma actual\n\nEjemplos:\n<code>background-color: {{Qthis.value ? 'lightyellow' : 'inherit'}};</code>\n<code>border: {{Q1.value === 'yes' ? '2px solid red' : 'none'}};</code>\n<code>opacity: {{Qthis.validity === false ? '0.5' : '1'}};</code>",
   "date": "Recopilar entrada en formato de fecha",
   "date_format": "Establecer el formato de fecha para entrada de fecha",
   "date_time": "Recopilar fecha y hora juntas",

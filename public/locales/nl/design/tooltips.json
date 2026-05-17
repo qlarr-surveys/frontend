@@ -7,7 +7,7 @@
   "columns_number": "Stel in hoeveel opties per rij verschijnen.",
   "columns_order": "Kies de weergavevolgorde van kolommen—zoals het is, willekeurig, omgekeerd of aangepast.",
   "columns_priority": "Wijs gewichten toe om kolommen in de vraag te prioriteren.",
-  "custom_css": "Voeg aangepaste CSS-stijlen toe om het uiterlijk en gedrag van deze vraag te wijzigen. Gebruik standaard CSS-eigenschappen om kleuren, lettertypen, afstanden en lay-out aan te passen.",
+  "custom_css": "Voeg aangepaste CSS toe om de container van deze vraag op te maken. Gebruik standaardeigenschappen voor statische stijlen, of sluit dynamische expressies in met <code>{{ }}</code> om te reageren op de enquêtestatus.\n\nBeschikbare variabelen:\n● <code>Qthis</code> — deze vraag (bijv. <code>Qthis.value</code>, <code>Qthis.relevance</code>, <code>Qthis.validity</code>)\n● <code>Qcode</code> — elke andere vraag via zijn code (bijv. <code>Q1.value</code>)\n● <code>Survey.lang</code> — huidige taal\n\nVoorbeelden:\n<code>background-color: {{Qthis.value ? 'lightyellow' : 'inherit'}};</code>\n<code>border: {{Q1.value === 'yes' ? '2px solid red' : 'none'}};</code>\n<code>opacity: {{Qthis.validity === false ? '0.5' : '1'}};</code>",
   "date": "Verzamel invoer in datumformaat",
   "date_format": "Stel het datumformaat in voor datum invoer",
   "date_time": "Verzamel zowel datum als tijd samen",

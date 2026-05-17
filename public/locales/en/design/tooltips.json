@@ -50,7 +50,7 @@
   "order_mode": "Set the order mode for the survey",
   "hide_text": "Set if you want the text to be hidden",
   "columns_number": "Set how many options appear per row.",
-  "custom_css": "Add custom CSS styles to modify the appearance and behavior of this question. Use standard CSS properties to customize colors, fonts, spacing, and layout.",
+  "custom_css": "Add custom CSS to style this question's container. Use standard properties for static styles, or embed dynamic expressions with <code>{{ }}</code> to react to survey state.\n\nAvailable variables:\n● <code>Qthis</code> — this question (e.g. <code>Qthis.value</code>, <code>Qthis.relevance</code>, <code>Qthis.validity</code>)\n● <code>Qcode</code> — any other question by its code (e.g. <code>Q1.value</code>)\n● <code>Survey.lang</code> — current language\n\nExamples:\n<code>background-color: {{Qthis.value ? 'lightyellow' : 'inherit'}};</code>\n<code>border: {{Q1.value === 'yes' ? '2px solid red' : 'none'}};</code>\n<code>opacity: {{Qthis.validity === false ? '0.5' : '1'}};</code>",
   "image_icon_size": "Define the pixel size for the icons within the question.",
   "spacing": "Set the space between options in the question.",
   "image_aspect_ratio": "Set the aspect ratio for the image",

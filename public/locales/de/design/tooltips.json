@@ -50,7 +50,7 @@
   "order_mode": "Reihenfolgemodus der Umfrage festlegen",
   "hide_text": "Text ausblenden",
   "columns_number": "Legen Sie fest, wie viele Optionen pro Zeile angezeigt werden.",
-  "custom_css": "Fügen Sie benutzerdefinierte CSS-Stile hinzu, um das Aussehen und Verhalten dieser Frage zu ändern. Verwenden Sie Standard-CSS-Eigenschaften, um Farben, Schriftarten, Abstände und Layout anzupassen.",
+  "custom_css": "Fügen Sie benutzerdefiniertes CSS hinzu, um den Container dieser Frage zu gestalten. Verwenden Sie Standard-Eigenschaften für statische Stile oder betten Sie dynamische Ausdrücke mit <code>{{ }}</code> ein, um auf den Umfragestatus zu reagieren.\n\nVerfügbare Variablen:\n● <code>Qthis</code> — diese Frage (z. B. <code>Qthis.value</code>, <code>Qthis.relevance</code>, <code>Qthis.validity</code>)\n● <code>Qcode</code> — jede andere Frage über ihren Code (z. B. <code>Q1.value</code>)\n● <code>Survey.lang</code> — aktuelle Sprache\n\nBeispiele:\n<code>background-color: {{Qthis.value ? 'lightyellow' : 'inherit'}};</code>\n<code>border: {{Q1.value === 'yes' ? '2px solid red' : 'none'}};</code>\n<code>opacity: {{Qthis.validity === false ? '0.5' : '1'}};</code>",
   "image_icon_size": "Definieren Sie die Pixelgröße der Symbole innerhalb der Frage.",
   "spacing": "Legen Sie den Abstand zwischen den Optionen in der Frage fest.",
   "image_aspect_ratio": "Seitenverhältnis für das Bild festlegen",
