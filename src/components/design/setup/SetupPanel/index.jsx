@@ -464,18 +464,30 @@ const SetupComponent = React.memo(({ code, rule, t, isQuickOptions }) => {
   }
 });
 
-const SETUP_SHOW_ADVANCED = "setup_show_advanced";
+const SETUP_SHOW_ADVANCED = "setup_show_advanced_by_code";
 
 const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const dispatch = useDispatch();
   const [highlightedEl, setHighlightedEl] = React.useState(highlighted);
+  const advancedByCode = React.useRef(
+    JSON.parse(localStorage.getItem(SETUP_SHOW_ADVANCED) || "{}")
+  );
   const [showAdvanced, setShowAdvanced] = React.useState(
-    () => localStorage.getItem(SETUP_SHOW_ADVANCED) === "true"
+    () => advancedByCode.current[code] ?? false
   );
 
   React.useEffect(() => {
-    localStorage.setItem(SETUP_SHOW_ADVANCED, showAdvanced);
-  }, [showAdvanced]);
+    setShowAdvanced(advancedByCode.current[code] ?? false);
+  }, [code]);
+
+  const handleShowAdvanced = React.useCallback(
+    (value) => {
+      advancedByCode.current[code] = value;
+      localStorage.setItem(SETUP_SHOW_ADVANCED, JSON.stringify(advancedByCode.current));
+      setShowAdvanced(value);
+    },
+    [code]
+  );
 
   const targetTabIndex = React.useMemo(() => {
     if (!rules?.length) return 0;
@@ -493,7 +505,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
 
   React.useEffect(() => {
     if (highlighted) {
-      setShowAdvanced(true);
+      handleShowAdvanced(true);
       setSelectedTab(targetTabIndex);
     }
   }, [targetTabIndex]);
@@ -562,7 +574,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
             variant="contained"
             size="medium"
             endIcon={<ArrowForwardIcon />}
-            onClick={() => setShowAdvanced(true)}
+            onClick={() => handleShowAdvanced(true)}
           >
             {t("show_advanced_settings")}
           </Button>
@@ -622,7 +634,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
               variant="contained"
               size="medium"
               startIcon={<ArrowBackIcon />}
-              onClick={() => setShowAdvanced(false)}
+              onClick={() => handleShowAdvanced(false)}
             >
               {t("hide_advanced_settings")}
             </Button>
