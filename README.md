@@ -1,21 +1,21 @@
 # Qlarr Frontend
 
-[Discord](https://discord.gg/9mbRh6SpGj) | [Demo](https://console.qlarr.com/) | [Docs](https://qlarr-surveys.github.io/docs/) | [Deploy Locally in 30 Sec!](https://qlarr-surveys.github.io/docs/guides/deployment/local)
+[Discord 💬](https://discord.gg/9mbRh6SpGj) | [Demo 🖥️](https://console.qlarr.com/) | [Docs 📄](https://qlarr-surveys.github.io/docs/) | [Deploy Locally in 30 Sec! 🚀](https://qlarr-surveys.github.io/docs/guides/deployment/local)
 
 The frontend application for **[Qlarr](https://github.com/qlarr-surveys)** — an open-source framework for creating and running customizable, scientific, and offline-first surveys as code on all platforms. Surveys are defined using JSON to represent UI-agnostic survey components and [JavaScript instructions](https://github.com/qlarr-surveys/survey-engine-script) to represent complex survey logic.
 
 ## Key Features
 
-- **Survey As Code** — Write survey structure in JSON, and survey logic in JavaScript
-- **Offline-First Design** — Collect data anywhere without internet connectivity
-- **Conditional Logic & Skip Logic** — Advanced branching based on user responses
-- **Input Validation** — Ensure data quality with built-in validation checks
-- **Randomization & Sampling** — Randomize questions and options with weighted priorities
-- **Multilingual Surveys** — Support for multiple languages
-- **Piping** — Reference and display values from previous answers
-- **Flexible Navigation** — All questions, page-by-page, or question-by-question
-- **Conditional Formatting** — Dynamic styling based on responses
-- **Time Limits & Scoring** (WIP) — Perfect for quizzes and timed assessments
+- 📄 **Survey As Code** — Write survey structure in JSON, and survey logic in JavaScript
+- 📴 **Offline-First Design** — Collect data anywhere without internet connectivity
+- ⍰ **Conditional Logic & Skip Logic** — Advanced branching based on user responses
+- ✅ **Input Validation** — Ensure data quality with built-in validation checks
+- 🎲 **Randomization & Sampling** — Randomize questions and options with weighted priorities
+- 🌐 **Multilingual Surveys** — Support for multiple languages
+- 🔗 **Piping** — Reference and display values from previous answers
+- ⬅️➡️ **Flexible Navigation** — All questions, page-by-page, or question-by-question
+- 🎨 **Conditional Formatting** — Dynamic styling based on responses
+- ⏱️📊 **Time Limits & Scoring** (WIP) — Perfect for quizzes and timed assessments
 
 ## What It Does
 
