@@ -291,26 +291,17 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 10px;
-  background: white;
-  color: var(--color-navy, #16205b);
-  border-radius: 999px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  color: white;
+  cursor: pointer;
   font-family: 'Rubik', sans-serif;
   font-size: 0.75rem;
   font-weight: 600;
   white-space: nowrap;
-  transition: var(--transition-default, all 0.2s ease);
-}
-
-.addLogoCta:hover {
-  transform: scale(1.05);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 
 .addLogoIcon {
   font-size: 16px !important;
-  color: var(--color-navy, #16205b);
+  color: white;
 }
 
 .addLogoLabel {
