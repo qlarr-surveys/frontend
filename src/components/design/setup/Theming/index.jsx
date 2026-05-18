@@ -20,7 +20,7 @@ import { ChromePicker } from "react-color";
 import { useBoolean } from "~/hooks/use-boolean";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useRef } from "react";
-import DeleteModal from "~/components/common/DeleteModal";
+import ConfirmActionModal from "~/components/common/ConfirmActionModal";
 
 const listFont = [
   "Merriweather",
@@ -512,12 +512,15 @@ function Theming({ t }) {
           </IconButton>
         )}
       </Stack>
-      <DeleteModal
+      <ConfirmActionModal
         open={showResetConfirm.value}
         title={t("reset_theme_title")}
         description={t("reset_theme_description")}
-        handleClose={showResetConfirm.onFalse}
-        handleDelete={handleResetTheme}
+        cancelLabel={t("cancel")}
+        confirmLabel={t("reset_action")}
+        confirmColor="warning"
+        onClose={showResetConfirm.onFalse}
+        onConfirm={handleResetTheme}
       />
     </div>
   );

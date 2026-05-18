@@ -295,6 +295,7 @@
   "textarea_lines": "Líneas del Área de Texto",
   "theme": "Tema",
   "theme_text": "Texto",
+  "reset_action": "Restablecer",
   "reset_theme": "Restablecer Tema",
   "reset_theme_title": "Restablecer Tema",
   "reset_theme_description": "Esto restaurará todos los ajustes del tema (fuentes, colores e imagen de fondo) a sus valores predeterminados. Esta acción no se puede deshacer.",

@@ -17,7 +17,7 @@ import {
   TableSortLabel,
 } from "@mui/material";
 import styles from "./UsersTable.module.css";
-import DeleteModal from "~/components/common/DeleteModal";
+import ConfirmActionModal from "~/components/common/ConfirmActionModal";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { useDispatch } from "react-redux";
@@ -312,13 +312,16 @@ export const UsersTable = () => {
       </CustomTooltip>
 
       {Boolean(userToDelete) && (
-        <DeleteModal
+        <ConfirmActionModal
           open={Boolean(userToDelete)}
+          title={t("action_btn.delete")}
           onClose={onCloseModal}
           onConfirm={deleteUser}
           description={t("users_manage.delete_title", {
             name: userToDelete.firstName + " " + userToDelete.lastName,
           })}
+          cancelLabel={t("action_btn.cancel")}
+          confirmLabel={t("action_btn.delete")}
           isLoading={deleteLoading}
         />
       )}

@@ -295,6 +295,7 @@
   "textarea_lines": "Lignes de la Zone de Texte",
   "theme": "Thème",
   "theme_text": "Texte",
+  "reset_action": "Réinitialiser",
   "reset_theme": "Réinitialiser le Thème",
   "reset_theme_title": "Réinitialiser le Thème",
   "reset_theme_description": "Ceci restaurera tous les paramètres du thème (polices, couleurs et image d'arrière-plan) à leurs valeurs par défaut. Cette action est irréversible.",

@@ -1,22 +1,19 @@
 import React from "react";
 import { Modal, Box, Typography, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import SurveyIcon from "../SurveyIcons/SurveyIcon";
-import styles from "./DeleteModal.module.css";
-import { useTranslation } from "react-i18next";
-import { NAMESPACES } from "~/hooks/useNamespaceLoader";
+import styles from "./ConfirmActionModal.module.css";
 
-const DeleteModal = ({
-  title,
+const ConfirmActionModal = ({
   open,
   onClose,
   onConfirm,
+  title,
   description,
+  cancelLabel,
+  confirmLabel,
+  confirmColor = "error",
   isLoading = false,
 }) => {
-  const { t } = useTranslation(NAMESPACES.MANAGE);
-  const modalTitle = title || t("action_btn.delete");
-
   const handleClose = (event, reason) => {
     if (isLoading) return;
     onClose?.(event, reason);
@@ -26,7 +23,7 @@ const DeleteModal = ({
     <Modal
       open={open}
       onClose={handleClose}
-      aria-labelledby="delete-modal"
+      aria-labelledby="confirm-action-modal"
       sx={{
         ".MuiBackdrop-root": {
           backgroundColor: "rgba(0, 0, 0, 0.3)",
@@ -34,19 +31,15 @@ const DeleteModal = ({
       }}
     >
       <Box className={styles.modalBox}>
-        <Box display="flex" gap={2} justifyContent="center" alignItems="center">
-          {!title && (
-            <SurveyIcon name="delete" color="#000" size="1.75em" />
-          )}
-          <Typography
-            id="delete-modal"
-            variant="h4"
-            fontWeight={600}
-            component="h2"
-          >
-            {modalTitle}
-          </Typography>
-        </Box>
+        <Typography
+          id="confirm-action-modal"
+          variant="h4"
+          fontWeight={600}
+          component="h2"
+          textAlign="center"
+        >
+          {title}
+        </Typography>
 
         {description && (
           <Typography
@@ -73,10 +66,11 @@ const DeleteModal = ({
               "&:hover": { backgroundColor: "action.hover" },
             }}
           >
-            {t("action_btn.cancel")}
+            {cancelLabel}
           </Button>
           <LoadingButton
             variant="contained"
+            color={confirmColor}
             size="medium"
             type="submit"
             loading={isLoading}
@@ -87,12 +81,12 @@ const DeleteModal = ({
             }}
             sx={{
               textTransform: "capitalize",
-              backgroundColor: "error.dark",
+              backgroundColor: `${confirmColor}.dark`,
               color: "common.white",
-              "&:hover": { backgroundColor: "error.darker" },
+              "&:hover": { backgroundColor: `${confirmColor}.darker` },
             }}
           >
-            {t("action_btn.delete")}
+            {confirmLabel}
           </LoadingButton>
         </Box>
       </Box>
@@ -100,4 +94,4 @@ const DeleteModal = ({
   );
 };
 
-export default DeleteModal;
+export default ConfirmActionModal;

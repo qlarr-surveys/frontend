@@ -279,6 +279,7 @@
   "replace_logo": "Logo ersetzen",
   "remove_logo": "Logo entfernen",
   "theme_text": "Text",
+  "reset_action": "Zurücksetzen",
   "reset_theme": "Thema zurücksetzen",
   "reset_theme_title": "Thema zurücksetzen",
   "reset_theme_description": "Dadurch werden alle Designeinstellungen (Schriftarten, Farben und Hintergrundbild) auf die Standardwerte zurückgesetzt. Diese Aktion kann nicht rückgängig gemacht werden.",
