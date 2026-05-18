@@ -275,7 +275,7 @@ export const UsersTable = () => {
                         setOpen(null);
                         setUserToDelete(user);
                       }}
-                      sx={{ color: "error.main" }}
+                      sx={{ color: "error.dark" }}
                     >
                       <Iconify icon="carbon:trash-can" sx={{ mr: 1 }} />{" "}
                       {t("users_manage.title_delete")}
