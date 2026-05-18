@@ -345,7 +345,10 @@
     "title_edit": "Bewerken",
     "status": "Status",
     "active": "Actief",
-    "invitation_sent": "Uitnodiging Verzonden"
+    "invitation_sent": "Uitnodiging Verzonden",
+    "learn_about_roles": "Meer informatie over gebruikersrollen",
+    "statuses_info": "<strong>Concept</strong> — De enquête is nog niet gepubliceerd. Alleen beschikbaar voor voorvertoning.<br/><br/><strong>Gepland</strong> — De enquête is gepubliceerd maar de startdatum ligt in de toekomst. Deze wordt automatisch actief.<br/><br/><strong>Actief</strong> — De enquête is live en accepteert reacties.<br/><br/><strong>Verlopen</strong> — De einddatum van de enquête is verstreken. Er kunnen geen nieuwe reacties worden verzameld. U kunt deze reactiveren door de datums te wijzigen.<br/><br/><strong>Gesloten</strong> — De enquête is permanent gesloten. U kunt alleen gegevens exporteren of dupliceren.",
+    "roles_info": "<strong>Super Admin</strong> — Volledige toegang tot alle functies, inclusief gebruikersbeheer, enquêtes aanmaken en systeeminstellingen.<br/><br/><strong>Enquête Admin</strong> — Kan enquêtes aanmaken en beheren, toegang tot ontwerp, instellingen, reacties en analyses.<br/><br/><strong>Analist</strong> — Kan enquêtereacties en analyses bekijken, en enquêtes voorvertonen.<br/><br/><strong>Enquêteur</strong> — Kan enquêtereacties verzamelen via de mobiele app, en enquêtes voorvertonen."
   },
   "launch": {
     "publish_text": "Vergeet niet je enquête te publiceren om de wijzigingen die je hebt aangebracht toe te passen.",

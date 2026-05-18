@@ -145,6 +145,9 @@ const reservedKeys = [
   "focus",
   "state",
   "designMode",
+  "componentIndex",
+  "designStateReceived",
+  "versionDto",
   "globalSetup",
 ];
 

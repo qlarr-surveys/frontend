@@ -65,6 +65,8 @@ export function GroupDropArea({ index, groupsCount, t, emptySurvey }) {
           ? styles.groupDropArea
           : isDraggingGroup
           ? styles.groupDragging
+          : index === 0
+          ? styles.groupHiddenFirst
           : styles.groupHidden)
       }
     >

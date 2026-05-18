@@ -12,6 +12,19 @@
   gap: 2rem;
 }
 
+.surveyLogoWrapper {
+  margin: auto;
+  max-width: 800px;
+  min-width: 300px;
+  display: flex;
+  align-items: center;
+}
+
+.surveyLogo {
+  display: block;
+  object-fit: contain;
+}
+
 .cardImage {
   max-height: 22.5vw;
   height: 160px;

@@ -2,7 +2,9 @@ import { setupOptions } from "~/constants/design";
 import { removeInstruction } from "./addInstructions";
 
 export function convertTextQuestion(currentQuestion, newType) {
-  if (!currentQuestion.validation) return;
+  if (!currentQuestion.validation) {
+    currentQuestion.validation = {};
+  }
 
   const validRules =
     setupOptions(newType)?.find((s) => s.key === "validation")?.rules || [];
@@ -13,4 +15,8 @@ export function convertTextQuestion(currentQuestion, newType) {
       removeInstruction(currentQuestion, rule);
     }
   });
+
+  if (newType === "email" && !currentQuestion.validation.validation_pattern_email) {
+    currentQuestion.validation.validation_pattern_email = { isActive: true };
+  }
 }
