@@ -345,7 +345,10 @@
     "title_edit": "Editar",
     "status": "Estado",
     "active": "Activo",
-    "invitation_sent": "Invitación Enviada"
+    "invitation_sent": "Invitación Enviada",
+    "learn_about_roles": "Conoce los roles de usuario",
+    "statuses_info": "<strong>Borrador</strong> — La encuesta aún no ha sido publicada. Solo disponible para vista previa.<br/><br/><strong>Programada</strong> — La encuesta está publicada pero la fecha de inicio es futura. Se activará automáticamente.<br/><br/><strong>Activa</strong> — La encuesta está en línea y aceptando respuestas.<br/><br/><strong>Expirada</strong> — La fecha de finalización ha pasado. No se pueden recopilar nuevas respuestas. Puedes reactivarla cambiando las fechas.<br/><br/><strong>Cerrada</strong> — La encuesta ha sido cerrada permanentemente. Solo puedes exportar datos o duplicarla.",
+    "roles_info": "<strong>Super Admin</strong> — Acceso completo a todas las funciones, incluida la gestión de usuarios, creación de encuestas y configuración del sistema.<br/><br/><strong>Admin de Encuestas</strong> — Puede crear y gestionar encuestas, acceder al diseño, configuración, respuestas y análisis.<br/><br/><strong>Analista</strong> — Puede ver las respuestas y análisis de encuestas, y previsualizar encuestas.<br/><br/><strong>Encuestador</strong> — Puede recopilar respuestas de encuestas a través de la aplicación móvil, y previsualizar encuestas."
   },
   "launch": {
     "publish_text": "No olvides publicar tu encuesta para aplicar los cambios que has realizado.",

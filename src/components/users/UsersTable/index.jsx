@@ -23,6 +23,8 @@ import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { useDispatch } from "react-redux";
 import { setLoading } from "~/state/edit/editState";
 import Iconify from "~/components/iconify";
+import HelpOutline from "@mui/icons-material/HelpOutline";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import AddEditUser from "~/pages/manage/AddEditUser";
 import { useService } from "~/hooks/use-service";
 import TokenService from "~/services/TokenService";
@@ -285,6 +287,29 @@ export const UsersTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <CustomTooltip
+        showIcon={false}
+        body={t("users_manage.roles_info")}
+        placement="top-start"
+      >
+        <Box
+          display="inline-flex"
+          alignItems="center"
+          gap={0.5}
+          sx={{
+            mt: 2,
+            cursor: "default",
+            color: "text.secondary",
+            "&:hover": { color: "primary.main" },
+          }}
+        >
+          <HelpOutline sx={{ fontSize: 18 }} />
+          <Typography variant="body2">
+            {t("users_manage.learn_about_roles")}
+          </Typography>
+        </Box>
+      </CustomTooltip>
 
       {Boolean(userToDelete) && (
         <DeleteModal

@@ -336,7 +336,7 @@ const Survey = ({
             <div className={styles.surveyMeta}>
               <CustomTooltip
                 showIcon={false}
-                title={t(`edit_survey.${surveyStatus}_mode`)}
+                body={t("users_manage.statuses_info")}
               >
                 <div className={`${styles.statusPill} ${styles[surveyStatus]}`}>
                   <span className={styles.statusDot} />
