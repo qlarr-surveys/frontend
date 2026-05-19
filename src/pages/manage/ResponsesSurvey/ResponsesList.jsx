@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import {
@@ -83,6 +83,8 @@ function ResponsesList() {
   const surveyService = useService("survey");
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const { surveyId } = useParams();
+  const [searchParams] = useSearchParams();
+  const urlResponseId = searchParams.get("responseId");
 
   const [fetching, setFetching] = useState(true);
   const [status, setStatus] = useState("all");
@@ -90,9 +92,14 @@ function ResponsesList() {
 
   const [allResponse, setAllResponse] = useState(null);
   const [responseId, setResponseId] = useState(() => {
+    if (urlResponseId) return urlResponseId;
     const stored = sessionStorage.getItem("responseId");
     return stored ? stored : null;
   });
+  // When responseId arrived via URL, the first fetch's "not in current page"
+  // check would clear it before getResponseById can resolve. Skip that clear
+  // exactly once so cross-tab navigation from the preview screen works.
+  const skipNextResponseClearRef = useRef(!!urlResponseId);
   const [selected, setSelected] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
   const [eventsData, setEventsData] = useState(null);
@@ -135,8 +142,12 @@ function ResponsesList() {
           }
           setAllResponse(data);
           if (responseId && !data.responses?.some((r) => r.id === responseId)) {
-            setResponseId(null);
-            setSelected(null);
+            if (skipNextResponseClearRef.current) {
+              skipNextResponseClearRef.current = false;
+            } else {
+              setResponseId(null);
+              setSelected(null);
+            }
           }
         }
         setFetching(false);

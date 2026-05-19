@@ -93,14 +93,12 @@ function PreviewSurvey({ responseId = null }) {
           event.data.responseId || currentResponseId;
 
         if (event.data.action === "check") {
-          if (responseIdFromMsg) {
-            sessionStorage.setItem("responseId", responseIdFromMsg);
-          }
-          window.open(
-            routes.responses.replace(":surveyId", surveyId),
-            "_blank",
-            "noopener,noreferrer"
-          );
+          // sessionStorage doesn't cross tabs, so pass responseId via URL.
+          const baseUrl = routes.responses.replace(":surveyId", surveyId);
+          const targetUrl = responseIdFromMsg
+            ? `${baseUrl}?responseId=${encodeURIComponent(responseIdFromMsg)}`
+            : baseUrl;
+          window.open(targetUrl, "_blank", "noopener,noreferrer");
           return;
         }
 
