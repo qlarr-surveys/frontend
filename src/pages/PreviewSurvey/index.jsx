@@ -69,26 +69,53 @@ function PreviewSurvey({ responseId = null }) {
 
   useEffect(() => {
     const handleMessage = (event) => {
-      // Always verify the origin for security
-      if (
-        event.origin !== window.location.origin ||
-        event.data.type !== "RESPONSE_ID_RECEIVED"
-      ) {
+      if (event.origin !== window.location.origin) {
         return;
       }
 
-      const iFrameResponseId = event.data.responseId;
-      if (currentResponseId != iFrameResponseId) {
-        setCurrentResponseId(iFrameResponseId);
-        window.history.replaceState(
-          {},
-          "",
-          routes.resumePreview
-            .replace(":surveyId", surveyId)
-            .replace(":responseId", iFrameResponseId)
-        );
+      if (event.data.type === "RESPONSE_ID_RECEIVED") {
+        const iFrameResponseId = event.data.responseId;
+        if (currentResponseId != iFrameResponseId) {
+          setCurrentResponseId(iFrameResponseId);
+          window.history.replaceState(
+            {},
+            "",
+            routes.resumePreview
+              .replace(":surveyId", surveyId)
+              .replace(":responseId", iFrameResponseId)
+          );
+        }
+        return;
       }
-      // Handle the message data here
+
+      if (event.data.type === "PREVIEW_END_ACTION") {
+        const responseIdFromMsg =
+          event.data.responseId || currentResponseId;
+
+        if (event.data.action === "check") {
+          if (responseIdFromMsg) {
+            sessionStorage.setItem("responseId", responseIdFromMsg);
+          }
+          window.open(
+            routes.responses.replace(":surveyId", surveyId),
+            "_blank",
+            "noopener,noreferrer"
+          );
+          return;
+        }
+
+        if (event.data.action === "reset") {
+          window.location.href =
+            routes.preview.replace(":surveyId", surveyId) +
+            window.location.search;
+          return;
+        }
+
+        if (event.data.action === "close") {
+          // window.close() is silently blocked unless the tab was opened by JS.
+          window.close();
+        }
+      }
     };
 
     window.addEventListener("message", handleMessage);

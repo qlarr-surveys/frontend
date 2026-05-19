@@ -53,5 +53,11 @@
   "saveAndContinueLaterDesc": "Wir speichern deinen aktuellen Fortschritt. Du kannst später zu dieser Umfrage zurückkehren.",
   "saveForLater": "Für später speichern",
   "linkCopied": "Link in die Zwischenablage kopiert!",
-  "no_options": "Keine Optionen gefunden"
+  "no_options": "Keine Optionen gefunden",
+  "preview_end_actions": {
+    "heading": "Vorschauoptionen",
+    "check_response": "Antwort prüfen",
+    "reset": "Vorschau zurücksetzen",
+    "close_window": "Fenster schließen"
+  }
 }

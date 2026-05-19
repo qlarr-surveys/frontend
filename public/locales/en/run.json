@@ -53,5 +53,11 @@
     "saveAndContinueLaterDesc":"We’ll save your current progress. You can return to this survey later.",
     "saveForLater":"Save for later",
     "linkCopied":"Link copied to clipboard!",
-    "no_options": "No options found"
+    "no_options": "No options found",
+    "preview_end_actions": {
+        "heading": "Preview options",
+        "check_response": "Check response",
+        "reset": "Reset preview",
+        "close_window": "Close window"
+    }
 }
