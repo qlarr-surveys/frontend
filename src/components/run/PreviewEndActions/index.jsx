@@ -64,12 +64,9 @@ const PreviewEndActions = () => {
         <Button
           variant="text"
           size="medium"
+          color="error"
           onClick={() => sendAction("close")}
-          sx={{
-            textTransform: "capitalize",
-            color: "text.secondary",
-            "&:hover": { backgroundColor: "action.hover" },
-          }}
+          sx={{ textTransform: "capitalize" }}
         >
           {t("preview_end_actions.close_window")}
         </Button>
