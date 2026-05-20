@@ -24,7 +24,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { resetSetup, clearHighlighted } from "~/state/design/designState";
+import { resetSetup, clearHighlighted, setShowAdvanced } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import Theming from "../Theming";
@@ -464,29 +464,17 @@ const SetupComponent = React.memo(({ code, rule, t, isQuickOptions }) => {
   }
 });
 
-const SETUP_SHOW_ADVANCED = "setup_show_advanced_by_code";
-
 const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const dispatch = useDispatch();
   const [highlightedEl, setHighlightedEl] = React.useState(highlighted);
-  const advancedByCode = React.useRef(
-    JSON.parse(localStorage.getItem(SETUP_SHOW_ADVANCED) || "{}")
-  );
-  const [showAdvanced, setShowAdvanced] = React.useState(
-    () => advancedByCode.current[code] ?? false
-  );
-
-  React.useEffect(() => {
-    setShowAdvanced(advancedByCode.current[code] ?? false);
-  }, [code]);
+  const advancedByCode = useSelector((state) => state.designState.advancedByCode ?? {});
+  const showAdvanced = advancedByCode[code] ?? false;
 
   const handleShowAdvanced = React.useCallback(
     (value) => {
-      advancedByCode.current[code] = value;
-      localStorage.setItem(SETUP_SHOW_ADVANCED, JSON.stringify(advancedByCode.current));
-      setShowAdvanced(value);
+      dispatch(setShowAdvanced({ code, value }));
     },
-    [code]
+    [code, dispatch]
   );
 
   const targetTabIndex = React.useMemo(() => {
@@ -505,7 +493,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
 
   React.useEffect(() => {
     if (highlighted) {
-      const isBasicMode = !(advancedByCode.current[code] ?? false);
+      const isBasicMode = !showAdvanced;
       const visibleInBasic =
         normalRules.includes(highlighted) ||
         rules?.some(
@@ -535,7 +523,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   React.useEffect(() => {
     if (!highlighted) return;
 
-    const isBasicMode = !(advancedByCode.current[code] ?? false);
+    const isBasicMode = !showAdvanced;
     if (isBasicMode) {
       const tab = rules?.find((t) => t.key === highlighted);
       const basicRule = tab
