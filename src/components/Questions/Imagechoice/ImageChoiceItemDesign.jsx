@@ -1,6 +1,6 @@
 import styles from "./ImageChoiceItemDesign.module.css";
 import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
-import { alpha, Box, css, Grid, IconButton, TextField } from "@mui/material";
+import { alpha, Box, css, IconButton, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -210,139 +210,130 @@ function ImageChoiceItemDesign({
   drop(preview(ref));
 
   return type == "add" ? (
-    <Grid height="100%" item xs={12 / columnNumber} key="add">
-      <Box
-        className={styles.addAnswerButton}
-        style={{
-          minHeight: "100px",
-          height: "100%",
-          width: "100%",
-          backgroundColor: theme.palette.background.default,
-          borderRadius: "4px",
-        }}
-      >
-        <IconButton
-          className={styles.addAnswerIcon}
-          onClick={() => {
-            addAnswer();
-          }}
-        >
-          <AddIcon />
-        </IconButton>
-      </Box>
-    </Grid>
+    <Box
+      className={styles.addAnswerButton}
+      onClick={() => addAnswer()}
+      style={{
+        minHeight: "100px",
+        width: "100%",
+        aspectRatio: imageAspectRatio,
+        alignSelf: "start",
+        backgroundColor: theme.palette.background.default,
+        borderRadius: "4px",
+        cursor: "pointer",
+      }}
+    >
+      <IconButton className={styles.addAnswerIcon}>
+        <AddIcon />
+      </IconButton>
+    </Box>
   ) : (
-    <>
-      <Grid
-        style={{
-          opacity: isDragging ? "0.2" : "1",
-        }}
-        item
-        data-code={code}
-        position="relative"
-        xs={12 / columnNumber}
-        key={qualifiedCode}
-      >
-        {isInSetup && (
-          <div
-            className={styles.overlay}
-            style={{ backgroundColor: contrastColor }}
-          />
-        )}
+    <Box
+      style={{
+        opacity: isDragging ? "0.2" : "1",
+      }}
+      data-code={code}
+      sx={{ position: "relative", height: "100%", width: "100%" }}
+    >
+      {isInSetup && (
         <div
-          className={styles.imageContainer}
-          style={{
-            paddingTop: 100 / imageAspectRatio + "%",
-            backgroundImage: backgroundImage,
-          }}
-          ref={ref}
-          data-handler-id={handlerId}
-        >
-          {inDesign(designMode) && (
-            <div className={`${btnStyles.buttonContainers} ${styles.buttonContainersAbsolute}`}>
-              <div className={btnStyles.leftZone}>
-                <IconButton ref={drag} className={btnStyles.iconButton}>
-                  <DragIndicatorIcon color="action" />
-                </IconButton>
-                <div className={btnStyles.codeWrapper}>
-                  <InlineCodeEditor
-                    qualifiedCode={qualifiedCode}
-                    designMode={designMode}
-                    compact
-                  />
-                </div>
-              </div>
-              <div className={btnStyles.rightZone}>
-                <IconButton
-                  className={btnStyles.iconButton}
-                  onClick={() => {
-                    onDelete();
-                  }}
-                >
-                  <DeleteOutlineIcon />
-                </IconButton>
-                <IconButton
-                  className={btnStyles.iconButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    dispatch(
-                      setup({
-                        code: qualifiedCode,
-                        rules: setupOptions("options"),
-                      })
-                    );
-                  }}
-                >
-                  <Build />
-                </IconButton>
-                <IconButton
-                  component="label"
-                  className={btnStyles.iconButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                >
-                  <PhotoCamera />
-                  <input
-                    hidden
-                    id={`file-input-${qualifiedCode}`}
-                    accept="image/*"
-                    type="file"
-                    onChange={handleImageChange}
-                  />
-                </IconButton>
+          className={styles.overlay}
+          style={{ backgroundColor: contrastColor }}
+        />
+      )}
+      <div
+        className={styles.imageContainer}
+        style={{
+          paddingTop: 100 / imageAspectRatio + "%",
+          backgroundImage: backgroundImage,
+        }}
+        ref={ref}
+        data-handler-id={handlerId}
+      >
+        {inDesign(designMode) && (
+          <div className={`${btnStyles.buttonContainers} ${styles.buttonContainersAbsolute}`}>
+            <div className={btnStyles.leftZone}>
+              <IconButton ref={drag} className={btnStyles.iconButton}>
+                <DragIndicatorIcon color="action" />
+              </IconButton>
+              <div className={btnStyles.codeWrapper}>
+                <InlineCodeEditor
+                  qualifiedCode={qualifiedCode}
+                  designMode={designMode}
+                  compact
+                />
               </div>
             </div>
-          )}
-
-          {isUploading && (
-            <div className={styles.loadingContainer}>
-              <LoadingDots />
+            <div className={btnStyles.rightZone}>
+              <IconButton
+                className={btnStyles.iconButton}
+                onClick={() => {
+                  onDelete();
+                }}
+              >
+                <DeleteOutlineIcon />
+              </IconButton>
+              <IconButton
+                className={btnStyles.iconButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(
+                    setup({
+                      code: qualifiedCode,
+                      rules: setupOptions("options"),
+                    })
+                  );
+                }}
+              >
+                <Build />
+              </IconButton>
+              <IconButton
+                component="label"
+                className={btnStyles.iconButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <PhotoCamera />
+                <input
+                  hidden
+                  id={`file-input-${qualifiedCode}`}
+                  accept="image/*"
+                  type="file"
+                  onChange={handleImageChange}
+                />
+              </IconButton>
             </div>
-          )}
-        </div>
-        {!hideText && (
-          <ContentEditor
-            code={qualifiedCode}
-            showToolbar={false}
-            editable={contentEditable(designMode)}
-            extended={false}
-            centerText
-            placeholder={
-              onMainLang
-                ? t("content_editor_placeholder_option", {
-                    lng: langInfo.mainLang,
-                  })
-                : mainContent ||
-                  t("content_editor_placeholder_option", {
-                    lng: langInfo.mainLang,
-                  })
-            }
-            contentKey="label"
-          />
+          </div>
         )}
-      </Grid>
-    </>
+
+        {isUploading && (
+          <div className={styles.loadingContainer}>
+            <LoadingDots />
+          </div>
+        )}
+      </div>
+      {!hideText && (
+        <ContentEditor
+          code={qualifiedCode}
+          showToolbar={false}
+          editable={contentEditable(designMode)}
+          extended={false}
+          centerText
+          placeholder={
+            onMainLang
+              ? t("content_editor_placeholder_option", {
+                  lng: langInfo.mainLang,
+                })
+              : mainContent ||
+                t("content_editor_placeholder_option", {
+                  lng: langInfo.mainLang,
+                })
+          }
+          contentKey="label"
+        />
+      )}
+    </Box>
   );
 }
 
