@@ -43,6 +43,7 @@
   "ai_prompt_placeholder": "ex., Criar uma pesquisa de satisfação do cliente para um restaurante com perguntas sobre qualidade da comida, serviço e ambiente",
   "ai_prompt_helper": "Descreva que tipo de pesquisa você deseja criar com o maior detalhe possível",
   "edit_survey": {
+    "add_logo": "Adicionar um logótipo ao inquérito",
     "export": "Exportar Pesquisa",
     "close_title": "Fechar Pesquisa",
     "can_lock_survey": "Permitir que pesquisadores bloqueiem a pesquisa",

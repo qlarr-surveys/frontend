@@ -286,6 +286,28 @@
   opacity: 1;
 }
 
+.addLogoCta {
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: white;
+  cursor: pointer;
+  font-family: 'Rubik', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.addLogoIcon {
+  font-size: 16px !important;
+  color: white;
+}
+
+.addLogoLabel {
+  line-height: 1;
+}
+
 .highlight {
   animation: fadeHighlight 3s ease-in-out;
   background-color: rgba(

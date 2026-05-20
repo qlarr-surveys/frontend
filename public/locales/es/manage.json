@@ -43,6 +43,7 @@
   "ai_prompt_placeholder": "ej., Crear una encuesta de satisfacción del cliente para un restaurante con preguntas sobre calidad de comida, servicio y ambiente",
   "ai_prompt_helper": "Describe qué tipo de encuesta quieres crear con el mayor detalle posible",
   "edit_survey": {
+    "add_logo": "Añadir un logo a la encuesta",
     "export": "Exportar Encuesta",
     "close_title": "Cerrar Encuesta",
     "can_lock_survey": "Permitir a los encuestadores bloquear la encuesta",
