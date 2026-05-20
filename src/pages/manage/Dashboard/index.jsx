@@ -24,7 +24,7 @@ import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { ImportSurvey } from "~/components/manage/ImportSurvey";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
-import DeleteModal from "~/components/common/DeleteModal";
+import ConfirmActionModal from "~/components/common/ConfirmActionModal";
 import StopSurveyModal from "~/components/manage/StopSurveyModal";
 import { Add, Description, FileUpload } from "@mui/icons-material";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
@@ -426,12 +426,14 @@ function Dashboard() {
         }}
       />
       {actionType === "delete" && (
-        <DeleteModal
+        <ConfirmActionModal
           open={open}
           description={description}
           onClose={() => setOpen(false)}
           onConfirm={handleAction}
           title={title}
+          cancelLabel={t("action_btn.cancel")}
+          confirmLabel={t("action_btn.delete")}
         />
       )}
       {actionType === "close" && (

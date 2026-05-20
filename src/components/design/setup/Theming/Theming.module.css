@@ -21,6 +21,18 @@
 .resetButton.resetButton {
   padding: 0px;
 }
+.resetThemeContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+.resetThemeButton.resetThemeButton {
+  padding: 0.2rem 12px;
+  border-radius: 8px;
+  text-transform: none;
+  color: #16205b;
+  font-weight: 500;
+  border: 1px solid #16205b;
+}
 .fontText {
   font-size: 14px;
 }
