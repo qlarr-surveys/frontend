@@ -48,6 +48,7 @@ import { defaultSurveyTheme } from "~/constants/theme";
 
 const reservedKeys = [
   "setup",
+  "advancedByCode",
   "langInfo",
   "reorder_refresh_code",
   "state",
@@ -112,7 +113,6 @@ export const designState = createSlice({
       state["latest"] = structuredClone(newState);
       state.lastAddedComponent = null;
       state.index = buildCodeIndex(state);
-      state.advancedByCode = {};
       state.designStateReceived = true;
     },
     setup(state, action) {
