@@ -1,6 +1,7 @@
 import {
   colorToThemeMode,
   getContrastColor,
+  getForegroundColor,
   getMildBorderColor,
 } from "~/components/Questions/utils";
 export {
@@ -19,9 +20,17 @@ export const defualtTheme = (theme) => {
   const primaryColor = theme?.primaryColor || PRIMARY_COLOR;
   const textColor = theme?.textColor || TEXT_COLOR;
 
-  const onPaper = getContrastColor(paperColor);
-  const onDefault = getContrastColor(bgColor);
-  const onPrimary = getContrastColor(primaryColor);
+  const onPaper = getForegroundColor(paperColor);
+  const onDefault = getForegroundColor(bgColor);
+  const onPrimary = getForegroundColor(primaryColor);
+
+  // Mild borders derive from a subtle paper/background tint, not the dark
+  // foregrounds above, so outlines stay soft.
+  const mildPaperBorder = getMildBorderColor(getContrastColor(paperColor), 0.4);
+  const mildDefaultBorder = getMildBorderColor(getContrastColor(bgColor), 0.4);
+
+  // Visible-but-soft hover wash for interactive controls on the card.
+  const hoverPaper = getContrastColor(paperColor, 0.12);
 
   return {
     textStyles: {
@@ -72,8 +81,9 @@ export const defualtTheme = (theme) => {
       onPaper,
       onDefault,
       onPrimary,
-      mildPaperBorder: getMildBorderColor(onPaper, 0.4),
-      mildDefaultBorder: getMildBorderColor(onDefault, 0.4),
+      mildPaperBorder,
+      mildDefaultBorder,
+      hoverPaper,
     },
     components: {
       // Survey inputs sit on the survey background, so their outline and
@@ -83,7 +93,7 @@ export const defualtTheme = (theme) => {
       MuiOutlinedInput: {
         styleOverrides: {
           notchedOutline: {
-            borderColor: getMildBorderColor(onDefault, 0.4),
+            borderColor: mildDefaultBorder,
           },
           root: {
             "&:hover .MuiOutlinedInput-notchedOutline": {

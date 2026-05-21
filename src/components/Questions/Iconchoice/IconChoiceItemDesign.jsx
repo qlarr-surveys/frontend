@@ -1,6 +1,11 @@
 import styles from "./IconChoiceItemDesign.module.css";
 import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
 import { alpha, Box, Grid, IconButton, TextField } from "@mui/material";
+import {
+  getContrastColor,
+  getForegroundColor,
+  getMildBorderColor,
+} from "~/components/Questions/utils";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -27,6 +32,7 @@ import { setupOptions } from "~/constants/design";
 import { Build } from "@mui/icons-material";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
+import ConfirmActionModal from "~/components/common/ConfirmActionModal";
 
 function IconChoiceItemDesign({
   parentCode,
@@ -66,16 +72,19 @@ function IconChoiceItemDesign({
   const mainContent =
     type == "add" ? undefined : answer.content?.[langInfo.mainLang]?.["label"];
 
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
   const onDelete = () => {
-    if (window.confirm(t("are_you_sure"))) {
-      dispatch(removeAnswer(qualifiedCode));
-    }
+    setDeleteModalOpen(false);
+    dispatch(removeAnswer(qualifiedCode));
   };
 
   const isInSetup = useSelector((state) => {
     return state.designState.setup?.code == qualifiedCode;
   });
   const contrastColor = alpha(theme.textStyles.question.color, 0.2);
+  const addCardBorder = theme.contrast?.mildPaperBorder || getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4);
+  const addIconColor = theme.contrast?.onPaper || getForegroundColor(theme.palette.background.paper);
 
   const dragType = parentCode + "icon-drag";
   const getRowByIndex = (index) => {
@@ -209,14 +218,16 @@ function IconChoiceItemDesign({
         className={styles.addAnswerButton}
         style={{
           minHeight: "100px",
-          borderRadius: "4px",
-          backgroundColor: theme.palette.background.default,
-          height: "100%",
           width: "100%",
+          height: "100%",
+          backgroundColor: theme.palette.background.paper,
+          border: `1px dashed ${addCardBorder}`,
+          borderRadius: "4px",
         }}
       >
         <IconButton
           className={styles.addAnswerIcon}
+          sx={{ color: addIconColor }}
           onClick={() => {
             addAnswer();
           }}
@@ -265,8 +276,9 @@ function IconChoiceItemDesign({
               <div className={btnStyles.rightZone}>
                 <IconButton
                   className={btnStyles.iconButton}
-                  onClick={() => {
-                    onDelete();
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteModalOpen(true);
                   }}
                 >
                   <DeleteOutlineIcon />
@@ -342,6 +354,15 @@ function IconChoiceItemDesign({
           }}
         />
       )}
+      <ConfirmActionModal
+        open={deleteModalOpen}
+        title={t("delete")}
+        description={t("delete_option")}
+        cancelLabel={t("cancel")}
+        confirmLabel={t("delete")}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={onDelete}
+      />
     </>
   );
 }

@@ -3,7 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import React, { useMemo } from "react";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import {
-  getContrastColor,
+  getForegroundColor,
   getThemedButtonSx,
 } from "~/components/Questions/utils";
 
@@ -23,7 +23,8 @@ function BarcodeDesign({ code }) {
 
   // The hint sits on the question card (survey paper color).
   const hintColor =
-    theme.contrast?.onPaper || getContrastColor(theme.palette.background.paper);
+    theme.contrast?.onPaper ||
+    getForegroundColor(theme.palette.background.paper);
   const buttonSx = useMemo(() => getThemedButtonSx(theme), [theme]);
 
   return (
