@@ -13,6 +13,7 @@ import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { RuleOutlined, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import ConfirmActionModal from "~/components/common/ConfirmActionModal";
+import AppThemeProvider from "~/theme";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
@@ -229,18 +230,22 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
               <SurveyIcon name="delete" size="1em" color="currentColor" />
             </IconButton>
           </CustomTooltip>
-          <ConfirmActionModal
-            open={deleteModalOpen}
-            title={t("delete")}
-            description={t(isGroup ? "delete_page" : "delete_question")}
-            cancelLabel={t("cancel")}
-            confirmLabel={t("delete")}
-            onClose={() => setDeleteModalOpen(false)}
-            onConfirm={() => {
-              setDeleteModalOpen(false);
-              onDelete();
-            }}
-          />
+          {deleteModalOpen && (
+            <AppThemeProvider>
+              <ConfirmActionModal
+                open
+                title={t("delete")}
+                description={t(isGroup ? "delete_page" : "delete_question")}
+                cancelLabel={t("cancel")}
+                confirmLabel={t("delete")}
+                onClose={() => setDeleteModalOpen(false)}
+                onConfirm={() => {
+                  setDeleteModalOpen(false);
+                  onDelete();
+                }}
+              />
+            </AppThemeProvider>
+          )}
         </>
       )}
     </div>
