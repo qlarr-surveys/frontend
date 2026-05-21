@@ -7,6 +7,9 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
+import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import styles from "./CustomValidationRules.module.css";
 
 function RuleCard({
@@ -20,6 +23,7 @@ function RuleCard({
   onRuleIdChange,
   onErrorMessageChange,
 }) {
+  const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
   const [idSuffix, setIdSuffix] = useState(
     rule.code?.replace(/^validation_custom_/, "") || ""
   );
@@ -75,9 +79,12 @@ function RuleCard({
       </Box>
 
       <Box sx={{ mb: 2 }}>
-        <Typography variant="body2" fontWeight={600} sx={{ mb: 0.5 }}>
-          {t("rule_condition")}
-        </Typography>
+        <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
+          <CustomTooltip body={tTooltips("expression_reference")} />
+          <Typography variant="body2" fontWeight={600}>
+            {t("rule_condition")}
+          </Typography>
+        </div>
         <TextField
           fullWidth
           multiline

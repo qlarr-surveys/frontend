@@ -24,8 +24,8 @@ function CustomCSS({ code, t }) {
 
   return (
     <>
-      <div style={{display:'flex'}}>
-        <CustomTooltip body={tTooltips("custom_css")} />
+      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+        <CustomTooltip body={`${tTooltips("custom_css")}\n\n${tTooltips("expression_reference")}`} />
         <Typography fontWeight={700}>{t("custom_css")}</Typography>
       </div>
       <TextField

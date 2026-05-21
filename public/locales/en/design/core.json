@@ -378,6 +378,7 @@
   "order_instruction_placeholder": "Enter order expression",
   "add_conditional_relevance": "Add Conditional Relevance",
   "conditional_relevance_text_placeholder": "Enter conditional relevance expression",
+  "manual_expression": "Manual expression",
   "use_manual_expression": "Use manual expression",
   "use_visual_builder": "Use visual builder",
   "switch_to_visual_warning": "This will erase your expression and reset to the visual builder.",

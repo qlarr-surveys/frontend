@@ -123,6 +123,10 @@ function Relevance({ code, t }) {
         ) : isRawMode ? (
           <>
             <Divider sx={{ my: 1 }} />
+            <Box sx={{ display: "flex", alignItems: "center", gap: "4px", mb: 0.5 }}>
+              <CustomTooltip body={`${tTooltips("relevance_manual_expression")}\n\n${tTooltips("expression_reference")}`} />
+              <Typography variant="body2" fontWeight={600}>{t("manual_expression")}</Typography>
+            </Box>
             <TextField
               fullWidth
               multiline
