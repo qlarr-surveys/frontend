@@ -123,8 +123,7 @@ function QuestionDesign({
   drop(preview(containerRef));
 
   const contrastColor = getContrastColor(theme.palette.background.paper, 0.2);
-  const hoverColor = getContrastColor(theme.palette.background.paper, 0.05);
-  const textColor = theme.textStyles.question.color;
+  const outlineColor = theme.palette.primary.main;
   const action = theme.palette.action.active;
 
   useEffect(() => {
@@ -158,9 +157,9 @@ function QuestionDesign({
 
   const customStyle = useMemo(() => {
     return isInSetup
-      ? `background-color: ${contrastColor};color: ${textColor};`
+      ? `outline: solid 3px ${outlineColor};outline-offset: -3px;`
       : hovered
-      ? `background-color: ${hoverColor};color: ${textColor};`
+      ? `outline: solid 2px ${outlineColor};outline-offset: -2px;`
       : `opacity: ${isDragging ? "0.2" : "1"};border: ${
           isDragging ? "dotted 1px " + contrastColor : "0"
         };`;
