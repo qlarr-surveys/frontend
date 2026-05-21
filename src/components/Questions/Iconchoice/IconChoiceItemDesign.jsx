@@ -1,6 +1,6 @@
 import styles from "./IconChoiceItemDesign.module.css";
 import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
-import { alpha, Box, IconButton, TextField } from "@mui/material";
+import { Box, IconButton, TextField } from "@mui/material";
 import {
   getContrastColor,
   getForegroundColor,
@@ -82,7 +82,7 @@ function IconChoiceItemDesign({
   const isInSetup = useSelector((state) => {
     return state.designState.setup?.code == qualifiedCode;
   });
-  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
+  const outlineColor = theme.palette.primary.main;
   const addCardBorder = theme.contrast?.mildPaperBorder || getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4);
   const addIconColor = theme.contrast?.onPaper || getForegroundColor(theme.palette.background.paper);
 
@@ -237,14 +237,14 @@ function IconChoiceItemDesign({
           opacity: isDragging ? "0.2" : "1",
         }}
         data-code={code}
-        sx={{ position: "relative", height: "100%", width: "100%" }}
+        sx={{
+          position: "relative",
+          height: "100%",
+          width: "100%",
+          outline: isInSetup ? `solid 2px ${outlineColor}` : "none",
+          outlineOffset: "-2px",
+        }}
       >
-        {isInSetup && (
-          <div
-            className={styles.overlay}
-            style={{ backgroundColor: contrastColor }}
-          />
-        )}
         <div
           ref={ref}
           data-handler-id={handlerId}

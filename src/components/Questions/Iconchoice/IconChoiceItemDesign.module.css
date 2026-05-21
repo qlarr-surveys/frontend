@@ -9,14 +9,6 @@
   width: 100%;
 }
 
-.overlay {
-  z-index: 1;
-  position: absolute;
-  inset: 0;
-  opacity: 0.6;
-  pointer-events: none;
-}
-
 .loadingContainer {
   text-align: center;
   float: right;

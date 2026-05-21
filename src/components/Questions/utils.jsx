@@ -202,13 +202,11 @@ export const getThemedButtonSx = (theme) => {
   const borderColor =
     theme.contrast?.mildPaperBorder ||
     getMildBorderColor(getContrastColor(paper), 0.4);
-  const hoverBg = theme.contrast?.hoverPaper || getContrastColor(paper, 0.12);
   return {
     color: onPaper,
     borderColor,
     "&:hover": {
       borderColor: onPaper,
-      backgroundColor: hoverBg,
     },
   };
 };

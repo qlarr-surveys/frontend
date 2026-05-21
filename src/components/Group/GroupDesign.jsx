@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { QuestionDropArea } from "../design/DropArea/DropArea";
 import GroupHeader from "./GroupHeader";
 import { Box, Divider } from "@mui/material";
-import { getContrastColor } from "~/components/Questions/utils";
 import { useDrag, useDrop } from "react-dnd";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
@@ -116,7 +115,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
 
   drop(preview(containerRef));
 
-  const contrastColor = getContrastColor(theme.palette.background.paper, 0.2);
+  const outlineColor = theme.palette.primary.main;
 
 
   if (!group) {
@@ -135,21 +134,14 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
           dispatch(setup({ code, rules: setupOptions(type) }));
         }
       }}
-      sx={
-        isInSetup
-          ? {
-              padding: "1rem",
-              borderRadius: "12px",
-              boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
-              backgroundColor: contrastColor,
-            }
-          : {
-              padding: "1rem",
-              boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
-              borderRadius: "12px",
-              backgroundColor: "background.paper",
-            }
-      }
+      sx={{
+        padding: "1rem",
+        borderRadius: "12px",
+        boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
+        backgroundColor: "background.paper",
+        outline: isInSetup ? `solid 3px ${outlineColor}` : "none",
+        outlineOffset: "-3px",
+      }}
       className={`${styles.topLevel} ${isLastAdded ? styles.highlight : ""}`}
       ref={containerRef}
       style={getStyles(isDragging)}

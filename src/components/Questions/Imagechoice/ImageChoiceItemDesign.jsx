@@ -1,6 +1,6 @@
 import styles from "./ImageChoiceItemDesign.module.css";
 import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
-import { alpha, Box, css, IconButton, TextField } from "@mui/material";
+import { Box, css, IconButton, TextField } from "@mui/material";
 import {
   getContrastColor,
   getForegroundColor,
@@ -87,7 +87,7 @@ function ImageChoiceItemDesign({
     return state.designState.setup?.code == qualifiedCode;
   });
 
-  const contrastColor = alpha(theme.palette.primary.main, 0.25);
+  const outlineColor = theme.palette.primary.main;
   const labelColor = theme.contrast?.onDefault || getForegroundColor(theme.palette.background.default);
   const addCardBorder = theme.contrast?.mildPaperBorder || getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4);
   const addIconColor = theme.contrast?.onPaper || getForegroundColor(theme.palette.background.paper);
@@ -246,14 +246,14 @@ function ImageChoiceItemDesign({
         opacity: isDragging ? "0.2" : "1",
       }}
       data-code={code}
-      sx={{ position: "relative", height: "100%", width: "100%" }}
+      sx={{
+        position: "relative",
+        height: "100%",
+        width: "100%",
+        outline: isInSetup ? `solid 2px ${outlineColor}` : "none",
+        outlineOffset: "-2px",
+      }}
     >
-      {isInSetup && (
-        <div
-          className={styles.overlay}
-          style={{ backgroundColor: contrastColor }}
-        />
-      )}
       <div
         className={styles.imageContainer}
         style={{
