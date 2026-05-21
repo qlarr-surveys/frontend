@@ -7,6 +7,7 @@ import { Box, Card, Grid, Radio } from "@mui/material";
 import { buildResourceUrl } from "~/networking/common";
 import { rtlLanguage } from "~/utils/common";
 import Content from '~/components/run/Content';
+import { placeholderImageUrl } from "~/components/Questions/placeholderImage";
 
 function ImageScq(props) {
   const theme = useTheme();
@@ -33,6 +34,9 @@ function ImageScq(props) {
 
   const runValues = useSelector((s) => s.runState.values);
 
+  // Loop-invariant: the placeholder depends only on the theme, not the option.
+  const placeholderBg = placeholderImageUrl(theme);
+
   return (
     <Box
       sx={{
@@ -44,7 +48,7 @@ function ImageScq(props) {
       {props.component.answers.map((option) => {
         const backgroundImage = option.resources?.image
           ? `url('${buildResourceUrl(option.resources?.image)}')`
-          : `url('/placeholder-image.jpg')`;
+          : placeholderBg;
 
         const relevance = runValues[option.qualifiedCode]?.relevance ?? true;
         if (!relevance) return null;

@@ -1,9 +1,13 @@
 import { Box, Button } from "@mui/material";
-import React from "react";
+import { useTheme } from "@mui/material/styles";
+import React, { useMemo } from "react";
 import VideocamIcon from "@mui/icons-material/Videocam";
+import {
+  getContrastColor,
+  getThemedButtonSx,
+} from "~/components/Questions/utils";
 
 import styles from "./VideoCaptureDesign.module.css";
-import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 
 function VideoCaptureDesign({ code }) {
@@ -17,16 +21,22 @@ function VideoCaptureDesign({ code }) {
     return state.designState.langInfo.lang;
   });
 
+  // The hint sits on the question card (survey paper color).
+  const hintColor =
+    theme.contrast?.onPaper || getContrastColor(theme.palette.background.paper);
+  const buttonSx = useMemo(() => getThemedButtonSx(theme), [theme]);
+
   return (
     <Box className={styles.container}>
-      <Button
-        variant="contained"
-        color="primary"
-      >
+      <Button variant="outlined" sx={buttonSx}>
         <VideocamIcon sx={{ fontSize: "48px" }} />
       </Button>
       <br />
-      {state.showHint && <span>{state.content?.[lang]?.hint || ""}</span>}
+      {state.showHint && (
+        <span style={{ color: hintColor }}>
+          {state.content?.[lang]?.hint || ""}
+        </span>
+      )}
     </Box>
   );
 }

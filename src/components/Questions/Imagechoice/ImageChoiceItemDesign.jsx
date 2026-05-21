@@ -1,6 +1,8 @@
 import styles from "./ImageChoiceItemDesign.module.css";
 import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
 import { alpha, Box, css, Grid, IconButton, TextField } from "@mui/material";
+import { getContrastColor, getMildBorderColor } from "~/components/Questions/utils";
+import { placeholderImageUrl } from "~/components/Questions/placeholderImage";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -78,11 +80,14 @@ function ImageChoiceItemDesign({
     return state.designState.setup?.code == qualifiedCode;
   });
 
-  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
+  const contrastColor = alpha(theme.palette.primary.main, 0.25);
+  const labelColor = theme.contrast?.onDefault || getContrastColor(theme.palette.background.default);
+  const addCardBorder = theme.contrast?.mildPaperBorder || getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4);
+  const addIconColor = theme.contrast?.onPaper || getContrastColor(theme.palette.background.paper);
 
   const backgroundImage = answer?.resources?.image
     ? `url('${buildResourceUrl(answer.resources.image)}')`
-    : `url('/placeholder-image.jpg')`;
+    : placeholderImageUrl(theme);
 
   function handleImageChange(e) {
     e.preventDefault();
@@ -210,19 +215,21 @@ function ImageChoiceItemDesign({
   drop(preview(ref));
 
   return type == "add" ? (
-    <Grid height="100%" item xs={12 / columnNumber} key="add">
+    <Grid item xs={12 / columnNumber} key="add">
       <Box
         className={styles.addAnswerButton}
         style={{
           minHeight: "100px",
-          height: "100%",
           width: "100%",
-          backgroundColor: theme.palette.background.default,
+          aspectRatio: imageAspectRatio,
+          backgroundColor: theme.palette.background.paper,
+          border: `1px dashed ${addCardBorder}`,
           borderRadius: "4px",
         }}
       >
         <IconButton
           className={styles.addAnswerIcon}
+          sx={{ color: addIconColor }}
           onClick={() => {
             addAnswer();
           }}
@@ -322,24 +329,26 @@ function ImageChoiceItemDesign({
           )}
         </div>
         {!hideText && (
-          <ContentEditor
-            code={qualifiedCode}
-            showToolbar={false}
-            editable={contentEditable(designMode)}
-            extended={false}
-            centerText
-            placeholder={
-              onMainLang
-                ? t("content_editor_placeholder_option", {
-                    lng: langInfo.mainLang,
-                  })
-                : mainContent ||
-                  t("content_editor_placeholder_option", {
-                    lng: langInfo.mainLang,
-                  })
-            }
-            contentKey="label"
-          />
+          <Box sx={{ color: labelColor }}>
+            <ContentEditor
+              code={qualifiedCode}
+              showToolbar={false}
+              editable={contentEditable(designMode)}
+              extended={false}
+              centerText
+              placeholder={
+                onMainLang
+                  ? t("content_editor_placeholder_option", {
+                      lng: langInfo.mainLang,
+                    })
+                  : mainContent ||
+                    t("content_editor_placeholder_option", {
+                      lng: langInfo.mainLang,
+                    })
+              }
+              contentKey="label"
+            />
+          </Box>
         )}
       </Grid>
     </>

@@ -2,10 +2,12 @@ import React, { useState } from "react";
 
 import { useSelector } from "react-redux";
 import { Button } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import PhotoIcon from "@mui/icons-material/Photo";
 import { buildResourceUrl } from "~/networking/common";
 import { useDispatch } from "react-redux";
 import { changeResources } from "~/state/design/designState";
+import { getThemedButtonSx } from "~/components/Questions/utils";
 import styles from "./ImageDisplayDesign.module.css";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
@@ -13,6 +15,7 @@ import { useService } from "~/hooks/use-service";
 function ImageDisplayDesign({ code, t, onMainLang }) {
   const designService = useService("design");
   const dispatch = useDispatch();
+  const theme = useTheme();
   const [isUploading, setUploading] = useState(false);
 
   const state = useSelector((state) => {
@@ -58,12 +61,14 @@ function ImageDisplayDesign({ code, t, onMainLang }) {
         </div>
       ) : onMainLang ? (
         <div className={styles.buttonContainer}>
-          <Button variant="outlined" 
-          component="label"
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
+          <Button
+            variant="outlined"
+            component="label"
+            sx={getThemedButtonSx(theme)}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
             <PhotoIcon className="mr-10" />
             {state.resources?.imageUrl ? t("replace_image") : t("upload_image")}
             <input

@@ -1,36 +1,21 @@
-import React from "react";
-import TextField from "@mui/material/TextField";
-import styles from "./FileUploadQuestionDesign.module.css";
+import React, { useMemo } from "react";
+import Button from "@mui/material/Button";
 import { useTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
+import { getThemedButtonSx } from "~/components/Questions/utils";
+import styles from "./FileUploadQuestionDesign.module.css";
 
-function FileUploadQuestionDesign({ code }) {
+function FileUploadQuestionDesign({ t }) {
   const theme = useTheme();
-
-  const state = useSelector((state) => {
-    return state.designState[code];
-  });
-
-  const lang = useSelector((state) => {
-    return state.designState.langInfo.lang;
-  });
+  const buttonSx = useMemo(
+    () => ({ pointerEvents: "none", ...getThemedButtonSx(theme) }),
+    [theme]
+  );
 
   return (
     <div className={styles.questionItem}>
-      <TextField
-        variant="standard"
-        required={
-          state.validation?.validation_required?.isActive ? true : false
-        }
-        label={
-          state.showHint && state.content?.[lang]
-            ? state.content[lang].hint
-            : "" || ""
-        }
-        value={""}
-        type="file"
-        disabled
-      />
+      <Button variant="outlined" disableRipple sx={buttonSx}>
+        {t("choose_file")}
+      </Button>
     </div>
   );
 }

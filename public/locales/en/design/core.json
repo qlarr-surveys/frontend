@@ -300,6 +300,7 @@
   "manual_entry_hint": "Manually add dropdown options one by one (Best for small lists)",
   "loading_values": "Loading values...",
   "upload_file": "Upload File",
+  "choose_file": "Choose File",
   "manual_entry_placeholder": "Enter one value per line",
   "submit_values": "Submit",
   "uploading_video": "Uploading Video",

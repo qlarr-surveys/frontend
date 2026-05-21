@@ -2,7 +2,8 @@ import styles from "./ChoiceItemDesign.module.css";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import CloseIcon from "@mui/icons-material/Close";
 import BuildIcon from "@mui/icons-material/Build";
-import { alpha, Box, Checkbox, Radio, TextField } from "@mui/material";
+import { Box, Checkbox, Radio, TextField } from "@mui/material";
+import { getContrastColor } from "~/components/Questions/utils";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
@@ -183,7 +184,7 @@ function ChoiceItemDesign(props) {
     }
   };
 
-  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
+  const contrastColor = getContrastColor(theme.palette.background.paper, 0.2);
 
   return (
     <div ref={ref} style={getStyles(isDragging)} data-handler-id={handlerId}>

@@ -18,6 +18,7 @@ import {
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { changeAttribute, changeResources } from "~/state/design/designState";
@@ -30,6 +31,7 @@ import {
 } from "~/utils/DateUtils";
 import { processError, PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
+import { getContrastColor } from "~/components/Questions/utils";
 
 function AutoCompleteQuestion({ code, t, onMainLang }) {
   const designService = useService("design");
@@ -48,6 +50,26 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
   const lang = useSelector((state) => {
     return state.designState.langInfo.lang;
   });
+
+  const theme = useTheme();
+  // The upload / manual-entry cards sit on the question card; derive their
+  // surface and text from the survey's paper color so they track the theme.
+  const cardVars = {
+    "--autocomplete-card-bg": getContrastColor(
+      theme.palette.background.paper,
+      0.06
+    ),
+    "--autocomplete-card-hover": getContrastColor(
+      theme.palette.background.paper,
+      0.12
+    ),
+    "--autocomplete-card-fg":
+      theme.contrast?.onPaper ||
+      getContrastColor(theme.palette.background.paper),
+    "--autocomplete-card-hint":
+      theme.palette.text?.secondary ||
+      getContrastColor(theme.palette.background.paper, 0.6),
+  };
 
   const uploadFile = (file, onSuccess, useDialogError = false) => {
     if (!useDialogError) {
@@ -174,7 +196,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
           <span>{t("uploading_autocomplete")}</span>
         </div>
       ) : onMainLang ? (
-        <div className={styles.buttonContainer}>
+        <div className={styles.buttonContainer} style={cardVars}>
           <div className={styles.optionWrapper}>
             <ButtonBase
               component="label"

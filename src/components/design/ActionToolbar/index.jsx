@@ -1,7 +1,7 @@
 import { IconButton } from "@mui/material";
 import styles from "./ActionToolbar.module.css";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import MoveDownIcon from "@mui/icons-material/MoveDown";
 import { useSelector } from "react-redux";
@@ -9,6 +9,8 @@ import { useDispatch } from "react-redux";
 import { setupOptions } from "~/constants/design";
 import { setup, cloneQuestion, deleteQuestion, deleteGroup, resetSetup } from "~/state/design/designState";
 import { useTheme } from "@emotion/react";
+import { getContrastRatio } from "@mui/material/styles";
+import { getContrastColor } from "~/components/Questions/utils";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { RuleOutlined, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
@@ -121,7 +123,23 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
     }
   };
 
-  const textColor = theme.palette.primary.main;
+  const textColor = useMemo(() => {
+    let primaryOnPaperRatio;
+    try {
+      primaryOnPaperRatio = getContrastRatio(
+        theme.palette.primary.main,
+        theme.palette.background.paper
+      );
+    } catch {
+      primaryOnPaperRatio = Infinity;
+    }
+    const onPaperFallback =
+      theme.contrast?.onPaper ||
+      getContrastColor(theme.palette.background.paper);
+    return primaryOnPaperRatio >= 3
+      ? theme.palette.primary.main
+      : onPaperFallback;
+  }, [theme]);
   const hasSkip = useSelector((state) => {
     let skipInstructions = state.designState[code]?.instructionList?.filter(
       (el) => el.code.startsWith("skip_to")
@@ -144,6 +162,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
   return (
     <div
       className={styles.actionControl}
+      style={{ color: textColor }}
       onClick={(e) => {
         if (e.target !== e.currentTarget) {
           e.preventDefault();
@@ -155,6 +174,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         <CustomTooltip title={tTooltips("has_relevance")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
+            color="inherit"
             onClick={() => expandRelevance()}
           >
             <RuleOutlined />
@@ -166,6 +186,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         <CustomTooltip title={tTooltips("is_disabled")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
+            color="inherit"
             onClick={() => expandDisabled()}
           >
             <VisibilityOff />
@@ -177,6 +198,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         <CustomTooltip title={tTooltips("has_validation")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
+            color="inherit"
             onClick={() => expandValidation()}
           >
             <VerifiedIcon />
@@ -187,6 +209,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         <CustomTooltip title={tTooltips("is_randomized")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
+            color="inherit"
             onClick={() => expandRandom(randomRule)}
           >
             <ShuffleIcon />
@@ -197,6 +220,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         <CustomTooltip title={tTooltips("has_skip")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
+            color="inherit"
             onClick={() => expandSkipLogic()}
           >
             <MoveDownIcon />
@@ -207,6 +231,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         <CustomTooltip title={t("duplicate")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
+            color="inherit"
             onClick={(e) => {
               e.stopPropagation();
               onClone();
@@ -221,6 +246,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
           <CustomTooltip title={t("delete")} showIcon={false}>
             <IconButton
               className={styles.statusIcon}
+              color="inherit"
               onClick={(e) => {
                 e.stopPropagation();
                 setDeleteModalOpen(true);

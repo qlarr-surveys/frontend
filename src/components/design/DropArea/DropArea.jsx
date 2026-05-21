@@ -1,10 +1,15 @@
+import { useMemo } from "react";
 import styles from "./DropArea.module.css";
 import { useDrop } from "react-dnd";
 import { onDrag } from "~/state/design/designState";
 import { useDispatch } from "react-redux";
 import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
-import { getContrastColor, isDisplay } from "~/components/Questions/utils";
+import {
+  getContrastColor,
+  getMildBorderColor,
+  isDisplay,
+} from "~/components/Questions/utils";
 import { useInView } from "react-intersection-observer";
 import { Box } from "@mui/material";
 import { HelpOutline } from "@mui/icons-material";
@@ -14,6 +19,18 @@ import addTextIcon from "~/assets/icons/add-text.svg";
 import addImageIcon from "~/assets/icons/add-image.svg";
 import addVideoIcon from "~/assets/icons/add-video.svg";
 import { Trans } from "react-i18next";
+
+function buildDropAreaVars(theme) {
+  const onDefault = theme.contrast?.onDefault || getContrastColor(theme.palette.background.default);
+  const onPaper = theme.contrast?.onPaper || getContrastColor(theme.palette.background.paper);
+  return {
+    "--drop-border": getMildBorderColor(onDefault, 0.4),
+    "--drop-text": onPaper,
+    "--drop-bg-idle": getContrastColor(theme.palette.background.default, 0.05),
+    "--drop-bg-active": getContrastColor(theme.palette.background.default, 0.15),
+    "--drop-hint-tile-bg": getContrastColor(theme.palette.background.paper, 0.08),
+  };
+}
 
 export function GroupDropArea({ index, groupsCount, t, emptySurvey }) {
   const dispatch = useDispatch();
@@ -48,11 +65,13 @@ export function GroupDropArea({ index, groupsCount, t, emptySurvey }) {
   const theme = useTheme();
 
   const contrastColor = getContrastColor(theme.palette.background.paper);
+  const dropAreaVars = useMemo(() => buildDropAreaVars(theme), [theme]);
 
   return (
     <div
       ref={drop}
       style={{
+        ...dropAreaVars,
         backgroundColor: isDraggingGroup && contrastColor,
         color: theme.palette.text.primary,
       }}
@@ -92,6 +111,7 @@ export function QuestionDropArea({
 }) {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const dropAreaVars = useMemo(() => buildDropAreaVars(theme), [theme]);
 
   const designMode = useSelector((state) => state.designState.designMode);
 
@@ -179,6 +199,7 @@ export function QuestionDropArea({
     <div
       ref={ref}
       style={{
+        ...dropAreaVars,
         marginRight: "1.5em",
         marginLeft: "1.5em",
       }}
