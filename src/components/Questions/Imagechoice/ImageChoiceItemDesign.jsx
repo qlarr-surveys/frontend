@@ -1,6 +1,6 @@
 import styles from "./ImageChoiceItemDesign.module.css";
 import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
-import { alpha, Box, css, Grid, IconButton, TextField } from "@mui/material";
+import { Box, css, IconButton, TextField } from "@mui/material";
 import {
   getContrastColor,
   getForegroundColor,
@@ -33,6 +33,7 @@ import { setupOptions } from "~/constants/design";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
 import ConfirmActionModal from "~/components/common/ConfirmActionModal";
+import AppThemeProvider from "~/theme";
 
 function ImageChoiceItemDesign({
   parentCode,
@@ -86,7 +87,7 @@ function ImageChoiceItemDesign({
     return state.designState.setup?.code == qualifiedCode;
   });
 
-  const contrastColor = alpha(theme.palette.primary.main, 0.25);
+  const outlineColor = theme.palette.primary.main;
   const labelColor = theme.contrast?.onDefault || getForegroundColor(theme.palette.background.default);
   const addCardBorder = theme.contrast?.mildPaperBorder || getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4);
   const addIconColor = theme.contrast?.onPaper || getForegroundColor(theme.palette.background.paper);
@@ -221,153 +222,147 @@ function ImageChoiceItemDesign({
   drop(preview(ref));
 
   return type == "add" ? (
-    <Grid item xs={12 / columnNumber} key="add">
-      <Box
-        className={styles.addAnswerButton}
-        style={{
-          minHeight: "100px",
-          width: "100%",
-          aspectRatio: imageAspectRatio,
-          backgroundColor: theme.palette.background.paper,
-          border: `1px dashed ${addCardBorder}`,
-          borderRadius: "4px",
-        }}
-      >
-        <IconButton
-          className={styles.addAnswerIcon}
-          sx={{ color: addIconColor }}
-          onClick={() => {
-            addAnswer();
-          }}
-        >
-          <AddIcon />
-        </IconButton>
-      </Box>
-    </Grid>
+    <Box
+      className={styles.addAnswerButton}
+      onClick={() => addAnswer()}
+      style={{
+        minHeight: "100px",
+        width: "100%",
+        aspectRatio: imageAspectRatio,
+        alignSelf: "start",
+        backgroundColor: theme.palette.background.paper,
+        border: `1px dashed ${addCardBorder}`,
+        borderRadius: "4px",
+        cursor: "pointer",
+      }}
+    >
+      <IconButton className={styles.addAnswerIcon} sx={{ color: addIconColor }}>
+        <AddIcon />
+      </IconButton>
+    </Box>
   ) : (
-    <>
-      <Grid
+    <Box
+      style={{
+        opacity: isDragging ? "0.2" : "1",
+      }}
+      data-code={code}
+      sx={{
+        position: "relative",
+        height: "100%",
+        width: "100%",
+        outline: isInSetup ? `solid 2px ${outlineColor}` : "none",
+        outlineOffset: "-2px",
+      }}
+    >
+      <div
+        className={styles.imageContainer}
         style={{
-          opacity: isDragging ? "0.2" : "1",
+          paddingTop: 100 / imageAspectRatio + "%",
+          backgroundImage: backgroundImage,
         }}
-        item
-        data-code={code}
-        position="relative"
-        xs={12 / columnNumber}
-        key={qualifiedCode}
+        ref={ref}
+        data-handler-id={handlerId}
       >
-        {isInSetup && (
-          <div
-            className={styles.overlay}
-            style={{ backgroundColor: contrastColor }}
-          />
-        )}
-        <div
-          className={styles.imageContainer}
-          style={{
-            paddingTop: 100 / imageAspectRatio + "%",
-            backgroundImage: backgroundImage,
-          }}
-          ref={ref}
-          data-handler-id={handlerId}
-        >
-          {inDesign(designMode) && (
-            <div className={`${btnStyles.buttonContainers} ${styles.buttonContainersAbsolute}`}>
-              <div className={btnStyles.leftZone}>
-                <IconButton ref={drag} className={btnStyles.iconButton}>
-                  <DragIndicatorIcon color="action" />
-                </IconButton>
-                <div className={btnStyles.codeWrapper}>
-                  <InlineCodeEditor
-                    qualifiedCode={qualifiedCode}
-                    designMode={designMode}
-                    compact
-                  />
-                </div>
-              </div>
-              <div className={btnStyles.rightZone}>
-                <IconButton
-                  className={btnStyles.iconButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDeleteModalOpen(true);
-                  }}
-                >
-                  <DeleteOutlineIcon />
-                </IconButton>
-                <IconButton
-                  className={btnStyles.iconButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    dispatch(
-                      setup({
-                        code: qualifiedCode,
-                        rules: setupOptions("options"),
-                      })
-                    );
-                  }}
-                >
-                  <Build />
-                </IconButton>
-                <IconButton
-                  component="label"
-                  className={btnStyles.iconButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                >
-                  <PhotoCamera />
-                  <input
-                    hidden
-                    id={`file-input-${qualifiedCode}`}
-                    accept="image/*"
-                    type="file"
-                    onChange={handleImageChange}
-                  />
-                </IconButton>
+        {inDesign(designMode) && (
+          <div className={`${btnStyles.buttonContainers} ${styles.buttonContainersAbsolute}`}>
+            <div className={btnStyles.leftZone}>
+              <IconButton ref={drag} className={btnStyles.iconButton}>
+                <DragIndicatorIcon color="action" />
+              </IconButton>
+              <div className={btnStyles.codeWrapper}>
+                <InlineCodeEditor
+                  qualifiedCode={qualifiedCode}
+                  designMode={designMode}
+                  compact
+                />
               </div>
             </div>
-          )}
+            <div className={btnStyles.rightZone}>
+              <IconButton
+                className={btnStyles.iconButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDeleteModalOpen(true);
+                }}
+              >
+                <DeleteOutlineIcon />
+              </IconButton>
+              <IconButton
+                className={btnStyles.iconButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(
+                    setup({
+                      code: qualifiedCode,
+                      rules: setupOptions("options"),
+                    })
+                  );
+                }}
+              >
+                <Build />
+              </IconButton>
+              <IconButton
+                component="label"
+                className={btnStyles.iconButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <PhotoCamera />
+                <input
+                  hidden
+                  id={`file-input-${qualifiedCode}`}
+                  accept="image/*"
+                  type="file"
+                  onChange={handleImageChange}
+                />
+              </IconButton>
+            </div>
+          </div>
+        )}
 
-          {isUploading && (
-            <div className={styles.loadingContainer}>
-              <LoadingDots />
-            </div>
-          )}
-        </div>
-        {!hideText && (
-          <Box sx={{ color: labelColor }}>
-            <ContentEditor
-              code={qualifiedCode}
-              showToolbar={false}
-              editable={contentEditable(designMode)}
-              extended={false}
-              centerText
-              placeholder={
-                onMainLang
-                  ? t("content_editor_placeholder_option", {
-                      lng: langInfo.mainLang,
-                    })
-                  : mainContent ||
-                    t("content_editor_placeholder_option", {
-                      lng: langInfo.mainLang,
-                    })
-              }
-              contentKey="label"
-            />
-          </Box>
+        {isUploading && (
+          <div className={styles.loadingContainer}>
+            <LoadingDots />
+          </div>
         )}
-      </Grid>
-      <ConfirmActionModal
-        open={deleteModalOpen}
-        title={t("delete")}
-        description={t("delete_option")}
-        cancelLabel={t("cancel")}
-        confirmLabel={t("delete")}
-        onClose={() => setDeleteModalOpen(false)}
-        onConfirm={onDelete}
-      />
-    </>
+      </div>
+      {!hideText && (
+        <Box sx={{ color: labelColor }}>
+          <ContentEditor
+            code={qualifiedCode}
+            showToolbar={false}
+            editable={contentEditable(designMode)}
+            extended={false}
+            centerText
+            placeholder={
+              onMainLang
+                ? t("content_editor_placeholder_option", {
+                    lng: langInfo.mainLang,
+                  })
+                : mainContent ||
+                  t("content_editor_placeholder_option", {
+                    lng: langInfo.mainLang,
+                  })
+            }
+            contentKey="label"
+          />
+        </Box>
+      )}
+      {deleteModalOpen && (
+        <AppThemeProvider>
+          <ConfirmActionModal
+            open
+            title={t("delete")}
+            description={t("delete_option")}
+            cancelLabel={t("cancel")}
+            confirmLabel={t("delete")}
+            onClose={() => setDeleteModalOpen(false)}
+            onConfirm={onDelete}
+          />
+        </AppThemeProvider>
+      )}
+    </Box>
   );
 }
 
