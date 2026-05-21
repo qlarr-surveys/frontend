@@ -59,6 +59,7 @@ const reservedKeys = [
   "lastAddedComponent",
   "index",
   "skipScroll",
+  "advancedByCode",
 ];
 
 export const designState = createSlice({
@@ -111,6 +112,7 @@ export const designState = createSlice({
       state["latest"] = structuredClone(newState);
       state.lastAddedComponent = null;
       state.index = buildCodeIndex(state);
+      state.advancedByCode = {};
       state.designStateReceived = true;
     },
     setup(state, action) {
@@ -129,6 +131,11 @@ export const designState = createSlice({
       if (state.setup) {
         delete state.setup.highlighted;
       }
+    },
+    setShowAdvanced(state, action) {
+      const { code, value } = action.payload;
+      if (!state.advancedByCode) state.advancedByCode = {};
+      state.advancedByCode[code] = value;
     },
     newVersionReceived(state, action) {
       const payload = action.payload;
@@ -937,6 +944,7 @@ export const {
   removeAnswer,
   setup,
   clearHighlighted,
+  setShowAdvanced,
   resetSetup,
   changeValidationValue,
   updateRandom,

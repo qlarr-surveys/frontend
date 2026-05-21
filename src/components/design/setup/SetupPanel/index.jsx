@@ -24,7 +24,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { resetSetup, clearHighlighted } from "~/state/design/designState";
+import { resetSetup, clearHighlighted, setShowAdvanced } from "~/state/design/designState";
 import { useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import Theming from "../Theming";
@@ -464,18 +464,18 @@ const SetupComponent = React.memo(({ code, rule, t, isQuickOptions }) => {
   }
 });
 
-const SETUP_SHOW_ADVANCED = "setup_show_advanced";
-
 const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   const dispatch = useDispatch();
   const [highlightedEl, setHighlightedEl] = React.useState(highlighted);
-  const [showAdvanced, setShowAdvanced] = React.useState(
-    () => localStorage.getItem(SETUP_SHOW_ADVANCED) === "true"
-  );
+  const advancedByCode = useSelector((state) => state.designState.advancedByCode ?? {});
+  const showAdvanced = advancedByCode[code] ?? false;
 
-  React.useEffect(() => {
-    localStorage.setItem(SETUP_SHOW_ADVANCED, showAdvanced);
-  }, [showAdvanced]);
+  const handleShowAdvanced = React.useCallback(
+    (value) => {
+      dispatch(setShowAdvanced({ code, value }));
+    },
+    [code, dispatch]
+  );
 
   const targetTabIndex = React.useMemo(() => {
     if (!rules?.length) return 0;
@@ -493,7 +493,15 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
 
   React.useEffect(() => {
     if (highlighted) {
-      setShowAdvanced(true);
+      const isBasicMode = !showAdvanced;
+      const visibleInBasic =
+        normalRules.includes(highlighted) ||
+        rules?.some(
+          (tab) => tab.key === highlighted && tab.rules?.some((r) => normalRules.includes(r))
+        );
+      if (!(isBasicMode && visibleInBasic)) {
+        handleShowAdvanced(true);
+      }
       setSelectedTab(targetTabIndex);
     }
   }, [targetTabIndex]);
@@ -515,7 +523,17 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   React.useEffect(() => {
     if (!highlighted) return;
 
-    setHighlightedEl(highlighted);
+    const isBasicMode = !showAdvanced;
+    if (isBasicMode) {
+      const tab = rules?.find((t) => t.key === highlighted);
+      const basicRule = tab
+        ? tab.rules?.find((r) => normalRules.includes(r))
+        : highlighted;
+      setHighlightedEl(basicRule ?? highlighted);
+    } else {
+      setHighlightedEl(highlighted);
+    }
+
     const timer = setTimeout(() => {
       setHighlightedEl(null);
       dispatch(clearHighlighted());
@@ -550,7 +568,9 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
         <Box>
           {normalRules.map((rule) => (
             <div className={styles.setupContainer} key={rule}>
-              <SetupComponent code={code} rule={rule} t={t} isQuickOptions />
+              <Box sx={rowSx(rule)}>
+                <SetupComponent code={code} rule={rule} t={t} isQuickOptions />
+              </Box>
             </div>
           ))}
         </Box>
@@ -562,7 +582,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
             variant="contained"
             size="medium"
             endIcon={<ArrowForwardIcon />}
-            onClick={() => setShowAdvanced(true)}
+            onClick={() => handleShowAdvanced(true)}
           >
             {t("show_advanced_settings")}
           </Button>
@@ -622,7 +642,7 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
               variant="contained"
               size="medium"
               startIcon={<ArrowBackIcon />}
-              onClick={() => setShowAdvanced(false)}
+              onClick={() => handleShowAdvanced(false)}
             >
               {t("hide_advanced_settings")}
             </Button>
