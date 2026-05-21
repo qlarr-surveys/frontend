@@ -1,6 +1,6 @@
 import styles from "./IconChoiceItemDesign.module.css";
 import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
-import { alpha, Box, Grid, IconButton, TextField } from "@mui/material";
+import { alpha, Box, IconButton, TextField } from "@mui/material";
 import {
   getContrastColor,
   getForegroundColor,
@@ -33,6 +33,7 @@ import { Build } from "@mui/icons-material";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
 import ConfirmActionModal from "~/components/common/ConfirmActionModal";
+import AppThemeProvider from "~/theme";
 
 function IconChoiceItemDesign({
   parentCode,
@@ -53,7 +54,6 @@ function IconChoiceItemDesign({
   const ref = useRef(null);
   const theme = useTheme();
   const [iconSelectoOpen, setIconSelectorOpen] = useState(false);
-
 
   const answer = useSelector((state) => {
     return type == "add" ? undefined : state.designState[qualifiedCode];
@@ -213,40 +213,31 @@ function IconChoiceItemDesign({
   drop(preview(ref));
 
   return type == "add" ? (
-    <Grid item xs={12 / columnNumber} height="100%" key="add">
-      <Box
-        className={styles.addAnswerButton}
-        style={{
-          minHeight: "100px",
-          width: "100%",
-          height: "100%",
-          backgroundColor: theme.palette.background.paper,
-          border: `1px dashed ${addCardBorder}`,
-          borderRadius: "4px",
-        }}
-      >
-        <IconButton
-          className={styles.addAnswerIcon}
-          sx={{ color: addIconColor }}
-          onClick={() => {
-            addAnswer();
-          }}
-        >
-          <AddIcon />
-        </IconButton>
-      </Box>
-    </Grid>
+    <Box
+      className={styles.addAnswerButton}
+      onClick={() => addAnswer()}
+      style={{
+        minHeight: "100px",
+        width: "100%",
+        height: "100%",
+        backgroundColor: theme.palette.background.paper,
+        border: `1px dashed ${addCardBorder}`,
+        borderRadius: "4px",
+        cursor: "pointer",
+      }}
+    >
+      <IconButton className={styles.addAnswerIcon} sx={{ color: addIconColor }}>
+        <AddIcon />
+      </IconButton>
+    </Box>
   ) : (
     <>
-      <Grid
+      <Box
         style={{
           opacity: isDragging ? "0.2" : "1",
         }}
-        item
         data-code={code}
-        position="relative"
-        xs={12 / columnNumber}
-        key={qualifiedCode}
+        sx={{ position: "relative", height: "100%", width: "100%" }}
       >
         {isInSetup && (
           <div
@@ -310,7 +301,9 @@ function IconChoiceItemDesign({
           <div
             style={{
               width: "100%",
+              flex: 1,
               display: "flex",
+              alignItems: "center",
               justifyContent: "center",
             }}
           >
@@ -341,7 +334,7 @@ function IconChoiceItemDesign({
             />
           )}
         </div>
-      </Grid>
+      </Box>
       {iconSelectoOpen && (
         <IconSelector
           currentIcon=""
@@ -354,15 +347,19 @@ function IconChoiceItemDesign({
           }}
         />
       )}
-      <ConfirmActionModal
-        open={deleteModalOpen}
-        title={t("delete")}
-        description={t("delete_option")}
-        cancelLabel={t("cancel")}
-        confirmLabel={t("delete")}
-        onClose={() => setDeleteModalOpen(false)}
-        onConfirm={onDelete}
-      />
+      {deleteModalOpen && (
+        <AppThemeProvider>
+          <ConfirmActionModal
+            open
+            title={t("delete")}
+            description={t("delete_option")}
+            cancelLabel={t("cancel")}
+            confirmLabel={t("delete")}
+            onClose={() => setDeleteModalOpen(false)}
+            onConfirm={onDelete}
+          />
+        </AppThemeProvider>
+      )}
     </>
   );
 }

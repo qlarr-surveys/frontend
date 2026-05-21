@@ -2,6 +2,13 @@
   scale: 2;
 }
 
+.imageContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
 .overlay {
   z-index: 1;
   position: absolute;
