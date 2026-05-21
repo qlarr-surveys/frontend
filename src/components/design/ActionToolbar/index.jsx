@@ -10,7 +10,10 @@ import { setupOptions } from "~/constants/design";
 import { setup, cloneQuestion, deleteQuestion, deleteGroup, resetSetup } from "~/state/design/designState";
 import { useTheme } from "@emotion/react";
 import { getContrastRatio } from "@mui/material/styles";
-import { getContrastColor } from "~/components/Questions/utils";
+import {
+  getContrastColor,
+  getForegroundColor,
+} from "~/components/Questions/utils";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { RuleOutlined, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
@@ -135,11 +138,24 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
     }
     const onPaperFallback =
       theme.contrast?.onPaper ||
-      getContrastColor(theme.palette.background.paper);
+      getForegroundColor(theme.palette.background.paper);
     return primaryOnPaperRatio >= 3
       ? theme.palette.primary.main
       : onPaperFallback;
   }, [theme]);
+
+  // A visible-but-soft hover wash so the toolbar actions register on hover
+  // instead of blending into the question card.
+  const iconButtonSx = useMemo(
+    () => ({
+      "&:hover": {
+        backgroundColor:
+          theme.contrast?.hoverPaper ||
+          getContrastColor(theme.palette.background.paper, 0.12),
+      },
+    }),
+    [theme]
+  );
   const hasSkip = useSelector((state) => {
     let skipInstructions = state.designState[code]?.instructionList?.filter(
       (el) => el.code.startsWith("skip_to")
@@ -175,6 +191,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
           <IconButton
             className={styles.statusIcon}
             color="inherit"
+            sx={iconButtonSx}
             onClick={() => expandRelevance()}
           >
             <RuleOutlined />
@@ -187,6 +204,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
           <IconButton
             className={styles.statusIcon}
             color="inherit"
+            sx={iconButtonSx}
             onClick={() => expandDisabled()}
           >
             <VisibilityOff />
@@ -199,6 +217,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
           <IconButton
             className={styles.statusIcon}
             color="inherit"
+            sx={iconButtonSx}
             onClick={() => expandValidation()}
           >
             <VerifiedIcon />
@@ -210,6 +229,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
           <IconButton
             className={styles.statusIcon}
             color="inherit"
+            sx={iconButtonSx}
             onClick={() => expandRandom(randomRule)}
           >
             <ShuffleIcon />
@@ -221,6 +241,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
           <IconButton
             className={styles.statusIcon}
             color="inherit"
+            sx={iconButtonSx}
             onClick={() => expandSkipLogic()}
           >
             <MoveDownIcon />
@@ -232,6 +253,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
           <IconButton
             className={styles.statusIcon}
             color="inherit"
+            sx={iconButtonSx}
             onClick={(e) => {
               e.stopPropagation();
               onClone();
@@ -247,6 +269,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
             <IconButton
               className={styles.statusIcon}
               color="inherit"
+              sx={iconButtonSx}
               onClick={(e) => {
                 e.stopPropagation();
                 setDeleteModalOpen(true);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { useSelector } from "react-redux";
 import {
@@ -31,7 +31,10 @@ import {
 } from "~/utils/DateUtils";
 import { processError, PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
-import { getContrastColor } from "~/components/Questions/utils";
+import {
+  getContrastColor,
+  getForegroundColor,
+} from "~/components/Questions/utils";
 
 function AutoCompleteQuestion({ code, t, onMainLang }) {
   const designService = useService("design");
@@ -54,22 +57,25 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
   const theme = useTheme();
   // The upload / manual-entry cards sit on the question card; derive their
   // surface and text from the survey's paper color so they track the theme.
-  const cardVars = {
-    "--autocomplete-card-bg": getContrastColor(
-      theme.palette.background.paper,
-      0.06
-    ),
-    "--autocomplete-card-hover": getContrastColor(
-      theme.palette.background.paper,
-      0.12
-    ),
-    "--autocomplete-card-fg":
-      theme.contrast?.onPaper ||
-      getContrastColor(theme.palette.background.paper),
-    "--autocomplete-card-hint":
-      theme.palette.text?.secondary ||
-      getContrastColor(theme.palette.background.paper, 0.6),
-  };
+  const cardVars = useMemo(
+    () => ({
+      "--autocomplete-card-bg": getContrastColor(
+        theme.palette.background.paper,
+        0.06
+      ),
+      "--autocomplete-card-hover": getContrastColor(
+        theme.palette.background.paper,
+        0.12
+      ),
+      "--autocomplete-card-fg":
+        theme.contrast?.onPaper ||
+        getForegroundColor(theme.palette.background.paper),
+      "--autocomplete-card-hint":
+        theme.palette.text?.secondary ||
+        getContrastColor(theme.palette.background.paper, 0.6),
+    }),
+    [theme]
+  );
 
   const uploadFile = (file, onSuccess, useDialogError = false) => {
     if (!useDialogError) {

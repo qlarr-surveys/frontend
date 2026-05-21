@@ -1,7 +1,11 @@
 import styles from "./ImageChoiceItemDesign.module.css";
 import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
 import { alpha, Box, css, Grid, IconButton, TextField } from "@mui/material";
-import { getContrastColor, getMildBorderColor } from "~/components/Questions/utils";
+import {
+  getContrastColor,
+  getForegroundColor,
+  getMildBorderColor,
+} from "~/components/Questions/utils";
 import { placeholderImageUrl } from "~/components/Questions/placeholderImage";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
@@ -28,6 +32,7 @@ import { Build } from "@mui/icons-material";
 import { setupOptions } from "~/constants/design";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
+import ConfirmActionModal from "~/components/common/ConfirmActionModal";
 
 function ImageChoiceItemDesign({
   parentCode,
@@ -70,10 +75,11 @@ function ImageChoiceItemDesign({
         ];
   });
 
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
   const onDelete = () => {
-    if (window.confirm(t("are_you_sure"))) {
-      dispatch(removeAnswer(qualifiedCode));
-    }
+    setDeleteModalOpen(false);
+    dispatch(removeAnswer(qualifiedCode));
   };
 
   const isInSetup = useSelector((state) => {
@@ -81,9 +87,9 @@ function ImageChoiceItemDesign({
   });
 
   const contrastColor = alpha(theme.palette.primary.main, 0.25);
-  const labelColor = theme.contrast?.onDefault || getContrastColor(theme.palette.background.default);
+  const labelColor = theme.contrast?.onDefault || getForegroundColor(theme.palette.background.default);
   const addCardBorder = theme.contrast?.mildPaperBorder || getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4);
-  const addIconColor = theme.contrast?.onPaper || getContrastColor(theme.palette.background.paper);
+  const addIconColor = theme.contrast?.onPaper || getForegroundColor(theme.palette.background.paper);
 
   const backgroundImage = answer?.resources?.image
     ? `url('${buildResourceUrl(answer.resources.image)}')`
@@ -282,8 +288,9 @@ function ImageChoiceItemDesign({
               <div className={btnStyles.rightZone}>
                 <IconButton
                   className={btnStyles.iconButton}
-                  onClick={() => {
-                    onDelete();
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteModalOpen(true);
                   }}
                 >
                   <DeleteOutlineIcon />
@@ -351,6 +358,15 @@ function ImageChoiceItemDesign({
           </Box>
         )}
       </Grid>
+      <ConfirmActionModal
+        open={deleteModalOpen}
+        title={t("delete")}
+        description={t("delete_option")}
+        cancelLabel={t("cancel")}
+        confirmLabel={t("delete")}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={onDelete}
+      />
     </>
   );
 }

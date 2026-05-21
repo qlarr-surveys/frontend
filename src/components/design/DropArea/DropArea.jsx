@@ -7,28 +7,35 @@ import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
 import {
   getContrastColor,
+  getForegroundColor,
   getMildBorderColor,
   isDisplay,
+  questionIconByType,
 } from "~/components/Questions/utils";
 import { useInView } from "react-intersection-observer";
 import { Box } from "@mui/material";
 import { HelpOutline } from "@mui/icons-material";
 import { inDesign } from "~/routes";
 import dragIcon from "~/assets/icons/drag.svg";
-import addTextIcon from "~/assets/icons/add-text.svg";
-import addImageIcon from "~/assets/icons/add-image.svg";
-import addVideoIcon from "~/assets/icons/add-video.svg";
 import { Trans } from "react-i18next";
 
 function buildDropAreaVars(theme) {
-  const onDefault = theme.contrast?.onDefault || getContrastColor(theme.palette.background.default);
-  const onPaper = theme.contrast?.onPaper || getContrastColor(theme.palette.background.paper);
+  const paper = theme.palette.background.paper;
+  const bgDefault = theme.palette.background.default;
+  // The dotted outline is a mild border (subtle tint), the label a readable
+  // foreground — neither derives from the dark `onPaper`/`onDefault` directly.
+  const dropBorder =
+    theme.contrast?.mildDefaultBorder ||
+    getMildBorderColor(getContrastColor(bgDefault), 0.4);
+  const dropText = theme.contrast?.onPaper || getForegroundColor(paper);
+  const hintTileBg = getContrastColor(paper, 0.08);
   return {
-    "--drop-border": getMildBorderColor(onDefault, 0.4),
-    "--drop-text": onPaper,
-    "--drop-bg-idle": getContrastColor(theme.palette.background.default, 0.05),
-    "--drop-bg-active": getContrastColor(theme.palette.background.default, 0.15),
-    "--drop-hint-tile-bg": getContrastColor(theme.palette.background.paper, 0.08),
+    "--drop-border": dropBorder,
+    "--drop-text": dropText,
+    "--drop-bg-idle": getContrastColor(bgDefault, 0.05),
+    "--drop-bg-active": getContrastColor(bgDefault, 0.15),
+    "--drop-hint-tile-bg": hintTileBg,
+    "--drop-hint-icon": getContrastColor(hintTileBg, 0.7),
   };
 }
 
@@ -112,6 +119,7 @@ export function QuestionDropArea({
   const theme = useTheme();
   const dispatch = useDispatch();
   const dropAreaVars = useMemo(() => buildDropAreaVars(theme), [theme]);
+  const hintIconColor = "var(--drop-hint-icon, #16205b)";
 
   const designMode = useSelector((state) => state.designState.designMode);
 
@@ -293,7 +301,7 @@ export function QuestionDropArea({
                 }
               >
                 <div className={styles.endPageActionIcon}>
-                  <img src={addTextIcon} alt="" width={24} height={24} />
+                  {questionIconByType("text_display", "24px", hintIconColor)}
                 </div>
                 <span>{t("add_a_text")}</span>
               </div>
@@ -311,7 +319,7 @@ export function QuestionDropArea({
                 }
               >
                 <div className={styles.endPageActionIcon}>
-                  <img src={addImageIcon} alt="" width={24} height={24} />
+                  {questionIconByType("image_display", "24px", hintIconColor)}
                 </div>
                 <span>{t("add_a_image")}</span>
               </div>
@@ -329,7 +337,7 @@ export function QuestionDropArea({
                 }
               >
                 <div className={styles.endPageActionIcon}>
-                  <img src={addVideoIcon} alt="" width={24} height={24} />
+                  {questionIconByType("video_display", "24px", hintIconColor)}
                 </div>
                 <span>{t("add_video")}</span>
               </div>

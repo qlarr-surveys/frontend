@@ -3,7 +3,7 @@ import PagesIcon from "@mui/icons-material/Pages";
 import FlagIcon from "@mui/icons-material/Flag";
 import StartIcon from "@mui/icons-material/Start";
 import SurveyIcon from "../common/SurveyIcons/SurveyIcon";
-import { alpha, getContrastRatio } from "@mui/material";
+import { getContrastRatio } from "@mui/material";
 
 export const groupIconByType = (type, size = "medium") => {
   switch (type) {
@@ -183,6 +183,12 @@ export const isDarkColor = (color) => {
   return (0.299 * r + 0.587 * g + 0.114 * b) / 255 <= 0.5;
 };
 
+// A readable text/icon color for content placed directly on `bg`.
+// getContrastColor() returns a subtle background tint; this returns a genuine
+// high-contrast foreground (near-black on light surfaces, near-white on dark).
+export const getForegroundColor = (bg) =>
+  getContrastColor(bg, isDarkColor(bg) ? 0.13 : 0.87);
+
 // Outlined-button styling for design-editor question controls (capture/upload
 // previews and media upload buttons). A filled button needs a strong accent
 // color, but the survey's `primary` is often left at the default indigo
@@ -192,15 +198,17 @@ export const isDarkColor = (color) => {
 // rest of the design editor already uses.
 export const getThemedButtonSx = (theme) => {
   const paper = theme.palette.background.paper;
-  const onPaper = theme.contrast?.onPaper || getContrastColor(paper);
+  const onPaper = theme.contrast?.onPaper || getForegroundColor(paper);
   const borderColor =
-    theme.contrast?.mildPaperBorder || getMildBorderColor(onPaper, 0.4);
+    theme.contrast?.mildPaperBorder ||
+    getMildBorderColor(getContrastColor(paper), 0.4);
+  const hoverBg = theme.contrast?.hoverPaper || getContrastColor(paper, 0.12);
   return {
     color: onPaper,
     borderColor,
     "&:hover": {
       borderColor: onPaper,
-      backgroundColor: alpha(onPaper, 0.08),
+      backgroundColor: hoverBg,
     },
   };
 };
