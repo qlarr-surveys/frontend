@@ -4,7 +4,8 @@ import styles from "./GroupDesign.module.css";
 import { useSelector } from "react-redux";
 import { QuestionDropArea } from "../design/DropArea/DropArea";
 import GroupHeader from "./GroupHeader";
-import { Box, Divider, decomposeColor, recomposeColor } from "@mui/material";
+import { Box, Divider } from "@mui/material";
+import { getContrastColor } from "~/components/Questions/utils";
 import { useDrag, useDrop } from "react-dnd";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
@@ -115,11 +116,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
 
   drop(preview(containerRef));
 
-  const contrastColor = blendColors(
-  theme.palette.background.paper,  // background
-  theme.textStyles.question.color, // overlay
-  0.2                              // opacity
-)
+  const contrastColor = getContrastColor(theme.palette.background.paper, 0.2);
 
 
   if (!group) {
@@ -223,19 +220,3 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
 }
 
 export default React.memo(GroupDesign);
-
-const blendColors = (background, overlay, opacity) => {
-  const bg = decomposeColor(background);
-  const fg = decomposeColor(overlay);
-  
-  const blended = {
-    type: 'rgb',
-    values: [
-      Math.round(fg.values[0] * opacity + bg.values[0] * (1 - opacity)),
-      Math.round(fg.values[1] * opacity + bg.values[1] * (1 - opacity)),
-      Math.round(fg.values[2] * opacity + bg.values[2] * (1 - opacity)),
-    ],
-  };
-  
-  return recomposeColor(blended);
-};

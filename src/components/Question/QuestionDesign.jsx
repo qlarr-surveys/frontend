@@ -3,8 +3,9 @@ import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 
 import styles from "./QuestionDesign.module.css";
 import ContentEditor from "~/components/design/ContentEditor";
-import { alpha, Box, css } from "@mui/material";
+import { Box, css } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { getContrastColor } from "~/components/Questions/utils";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
 import { useSelector } from "react-redux";
 import { onDrag, setup } from "~/state/design/designState";
@@ -121,8 +122,8 @@ function QuestionDesign({
 
   drop(preview(containerRef));
 
-  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
-  const hoverColor = alpha(theme.textStyles.question.color, 0.05);
+  const contrastColor = getContrastColor(theme.palette.background.paper, 0.2);
+  const hoverColor = getContrastColor(theme.palette.background.paper, 0.05);
   const textColor = theme.textStyles.question.color;
   const action = theme.palette.action.active;
 

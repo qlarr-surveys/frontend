@@ -330,6 +330,7 @@
   "manual_entry_hint": "Añada opciones del menú desplegable manualmente una a una (Ideal para listas pequeñas)",
   "loading_values": "Cargando valores...",
   "upload_file": "Subir archivo",
+  "choose_file": "Elegir Archivo",
   "manual_entry_placeholder": "Ingrese un valor por línea",
   "submit_values": "Enviar",
   "uploading_image": "Subiendo Imagen",

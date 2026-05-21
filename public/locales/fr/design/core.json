@@ -330,6 +330,7 @@
   "manual_entry_hint": "Ajoutez manuellement les options de la liste déroulante une par une (Idéal pour les petites listes)",
   "loading_values": "Chargement des valeurs...",
   "upload_file": "Télécharger un fichier",
+  "choose_file": "Choisir un Fichier",
   "manual_entry_placeholder": "Entrez une valeur par ligne",
   "submit_values": "Soumettre",
   "uploading_image": "Téléchargement de l'Image",

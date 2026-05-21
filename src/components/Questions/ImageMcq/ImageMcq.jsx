@@ -4,6 +4,7 @@ import { valueChange } from "~/state/runState";
 import { useTheme } from "@emotion/react";
 import { Box, Checkbox } from "@mui/material";
 import { buildResourceUrl } from "~/networking/common";
+import { placeholderImageUrl } from "~/components/Questions/placeholderImage";
 import styles from "./ImageMcq.module.css";
 import { setDirty } from "~/state/templateState";
 import { rtlLanguage } from "~/utils/common";
@@ -74,7 +75,7 @@ function ImageMcqItem(props) {
   };
   const backgroundImage = props.option.resources?.image
     ? `url('${buildResourceUrl(props.option.resources?.image)}')`
-    : `url('/placeholder-image.jpg')`;
+    : placeholderImageUrl(theme);
 
   return (
     <Box

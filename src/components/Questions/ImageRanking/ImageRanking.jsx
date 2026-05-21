@@ -5,6 +5,7 @@ import { Box, Grid } from "@mui/material";
 import { shallowEqual, useDispatch } from "react-redux";
 import { valueChange } from "~/state/runState";
 import { buildResourceUrl } from "~/networking/common";
+import { placeholderImageUrl } from "~/components/Questions/placeholderImage";
 import { useSelector } from "react-redux";
 import { setDirty } from "~/state/templateState";
 import { rtlLanguage } from "~/utils/common";
@@ -108,7 +109,7 @@ function ImageRankingItem(props) {
 
   const backgroundImage = props.option.resources?.image
     ? `url('${buildResourceUrl(props.option.resources.image)}')`
-    : `url('/placeholder-image.jpg')`;
+    : placeholderImageUrl(theme);
 
   return (
     <Box

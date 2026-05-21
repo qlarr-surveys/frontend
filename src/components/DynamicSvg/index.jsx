@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./DynamicSvg.module.css";
+import { placeholderIconSvg } from "~/components/Questions/placeholderImage";
 
 function DynamicSvg({
   svgUrl,
@@ -10,16 +11,21 @@ function DynamicSvg({
   isSelected = false,
   theme,
 }) {
-  const [svgContent, setSvgContent] = useState("");
+  const [fetchedSvg, setFetchedSvg] = useState("");
 
   useEffect(() => {
+    if (!svgUrl) return;
     const fetchSvg = async () => {
-      const response = await fetch(svgUrl || "/placeholder-image.svg");
+      const response = await fetch(svgUrl);
       const svgText = await response.text();
-      setSvgContent(svgText);
+      setFetchedSvg(svgText);
     };
     fetchSvg();
   }, [svgUrl]);
+
+  // No uploaded icon yet: fall back to the theme-aware placeholder, generated
+  // inline so it recolours with the survey theme.
+  const svgContent = svgUrl ? fetchedSvg : placeholderIconSvg(theme);
 
   return (
     <div
@@ -42,7 +48,7 @@ function DynamicSvg({
       }}
       onClick={onIconClick}
       className={styles.svgContainer}
-      dangerouslySetInnerHTML={{ __html: svgContent ? svgContent : "" }}
+      dangerouslySetInnerHTML={{ __html: svgContent }}
     />
   );
 }

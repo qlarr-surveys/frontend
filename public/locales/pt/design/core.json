@@ -330,6 +330,7 @@
   "manual_entry_hint": "Adicione opções do menu suspenso manualmente uma a uma (Ideal para listas pequenas)",
   "loading_values": "Carregando valores...",
   "upload_file": "Carregar arquivo",
+  "choose_file": "Escolher Arquivo",
   "manual_entry_placeholder": "Insira um valor por linha",
   "submit_values": "Enviar",
   "uploading_image": "Enviando Imagem",

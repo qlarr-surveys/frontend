@@ -3,7 +3,7 @@ import PagesIcon from "@mui/icons-material/Pages";
 import FlagIcon from "@mui/icons-material/Flag";
 import StartIcon from "@mui/icons-material/Start";
 import SurveyIcon from "../common/SurveyIcons/SurveyIcon";
-import { getContrastRatio } from "@mui/material";
+import { alpha, getContrastRatio } from "@mui/material";
 
 export const groupIconByType = (type, size = "medium") => {
   switch (type) {
@@ -102,34 +102,35 @@ function blendColors(color1, color2, opacity) {
   return [r, g, b];
 }
 
-export const getContrastColor = (hexColor, opacity = 0.2) => {
-  const rgbColor = hexToRgb(hexColor);
+const colorStringToRgb = (input) => {
+  if (typeof input === "string" && input.startsWith("#")) {
+    return hexToRgb(input);
+  }
+  const { r, g, b } = extractRgbaValues(input || "");
+  return [r, g, b];
+};
 
-  // Calculate luminance
+export const getContrastColor = (color, opacity = 0.2) => {
+  const rgbColor = colorStringToRgb(color);
+
   const luminance =
     (0.299 * rgbColor[0] + 0.587 * rgbColor[1] + 0.114 * rgbColor[2]) / 255;
 
-  // Determine contrast color (black or white)
   const contrastRgb = luminance > 0.5 ? [0, 0, 0] : [255, 255, 255];
   const effectiveOpacity = luminance > 0.5 ? opacity : 1 - opacity;
 
-  // Blend the original color with the contrasting color
   const blendedRgb = blendColors(rgbColor, contrastRgb, effectiveOpacity);
 
-  // Convert the blended RGB color back to hex
   return rgbToHex(...blendedRgb);
 };
 
-export const getMildBorderColor = (textColor, opacity = 0.2) => {
-  const rgbColor = hexToRgb(textColor);
+export const getMildBorderColor = (color, opacity = 0.2) => {
+  const rgbColor = colorStringToRgb(color);
 
-  // Create a gray color (neutral gray)
   const grayRgb = [120, 120, 120];
 
-  // Blend the text color with gray to create a mild version
   const mildRgb = blendColors(rgbColor, grayRgb, opacity);
 
-  // Convert back to hex
   return rgbToHex(...mildRgb);
 };
 
@@ -174,6 +175,34 @@ export const colorToThemeMode = (color) => {
 
   // If white text has better contrast, use dark theme
   return whiteContrast > blackContrast ? "light" : "dark";
+};
+
+// True when a color is dark enough that light content reads better on it.
+export const isDarkColor = (color) => {
+  const [r, g, b] = colorStringToRgb(color);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 <= 0.5;
+};
+
+// Outlined-button styling for design-editor question controls (capture/upload
+// previews and media upload buttons). A filled button needs a strong accent
+// color, but the survey's `primary` is often left at the default indigo
+// (authors usually customize only their background colors), which clashes with
+// a themed survey. So these render as outlined buttons whose border and label
+// derive entirely from the question card's `paper` contrast — the palette the
+// rest of the design editor already uses.
+export const getThemedButtonSx = (theme) => {
+  const paper = theme.palette.background.paper;
+  const onPaper = theme.contrast?.onPaper || getContrastColor(paper);
+  const borderColor =
+    theme.contrast?.mildPaperBorder || getMildBorderColor(onPaper, 0.4);
+  return {
+    color: onPaper,
+    borderColor,
+    "&:hover": {
+      borderColor: onPaper,
+      backgroundColor: alpha(onPaper, 0.08),
+    },
+  };
 };
 
 export const QUESTION_TYPES = [
