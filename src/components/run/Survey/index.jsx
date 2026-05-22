@@ -89,13 +89,9 @@ function Survey() {
             ? survey.groups
                 .filter((group) => group.inCurrentNavigation)
                 .map((group, index) => (
-                  <div
-                    key={group.code}
-                    id={`group-${index}`}
-                    data-index={index}
-                  >
+
                     <Group group={group} groupIndex={index} />
-                  </div>
+
                 ))
             : ""}
           <Navigation navigationIndex={navigationIndex} />

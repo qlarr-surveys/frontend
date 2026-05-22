@@ -30,61 +30,59 @@ function Group(props) {
 
   const showGroup = () => {
     return (
-      <>
-        <Box
-          data-code={props.group.code}
-          className={styles.topLevel}
-          sx={{
-            borderRadius: "12px",
-            boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
-            backgroundColor: theme.palette.background.paper,
-          }}
-        >
-          <div className={styles.groupHeader}>
-            <Content
-              elementCode={props.group.code}
-              name="label"
-              customStyle={`
+      <Box
+        data-code={props.group.code}
+        className={styles.topLevel}
+        sx={{
+          width:"100%",
+          borderRadius: "12px",
+          boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
+          backgroundColor: theme.palette.background.paper,
+        }}
+      >
+        <div className={styles.groupHeader}>
+          <Content
+            elementCode={props.group.code}
+            name="label"
+            customStyle={`
         font-size: ${theme.textStyles.group.size}px;
         `}
-              content={props.group.content?.label}
-            />
+            content={props.group.content?.label}
+          />
 
-            {props.group.showDescription &&
-              props.group.content?.description && (
-                <Box className={styles.textDescription}>
-                  <Content
-                    elementCode={props.group.code}
-                    name="description"
-                    customStyle={`
+          {props.group.showDescription && props.group.content?.description && (
+            <Box className={styles.textDescription}>
+              <Content
+                elementCode={props.group.code}
+                name="description"
+                customStyle={`
         font-size: ${theme.textStyles.text.size}px;
         `}
-                    content={props.group.content?.description}
-                  />
-                </Box>
-              )}
-          </div>
+                content={props.group.content?.description}
+              />
+            </Box>
+          )}
+        </div>
 
-          {props.group && props.group.questions
-            ? (() => {
-                const visibleQuestions = props.group.questions.filter(
-                  (quest) => quest.inCurrentNavigation
-                );
-                return visibleQuestions.map((quest, idx) => (
-                  <React.Fragment key={quest.code}>
-                    <Question component={quest} />
-                    {visibleQuestionCodes.indexOf(quest.code) >= 0 && (
-                      <Divider sx={{ mt: "12px", mb: "12px" }} />
-                    )}
-                  </React.Fragment>
-                ));
-              })()
-            : ""}
-        </Box>
-      </>
+        {props.group && props.group.questions
+          ? (() => {
+              const visibleQuestions = props.group.questions.filter(
+                (quest) => quest.inCurrentNavigation,
+              );
+              return visibleQuestions.map((quest, idx) => (
+                <React.Fragment key={quest.code}>
+                  <Question component={quest} />
+                  {visibleQuestionCodes.indexOf(quest.code) >= 0 && (
+                    <Divider sx={{ mt: "12px", mb: "12px" }} />
+                  )}
+                </React.Fragment>
+              ));
+            })()
+          : ""}
+      </Box>
     );
   };
-  return state.showGroup && (props.group ? showGroup() : "");
+  return state.showGroup && (props.group ? showGroup() : <></>);
 }
 
 export default React.memo(Group);

@@ -223,7 +223,7 @@ function QuestionDesign({
               designMode == DESIGN_SURVEY_MODE.DESIGN ||
               designMode == DESIGN_SURVEY_MODE.LANGUAGES
             }
-            extended={type == "text_display"}
+            extended={true}
             placeholder={t("content_editor_placeholder_title", {
               lng: langInfo.mainLang,
             })}
