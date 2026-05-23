@@ -93,9 +93,10 @@ function ImageMcqItem(props) {
           paddingTop: 100 / props.aspectRatio + "%",
           backgroundImage: backgroundImage,
           borderRadius: "4px",
-          border: checked
-            ? `4px solid ${theme.palette.primary.main}`
-            : "4px solid transparent",
+          outline: checked
+            ? `2px solid ${theme.palette.primary.main}`
+            : "none",
+          outlineOffset: "-2px",
         }}
       >
         <div className={styles.selection}>

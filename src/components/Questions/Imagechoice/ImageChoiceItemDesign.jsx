@@ -250,6 +250,7 @@ function ImageChoiceItemDesign({
         position: "relative",
         height: "100%",
         width: "100%",
+        borderRadius: "4px",
         outline: isInSetup ? `solid 2px ${outlineColor}` : "none",
         outlineOffset: "-2px",
       }}

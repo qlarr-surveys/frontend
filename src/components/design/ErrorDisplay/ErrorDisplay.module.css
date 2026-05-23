@@ -6,8 +6,8 @@
 }
 
 .errorItem {
-  border: 1px solid var(--error-display-border, orange);
-  background-color: var(--error-display-tint, rgba(255, 166, 0, 0.13));
+  border: 1px solid orange;
+  background-color: rgba(255, 166, 0, 0.13);
   border-radius: 4px;
   padding: 8px;
 }
@@ -20,7 +20,7 @@
   display: inline-block;
   font-family: monospace;
   font-size: 0.7rem;
-  background-color: var(--error-display-badge-bg, rgba(0, 0, 0, 0.08));
+  background-color: rgba(0, 0, 0, 0.08);
   border-radius: 3px;
   padding: 1px 5px;
   margin-inline-end: 6px;
