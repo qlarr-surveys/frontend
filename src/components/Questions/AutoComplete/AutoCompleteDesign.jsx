@@ -31,10 +31,7 @@ import {
 } from "~/utils/DateUtils";
 import { processError, PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
-import {
-  getContrastColor,
-  getForegroundColor,
-} from "~/components/Questions/utils";
+import { getContrastColor } from "~/components/Questions/utils";
 
 function AutoCompleteQuestion({ code, t, onMainLang }) {
   const designService = useService("design");
@@ -56,7 +53,9 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
 
   const theme = useTheme();
   // The upload / manual-entry cards sit on the question card; derive their
-  // surface and text from the survey's paper color so they track the theme.
+  // surface from the survey's paper color so they track the theme, and use the
+  // survey's text color for the icon + title so they match the other action
+  // buttons in the editor.
   const cardVars = useMemo(
     () => ({
       "--autocomplete-card-bg": getContrastColor(
@@ -67,9 +66,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         theme.palette.background.paper,
         0.12
       ),
-      "--autocomplete-card-fg":
-        theme.contrast?.onPaper ||
-        getForegroundColor(theme.palette.background.paper),
+      "--autocomplete-card-fg": theme.palette.text.primary,
       "--autocomplete-card-hint":
         theme.palette.text?.secondary ||
         getContrastColor(theme.palette.background.paper, 0.6),

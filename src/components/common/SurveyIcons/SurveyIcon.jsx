@@ -272,12 +272,22 @@ const iconPaths = {
   ),
 
   email: (props) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11.79 8.84">
+    <svg
+      {...props}
+      style={{
+        ...props.style,
+        fill: "none",
+        stroke: props.style?.fill || "#16205b",
+        strokeWidth: 1.7,
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+      }}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+    >
       <g id="Isolation_Mode" data-name="Isolation Mode">
-        <path
-          className="cls-1"
-          d="M1.11,0C.5,0,0,.5,0,1.11c0,.35.16.67.44.88l5.01,3.76c.26.2.62.2.88,0l5.01-3.76c.28-.21.44-.54.44-.88,0-.61-.5-1.11-1.11-1.11C10.68,0,1.11,0,1.11,0ZM0,2.58v4.79c0,.81.66,1.47,1.47,1.47h8.84c.81,0,1.47-.66,1.47-1.47V2.58l-5.01,3.76c-.52.39-1.24.39-1.77,0L0,2.58Z"
-        />
+        <rect x="2.5" y="5.5" width="19" height="13" rx="2" ry="2" />
+        <path d="M3 7l9 6 9-6" />
       </g>
     </svg>
   ),
@@ -544,45 +554,20 @@ const iconPaths = {
   multipleText: (props) => (
     <svg
       {...props}
+      style={{
+        ...props.style,
+        fill: "none",
+        stroke: props.style?.fill || "#16205b",
+        strokeWidth: 1.9,
+        strokeLinecap: "round",
+      }}
       xmlns="http://www.w3.org/2000/svg"
-      xmlnsXlink="http://www.w3.org/1999/xlink"
-      version="1.1"
-      viewBox="0 0 256 256"
-      enableBackground="new 0 0 256 256"
-      xmlSpace="preserve"
+      viewBox="0 0 24 24"
     >
-      <metadata>
-        {" "}
-        Svg Vector Icons : http://www.onlinewebfonts.com/icon{" "}
-      </metadata>
-      <g>
-        <g>
-          <g>
-            <g id="menu">
-              <g>
-                <path
-                  fill="#000000"
-                  d="M32.1,91.1h191.7c12.2,0,22.1-9.9,22.1-22.1c0-12.2-9.9-22.1-22.1-22.1H32.1C19.9,46.9,10,56.8,10,69S19.9,91.1,32.1,91.1z M32.1,61.6h191.7c4.1,0,7.4,3.3,7.4,7.4c0,4.1-3.3,7.4-7.4,7.4H32.1c-4.1,0-7.4-3.3-7.4-7.4C24.8,64.9,28.1,61.6,32.1,61.6z M223.8,105.9H32.1c-12.2,0-22.1,9.9-22.1,22.1c0,12.2,9.9,22.1,22.1,22.1h191.7c12.2,0,22.1-9.9,22.1-22.1C246,115.8,236.1,105.9,223.8,105.9z M223.8,135.4H32.1c-4.1,0-7.4-3.3-7.4-7.4c0-4.1,3.3-7.4,7.4-7.4h191.7c4.1,0,7.4,3.3,7.4,7.4C231.2,132.1,227.9,135.4,223.8,135.4z M223.8,164.9H32.1c-12.2,0-22.1,9.9-22.1,22.1c0,12.2,9.9,22.1,22.1,22.1h191.7c12.2,0,22.1-9.9,22.1-22.1C246,174.8,236.1,164.9,223.8,164.9z M223.8,194.4H32.1c-4.1,0-7.4-3.3-7.4-7.4s3.3-7.4,7.4-7.4h191.7c4.1,0,7.4,3.3,7.4,7.4S227.9,194.4,223.8,194.4z"
-                />
-              </g>
-            </g>
-          </g>
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-          <g />
-        </g>
+      <g id="Isolation_Mode" data-name="Isolation Mode">
+        <path d="M4 6h16" />
+        <path d="M4 12h16" />
+        <path d="M4 18h11" />
       </g>
     </svg>
   ),
@@ -834,30 +819,20 @@ const iconPaths = {
   time: (props) => (
     <svg
       {...props}
-      style={{ fill: "none", strokeWidth: "1.5", stroke: "#16205b" }}
+      style={{
+        ...props.style,
+        fill: "none",
+        stroke: props.style?.fill || "#16205b",
+        strokeWidth: 1.7,
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+      }}
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 19.72 19.63"
+      viewBox="0 0 24 24"
     >
-      <g>
-        <circle
-          cx="9.86"
-          cy="9.815"
-          r="8.5"
-          fill="none"
-          stroke="#16205b"
-          strokeWidth="2.5"
-        />
-        <circle cx="9.86" cy="9.815" r="7.5" fill="white" />
-        <rect x="9.76" y="3.315" width="0.2" height="6" fill="#16205b" />
-        <rect
-          x="9.76"
-          y="9.815"
-          width="6"
-          height="0.2"
-          fill="#16205b"
-          transform="translate(-4.8, 0)"
-        />
-        <circle cx="9.86" cy="9.815" r="0.6" fill="#16205b" />
+      <g id="Isolation_Mode" data-name="Isolation Mode">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
       </g>
     </svg>
   ),
