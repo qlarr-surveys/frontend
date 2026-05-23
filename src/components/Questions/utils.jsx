@@ -189,28 +189,6 @@ export const isDarkColor = (color) => {
 export const getForegroundColor = (bg) =>
   getContrastColor(bg, isDarkColor(bg) ? 0.13 : 0.87);
 
-// Outlined-button styling for design-editor question controls (capture/upload
-// previews and media upload buttons). A filled button needs a strong accent
-// color, but the survey's `primary` is often left at the default indigo
-// (authors usually customize only their background colors), which clashes with
-// a themed survey. So these render as outlined buttons whose border and label
-// derive entirely from the question card's `paper` contrast — the palette the
-// rest of the design editor already uses.
-export const getThemedButtonSx = (theme) => {
-  const paper = theme.palette.background.paper;
-  const onPaper = theme.contrast?.onPaper || getForegroundColor(paper);
-  const borderColor =
-    theme.contrast?.mildPaperBorder ||
-    getMildBorderColor(getContrastColor(paper), 0.4);
-  return {
-    color: onPaper,
-    borderColor,
-    "&:hover": {
-      borderColor: onPaper,
-    },
-  };
-};
-
 export const QUESTION_TYPES = [
   {
     name: "section_text_based",

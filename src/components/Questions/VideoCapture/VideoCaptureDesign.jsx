@@ -1,11 +1,8 @@
 import { Box, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import React, { useMemo } from "react";
+import React from "react";
 import VideocamIcon from "@mui/icons-material/Videocam";
-import {
-  getForegroundColor,
-  getThemedButtonSx,
-} from "~/components/Questions/utils";
+import { getForegroundColor } from "~/components/Questions/utils";
 
 import styles from "./VideoCaptureDesign.module.css";
 import { useSelector } from "react-redux";
@@ -25,11 +22,10 @@ function VideoCaptureDesign({ code }) {
   const hintColor =
     theme.contrast?.onPaper ||
     getForegroundColor(theme.palette.background.paper);
-  const buttonSx = useMemo(() => getThemedButtonSx(theme), [theme]);
 
   return (
     <Box className={styles.container}>
-      <Button variant="outlined" sx={buttonSx}>
+      <Button variant="contained" color="primary">
         <VideocamIcon sx={{ fontSize: "48px" }} />
       </Button>
       <br />
