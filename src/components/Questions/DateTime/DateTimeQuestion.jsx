@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import TextField from "@mui/material/TextField";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -10,13 +10,50 @@ import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 
 import styles from "./DateTimeQuestion.module.css";
-import { useTheme } from "@mui/system";
+import { useTheme, alpha } from "@mui/material/styles";
 import { valueChange } from "~/state/runState";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function DateTimeQuestion(props) {
   const theme = useTheme();
   const { i18n } = useTranslation(NAMESPACES.RUN);
+
+  // Popup styling derived from the survey theme so the picker matches the
+  // surrounding card instead of always rendering on white.
+  const pickerPaperProps = useMemo(() => {
+    const paper = theme.palette.background.paper;
+    const onPaper = theme.contrast?.onPaper;
+    const primary = theme.palette.primary.main;
+    // Hover wash uses the primary color (with alpha) so it stays distinct
+    // from the day-number text — `theme.contrast.hoverPaper` blends in the
+    // same direction as the text and can match it on mid-luminance papers.
+    const hoverBg = alpha(primary, 0.24);
+    return {
+      sx: {
+        backgroundColor: paper,
+        color: onPaper,
+        "& .MuiPickersDay-root": {
+          backgroundColor: "transparent",
+          color: onPaper,
+          "&:hover, &:focus": { backgroundColor: hoverBg, color: onPaper },
+          "&.Mui-selected": {
+            backgroundColor: primary,
+            color: theme.palette.primary.contrastText,
+            "&:hover, &:focus": {
+              backgroundColor: primary,
+              color: theme.palette.primary.contrastText,
+            },
+          },
+        },
+        "& .MuiPickersCalendarHeader-root, & .MuiDayCalendar-weekDayLabel, & .MuiPickersYear-yearButton, & .MuiPickersMonth-monthButton, & .MuiClock-pin, & .MuiClockPointer-root, & .MuiClockNumber-root": {
+          color: onPaper,
+        },
+        "& .MuiPickersYear-yearButton:hover, & .MuiPickersMonth-monthButton:hover": {
+          backgroundColor: hoverBg,
+        },
+      },
+    };
+  }, [theme]);
 
   const state = useSelector((state) => {
     let own = state.runState.values[props.component.qualifiedCode];
@@ -82,14 +119,7 @@ function DateTimeQuestion(props) {
                 " " +
                 (props.component.fullDayFormat ? "HH:mm" : "hh:mm A")
               }
-              PaperProps={{
-                sx: {
-                  backgroundColor: 'white',
-                  "& .MuiPickersDay-root": {
-                    backgroundColor: 'white',
-                  },
-                },
-              }}
+              PaperProps={pickerPaperProps}
 
               ampm={props.component.fullDayFormat ? false : true}
               openTo="year"
@@ -135,14 +165,7 @@ function DateTimeQuestion(props) {
             value={state.value}
             error={state.invalid}
             onChange={handleDateChange}
-            PaperProps={{
-              sx: {
-                backgroundColor: 'white',
-                "& .MuiPickersDay-root": {
-                  backgroundColor: 'white',
-                },
-              },
-            }}
+            PaperProps={pickerPaperProps}
           />
         ) : (
           <DatePicker
@@ -167,14 +190,7 @@ function DateTimeQuestion(props) {
                 )
                 : undefined
             }
-            PaperProps={{
-              sx: {
-                backgroundColor: 'white',
-                "& .MuiPickersDay-root": {
-                  backgroundColor: 'white',
-                },
-              },
-            }}
+            PaperProps={pickerPaperProps}
             maxDate={
               props.component.maxDate
                 ? window.QlarrScripts.dateStringToDate(
