@@ -157,6 +157,11 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
             isDarkColor(theme.palette.background.paper) ? 0.88 : 0.12,
           ),
       },
+      "&:focus-visible, &.Mui-focusVisible, &:active": {
+        backgroundColor: "transparent",
+        outline: "2px solid currentColor",
+        outlineOffset: "-2px",
+      },
     }),
     [theme]
   );

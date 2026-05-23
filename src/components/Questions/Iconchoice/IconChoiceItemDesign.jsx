@@ -251,10 +251,13 @@ function IconChoiceItemDesign({
           className={styles.imageContainer}
         >
           {inDesign(designMode) && (
-            <div className={btnStyles.buttonContainers}>
+            <div
+              className={btnStyles.buttonContainers}
+              style={{ color: addIconColor }}
+            >
               <div className={btnStyles.leftZone}>
-                <IconButton ref={drag} className={btnStyles.iconButton}>
-                  <DragIndicatorIcon color="action" />
+                <IconButton ref={drag} className={btnStyles.iconButton} color="inherit">
+                  <DragIndicatorIcon />
                 </IconButton>
                 <div className={btnStyles.codeWrapper}>
                   <InlineCodeEditor
@@ -267,6 +270,7 @@ function IconChoiceItemDesign({
               <div className={btnStyles.rightZone}>
                 <IconButton
                   className={btnStyles.iconButton}
+                  color="inherit"
                   onClick={(e) => {
                     e.stopPropagation();
                     setDeleteModalOpen(true);
@@ -276,6 +280,7 @@ function IconChoiceItemDesign({
                 </IconButton>
                 <IconButton
                   className={btnStyles.iconButton}
+                  color="inherit"
                   onClick={(e) => {
                     e.stopPropagation();
                     dispatch(
@@ -291,6 +296,7 @@ function IconChoiceItemDesign({
                 <IconButton
                   component="label"
                   className={btnStyles.iconButton}
+                  color="inherit"
                   onClick={() => setIconSelectorOpen(true)}
                 >
                   <PhotoCamera />
