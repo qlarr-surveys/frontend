@@ -72,10 +72,11 @@ function ImageScq(props) {
                 paddingTop: `${100 / props.component.imageAspectRatio}%`,
                 borderRadius: "4px",
                 backgroundImage: backgroundImage,
-                border:
+                outline:
                   state.value === option.code
-                    ? `4px solid ${theme.palette.primary.main}`
-                    : "4px solid transparent",
+                    ? `2px solid ${theme.palette.primary.main}`
+                    : "none",
+                outlineOffset: "-2px",
               }}
             >
               <div className={styles.selection}>

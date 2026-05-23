@@ -7,7 +7,7 @@ const ICON_CONTRAST = 0.32; // icon: soft but legible
 // Stacked-photos artwork for empty image-choice option tiles.
 const imageSvgMarkup = (tile, icon) =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">` +
-  `<rect width="256" height="256" rx="16" fill="${tile}"/>` +
+  `<rect width="256" height="256" rx="4" fill="${tile}"/>` +
   // back photo frame: outline only, rotated, peeking out behind
   `<rect x="44" y="62" width="150" height="116" rx="14" fill="none" stroke="${icon}" ` +
   `stroke-width="11" stroke-linejoin="round" transform="rotate(-15 119 120)"/>` +
