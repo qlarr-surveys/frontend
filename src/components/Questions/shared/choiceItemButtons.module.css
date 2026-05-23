@@ -4,6 +4,14 @@
   margin: 4px !important;
 }
 
+.iconButton:focus-visible,
+.iconButton:global(.Mui-focusVisible),
+.iconButton:active {
+  background-color: transparent !important;
+  outline: 2px solid currentColor !important;
+  outline-offset: -2px !important;
+}
+
 .hoverIconButton {
   display: none;
   border-radius: 0 !important;

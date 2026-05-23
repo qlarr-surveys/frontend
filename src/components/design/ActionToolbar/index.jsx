@@ -154,6 +154,11 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
           theme.contrast?.hoverPaper ||
           getContrastColor(theme.palette.background.paper, 0.12),
       },
+      "&:focus-visible, &.Mui-focusVisible, &:active": {
+        backgroundColor: "transparent",
+        outline: "2px solid currentColor",
+        outlineOffset: "-2px",
+      },
     }),
     [theme]
   );
