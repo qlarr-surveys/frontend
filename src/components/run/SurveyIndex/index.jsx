@@ -8,11 +8,19 @@ import { shallowEqual, useSelector } from "react-redux";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
 import { jump } from "~/state/runState";
-import { questionIconByType } from "~/components/Questions/utils";
+import {
+  questionIconByType,
+  getForegroundColor,
+} from "~/components/Questions/utils";
 
 function SurveyIndex(props) {
   const theme = useTheme();
   const dispatch = useDispatch();
+
+  const iconColor =
+    theme.contrast?.onPaper ||
+    getForegroundColor(theme.palette.background.paper);
+  const activeBg = theme.contrast?.hoverPaper || theme.palette.action?.hover;
 
   const relevance_map = useSelector((state) => {
     return state.runState.values["Survey"].relevance_map;
@@ -77,7 +85,7 @@ function SurveyIndex(props) {
                   className={styles.groupCard}
                   style={{
                     backgroundColor: isCurrentGroup(group.code)
-                      ? "beige"
+                      ? activeBg
                       : theme.palette.background.paper,
                     cursor: isGroupClickable(group.code)
                       ? "pointer"
@@ -97,7 +105,7 @@ function SurveyIndex(props) {
                           className={styles.questionTitle}
                           style={{
                             backgroundColor: isCurrentQuestion(question.code)
-                              ? "beige"
+                              ? activeBg
                               : "inherit",
                             cursor: isGroupClickable(group.code)
                               ? "inherit"
@@ -107,7 +115,7 @@ function SurveyIndex(props) {
                           }}
                         >
                           <span className={styles.questionIcon}>
-                            {questionIconByType(question.type)}
+                            {questionIconByType(question.type, "1.25em", iconColor)}
                           </span>
 
                           <span className={styles.truncatedTwoLines}>
