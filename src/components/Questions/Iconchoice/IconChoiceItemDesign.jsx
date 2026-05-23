@@ -236,7 +236,11 @@ function IconChoiceItemDesign({
         cursor: "pointer",
       }}
     >
-      <IconButton className={styles.addAnswerIcon} sx={{ color: addIconColor }}>
+      <IconButton
+        className={styles.addAnswerIcon}
+        disableRipple
+        sx={{ color: addIconColor }}
+      >
         <AddIcon />
       </IconButton>
     </Box>
