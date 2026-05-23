@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import QuestionDesign from "~/components/Question/QuestionDesign";
 import styles from "./GroupDesign.module.css";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { QuestionDropArea } from "../design/DropArea/DropArea";
 import GroupHeader from "./GroupHeader";
 import { Box, Divider } from "@mui/material";
@@ -15,11 +15,11 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
   const dispatch = useDispatch();
   const group = useSelector((state) => {
     return state.designState[code];
-  });
+  }, shallowEqual);
 
   const langInfo = useSelector((state) => {
     return  state.designState.langInfo;
-  });
+  }, shallowEqual);
 
   const inDesign = designMode == DESIGN_SURVEY_MODE.DESIGN;
 

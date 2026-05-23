@@ -20,7 +20,7 @@ import {
 } from "~/state/design/designState";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddIcon from "@mui/icons-material/Add";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import IconSelector from "~/components/design/IconSelector";
 import { rtlLanguage } from "~/utils/common";
 import { useDrag, useDrop } from "react-dnd";
@@ -83,8 +83,18 @@ function IconChoiceItemDesign({
     return state.designState.setup?.code == qualifiedCode;
   });
   const outlineColor = theme.palette.primary.main;
-  const addCardBorder = theme.contrast?.mildPaperBorder || getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4);
-  const addIconColor = theme.contrast?.onPaper || getForegroundColor(theme.palette.background.paper);
+  const addCardBorder = useMemo(
+    () =>
+      theme.contrast?.mildPaperBorder ||
+      getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4),
+    [theme]
+  );
+  const addIconColor = useMemo(
+    () =>
+      theme.contrast?.onPaper ||
+      getForegroundColor(theme.palette.background.paper),
+    [theme]
+  );
 
   const dragType = parentCode + "icon-drag";
   const getRowByIndex = (index) => {

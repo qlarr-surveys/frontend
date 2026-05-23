@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { alpha, Box, css, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -54,7 +54,7 @@ function ContentPanel({ designMode }, ref) {
 
   const groups = useSelector((state) => {
     return state.designState["Survey"]?.children || [];
-  });
+  }, shallowEqual);
   const logoImage = useSelector(
     (state) => state.designState["Survey"]?.resources?.logoImage
   );
@@ -134,7 +134,8 @@ function ContentPanel({ designMode }, ref) {
     useDragNearViewportEdge(virtuosoWrapperRef);
 
   const lastAddedComponent = useSelector(
-    (state) => state.designState.lastAddedComponent
+    (state) => state.designState.lastAddedComponent,
+    shallowEqual
   );
   const skipScroll = useSelector((state) => state.designState.skipScroll);
   const dispatch = useDispatch();

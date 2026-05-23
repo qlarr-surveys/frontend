@@ -7,7 +7,7 @@ import { Box, css } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { getContrastColor } from "~/components/Questions/utils";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { onDrag, setup } from "~/state/design/designState";
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
@@ -46,7 +46,7 @@ function QuestionDesign({
 
   const question = useSelector((state) => {
     return state.designState[code];
-  });
+  }, shallowEqual);
 
   const [isDragging, drag, preview] = useDrag({
     type: "questions",
@@ -122,7 +122,10 @@ function QuestionDesign({
 
   drop(preview(containerRef));
 
-  const contrastColor = getContrastColor(theme.palette.background.paper, 0.2);
+  const contrastColor = useMemo(
+    () => getContrastColor(theme.palette.background.paper, 0.2),
+    [theme]
+  );
   const outlineColor = theme.palette.primary.main;
   const action = theme.palette.action.active;
 

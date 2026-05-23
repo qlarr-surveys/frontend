@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   getContrastColor,
   getMildBorderColor,
@@ -13,13 +13,16 @@ function SignatureDesign() {
   const theme = useTheme();
   const paper = theme.palette.background.paper;
   // A soft frame for the pad — mild border, not the dark `onPaper` foreground.
-  const borderColor =
-    theme.contrast?.mildPaperBorder ||
-    getMildBorderColor(getContrastColor(paper), 0.4);
+  const borderColor = useMemo(
+    () =>
+      theme.contrast?.mildPaperBorder ||
+      getMildBorderColor(getContrastColor(paper), 0.4),
+    [theme, paper]
+  );
   // signature.png is dark ink on a transparent background. The pad takes the
   // survey's paper color so it tracks the theme; on a dark-papered theme the
   // ink is inverted to white so the signature stays legible against it.
-  const darkPaper = isDarkColor(paper);
+  const darkPaper = useMemo(() => isDarkColor(paper), [paper]);
   return (
     <Box
       className={styles.signatureCanvas}
