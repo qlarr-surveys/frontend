@@ -53,10 +53,10 @@
 .questionRow {
   position: relative;
   display: grid;
-  grid-template-columns: 3px 28px 1fr 20px;
+  grid-template-columns: 28px 1fr 20px;
   align-items: center;
   gap: 12px;
-  padding: 8px 12px 8px 0;
+  padding: 8px 12px;
   border-radius: 10px;
   color: var(--qlarr-on-paper);
   cursor: default;
@@ -73,18 +73,6 @@
 
 .questionRow[data-state="current"] {
   background-color: var(--qlarr-hover-paper);
-}
-
-.accentBar {
-  display: block;
-  width: 3px;
-  height: 22px;
-  border-radius: 0 3px 3px 0;
-  background-color: transparent;
-}
-
-.questionRow[data-state="current"] .accentBar {
-  background-color: var(--qlarr-primary);
 }
 
 .iconTile {
@@ -141,8 +129,4 @@
 .statusIcon[data-status="answered"] {
   color: var(--qlarr-on-paper);
   opacity: 0.55;
-}
-
-[dir="rtl"] .accentBar {
-  border-radius: 3px 0 0 3px;
 }

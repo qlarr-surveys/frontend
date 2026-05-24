@@ -12,6 +12,7 @@ import {
 } from "~/components/Questions/utils";
 import CheckCircleOutlineOutlined from "@mui/icons-material/CheckCircleOutlineOutlined";
 import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
+import { getClosestScrollableParent } from "~/components/run/Navigation";
 
 function SurveyIndex(props) {
   const theme = useTheme();
@@ -62,23 +63,46 @@ function SurveyIndex(props) {
   };
 
   const isGroupClickable = (groupCode) =>
-    canJump &&
-    !isCurrentGroup(groupCode) &&
-    props.navigationIndex.name == "group";
+    canJump && !isCurrentGroup(groupCode);
 
   const isQuestionClickable = (questionCode) =>
-    canJump &&
-    !isCurrentQuestion(questionCode) &&
-    props.navigationIndex.name == "question";
+    canJump && !isCurrentQuestion(questionCode);
 
-  const onGroupClicked = (groupCode) => {
-    if (isGroupClickable(groupCode)) {
-      dispatch(jump({ ...props.navigationIndex, groupId: groupCode }));
-    }
+  const closeDrawer = () => {
+    if (props.onCloseDrawer) props.onCloseDrawer();
   };
 
-  const onQuestionClicked = (questionCode) => {
-    if (isQuestionClickable(questionCode)) {
+  const scrollToElement = (el) => {
+    const container = getClosestScrollableParent(el);
+    container.scrollTo({
+      top: el.offsetTop - container.offsetTop,
+      behavior: "smooth",
+    });
+  };
+
+  const onGroupClicked = (groupCode) => {
+    if (!isGroupClickable(groupCode)) return;
+    closeDrawer();
+    dispatch(jump({ ...props.navigationIndex, groupId: groupCode }));
+  };
+
+  const onQuestionClicked = (questionCode, groupCode) => {
+    if (!isQuestionClickable(questionCode)) {
+      closeDrawer();
+      return;
+    }
+    closeDrawer();
+    const el = document.querySelector(`[data-code="${questionCode}"]`);
+    if (el) {
+      scrollToElement(el);
+      return;
+    }
+    if (props.onPendingScrollTarget) {
+      props.onPendingScrollTarget(questionCode);
+    }
+    if (props.navigationIndex.name === "group") {
+      dispatch(jump({ ...props.navigationIndex, groupId: groupCode }));
+    } else {
       dispatch(jump({ ...props.navigationIndex, questionId: questionCode }));
     }
   };
@@ -152,9 +176,8 @@ function SurveyIndex(props) {
                       className={styles.questionRow}
                       data-state={state}
                       data-clickable={clickable ? "true" : "false"}
-                      onClick={() => onQuestionClicked(question.code)}
+                      onClick={() => onQuestionClicked(question.code, group.code)}
                     >
-                      <span className={styles.accentBar} aria-hidden="true" />
                       <span className={styles.iconTile}>
                         {questionIconByType(question.type, "1em", iconColor)}
                       </span>

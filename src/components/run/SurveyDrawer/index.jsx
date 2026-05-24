@@ -7,7 +7,7 @@ import { Close } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
 import { getForegroundColor } from "~/components/Questions/utils";
 
-function SurveyDrawer({ expanded, toggleDrawer, t }) {
+function SurveyDrawer({ expanded, toggleDrawer, t, onPendingScrollTarget }) {
   const theme = useTheme();
 
   const navigationIndex = useSelector((state) => {
@@ -103,6 +103,8 @@ function SurveyDrawer({ expanded, toggleDrawer, t }) {
           navigationIndex={navigationIndex}
           survey={survey}
           t={t}
+          onCloseDrawer={toggleDrawer(false)}
+          onPendingScrollTarget={onPendingScrollTarget}
         />
       </div>
     </Drawer>
