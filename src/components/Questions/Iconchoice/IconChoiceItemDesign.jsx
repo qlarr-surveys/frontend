@@ -20,7 +20,7 @@ import {
 } from "~/state/design/designState";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddIcon from "@mui/icons-material/Add";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import IconSelector from "~/components/design/IconSelector";
 import { rtlLanguage } from "~/utils/common";
 import { useDrag, useDrop } from "react-dnd";
@@ -83,8 +83,22 @@ function IconChoiceItemDesign({
     return state.designState.setup?.code == qualifiedCode;
   });
   const outlineColor = theme.palette.primary.main;
-  const addCardBorder = theme.contrast?.mildPaperBorder || getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4);
-  const addIconColor = theme.contrast?.onPaper || getForegroundColor(theme.palette.background.paper);
+  const addCardBorder = useMemo(
+    () =>
+      theme.contrast?.mildPaperBorder ||
+      getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4),
+    [theme]
+  );
+  const addIconColor = useMemo(
+    () =>
+      theme.contrast?.onPaper ||
+      getForegroundColor(theme.palette.background.paper),
+    [theme]
+  );
+  // The right-zone pill paints a solid contrast surface so action icons stay
+  // legible against the paper, regardless of the placeholder icon underneath.
+  const pillBg = addIconColor;
+  const pillFg = useMemo(() => getForegroundColor(pillBg), [pillBg]);
 
   const dragType = parentCode + "icon-drag";
   const getRowByIndex = (index) => {
@@ -271,7 +285,10 @@ function IconChoiceItemDesign({
                   />
                 </div>
               </div>
-              <div className={btnStyles.rightZone}>
+              <div
+                className={`${btnStyles.rightZone} ${btnStyles.pillZone}`}
+                style={{ "--qlarr-pill-bg": pillBg, "--qlarr-pill-fg": pillFg }}
+              >
                 <IconButton
                   className={btnStyles.iconButton}
                   color="inherit"
