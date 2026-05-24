@@ -6,7 +6,10 @@ import {
   getForegroundColor,
   getMildBorderColor,
 } from "~/components/Questions/utils";
-import { placeholderImageUrl } from "~/components/Questions/placeholderImage";
+import {
+  placeholderImageUrl,
+  placeholderTileColor,
+} from "~/components/Questions/placeholderImage";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -91,6 +94,10 @@ function ImageChoiceItemDesign({
   const labelColor = theme.contrast?.onDefault || getForegroundColor(theme.palette.background.default);
   const addCardBorder = theme.contrast?.mildPaperBorder || getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4);
   const addIconColor = theme.contrast?.onPaper || getForegroundColor(theme.palette.background.paper);
+  // Action icons sit on top of the placeholder tile, not the paper itself.
+  // On dark papers the tile flips to near-white, so `onPaper` (also near-white)
+  // would be invisible. Derive the icon color from the tile we actually paint.
+  const buttonIconColor = getForegroundColor(placeholderTileColor(theme));
 
   const backgroundImage = answer?.resources?.image
     ? `url('${buildResourceUrl(answer.resources.image)}')`
@@ -236,7 +243,11 @@ function ImageChoiceItemDesign({
         cursor: "pointer",
       }}
     >
-      <IconButton className={styles.addAnswerIcon} sx={{ color: addIconColor }}>
+      <IconButton
+        className={styles.addAnswerIcon}
+        disableRipple
+        sx={{ color: addIconColor }}
+      >
         <AddIcon />
       </IconButton>
     </Box>
@@ -265,10 +276,13 @@ function ImageChoiceItemDesign({
         data-handler-id={handlerId}
       >
         {inDesign(designMode) && (
-          <div className={`${btnStyles.buttonContainers} ${styles.buttonContainersAbsolute}`}>
+          <div
+            className={`${btnStyles.buttonContainers} ${styles.buttonContainersAbsolute}`}
+            style={{ color: buttonIconColor }}
+          >
             <div className={btnStyles.leftZone}>
-              <IconButton ref={drag} className={btnStyles.iconButton}>
-                <DragIndicatorIcon color="action" />
+              <IconButton ref={drag} className={btnStyles.iconButton} color="inherit">
+                <DragIndicatorIcon />
               </IconButton>
               <div className={btnStyles.codeWrapper}>
                 <InlineCodeEditor
@@ -281,6 +295,7 @@ function ImageChoiceItemDesign({
             <div className={btnStyles.rightZone}>
               <IconButton
                 className={btnStyles.iconButton}
+                color="inherit"
                 onClick={(e) => {
                   e.stopPropagation();
                   setDeleteModalOpen(true);
@@ -290,6 +305,7 @@ function ImageChoiceItemDesign({
               </IconButton>
               <IconButton
                 className={btnStyles.iconButton}
+                color="inherit"
                 onClick={(e) => {
                   e.stopPropagation();
                   dispatch(
@@ -305,6 +321,7 @@ function ImageChoiceItemDesign({
               <IconButton
                 component="label"
                 className={btnStyles.iconButton}
+                color="inherit"
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
