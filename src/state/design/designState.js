@@ -352,7 +352,7 @@ export const designState = createSlice({
       )[index + 1];
       if (nextAnswerOfSameType && nextAnswerOfSameType.qualifiedCode) {
         state.focus = nextAnswerOfSameType.qualifiedCode;
-      } else {
+      } else if (state.designMode === DESIGN_SURVEY_MODE.DESIGN) {
         designState.caseReducers.addNewAnswer(state, {
           payload: {
             questionCode,
