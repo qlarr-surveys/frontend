@@ -1,8 +1,6 @@
 import React from "react";
 
 import styles from "./SurveyIndex.module.css";
-import { Card } from "@mui/material";
-import { Box } from "@mui/system";
 import { stripTags } from "~/utils/design/utils";
 import { shallowEqual, useSelector } from "react-redux";
 import { useTheme } from "@emotion/react";
@@ -12,6 +10,8 @@ import {
   questionIconByType,
   getForegroundColor,
 } from "~/components/Questions/utils";
+import CheckCircleOutlineOutlined from "@mui/icons-material/CheckCircleOutlineOutlined";
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 
 function SurveyIndex(props) {
   const theme = useTheme();
@@ -20,7 +20,6 @@ function SurveyIndex(props) {
   const iconColor =
     theme.contrast?.onPaper ||
     getForegroundColor(theme.palette.background.paper);
-  const activeBg = theme.contrast?.hoverPaper || theme.palette.action?.hover;
 
   const relevance_map = useSelector((state) => {
     return state.runState.values["Survey"].relevance_map;
@@ -29,6 +28,20 @@ function SurveyIndex(props) {
   const validity_map = useSelector((state) => {
     return state.runState.values["Survey"].validity_map;
   }, shallowEqual);
+
+  const answeredSet = useSelector((state) => {
+    const set = new Set();
+    const values = state.runState.values;
+    for (const code in values) {
+      if (code === "Survey") continue;
+      if (values[code]?.value !== undefined) set.add(code);
+    }
+    return set;
+  }, (a, b) => {
+    if (a.size !== b.size) return false;
+    for (const code of a) if (!b.has(code)) return false;
+    return true;
+  });
 
   const canJump = useSelector((state) => {
     return state.runState.data.navigationData.allowJump;
@@ -70,68 +83,98 @@ function SurveyIndex(props) {
     }
   };
 
-  return (
-    <>
-      {props.survey && props.survey.groups
-        ? props.survey.groups
-            .filter(
-              (group) => relevance_map[group.code] && group.groupType != "END"
-            )
-            .map((group) => {
-              return (
-                <Card
-                  onClick={() => onGroupClicked(group.code)}
-                  key={group.code}
-                  className={styles.groupCard}
-                  style={{
-                    backgroundColor: isCurrentGroup(group.code)
-                      ? activeBg
-                      : theme.palette.background.paper,
-                    cursor: isGroupClickable(group.code)
-                      ? "pointer"
-                      : "default",
-                  }}
-                >
-                  <Box className={styles.groupTitle}>
-                    {stripTags(group.content?.label)}{" "}
-                  </Box>
-                  {group.questions
-                    .filter((question) => relevance_map[question.code])
-                    .map((question) => {
-                      return (
-                        <Box
-                          key={question.code}
-                          onClick={() => onQuestionClicked(question.code)}
-                          className={styles.questionTitle}
-                          style={{
-                            backgroundColor: isCurrentQuestion(question.code)
-                              ? activeBg
-                              : "inherit",
-                            cursor: isGroupClickable(group.code)
-                              ? "inherit"
-                              : isQuestionClickable(group.code)
-                              ? "pointer"
-                              : "default",
-                          }}
-                        >
-                          <span className={styles.questionIcon}>
-                            {questionIconByType(question.type, "1.25em", iconColor)}
-                          </span>
+  const questionState = (questionCode) => {
+    if (isCurrentQuestion(questionCode)) return "current";
+    if (validity_map[questionCode] === false) return "invalid";
+    if (answeredSet.has(questionCode)) return "answered";
+    return "pending";
+  };
 
-                          <span className={styles.truncatedTwoLines}>
-                            {stripTags(question.content?.label)}
-                          </span>
-                          {!validity_map[question.code] && (
-                            <span className={styles.redAsterix}>*</span>
-                          )}
-                        </Box>
-                      );
-                    })}
-                </Card>
-              );
-            })
-        : ""}
-    </>
+  const renderStatusIcon = (state) => {
+    if (state === "invalid") {
+      return (
+        <ErrorOutlineOutlined
+          className={styles.statusIcon}
+          fontSize="inherit"
+          data-status="invalid"
+        />
+      );
+    }
+    if (state === "answered") {
+      return (
+        <CheckCircleOutlineOutlined
+          className={styles.statusIcon}
+          fontSize="inherit"
+          data-status="answered"
+        />
+      );
+    }
+    return null;
+  };
+
+  const untitledLabel = props.t ? props.t("untitled_question") : "(Untitled)";
+
+  if (!props.survey?.groups) return null;
+
+  const groups = props.survey.groups.filter(
+    (group) => relevance_map[group.code] && group.groupType != "END",
+  );
+
+  return (
+    <div className={styles.list}>
+      {groups.map((group) => {
+        const groupClickable = isGroupClickable(group.code);
+        const groupCurrent = isCurrentGroup(group.code);
+        const groupLabel = stripTags(group.content?.label) || "";
+        return (
+          <section key={group.code} className={styles.groupSection}>
+            {groupLabel && (
+              <div
+                className={styles.groupHeader}
+                data-clickable={groupClickable ? "true" : "false"}
+                data-current={groupCurrent ? "true" : "false"}
+                onClick={() => onGroupClicked(group.code)}
+              >
+                {groupLabel}
+              </div>
+            )}
+            <ul className={styles.questionList}>
+              {group.questions
+                .filter((question) => relevance_map[question.code])
+                .map((question) => {
+                  const state = questionState(question.code);
+                  const clickable = isQuestionClickable(question.code);
+                  const rawLabel = stripTags(question.content?.label) || "";
+                  const labelText = rawLabel.trim();
+                  return (
+                    <li
+                      key={question.code}
+                      className={styles.questionRow}
+                      data-state={state}
+                      data-clickable={clickable ? "true" : "false"}
+                      onClick={() => onQuestionClicked(question.code)}
+                    >
+                      <span className={styles.accentBar} aria-hidden="true" />
+                      <span className={styles.iconTile}>
+                        {questionIconByType(question.type, "1em", iconColor)}
+                      </span>
+                      <span
+                        className={styles.questionLabel}
+                        data-empty={labelText ? "false" : "true"}
+                      >
+                        {labelText || untitledLabel}
+                      </span>
+                      <span className={styles.statusSlot}>
+                        {renderStatusIcon(state)}
+                      </span>
+                    </li>
+                  );
+                })}
+            </ul>
+          </section>
+        );
+      })}
+    </div>
   );
 }
 
