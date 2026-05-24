@@ -521,7 +521,10 @@ const SetupSection = React.memo(({ highlighted, rules, code, t, theme }) => {
   }, [rules]);
 
   React.useEffect(() => {
-    if (!highlighted) return;
+    if (!highlighted) {
+      setHighlightedEl(null);
+      return;
+    }
 
     const isBasicMode = !showAdvanced;
     if (isBasicMode) {
