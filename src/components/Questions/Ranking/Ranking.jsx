@@ -18,7 +18,7 @@ function Ranking(props) {
 
   const visibleAnswers = useSelector(
     (state) =>
-      props.component.answers.filter((ans) => {
+      (props.component.answers || []).filter((ans) => {
         return state.runState.values[ans.qualifiedCode]?.relevance ?? true;
       }),
     shallowEqual

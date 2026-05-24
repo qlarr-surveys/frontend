@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
@@ -22,6 +22,13 @@ export const SurveyHeader = ({ showPreview }) => {
   const { surveyId } = useParams();
   const surveyName = useSelector(
     (state) => state.editState?.survey?.name || ""
+  );
+
+  const hasDesignErrors = useSelector((state) =>
+    Object.values(state.designState).some(
+      (component) =>
+        component?.designErrors && component.designErrors.length > 0
+    )
   );
 
   const user = TokenService.getUser();
@@ -56,21 +63,35 @@ export const SurveyHeader = ({ showPreview }) => {
           <Typography variant="h3">{surveyName}</Typography>
         </Box>
         {showPreview && (
-          <Button
-            data-tour="preview-button"
-            variant="contained"
-            color="primary"
-            sx={{ mr: 2 }}
-            endIcon={<VisibilityIcon sx={{ color: "#fff" }} />}
-            onClick={() => {
-              window.open(
-                routes.preview.replace(":surveyId", surveyId),
-                "_blank"
-              );
-            }}
+          <Tooltip
+            title={
+              hasDesignErrors ? t("preview_blocked_design_errors") : ""
+            }
+            placement="bottom"
           >
-            {t("preview")}
-          </Button>
+            <span>
+              <Button
+                data-tour="preview-button"
+                variant="contained"
+                color="primary"
+                disabled={hasDesignErrors}
+                sx={{ mr: 2 }}
+                endIcon={
+                  <VisibilityIcon
+                    sx={{ color: hasDesignErrors ? undefined : "#fff" }}
+                  />
+                }
+                onClick={() => {
+                  window.open(
+                    routes.preview.replace(":surveyId", surveyId),
+                    "_blank"
+                  );
+                }}
+              >
+                {t("preview")}
+              </Button>
+            </span>
+          </Tooltip>
         )}
       </Box>
     )

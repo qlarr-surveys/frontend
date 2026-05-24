@@ -14,11 +14,12 @@ import { setDirty } from "~/state/templateState";
 import MCQAnswer from "./MCQAnswer";
 
 function MCQ(props) {
+  const answers = props.component.answers || [];
   const parentValue = useSelector((state) => {
     return state.runState.values[props.component.qualifiedCode].value || [];
   }, shallowEqual);
-  const hasAll = props.component.answers.some((answer) => answer.type == "all");
-  const allCodes = props.component.answers
+  const hasAll = answers.some((answer) => answer.type == "all");
+  const allCodes = answers
     .filter(
       (answer) =>
         answer.type !== "all" &&
@@ -33,7 +34,7 @@ function MCQ(props) {
   return (
     <FormControl component="fieldset">
       <FormGroup>
-        {props.component.answers.map((option) => {
+        {answers.map((option) => {
           if (option.type === "other") {
             return (
               <McqAnswerOther

@@ -12,9 +12,10 @@ import { rtlLanguage } from "~/utils/common";
 import Content from '~/components/run/Content';
 
 function ImageRanking(props) {
+  const answers = props.component.answers || [];
   const values = useSelector((state) => {
     let valuesMap = {};
-    props.component.answers.forEach((element) => {
+    answers.forEach((element) => {
       valuesMap[element.qualifiedCode] =
         state.runState.values[element.qualifiedCode].value;
     });
@@ -77,7 +78,7 @@ function ImageRanking(props) {
       }}
       className={styles.imageFlexContainer}
     >
-      {props.component.answers.map((option) => {
+      {answers.map((option) => {
         return (
           <ImageRankingItem
             option={option}

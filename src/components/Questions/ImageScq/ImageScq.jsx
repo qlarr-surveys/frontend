@@ -45,7 +45,7 @@ function ImageScq(props) {
       }}
       className={styles.imageFlexContainer}
     >
-      {props.component.answers.map((option) => {
+      {(props.component.answers || []).map((option) => {
         const backgroundImage = option.resources?.image
           ? `url('${buildResourceUrl(option.resources?.image)}')`
           : placeholderBg;

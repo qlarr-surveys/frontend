@@ -18,11 +18,10 @@ import Content from "~/components/run/Content";
 function SCQIconArray(props) {
   const theme = useTheme();
   const width = useColumnMinWidth();
+  const answers = props.component.answers || [];
 
-  let columns = props.component.answers.filter(
-    (answer) => answer.type == "column"
-  );
-  let rows = props.component.answers.filter((answer) => answer.type == "row");
+  let columns = answers.filter((answer) => answer.type == "column");
+  let rows = answers.filter((answer) => answer.type == "row");
 
   return (
     <TableContainer
