@@ -67,6 +67,13 @@ export function placeholderImageUrl(theme) {
   return buildImageUrl(paperOf(theme));
 }
 
+// The resolved tile colour painted behind the placeholder artwork. Exported so
+// callers rendering controls on top of the tile can derive a contrasting
+// foreground from the same surface the tile uses, instead of from paper.
+export function placeholderTileColor(theme) {
+  return getContrastColor(paperOf(theme), TILE_CONTRAST);
+}
+
 /**
  * Theme-aware placeholder for empty icon-choice slots, as raw inline SVG
  * markup (injected into the DOM by DynamicSvg). Keeps the original single

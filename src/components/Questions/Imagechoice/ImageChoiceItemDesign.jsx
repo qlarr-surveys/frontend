@@ -6,7 +6,10 @@ import {
   getForegroundColor,
   getMildBorderColor,
 } from "~/components/Questions/utils";
-import { placeholderImageUrl } from "~/components/Questions/placeholderImage";
+import {
+  placeholderImageUrl,
+  placeholderTileColor,
+} from "~/components/Questions/placeholderImage";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -91,6 +94,10 @@ function ImageChoiceItemDesign({
   const labelColor = theme.contrast?.onDefault || getForegroundColor(theme.palette.background.default);
   const addCardBorder = theme.contrast?.mildPaperBorder || getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4);
   const addIconColor = theme.contrast?.onPaper || getForegroundColor(theme.palette.background.paper);
+  // Action icons sit on top of the placeholder tile, not the paper itself.
+  // On dark papers the tile flips to near-white, so `onPaper` (also near-white)
+  // would be invisible. Derive the icon color from the tile we actually paint.
+  const buttonIconColor = getForegroundColor(placeholderTileColor(theme));
 
   const backgroundImage = answer?.resources?.image
     ? `url('${buildResourceUrl(answer.resources.image)}')`
@@ -271,7 +278,7 @@ function ImageChoiceItemDesign({
         {inDesign(designMode) && (
           <div
             className={`${btnStyles.buttonContainers} ${styles.buttonContainersAbsolute}`}
-            style={{ color: addIconColor }}
+            style={{ color: buttonIconColor }}
           >
             <div className={btnStyles.leftZone}>
               <IconButton ref={drag} className={btnStyles.iconButton} color="inherit">
