@@ -3,6 +3,7 @@ import {
   getContrastColor,
   getForegroundColor,
   getMildBorderColor,
+  isDarkColor,
 } from "~/components/Questions/utils";
 export {
   BG_COLOR, TEXT_COLOR, PRIMARY_COLOR, SECONDARY_COLOR, ERR_COLOR,
@@ -29,8 +30,13 @@ export const defualtTheme = (theme) => {
   const mildPaperBorder = getMildBorderColor(getContrastColor(paperColor), 0.4);
   const mildDefaultBorder = getMildBorderColor(getContrastColor(bgColor), 0.4);
 
-  // Visible-but-soft hover wash for interactive controls on the card.
-  const hoverPaper = getContrastColor(paperColor, 0.12);
+  // A *subtle* hover wash that always stays close to the paper color.
+  // getContrastColor inverts its opacity arg on dark inputs, so we pass the
+  // complementary value when paper is dark to land on ~12% in both cases.
+  const hoverPaper = getContrastColor(
+    paperColor,
+    isDarkColor(paperColor) ? 0.88 : 0.12,
+  );
 
   return {
     textStyles: {

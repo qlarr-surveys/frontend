@@ -13,6 +13,7 @@ import { getContrastRatio } from "@mui/material/styles";
 import {
   getContrastColor,
   getForegroundColor,
+  isDarkColor,
 } from "~/components/Questions/utils";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { RuleOutlined, VisibilityOff } from "@mui/icons-material";
@@ -151,7 +152,10 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
       "&:hover": {
         backgroundColor:
           theme.contrast?.hoverPaper ||
-          getContrastColor(theme.palette.background.paper, 0.12),
+          getContrastColor(
+            theme.palette.background.paper,
+            isDarkColor(theme.palette.background.paper) ? 0.88 : 0.12,
+          ),
       },
     }),
     [theme]
