@@ -345,7 +345,7 @@ const QuestionWrapper = React.memo((props) => {
 
   return (
     <Box
-      data-code={props.code}
+      data-code={props.qualifiedCode}
       css={css`
         ${replaceFormatInstructions(props.customCss, formatState, "custom_css")}
       `}
