@@ -16,10 +16,9 @@ import Content from "~/components/run/Content";
 
 function Array(props) {
   const theme = useTheme();
-  let columns = props.component.answers.filter(
-    (answer) => answer.type == "column"
-  );
-  let rows = props.component.answers.filter((answer) => answer.type == "row");
+  const answers = props.component.answers || [];
+  let columns = answers.filter((answer) => answer.type == "column");
+  let rows = answers.filter((answer) => answer.type == "row");
   const { header, rowLabel } = useColumnMinWidth(null, props.component);
 
   return (
