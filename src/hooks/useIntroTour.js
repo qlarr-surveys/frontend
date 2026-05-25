@@ -10,7 +10,6 @@ import {
   mirrorPositionForRtl,
   positionSkipButtonAwayFromArrow,
   readTourProgress,
-  saveTourStep,
   setNextButtonText,
   setPrevButtonText,
 } from "~/utils/tour";
@@ -28,12 +27,15 @@ export function useIntroTour({
   onExitExtra,
 }) {
   const introInstanceRef = useRef(null);
+  const isProgrammaticExitRef = useRef(false);
 
   useEffect(() => {
     if (!enabled) return undefined;
 
     const { completed, startStep } = readTourProgress(storageKey);
     if (completed) return undefined;
+
+    isProgrammaticExitRef.current = false;
 
     const rtl = isSessionRtl();
     const tourSteps = getSteps();
@@ -96,19 +98,18 @@ export function useIntroTour({
         }, 0);
       });
 
-      intro.onComplete(function (currentStep, reason) {
-        if (reason === "done") {
-          markTourCompleted(storageKey);
-        } else {
-          saveTourStep(storageKey, currentStep ?? 0);
-        }
+      intro.onComplete(function () {
+        markTourCompleted(storageKey);
       });
 
       intro.onExit(function () {
-        const stepIndex = this.getCurrentStep();
-        saveTourStep(storageKey, stepIndex ?? 0);
         clearHighlightedElementClasses();
         onExitExtra?.();
+        if (isProgrammaticExitRef.current) {
+          isProgrammaticExitRef.current = false;
+          return;
+        }
+        markTourCompleted(storageKey);
       });
 
       intro.start();
@@ -119,7 +120,10 @@ export function useIntroTour({
 
     return () => {
       clearTimeout(timer);
-      introInstanceRef.current?.exit(true);
+      if (introInstanceRef.current) {
+        isProgrammaticExitRef.current = true;
+        introInstanceRef.current.exit(true);
+      }
       onExitExtra?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
