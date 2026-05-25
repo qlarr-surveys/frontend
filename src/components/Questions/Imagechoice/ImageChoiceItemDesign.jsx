@@ -26,6 +26,8 @@ import { Build } from "@mui/icons-material";
 import { setupOptions } from "~/constants/design";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
+import ConfirmActionModal from "~/components/common/ConfirmActionModal";
+import AppThemeProvider from "~/theme";
 
 function ImageChoiceItemDesign({
   parentCode,
@@ -46,6 +48,7 @@ function ImageChoiceItemDesign({
   const theme = useTheme();
   const ref = useRef();
   const [isUploading, setUploading] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   const answer = useSelector((state) => {
     return type == "add" ? undefined : state.designState[qualifiedCode];
@@ -69,9 +72,12 @@ function ImageChoiceItemDesign({
   });
 
   const onDelete = () => {
-    if (window.confirm(t("are_you_sure"))) {
-      dispatch(removeAnswer(qualifiedCode));
-    }
+    setConfirmDeleteOpen(true);
+  };
+
+  const onConfirmDelete = () => {
+    setConfirmDeleteOpen(false);
+    dispatch(removeAnswer(qualifiedCode));
   };
 
   const isInSetup = useSelector((state) => {
@@ -342,6 +348,18 @@ function ImageChoiceItemDesign({
           />
         )}
       </Grid>
+      {confirmDeleteOpen && (
+        <AppThemeProvider>
+          <ConfirmActionModal
+            open
+            onClose={() => setConfirmDeleteOpen(false)}
+            onConfirm={onConfirmDelete}
+            title={t("are_you_sure")}
+            cancelLabel={t("cancel")}
+            confirmLabel={t("delete")}
+          />
+        </AppThemeProvider>
+      )}
     </>
   );
 }
