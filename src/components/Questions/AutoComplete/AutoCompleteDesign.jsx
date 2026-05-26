@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 
 import { useSelector } from "react-redux";
 import {
@@ -18,7 +18,6 @@ import {
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import CloseIcon from "@mui/icons-material/Close";
-import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { changeAttribute, changeResources } from "~/state/design/designState";
@@ -31,7 +30,6 @@ import {
 } from "~/utils/DateUtils";
 import { processError, PROCESSED_ERRORS } from "~/utils/errorsProcessor";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
-import { getContrastColor } from "~/components/Questions/utils";
 
 function AutoCompleteQuestion({ code, t, onMainLang }) {
   const designService = useService("design");
@@ -50,29 +48,6 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
   const lang = useSelector((state) => {
     return state.designState.langInfo.lang;
   });
-
-  const theme = useTheme();
-  // The upload / manual-entry cards sit on the question card; derive their
-  // surface from the survey's paper color so they track the theme, and use the
-  // survey's text color for the icon + title so they match the other action
-  // buttons in the editor.
-  const cardVars = useMemo(
-    () => ({
-      "--autocomplete-card-bg": getContrastColor(
-        theme.palette.background.paper,
-        0.06
-      ),
-      "--autocomplete-card-hover": getContrastColor(
-        theme.palette.background.paper,
-        0.12
-      ),
-      "--autocomplete-card-fg": theme.palette.text.primary,
-      "--autocomplete-card-hint":
-        theme.palette.text?.secondary ||
-        getContrastColor(theme.palette.background.paper, 0.6),
-    }),
-    [theme]
-  );
 
   const uploadFile = (file, onSuccess, useDialogError = false) => {
     if (!useDialogError) {
@@ -199,7 +174,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
           <span>{t("uploading_autocomplete")}</span>
         </div>
       ) : onMainLang ? (
-        <div className={styles.buttonContainer} style={cardVars}>
+        <div className={styles.buttonContainer}>
           <div className={styles.optionWrapper}>
             <ButtonBase
               component="label"

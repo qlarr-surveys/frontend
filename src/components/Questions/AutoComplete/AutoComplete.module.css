@@ -27,29 +27,29 @@
   align-items: center !important;
   gap: 10px !important;
   padding: 16px !important;
-  background-color: var(--autocomplete-card-bg, #dfe2ef) !important;
+  background-color: #dfe2ef !important;
   border-radius: 8px !important;
   text-align: left !important;
   cursor: pointer !important;
 }
 
 .optionCard:hover {
-  background-color: var(--autocomplete-card-hover, #ebebeb) !important;
+  background-color: #ebebeb !important;
 }
 
 .cardIcon {
-  color: var(--autocomplete-card-fg, #555);
+  color: #555;
 }
 
 .cardTitle {
   font-weight: 600 !important;
   font-size: 0.875rem !important;
-  color: var(--autocomplete-card-fg, #212121);
+  color: #212121;
 }
 
 .cardHint {
   font-size: 0.75rem !important;
-  color: var(--autocomplete-card-hint, #757575) !important;
+  color: #757575 !important;
   line-height: 1.4 !important;
   padding: 0 4px !important;
 }
