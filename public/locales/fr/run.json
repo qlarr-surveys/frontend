@@ -53,5 +53,11 @@
     "saveAndContinueLaterDesc":"Nous enregistrerons votre progression actuelle. Vous pouvez revenir à ce sondage plus tard.",
     "saveForLater":"Enregistrer pour plus tard",
     "linkCopied":"Lien copié dans le presse-papiers !",
-    "no_options": "Aucune option trouvée"
+    "no_options": "Aucune option trouvée",
+    "preview_end_actions": {
+        "heading": "Options d'aperçu",
+        "check_response": "Voir la réponse",
+        "reset": "Réinitialiser l'aperçu",
+        "close_window": "Fermer la fenêtre"
+    }
 }

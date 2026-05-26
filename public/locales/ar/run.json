@@ -53,5 +53,11 @@
   "saveAndContinueLaterDesc": "سنحفظ تقدمك الحالي. يمكنك العودة إلى هذا الاستبيان لاحقًا.",
   "saveForLater": "احفظ لوقت لاحق",
   "linkCopied": "تم نسخ الرابط إلى الحافظة!",
-  "no_options": "لا توجد خيارات"
+  "no_options": "لا توجد خيارات",
+  "preview_end_actions": {
+    "heading": "خيارات المعاينة",
+    "check_response": "عرض الرد",
+    "reset": "إعادة تعيين المعاينة",
+    "close_window": "إغلاق النافذة"
+  }
 }

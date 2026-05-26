@@ -29,6 +29,7 @@ import RunLoadingDots from "~/components/common/RunLoadingDots";
 
 import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
 import SurveyAppBar from "~/components/run/SurveyAppBar";
+import PreviewEndActions from "~/components/run/PreviewEndActions";
 import { routes } from "~/routes";
 
 function RunSurvey({
@@ -314,6 +315,7 @@ function RunSurvey({
                 <SurveyMemo
                   key="Survey"
                 />
+                {preview && SURVEY_ENDED && <PreviewEndActions />}
                 <SurveyDrawer
                   expanded={expanded}
                   toggleDrawer={toggleDrawer}
