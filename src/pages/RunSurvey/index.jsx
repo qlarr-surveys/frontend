@@ -243,14 +243,23 @@ function RunSurvey({
       );
       if (el) {
         const container = getClosestScrollableParent(el);
-        container.scrollTo({
-          top: el.offsetTop - container.offsetTop,
-          behavior: "smooth",
-        });
+        if (container && container !== document.documentElement) {
+          container.scrollTo({
+            top: el.offsetTop - container.offsetTop,
+            behavior: "smooth",
+          });
+        } else {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
         setPendingScrollTarget(null);
         return;
       }
       if (i >= delays.length) {
+        if (import.meta.env?.DEV) {
+          console.warn(
+            `RunSurvey: pending scroll target "${pendingScrollTarget}" never mounted; giving up after ${delays.reduce((a, b) => a + b, 0)}ms.`,
+          );
+        }
         setPendingScrollTarget(null);
         return;
       }

@@ -36,6 +36,13 @@
   opacity: 0.85;
 }
 
+.groupHeader[data-clickable="true"]:focus-visible {
+  outline: 2px solid var(--qlarr-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+  opacity: 0.95;
+}
+
 .groupHeader[data-current="true"] {
   opacity: 0.95;
   color: var(--qlarr-primary);
@@ -68,6 +75,12 @@
 }
 
 .questionRow[data-clickable="true"]:hover {
+  background-color: var(--qlarr-hover-paper);
+}
+
+.questionRow[data-clickable="true"]:focus-visible {
+  outline: 2px solid var(--qlarr-primary);
+  outline-offset: -2px;
   background-color: var(--qlarr-hover-paper);
 }
 

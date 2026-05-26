@@ -2,25 +2,17 @@ import React from "react";
 
 import styles from "./SurveyIndex.module.css";
 import { stripTags } from "~/utils/design/utils";
-import { shallowEqual, useSelector } from "react-redux";
-import { useTheme } from "@emotion/react";
-import { useDispatch } from "react-redux";
-import { jump } from "~/state/runState";
-import {
-  questionIconByType,
-  getForegroundColor,
-} from "~/components/Questions/utils";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { jump, selectAnsweredSet } from "~/state/runState";
+import { questionIconByType } from "~/components/Questions/utils";
+import { useThemeContrast } from "~/components/Questions/useThemeContrast";
 import CheckCircleOutlineOutlined from "@mui/icons-material/CheckCircleOutlineOutlined";
 import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import { getClosestScrollableParent } from "~/components/run/Navigation";
 
 function SurveyIndex(props) {
-  const theme = useTheme();
   const dispatch = useDispatch();
-
-  const iconColor =
-    theme.contrast?.onPaper ||
-    getForegroundColor(theme.palette.background.paper);
+  const contrast = useThemeContrast();
 
   const relevance_map = useSelector((state) => {
     return state.runState.values["Survey"].relevance_map;
@@ -30,19 +22,7 @@ function SurveyIndex(props) {
     return state.runState.values["Survey"].validity_map;
   }, shallowEqual);
 
-  const answeredSet = useSelector((state) => {
-    const set = new Set();
-    const values = state.runState.values;
-    for (const code in values) {
-      if (code === "Survey") continue;
-      if (values[code]?.value !== undefined) set.add(code);
-    }
-    return set;
-  }, (a, b) => {
-    if (a.size !== b.size) return false;
-    for (const code of a) if (!b.has(code)) return false;
-    return true;
-  });
+  const answeredSet = useSelector(selectAnsweredSet);
 
   const canJump = useSelector((state) => {
     return state.runState.data.navigationData.allowJump;
@@ -73,7 +53,15 @@ function SurveyIndex(props) {
   };
 
   const scrollToElement = (el) => {
+    if (!el) return;
     const container = getClosestScrollableParent(el);
+    // When no scrollable ancestor exists, getClosestScrollableParent falls back
+    // to document.documentElement; offset math is unreliable there, so defer to
+    // the browser's native scrollIntoView instead.
+    if (!container || container === document.documentElement) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
     container.scrollTo({
       top: el.offsetTop - container.offsetTop,
       behavior: "smooth",
@@ -107,10 +95,7 @@ function SurveyIndex(props) {
   };
 
   const onQuestionClicked = (questionCode, groupCode) => {
-    if (!isQuestionClickable(questionCode)) {
-      closeDrawer();
-      return;
-    }
+    if (!isQuestionClickable(questionCode)) return;
     closeDrawer();
     const el = document.querySelector(`[data-code="${questionCode}"]`);
     if (el) {
@@ -156,6 +141,13 @@ function SurveyIndex(props) {
     return null;
   };
 
+  const handleActivateKey = (e, fn) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      fn();
+    }
+  };
+
   if (!props.survey?.groups) return null;
 
   const groups = props.survey.groups.filter(
@@ -175,7 +167,14 @@ function SurveyIndex(props) {
                 className={styles.groupHeader}
                 data-clickable={groupClickable ? "true" : "false"}
                 data-current={groupCurrent ? "true" : "false"}
+                role={groupClickable ? "button" : undefined}
+                tabIndex={groupClickable ? 0 : -1}
+                aria-current={groupCurrent ? "step" : undefined}
                 onClick={() => onGroupClicked(group.code)}
+                onKeyDown={(e) =>
+                  groupClickable &&
+                  handleActivateKey(e, () => onGroupClicked(group.code))
+                }
               >
                 {groupLabel}
               </div>
@@ -186,6 +185,8 @@ function SurveyIndex(props) {
                 .map((question) => {
                   const state = questionState(question.code);
                   const clickable = isQuestionClickable(question.code);
+                  const isCurrent = state === "current";
+                  const isInvalid = state === "invalid";
                   const rawLabel = stripTags(question.content?.label) || "";
                   const labelText = rawLabel.trim();
                   return (
@@ -194,10 +195,22 @@ function SurveyIndex(props) {
                       className={styles.questionRow}
                       data-state={state}
                       data-clickable={clickable ? "true" : "false"}
-                      onClick={() => onQuestionClicked(question.code, group.code)}
+                      role={clickable ? "button" : undefined}
+                      tabIndex={clickable ? 0 : -1}
+                      aria-current={isCurrent ? "step" : undefined}
+                      aria-invalid={isInvalid ? true : undefined}
+                      onClick={() =>
+                        onQuestionClicked(question.code, group.code)
+                      }
+                      onKeyDown={(e) =>
+                        clickable &&
+                        handleActivateKey(e, () =>
+                          onQuestionClicked(question.code, group.code),
+                        )
+                      }
                     >
                       <span className={styles.iconTile}>
-                        {questionIconByType(question.type, "1em", iconColor)}
+                        {questionIconByType(question.type, "1em", contrast.onPaper)}
                       </span>
                       <span
                         className={styles.questionLabel}

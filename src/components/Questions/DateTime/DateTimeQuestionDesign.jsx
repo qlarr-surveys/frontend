@@ -4,16 +4,15 @@ import InputAdornment from "@mui/material/InputAdornment";
 import styles from "./DateTimeQuestionDesign.module.css";
 import { useSelector } from "react-redux";
 import { useEditableHint } from "~/hooks/useEditableHint";
-import { useTheme } from "@mui/material/styles";
 import Iconify from "~/components/iconify";
-import { getForegroundColor } from "~/components/Questions/utils";
+import { useThemeContrast } from "~/components/Questions/useThemeContrast";
 
 function DateTimeQuestionDesign({ code, designMode }) {
   const state = useSelector((state) => {
     return state.designState[code];
   });
 
-  const theme = useTheme();
+  const { onPaper: hintColor } = useThemeContrast();
 
   const { hintText, isEditable, handleHintChange } = useEditableHint(code, designMode);
 
@@ -23,12 +22,18 @@ function DateTimeQuestionDesign({ code, designMode }) {
     ? `${dateFormat} ${state.fullDayFormat ? "HH:mm" : "hh:mm A"}`
     : dateFormat;
 
-  const hintColor = useMemo(
-    () =>
-      theme.contrast?.onPaper ||
-      getForegroundColor(theme.palette.background.paper),
-    [theme]
+  const fieldSx = useMemo(
+    () => ({
+      pointerEvents: isEditable ? "auto" : "none",
+      input: { color: hintColor },
+      "& .MuiInputBase-input::placeholder": {
+        color: hintColor,
+        opacity: 0.7,
+      },
+    }),
+    [hintColor, isEditable],
   );
+  const iconSx = useMemo(() => ({ color: hintColor }), [hintColor]);
 
   return (
     <div className={styles.questionItem}>
@@ -47,19 +52,12 @@ function DateTimeQuestionDesign({ code, designMode }) {
               <Iconify
                 icon="solar:calendar-minimalistic-linear"
                 width={20}
-                sx={{ color: hintColor }}
+                sx={iconSx}
               />
             </InputAdornment>
           ),
         }}
-        sx={{
-          pointerEvents: isEditable ? "auto" : "none",
-          input: { color: hintColor },
-          "& .MuiInputBase-input::placeholder": {
-            color: hintColor,
-            opacity: 0.7,
-          },
-        }}
+        sx={fieldSx}
       />
     </div>
   );

@@ -13,16 +13,17 @@ import styles from "./DateTimeQuestion.module.css";
 import { useTheme, alpha } from "@mui/material/styles";
 import { valueChange } from "~/state/runState";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
+import { useThemeContrast } from "~/components/Questions/useThemeContrast";
 
 function DateTimeQuestion(props) {
   const theme = useTheme();
+  const { onPaper } = useThemeContrast();
   const { i18n } = useTranslation(NAMESPACES.RUN);
 
   // Popup styling derived from the survey theme so the picker matches the
   // surrounding card instead of always rendering on white.
   const pickerPaperProps = useMemo(() => {
     const paper = theme.palette.background.paper;
-    const onPaper = theme.contrast?.onPaper;
     const primary = theme.palette.primary.main;
     // Hover wash uses the primary color (with alpha) so it stays distinct
     // from the day-number text — `theme.contrast.hoverPaper` blends in the
@@ -53,7 +54,7 @@ function DateTimeQuestion(props) {
         },
       },
     };
-  }, [theme]);
+  }, [theme, onPaper]);
 
   const state = useSelector((state) => {
     let own = state.runState.values[props.component.qualifiedCode];

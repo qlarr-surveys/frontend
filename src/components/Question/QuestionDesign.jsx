@@ -123,7 +123,6 @@ function QuestionDesign({
 
   const contrastColor = alpha(theme.textStyles.question.color, 0.2);
   const outlineColor = theme.palette.primary.main;
-  const action = theme.palette.action.active;
 
   useEffect(() => {
     const element = containerRef.current;

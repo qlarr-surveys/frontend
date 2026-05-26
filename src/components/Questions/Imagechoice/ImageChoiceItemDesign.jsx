@@ -1,11 +1,8 @@
 import styles from "./ImageChoiceItemDesign.module.css";
 import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
 import { Box, css, IconButton, TextField } from "@mui/material";
-import {
-  getContrastColor,
-  getForegroundColor,
-  getMildBorderColor,
-} from "~/components/Questions/utils";
+import { getForegroundColor } from "~/components/Questions/utils";
+import { useThemeContrast } from "~/components/Questions/useThemeContrast";
 import {
   placeholderImageUrl,
   placeholderTileColor,
@@ -90,10 +87,11 @@ function ImageChoiceItemDesign({
     return state.designState.setup?.code == qualifiedCode;
   });
 
+  const contrast = useThemeContrast();
   const outlineColor = theme.palette.primary.main;
-  const labelColor = theme.contrast?.onDefault || getForegroundColor(theme.palette.background.default);
-  const addCardBorder = theme.contrast?.mildPaperBorder || getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4);
-  const addIconColor = theme.contrast?.onPaper || getForegroundColor(theme.palette.background.paper);
+  const labelColor = contrast.onDefault;
+  const addCardBorder = contrast.mildPaperBorder;
+  const addIconColor = contrast.onPaper;
   // Action icons sit on top of the placeholder tile, not the paper itself.
   // On dark papers the tile flips to near-white, so `onPaper` (also near-white)
   // would be invisible. Derive the icon color from the tile we actually paint.

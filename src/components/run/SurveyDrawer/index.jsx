@@ -5,10 +5,22 @@ import React, { useMemo } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import { Close } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
-import { getForegroundColor } from "~/components/Questions/utils";
+import { useThemeContrast } from "~/components/Questions/useThemeContrast";
+import { selectAnsweredCounts } from "~/state/runState";
+
+const drawerSx = {
+  "& .MuiDrawer-paper": {
+    width: "350px",
+    maxWidth: "90%",
+    "@media (max-width: 600px)": {
+      width: "300px",
+    },
+  },
+};
 
 function SurveyDrawer({ expanded, toggleDrawer, t, onPendingScrollTarget }) {
   const theme = useTheme();
+  const contrast = useThemeContrast();
 
   const navigationIndex = useSelector((state) => {
     return state.runState.data?.navigationIndex;
@@ -16,48 +28,21 @@ function SurveyDrawer({ expanded, toggleDrawer, t, onPendingScrollTarget }) {
   const survey = useSelector((state) => {
     return state.runState.data?.survey;
   }, shallowEqual);
-  const relevanceMap = useSelector((state) => {
-    return state.runState.values["Survey"].relevance_map;
-  }, shallowEqual);
-  const surveyValues = useSelector((state) => {
-    return state.runState.values;
-  }, shallowEqual);
+  const { answeredCount, totalCount } = useSelector(
+    selectAnsweredCounts,
+    shallowEqual,
+  );
 
-  const { answeredCount, totalCount } = useMemo(() => {
-    if (!survey?.groups) return { answeredCount: 0, totalCount: 0 };
-    let total = 0;
-    let answered = 0;
-    for (const group of survey.groups) {
-      if (group.groupType === "END") continue;
-      if (!relevanceMap[group.code]) continue;
-      for (const question of group.questions || []) {
-        if (!relevanceMap[question.code]) continue;
-        total += 1;
-        if (surveyValues[question.code]?.value !== undefined) {
-          answered += 1;
-        }
-      }
-    }
-    return { answeredCount: answered, totalCount: total };
-  }, [survey, relevanceMap, surveyValues]);
-
-  const onPaper =
-    theme.contrast?.onPaper ||
-    getForegroundColor(theme.palette.background.paper);
-  const hoverPaper =
-    theme.contrast?.hoverPaper || theme.palette.action?.hover || "transparent";
-  const mildBorder =
-    theme.contrast?.mildPaperBorder ||
-    theme.palette.divider ||
-    "rgba(0,0,0,0.12)";
-
-  const cssVars = {
-    "--qlarr-on-paper": onPaper,
-    "--qlarr-hover-paper": hoverPaper,
-    "--qlarr-mild-border": mildBorder,
-    "--qlarr-error": theme.palette.error?.main || "#d32f2f",
-    "--qlarr-primary": theme.palette.primary?.main || onPaper,
-  };
+  const cssVars = useMemo(
+    () => ({
+      "--qlarr-on-paper": contrast.onPaper,
+      "--qlarr-hover-paper": contrast.hoverPaper,
+      "--qlarr-mild-border": contrast.mildPaperBorder,
+      "--qlarr-error": theme.palette.error?.main || "#d32f2f",
+      "--qlarr-primary": theme.palette.primary?.main || contrast.onPaper,
+    }),
+    [contrast, theme.palette.error?.main, theme.palette.primary?.main],
+  );
 
   return (
     <Drawer
@@ -65,15 +50,7 @@ function SurveyDrawer({ expanded, toggleDrawer, t, onPendingScrollTarget }) {
       transitionDuration={expanded !== COLLAPSE_IMMEDIATE ? 500 : 0}
       open={expanded == EXPAND}
       onClose={toggleDrawer(false)}
-      sx={{
-        "& .MuiDrawer-paper": {
-          width: "350px",
-          maxWidth: "90%",
-          "@media (max-width: 600px)": {
-            width: "300px",
-          },
-        },
-      }}
+      sx={drawerSx}
     >
       <div className={styles.drawer} style={cssVars}>
         <div className={styles.drawerHeader}>

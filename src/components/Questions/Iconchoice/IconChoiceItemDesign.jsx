@@ -1,11 +1,7 @@
 import styles from "./IconChoiceItemDesign.module.css";
 import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
 import { Box, IconButton, TextField } from "@mui/material";
-import {
-  getContrastColor,
-  getForegroundColor,
-  getMildBorderColor,
-} from "~/components/Questions/utils";
+import { useThemeContrast } from "~/components/Questions/useThemeContrast";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -20,7 +16,7 @@ import {
 } from "~/state/design/designState";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddIcon from "@mui/icons-material/Add";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import IconSelector from "~/components/design/IconSelector";
 import { rtlLanguage } from "~/utils/common";
 import { useDrag, useDrop } from "react-dnd";
@@ -82,19 +78,10 @@ function IconChoiceItemDesign({
   const isInSetup = useSelector((state) => {
     return state.designState.setup?.code == qualifiedCode;
   });
+  const contrast = useThemeContrast();
   const outlineColor = theme.palette.primary.main;
-  const addCardBorder = useMemo(
-    () =>
-      theme.contrast?.mildPaperBorder ||
-      getMildBorderColor(getContrastColor(theme.palette.background.paper), 0.4),
-    [theme]
-  );
-  const addIconColor = useMemo(
-    () =>
-      theme.contrast?.onPaper ||
-      getForegroundColor(theme.palette.background.paper),
-    [theme]
-  );
+  const addCardBorder = contrast.mildPaperBorder;
+  const addIconColor = contrast.onPaper;
   const dragType = parentCode + "icon-drag";
   const getRowByIndex = (index) => {
     return Math.round(index / columnNumber);
