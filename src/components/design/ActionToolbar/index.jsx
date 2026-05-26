@@ -9,10 +9,8 @@ import { useDispatch } from "react-redux";
 import { setupOptions } from "~/constants/design";
 import { setup, cloneQuestion, deleteQuestion, deleteGroup, resetSetup } from "~/state/design/designState";
 import { useTheme } from "@emotion/react";
-import { getContrastRatio } from "@mui/material/styles";
 import {
   getContrastColor,
-  getForegroundColor,
   isDarkColor,
 } from "~/components/Questions/utils";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
@@ -128,23 +126,8 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
     }
   };
 
-  const textColor = useMemo(() => {
-    let primaryOnPaperRatio;
-    try {
-      primaryOnPaperRatio = getContrastRatio(
-        theme.palette.primary.main,
-        theme.palette.background.paper
-      );
-    } catch {
-      primaryOnPaperRatio = Infinity;
-    }
-    const onPaperFallback =
-      theme.contrast?.onPaper ||
-      getForegroundColor(theme.palette.background.paper);
-    return primaryOnPaperRatio >= 3
-      ? theme.palette.primary.main
-      : onPaperFallback;
-  }, [theme]);
+  const textColor =
+    theme.textStyles?.text?.color || theme.palette.text.primary;
 
   // A visible-but-soft hover wash so the toolbar actions register on hover
   // instead of blending into the question card.
