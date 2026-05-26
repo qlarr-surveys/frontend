@@ -69,6 +69,7 @@ function SurveyDrawer({ expanded, toggleDrawer, t, onPendingScrollTarget }) {
         "& .MuiDrawer-paper": {
           width: "350px",
           maxWidth: "90%",
+          backgroundColor: "rgb(0 0 0 / 75%)",
           "@media (max-width: 600px)": {
             width: "300px",
           },
