@@ -98,10 +98,6 @@ function ImageChoiceItemDesign({
   // On dark papers the tile flips to near-white, so `onPaper` (also near-white)
   // would be invisible. Derive the icon color from the tile we actually paint.
   const buttonIconColor = getForegroundColor(placeholderTileColor(theme));
-  // The right-zone pill paints a solid contrast surface so icons stay legible
-  // regardless of what sits behind them (placeholder tile or uploaded image).
-  const pillBg = buttonIconColor;
-  const pillFg = getForegroundColor(pillBg);
 
   const backgroundImage = answer?.resources?.image
     ? `url('${buildResourceUrl(answer.resources.image)}')`
@@ -287,7 +283,7 @@ function ImageChoiceItemDesign({
             <div className={btnStyles.leftZone}>
               <div
                 className={btnStyles.pillZone}
-                style={{ "--qlarr-pill-bg": pillBg, "--qlarr-pill-fg": pillFg }}
+                style={{ color: addIconColor }}
               >
                 <IconButton ref={drag} className={btnStyles.iconButton} color="inherit">
                   <DragIndicatorIcon />
@@ -303,7 +299,7 @@ function ImageChoiceItemDesign({
             </div>
             <div
               className={`${btnStyles.rightZone} ${btnStyles.pillZone}`}
-              style={{ "--qlarr-pill-bg": pillBg, "--qlarr-pill-fg": pillFg }}
+              style={{ color: addIconColor }}
             >
               <IconButton
                 className={btnStyles.iconButton}

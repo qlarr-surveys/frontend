@@ -95,11 +95,6 @@ function IconChoiceItemDesign({
       getForegroundColor(theme.palette.background.paper),
     [theme]
   );
-  // The right-zone pill paints a solid contrast surface so action icons stay
-  // legible against the paper, regardless of the placeholder icon underneath.
-  const pillBg = addIconColor;
-  const pillFg = useMemo(() => getForegroundColor(pillBg), [pillBg]);
-
   const dragType = parentCode + "icon-drag";
   const getRowByIndex = (index) => {
     return Math.round(index / columnNumber);
@@ -287,7 +282,6 @@ function IconChoiceItemDesign({
               </div>
               <div
                 className={`${btnStyles.rightZone} ${btnStyles.pillZone}`}
-                style={{ "--qlarr-pill-bg": pillBg, "--qlarr-pill-fg": pillFg }}
               >
                 <IconButton
                   className={btnStyles.iconButton}
