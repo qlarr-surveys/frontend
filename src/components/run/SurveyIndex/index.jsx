@@ -83,6 +83,26 @@ function SurveyIndex(props) {
   const onGroupClicked = (groupCode) => {
     if (!isGroupClickable(groupCode)) return;
     closeDrawer();
+    const el = document.querySelector(`[data-code="${groupCode}"]`);
+    if (el) {
+      scrollToElement(el);
+      return;
+    }
+    if (props.onPendingScrollTarget) {
+      props.onPendingScrollTarget(groupCode);
+    }
+    if (props.navigationIndex.name === "question") {
+      const group = props.survey?.groups?.find((g) => g.code === groupCode);
+      const firstQuestion = group?.questions?.find(
+        (q) => relevance_map[q.code],
+      );
+      if (firstQuestion) {
+        dispatch(
+          jump({ ...props.navigationIndex, questionId: firstQuestion.code }),
+        );
+        return;
+      }
+    }
     dispatch(jump({ ...props.navigationIndex, groupId: groupCode }));
   };
 
