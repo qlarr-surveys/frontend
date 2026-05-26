@@ -285,9 +285,14 @@ function ImageChoiceItemDesign({
             style={{ color: buttonIconColor }}
           >
             <div className={btnStyles.leftZone}>
-              <IconButton ref={drag} className={btnStyles.iconButton} color="inherit">
-                <DragIndicatorIcon />
-              </IconButton>
+              <div
+                className={btnStyles.pillZone}
+                style={{ "--qlarr-pill-bg": pillBg, "--qlarr-pill-fg": pillFg }}
+              >
+                <IconButton ref={drag} className={btnStyles.iconButton} color="inherit">
+                  <DragIndicatorIcon />
+                </IconButton>
+              </div>
               <div className={btnStyles.codeWrapper}>
                 <InlineCodeEditor
                   qualifiedCode={qualifiedCode}

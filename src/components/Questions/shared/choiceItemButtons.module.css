@@ -29,6 +29,7 @@
   display: flex;
   align-items: center;
   flex: 1;
+  margin: 8px 0 0 8px;
 }
 
 .rightZone {
@@ -36,6 +37,7 @@
   align-items: center;
   justify-content: flex-end;
   flex: 1;
+  margin: 8px 8px 0 0;
 }
 
 .codeWrapper {
@@ -50,7 +52,7 @@
 .pillZone {
   background-color: var(--qlarr-pill-bg);
   color: var(--qlarr-pill-fg);
-  border-radius: 999px;
+  border-radius: 6px;
   padding: 2px 6px;
   gap: 2px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
@@ -58,7 +60,7 @@
 }
 
 .pillZone .iconButton {
-  border-radius: 50% !important;
+  border-radius: 4px !important;
   margin: 0 !important;
   padding: 3px !important;
 }
