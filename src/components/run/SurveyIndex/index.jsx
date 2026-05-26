@@ -136,8 +136,6 @@ function SurveyIndex(props) {
     return null;
   };
 
-  const untitledLabel = props.t ? props.t("untitled_question") : "(Untitled)";
-
   if (!props.survey?.groups) return null;
 
   const groups = props.survey.groups.filter(
@@ -185,7 +183,7 @@ function SurveyIndex(props) {
                         className={styles.questionLabel}
                         data-empty={labelText ? "false" : "true"}
                       >
-                        {labelText || untitledLabel}
+                        {labelText}
                       </span>
                       <span className={styles.statusSlot}>
                         {renderStatusIcon(state)}
