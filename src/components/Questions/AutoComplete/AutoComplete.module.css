@@ -38,13 +38,13 @@
 }
 
 .cardIcon {
-  color: var(--autocomplete-card-fg, #555);
+  color: #555;
 }
 
 .cardTitle {
   font-weight: 600 !important;
   font-size: 0.875rem !important;
-  color: var(--autocomplete-card-fg, #212121);
+  color:  #212121;
 }
 
 .cardHint {
