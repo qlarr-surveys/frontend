@@ -2,7 +2,7 @@ import styles from "./ChoiceItemDesign.module.css";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import CloseIcon from "@mui/icons-material/Close";
 import BuildIcon from "@mui/icons-material/Build";
-import { Box, Checkbox, Radio, TextField } from "@mui/material";
+import { alpha, Box, Checkbox, Radio, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
@@ -183,16 +183,13 @@ function ChoiceItemDesign(props) {
     }
   };
 
-  const outlineColor = theme.palette.primary.main;
+  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
 
   return (
     <div ref={ref} style={getStyles(isDragging)} data-handler-id={handlerId}>
       <Box
         data-code={props.code}
-        sx={{
-          outline: isInSetup ? `solid 2px ${outlineColor}` : "none",
-          outlineOffset: "-2px",
-        }}
+        sx={{ backgroundColor: isInSetup ? contrastColor : "inherit" }}
         className={styles.answerItem}
         style={{
           gap: "8px",
@@ -232,8 +229,7 @@ function ChoiceItemDesign(props) {
                 color: theme.palette.text.disabled,
               },
               "& .MuiInputBase-root": {
-                outline: isInSetupText ? `solid 2px ${outlineColor}` : "none",
-                outlineOffset: "-2px",
+                backgroundColor: isInSetupText ? contrastColor : "inherit",
               },
             }}
             value={content || ""}

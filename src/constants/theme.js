@@ -1,4 +1,4 @@
-import { colorToThemeMode, getContrastColor } from "~/components/Questions/utils";
+import { colorToThemeMode } from "~/components/Questions/utils";
 export {
   BG_COLOR, TEXT_COLOR, PRIMARY_COLOR, SECONDARY_COLOR, ERR_COLOR,
   PAPER_COLOR, GROUP_FONT_SIZE, QUESTION_FONT_SIZE, TEXT_FONT_SIZE, FONT_FAMILY,
@@ -10,8 +10,6 @@ import {
 } from "./surveyTheme";
 
 export const defualtTheme = (theme) => {
-  const paperColor = theme?.paperColor || PAPER_COLOR;
-
   return {
     textStyles: {
       group: {
@@ -52,7 +50,6 @@ export const defualtTheme = (theme) => {
       },
       text: {
         primary: theme?.textColor || TEXT_COLOR, // Main text color
-        secondary: getContrastColor(paperColor, 0.7),
       },
     },
   };

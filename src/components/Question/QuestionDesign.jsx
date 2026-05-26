@@ -3,11 +3,10 @@ import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 
 import styles from "./QuestionDesign.module.css";
 import ContentEditor from "~/components/design/ContentEditor";
-import { Box, css } from "@mui/material";
+import { alpha, Box, css } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { getContrastColor } from "~/components/Questions/utils";
 import ErrorDisplay from "~/components/design/ErrorDisplay";
-import { shallowEqual, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { onDrag, setup } from "~/state/design/designState";
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
@@ -46,7 +45,7 @@ function QuestionDesign({
 
   const question = useSelector((state) => {
     return state.designState[code];
-  }, shallowEqual);
+  });
 
   const [isDragging, drag, preview] = useDrag({
     type: "questions",
@@ -122,10 +121,8 @@ function QuestionDesign({
 
   drop(preview(containerRef));
 
-  const contrastColor = useMemo(
-    () => getContrastColor(theme.palette.background.paper, 0.2),
-    [theme]
-  );
+  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
+  const textColor = theme.textStyles.question.color;
   const outlineColor = theme.palette.primary.main;
   const action = theme.palette.action.active;
 
@@ -160,7 +157,7 @@ function QuestionDesign({
 
   const customStyle = useMemo(() => {
     return isInSetup
-      ? `outline: solid 3px ${outlineColor};outline-offset: -3px;`
+      ? `background-color: ${contrastColor};color: ${textColor};`
       : hovered
       ? `outline: solid 2px ${outlineColor};outline-offset: -2px;`
       : `opacity: ${isDragging ? "0.2" : "1"};border: ${
