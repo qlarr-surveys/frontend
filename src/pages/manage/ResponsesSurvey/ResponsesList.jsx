@@ -83,7 +83,7 @@ function ResponsesList() {
   const surveyService = useService("survey");
   const { t } = useTranslation(NAMESPACES.MANAGE);
   const { surveyId } = useParams();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const urlResponseId = searchParams.get("responseId");
 
   const [fetching, setFetching] = useState(true);
@@ -100,6 +100,13 @@ function ResponsesList() {
   // check would clear it before getResponseById can resolve. Skip that clear
   // exactly once so cross-tab navigation from the preview screen works.
   const skipNextResponseClearRef = useRef(!!urlResponseId);
+  useEffect(() => {
+    if (!urlResponseId) return;
+    const next = new URLSearchParams(searchParams);
+    next.delete("responseId");
+    setSearchParams(next, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [selected, setSelected] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
   const [eventsData, setEventsData] = useState(null);
