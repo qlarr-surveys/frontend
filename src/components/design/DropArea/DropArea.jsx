@@ -283,12 +283,14 @@ export function QuestionDropArea({
           >
             <span
               className={styles.endPageText}
+              style={{ color: textContrast }}
             >
               <Trans t={t} i18nKey="end_page_empty_hint" />
             </span>
             <Box className={styles.endPageActions}>
               <div
                 className={styles.endPageActionItem}
+                style={{ color: textContrast }}
                 onClick={() =>
                   dispatch(
                     onDrag({
@@ -307,6 +309,7 @@ export function QuestionDropArea({
               </div>
               <div
                 className={styles.endPageActionItem}
+                style={{ color: textContrast }}
                 onClick={() =>
                   dispatch(
                     onDrag({
@@ -325,6 +328,7 @@ export function QuestionDropArea({
               </div>
               <div
                 className={styles.endPageActionItem}
+                style={{ color: textContrast }}
                 onClick={() =>
                   dispatch(
                     onDrag({
