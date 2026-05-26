@@ -52,10 +52,8 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
   });
 
   const theme = useTheme();
-  // The upload / manual-entry cards sit on the question card; derive their
-  // surface from the survey's paper color so they track the theme, and use the
-  // survey's text color for the icon + title so they match the other action
-  // buttons in the editor.
+  // Derive the card surface and hint color from the survey paper color so they
+  // track the theme; icon and title stay on a fixed dark color (set in CSS).
   const cardVars = useMemo(
     () => ({
       "--autocomplete-card-bg": getContrastColor(
@@ -66,7 +64,6 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         theme.palette.background.paper,
         0.12
       ),
-      "--autocomplete-card-fg": theme.palette.text.primary,
       "--autocomplete-card-hint":
         theme.palette.text?.secondary ||
         getContrastColor(theme.palette.background.paper, 0.6),
