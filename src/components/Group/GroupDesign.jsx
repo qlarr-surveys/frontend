@@ -4,7 +4,7 @@ import styles from "./GroupDesign.module.css";
 import { useSelector } from "react-redux";
 import { QuestionDropArea } from "../design/DropArea/DropArea";
 import GroupHeader from "./GroupHeader";
-import { Box, Divider, decomposeColor, recomposeColor } from "@mui/material";
+import { Box, Divider, css, decomposeColor, recomposeColor } from "@mui/material";
 import { useDrag, useDrop } from "react-dnd";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
@@ -156,6 +156,9 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
       className={`${styles.topLevel} ${isLastAdded ? styles.highlight : ""}`}
       ref={containerRef}
       style={getStyles(isDragging)}
+      css={css`
+        ${group.customCss || ""}
+      `}
     >
       <GroupHeader
         t={t}
