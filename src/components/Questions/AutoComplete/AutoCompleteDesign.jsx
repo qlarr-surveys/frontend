@@ -18,6 +18,7 @@ import {
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { changeAttribute, changeResources } from "~/state/design/designState";
@@ -34,6 +35,7 @@ import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 function AutoCompleteQuestion({ code, t, onMainLang }) {
   const designService = useService("design");
   const dispatch = useDispatch();
+  const theme = useTheme();
   const { t: tManage } = useTranslation(NAMESPACES.MANAGE);
   const [isUploading, setUploading] = useState(false);
   const [isFetchingValues, setIsFetchingValues] = useState(false);
@@ -48,6 +50,8 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
   const lang = useSelector((state) => {
     return state.designState.langInfo.lang;
   });
+
+  const hintColor = theme.palette.text.primary;
 
   const uploadFile = (file, onSuccess, useDialogError = false) => {
     if (!useDialogError) {
@@ -187,7 +191,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
               </Typography>
               <input hidden accept="application/json,.json" type="file" onChange={handleUpload} />
             </ButtonBase>
-            <Typography className={styles.cardHint}>
+            <Typography className={styles.cardHint} style={{ color: hintColor }}>
               {t("upload_autocomplete_hint")}
             </Typography>
           </div>
@@ -202,7 +206,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
                 {isFetchingValues ? t("loading_values") : t("manual_entry")}
               </Typography>
             </ButtonBase>
-            <Typography className={styles.cardHint}>
+            <Typography className={styles.cardHint} style={{ color: hintColor }}>
               {t("manual_entry_hint")}
             </Typography>
           </div>

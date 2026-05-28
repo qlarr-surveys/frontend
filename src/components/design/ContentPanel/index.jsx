@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
-import { useDispatch, useSelector } from "react-redux";
-import { Box, css, CircularProgress, IconButton, Tooltip } from "@mui/material";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { alpha, Box, css, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
@@ -54,7 +54,7 @@ function ContentPanel({ designMode }, ref) {
 
   const groups = useSelector((state) => {
     return state.designState["Survey"]?.children || [];
-  });
+  }, shallowEqual);
   const logoImage = useSelector(
     (state) => state.designState["Survey"]?.resources?.logoImage
   );
@@ -134,7 +134,8 @@ function ContentPanel({ designMode }, ref) {
     useDragNearViewportEdge(virtuosoWrapperRef);
 
   const lastAddedComponent = useSelector(
-    (state) => state.designState.lastAddedComponent
+    (state) => state.designState.lastAddedComponent,
+    shallowEqual
   );
   const skipScroll = useSelector((state) => state.designState.skipScroll);
   const dispatch = useDispatch();
@@ -235,6 +236,22 @@ function ContentPanel({ designMode }, ref) {
     }
   }, [lastAddedComponent]);
 
+  // Theme-derived CSS variables consumed by the design components' CSS modules.
+  const panelStyle = useMemo(
+    () => ({
+      backgroundColor: theme.palette.background.default,
+      "--design-error-color": theme.palette.error.main,
+      "--design-error-tint": alpha(theme.palette.error.main, 0.06),
+      "--new-item-flash": alpha(theme.palette.primary.main, 0.18),
+      "--new-item-flash-end": alpha(theme.palette.primary.main, 0.04),
+      "--question-prefix-color":
+        theme.contrast?.onPaper || theme.palette.text.primary,
+      "--page-label-color":
+        theme.contrast?.onDefault || theme.palette.text.primary,
+    }),
+    [theme]
+  );
+
   return (
     <Box
       data-tour="content-panel"
@@ -250,9 +267,7 @@ function ContentPanel({ designMode }, ref) {
         color: ${theme.textStyles.text.color};
         font-family: ${theme.textStyles.text.font};
       `}
-      style={{
-        backgroundColor: theme.palette.background.default,
-      }}
+      style={panelStyle}
     >
       <Box ref={virtuosoWrapperRef} width="100%" height="100%">
         <Virtuoso
@@ -319,7 +334,8 @@ function LogoHeader({ context }) {
     t,
   } = context;
   const theme = useTheme();
-  const textColor = theme.textStyles?.text?.color || "#16205b";
+  const onPaper = theme.contrast?.onPaper || "#16205b";
+  const textColor = theme.textStyles?.text?.color || onPaper;
   const cardStyle = { backgroundColor: theme.palette.background.paper };
   const textStyle = { color: textColor };
 
@@ -343,7 +359,7 @@ function LogoHeader({ context }) {
     const toolbarStyle = {
       backgroundColor: theme.palette.background.paper,
     };
-    const toolbarButtonStyle = { color: textColor };
+    const toolbarButtonStyle = { color: onPaper };
     return (
       <div className={styles.logoHeader} style={logoHeaderStyle}>
         <div

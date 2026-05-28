@@ -1,6 +1,12 @@
 import styles from "./ImageChoiceItemDesign.module.css";
 import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
-import { alpha, Box, css, Grid, IconButton, TextField } from "@mui/material";
+import { Box, css, IconButton, TextField } from "@mui/material";
+import { getForegroundColor } from "~/components/Questions/utils";
+import { useThemeContrast } from "~/components/Questions/useThemeContrast";
+import {
+  placeholderImageUrl,
+  placeholderTileColor,
+} from "~/components/Questions/placeholderImage";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -26,6 +32,8 @@ import { Build } from "@mui/icons-material";
 import { setupOptions } from "~/constants/design";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
+import ConfirmActionModal from "~/components/common/ConfirmActionModal";
+import AppThemeProvider from "~/theme";
 
 function ImageChoiceItemDesign({
   parentCode,
@@ -68,21 +76,30 @@ function ImageChoiceItemDesign({
         ];
   });
 
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
   const onDelete = () => {
-    if (window.confirm(t("are_you_sure"))) {
-      dispatch(removeAnswer(qualifiedCode));
-    }
+    setDeleteModalOpen(false);
+    dispatch(removeAnswer(qualifiedCode));
   };
 
   const isInSetup = useSelector((state) => {
     return state.designState.setup?.code == qualifiedCode;
   });
 
-  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
+  const contrast = useThemeContrast();
+  const outlineColor = theme.palette.primary.main;
+  const labelColor = contrast.onDefault;
+  const addCardBorder = contrast.mildPaperBorder;
+  const addIconColor = contrast.onPaper;
+  // Action icons sit on top of the placeholder tile, not the paper itself.
+  // On dark papers the tile flips to near-white, so `onPaper` (also near-white)
+  // would be invisible. Derive the icon color from the tile we actually paint.
+  const buttonIconColor = getForegroundColor(placeholderTileColor(theme));
 
   const backgroundImage = answer?.resources?.image
     ? `url('${buildResourceUrl(answer.resources.image)}')`
-    : `url('/placeholder-image.jpg')`;
+    : placeholderImageUrl(theme);
 
   function handleImageChange(e) {
     e.preventDefault();
@@ -210,118 +227,132 @@ function ImageChoiceItemDesign({
   drop(preview(ref));
 
   return type == "add" ? (
-    <Grid height="100%" item xs={12 / columnNumber} key="add">
-      <Box
-        className={styles.addAnswerButton}
-        style={{
-          minHeight: "100px",
-          height: "100%",
-          width: "100%",
-          backgroundColor: theme.palette.background.default,
-          borderRadius: "4px",
-        }}
+    <Box
+      className={styles.addAnswerButton}
+      onClick={() => addAnswer()}
+      style={{
+        minHeight: "100px",
+        width: "100%",
+        aspectRatio: imageAspectRatio,
+        alignSelf: "start",
+        backgroundColor: theme.palette.background.paper,
+        border: `1px dashed ${addCardBorder}`,
+        borderRadius: "4px",
+        cursor: "pointer",
+      }}
+    >
+      <IconButton
+        className={styles.addAnswerIcon}
+        disableRipple
+        sx={{ color: addIconColor }}
       >
-        <IconButton
-          className={styles.addAnswerIcon}
-          onClick={() => {
-            addAnswer();
-          }}
-        >
-          <AddIcon />
-        </IconButton>
-      </Box>
-    </Grid>
+        <AddIcon />
+      </IconButton>
+    </Box>
   ) : (
-    <>
-      <Grid
+    <Box
+      style={{
+        opacity: isDragging ? "0.2" : "1",
+      }}
+      data-code={code}
+      sx={{
+        position: "relative",
+        height: "100%",
+        width: "100%",
+        borderRadius: "4px",
+        outline: isInSetup ? `solid 2px ${outlineColor}` : "none",
+        outlineOffset: "-2px",
+      }}
+    >
+      <div
+        className={styles.imageContainer}
         style={{
-          opacity: isDragging ? "0.2" : "1",
+          paddingTop: 100 / imageAspectRatio + "%",
+          backgroundImage: backgroundImage,
         }}
-        item
-        data-code={code}
-        position="relative"
-        xs={12 / columnNumber}
-        key={qualifiedCode}
+        ref={ref}
+        data-handler-id={handlerId}
       >
-        {isInSetup && (
+        {inDesign(designMode) && (
           <div
-            className={styles.overlay}
-            style={{ backgroundColor: contrastColor }}
-          />
+            className={`${btnStyles.buttonContainers} ${styles.buttonContainersAbsolute}`}
+            style={{ color: buttonIconColor }}
+          >
+            <div className={btnStyles.leftZone}>
+              <div
+                className={btnStyles.pillZone}
+                style={{ color: addIconColor }}
+              >
+                <IconButton ref={drag} className={btnStyles.iconButton} color="inherit">
+                  <DragIndicatorIcon />
+                </IconButton>
+              </div>
+              <div className={btnStyles.codeWrapper}>
+                <InlineCodeEditor
+                  qualifiedCode={qualifiedCode}
+                  designMode={designMode}
+                  compact
+                />
+              </div>
+            </div>
+            <div
+              className={`${btnStyles.rightZone} ${btnStyles.pillZone}`}
+              style={{ color: addIconColor }}
+            >
+              <IconButton
+                className={btnStyles.iconButton}
+                color="inherit"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDeleteModalOpen(true);
+                }}
+              >
+                <DeleteOutlineIcon />
+              </IconButton>
+              <IconButton
+                className={btnStyles.iconButton}
+                color="inherit"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(
+                    setup({
+                      code: qualifiedCode,
+                      rules: setupOptions("options"),
+                    })
+                  );
+                }}
+              >
+                <Build />
+              </IconButton>
+              <IconButton
+                component="label"
+                className={btnStyles.iconButton}
+                color="inherit"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <PhotoCamera />
+                <input
+                  hidden
+                  id={`file-input-${qualifiedCode}`}
+                  accept="image/*"
+                  type="file"
+                  onChange={handleImageChange}
+                />
+              </IconButton>
+            </div>
+          </div>
         )}
-        <div
-          className={styles.imageContainer}
-          style={{
-            paddingTop: 100 / imageAspectRatio + "%",
-            backgroundImage: backgroundImage,
-          }}
-          ref={ref}
-          data-handler-id={handlerId}
-        >
-          {inDesign(designMode) && (
-            <div className={`${btnStyles.buttonContainers} ${styles.buttonContainersAbsolute}`}>
-              <div className={btnStyles.leftZone}>
-                <IconButton ref={drag} className={btnStyles.iconButton}>
-                  <DragIndicatorIcon color="action" />
-                </IconButton>
-                <div className={btnStyles.codeWrapper}>
-                  <InlineCodeEditor
-                    qualifiedCode={qualifiedCode}
-                    designMode={designMode}
-                    compact
-                  />
-                </div>
-              </div>
-              <div className={btnStyles.rightZone}>
-                <IconButton
-                  className={btnStyles.iconButton}
-                  onClick={() => {
-                    onDelete();
-                  }}
-                >
-                  <DeleteOutlineIcon />
-                </IconButton>
-                <IconButton
-                  className={btnStyles.iconButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    dispatch(
-                      setup({
-                        code: qualifiedCode,
-                        rules: setupOptions("options"),
-                      })
-                    );
-                  }}
-                >
-                  <Build />
-                </IconButton>
-                <IconButton
-                  component="label"
-                  className={btnStyles.iconButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                >
-                  <PhotoCamera />
-                  <input
-                    hidden
-                    id={`file-input-${qualifiedCode}`}
-                    accept="image/*"
-                    type="file"
-                    onChange={handleImageChange}
-                  />
-                </IconButton>
-              </div>
-            </div>
-          )}
 
-          {isUploading && (
-            <div className={styles.loadingContainer}>
-              <LoadingDots />
-            </div>
-          )}
-        </div>
-        {!hideText && (
+        {isUploading && (
+          <div className={styles.loadingContainer}>
+            <LoadingDots />
+          </div>
+        )}
+      </div>
+      {!hideText && (
+        <Box sx={{ color: labelColor }}>
           <ContentEditor
             code={qualifiedCode}
             showToolbar={false}
@@ -340,9 +371,22 @@ function ImageChoiceItemDesign({
             }
             contentKey="label"
           />
-        )}
-      </Grid>
-    </>
+        </Box>
+      )}
+      {deleteModalOpen && (
+        <AppThemeProvider>
+          <ConfirmActionModal
+            open
+            title={t("delete")}
+            description={t("delete_option")}
+            cancelLabel={t("cancel")}
+            confirmLabel={t("delete")}
+            onClose={() => setDeleteModalOpen(false)}
+            onConfirm={onDelete}
+          />
+        </AppThemeProvider>
+      )}
+    </Box>
   );
 }
 

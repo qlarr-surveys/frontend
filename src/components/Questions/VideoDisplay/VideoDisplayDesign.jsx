@@ -77,7 +77,8 @@ function VideoDisplayDesign({ code, t, onMainLang }) {
         <div className={styles.buttonContainer}>
           <Button
             component="label"
-            variant="outlined"
+            variant="contained"
+            color="primary"
             startIcon={<VideocamIcon />}
             onClick={(e) => {
               e.stopPropagation();

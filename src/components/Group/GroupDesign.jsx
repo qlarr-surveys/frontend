@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
 import QuestionDesign from "~/components/Question/QuestionDesign";
 import styles from "./GroupDesign.module.css";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { QuestionDropArea } from "../design/DropArea/DropArea";
 import GroupHeader from "./GroupHeader";
-import { Box, Divider, decomposeColor, recomposeColor } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import { useDrag, useDrop } from "react-dnd";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
@@ -15,11 +15,11 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
   const dispatch = useDispatch();
   const group = useSelector((state) => {
     return state.designState[code];
-  });
+  }, shallowEqual);
 
   const langInfo = useSelector((state) => {
     return  state.designState.langInfo;
-  });
+  }, shallowEqual);
 
   const inDesign = designMode == DESIGN_SURVEY_MODE.DESIGN;
 
@@ -115,11 +115,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
 
   drop(preview(containerRef));
 
-  const contrastColor = blendColors(
-  theme.palette.background.paper,  // background
-  theme.textStyles.question.color, // overlay
-  0.2                              // opacity
-)
+  const outlineColor = theme.palette.primary.main;
 
 
   if (!group) {
@@ -138,21 +134,14 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
           dispatch(setup({ code, rules: setupOptions(type) }));
         }
       }}
-      sx={
-        isInSetup
-          ? {
-              padding: "1rem",
-              borderRadius: "12px",
-              boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
-              backgroundColor: contrastColor,
-            }
-          : {
-              padding: "1rem",
-              boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
-              borderRadius: "12px",
-              backgroundColor: "background.paper",
-            }
-      }
+      sx={{
+        padding: "1rem",
+        borderRadius: "12px",
+        boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
+        backgroundColor: "background.paper",
+        outline: isInSetup ? `solid 3px ${outlineColor}` : "none",
+        outlineOffset: "-3px",
+      }}
       className={`${styles.topLevel} ${isLastAdded ? styles.highlight : ""}`}
       ref={containerRef}
       style={getStyles(isDragging)}
@@ -223,19 +212,3 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
 }
 
 export default React.memo(GroupDesign);
-
-const blendColors = (background, overlay, opacity) => {
-  const bg = decomposeColor(background);
-  const fg = decomposeColor(overlay);
-  
-  const blended = {
-    type: 'rgb',
-    values: [
-      Math.round(fg.values[0] * opacity + bg.values[0] * (1 - opacity)),
-      Math.round(fg.values[1] * opacity + bg.values[1] * (1 - opacity)),
-      Math.round(fg.values[2] * opacity + bg.values[2] * (1 - opacity)),
-    ],
-  };
-  
-  return recomposeColor(blended);
-};

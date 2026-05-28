@@ -92,12 +92,13 @@ function DesignSurvey() {
 
   const cacheRtlMemo = useMemo(() => cacheRtl(lang), [lang]);
 
-  const surveyTheme = React.useCallback(
-    createTheme({
-      ...defualtTheme(theme),
-      direction: rtlLanguage.includes(lang) ? "rtl" : "ltr",
-    }),
-    [theme]
+  const surveyTheme = useMemo(
+    () =>
+      createTheme({
+        ...defualtTheme(theme),
+        direction: rtlLanguage.includes(lang) ? "rtl" : "ltr",
+      }),
+    [theme, lang]
   );
 
   const backgroundImage = useSelector(

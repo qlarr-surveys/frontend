@@ -21,6 +21,7 @@
   "timezone_tooltip": "The survey will expire at 00:00 on the selected end date in your local timezone",
   "goBack": "Go Back",
   "preview": "Preview",
+  "preview_blocked_design_errors": "Fix the design errors in your survey before previewing.",
   "mobile_view": "Console Not Optimized for Small Screens",
   "mobile_view_working": "Our console is complex and doesn't support smaller screens for the best experience. But don't worry - the surveys we help you create are awesome on small screens!",
   "added": "Added:",

@@ -88,7 +88,7 @@ function Navigation(props) {
 
 export default Navigation;
 
-function getClosestScrollableParent(element) {
+export function getClosestScrollableParent(element) {
   if (!element) return null;
 
   let parent = element.parentElement;

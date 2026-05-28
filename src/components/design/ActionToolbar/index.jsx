@@ -1,7 +1,7 @@
 import { IconButton } from "@mui/material";
 import styles from "./ActionToolbar.module.css";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import MoveDownIcon from "@mui/icons-material/MoveDown";
 import { useSelector } from "react-redux";
@@ -9,10 +9,15 @@ import { useDispatch } from "react-redux";
 import { setupOptions } from "~/constants/design";
 import { setup, cloneQuestion, deleteQuestion, deleteGroup, resetSetup } from "~/state/design/designState";
 import { useTheme } from "@emotion/react";
+import {
+  getContrastColor,
+  isDarkColor,
+} from "~/components/Questions/utils";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { RuleOutlined, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import ConfirmActionModal from "~/components/common/ConfirmActionModal";
+import AppThemeProvider from "~/theme";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
@@ -121,7 +126,29 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
     }
   };
 
-  const textColor = theme.palette.primary.main;
+  const textColor =
+    theme.textStyles?.text?.color || theme.palette.text.primary;
+
+  // A visible-but-soft hover wash so the toolbar actions register on hover
+  // instead of blending into the question card.
+  const iconButtonSx = useMemo(
+    () => ({
+      "&:hover": {
+        backgroundColor:
+          theme.contrast?.hoverPaper ||
+          getContrastColor(
+            theme.palette.background.paper,
+            isDarkColor(theme.palette.background.paper) ? 0.88 : 0.12,
+          ),
+      },
+      "&:focus-visible, &.Mui-focusVisible, &:active": {
+        backgroundColor: "transparent",
+        outline: "2px solid currentColor",
+        outlineOffset: "-2px",
+      },
+    }),
+    [theme]
+  );
   const hasSkip = useSelector((state) => {
     let skipInstructions = state.designState[code]?.instructionList?.filter(
       (el) => el.code.startsWith("skip_to")
@@ -144,6 +171,7 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
   return (
     <div
       className={styles.actionControl}
+      style={{ color: textColor }}
       onClick={(e) => {
         if (e.target !== e.currentTarget) {
           e.preventDefault();
@@ -155,6 +183,8 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         <CustomTooltip title={tTooltips("has_relevance")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
+            color="inherit"
+            sx={iconButtonSx}
             onClick={() => expandRelevance()}
           >
             <RuleOutlined />
@@ -166,6 +196,8 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         <CustomTooltip title={tTooltips("is_disabled")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
+            color="inherit"
+            sx={iconButtonSx}
             onClick={() => expandDisabled()}
           >
             <VisibilityOff />
@@ -177,6 +209,8 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         <CustomTooltip title={tTooltips("has_validation")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
+            color="inherit"
+            sx={iconButtonSx}
             onClick={() => expandValidation()}
           >
             <VerifiedIcon />
@@ -187,6 +221,8 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         <CustomTooltip title={tTooltips("is_randomized")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
+            color="inherit"
+            sx={iconButtonSx}
             onClick={() => expandRandom(randomRule)}
           >
             <ShuffleIcon />
@@ -197,6 +233,8 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         <CustomTooltip title={tTooltips("has_skip")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
+            color="inherit"
+            sx={iconButtonSx}
             onClick={() => expandSkipLogic()}
           >
             <MoveDownIcon />
@@ -207,6 +245,8 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
         <CustomTooltip title={t("duplicate")} showIcon={false}>
           <IconButton
             className={styles.statusIcon}
+            color="inherit"
+            sx={iconButtonSx}
             onClick={(e) => {
               e.stopPropagation();
               onClone();
@@ -221,6 +261,8 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
           <CustomTooltip title={t("delete")} showIcon={false}>
             <IconButton
               className={styles.statusIcon}
+              color="inherit"
+              sx={iconButtonSx}
               onClick={(e) => {
                 e.stopPropagation();
                 setDeleteModalOpen(true);
@@ -229,18 +271,22 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
               <SurveyIcon name="delete" size="1em" color="currentColor" />
             </IconButton>
           </CustomTooltip>
-          <ConfirmActionModal
-            open={deleteModalOpen}
-            title={t("delete")}
-            description={t(isGroup ? "delete_page" : "delete_question")}
-            cancelLabel={t("cancel")}
-            confirmLabel={t("delete")}
-            onClose={() => setDeleteModalOpen(false)}
-            onConfirm={() => {
-              setDeleteModalOpen(false);
-              onDelete();
-            }}
-          />
+          {deleteModalOpen && (
+            <AppThemeProvider>
+              <ConfirmActionModal
+                open
+                title={t("delete")}
+                description={t(isGroup ? "delete_page" : "delete_question")}
+                cancelLabel={t("cancel")}
+                confirmLabel={t("delete")}
+                onClose={() => setDeleteModalOpen(false)}
+                onConfirm={() => {
+                  setDeleteModalOpen(false);
+                  onDelete();
+                }}
+              />
+            </AppThemeProvider>
+          )}
         </>
       )}
     </div>

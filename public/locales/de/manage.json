@@ -242,6 +242,7 @@
   "ok": "OK",
   "password_required": "Passwort ist erforderlich",
   "preview": "Vorschau",
+  "preview_blocked_design_errors": "Bitte beheben Sie die Designfehler in Ihrer Umfrage, bevor Sie eine Vorschau anzeigen.",
   "processed_errors": {
     "autocomplete_malformed_input": "Fehlerhaft formatierte Eingabe: Datei muss ein JSON-Array sein, das nur Zeichenketten enthält",
     "max_upload_size_exceeded": "Die Dateigröße überschreitet das maximale Upload-Limit.",

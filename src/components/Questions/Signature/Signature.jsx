@@ -104,7 +104,11 @@ function Signature(props) {
       >
         <Box
           ref={containerRef}
-          sx={{ maxWidth: Math.min(canvasWidth, 400) + "px" }}
+          sx={{
+            maxWidth: Math.min(canvasWidth, 400) + "px",
+            // Pad tracks the survey's paper color instead of a hardcoded white.
+            backgroundColor: "background.paper",
+          }}
           className={styles.signatureCanvas}
         >
           {signature ? (

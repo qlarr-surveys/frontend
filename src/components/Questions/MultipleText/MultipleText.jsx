@@ -16,7 +16,7 @@ function MultipleText(props) {
         flexDirection: "column",
       }}
     >
-      {props.component.answers.map((option) => {
+      {(props.component.answers || []).map((option) => {
         return <MultipleTextItem key={option.qualifiedCode} item={option} />;
       })}
     </Box>

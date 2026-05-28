@@ -1,6 +1,7 @@
 import styles from "./IconChoiceItemDesign.module.css";
 import btnStyles from "~/components/Questions/shared/choiceItemButtons.module.css";
-import { alpha, Box, Grid, IconButton, TextField } from "@mui/material";
+import { Box, IconButton, TextField } from "@mui/material";
+import { useThemeContrast } from "~/components/Questions/useThemeContrast";
 import { useTheme } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -27,6 +28,8 @@ import { setupOptions } from "~/constants/design";
 import { Build } from "@mui/icons-material";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
+import ConfirmActionModal from "~/components/common/ConfirmActionModal";
+import AppThemeProvider from "~/theme";
 
 function IconChoiceItemDesign({
   parentCode,
@@ -48,7 +51,6 @@ function IconChoiceItemDesign({
   const theme = useTheme();
   const [iconSelectoOpen, setIconSelectorOpen] = useState(false);
 
-
   const answer = useSelector((state) => {
     return type == "add" ? undefined : state.designState[qualifiedCode];
   });
@@ -66,17 +68,20 @@ function IconChoiceItemDesign({
   const mainContent =
     type == "add" ? undefined : answer.content?.[langInfo.mainLang]?.["label"];
 
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
   const onDelete = () => {
-    if (window.confirm(t("are_you_sure"))) {
-      dispatch(removeAnswer(qualifiedCode));
-    }
+    setDeleteModalOpen(false);
+    dispatch(removeAnswer(qualifiedCode));
   };
 
   const isInSetup = useSelector((state) => {
     return state.designState.setup?.code == qualifiedCode;
   });
-  const contrastColor = alpha(theme.textStyles.question.color, 0.2);
-
+  const contrast = useThemeContrast();
+  const outlineColor = theme.palette.primary.main;
+  const addCardBorder = contrast.mildPaperBorder;
+  const addIconColor = contrast.onPaper;
   const dragType = parentCode + "icon-drag";
   const getRowByIndex = (index) => {
     return Math.round(index / columnNumber);
@@ -204,55 +209,55 @@ function IconChoiceItemDesign({
   drop(preview(ref));
 
   return type == "add" ? (
-    <Grid item xs={12 / columnNumber} height="100%" key="add">
-      <Box
-        className={styles.addAnswerButton}
-        style={{
-          minHeight: "100px",
-          borderRadius: "4px",
-          backgroundColor: theme.palette.background.default,
-          height: "100%",
-          width: "100%",
-        }}
+    <Box
+      className={styles.addAnswerButton}
+      onClick={() => addAnswer()}
+      style={{
+        minHeight: "100px",
+        width: "100%",
+        height: "100%",
+        backgroundColor: theme.palette.background.paper,
+        border: `1px dashed ${addCardBorder}`,
+        borderRadius: "4px",
+        cursor: "pointer",
+      }}
+    >
+      <IconButton
+        className={styles.addAnswerIcon}
+        disableRipple
+        sx={{ color: addIconColor }}
       >
-        <IconButton
-          className={styles.addAnswerIcon}
-          onClick={() => {
-            addAnswer();
-          }}
-        >
-          <AddIcon />
-        </IconButton>
-      </Box>
-    </Grid>
+        <AddIcon />
+      </IconButton>
+    </Box>
   ) : (
     <>
-      <Grid
+      <Box
         style={{
           opacity: isDragging ? "0.2" : "1",
         }}
-        item
         data-code={code}
-        position="relative"
-        xs={12 / columnNumber}
-        key={qualifiedCode}
+        sx={{
+          position: "relative",
+          height: "100%",
+          width: "100%",
+          outline: isInSetup ? `solid 2px ${outlineColor}` : "none",
+          outlineOffset: "-2px",
+        }}
       >
-        {isInSetup && (
-          <div
-            className={styles.overlay}
-            style={{ backgroundColor: contrastColor }}
-          />
-        )}
         <div
           ref={ref}
           data-handler-id={handlerId}
           className={styles.imageContainer}
         >
           {inDesign(designMode) && (
-            <div className={btnStyles.buttonContainers}>
+            <div
+              className={btnStyles.buttonContainers}
+              style={{ color: addIconColor }}
+            >
               <div className={btnStyles.leftZone}>
-                <IconButton ref={drag} className={btnStyles.iconButton}>
-                  <DragIndicatorIcon color="action" />
+                <IconButton ref={drag} className={btnStyles.iconButton} color="inherit">
+                  <DragIndicatorIcon />
                 </IconButton>
                 <div className={btnStyles.codeWrapper}>
                   <InlineCodeEditor
@@ -262,17 +267,22 @@ function IconChoiceItemDesign({
                   />
                 </div>
               </div>
-              <div className={btnStyles.rightZone}>
+              <div
+                className={`${btnStyles.rightZone} ${btnStyles.pillZone}`}
+              >
                 <IconButton
                   className={btnStyles.iconButton}
-                  onClick={() => {
-                    onDelete();
+                  color="inherit"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteModalOpen(true);
                   }}
                 >
                   <DeleteOutlineIcon />
                 </IconButton>
                 <IconButton
                   className={btnStyles.iconButton}
+                  color="inherit"
                   onClick={(e) => {
                     e.stopPropagation();
                     dispatch(
@@ -288,6 +298,7 @@ function IconChoiceItemDesign({
                 <IconButton
                   component="label"
                   className={btnStyles.iconButton}
+                  color="inherit"
                   onClick={() => setIconSelectorOpen(true)}
                 >
                   <PhotoCamera />
@@ -298,7 +309,9 @@ function IconChoiceItemDesign({
           <div
             style={{
               width: "100%",
+              flex: 1,
               display: "flex",
+              alignItems: "center",
               justifyContent: "center",
             }}
           >
@@ -329,7 +342,7 @@ function IconChoiceItemDesign({
             />
           )}
         </div>
-      </Grid>
+      </Box>
       {iconSelectoOpen && (
         <IconSelector
           currentIcon=""
@@ -341,6 +354,19 @@ function IconChoiceItemDesign({
             setIconSelectorOpen(false);
           }}
         />
+      )}
+      {deleteModalOpen && (
+        <AppThemeProvider>
+          <ConfirmActionModal
+            open
+            title={t("delete")}
+            description={t("delete_option")}
+            cancelLabel={t("cancel")}
+            confirmLabel={t("delete")}
+            onClose={() => setDeleteModalOpen(false)}
+            onConfirm={onDelete}
+          />
+        </AppThemeProvider>
       )}
     </>
   );

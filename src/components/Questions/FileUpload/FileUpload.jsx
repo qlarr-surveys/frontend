@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { previewUrlByFilename, uploadFile } from "~/networking/run";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import ValidationItem from "~/components/run/ValidationItem";
 import { valueChange } from "~/state/runState";

@@ -37,7 +37,7 @@ function IconScq(props) {
       }}
       className={styles.iconFlexContainer}
     >
-      {props.component.answers.map((option) => {
+      {(props.component.answers || []).map((option) => {
         const isSelected = state.value == option.code;
         const relevance = runValues[option.qualifiedCode]?.relevance ?? true;
         if (!relevance) return null;

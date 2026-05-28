@@ -5,15 +5,17 @@ import { Box, Grid } from "@mui/material";
 import { shallowEqual, useDispatch } from "react-redux";
 import { valueChange } from "~/state/runState";
 import { buildResourceUrl } from "~/networking/common";
+import { placeholderImageUrl } from "~/components/Questions/placeholderImage";
 import { useSelector } from "react-redux";
 import { setDirty } from "~/state/templateState";
 import { rtlLanguage } from "~/utils/common";
 import Content from '~/components/run/Content';
 
 function ImageRanking(props) {
+  const answers = props.component.answers || [];
   const values = useSelector((state) => {
     let valuesMap = {};
-    props.component.answers.forEach((element) => {
+    answers.forEach((element) => {
       valuesMap[element.qualifiedCode] =
         state.runState.values[element.qualifiedCode].value;
     });
@@ -76,7 +78,7 @@ function ImageRanking(props) {
       }}
       className={styles.imageFlexContainer}
     >
-      {props.component.answers.map((option) => {
+      {answers.map((option) => {
         return (
           <ImageRankingItem
             option={option}
@@ -108,7 +110,7 @@ function ImageRankingItem(props) {
 
   const backgroundImage = props.option.resources?.image
     ? `url('${buildResourceUrl(props.option.resources.image)}')`
-    : `url('/placeholder-image.jpg')`;
+    : placeholderImageUrl(theme);
 
   return (
     <Box
