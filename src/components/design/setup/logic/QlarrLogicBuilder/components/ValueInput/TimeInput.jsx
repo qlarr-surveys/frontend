@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { TextField } from '@mui/material';
 import { TimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { DATE_FORMATS } from '../../config/constants';
@@ -18,10 +19,8 @@ export const TimeInput = React.memo(function TimeInput({ value, onChange, t, com
       onChange={(newValue) => {
         onChange(newValue ? newValue.format(DATE_FORMATS.TIME_VALUE) : '');
       }}
-      slotProps={{
-        textField: textFieldProps,
-      }}
-      format={DATE_FORMATS.TIME_DISPLAY}
+      inputFormat={DATE_FORMATS.TIME_DISPLAY}
+      renderInput={(params) => <TextField {...params} {...textFieldProps} />}
     />
   );
 });

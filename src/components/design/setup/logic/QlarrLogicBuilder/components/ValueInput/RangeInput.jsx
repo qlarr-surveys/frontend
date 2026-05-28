@@ -82,14 +82,15 @@ export const RangeInput = React.memo(function RangeInput({ fieldType, value, onC
             onChange={(newValue) => {
               handleMinChange(newValue ? newValue.format(DATE_FORMATS.DATE_VALUE) : '');
             }}
-            slotProps={{
-              textField: {
-                ...fromProps,
-                sx: { ...fromProps.sx, flex: 1, minWidth: 0 },
-                error: inverted,
-              },
-            }}
-            format={DATE_FORMATS.DATE_DISPLAY}
+            inputFormat={DATE_FORMATS.DATE_DISPLAY}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                {...fromProps}
+                sx={{ ...fromProps.sx, flex: 1, minWidth: 0 }}
+                error={inverted}
+              />
+            )}
           />
           <span className={styles.rangeSeparator}>-</span>
           <DatePicker
@@ -98,14 +99,15 @@ export const RangeInput = React.memo(function RangeInput({ fieldType, value, onC
             onChange={(newValue) => {
               handleMaxChange(newValue ? newValue.format(DATE_FORMATS.DATE_VALUE) : '');
             }}
-            slotProps={{
-              textField: {
-                ...toProps,
-                sx: { ...toProps.sx, flex: 1, minWidth: 0 },
-                error: inverted,
-              },
-            }}
-            format={DATE_FORMATS.DATE_DISPLAY}
+            inputFormat={DATE_FORMATS.DATE_DISPLAY}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                {...toProps}
+                sx={{ ...toProps.sx, flex: 1, minWidth: 0 }}
+                error={inverted}
+              />
+            )}
           />
         </div>
         {errorElement}
