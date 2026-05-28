@@ -8,11 +8,16 @@ import { questionIconByType } from "~/components/Questions/utils";
 import { useThemeContrast } from "~/components/Questions/useThemeContrast";
 import CheckCircleOutlineOutlined from "@mui/icons-material/CheckCircleOutlineOutlined";
 import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { getClosestScrollableParent } from "~/components/run/Navigation";
 
 function SurveyIndex(props) {
   const dispatch = useDispatch();
   const contrast = useThemeContrast();
+  // Drawer overlaps content on small viewports (including phone preview, where
+  // the iframe is 375px wide), so dismiss it after a jump there. On desktop
+  // the drawer sits beside the survey, so keep it open for rapid navigation.
+  const isMobileViewport = useMediaQuery("(max-width: 600px)");
 
   const relevance_map = useSelector((state) => {
     return state.runState.values["Survey"].relevance_map;
@@ -49,6 +54,7 @@ function SurveyIndex(props) {
     canJump && !isCurrentQuestion(questionCode);
 
   const closeDrawer = () => {
+    if (!isMobileViewport) return;
     if (props.onCloseDrawer) props.onCloseDrawer();
   };
 
