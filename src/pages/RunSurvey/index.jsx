@@ -248,9 +248,12 @@ function RunSurvey({
             top: el.offsetTop - container.offsetTop,
             behavior: "smooth",
           });
-        } else {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
         }
+        // No scrollable ancestor → content already fits the viewport, so the
+        // element is visible without scrolling. Skip rather than call
+        // el.scrollIntoView, which propagates to the parent window when this
+        // runs inside the preview iframe and pushes the preview-mode-tabs
+        // off-screen.
         setPendingScrollTarget(null);
         return;
       }

@@ -55,13 +55,11 @@ function SurveyIndex(props) {
   const scrollToElement = (el) => {
     if (!el) return;
     const container = getClosestScrollableParent(el);
-    // When no scrollable ancestor exists, getClosestScrollableParent falls back
-    // to document.documentElement; offset math is unreliable there, so defer to
-    // the browser's native scrollIntoView instead.
-    if (!container || container === document.documentElement) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
+    // No scrollable ancestor → content already fits the viewport, so the
+    // element is visible without scrolling. Skip rather than call
+    // el.scrollIntoView, which propagates to the parent window when this runs
+    // inside the preview iframe and pushes the preview-mode-tabs off-screen.
+    if (!container || container === document.documentElement) return;
     container.scrollTo({
       top: el.offsetTop - container.offsetTop,
       behavior: "smooth",
