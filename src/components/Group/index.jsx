@@ -2,10 +2,10 @@ import React from "react";
 import { useSelector, shallowEqual } from "react-redux";
 
 import Question from "~/components/Question";
-import Content from "~/components/run/Content";
+import Content, { replaceFormatInstructions } from "~/components/run/Content";
 
 import styles from "./Group.module.css";
-import { Box, Divider, useTheme } from "@mui/material";
+import { Box, css, Divider, useTheme } from "@mui/material";
 
 function Group(props) {
   const theme = useTheme();
@@ -17,6 +17,10 @@ function Group(props) {
         typeof groupState?.relevance === "undefined" || groupState.relevance,
     };
   }, shallowEqual);
+
+  const formatState = useSelector((state) => {
+    return state.runState.values[props.group.code];
+  });
 
   const visibleQuestionCodes = useSelector((state) => {
     return (props.group?.questions ?? [])
@@ -39,6 +43,9 @@ function Group(props) {
           boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
           backgroundColor: theme.palette.background.paper,
         }}
+        css={css`
+          ${replaceFormatInstructions(props.group.customCss, formatState, "custom_css")}
+        `}
       >
         <div className={styles.groupHeader}>
           <Content
