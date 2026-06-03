@@ -26,7 +26,7 @@ function IconMcq(props) {
       }}
       className={styles.iconFlexContainer}
     >
-      {props.component.answers.map((option) => {
+      {(props.component.answers || []).map((option) => {
         const relevance = runValues[option.qualifiedCode]?.relevance ?? true;
         if (!relevance) return null;
 

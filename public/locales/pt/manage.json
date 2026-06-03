@@ -21,6 +21,7 @@
   "timezone_tooltip": "A pesquisa expirará às 00:00 na data de finalização selecionada em seu fuso horário local",
   "goBack": "Voltar",
   "preview": "Pré-visualização",
+  "preview_blocked_design_errors": "Corrija os erros de design na sua pesquisa antes de pré-visualizar.",
   "mobile_view": "Console Não Otimizado para Telas Pequenas",
   "mobile_view_working": "Nosso console é complexo e não suporta telas menores para a melhor experiência. Mas não se preocupe - as pesquisas que ajudamos você a criar são incríveis em telas pequenas!",
   "added": "Adicionado:",

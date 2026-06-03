@@ -35,7 +35,7 @@ function SCQ(props) {
         value={state.value}
         onChange={handleChange}
       >
-        {props.component.answers.map((option) => {
+        {(props.component.answers || []).map((option) => {
           if (option.type === "other") {
             return (
               <ScqChoiceOther

@@ -21,6 +21,7 @@
   "timezone_tooltip": "La encuesta expirará a las 00:00 en la fecha de finalización seleccionada en tu zona horaria local",
   "goBack": "Volver",
   "preview": "Vista previa",
+  "preview_blocked_design_errors": "Corrige los errores de diseño en tu encuesta antes de obtener una vista previa.",
   "mobile_view": "Consola No Optimizada para Pantallas Pequeñas",
   "mobile_view_working": "Nuestra consola es compleja y no admite pantallas más pequeñas para la mejor experiencia. ¡Pero no te preocupes - las encuestas que te ayudamos a crear son increíbles en pantallas pequeñas!",
   "added": "Agregado:",
