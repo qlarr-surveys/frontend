@@ -12,6 +12,8 @@
     "error":"Error",
     "goBack":"Go Back",
     "survey_navigation": "Survey Navigation",
+    "untitled_question": "(Untitled)",
+    "answered_progress": "{{answered}} / {{total}} answered",
     "processed_errors": {
         "survey_closed": "This survey is not active",
         "survey_design_error": "Survey Design Error... Check Survey Design",

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 
 let qlarrDependents = {};
 
@@ -79,6 +79,45 @@ export const {
 } = runState.actions;
 
 export default runState.reducer;
+
+const selectRunValues = (state) => state.runState.values;
+const selectSurvey = (state) => state.runState.data?.survey;
+const selectRelevanceMap = (state) =>
+  state.runState.values?.Survey?.relevance_map;
+
+// Set of question codes that have a recorded answer (excluding the Survey root).
+export const selectAnsweredSet = createSelector([selectRunValues], (values) => {
+  const set = new Set();
+  if (!values) return set;
+  for (const code in values) {
+    if (code === "Survey") continue;
+    if (values[code]?.value !== undefined) set.add(code);
+  }
+  return set;
+});
+
+// Answered/total counts across relevant, non-END groups. Used by the drawer
+// progress indicator and kept here so the run UI shares one walk of the tree.
+export const selectAnsweredCounts = createSelector(
+  [selectSurvey, selectRelevanceMap, selectAnsweredSet],
+  (survey, relevanceMap, answeredSet) => {
+    if (!survey?.groups || !relevanceMap) {
+      return { answeredCount: 0, totalCount: 0 };
+    }
+    let total = 0;
+    let answered = 0;
+    for (const group of survey.groups) {
+      if (group.groupType === "END") continue;
+      if (!relevanceMap[group.code]) continue;
+      for (const question of group.questions || []) {
+        if (!relevanceMap[question.code]) continue;
+        total += 1;
+        if (answeredSet.has(question.code)) answered += 1;
+      }
+    }
+    return { answeredCount: answered, totalCount: total };
+  },
+);
 
 function setValueInState(state, payload) {
   let componentCode = payload.componentCode;

@@ -12,6 +12,8 @@
     "error":"Erreur",
     "goBack":"Retour",
     "survey_navigation": "Navigation du Sondage",
+    "untitled_question": "(Sans titre)",
+    "answered_progress": "{{answered}} / {{total}} répondues",
     "processed_errors": {
         "survey_closed": "Ce sondage n'est pas actif",
         "survey_design_error": "Erreur de Conception de Sondage... Vérifiez la Conception du Sondage",
