@@ -102,34 +102,35 @@ function blendColors(color1, color2, opacity) {
   return [r, g, b];
 }
 
-export const getContrastColor = (hexColor, opacity = 0.2) => {
-  const rgbColor = hexToRgb(hexColor);
+const colorStringToRgb = (input) => {
+  if (typeof input === "string" && input.startsWith("#")) {
+    return hexToRgb(input);
+  }
+  const { r, g, b } = extractRgbaValues(input || "");
+  return [r, g, b];
+};
 
-  // Calculate luminance
+export const getContrastColor = (color, opacity = 0.2) => {
+  const rgbColor = colorStringToRgb(color);
+
   const luminance =
     (0.299 * rgbColor[0] + 0.587 * rgbColor[1] + 0.114 * rgbColor[2]) / 255;
 
-  // Determine contrast color (black or white)
   const contrastRgb = luminance > 0.5 ? [0, 0, 0] : [255, 255, 255];
   const effectiveOpacity = luminance > 0.5 ? opacity : 1 - opacity;
 
-  // Blend the original color with the contrasting color
   const blendedRgb = blendColors(rgbColor, contrastRgb, effectiveOpacity);
 
-  // Convert the blended RGB color back to hex
   return rgbToHex(...blendedRgb);
 };
 
-export const getMildBorderColor = (textColor, opacity = 0.2) => {
-  const rgbColor = hexToRgb(textColor);
+export const getMildBorderColor = (color, opacity = 0.2) => {
+  const rgbColor = colorStringToRgb(color);
 
-  // Create a gray color (neutral gray)
   const grayRgb = [120, 120, 120];
 
-  // Blend the text color with gray to create a mild version
   const mildRgb = blendColors(rgbColor, grayRgb, opacity);
 
-  // Convert back to hex
   return rgbToHex(...mildRgb);
 };
 
@@ -175,6 +176,18 @@ export const colorToThemeMode = (color) => {
   // If white text has better contrast, use dark theme
   return whiteContrast > blackContrast ? "light" : "dark";
 };
+
+// True when a color is dark enough that light content reads better on it.
+export const isDarkColor = (color) => {
+  const [r, g, b] = colorStringToRgb(color);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 <= 0.5;
+};
+
+// A readable text/icon color for content placed directly on `bg`.
+// getContrastColor() returns a subtle background tint; this returns a genuine
+// high-contrast foreground (near-black on light surfaces, near-white on dark).
+export const getForegroundColor = (bg) =>
+  getContrastColor(bg, isDarkColor(bg) ? 0.13 : 0.87);
 
 export const QUESTION_TYPES = [
   {

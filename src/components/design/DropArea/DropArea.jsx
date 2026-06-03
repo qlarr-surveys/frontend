@@ -1,19 +1,43 @@
+import { useMemo } from "react";
 import styles from "./DropArea.module.css";
 import { useDrop } from "react-dnd";
 import { onDrag } from "~/state/design/designState";
 import { useDispatch } from "react-redux";
 import { useTheme } from "@emotion/react";
 import { useSelector } from "react-redux";
-import { getContrastColor, isDisplay } from "~/components/Questions/utils";
+import {
+  getContrastColor,
+  getForegroundColor,
+  getMildBorderColor,
+  isDisplay,
+  questionIconByType,
+} from "~/components/Questions/utils";
 import { useInView } from "react-intersection-observer";
 import { Box } from "@mui/material";
 import { HelpOutline } from "@mui/icons-material";
 import { inDesign } from "~/routes";
 import dragIcon from "~/assets/icons/drag.svg";
-import addTextIcon from "~/assets/icons/add-text.svg";
-import addImageIcon from "~/assets/icons/add-image.svg";
-import addVideoIcon from "~/assets/icons/add-video.svg";
 import { Trans } from "react-i18next";
+
+function buildDropAreaVars(theme) {
+  const paper = theme.palette.background.paper;
+  const bgDefault = theme.palette.background.default;
+  // The dotted outline is a mild border (subtle tint), the label a readable
+  // foreground — neither derives from the dark `onPaper`/`onDefault` directly.
+  const dropBorder =
+    theme.contrast?.mildDefaultBorder ||
+    getMildBorderColor(getContrastColor(bgDefault), 0.4);
+  const dropText = theme.contrast?.onPaper || getForegroundColor(paper);
+  const hintTileBg = getContrastColor(paper, 0.08);
+  return {
+    "--drop-border": dropBorder,
+    "--drop-text": dropText,
+    "--drop-bg-idle": getContrastColor(bgDefault, 0.05),
+    "--drop-bg-active": getContrastColor(bgDefault, 0.15),
+    "--drop-hint-tile-bg": hintTileBg,
+    "--drop-hint-icon": getContrastColor(hintTileBg, 0.7),
+  };
+}
 
 export function GroupDropArea({ index, groupsCount, t, emptySurvey }) {
   const dispatch = useDispatch();
@@ -48,11 +72,13 @@ export function GroupDropArea({ index, groupsCount, t, emptySurvey }) {
   const theme = useTheme();
 
   const contrastColor = getContrastColor(theme.palette.background.paper);
+  const dropAreaVars = useMemo(() => buildDropAreaVars(theme), [theme]);
 
   return (
     <div
       ref={drop}
       style={{
+        ...dropAreaVars,
         backgroundColor: isDraggingGroup && contrastColor,
         color: theme.palette.text.primary,
       }}
@@ -92,6 +118,8 @@ export function QuestionDropArea({
 }) {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const dropAreaVars = useMemo(() => buildDropAreaVars(theme), [theme]);
+  const hintIconColor = "var(--drop-hint-icon, #16205b)";
 
   const designMode = useSelector((state) => state.designState.designMode);
 
@@ -179,6 +207,7 @@ export function QuestionDropArea({
     <div
       ref={ref}
       style={{
+        ...dropAreaVars,
         marginRight: "1.5em",
         marginLeft: "1.5em",
       }}
@@ -254,12 +283,14 @@ export function QuestionDropArea({
           >
             <span
               className={styles.endPageText}
+              style={{ color: textContrast }}
             >
               <Trans t={t} i18nKey="end_page_empty_hint" />
             </span>
             <Box className={styles.endPageActions}>
               <div
                 className={styles.endPageActionItem}
+                style={{ color: textContrast }}
                 onClick={() =>
                   dispatch(
                     onDrag({
@@ -272,12 +303,13 @@ export function QuestionDropArea({
                 }
               >
                 <div className={styles.endPageActionIcon}>
-                  <img src={addTextIcon} alt="" width={24} height={24} />
+                  {questionIconByType("text_display", "24px", hintIconColor)}
                 </div>
                 <span>{t("add_a_text")}</span>
               </div>
               <div
                 className={styles.endPageActionItem}
+                style={{ color: textContrast }}
                 onClick={() =>
                   dispatch(
                     onDrag({
@@ -290,12 +322,13 @@ export function QuestionDropArea({
                 }
               >
                 <div className={styles.endPageActionIcon}>
-                  <img src={addImageIcon} alt="" width={24} height={24} />
+                  {questionIconByType("image_display", "24px", hintIconColor)}
                 </div>
                 <span>{t("add_a_image")}</span>
               </div>
               <div
                 className={styles.endPageActionItem}
+                style={{ color: textContrast }}
                 onClick={() =>
                   dispatch(
                     onDrag({
@@ -308,7 +341,7 @@ export function QuestionDropArea({
                 }
               >
                 <div className={styles.endPageActionIcon}>
-                  <img src={addVideoIcon} alt="" width={24} height={24} />
+                  {questionIconByType("video_display", "24px", hintIconColor)}
                 </div>
                 <span>{t("add_video")}</span>
               </div>

@@ -7,7 +7,7 @@
   max-width: 800px;
   min-width: 350px;
   width: 100%;
-  border: 1px dotted #16205b;
+  border: 1px dotted var(--drop-border, #16205b);
   border-radius: 6px;
   opacity: 1;
 }
@@ -16,8 +16,8 @@
   composes: dropAreaBase;
   height: 6rem;
   margin: 20px auto 35px;
-  color: rgba(0, 0, 0, 0.5);
-  background-color: #f9f9f9;
+  color: var(--drop-text, rgba(0, 0, 0, 0.5));
+  background-color: var(--drop-bg-idle, #f9f9f9);
   transition: padding 200ms, background-color 200ms, height 200ms ease-in-out,
     opacity 200ms;
 }
@@ -26,8 +26,8 @@
   composes: dropAreaBase;
   height: 50px;
   margin: 20px auto 35px;
-  color: rgba(0, 0, 0, 0.5);
-  background-color: #f9f9f9;
+  color: var(--drop-text, rgba(0, 0, 0, 0.5));
+  background-color: var(--drop-bg-idle, #f9f9f9);
   transition: padding 200ms, background-color 200ms, opacity 200ms;
 }
 
@@ -36,8 +36,8 @@
   height: 6rem;
   margin: auto;
   font-size: 2rem;
-  color: rgba(0, 0, 0, 0.5);
-  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--drop-text, rgba(0, 0, 0, 0.5));
+  background-color: var(--drop-bg-active, rgba(0, 0, 0, 0.1));
   transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
 }
 
@@ -45,7 +45,7 @@
   composes: dropAreaBase;
   height: 50px;
   margin: 0 auto;
-  background-color: #f9f9f9;
+  background-color: var(--drop-bg-idle, #f9f9f9);
   transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
 }
 
@@ -95,10 +95,10 @@
   border-radius: 8px;
   padding: 6px;
   background-image:
-    repeating-linear-gradient(to right, #c0c4d0 0, #c0c4d0 10px, transparent 10px, transparent 20px),
-    repeating-linear-gradient(to right, #c0c4d0 0, #c0c4d0 10px, transparent 10px, transparent 20px),
-    repeating-linear-gradient(to bottom, #c0c4d0 0, #c0c4d0 10px, transparent 10px, transparent 20px),
-    repeating-linear-gradient(to bottom, #c0c4d0 0, #c0c4d0 10px, transparent 10px, transparent 20px);
+    repeating-linear-gradient(to right, var(--drop-border, #c0c4d0) 0, var(--drop-border, #c0c4d0) 10px, transparent 10px, transparent 20px),
+    repeating-linear-gradient(to right, var(--drop-border, #c0c4d0) 0, var(--drop-border, #c0c4d0) 10px, transparent 10px, transparent 20px),
+    repeating-linear-gradient(to bottom, var(--drop-border, #c0c4d0) 0, var(--drop-border, #c0c4d0) 10px, transparent 10px, transparent 20px),
+    repeating-linear-gradient(to bottom, var(--drop-border, #c0c4d0) 0, var(--drop-border, #c0c4d0) 10px, transparent 10px, transparent 20px);
   background-size:
     100% 1px,
     100% 1px,
@@ -120,7 +120,7 @@
 }
 
 .groupEmptyHintHover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--drop-bg-active, rgba(0, 0, 0, 0.1));
 }
 
 .endPageEmptyHint {
@@ -133,8 +133,8 @@
   height: 150px;
   margin: auto;
   font-size: 2rem;
-  color: rgba(0, 0, 0, 0.5);
-  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--drop-text, rgba(0, 0, 0, 0.5));
+  background-color: var(--drop-bg-active, rgba(0, 0, 0, 0.1));
   transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
 }
 
@@ -143,8 +143,8 @@
   height: 220px;
   margin: auto;
   font-size: 2rem;
-  color: rgba(0, 0, 0, 0.5);
-  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--drop-text, rgba(0, 0, 0, 0.5));
+  background-color: var(--drop-bg-active, rgba(0, 0, 0, 0.1));
   transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
 }
 
@@ -152,7 +152,7 @@
   composes: dropAreaBase;
   height: 150px;
   margin: 0 auto;
-  background-color: #f9f9f9;
+  background-color: var(--drop-bg-idle, #f9f9f9);
   transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
 }
 
@@ -160,7 +160,7 @@
   composes: dropAreaBase;
   height: 220px;
   margin: 0 auto;
-  background-color: #f9f9f9;
+  background-color: var(--drop-bg-idle, #f9f9f9);
   transition: height 200ms, padding 200ms, background-color 200ms, opacity 200ms;
 }
 
@@ -179,7 +179,7 @@
   line-height: 32px;
   letter-spacing: 0px;
   text-align: center;
-  color: #16205B;
+  color: var(--drop-text, #16205B);
   opacity: 0.7;
 }
 
@@ -190,7 +190,7 @@
   line-height: 24px;
   letter-spacing: 0px;
   text-align: center;
-  color: #16205B;
+  color: var(--drop-text, #16205B);
   opacity: 0.7;
 }
 
@@ -208,7 +208,7 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #16205b;
+  color: var(--drop-text, #16205b);
   cursor: pointer;
 }
 
@@ -216,7 +216,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f0f1f4;
+  background: var(--drop-hint-tile-bg, #f0f1f4);
   border-radius: 8px;
   padding: 12px;
 }

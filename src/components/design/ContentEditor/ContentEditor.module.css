@@ -26,7 +26,7 @@ p {
 
 .placeholder {
 opacity: 0.5;
-color: #aaa;
+color: currentColor;
 }
 
 .placeholder > :first-child {

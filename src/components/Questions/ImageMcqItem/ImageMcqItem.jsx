@@ -5,6 +5,7 @@ import { valueChange } from "~/state/runState";
 import { useTheme } from "@emotion/react";
 import { Box, Card, Checkbox, Grid } from "@mui/material";
 import { buildResourceUrl } from "~/networking/common";
+import { placeholderImageUrl } from "~/components/Questions/placeholderImage";
 import { setDirty } from "~/state/templateState";
 import Content from "~/components/run/Content";
 
@@ -27,7 +28,7 @@ function ImageMcqItem(props) {
   };
   const backgroundImage = props.option.resources?.image
     ? `url('${buildResourceUrl(props.option.resources.image)}')`
-    : `url('/placeholder-image.jpg')`;
+    : placeholderImageUrl(theme);
 
   return (
     <Grid key={props.option.code} item xs={12 / props.columns}>

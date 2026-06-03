@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Tooltip } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -13,6 +13,7 @@ import {
   getErrorMessage,
   selectMaxSuffixLength,
 } from "~/utils/design/codeUtils";
+import { getContrastColor } from "~/components/Questions/utils";
 import styles from "./InlineCodeEditor.module.css";
 
 const SPECIAL_TYPES = ["other", "all", "none", "other_text"];
@@ -131,12 +132,17 @@ function InlineCodeEditor({ qualifiedCode, designMode, compact }) {
   const hasAPrefix = qualifiedCode.includes("A");
   const displayText = hasAPrefix ? "A" + suffix : suffix;
 
+  const codeLabelColor = useMemo(
+    () => getContrastColor(theme.palette.background.paper, 0.7),
+    [theme.palette.background.paper]
+  );
+
   return (
     <span
       className={`${styles.codeLabel} ${!isEditable ? styles.codeLabelReadOnly : ""}`}
       style={{
         backgroundColor: theme.palette.grey[200],
-        color: theme.palette.text.secondary,
+        color: codeLabelColor,
         ...(!isEditing && compact
           ? { maxWidth: "4ch" }
           : { minWidth: `${maxSuffixLength + (hasAPrefix ? 1 : 0)}ch` }),

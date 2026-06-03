@@ -4,6 +4,7 @@ import { valueChange } from "~/state/runState";
 import { useTheme } from "@emotion/react";
 import { Box, Checkbox } from "@mui/material";
 import { buildResourceUrl } from "~/networking/common";
+import { placeholderImageUrl } from "~/components/Questions/placeholderImage";
 import styles from "./ImageMcq.module.css";
 import { setDirty } from "~/state/templateState";
 import { rtlLanguage } from "~/utils/common";
@@ -74,7 +75,7 @@ function ImageMcqItem(props) {
   };
   const backgroundImage = props.option.resources?.image
     ? `url('${buildResourceUrl(props.option.resources?.image)}')`
-    : `url('/placeholder-image.jpg')`;
+    : placeholderImageUrl(theme);
 
   return (
     <Box
@@ -92,9 +93,10 @@ function ImageMcqItem(props) {
           paddingTop: 100 / props.aspectRatio + "%",
           backgroundImage: backgroundImage,
           borderRadius: "4px",
-          border: checked
-            ? `4px solid ${theme.palette.primary.main}`
-            : "4px solid transparent",
+          outline: checked
+            ? `2px solid ${theme.palette.primary.main}`
+            : "none",
+          outlineOffset: "-2px",
         }}
       >
         <div className={styles.selection}>

@@ -38,8 +38,8 @@
 }
 
 .groupDesignError {
-  border-color: red !important;
-  background-color: #ff000010 !important;
+  border-color: var(--design-error-color, red) !important;
+  background-color: var(--design-error-tint, #ff000010) !important;
 }
 
 .groupHeader {
@@ -115,29 +115,14 @@
 
 .highlight {
   animation: fadeHighlight 3s ease-in-out;
-  background-color: rgba(
-    245,
-    245,
-    220,
-    0.7
-  ); /* Beige with partial transparency */
+  background-color: var(--new-item-flash, rgba(245, 245, 220, 0.7));
 }
 
 @keyframes fadeHighlight {
   0% {
-    background-color: rgba(
-      245,
-      245,
-      220,
-      0.7
-    ); /* Start with semi-transparent beige */
+    background-color: var(--new-item-flash, rgba(245, 245, 220, 0.7));
   }
   100% {
-    background-color: rgba(
-      245,
-      245,
-      220,
-      0.2
-    ); /* Fade to even more transparent beige */
+    background-color: var(--new-item-flash-end, rgba(245, 245, 220, 0.2));
   }
 }

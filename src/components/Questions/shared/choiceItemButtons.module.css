@@ -4,6 +4,14 @@
   margin: 4px !important;
 }
 
+.iconButton:focus-visible,
+.iconButton:global(.Mui-focusVisible),
+.iconButton:active {
+  background-color: transparent !important;
+  outline: 2px solid currentColor !important;
+  outline-offset: -2px !important;
+}
+
 .hoverIconButton {
   display: none;
   border-radius: 0 !important;
@@ -21,6 +29,7 @@
   display: flex;
   align-items: center;
   flex: 1;
+  margin: 8px 0 0 8px;
 }
 
 .rightZone {
@@ -28,6 +37,7 @@
   align-items: center;
   justify-content: flex-end;
   flex: 1;
+  margin: 8px 8px 0 0;
 }
 
 .codeWrapper {
@@ -37,4 +47,27 @@
 
 .rightZone:hover .hoverIconButton {
   display: flex;
+}
+
+.pillZone {
+  border-radius: 6px;
+  padding: 2px 6px;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+.pillZone .iconButton {
+  border-radius: 4px !important;
+  margin: 0 !important;
+  padding: 3px !important;
+}
+
+.pillZone .iconButton svg {
+  font-size: 1.125rem;
+}
+
+.pillZone .iconButton:focus-visible,
+.pillZone .iconButton:global(.Mui-focusVisible),
+.pillZone .iconButton:active {
+  outline-color: currentColor !important;
 }
