@@ -32,6 +32,6 @@
 
 @media (min-width: 600px) {
   .topLevel {
-    padding: 1rem;
+    padding: 1rem 0rem 0rem 0rem;
   }
 }
