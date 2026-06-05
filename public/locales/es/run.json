@@ -12,7 +12,6 @@
     "error":"Error",
     "goBack":"Volver",
     "survey_navigation": "Navegación de la Encuesta",
-    "answered_progress": "{{answered}} / {{total}} respondidas",
     "processed_errors": {
         "survey_closed": "Esta encuesta no está activa",
         "survey_design_error": "Error de Diseño de Encuesta... Verifica el Diseño de la Encuesta",
