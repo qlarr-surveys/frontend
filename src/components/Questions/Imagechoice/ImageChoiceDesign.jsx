@@ -41,6 +41,7 @@ function ImageChoiceQuestion(props) {
           sx={{
             display: "flex",
             flexWrap: "wrap",
+            alignItems: "flex-start",
             gap: `${spacing}px`,
           }}
         >

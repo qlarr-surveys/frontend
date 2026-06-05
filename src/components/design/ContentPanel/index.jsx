@@ -56,8 +56,16 @@ function ContentPanel({ designMode }, ref) {
       "--new-item-flash-end": alpha(theme.palette.primary.main, 0.04),
       "--question-prefix-color":
         theme.contrast?.onPaper || theme.palette.text.primary,
-      "--page-label-color":
+      "--page-label-color": alpha(
         theme.contrast?.onDefault || theme.palette.text.primary,
+        0.6
+      ),
+      "--error-display-border": theme.palette.error.main,
+      "--error-display-tint": alpha(theme.palette.error.main, 0.1),
+      "--error-display-badge-bg": alpha(
+        theme.contrast?.onPaper || theme.palette.text.primary,
+        0.08
+      ),
     }),
     [theme]
   );

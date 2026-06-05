@@ -23,7 +23,7 @@
   padding-inline-start: 4px;
   font-size: 13px;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--page-label-color, #6b7280);
 }
 
 .footer {
