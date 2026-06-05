@@ -249,6 +249,7 @@ function QuestionDesign({
         </Box>
       )}
 
+    {!isDragging &&
       <QuestionDesignBody
         code={code}
         type={type}
@@ -256,6 +257,7 @@ function QuestionDesign({
         designMode={designMode}
         langInfo={langInfo}
       />
+    }
       <ErrorDisplay code={code} />
     </div>
   );
