@@ -42,6 +42,9 @@ function IconChoiceItemDesign({
   t,
   addAnswer,
 }) {
+  // Fixed icon-cell height so the "+" never stretches and roughly matches a typical
+  // cell (action-button row + icon + one label line; less when the label is hidden).
+  const cellHeight = imageHeight + (hideText ? 52 : 80);
   const designService = useService("design");
   const dispatch = useDispatch();
   const ref = useRef(null);
@@ -204,25 +207,20 @@ function IconChoiceItemDesign({
   drop(preview(ref));
 
   return type == "add" ? (
-    <Grid item xs={12 / columnNumber} height="100%" key="add">
+    <Grid item xs={12 / columnNumber} key="add">
       <Box
         className={styles.addAnswerButton}
+        onClick={() => {
+          addAnswer();
+        }}
         style={{
-          minHeight: "100px",
+          height: cellHeight + "px",
           borderRadius: "4px",
           backgroundColor: theme.palette.background.default,
-          height: "100%",
           width: "100%",
         }}
       >
-        <IconButton
-          className={styles.addAnswerIcon}
-          onClick={() => {
-            addAnswer();
-          }}
-        >
-          <AddIcon />
-        </IconButton>
+        <AddIcon className={styles.addAnswerIcon} color="action" />
       </Box>
     </Grid>
   ) : (
@@ -230,6 +228,7 @@ function IconChoiceItemDesign({
       <Grid
         style={{
           opacity: isDragging ? "0.2" : "1",
+          minHeight: cellHeight + "px",
         }}
         item
         data-code={code}

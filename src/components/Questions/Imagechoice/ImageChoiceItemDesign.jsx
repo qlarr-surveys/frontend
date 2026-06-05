@@ -210,25 +210,31 @@ function ImageChoiceItemDesign({
   drop(preview(ref));
 
   return type == "add" ? (
-    <Grid height="100%" item xs={12 / columnNumber} key="add">
+    <Grid item xs={12 / columnNumber} key="add">
       <Box
         className={styles.addAnswerButton}
+        onClick={() => {
+          addAnswer();
+        }}
         style={{
-          minHeight: "100px",
-          height: "100%",
+          position: "relative",
           width: "100%",
+          paddingTop: 100 / imageAspectRatio + "%",
           backgroundColor: theme.palette.background.default,
           borderRadius: "4px",
         }}
       >
-        <IconButton
-          className={styles.addAnswerIcon}
-          onClick={() => {
-            addAnswer();
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <AddIcon />
-        </IconButton>
+          <AddIcon className={styles.addAnswerIcon} color="action" />
+        </div>
       </Box>
     </Grid>
   ) : (
