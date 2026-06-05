@@ -27,6 +27,7 @@ import { setupOptions } from "~/constants/design";
 import { Build } from "@mui/icons-material";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
+import ConfirmActionModal from "~/components/common/ConfirmActionModal";
 
 function IconChoiceItemDesign({
   parentCode,
@@ -42,11 +43,15 @@ function IconChoiceItemDesign({
   t,
   addAnswer,
 }) {
+  // Fixed icon-cell height so the "+" never stretches and roughly matches a typical
+  // cell (action-button row + icon + one label line; less when the label is hidden).
+  const cellHeight = imageHeight + (hideText ? 52 : 80);
   const designService = useService("design");
   const dispatch = useDispatch();
   const ref = useRef(null);
   const theme = useTheme();
   const [iconSelectoOpen, setIconSelectorOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
 
   const answer = useSelector((state) => {
@@ -67,9 +72,7 @@ function IconChoiceItemDesign({
     type == "add" ? undefined : answer.content?.[langInfo.mainLang]?.["label"];
 
   const onDelete = () => {
-    if (window.confirm(t("are_you_sure"))) {
-      dispatch(removeAnswer(qualifiedCode));
-    }
+    dispatch(removeAnswer(qualifiedCode));
   };
 
   const isInSetup = useSelector((state) => {
@@ -204,25 +207,20 @@ function IconChoiceItemDesign({
   drop(preview(ref));
 
   return type == "add" ? (
-    <Grid item xs={12 / columnNumber} height="100%" key="add">
+    <Grid item xs={12 / columnNumber} key="add">
       <Box
         className={styles.addAnswerButton}
+        onClick={() => {
+          addAnswer();
+        }}
         style={{
-          minHeight: "100px",
+          height: cellHeight + "px",
           borderRadius: "4px",
           backgroundColor: theme.palette.background.default,
-          height: "100%",
           width: "100%",
         }}
       >
-        <IconButton
-          className={styles.addAnswerIcon}
-          onClick={() => {
-            addAnswer();
-          }}
-        >
-          <AddIcon />
-        </IconButton>
+        <AddIcon className={styles.addAnswerIcon} color="action" />
       </Box>
     </Grid>
   ) : (
@@ -230,6 +228,7 @@ function IconChoiceItemDesign({
       <Grid
         style={{
           opacity: isDragging ? "0.2" : "1",
+          minHeight: cellHeight + "px",
         }}
         item
         data-code={code}
@@ -265,8 +264,9 @@ function IconChoiceItemDesign({
               <div className={btnStyles.rightZone}>
                 <IconButton
                   className={btnStyles.iconButton}
-                  onClick={() => {
-                    onDelete();
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteModalOpen(true);
                   }}
                 >
                   <DeleteOutlineIcon />
@@ -342,6 +342,18 @@ function IconChoiceItemDesign({
           }}
         />
       )}
+      <ConfirmActionModal
+        open={deleteModalOpen}
+        title={t("delete")}
+        description={t("delete_option")}
+        cancelLabel={t("cancel")}
+        confirmLabel={t("delete")}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={() => {
+          setDeleteModalOpen(false);
+          onDelete();
+        }}
+      />
     </>
   );
 }
