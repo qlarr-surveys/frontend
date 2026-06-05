@@ -22,7 +22,7 @@
 }
 
 .groupQuestion {
-  padding: 10px;
+  padding: 16px;
   border-radius: 6px;
   page-break-inside: avoid;
   transition: all 200ms cubic-bezier(0, 0, 0.2, 1);
@@ -32,6 +32,6 @@
 
 @media (min-width: 600px) {
   .groupQuestion {
-    padding: 1rem;
+    padding: 2rem;
   }
 }

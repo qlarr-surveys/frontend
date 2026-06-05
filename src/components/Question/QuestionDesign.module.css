@@ -17,8 +17,17 @@
 
 .groupQuestion {
   position: relative;
-  padding: 1rem;
-  border-radius: 6px;
+  padding: 2rem;
+  border-radius: 0px;
+  page-break-inside: avoid;
+  transition: all 200ms cubic-bezier(0, 0, 0.2, 1);
+  cursor: default;
+}
+
+.groupQuestionLast {
+  position: relative;
+  padding: 2rem;
+  border-radius: 0px 0px 12px 12px;
   page-break-inside: avoid;
   transition: all 200ms cubic-bezier(0, 0, 0.2, 1);
   cursor: default;

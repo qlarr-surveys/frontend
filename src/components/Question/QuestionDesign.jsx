@@ -124,7 +124,6 @@ function QuestionDesign({
   const contrastColor = alpha(theme.textStyles.question.color, 0.2);
   const hoverColor = alpha(theme.textStyles.question.color, 0.05);
   const textColor = theme.textStyles.question.color;
-  const action = theme.palette.action.active;
 
   useEffect(() => {
     const element = containerRef.current;
@@ -154,12 +153,13 @@ function QuestionDesign({
       return () => clearTimeout(timeoutId); // Cleanup timeout on unmount or re-render
     }
   }, [lastAddedComponent, parentIndex, index]);
+  const outlineColor = theme.palette.primary.main;
 
   const customStyle = useMemo(() => {
     return isInSetup
-      ? `background-color: ${contrastColor};color: ${textColor};`
+      ? `background-color: ${contrastColor};color: ${textColor};outline: solid 3px ${outlineColor};outline-offset: -3px`
       : hovered
-      ? `background-color: ${hoverColor};color: ${textColor};`
+      ? `background-color: ${hoverColor};color: ${textColor};outline: solid 1px ${outlineColor};outline-offset: -1px`
       : `opacity: ${isDragging ? "0.2" : "1"};border: ${
           isDragging ? "dotted 1px " + contrastColor : "0"
         };`;
@@ -186,7 +186,7 @@ function QuestionDesign({
       css={css`
         ${customStyle} ${question.customCss}
       `}
-      className={`question ${styles.groupQuestion}`}
+      className={`question ${isLast ? styles.groupQuestionLast : styles.groupQuestion }`}
       data-code={code}
     >
       <Box className={styles.contentContainer}>
