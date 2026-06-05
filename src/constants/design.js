@@ -69,16 +69,16 @@ export const setupOptions = (type) => {
   switch (type) {
     case "group":
     case "welcome":
-    case "end":
+    case "end": {
+      const generalRules =
+        type === "group"
+          ? ["changeCode", "move_group", "disabled", "showDescription"]
+          : ["changeCode", "disabled", "showDescription"];
       return [
         {
           title: "general",
           key: "general",
-          rules: [
-            "changeCode",
-            "disabled",
-            "showDescription",
-          ],
+          rules: generalRules,
         },
         {
           title: "logic",
@@ -91,6 +91,7 @@ export const setupOptions = (type) => {
           rules: ["customCss"],
         },
       ];
+    }
     case "text_display":
       return [
         {
