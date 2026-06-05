@@ -84,6 +84,7 @@
   "default_value": "Valor Predeterminado",
   "delete_page": "¿Estás seguro de que quieres eliminar esta página?",
   "delete_question": "¿Estás seguro de que quieres eliminar esta pregunta?",
+  "delete_option": "¿Estás seguro de que quieres eliminar esta opción?",
   "design": "Diseño",
   "disabled": "Deshabilitado",
   "question_type": "Tipo de pregunta",
