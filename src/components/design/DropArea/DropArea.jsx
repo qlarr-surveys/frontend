@@ -207,9 +207,7 @@ export function QuestionDropArea({
     <div
       ref={ref}
       style={{
-        ...dropAreaVars,
-        marginRight: "1.5em",
-        marginLeft: "1.5em",
+        padding: isDragging ? "1rem" : 0
       }}
     >
       {" "}

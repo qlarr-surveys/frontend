@@ -79,8 +79,8 @@ function Group(props) {
               return visibleQuestions.map((quest, idx) => (
                 <React.Fragment key={quest.code}>
                   <Question component={quest} />
-                  {visibleQuestionCodes.indexOf(quest.code) >= 0 && (
-                    <Divider sx={{ mt: "12px", mb: "12px" }} />
+                  {visibleQuestionCodes.indexOf(quest.code) >= 0 && idx < visibleQuestionCodes.length - 1 && (
+                    <Divider  />
                   )}
                 </React.Fragment>
               ));

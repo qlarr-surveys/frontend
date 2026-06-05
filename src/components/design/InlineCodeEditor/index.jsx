@@ -142,7 +142,6 @@ function InlineCodeEditor({ qualifiedCode, designMode, compact }) {
       className={`${styles.codeLabel} ${!isEditable ? styles.codeLabelReadOnly : ""}`}
       style={{
         backgroundColor: theme.palette.grey[200],
-        color: codeLabelColor,
         ...(!isEditing && compact
           ? { maxWidth: "4ch" }
           : { minWidth: `${maxSuffixLength + (hasAPrefix ? 1 : 0)}ch` }),

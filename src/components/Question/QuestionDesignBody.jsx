@@ -113,7 +113,7 @@ function QuestionDesignBody({ code, type, t, langInfo, designMode }) {
         />
       );
     case "file_upload":
-      return <FileUploadQuestionDesign key={code} t={t} />;
+      return <FileUploadQuestionDesign key={code} code={code} t={t} />;
     case "mcq":
       return (
         <ChoiceQuestion

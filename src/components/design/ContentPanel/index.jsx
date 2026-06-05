@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./ContentPanel.module.css";
 import { useTheme } from "@mui/material/styles";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { alpha, Box, css, CircularProgress, IconButton, Tooltip } from "@mui/material";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { Box, css, CircularProgress, IconButton, Tooltip, alpha } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
@@ -46,6 +46,28 @@ function ContentPanel({ designMode }, ref) {
       i18n.loadLanguages([lang]).then(() => setLangReady(true));
     }
   }, [lang, i18n]);
+
+  // Theme-derived CSS variables consumed by the design components' CSS modules.
+  const panelStyle = useMemo(
+    () => ({
+      backgroundColor: theme.palette.background.default,
+      "--design-error-color": theme.palette.error.main,
+      "--design-error-tint": alpha(theme.palette.error.main, 0.06),
+      "--new-item-flash": alpha(theme.palette.primary.main, 0.18),
+      "--new-item-flash-end": alpha(theme.palette.primary.main, 0.04),
+      "--question-prefix-color":
+        theme.contrast?.onPaper || theme.palette.text.primary,
+      "--page-label-color":
+        theme.contrast?.onDefault || theme.palette.text.primary,
+      "--error-display-border": theme.palette.error.main,
+      "--error-display-tint": alpha(theme.palette.error.main, 0.1),
+      "--error-display-badge-bg": alpha(
+        theme.contrast?.onPaper || theme.palette.text.primary,
+        0.08
+      ),
+    }),
+    [theme]
+  );
 
   const t = useMemo(
     () => i18n.getFixedT(lang, NAMESPACES.DESIGN_CORE),
@@ -235,28 +257,6 @@ function ContentPanel({ designMode }, ref) {
       return () => clearTimeout(timeoutId);
     }
   }, [lastAddedComponent]);
-
-  // Theme-derived CSS variables consumed by the design components' CSS modules.
-  const panelStyle = useMemo(
-    () => ({
-      backgroundColor: theme.palette.background.default,
-      "--design-error-color": theme.palette.error.main,
-      "--design-error-tint": alpha(theme.palette.error.main, 0.06),
-      "--new-item-flash": alpha(theme.palette.primary.main, 0.18),
-      "--new-item-flash-end": alpha(theme.palette.primary.main, 0.04),
-      "--question-prefix-color":
-        theme.contrast?.onPaper || theme.palette.text.primary,
-      "--page-label-color":
-        theme.contrast?.onDefault || theme.palette.text.primary,
-      "--error-display-border": theme.palette.error.main,
-      "--error-display-tint": alpha(theme.palette.error.main, 0.1),
-      "--error-display-badge-bg": alpha(
-        theme.contrast?.onPaper || theme.palette.text.primary,
-        0.08
-      ),
-    }),
-    [theme]
-  );
 
   return (
     <Box

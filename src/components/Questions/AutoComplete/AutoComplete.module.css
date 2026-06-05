@@ -49,6 +49,7 @@
 
 .cardHint {
   font-size: 0.75rem !important;
+  opacity: .7;
   line-height: 1.4 !important;
   padding: 0 4px !important;
 }

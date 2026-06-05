@@ -1,25 +1,40 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import QuestionDesign from "~/components/Question/QuestionDesign";
 import styles from "./GroupDesign.module.css";
 import { shallowEqual, useSelector } from "react-redux";
 import { QuestionDropArea } from "../design/DropArea/DropArea";
 import GroupHeader from "./GroupHeader";
-import { Box, Divider, css } from "@mui/material";
+import {
+  Box,
+  Divider,
+  css,
+  decomposeColor,
+  recomposeColor,
+} from "@mui/material";
 import { useDrag, useDrop } from "react-dnd";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
 import { onDrag, setup } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { setupOptions } from "~/constants/design";
-function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGroup }) {
+function GroupDesign({
+  t,
+  code,
+  index,
+  designMode,
+  lastAddedComponent,
+  isLastGroup,
+}) {
   const dispatch = useDispatch();
   const group = useSelector((state) => {
     return state.designState[code];
   }, shallowEqual);
 
   const langInfo = useSelector((state) => {
-    return  state.designState.langInfo;
-  }, shallowEqual);
+    return state.designState.langInfo;
+  });
+
+  const [hovered, setHovered] = useState(false);
 
   const inDesign = designMode == DESIGN_SURVEY_MODE.DESIGN;
 
@@ -86,7 +101,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
           id: item.draggableId,
           fromIndex: dragIndex,
           toIndex: hoverIndex,
-        })
+        }),
       );
 
       // Note: we're mutating the monitor item here!
@@ -115,18 +130,28 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
 
   drop(preview(containerRef));
 
-  const outlineColor = theme.palette.primary.main;
-
+  const contrastColor = blendColors(
+    theme.palette.background.paper, // background
+    theme.textStyles.question.color, // overlay
+    0.2, // opacity
+  );
 
   if (!group) {
     return null;
   }
+  const outlineColor = theme.palette.primary.main;
 
   const isLastAdded =
     lastAddedComponent?.type === "group" && lastAddedComponent.index === index;
   return (
     <Box
-      data-tour={type === "end" ? "thank-you-page" : (type !== "welcome" && index === 0 ? "page-group" : undefined)}
+      data-tour={
+        type === "end"
+          ? "thank-you-page"
+          : type !== "welcome" && index === 0
+            ? "page-group"
+            : undefined
+      }
       onClick={(event) => {
         event.stopPropagation();
         event.preventDefault();
@@ -134,13 +159,37 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
           dispatch(setup({ code, rules: setupOptions(type) }));
         }
       }}
-      sx={{
-        padding: "1rem",
-        borderRadius: "12px",
-        boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
-        backgroundColor: "background.paper",
-        outline: isInSetup ? `solid 3px ${outlineColor}` : "none",
-        outlineOffset: "-3px",
+      sx={
+        isInSetup
+          ? {
+              padding: "1rem 0rem 0rem 0rem",
+              borderRadius: "12px",
+              boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
+              backgroundColor: contrastColor,
+              outline: `3px solid ${outlineColor}`,
+              outlineOffset : "-3px"
+            }
+          : hovered ? {
+              padding: "1rem 0rem 0rem 0rem",
+              boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
+              borderRadius: "12px",
+              outline: `1px solid ${outlineColor}`,
+              outlineOffset : "-1px",
+              backgroundColor: "background.paper",
+            } : {
+              padding: "1rem 0rem 0rem 0rem",
+              boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
+              borderRadius: "12px",
+              backgroundColor: "background.paper",
+            }
+      }
+      onMouseOver={(e) => {
+        if (designMode === DESIGN_SURVEY_MODE.DESIGN) {
+          setHovered(!e.target.closest(".question") && !e.target.closest(".separator"));
+        }
+      }}
+      onMouseLeave={() => {
+        setHovered(false);
       }}
       className={`${styles.topLevel} ${isLastAdded ? styles.highlight : ""}`}
       ref={containerRef}
@@ -194,7 +243,7 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
                 t={t}
               />
               {childIndex < children.length - 1 && (
-                <Divider sx={{ mt: "12px", mb: "12px" }} />
+                <Divider className='separator'  />
               )}
             </React.Fragment>
           );
@@ -215,3 +264,19 @@ function GroupDesign({ t, code, index, designMode, lastAddedComponent, isLastGro
 }
 
 export default React.memo(GroupDesign);
+
+const blendColors = (background, overlay, opacity) => {
+  const bg = decomposeColor(background);
+  const fg = decomposeColor(overlay);
+
+  const blended = {
+    type: "rgb",
+    values: [
+      Math.round(fg.values[0] * opacity + bg.values[0] * (1 - opacity)),
+      Math.round(fg.values[1] * opacity + bg.values[1] * (1 - opacity)),
+      Math.round(fg.values[2] * opacity + bg.values[2] * (1 - opacity)),
+    ],
+  };
+
+  return recomposeColor(blended);
+};

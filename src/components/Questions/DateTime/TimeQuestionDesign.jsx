@@ -1,11 +1,12 @@
 import React, { useMemo } from "react";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 import styles from "./TimeQuestionDesign.module.css";
 import { useSelector } from "react-redux";
 import { useEditableHint } from "~/hooks/useEditableHint";
+import { useTheme } from '@emotion/react';
 import Iconify from "~/components/iconify";
-import { useThemeContrast } from "~/components/Questions/useThemeContrast";
 
 function TimeQuestionDesign({ code, designMode }) {
   const state = useSelector((state) => {
@@ -41,15 +42,12 @@ function TimeQuestionDesign({ code, designMode }) {
         }
         value={isEditable ? hintText : ""}
         onChange={isEditable ? handleHintChange : undefined}
-        placeholder={sample}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <Iconify
-                icon="solar:clock-circle-outline"
-                width={20}
-                sx={iconSx}
-              />
+              <IconButton edge="end">
+                <Iconify icon="solar:clock-circle-outline" width={24} />
+              </IconButton>
             </InputAdornment>
           ),
         }}
