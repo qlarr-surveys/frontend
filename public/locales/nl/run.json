@@ -12,7 +12,6 @@
     "error":"Fout",
     "goBack":"Terug",
     "survey_navigation": "Enquête Navigatie",
-    "untitled_question": "(Zonder titel)",
     "answered_progress": "{{answered}} / {{total}} beantwoord",
     "processed_errors": {
         "survey_closed": "Deze enquête is niet actief",

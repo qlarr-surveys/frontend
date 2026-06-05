@@ -12,7 +12,6 @@
   "error": "خطأ",
   "goBack": "العودة إلى الوراء",
   "survey_navigation": "تنقل الاستطلاع",
-  "untitled_question": "(بدون عنوان)",
   "answered_progress": "{{answered}} / {{total}} تمت الإجابة",
   "processed_errors": {
     "survey_closed": "هذا الاستطلاع غير نشط",

@@ -12,7 +12,6 @@
   "error": "Fehler",
   "goBack": "Zurückgehen",
   "survey_navigation": "Umfragenavigation",
-  "untitled_question": "(Ohne Titel)",
   "answered_progress": "{{answered}} / {{total}} beantwortet",
   "processed_errors": {
     "survey_closed": "Diese Umfrage ist nicht aktiv",
