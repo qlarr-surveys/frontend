@@ -83,6 +83,7 @@
   "default_value": "Valor Padrão",
   "delete_page": "Tem certeza de que deseja excluir esta página?",
   "delete_question": "Tem certeza de que deseja excluir esta pergunta?",
+  "delete_option": "Tem certeza de que deseja excluir esta opção?",
   "design": "Design",
   "disabled": "Desabilitado",
   "question_type": "Tipo de pergunta",

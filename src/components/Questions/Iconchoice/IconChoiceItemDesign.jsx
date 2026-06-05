@@ -27,6 +27,7 @@ import { setupOptions } from "~/constants/design";
 import { Build } from "@mui/icons-material";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
+import ConfirmActionModal from "~/components/common/ConfirmActionModal";
 
 function IconChoiceItemDesign({
   parentCode,
@@ -47,6 +48,7 @@ function IconChoiceItemDesign({
   const ref = useRef(null);
   const theme = useTheme();
   const [iconSelectoOpen, setIconSelectorOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
 
   const answer = useSelector((state) => {
@@ -67,9 +69,7 @@ function IconChoiceItemDesign({
     type == "add" ? undefined : answer.content?.[langInfo.mainLang]?.["label"];
 
   const onDelete = () => {
-    if (window.confirm(t("are_you_sure"))) {
-      dispatch(removeAnswer(qualifiedCode));
-    }
+    dispatch(removeAnswer(qualifiedCode));
   };
 
   const isInSetup = useSelector((state) => {
@@ -265,8 +265,9 @@ function IconChoiceItemDesign({
               <div className={btnStyles.rightZone}>
                 <IconButton
                   className={btnStyles.iconButton}
-                  onClick={() => {
-                    onDelete();
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteModalOpen(true);
                   }}
                 >
                   <DeleteOutlineIcon />
@@ -342,6 +343,18 @@ function IconChoiceItemDesign({
           }}
         />
       )}
+      <ConfirmActionModal
+        open={deleteModalOpen}
+        title={t("delete")}
+        description={t("delete_option")}
+        cancelLabel={t("cancel")}
+        confirmLabel={t("delete")}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={() => {
+          setDeleteModalOpen(false);
+          onDelete();
+        }}
+      />
     </>
   );
 }
