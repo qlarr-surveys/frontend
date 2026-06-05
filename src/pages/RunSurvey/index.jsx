@@ -30,6 +30,7 @@ import RunLoadingDots from "~/components/common/RunLoadingDots";
 import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
 import SurveyAppBar from "~/components/run/SurveyAppBar";
 import PreviewEndActions from "~/components/run/PreviewEndActions";
+import { getClosestScrollableParent } from "~/components/run/Navigation";
 import { routes } from "~/routes";
 
 function RunSurvey({
@@ -50,6 +51,7 @@ function RunSurvey({
   const [currentMode, setCurrentMode] = React.useState(mode);
   const [currentNavigationMode, setCurrentNavigationMode] =
     React.useState(navigationMode);
+  const [pendingScrollTarget, setPendingScrollTarget] = React.useState(null);
   const containerRef = useRef(null);
 
   const store = useStore()
@@ -228,10 +230,50 @@ function RunSurvey({
   };
 
   useEffect(() => {
-    if (!navigation && containerRef.current) {
+    if (navigation || !containerRef.current) return;
+    if (!pendingScrollTarget) {
       containerRef.current.scrollTo({ top: 0 });
+      return;
     }
-  }, [navigation, containerRef.current]);
+    const delays = [50, 150, 400];
+    let cancelled = false;
+    const tryScroll = (i) => {
+      if (cancelled) return;
+      const el = document.querySelector(
+        `[data-code="${pendingScrollTarget}"]`,
+      );
+      if (el) {
+        const container = getClosestScrollableParent(el);
+        if (container && container !== document.documentElement) {
+          container.scrollTo({
+            top: el.offsetTop - container.offsetTop,
+            behavior: "smooth",
+          });
+        }
+        // No scrollable ancestor → content already fits the viewport, so the
+        // element is visible without scrolling. Skip rather than call
+        // el.scrollIntoView, which propagates to the parent window when this
+        // runs inside the preview iframe and pushes the preview-mode-tabs
+        // off-screen.
+        setPendingScrollTarget(null);
+        return;
+      }
+      if (i >= delays.length) {
+        if (import.meta.env?.DEV) {
+          console.warn(
+            `RunSurvey: pending scroll target "${pendingScrollTarget}" never mounted; giving up after ${delays.reduce((a, b) => a + b, 0)}ms.`,
+          );
+        }
+        setPendingScrollTarget(null);
+        return;
+      }
+      setTimeout(() => tryScroll(i + 1), delays[i]);
+    };
+    tryScroll(0);
+    return () => {
+      cancelled = true;
+    };
+  }, [navigation, pendingScrollTarget]);
 
   useEffect(() => {
     document.body.style.overflow = "visible";
@@ -268,7 +310,7 @@ function RunSurvey({
 
   const toggleDrawer = (open) => (event) => {
     if (
-      event.type === "keydown" &&
+      event?.type === "keydown" &&
       (event.key === "Tab" || event.key === "Shift")
     ) {
       return;
@@ -320,6 +362,7 @@ function RunSurvey({
                   expanded={expanded}
                   toggleDrawer={toggleDrawer}
                   t={t}
+                  onPendingScrollTarget={setPendingScrollTarget}
                 />
               </div>
             </>
