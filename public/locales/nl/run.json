@@ -12,6 +12,7 @@
     "error":"Fout",
     "goBack":"Terug",
     "survey_navigation": "Enquête Navigatie",
+    "answered_progress": "{{answered}} / {{total}} beantwoord",
     "processed_errors": {
         "survey_closed": "Deze enquête is niet actief",
         "survey_design_error": "Enquête Ontwerp Fout... Controleer Enquête Ontwerp",

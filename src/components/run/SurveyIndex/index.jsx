@@ -1,18 +1,23 @@
 import React from "react";
 
 import styles from "./SurveyIndex.module.css";
-import { Card } from "@mui/material";
-import { Box } from "@mui/system";
 import { stripTags } from "~/utils/design/utils";
-import { shallowEqual, useSelector } from "react-redux";
-import { useTheme } from "@emotion/react";
-import { useDispatch } from "react-redux";
-import { jump } from "~/state/runState";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { jump, selectAnsweredSet } from "~/state/runState";
 import { questionIconByType } from "~/components/Questions/utils";
+import { useTheme } from "@emotion/react";
+import CheckCircleOutlineOutlined from "@mui/icons-material/CheckCircleOutlineOutlined";
+import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { getClosestScrollableParent } from "~/components/run/Navigation";
 
 function SurveyIndex(props) {
-  const theme = useTheme();
   const dispatch = useDispatch();
+  const theme = useTheme();
+  // Drawer overlaps content on small viewports (including phone preview, where
+  // the iframe is 375px wide), so dismiss it after a jump there. On desktop
+  // the drawer sits beside the survey, so keep it open for rapid navigation.
+  const isMobileViewport = useMediaQuery("(max-width: 600px)");
 
   const relevance_map = useSelector((state) => {
     return state.runState.values["Survey"].relevance_map;
@@ -21,6 +26,8 @@ function SurveyIndex(props) {
   const validity_map = useSelector((state) => {
     return state.runState.values["Survey"].validity_map;
   }, shallowEqual);
+
+  const answeredSet = useSelector(selectAnsweredSet);
 
   const canJump = useSelector((state) => {
     return state.runState.data.navigationData.allowJump;
@@ -41,89 +48,191 @@ function SurveyIndex(props) {
   };
 
   const isGroupClickable = (groupCode) =>
-    canJump &&
-    !isCurrentGroup(groupCode) &&
-    props.navigationIndex.name == "group";
+    canJump && !isCurrentGroup(groupCode);
 
   const isQuestionClickable = (questionCode) =>
-    canJump &&
-    !isCurrentQuestion(questionCode) &&
-    props.navigationIndex.name == "question";
+    canJump && !isCurrentQuestion(questionCode);
 
-  const onGroupClicked = (groupCode) => {
-    if (isGroupClickable(groupCode)) {
-      dispatch(jump({ ...props.navigationIndex, groupId: groupCode }));
-    }
+  const closeDrawer = () => {
+    if (!isMobileViewport) return;
+    if (props.onCloseDrawer) props.onCloseDrawer();
   };
 
-  const onQuestionClicked = (questionCode) => {
-    if (isQuestionClickable(questionCode)) {
+  const scrollToElement = (el) => {
+    if (!el) return;
+    const container = getClosestScrollableParent(el);
+    // No scrollable ancestor → content already fits the viewport, so the
+    // element is visible without scrolling. Skip rather than call
+    // el.scrollIntoView, which propagates to the parent window when this runs
+    // inside the preview iframe and pushes the preview-mode-tabs off-screen.
+    if (!container || container === document.documentElement) return;
+    container.scrollTo({
+      top: el.offsetTop - container.offsetTop,
+      behavior: "smooth",
+    });
+  };
+
+  const onGroupClicked = (groupCode) => {
+    if (!isGroupClickable(groupCode)) return;
+    closeDrawer();
+    const el = document.querySelector(`[data-code="${groupCode}"]`);
+    if (el) {
+      scrollToElement(el);
+      return;
+    }
+    if (props.onPendingScrollTarget) {
+      props.onPendingScrollTarget(groupCode);
+    }
+    if (props.navigationIndex.name === "question") {
+      const group = props.survey?.groups?.find((g) => g.code === groupCode);
+      const firstQuestion = group?.questions?.find(
+        (q) => relevance_map[q.code],
+      );
+      if (firstQuestion) {
+        dispatch(
+          jump({ ...props.navigationIndex, questionId: firstQuestion.code }),
+        );
+        return;
+      }
+    }
+    dispatch(jump({ ...props.navigationIndex, groupId: groupCode }));
+  };
+
+  const onQuestionClicked = (questionCode, groupCode) => {
+    if (!isQuestionClickable(questionCode)) return;
+    closeDrawer();
+    const el = document.querySelector(`[data-code="${questionCode}"]`);
+    if (el) {
+      scrollToElement(el);
+      return;
+    }
+    if (props.onPendingScrollTarget) {
+      props.onPendingScrollTarget(questionCode);
+    }
+    if (props.navigationIndex.name === "group") {
+      dispatch(jump({ ...props.navigationIndex, groupId: groupCode }));
+    } else {
       dispatch(jump({ ...props.navigationIndex, questionId: questionCode }));
     }
   };
 
-  return (
-    <>
-      {props.survey && props.survey.groups
-        ? props.survey.groups
-            .filter(
-              (group) => relevance_map[group.code] && group.groupType != "END"
-            )
-            .map((group) => {
-              return (
-                <Card
-                  onClick={() => onGroupClicked(group.code)}
-                  key={group.code}
-                  className={styles.groupCard}
-                  style={{
-                    backgroundColor: isCurrentGroup(group.code)
-                      ? "beige"
-                      : theme.palette.background.paper,
-                    cursor: isGroupClickable(group.code)
-                      ? "pointer"
-                      : "default",
-                  }}
-                >
-                  <Box className={styles.groupTitle}>
-                    {stripTags(group.content?.label)}{" "}
-                  </Box>
-                  {group.questions
-                    .filter((question) => relevance_map[question.code])
-                    .map((question) => {
-                      return (
-                        <Box
-                          key={question.code}
-                          onClick={() => onQuestionClicked(question.code)}
-                          className={styles.questionTitle}
-                          style={{
-                            backgroundColor: isCurrentQuestion(question.code)
-                              ? "beige"
-                              : "inherit",
-                            cursor: isGroupClickable(group.code)
-                              ? "inherit"
-                              : isQuestionClickable(group.code)
-                              ? "pointer"
-                              : "default",
-                          }}
-                        >
-                          <span className={styles.questionIcon}>
-                            {questionIconByType(question.type)}
-                          </span>
+  const questionState = (questionCode) => {
+    if (isCurrentQuestion(questionCode)) return "current";
+    if (validity_map[questionCode] === false) return "invalid";
+    if (answeredSet.has(questionCode)) return "answered";
+    return "pending";
+  };
 
-                          <span className={styles.truncatedTwoLines}>
-                            {stripTags(question.content?.label)}
-                          </span>
-                          {!validity_map[question.code] && (
-                            <span className={styles.redAsterix}>*</span>
-                          )}
-                        </Box>
-                      );
-                    })}
-                </Card>
-              );
-            })
-        : ""}
-    </>
+  const renderStatusIcon = (state) => {
+    if (state === "invalid") {
+      return (
+        <ErrorOutlineOutlined
+          className={styles.statusIcon}
+          fontSize="inherit"
+          data-status="invalid"
+        />
+      );
+    }
+    if (state === "answered") {
+      return (
+        <CheckCircleOutlineOutlined
+          className={styles.statusIcon}
+          fontSize="inherit"
+          data-status="answered"
+        />
+      );
+    }
+    return null;
+  };
+
+  const handleActivateKey = (e, fn) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      fn();
+    }
+  };
+
+  if (!props.survey?.groups) return null;
+
+  const groups = props.survey.groups.filter(
+    (group) => relevance_map[group.code] && group.groupType != "END",
+  );
+
+  return (
+    <div className={styles.list}>
+      {groups.map((group) => {
+        const groupClickable = isGroupClickable(group.code);
+        const groupCurrent = isCurrentGroup(group.code);
+        const groupLabel = stripTags(group.content?.label) || "";
+        return (
+          <section key={group.code} className={styles.groupSection}>
+            {groupLabel && (
+              <div
+                className={styles.groupHeader}
+                data-clickable={groupClickable ? "true" : "false"}
+                data-current={groupCurrent ? "true" : "false"}
+                role={groupClickable ? "button" : undefined}
+                tabIndex={groupClickable ? 0 : -1}
+                aria-current={groupCurrent ? "step" : undefined}
+                onClick={() => onGroupClicked(group.code)}
+                onKeyDown={(e) =>
+                  groupClickable &&
+                  handleActivateKey(e, () => onGroupClicked(group.code))
+                }
+              >
+                {groupLabel}
+              </div>
+            )}
+            <ul className={styles.questionList}>
+              {group.questions
+                .filter((question) => relevance_map[question.code])
+                .map((question) => {
+                  const state = questionState(question.code);
+                  const clickable = isQuestionClickable(question.code);
+                  const isCurrent = state === "current";
+                  const isInvalid = state === "invalid";
+                  const rawLabel = stripTags(question.content?.label) || "";
+                  const labelText = rawLabel.trim();
+                  return (
+                    <li
+                      key={question.code}
+                      className={styles.questionRow}
+                      data-state={state}
+                      data-clickable={clickable ? "true" : "false"}
+                      role={clickable ? "button" : undefined}
+                      tabIndex={clickable ? 0 : -1}
+                      aria-current={isCurrent ? "step" : undefined}
+                      aria-invalid={isInvalid ? true : undefined}
+                      onClick={() =>
+                        onQuestionClicked(question.code, group.code)
+                      }
+                      onKeyDown={(e) =>
+                        clickable &&
+                        handleActivateKey(e, () =>
+                          onQuestionClicked(question.code, group.code),
+                        )
+                      }
+                    >
+                      <span className={styles.iconTile}>
+                        {questionIconByType(question.type, "1em", theme.palette.text.primary)}
+                      </span>
+                      <span
+                        className={styles.questionLabel}
+                        data-empty={labelText ? "false" : "true"}
+                      >
+                        {labelText}
+                      </span>
+                      <span className={styles.statusSlot}>
+                        {renderStatusIcon(state)}
+                      </span>
+                    </li>
+                  );
+                })}
+            </ul>
+          </section>
+        );
+      })}
+    </div>
   );
 }
 

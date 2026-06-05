@@ -1,17 +1,46 @@
-import { Drawer, IconButton, Typography } from "@mui/material";
+import { Drawer, IconButton } from "@mui/material";
 import styles from "./SurveyDrawer.module.css";
 import SurveyIndex from "~/components/run/SurveyIndex";
-import React from "react";
+import React, { useMemo } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import { Close } from "@mui/icons-material";
+import { useTheme } from "@emotion/react";
+import { selectAnsweredCounts } from "~/state/runState";
 
-function SurveyDrawer({ expanded, toggleDrawer, t }) {
+const drawerSx = {
+  "& .MuiDrawer-paper": {
+    width: "350px",
+    maxWidth: "90%",
+    "@media (max-width: 600px)": {
+      width: "300px",
+    },
+  },
+};
+
+function SurveyDrawer({ expanded, toggleDrawer, t, onPendingScrollTarget }) {
+  const theme = useTheme();
+
   const navigationIndex = useSelector((state) => {
     return state.runState.data?.navigationIndex;
   }, shallowEqual);
   const survey = useSelector((state) => {
     return state.runState.data?.survey;
   }, shallowEqual);
+  const { answeredCount, totalCount } = useSelector(
+    selectAnsweredCounts,
+    shallowEqual,
+  );
+
+  const cssVars = useMemo(
+    () => ({
+      "--qlarr-on-paper": theme.palette.text.primary,
+      "--qlarr-hover-paper": theme.palette.action?.hover || "transparent",
+      "--qlarr-mild-border": theme.palette.divider,
+      "--qlarr-error": theme.palette.error?.main || "#d32f2f",
+      "--qlarr-primary": theme.palette.primary?.main || theme.palette.text.primary,
+    }),
+    [theme.palette],
+  );
 
   return (
     <Drawer
@@ -19,29 +48,39 @@ function SurveyDrawer({ expanded, toggleDrawer, t }) {
       transitionDuration={expanded !== COLLAPSE_IMMEDIATE ? 500 : 0}
       open={expanded == EXPAND}
       onClose={toggleDrawer(false)}
-      sx={{
-        "& .MuiDrawer-paper": {
-          width: "350px",
-          maxWidth: "90%",
-          "@media (max-width: 600px)": {
-            width: "300px",
-          },
-        },
-      }}
+      sx={drawerSx}
     >
-      <div className={styles.drawer}>
+      <div className={styles.drawer} style={cssVars}>
         <div className={styles.drawerHeader}>
-          <Typography variant="h6" className={styles.drawerTitle}>
-            {t("survey_navigation")}
-          </Typography>
+          <div className={styles.drawerHeaderText}>
+            <span className={styles.drawerTitle}>
+              {t("survey_navigation")}
+            </span>
+            {totalCount > 0 && (
+              <span className={styles.drawerSubtitle}>
+                {t("answered_progress", {
+                  answered: answeredCount,
+                  total: totalCount,
+                })}
+              </span>
+            )}
+          </div>
           <IconButton
             className={styles.closeButton}
             onClick={toggleDrawer(false)}
+            size="small"
+            aria-label="close"
           >
-            <Close />
+            <Close fontSize="small" />
           </IconButton>
         </div>
-        <SurveyIndex navigationIndex={navigationIndex} survey={survey} />
+        <SurveyIndex
+          navigationIndex={navigationIndex}
+          survey={survey}
+          t={t}
+          onCloseDrawer={toggleDrawer(false)}
+          onPendingScrollTarget={onPendingScrollTarget}
+        />
       </div>
     </Drawer>
   );

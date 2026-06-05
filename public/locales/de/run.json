@@ -12,6 +12,7 @@
   "error": "Fehler",
   "goBack": "Zurückgehen",
   "survey_navigation": "Umfragenavigation",
+  "answered_progress": "{{answered}} / {{total}} beantwortet",
   "processed_errors": {
     "survey_closed": "Diese Umfrage ist nicht aktiv",
     "survey_design_error": "Fehler im Umfragedesign... Überprüfen Sie das Umfragedesign",
