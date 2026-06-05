@@ -5,7 +5,6 @@ import React, { useMemo } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import { Close } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
-import { selectAnsweredCounts } from "~/state/runState";
 
 const drawerSx = {
   "& .MuiDrawer-paper": {
@@ -26,10 +25,6 @@ function SurveyDrawer({ expanded, toggleDrawer, t, onPendingScrollTarget }) {
   const survey = useSelector((state) => {
     return state.runState.data?.survey;
   }, shallowEqual);
-  const { answeredCount, totalCount } = useSelector(
-    selectAnsweredCounts,
-    shallowEqual,
-  );
 
   const cssVars = useMemo(
     () => ({
@@ -56,14 +51,6 @@ function SurveyDrawer({ expanded, toggleDrawer, t, onPendingScrollTarget }) {
             <span className={styles.drawerTitle}>
               {t("survey_navigation")}
             </span>
-            {totalCount > 0 && (
-              <span className={styles.drawerSubtitle}>
-                {t("answered_progress", {
-                  answered: answeredCount,
-                  total: totalCount,
-                })}
-              </span>
-            )}
           </div>
           <IconButton
             className={styles.closeButton}

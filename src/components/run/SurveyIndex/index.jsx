@@ -3,10 +3,9 @@ import React from "react";
 import styles from "./SurveyIndex.module.css";
 import { stripTags } from "~/utils/design/utils";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { jump, selectAnsweredSet } from "~/state/runState";
+import { jump } from "~/state/runState";
 import { questionIconByType } from "~/components/Questions/utils";
 import { useTheme } from "@emotion/react";
-import CheckCircleOutlineOutlined from "@mui/icons-material/CheckCircleOutlineOutlined";
 import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { getClosestScrollableParent } from "~/components/run/Navigation";
@@ -27,7 +26,6 @@ function SurveyIndex(props) {
     return state.runState.values["Survey"].validity_map;
   }, shallowEqual);
 
-  const answeredSet = useSelector(selectAnsweredSet);
 
   const canJump = useSelector((state) => {
     return state.runState.data.navigationData.allowJump;
@@ -119,7 +117,6 @@ function SurveyIndex(props) {
   const questionState = (questionCode) => {
     if (isCurrentQuestion(questionCode)) return "current";
     if (validity_map[questionCode] === false) return "invalid";
-    if (answeredSet.has(questionCode)) return "answered";
     return "pending";
   };
 
@@ -130,15 +127,6 @@ function SurveyIndex(props) {
           className={styles.statusIcon}
           fontSize="inherit"
           data-status="invalid"
-        />
-      );
-    }
-    if (state === "answered") {
-      return (
-        <CheckCircleOutlineOutlined
-          className={styles.statusIcon}
-          fontSize="inherit"
-          data-status="answered"
         />
       );
     }
