@@ -3,13 +3,27 @@ import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { useBoolean } from "~/hooks/use-boolean";
 import { useIsReleased } from "~/hooks/useIsReleased";
+import { useReleaseAcknowledgement } from "~/hooks/useReleaseAcknowledgement";
 import ConfirmActionModal from "~/components/common/ConfirmActionModal";
 
 const DEFAULT_MESSAGE_KEY = "released_warning";
 
-// Guards a destructive design action behind a confirmation modal, but only when
-// the survey is released. When not released, the action runs immediately so the
-// editor keeps its usual frictionless behavior.
+// Guards a destructive design action behind a confirmation modal.
+//
+// By default it only prompts when the survey is released — otherwise the action
+// runs immediately so the editor keeps its usual frictionless behavior. Callers
+// that want a confirmation even on an unreleased survey pass `confirmWhenUnreleased`
+// together with the plain (non-release) copy; when the survey IS released the modal
+// upgrades to the warning title + acknowledgement checkbox automatically.
+//
+// guard(action, {
+//   messageKey,            // released description key (defaults to "released_warning")
+//   onCancel,
+//   confirmWhenUnreleased, // also prompt when NOT released (plain confirmation)
+//   unreleasedTitleKey,    // title key when not released (defaults to "delete")
+//   unreleasedMessageKey,  // description key when not released
+//   confirmLabelKey,       // confirm button label key (defaults to "confirm")
+// })
 //
 // Usage:
 //   const { released, guard, modal, pending } = useReleaseGuard();
@@ -18,21 +32,22 @@ const DEFAULT_MESSAGE_KEY = "released_warning";
 //   {modal}
 export function useReleaseGuard() {
   const released = useIsReleased();
+  const ack = useReleaseAcknowledgement(released);
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const open = useBoolean(false);
   const pendingConfirm = useRef(null);
   const pendingCancel = useRef(null);
-  const [messageKey, setMessageKey] = useState(DEFAULT_MESSAGE_KEY);
+  const [opts, setOpts] = useState({});
 
   const guard = useCallback(
-    (action, opts = {}) => {
-      if (!released) {
+    (action, options = {}) => {
+      if (!released && !options.confirmWhenUnreleased) {
         action();
         return;
       }
       pendingConfirm.current = action;
-      pendingCancel.current = opts.onCancel || null;
-      setMessageKey(opts.messageKey || DEFAULT_MESSAGE_KEY);
+      pendingCancel.current = options.onCancel || null;
+      setOpts(options);
       open.onTrue();
     },
     [released, open]
@@ -57,11 +72,16 @@ export function useReleaseGuard() {
   const modal = (
     <ConfirmActionModal
       open={open.value}
-      title={t("released_warning_title")}
-      description={t(messageKey)}
+      title={t(released ? "released_warning_title" : opts.unreleasedTitleKey || "delete")}
+      description={t(
+        released
+          ? opts.messageKey || DEFAULT_MESSAGE_KEY
+          : opts.unreleasedMessageKey || ""
+      )}
       cancelLabel={t("cancel")}
-      confirmLabel={t("confirm")}
+      confirmLabel={t(opts.confirmLabelKey || "confirm")}
       confirmColor="error"
+      {...ack}
       onClose={onClose}
       onConfirm={onConfirm}
     />

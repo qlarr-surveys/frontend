@@ -26,8 +26,7 @@ import { Build } from "@mui/icons-material";
 import { setupOptions } from "~/constants/design";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
-import ConfirmActionModal from "~/components/common/ConfirmActionModal";
-import { useIsReleased } from "~/hooks/useIsReleased";
+import { useReleaseGuard } from "~/hooks/useReleaseGuard";
 
 function ImageChoiceItemDesign({
   parentCode,
@@ -48,8 +47,7 @@ function ImageChoiceItemDesign({
   const theme = useTheme();
   const ref = useRef();
   const [isUploading, setUploading] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const released = useIsReleased();
+  const { guard, modal } = useReleaseGuard();
 
   const answer = useSelector((state) => {
     return type == "add" ? undefined : state.designState[qualifiedCode];
@@ -285,7 +283,13 @@ function ImageChoiceItemDesign({
                   className={btnStyles.iconButton}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setDeleteModalOpen(true);
+                    guard(onDelete, {
+                      messageKey: "released_delete_option",
+                      confirmWhenUnreleased: true,
+                      unreleasedTitleKey: "delete",
+                      unreleasedMessageKey: "delete_option",
+                      confirmLabelKey: "delete",
+                    });
                   }}
                 >
                   <DeleteOutlineIcon />
@@ -351,18 +355,7 @@ function ImageChoiceItemDesign({
           />
         )}
       </Grid>
-      <ConfirmActionModal
-        open={deleteModalOpen}
-        title={released ? t("released_warning_title") : t("delete")}
-        description={released ? t("released_delete_option") : t("delete_option")}
-        cancelLabel={t("cancel")}
-        confirmLabel={t("delete")}
-        onClose={() => setDeleteModalOpen(false)}
-        onConfirm={() => {
-          setDeleteModalOpen(false);
-          onDelete();
-        }}
-      />
+      {modal}
     </>
   );
 }
