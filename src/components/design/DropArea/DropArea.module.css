@@ -86,9 +86,10 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin: auto;
+  box-sizing: border-box;
+  margin: 0 auto;
   max-width: 800px;
-  width: 100%;
+  width: calc(100% - 2rem);
   min-width: 350px;
   color: gray;
   border: none;

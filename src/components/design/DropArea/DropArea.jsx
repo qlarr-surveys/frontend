@@ -187,7 +187,8 @@ export function QuestionDropArea({
         ref={drop}
         style={{
           marginTop: !isDragging && !isOver ? "0rem" : "inherit",
-          marginBottom: !isDragging && !isOver ? "0rem" : "inherit",
+          marginBottom:
+            !isDragging && !isOver ? (emptyGroup ? "1rem" : "0rem") : "inherit",
         }}
         className={
           "question-drop-area" +
