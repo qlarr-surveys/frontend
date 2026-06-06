@@ -133,8 +133,8 @@ const ConfirmActionModal = ({
                   onChange={(e) => setAcknowledged(e.target.checked)}
                   size="small"
                   sx={{
-                    py: 0,
-                    pl: 0,
+                    p: 0.5,
+                    ml: -0.5,
                     color: "warning.dark",
                     "&.Mui-checked": { color: "warning.dark" },
                   }}
