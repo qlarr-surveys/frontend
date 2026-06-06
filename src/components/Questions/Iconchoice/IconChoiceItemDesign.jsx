@@ -28,6 +28,7 @@ import { Build } from "@mui/icons-material";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
 import ConfirmActionModal from "~/components/common/ConfirmActionModal";
+import { useIsReleased } from "~/hooks/useIsReleased";
 
 function IconChoiceItemDesign({
   parentCode,
@@ -52,6 +53,7 @@ function IconChoiceItemDesign({
   const theme = useTheme();
   const [iconSelectoOpen, setIconSelectorOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const released = useIsReleased();
 
 
   const answer = useSelector((state) => {
@@ -344,8 +346,8 @@ function IconChoiceItemDesign({
       )}
       <ConfirmActionModal
         open={deleteModalOpen}
-        title={t("delete")}
-        description={t("delete_option")}
+        title={released ? t("released_warning_title") : t("delete")}
+        description={released ? t("released_delete_option") : t("delete_option")}
         cancelLabel={t("cancel")}
         confirmLabel={t("delete")}
         onClose={() => setDeleteModalOpen(false)}

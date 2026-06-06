@@ -33,7 +33,7 @@ const ConfirmActionModal = ({
       <Box className={styles.modalBox}>
         <Typography
           id="confirm-action-modal"
-          variant="h4"
+          variant="h6"
           fontWeight={600}
           component="h2"
           textAlign="center"
@@ -44,13 +44,15 @@ const ConfirmActionModal = ({
         {description && (
           <Typography
             id="modal-description"
-            sx={{ mt: 2, overflowWrap: "break-word" }}
+            variant="body2"
+            color="text.secondary"
+            sx={{ mt: 1, overflowWrap: "break-word" }}
           >
             {description}
           </Typography>
         )}
 
-        <Box display="flex" justifyContent="center" mt={4} gap={2}>
+        <Box display="flex" justifyContent="center" mt={3} gap={1}>
           <Button
             variant="text"
             size="medium"

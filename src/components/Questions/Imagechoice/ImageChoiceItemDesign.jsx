@@ -27,6 +27,7 @@ import { setupOptions } from "~/constants/design";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
 import ConfirmActionModal from "~/components/common/ConfirmActionModal";
+import { useIsReleased } from "~/hooks/useIsReleased";
 
 function ImageChoiceItemDesign({
   parentCode,
@@ -48,6 +49,7 @@ function ImageChoiceItemDesign({
   const ref = useRef();
   const [isUploading, setUploading] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const released = useIsReleased();
 
   const answer = useSelector((state) => {
     return type == "add" ? undefined : state.designState[qualifiedCode];
@@ -351,8 +353,8 @@ function ImageChoiceItemDesign({
       </Grid>
       <ConfirmActionModal
         open={deleteModalOpen}
-        title={t("delete")}
-        description={t("delete_option")}
+        title={released ? t("released_warning_title") : t("delete")}
+        description={released ? t("released_delete_option") : t("delete_option")}
         cancelLabel={t("cancel")}
         confirmLabel={t("delete")}
         onClose={() => setDeleteModalOpen(false)}

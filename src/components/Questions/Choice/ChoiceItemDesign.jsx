@@ -21,11 +21,13 @@ import { useTheme } from "@emotion/react";
 import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
 import ContentEditor from "~/components/design/ContentEditor";
 import InlineCodeEditor from "~/components/design/InlineCodeEditor";
+import { useReleaseGuard } from "~/hooks/useReleaseGuard";
 
 function ChoiceItemDesign(props) {
   const dispatch = useDispatch();
   const ref = useRef(null);
   const theme = useTheme();
+  const { guard, modal } = useReleaseGuard();
 
   const inputRef = useRef();
   const inFocus = useSelector((state) => {
@@ -330,10 +332,16 @@ function ChoiceItemDesign(props) {
             color="action"
             sx={{ fontSize: 18 }}
             className={styles.answerIconSettings}
-            onClick={(e) => dispatch(removeAnswer(props.qualifiedCode))}
+            onClick={(e) => {
+              e.stopPropagation();
+              guard(() => dispatch(removeAnswer(props.qualifiedCode)), {
+                messageKey: "released_delete_option",
+              });
+            }}
           />
         )}
       </Box>
+      {modal}
     </div>
   );
 }

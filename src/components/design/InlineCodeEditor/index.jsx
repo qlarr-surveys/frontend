@@ -4,6 +4,7 @@ import { useTheme } from "@emotion/react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { designStateReceived, setSaving, setup } from "~/state/design/designState";
 import { useService } from "~/hooks/use-service";
+import { useReleaseGuard } from "~/hooks/useReleaseGuard";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import { inDesign } from "~/routes";
@@ -22,6 +23,7 @@ function InlineCodeEditor({ qualifiedCode, designMode, compact }) {
   const dispatch = useDispatch();
   const theme = useTheme();
   const designService = useService("design");
+  const { guard, modal, pending } = useReleaseGuard();
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const inputRef = useRef(null);
 
@@ -74,8 +76,35 @@ function InlineCodeEditor({ qualifiedCode, designMode, compact }) {
     setError(null);
   }, []);
 
+  const performSave = useCallback(
+    (newFullCode) => {
+      setIsSaving(true);
+      setError(null);
+      dispatch(setSaving(true));
+
+      designService
+        .changeCode(qualifiedCode, newFullCode)
+        .then((response) => {
+          dispatch(designStateReceived(response));
+          if (currentSetup?.code === qualifiedCode) {
+            dispatch(setup({ ...currentSetup, code: newFullCode }));
+          }
+          setIsEditing(false);
+        })
+        .catch((e) => {
+          setError(e);
+        })
+        .finally(() => {
+          setIsSaving(false);
+          dispatch(setSaving(false));
+        });
+    },
+    [qualifiedCode, designService, dispatch, currentSetup]
+  );
+
   const handleSave = useCallback(() => {
-    if (isSaving) return;
+    // `pending` short-circuits the blur that fires when the confirm modal steals focus.
+    if (isSaving || pending) return;
 
     const newFullCode = prefix + editValue;
     if (!editValue.trim() || newFullCode === qualifiedCode) {
@@ -84,35 +113,14 @@ function InlineCodeEditor({ qualifiedCode, designMode, compact }) {
       return;
     }
 
-    setIsSaving(true);
-    setError(null);
-    dispatch(setSaving(true));
-
-    designService
-      .changeCode(qualifiedCode, newFullCode)
-      .then((response) => {
-        dispatch(designStateReceived(response));
-        if (currentSetup?.code === qualifiedCode) {
-          dispatch(setup({ ...currentSetup, code: newFullCode }));
-        }
+    guard(() => performSave(newFullCode), {
+      messageKey: "released_change_code",
+      onCancel: () => {
         setIsEditing(false);
-      })
-      .catch((e) => {
-        setError(e);
-      })
-      .finally(() => {
-        setIsSaving(false);
-        dispatch(setSaving(false));
-      });
-  }, [
-    isSaving,
-    prefix,
-    editValue,
-    qualifiedCode,
-    designService,
-    dispatch,
-    currentSetup,
-  ]);
+        setError(null);
+      },
+    });
+  }, [isSaving, pending, prefix, editValue, qualifiedCode, guard, performSave]);
 
   const handleKeyDown = useCallback(
     (e) => {
@@ -171,6 +179,7 @@ function InlineCodeEditor({ qualifiedCode, designMode, compact }) {
       ) : (
         displayText
       )}
+      {modal}
     </span>
   );
 }
