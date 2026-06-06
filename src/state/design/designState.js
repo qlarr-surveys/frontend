@@ -865,6 +865,8 @@ export const designState = createSlice({
         case "reorder_groups":
           reorderGroups(state.Survey, payload);
           state.index = buildCodeIndex(state);
+          state.skipScroll = false;
+          state.lastAddedComponent = { type: "group", index: payload.toIndex };
           break;
         case "reorder_answers":
           reorderAnswers(state, payload);

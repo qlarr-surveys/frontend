@@ -234,13 +234,20 @@ function ContentPanel({ designMode }, ref) {
     if (lastAddedComponent && virtuosoRef.current && !skipScroll) {
       const performScroll = () => {
         if (lastAddedComponent.type === "group") {
-          // Calculate the exact index of the newly added group
-          const groupBaseIndex = lastAddedComponent.index * 2; // Assuming each group has a drop area before and after
-          virtuosoRef.current.scrollToIndex({
-            index: groupBaseIndex + 1,
-            behavior: "smooth",
-            align: "start",
-          });
+          // Find the exact list position of the group (accounts for the
+          // optional leading drop area when no welcome page exists).
+          const itemIndex = items.findIndex(
+            (it) =>
+              it.name === ELEMENTS.GROUP &&
+              it.index === lastAddedComponent.index
+          );
+          if (itemIndex !== -1) {
+            virtuosoRef.current.scrollToIndex({
+              index: itemIndex,
+              behavior: "smooth",
+              align: "start",
+            });
+          }
         } else if (lastAddedComponent.type === "question") {
           // Calculate the exact index for the newly added question
           const groupBaseIndex = lastAddedComponent.groupIndex * 2; // Groups and their drop areas
