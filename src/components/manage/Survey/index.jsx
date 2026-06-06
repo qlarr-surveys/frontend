@@ -368,7 +368,17 @@ const Survey = ({
                       title={t("label.unpublished_changes")}
                       showIcon={false}
                     >
-                      <div className={styles.surveyIcon}>
+                      <div
+                        className={styles.surveyIcon}
+                        style={isAdmin ? undefined : { cursor: "default" }}
+                        {...(isAdmin && {
+                          onClick: (e) => {
+                            e.stopPropagation();
+                            dispatch(setDesignModeToDesign());
+                            navigate(`/edit-survey/${survey.id}`);
+                          },
+                        })}
+                      >
                         <WarningIcon sx={ICON_SIZE} />
                       </div>
                     </CustomTooltip>
@@ -380,34 +390,20 @@ const Survey = ({
                     count: survey.completeResponseCount,
                   })}
                 >
-                  <div className={styles.surveyIcon}>
+                  <div
+                    className={styles.surveyIcon}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      dispatch(setDesignModeToDesign());
+                      navigate(`/responses/${survey.id}`);
+                    }}
+                  >
                     <Badge
                       badgeContent={survey.completeResponseCount}
                       color="primary"
                       sx={BADGE_SX}
                     >
                       <TableRowsIcon sx={ICON_SIZE} />
-                    </Badge>
-                  </div>
-                </CustomTooltip>
-
-                <CustomTooltip
-                  showIcon={false}
-                  title={
-                    survey.surveyQuota > 0
-                      ? t("label.quota", { count: survey.surveyQuota })
-                      : t("label.no_quota")
-                  }
-                >
-                  <div className={styles.surveyIcon}>
-                    <Badge
-                      badgeContent={
-                        survey.surveyQuota > 0 ? survey.surveyQuota : 0
-                      }
-                      color="primary"
-                      sx={BADGE_SX}
-                    >
-                      <NumbersIcon sx={ICON_SIZE} />
                     </Badge>
                   </div>
                 </CustomTooltip>
