@@ -13,6 +13,7 @@ import {
   setup,
 } from "~/state/design/designState";
 import { useService } from "~/hooks/use-service";
+import { useReleaseGuard } from "~/hooks/useReleaseGuard";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import {
@@ -24,6 +25,7 @@ import {
 function EntityCodeEditor({ code }) {
   const dispatch = useDispatch();
   const designService = useService("design");
+  const { guard, modal } = useReleaseGuard();
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
 
   const { currentSetup, saving } = useSelector(
@@ -54,9 +56,7 @@ function EntityCodeEditor({ code }) {
   const fullCode = `${prefix || ""}${suffix || ""}`.trim();
   const isDirty = fullCode !== code;
 
-  const handleEntityCodeSave = React.useCallback(() => {
-    if (!code || !isDirty) return;
-
+  const performSave = React.useCallback(() => {
     dispatch(setSaving(true));
     setError(null);
 
@@ -72,7 +72,12 @@ function EntityCodeEditor({ code }) {
       .finally(() => {
         dispatch(setSaving(false));
       });
-  }, [code, dispatch, designService, fullCode, isDirty, currentSetup]);
+  }, [code, dispatch, designService, fullCode, currentSetup]);
+
+  const handleEntityCodeSave = React.useCallback(() => {
+    if (!code || !isDirty) return;
+    guard(performSave, { messageKey: "released_change_code" });
+  }, [code, isDirty, guard, performSave]);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -123,6 +128,7 @@ function EntityCodeEditor({ code }) {
       >
         {t("submit")}
       </Button>
+      {modal}
     </Box>
   );
 }

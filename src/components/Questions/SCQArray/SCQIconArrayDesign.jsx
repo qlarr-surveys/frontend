@@ -32,6 +32,7 @@ import IconSelector from "~/components/design/IconSelector";
 import DynamicSvg from "~/components/DynamicSvg";
 import { buildResourceUrl } from "~/networking/common";
 import { useService } from "~/hooks/use-service";
+import { useReleaseGuard } from "~/hooks/useReleaseGuard";
 import { contentEditable, DESIGN_SURVEY_MODE } from "~/routes";
 import { useColumnMinWidth } from "~/utils/design/utils";
 import { sanitizePastedText } from "~/components/design/ContentEditor/sanitizePastedText";
@@ -172,6 +173,7 @@ function SCQArrayRowDesign({
   parentQualifiedCode,
 }) {
   const dispatch = useDispatch();
+  const { guard, modal } = useReleaseGuard();
   const theme = useTheme();
   const ref = useRef();
   const inputRef = useRef();
@@ -322,7 +324,12 @@ function SCQArrayRowDesign({
       })}
       {inDesign && (
         <TableCell
-          onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
+          onClick={(e) => {
+            e.stopPropagation();
+            guard(() => dispatch(removeAnswer(item.qualifiedCode)), {
+              messageKey: "released_delete_option",
+            });
+          }}
           key="remove"
           sx={{
             width: "30px",
@@ -330,6 +337,7 @@ function SCQArrayRowDesign({
           }}
         >
           <CloseIcon color="action" />
+          {modal}
         </TableCell>
       )}
     </TableRow>
@@ -350,6 +358,7 @@ function SCQArrayHeaderDesign({
   const icon = icons[index];
   const [iconSelectoOpen, setIconSelectorOpen] = useState(false);
   const dispatch = useDispatch();
+  const { guard, modal } = useReleaseGuard();
   const theme = useTheme();
   const ref = useRef();
 
@@ -474,10 +483,16 @@ function SCQArrayHeaderDesign({
               sx={{
                 padding: "0",
               }}
-              onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
+              onClick={(e) => {
+                e.stopPropagation();
+                guard(() => dispatch(removeAnswer(item.qualifiedCode)), {
+                  messageKey: "released_delete_option",
+                });
+              }}
             >
               <CloseIcon color="action" />
             </div>
+            {modal}
           </div>
         )}
 

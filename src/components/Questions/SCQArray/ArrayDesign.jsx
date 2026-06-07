@@ -28,6 +28,7 @@ import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 import { rtlLanguage } from "~/utils/common";
 import { contentEditable, inDesign } from "~/routes";
+import { useReleaseGuard } from "~/hooks/useReleaseGuard";
 import { useColumnMinWidth } from "~/utils/design/utils";
 import ContentEditor from "~/components/design/ContentEditor";
 
@@ -183,6 +184,7 @@ function ArrayRowDesign({
   parentQualifiedCode,
 }) {
   const dispatch = useDispatch();
+  const { guard, modal } = useReleaseGuard();
   const ref = useRef();
   const inputRef = useRef();
 
@@ -328,7 +330,12 @@ function ArrayRowDesign({
       })}
       {inDesign(designMode) && (
         <TableCell
-          onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
+          onClick={(e) => {
+            e.stopPropagation();
+            guard(() => dispatch(removeAnswer(item.qualifiedCode)), {
+              messageKey: "released_delete_option",
+            });
+          }}
           key="remove"
           sx={{
             width: "30px",
@@ -336,6 +343,7 @@ function ArrayRowDesign({
           }}
         >
           <CloseIcon color="action" />
+          {modal}
         </TableCell>
       )}
     </TableRow>
@@ -352,6 +360,7 @@ function ArrayHeaderDesign({
   width,
 }) {
   const dispatch = useDispatch();
+  const { guard, modal } = useReleaseGuard();
   const ref = useRef();
 
   const onMainLang = langInfo.lang === langInfo.mainLang;
@@ -454,10 +463,16 @@ function ArrayHeaderDesign({
             sx={{
               padding: "0",
             }}
-            onClick={(e) => dispatch(removeAnswer(item.qualifiedCode))}
+            onClick={(e) => {
+              e.stopPropagation();
+              guard(() => dispatch(removeAnswer(item.qualifiedCode)), {
+                messageKey: "released_delete_option",
+              });
+            }}
           >
             <CloseIcon color="action" />
           </div>
+          {modal}
         </div>
       )}
       <div className="array-column-header">

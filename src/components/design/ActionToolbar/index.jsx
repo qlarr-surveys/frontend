@@ -15,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import ConfirmActionModal from "~/components/common/ConfirmActionModal";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
+import { useIsReleased } from "~/hooks/useIsReleased";
+import { useReleaseAcknowledgement } from "~/hooks/useReleaseAcknowledgement";
 
 function ActionToolbar({ code, isGroup, parentCode, showActions }) {
   const dispatch = useDispatch();
@@ -22,6 +24,8 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
   const { t: tTooltips } = useTranslation(NAMESPACES.DESIGN_TOOLTIPS);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const released = useIsReleased();
+  const ack = useReleaseAcknowledgement(released);
 
   const onDelete = useCallback(() => {
     dispatch(resetSetup());
@@ -231,10 +235,15 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
           </CustomTooltip>
           <ConfirmActionModal
             open={deleteModalOpen}
-            title={t("delete")}
-            description={t(isGroup ? "delete_page" : "delete_question")}
+            title={released ? t("released_warning_title") : t("delete")}
+            description={
+              released
+                ? t(isGroup ? "released_delete_page" : "released_delete_question")
+                : t(isGroup ? "delete_page" : "delete_question")
+            }
             cancelLabel={t("cancel")}
             confirmLabel={t("delete")}
+            {...ack}
             onClose={() => setDeleteModalOpen(false)}
             onConfirm={() => {
               setDeleteModalOpen(false);
