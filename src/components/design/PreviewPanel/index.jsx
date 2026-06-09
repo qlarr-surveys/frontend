@@ -3,8 +3,7 @@ import { Box, IconButton, Typography } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import DesktopWindowsOutlinedIcon from "@mui/icons-material/DesktopWindowsOutlined";
-import PhoneIphoneOutlinedIcon from "@mui/icons-material/PhoneIphoneOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import {
   Provider,
   shallowEqual,
@@ -50,7 +49,6 @@ function PreviewPanel() {
   const dispatch = useDispatch();
   const store = useStore(); // the design (manage) store
 
-  const [device, setDevice] = useState("desktop");
   const [computing, setComputing] = useState(false);
   const [error, setError] = useState(null);
   const [response, setResponse] = useState(null);
@@ -154,32 +152,29 @@ function PreviewPanel() {
   return (
     <Box className={styles.panel} data-tour="question-preview-panel">
       <Box className={styles.header}>
-        <Typography className={styles.title} variant="subtitle2" noWrap>
-          {t("preview_panel.title")}
-          {questionCode ? ` · ${questionCode}` : ""}
-        </Typography>
-        <Box className={styles.headerActions}>
-          <CustomTooltip
-            title={t(
-              device === "desktop"
-                ? "preview_panel.phone_view"
-                : "preview_panel.desktop_view"
-            )}
-            showIcon={false}
+        <Box className={styles.titleWrap}>
+          <Typography className={styles.title} variant="subtitle2" noWrap>
+            {t("preview_panel.title")}
+            {questionCode ? (
+              <Typography
+                component="span"
+                variant="subtitle2"
+                color="text.secondary"
+                className={styles.questionCode}
+              >
+                {`· ${questionCode}`}
+              </Typography>
+            ) : null}
+          </Typography>
+          <Typography
+            className={styles.subtitle}
+            variant="caption"
+            color="text.secondary"
           >
-            <IconButton
-              size="small"
-              onClick={() =>
-                setDevice((d) => (d === "desktop" ? "phone" : "desktop"))
-              }
-            >
-              {device === "desktop" ? (
-                <PhoneIphoneOutlinedIcon fontSize="small" />
-              ) : (
-                <DesktopWindowsOutlinedIcon fontSize="small" />
-              )}
-            </IconButton>
-          </CustomTooltip>
+            {t("preview_panel.subtitle")}
+          </Typography>
+        </Box>
+        <Box className={styles.headerActions}>
           <CustomTooltip title={t("preview_panel.refresh")} showIcon={false}>
             <IconButton size="small" onClick={() => setReloadNonce((n) => n + 1)}>
               <RefreshIcon fontSize="small" />
@@ -201,24 +196,26 @@ function PreviewPanel() {
       <Box className={styles.body}>
         {!questionCode ? (
           <Box className={styles.empty}>
+            <VisibilityOutlinedIcon
+              className={styles.emptyIcon}
+              fontSize="large"
+            />
             <Typography variant="body2" color="text.secondary">
               {t("preview_panel.empty")}
             </Typography>
           </Box>
         ) : error ? (
           <Box className={styles.empty}>
-            <Typography variant="body2" color="error">
+            <VisibilityOutlinedIcon
+              className={styles.emptyIcon}
+              fontSize="large"
+            />
+            <Typography variant="body2" color="text.secondary">
               {t("preview_panel.error")}
             </Typography>
           </Box>
         ) : response ? (
-          device === "phone" ? (
-            <Box className={styles.phoneFrame}>
-              <Box className={styles.phone}>{surveyTree}</Box>
-            </Box>
-          ) : (
-            <Box className={styles.desktopFrame}>{surveyTree}</Box>
-          )
+          <Box className={styles.stage}>{surveyTree}</Box>
         ) : (
           <Box className={styles.empty}>
             <LoadingDots />

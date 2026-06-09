@@ -1,5 +1,22 @@
 .mainContainer {
   display: flex;
+  overflow: hidden;
+}
+
+/* Draggable divider between the design canvas and the preview panel. */
+.resizeGutter {
+  flex: 0 0 6px;
+  align-self: stretch;
+  height: calc(100vh - 64px);
+  cursor: col-resize;
+  touch-action: none;
+  background-color: rgba(145, 158, 171, 0.2); /* divider token */
+  transition: background-color 150ms ease;
+}
+
+.resizeGutter:hover,
+.resizeGutterDragging {
+  background-color: var(--mui-palette-primary-main, #16205b);
 }
 
 .updateButtons {

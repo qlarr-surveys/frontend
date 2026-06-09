@@ -16,6 +16,7 @@ import { isTouchDevice } from "~/utils/isTouchDevice";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { buildResourceUrl } from "~/networking/common";
 import LoadingDots from "~/components/common/LoadingDots";
+import { useResizableWidth } from "~/hooks/useResizableWidth";
 import {
   setDesignModeToDesign,
   setDesignModeToLang,
@@ -29,6 +30,15 @@ const ContentPanel = React.lazy(() =>
 );
 const LeftPanel = React.lazy(() => import("~/components/design/LeftPanel"));
 const PreviewPanel = React.lazy(() => import("~/components/design/PreviewPanel"));
+
+// Resizable preview panel bounds. The canvas is kept at least CANVAS_MIN wide;
+// LEFT_RAIL_WIDTH (22rem) + the gutter are reserved from the container width.
+const PREVIEW_MIN_WIDTH = 320;
+const PREVIEW_MAX_WIDTH = 640;
+const PREVIEW_DEFAULT_WIDTH = 420;
+const CANVAS_MIN_WIDTH = 400;
+const LEFT_RAIL_WIDTH = 352;
+const GUTTER_WIDTH = 6;
 
 function DesignSurvey() {
   useNamespaceLoader();
@@ -54,6 +64,25 @@ function DesignSurvey() {
   });
   const designStateReceived = useSelector((state) => {
     return state.designState.designStateReceived || false;
+  });
+
+  const previewOpen = useSelector(
+    (state) => state.editState.previewPanelOpen
+  );
+
+  const {
+    width: previewWidth,
+    dragging: previewResizing,
+    onPointerDown: onPreviewResizeStart,
+  } = useResizableWidth({
+    containerRef,
+    cssVar: "--preview-width",
+    storageKey: "qlarr.designPreviewWidth",
+    min: PREVIEW_MIN_WIDTH,
+    max: PREVIEW_MAX_WIDTH,
+    defaultWidth: PREVIEW_DEFAULT_WIDTH,
+    canvasMin: CANVAS_MIN_WIDTH,
+    reservedWidth: LEFT_RAIL_WIDTH + GUTTER_WIDTH,
   });
 
   const lang = langInfo?.lang;
@@ -119,6 +148,7 @@ function DesignSurvey() {
       className={styles.mainContainer}
       ref={containerRef}
       sx={backgroundStyle}
+      style={{ "--preview-width": `${previewWidth}px` }}
     >
       <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
         <Suspense fallback={<LoadingDots fullHeight />}>
@@ -135,6 +165,16 @@ function DesignSurvey() {
             </Suspense>
           </ThemeProvider>
         </CacheProvider>
+        {previewOpen && (
+          <Box
+            role="separator"
+            aria-orientation="vertical"
+            className={`${styles.resizeGutter} ${
+              previewResizing ? styles.resizeGutterDragging : ""
+            }`}
+            onPointerDown={onPreviewResizeStart}
+          />
+        )}
         <Suspense fallback={null}>
           <PreviewPanel />
         </Suspense>

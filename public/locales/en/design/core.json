@@ -4,6 +4,7 @@
   "preview_question": "Preview question",
   "preview_panel": {
     "title": "Question preview",
+    "subtitle": "Respondent's eye view",
     "empty": "Select a question to preview it here.",
     "refresh": "Refresh preview",
     "close": "Close preview",
