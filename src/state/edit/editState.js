@@ -3,14 +3,18 @@ import { isEquivalent } from "~/utils/design/utils";
 
 export const editState = createSlice({
   name: "editState",
-  initialState: { 
+  initialState: {
     state: {},
     error: null,
     isSaving: false,
     isUpdating: false,
-    loading: false
+    loading: false,
+    previewPanelOpen: false
   },
   reducers: {
+    setPreviewPanelOpen: (state, action) => {
+      state.previewPanelOpen = action.payload;
+    },
     setSaving: (state, action) => {
       state.isSaving = action.payload;
     },
@@ -55,6 +59,7 @@ export const {
   onEditErrorSeen,
   surveyAttributeChanged,
   surveyAttributeChangedImmediate,
+  setPreviewPanelOpen,
 } = editState.actions;
 
 export default editState.reducer;

@@ -111,6 +111,75 @@ export function truncateWithEllipsis(text, maxLength) {
 export const isQuestion = (code) => QUESTION_CODE_PATTERN.test(code);
 export const isGroup = (code) => GROUP_CODE_PATTERN.test(code);
 
+/**
+ * Resolve a selected design component to the question that should be previewed.
+ * - A question code returns itself.
+ * - A group code returns its first question (if any).
+ * - An answer/sub-component code returns its owning question.
+ * Returns null when no question can be resolved (e.g. an empty group).
+ */
+export const resolvePreviewQuestionCode = (designState, code) => {
+  if (!designState || !code) return null;
+  if (isQuestion(code)) return code;
+
+  if (isGroup(code)) {
+    return designState[code]?.children?.[0]?.code || null;
+  }
+
+  // Otherwise treat `code` as an answer/sub-component: find its owning question.
+  const groups = designState.Survey?.children || [];
+  for (const groupRef of groups) {
+    const questions = designState[groupRef.code]?.children || [];
+    for (const questionRef of questions) {
+      const owns = designState[questionRef.code]?.children?.some(
+        (child) => child.qualifiedCode === code || child.code === code
+      );
+      if (owns) return questionRef.code;
+    }
+  }
+  return null;
+};
+
+// Key used for a component's nested children at each tree depth, mirroring the
+// engine's design DSL (Survey -> groups -> questions -> answers -> answers...).
+const CHILDREN_KEY_BY_LEVEL = ["groups", "questions", "answers"];
+const childrenKeyForLevel = (level) =>
+  CHILDREN_KEY_BY_LEVEL[level] || "answers";
+
+// In the flat design tree, a node holds only its body (content, instructionList,
+// children, ...); its identity (code / qualifiedCode / type / groupType) lives on
+// the parent's child ref. We merge the ref with the node body so the assembled
+// DSL carries a code on every component. `children` is a storage artifact and is
+// replaced by the level-appropriate nested array.
+const assembleNode = (designState, ref, level) => {
+  const node = designState[ref.qualifiedCode ?? ref.code];
+  if (!node) return null;
+  const { children, ...body } = node;
+  const assembled = { ...ref, ...body };
+  if (Array.isArray(children) && children.length) {
+    assembled[childrenKeyForLevel(level)] = children
+      .map((child) => assembleNode(designState, child, level + 1))
+      .filter(Boolean);
+  }
+  return assembled;
+};
+
+/**
+ * Rebuild the nested survey design DSL (a JSON string) from the live, flat
+ * designState — including unsaved edits and added/removed components. This is
+ * the exact shape the survey engine's ValidationUseCaseWrapper.create() expects.
+ * The engine ignores unknown keys, so UI-only node props pass through harmlessly.
+ */
+export const assembleSurveyJson = (designState) => {
+  if (!designState?.Survey) return null;
+  const root = assembleNode(
+    designState,
+    { code: "Survey", qualifiedCode: "Survey" },
+    0
+  );
+  return root ? JSON.stringify(root) : null;
+};
+
 export const isNotEmptyHtml = (value) => {
   if (!value) return false;
 

@@ -1,6 +1,17 @@
 {
   "duplicate": "Duplicate",
   "delete": "Delete",
+  "preview_question": "Preview question",
+  "preview_panel": {
+    "title": "Question preview",
+    "empty": "Select a question to preview it here.",
+    "refresh": "Refresh preview",
+    "close": "Close preview",
+    "desktop_view": "Desktop view",
+    "phone_view": "Phone view",
+    "error": "This question can't be previewed (the survey design has errors).",
+    "isolation_note": "This question is previewed on its own; logic that depends on other questions uses empty values."
+  },
   "components": "Components",
   "design": "Design",
   "settings": "Settings",

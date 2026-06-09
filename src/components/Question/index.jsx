@@ -60,6 +60,8 @@ const SCQIconArray = React.lazy(() =>
 const Question = forwardRef((props, ref) => {
   console.debug("rendering: " + props.component.code);
   const relevance = useSelector((state) => {
+    // In a single-question preview, always render the targeted question.
+    if (state.runState.singleQuestion) return true;
     let questionState = state.runState.values[props.component.qualifiedCode];
     return (
       typeof questionState?.relevance === "undefined" ||

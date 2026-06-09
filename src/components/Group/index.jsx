@@ -10,11 +10,16 @@ import { alpha, Box, css, Divider, useTheme } from "@mui/material";
 function Group(props) {
   const theme = useTheme();
 
+  const singleQuestion = useSelector((state) => state.runState.singleQuestion);
+
   const state = useSelector((state) => {
     let groupState = state.runState.values[props.group.code];
     return {
       showGroup:
-        typeof groupState?.relevance === "undefined" || groupState.relevance,
+        // In a single-question preview, always render the containing group.
+        state.runState.singleQuestion ||
+        typeof groupState?.relevance === "undefined" ||
+        groupState.relevance,
     };
   }, shallowEqual);
 
@@ -72,7 +77,12 @@ function Group(props) {
         {props.group && props.group.questions
           ? (() => {
               const visibleQuestions = props.group.questions.filter(
-                (quest) => quest.inCurrentNavigation,
+                (quest) =>
+                  // Single-question preview: render the target question even if
+                  // it sits outside the current navigation.
+                  (singleQuestion || quest.inCurrentNavigation) &&
+                  (!props.onlyQuestionCode ||
+                    quest.qualifiedCode === props.onlyQuestionCode),
               );
               return visibleQuestions.map((quest, idx) => (
                 <React.Fragment key={quest.code}>

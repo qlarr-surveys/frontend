@@ -20,6 +20,9 @@ export const runState = createSlice({
       let keys = Object.keys(state);
       keys.forEach((key) => delete state[key]);
       state.preview = action.payload.preview;
+      // Single-question design preview: render the targeted question even if its
+      // default relevance is false (it depends on answers we don't have here).
+      state.singleQuestion = action.payload.singleQuestion;
       let response = action.payload.response;
       qlarrDependents = response.state.qlarrDependents;
       state.navigation = undefined;

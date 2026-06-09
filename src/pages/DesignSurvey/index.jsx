@@ -28,6 +28,7 @@ const ContentPanel = React.lazy(() =>
   import("~/components/design/ContentPanel")
 );
 const LeftPanel = React.lazy(() => import("~/components/design/LeftPanel"));
+const PreviewPanel = React.lazy(() => import("~/components/design/PreviewPanel"));
 
 function DesignSurvey() {
   useNamespaceLoader();
@@ -134,6 +135,9 @@ function DesignSurvey() {
             </Suspense>
           </ThemeProvider>
         </CacheProvider>
+        <Suspense fallback={null}>
+          <PreviewPanel />
+        </Suspense>
       </DndProvider>
     </Box>
   );

@@ -23,7 +23,7 @@ const ALIGNMENT_TO_FLEX = {
   right: "flex-end",
 };
 
-function Survey() {
+function Survey({ singleQuestion = false, onlyQuestionCode }) {
   const theme = useTheme();
 
   const navigationIndex = useSelector((state) => {
@@ -87,14 +87,28 @@ function Survey() {
         <div className={styles.surveyGroups}>
           {survey && survey.groups
             ? survey.groups
-                .filter((group) => group.inCurrentNavigation)
+                // Single-question preview: a content group may sit outside the
+                // current navigation (e.g. ALL_IN_ONE only pages the first
+                // group), so keep all groups when focusing one question.
+                .filter((group) => singleQuestion || group.inCurrentNavigation)
+                // Single-question preview: keep only the group that owns the target question.
+                .filter(
+                  (group) =>
+                    !onlyQuestionCode ||
+                    (group.questions ?? []).some(
+                      (q) => q.qualifiedCode === onlyQuestionCode
+                    )
+                )
                 .map((group, index) => (
-
-                    <Group group={group} groupIndex={index} />
-
+                  <Group
+                    key={group.code}
+                    group={group}
+                    groupIndex={index}
+                    onlyQuestionCode={onlyQuestionCode}
+                  />
                 ))
             : ""}
-          <Navigation navigationIndex={navigationIndex} />
+          {!singleQuestion && <Navigation navigationIndex={navigationIndex} />}
         </div>
       </form>
     </DndProvider>
