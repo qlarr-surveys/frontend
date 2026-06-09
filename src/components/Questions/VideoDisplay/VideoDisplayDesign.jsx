@@ -39,12 +39,8 @@ function VideoDisplayDesign({ code, t, onMainLang }) {
     <>
       {!isUploading && state.resources?.videoUrl && (
         <div
-          style={{
-            position: "relative",
-            marginTop: "16px",
-            // 16:9 aspect ratio
-            paddingTop: state.audio_only ? "10%" : "56%",
-          }}
+          className={styles.videoWrapper}
+          style={{ '--qlarr-video-padding': state.audio_only ? '10%' : '56%' }}
         >
           <ReactPlayer
             url={buildResourceUrl(state.resources.videoUrl)}
@@ -54,12 +50,7 @@ function VideoDisplayDesign({ code, t, onMainLang }) {
             config={{
               forceAudio: state.audio_only || false,
             }}
-            style={{
-              backgroundColor: "black",
-              position: "absolute",
-              top: "0",
-              left: "0",
-            }}
+            className={styles.videoPlayer}
             volume={1}
             width="100%"
             height="100%"

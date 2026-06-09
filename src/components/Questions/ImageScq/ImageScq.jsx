@@ -35,11 +35,8 @@ function ImageScq(props) {
 
   return (
     <Box
-      sx={{
-        gap: `${props.component.spacing}px`,
-        justifyContent: isRtl ? "flex-end" : "flex-start",
-      }}
-      className={styles.imageFlexContainer}
+      className={`${styles.imageFlexContainer} ${isRtl ? styles.rtl : ''}`}
+      style={{ '--qlarr-spacing': `${props.component.spacing}px` }}
     >
       {props.component.answers.map((option) => {
         const backgroundImage = option.resources?.image
@@ -52,26 +49,17 @@ function ImageScq(props) {
           <Box
             data-code={option.code}
             key={option.code}
-            sx={{
-              flex: `0 1 calc(${100 / props.component.columns}% - ${
-                props.component.spacing
-              }px)`,
-              cursor: "pointer",
-            }}
+            className={styles.choiceItem}
+            style={{ '--qlarr-item-flex': `0 1 calc(${100 / props.component.columns}% - ${props.component.spacing}px)` }}
             onClick={() =>
               handleChange(props.component.qualifiedCode, option.code)
             }
           >
             <Box
-              className={styles.imageContainer}
+              className={`${styles.imageContainer} ${state.value === option.code ? styles.imageContainerSelected : ''}`}
               style={{
                 paddingTop: `${100 / props.component.imageAspectRatio}%`,
-                borderRadius: "4px",
                 backgroundImage: backgroundImage,
-                border:
-                  state.value === option.code
-                    ? `4px solid ${theme.palette.primary.main}`
-                    : "4px solid transparent",
               }}
             >
               <div className={styles.selection}>
@@ -81,12 +69,9 @@ function ImageScq(props) {
                     handleChange(event.target.name, event.target.value)
                   }
                   value={option.code}
-                  className={styles.radioCheck}
+                  className={`${styles.radioCheck} ${styles.radioMargin}`}
                   name={props.component.qualifiedCode}
                   size="large"
-                  sx={{
-                    m: "5px",
-                  }}
                 />
               </div>
             </Box>

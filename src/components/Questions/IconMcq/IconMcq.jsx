@@ -21,10 +21,8 @@ function IconMcq(props) {
 
   return (
     <Box
-      sx={{
-        gap: `${props.component.spacing || 8}px`,
-      }}
       className={styles.iconFlexContainer}
+      style={{ '--qlarr-spacing': `${props.component.spacing || 8}px` }}
     >
       {props.component.answers.map((option) => {
         const relevance = runValues[option.qualifiedCode]?.relevance ?? true;
@@ -65,18 +63,11 @@ function IconMcqChoice({
     <Box
       data-code={component.code}
       key={component.code}
-      sx={{
-        flex: `0 1 calc(${100 / columns}% - ${spacing || 8}px)`,
-        textAlign: "center",
-        cursor: "pointer",
-      }}
+      className={styles.choiceItem}
+      style={{ '--qlarr-item-flex': `0 1 calc(${100 / columns}% - ${spacing || 8}px)` }}
     >
       <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          width: "100%",
-        }}
+        className={styles.iconCenter}
       >
         <DynamicSvg
           onIconClick={() => {

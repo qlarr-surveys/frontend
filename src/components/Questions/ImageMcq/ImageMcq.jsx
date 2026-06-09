@@ -23,11 +23,8 @@ function ImageMcq(props) {
 
   return (
     <Box
-      sx={{
-        gap: `${props.component.spacing}px`,
-        justifyContent: isRtl ? "flex-end" : "flex-start",
-      }}
-      className={styles.imageFlexContainer}
+      className={`${styles.imageFlexContainer} ${isRtl ? styles.rtl : ''}`}
+      style={{ '--qlarr-spacing': `${props.component.spacing}px` }}
     >
       {props.component.answers.map((option) => {
         const relevance = runValues[option.qualifiedCode]?.relevance ?? true;
@@ -80,31 +77,22 @@ function ImageMcqItem(props) {
     <Box
       key={props.option.code}
       data-code={props.option.code}
-      sx={{
-        flex: `0 1 calc(${100 / props.columns}% - ${props.spacing}px)`,
-        cursor: "pointer",
-      }}
+      className={styles.choiceItem}
+      style={{ '--qlarr-item-flex': `0 1 calc(${100 / props.columns}% - ${props.spacing}px)` }}
     >
       <Box
-        className={styles.imageContainer}
+        className={`${styles.imageContainer} ${checked ? styles.imageContainerSelected : ''}`}
         onClick={handleChange}
         style={{
           paddingTop: 100 / props.aspectRatio + "%",
           backgroundImage: backgroundImage,
-          borderRadius: "4px",
-          border: checked
-            ? `4px solid ${theme.palette.primary.main}`
-            : "4px solid transparent",
         }}
       >
         <div className={styles.selection}>
           <Checkbox
             onChange={handleChange}
             size="large"
-            sx={{
-              m: "5px",
-            }}
-            className={styles.radioCheck}
+            className={`${styles.radioCheck} ${styles.checkboxMargin}`}
             checked={checked}
           />
         </div>

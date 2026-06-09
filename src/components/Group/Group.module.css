@@ -28,6 +28,10 @@
   margin: auto;
   position: relative;
   overflow: hidden;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px var(--qlarr-shadow-color);
+  background-color: var(--qlarr-bg-color);
 }
 
 @media (min-width: 600px) {

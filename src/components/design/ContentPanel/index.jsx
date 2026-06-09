@@ -27,6 +27,7 @@ import {
   LOGO_SIZE_DIMENSIONS,
   LOGO_SPACING_DEFAULT,
 } from "~/constants/design";
+import { qlarrCssVars } from "~/components/Questions/qlarrVars";
 
 const ALIGNMENT_TO_FLEX = {
   left: "flex-start",
@@ -50,6 +51,7 @@ function ContentPanel({ designMode }, ref) {
   const panelStyle = useMemo(
     () => ({
       backgroundColor: theme.palette.background.default,
+      ...qlarrCssVars(theme),
       "--design-error-color": theme.palette.error.main,
       "--design-error-tint": alpha(theme.palette.error.main, 0.06),
       "--new-item-flash": alpha(theme.palette.primary.main, 0.18),

@@ -78,17 +78,10 @@ function VideoCapture(props) {
           variant="contained"
           color="primary"
         >
-          <VideocamIcon sx={{ fontSize: "48px" }} />
+          <VideocamIcon className={styles.largeIcon} />
         </Button>
       ) : (
-        <div
-          style={{
-            position: "relative",
-            marginTop: "16px",
-            // 16:9 aspect ratio
-            paddingTop: "56%",
-          }}
-        >
+        <div className={styles.videoWrapper}>
           <ReactPlayer
             url={previewUrlByFilename(state.value.stored_filename)}
             loop={false}
@@ -97,12 +90,7 @@ function VideoCapture(props) {
             config={{
               forceAudio: false,
             }}
-            style={{
-              backgroundColor: "black",
-              position: "absolute",
-              top: "0",
-              left: "0",
-            }}
+            className={styles.videoPlayer}
             volume={1}
             width="100%"
             height="100%"

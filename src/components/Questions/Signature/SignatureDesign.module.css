@@ -3,4 +3,12 @@
   padding: 8px;
   border-radius: 4px;
   text-align: center;
+  background-color: var(--qlarr-bg-default);
+}
+
+.signatureImage {
+  background-color: rgba(255, 255, 255, 1);
+  width: 80%;
+  max-width: 500px;
+  height: 200px;
 }

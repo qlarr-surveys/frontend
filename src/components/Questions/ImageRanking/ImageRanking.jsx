@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./ImageRanking.module.css";
-import { css, useTheme } from "@emotion/react";
+import { useTheme } from "@emotion/react";
 import { Box, Grid } from "@mui/material";
 import { shallowEqual, useDispatch } from "react-redux";
 import { valueChange } from "~/state/runState";
@@ -70,11 +70,8 @@ function ImageRanking(props) {
 
   return (
     <Box
-      sx={{
-        gap: `${props.component.spacing}px`,
-        justifyContent: isRtl ? "flex-end" : "flex-start",
-      }}
-      className={styles.imageFlexContainer}
+      className={`${styles.imageFlexContainer} ${isRtl ? styles.rtl : ''}`}
+      style={{ '--qlarr-spacing': `${props.component.spacing}px` }}
     >
       {props.component.answers.map((option) => {
         return (
@@ -114,13 +111,11 @@ function ImageRankingItem(props) {
     <Box
       data-code={props.option.code}
       key={props.option.code}
-      sx={{
-        flex: `0 1 calc(${100 / props.columns}% - ${props.spacing}px)`,
-        cursor: "pointer",
-      }}
+      className={styles.rankingItem}
+      style={{ '--qlarr-item-flex': `0 1 calc(${100 / props.columns}% - ${props.spacing}px)` }}
     >
       <Box
-        className={styles.imageContainer}
+        className={`${styles.imageContainer} ${state.value > 0 ? styles.imageContainerSelected : ''}`}
         onClick={() => props.onClick()}
         display="flex"
         justifyContent="center"
@@ -128,28 +123,16 @@ function ImageRankingItem(props) {
         style={{
           paddingTop: 100 / props.aspectRatio + "%",
           backgroundImage: backgroundImage,
-          borderRadius: "4px",
-          boxShadow: 2,
           height: props.imageHeight + "px",
-          border: state.checked
-            ? `2px solid ${theme.palette.primary.main}`
-            : "2px solid transparent",
         }}
       >
         {state.value > 0 && (
           <div
-            style={{
-              background: theme.palette.primary.main,
-            }}
-            className={styles.rankContainer}
+            className={`${styles.rankContainer} ${styles.rankBadgeBg}`}
           >
             <span
               className={styles.rankValue}
-              css={css`
-                 {
-                  color: ${theme.textStyles.text.color};
-                }
-              `}
+              style={{ '--qlarr-text-color': theme.textStyles.text.color }}
             >
               {state.value}
             </span>

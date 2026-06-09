@@ -1,0 +1,19 @@
+.container {
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.itemRow {
+  gap: 10px;
+  display: flex;
+}
+
+.labelColumn {
+  flex: 1;
+  font-size: var(--qlarr-text-size);
+}
+
+.textField {
+  flex: 2;
+}

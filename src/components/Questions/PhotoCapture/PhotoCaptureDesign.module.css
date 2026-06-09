@@ -1,3 +1,7 @@
 .container {
   text-align: center;
 }
+
+.largeIcon {
+  font-size: 48px;
+}

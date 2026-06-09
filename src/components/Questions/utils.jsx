@@ -95,7 +95,7 @@ function rgbToHex(r, g, b) {
   return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
 
-function blendColors(color1, color2, opacity) {
+export function blendColors(color1, color2, opacity) {
   const r = Math.round(color1[0] * (1 - opacity) + color2[0] * opacity);
   const g = Math.round(color1[1] * (1 - opacity) + color2[1] * opacity);
   const b = Math.round(color1[2] * (1 - opacity) + color2[2] * opacity);

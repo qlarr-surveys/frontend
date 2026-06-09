@@ -180,7 +180,6 @@
   line-height: 32px;
   letter-spacing: 0px;
   text-align: center;
-  color: var(--drop-text, #16205B);
   opacity: 0.7;
 }
 
@@ -191,8 +190,6 @@
   line-height: 24px;
   letter-spacing: 0px;
   text-align: center;
-  color: var(--drop-text, #16205B);
-  opacity: 0.7;
 }
 
 .endPageActions {
@@ -209,7 +206,6 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: var(--drop-text, #16205b);
   cursor: pointer;
 }
 

@@ -24,7 +24,7 @@ function PhotoCaptureDesign({ code }) {
         variant="contained"
         color="primary"
       >
-        <PhotoCameraIcon sx={{ fontSize: "48px" }} />
+        <PhotoCameraIcon className={styles.largeIcon} />
       </Button>
       <br />
       {state.showHint && <span>{state.content?.[lang]?.hint || ""}</span>}

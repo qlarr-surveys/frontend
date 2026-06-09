@@ -38,20 +38,17 @@ function ImageChoiceQuestion(props) {
       {imageHeight && (
         <Box
           id={"items-" + props.code}
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "flex-start",
-            gap: `${spacing}px`,
-          }}
+          className={styles.flexContainer}
+          style={{ "--qlarr-spacing": `${spacing}px` }}
         >
           {childrenWithAdd.map((item, index) =>
             props.icon ? (
               <Box
                 key={item.code}
-                sx={{
-                  flex: `0 1 ${itemWidth}`,
-                  maxWidth: itemWidth,
+                className={styles.flexItem}
+                style={{
+                  "--qlarr-item-flex": `0 1 ${itemWidth}`,
+                  "--qlarr-item-max-width": itemWidth,
                 }}
               >
                 <IconChoiceItemDesign
@@ -75,9 +72,10 @@ function ImageChoiceQuestion(props) {
             ) : (
               <Box
                 key={item.code}
-                sx={{
-                  flex: `0 1 ${itemWidth}`,
-                  maxWidth: itemWidth,
+                className={styles.flexItem}
+                style={{
+                  "--qlarr-item-flex": `0 1 ${itemWidth}`,
+                  "--qlarr-item-max-width": itemWidth,
                 }}
               >
                 <ImageChoiceItemDesign

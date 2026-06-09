@@ -7,6 +7,7 @@ import GroupHeader from "./GroupHeader";
 import {
   Box,
   Divider,
+  alpha,
   css,
   decomposeColor,
   recomposeColor,
@@ -17,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { onDrag, setup } from "~/state/design/designState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { setupOptions } from "~/constants/design";
+import { blendColors } from '../Questions/utils';
 function GroupDesign({
   t,
   code,
@@ -130,16 +132,22 @@ function GroupDesign({
 
   drop(preview(containerRef));
 
-  const contrastColor = blendColors(
-    theme.palette.background.paper, // background
-    theme.textStyles.question.color, // overlay
-    0.2, // opacity
-  );
+  const contrastColor = `linear-gradient(
+    ${alpha(theme.textStyles.question.color, 0.2)},
+    ${alpha(theme.textStyles.question.color, 0.2)}
+  ), ${theme.palette.background.paper}`
+  const shadowColor = alpha(theme.textStyles.question.color, 0.15);
+  const outlineColor = theme.palette.primary.main;
 
   if (!group) {
     return null;
   }
-  const outlineColor = theme.palette.primary.main;
+
+  const stateClass = isInSetup
+    ? styles.groupSetup
+    : hovered
+    ? styles.groupHovered
+    : "";
 
   const isLastAdded =
     lastAddedComponent?.type === "group" && lastAddedComponent.index === index;
@@ -159,41 +167,26 @@ function GroupDesign({
           dispatch(setup({ code, rules: setupOptions(type) }));
         }
       }}
-      sx={
-        isInSetup
-          ? {
-              padding: "1rem 0rem 0rem 0rem",
-              borderRadius: "12px",
-              boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
-              backgroundColor: contrastColor,
-              outline: `3px solid ${outlineColor}`,
-              outlineOffset : "-3px"
-            }
-          : hovered ? {
-              padding: "1rem 0rem 0rem 0rem",
-              boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
-              borderRadius: "12px",
-              outline: `1px solid ${outlineColor}`,
-              outlineOffset : "-1px",
-              backgroundColor: "background.paper",
-            } : {
-              padding: "1rem 0rem 0rem 0rem",
-              boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
-              borderRadius: "12px",
-              backgroundColor: "background.paper",
-            }
-      }
       onMouseOver={(e) => {
         if (designMode === DESIGN_SURVEY_MODE.DESIGN) {
-          setHovered(!e.target.closest(".question") && !e.target.closest(".separator"));
+          setHovered(
+            !e.target.closest(".question") && !e.target.closest(".separator"),
+          );
         }
       }}
       onMouseLeave={() => {
         setHovered(false);
       }}
-      className={`${styles.topLevel} ${isLastAdded ? styles.highlight : ""}`}
+      className={`${styles.topLevel} ${styles.groupBase} ${stateClass} ${isLastAdded ? styles.highlight : ""}`}
       ref={containerRef}
-      style={getStyles(isDragging)}
+      style={{
+        ...getStyles(isDragging),
+        '--qlarr-shadow-color': shadowColor,
+        '--qlarr-outline-color': outlineColor,
+        '--qlarr-bg-color': theme.palette.background.paper,
+        '--qlarr-setup-bg': alpha(theme.textStyles.question.color, 0.2),
+        '--qlarr-hover-bg': alpha(theme.textStyles.question.color, 0.05),
+      }}
       css={css`
         ${group.customCss || ""}
       `}
@@ -243,7 +236,7 @@ function GroupDesign({
                 t={t}
               />
               {childIndex < children.length - 1 && (
-                <Divider className='separator'  />
+                <Divider className="separator" />
               )}
             </React.Fragment>
           );
@@ -265,18 +258,11 @@ function GroupDesign({
 
 export default React.memo(GroupDesign);
 
-const blendColors = (background, overlay, opacity) => {
-  const bg = decomposeColor(background);
-  const fg = decomposeColor(overlay);
-
-  const blended = {
-    type: "rgb",
-    values: [
-      Math.round(fg.values[0] * opacity + bg.values[0] * (1 - opacity)),
-      Math.round(fg.values[1] * opacity + bg.values[1] * (1 - opacity)),
-      Math.round(fg.values[2] * opacity + bg.values[2] * (1 - opacity)),
-    ],
-  };
-
-  return recomposeColor(blended);
-};
+function overlay(base, top, topAlpha) {
+  const b = decomposeColor(base).values;
+  const t = decomposeColor(top).values;
+  return recomposeColor({
+    type: 'rgb',
+    values: b.map((c, i) => Math.round(topAlpha * t[i] + (1 - topAlpha) * c)),
+  });
+}

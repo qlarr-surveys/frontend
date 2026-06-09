@@ -34,6 +34,27 @@
   cursor: pointer;
 }
 
+.addButtonBox {
+  height: var(--qlarr-cell-height);
+  border-radius: 4px;
+  background-color: var(--qlarr-bg-default);
+  width: 100%;
+}
+
+.dragging {
+  opacity: 0.2;
+}
+
+.gridItemHeight {
+  min-height: var(--qlarr-cell-height);
+}
+
+.iconCenter {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .svgContainer > svg {
   width: 100%;
   height: 100%;

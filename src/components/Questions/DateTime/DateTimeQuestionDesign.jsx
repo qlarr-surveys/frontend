@@ -5,15 +5,12 @@ import IconButton from "@mui/material/IconButton";
 import styles from "./DateTimeQuestionDesign.module.css";
 import { useSelector } from "react-redux";
 import { useEditableHint } from "~/hooks/useEditableHint";
-import { useTheme } from '@emotion/react';
 import Iconify from "~/components/iconify";
 
 function DateTimeQuestionDesign({ code, designMode }) {
   const state = useSelector((state) => {
     return state.designState[code];
   });
-
-  const theme = useTheme();
 
   const { hintText, isEditable, handleHintChange } = useEditableHint(code, designMode);
 
@@ -22,6 +19,7 @@ function DateTimeQuestionDesign({ code, designMode }) {
       <TextField
         size="small"
         variant="outlined"
+        className={`${styles.designTextField} ${isEditable ? '' : styles.noPointerEvents}`}
         required={
           state.validation?.validation_required?.isActive ? true : false
         }
@@ -35,10 +33,6 @@ function DateTimeQuestionDesign({ code, designMode }) {
               </IconButton>
             </InputAdornment>
           ),
-        }}
-        sx={{
-          pointerEvents: isEditable ? "auto" : "none",
-          input: { color: theme.palette.text.disabled },
         }}
       />
     </div>

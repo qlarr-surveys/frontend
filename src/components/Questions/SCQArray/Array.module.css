@@ -1,0 +1,30 @@
+:global(.MuiTableContainer-root).tableContainer {
+  overflow-x: auto;
+  max-width: 100%;
+}
+:global(.MuiTable-root).table {
+  table-layout: fixed;
+}
+:global(.MuiTableCell-root).rowLabelHeader {
+  padding: 2px;
+  width: var(--qlarr-cell-width);
+}
+:global(.MuiTableCell-root).columnHeader {
+  color: inherit;
+  padding: 2px;
+  width: var(--qlarr-cell-width);
+}
+:global(.MuiTableCell-root).rowLabelCell {
+  padding: 2px;
+  color: inherit;
+  word-wrap: break-word;
+}
+:global(.MuiTableCell-root).choiceCell {
+  padding: 2px;
+}
+:global(.MuiTableCell-root).validationCell {
+  padding: 8px;
+}
+.noBorder {
+  border-bottom: 0;
+}

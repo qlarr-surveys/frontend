@@ -29,6 +29,7 @@
   border-radius: 8px;
   cursor: grab;
   transition: box-shadow 0.2s ease, opacity 0.2s ease, transform 0.15s ease;
+  background-color: var(--qlarr-bg-paper);
 }
 
 .rankingItem:hover {
@@ -49,6 +50,8 @@
   align-items: center;
   flex-shrink: 0;
   cursor: grab;
+  font-size: 20px;
+  color: var(--qlarr-text-disabled);
 }
 
 .dragHandle:active {
@@ -71,11 +74,13 @@
   font-weight: 600;
   font-size: 14px;
   color: #fff;
+  background-color: var(--qlarr-primary);
 }
 
 .actionButton {
   flex-shrink: 0;
   margin-left: auto;
+  color: var(--qlarr-text-secondary);
 }
 
 .emptyState {
@@ -87,4 +92,36 @@
   border: 2px dashed;
   border-radius: 8px;
   padding: 24px;
+  border-color: var(--qlarr-divider);
+}
+
+.rankingGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.textSecondary {
+  color: var(--qlarr-text-secondary);
+}
+
+.textDisabled {
+  color: var(--qlarr-text-disabled);
+}
+
+.dragContainerOver {
+  background-color: var(--qlarr-action-hover);
+}
+
+.dragContainerDefault {
+  background-color: var(--qlarr-bg-default);
+}
+
+.dropArea {
+  min-height: 8px;
+}
+
+.dropAreaFill {
+  flex: 1;
+  min-height: 8px;
 }

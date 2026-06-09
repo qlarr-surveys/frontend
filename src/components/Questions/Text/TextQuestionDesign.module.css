@@ -9,3 +9,11 @@
     width: 100%;
   }
 }
+
+.designTextField :global(.MuiInputBase-input) {
+  color: var(--qlarr-text-disabled);
+}
+
+.noPointerEvents {
+  pointer-events: none;
+}

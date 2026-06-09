@@ -41,16 +41,9 @@ function NPS(props) {
           return (
             <Box
               key={option}
-              className={styles.choice}
+              className={isSelected ? styles.choiceSelected : styles.choice}
               onClick={() => handleChange(option)}
-              sx={{
-                color: isSelected
-                  ? highlightContrast
-                  : "inherit",
-                backgroundColor: isSelected
-                  ? "primary.main"
-                  : "background.paper",
-              }}
+              style={{ '--qlarr-highlight-contrast': highlightContrast }}
             >
               {option}
             </Box>

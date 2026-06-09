@@ -2,3 +2,20 @@
 .container {
   text-align: center;
 }
+
+.largeIcon {
+  font-size: 48px;
+}
+
+.videoWrapper {
+  position: relative;
+  margin-top: 16px;
+  padding-top: 56%;
+}
+
+.videoPlayer {
+  background-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+}

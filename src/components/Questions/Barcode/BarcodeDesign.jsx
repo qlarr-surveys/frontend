@@ -24,7 +24,7 @@ function BarcodeDesign({ code }) {
         variant="contained"
         color="primary"
       >
-        <QrCodeScannerIcon sx={{ fontSize: "48px" }} />
+        <QrCodeScannerIcon className={styles.largeIcon} />
       </Button>
       <br />
       {state.showHint && <span>{state.content?.[lang]?.hint || ""}</span>}

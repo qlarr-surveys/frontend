@@ -15,6 +15,13 @@
   font-size: larger;
   border: 1px solid;
   text-align: center;
+  background-color: var(--qlarr-bg-paper);
+}
+
+.choiceSelected {
+  composes: choice;
+  color: var(--qlarr-highlight-contrast);
+  background-color: var(--qlarr-primary);
 }
 
 .choiceLabels {

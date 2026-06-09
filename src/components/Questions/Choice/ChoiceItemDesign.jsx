@@ -204,9 +204,7 @@ function ChoiceItemDesign(props) {
             <DragIndicatorIcon
               color="action"
               ref={drag}
-              sx={{
-                fontSize: 18,
-              }}
+              className={styles.smallIcon}
             />
           </div>
         )}
@@ -226,14 +224,8 @@ function ChoiceItemDesign(props) {
             variant="outlined"
             size="small"
             fullWidth
-            sx={{
-              "& .MuiInputBase-input": {
-                color: theme.palette.text.disabled,
-              },
-              "& .MuiInputBase-root": {
-                backgroundColor: isInSetupText ? contrastColor : "inherit",
-              },
-            }}
+            className={`${styles.textFieldOther} ${isInSetupText ? styles.textFieldOtherHighlight : ""}`}
+            style={{ "--qlarr-contrast-color": contrastColor }}
             value={content || ""}
             onChange={(e) => {
               if (contentEditable(props.designMode)) {
@@ -257,8 +249,7 @@ function ChoiceItemDesign(props) {
                 <BuildIcon
                   key="setup"
                   color="action"
-                  sx={{ fontSize: 18 }}
-                  className={styles.answerIconOther}
+                  className={`${styles.smallIcon} ${styles.answerIconOther}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
@@ -298,7 +289,7 @@ function ChoiceItemDesign(props) {
         {props.type === "text" && (
           <>
             <TextField
-              sx={{ flex: 2, pointerEvents: "none" }}
+              className={styles.textFieldInert}
               size="small"
               value=""
               variant="outlined"
@@ -311,8 +302,7 @@ function ChoiceItemDesign(props) {
             <BuildIcon
               key="setup"
               color="action"
-              sx={{ fontSize: 18 }}
-              className={styles.answerIconSettings}
+              className={`${styles.smallIcon} ${styles.answerIconSettings}`}
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
@@ -330,8 +320,7 @@ function ChoiceItemDesign(props) {
           <CloseIcon
             key="close"
             color="action"
-            sx={{ fontSize: 18 }}
-            className={styles.answerIconSettings}
+            className={`${styles.smallIcon} ${styles.answerIconSettings}`}
             onClick={(e) => {
               e.stopPropagation();
               guard(() => dispatch(removeAnswer(props.qualifiedCode)), {

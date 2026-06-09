@@ -190,19 +190,13 @@ function Ranking(props) {
   };
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: "16px",
-      }}
-    >
+    <div className={styles.rankingGrid}>
       <div className={styles.column}>
         <div className={styles.columnHeader}>
-          <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
+          <Typography variant="subtitle2" className={styles.textSecondary}>
             Options
           </Typography>
-          <Typography variant="caption" sx={{ color: "text.disabled" }}>
+          <Typography variant="caption" className={styles.textDisabled}>
             {withoutOrder.length} remaining
           </Typography>
         </div>
@@ -222,10 +216,10 @@ function Ranking(props) {
       </div>
       <div className={styles.column}>
         <div className={styles.columnHeader}>
-          <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
+          <Typography variant="subtitle2" className={styles.textSecondary}>
             Your Ranking
           </Typography>
-          <Typography variant="caption" sx={{ color: "text.disabled" }}>
+          <Typography variant="caption" className={styles.textDisabled}>
             {withOrder.length} ranked
           </Typography>
         </div>
@@ -271,12 +265,7 @@ function RankingContainer({
   return (
     <Box
       ref={containerRef}
-      className={styles.dragContainer}
-      sx={{
-        backgroundColor: isOver
-          ? "action.hover"
-          : "background.default",
-      }}
+      className={`${styles.dragContainer} ${isOver ? styles.dragContainerOver : styles.dragContainerDefault}`}
     >
       {options.length === 0 && (
         <DropArea
@@ -287,9 +276,8 @@ function RankingContainer({
         >
           <Box
             className={styles.emptyState}
-            sx={{ borderColor: "divider" }}
           >
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            <Typography variant="body2" className={styles.textSecondary}>
               {isSorted
                 ? "Drag items here to rank them"
                 : "All items have been ranked"}
@@ -402,16 +390,14 @@ function RankingOption({
         data-handler-id={handlerId}
         className={isDragging ? styles.rankingItemDragging : styles.rankingItem}
         onDoubleClick={() => onDoubleClick(item)}
-        sx={{ backgroundColor: "background.paper" }}
       >
         {isSorted && rank != null && (
-          <Box className={styles.rankBadge} sx={{ backgroundColor: "primary.main" }}>
+          <Box className={styles.rankBadge}>
             {rank}
           </Box>
         )}
         <DragIndicatorIcon
           className={styles.dragHandle}
-          sx={{ color: "text.disabled", fontSize: 20 }}
         />
         <div className={styles.itemContent}>
           <Content
@@ -428,7 +414,6 @@ function RankingOption({
             onClickMove(option);
           }}
           className={styles.actionButton}
-          sx={{ color: "text.secondary" }}
         >
           {isSorted ? <CloseIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}
         </IconButton>
@@ -460,7 +445,7 @@ function DropArea({ index, onItemTransfer, itemType, fillParent, children }) {
   drop(containerRef);
   return (
     <div
-      style={{ flex: fillParent ? 1 : "inherit", minHeight: "8px" }}
+      className={fillParent ? styles.dropAreaFill : styles.dropArea}
       ref={containerRef}
       data-handler-id={handlerId}
     >

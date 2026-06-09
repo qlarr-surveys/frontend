@@ -5,10 +5,17 @@
   width: 100%;
   margin: auto;
   text-align: center;
+  max-width: var(--qlarr-canvas-width);
 }
 
 .container {
   padding: 8px;
+  background-color: var(--qlarr-bg-default);
+}
+
+.signatureImage {
+  width: var(--qlarr-canvas-width);
+  height: 200px;
 }
 
 .buttonContainer {

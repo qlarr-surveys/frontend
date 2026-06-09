@@ -40,9 +40,9 @@ function ImageDisplayDesign({ code, t, onMainLang }) {
     <div className={styles.imageContainer}>
       {!isUploading && state.resources?.imageUrl && (
         <img
+          className={styles.image}
           style={{
-            maxWidth: "100%",
-            width: state.imageWidth?.endsWith("%")
+            '--qlarr-image-width': state.imageWidth?.endsWith('%')
               ? state.imageWidth
               : undefined,
           }}

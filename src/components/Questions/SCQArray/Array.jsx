@@ -13,6 +13,7 @@ import { valueChange } from "~/state/runState";
 import Validation from "~/components/run/Validation";
 import { useColumnMinWidth } from "~/utils/design/utils";
 import Content from "~/components/run/Content";
+import styles from "./Array.module.css";
 
 function Array(props) {
   const theme = useTheme();
@@ -23,34 +24,20 @@ function Array(props) {
   const { header, rowLabel } = useColumnMinWidth(null, props.component);
 
   return (
-    <TableContainer
-      sx={{
-        overflowX: "auto",
-        maxWidth: "100%",
-      }}
-    >
-      <Table
-        sx={{
-          tableLayout: "fixed",
-        }}
-      >
+    <TableContainer className={styles.tableContainer}>
+      <Table className={styles.table}>
         <TableHead>
           <TableRow>
             <TableCell
               key="content"
-              sx={{
-                padding: "2px",
-                width: rowLabel + "px",
-              }}
+              className={styles.rowLabelHeader}
+              style={{ '--qlarr-cell-width': rowLabel + 'px' }}
             ></TableCell>
             {columns.map((option) => {
               return (
                 <TableCell
-                  sx={{
-                    color: "inherit",
-                    padding: "2px",
-                    width: header + "px",
-                  }}
+                  className={styles.columnHeader}
+                  style={{ '--qlarr-cell-width': header + 'px' }}
                   key={option.qualifiedCode}
                 >
                   <Content
@@ -126,12 +113,7 @@ function ArrayRow(props) {
     <React.Fragment>
       <TableRow key={props.answer.code} data-code={props.answer.code}>
         <TableCell
-          sx={{
-            borderBottom: invalid ? "0" : "",
-            padding: "2px",
-            color: "inherit",
-            wordWrap: "break-word",
-          }}
+          className={`${styles.rowLabelCell} ${invalid ? styles.noBorder : ''}`}
         >
           <Content
             elementCode={props.answer.qualifiedCode}
@@ -143,12 +125,9 @@ function ArrayRow(props) {
           return (
             <TableCell
               key={option.code}
-              component="th"
+              component="td"
               scope="row"
-              sx={{
-                borderBottom: invalid ? "0" : "",
-                padding: "2px",
-              }}
+              className={`${styles.choiceCell} ${invalid ? styles.noBorder : ''}`}
             >
               {props.type === "scq_array" ? (
                 <Radio
@@ -172,7 +151,7 @@ function ArrayRow(props) {
       {invalid ? (
         <TableRow>
           <TableCell
-            sx={{ padding: "8px" }}
+            className={styles.validationCell}
             colSpan={props.choices ? props.choices.length + 1 : 1}
           >
             <Validation component={props.answer} />

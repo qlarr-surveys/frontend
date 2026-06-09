@@ -32,16 +32,12 @@ function ImageMcqItem(props) {
   return (
     <Grid key={props.option.code} item xs={12 / props.columns}>
       <Box
-        className={styles.imageContainer}
+        className={`${styles.imageContainer} ${state.checked ? styles.imageContainerSelected : ''}`}
         onClick={() => handleChange(props.option.qualifiedCode, !state.checked)}
         style={{
-          backgroundImage: backgroundImage,
-          borderRadius: "4px",
-          margin: props.spacing + "px",
-          height: props.imageHeight + "px",
-          border: state.checked
-            ? `2px solid ${theme.palette.primary.main}`
-            : "2px solid transparent",
+          '--qlarr-bg-image': backgroundImage,
+          '--qlarr-spacing': props.spacing + 'px',
+          '--qlarr-image-height': props.imageHeight + 'px',
         }}
       >
         <Checkbox

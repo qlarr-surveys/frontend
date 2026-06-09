@@ -37,6 +37,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: var(--qlarr-question-font-size);
 }
 
 .titleQuestion {
@@ -100,6 +101,25 @@
     220,
     0.7
   ); /* Beige with partial transparency */
+}
+
+.questionSetup {
+  background-image: linear-gradient(var(--qlarr-contrast-color), var(--qlarr-contrast-color));
+  color: var(--qlarr-text-color);
+  outline: solid 3px var(--qlarr-outline-color);
+  outline-offset: -3px;
+}
+
+.questionHovered {
+  background-image: linear-gradient(var(--qlarr-hover-color), var(--qlarr-hover-color));
+  color: var(--qlarr-text-color);
+  outline: solid 1px var(--qlarr-outline-color);
+  outline-offset: -1px;
+}
+
+.questionDragging {
+  opacity: 0.2;
+  border: dotted 1px var(--qlarr-contrast-color);
 }
 
 @keyframes fadeHighlight {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { previewUrlByFilename, uploadFile } from "~/networking/run";
-import { styled, useTheme } from "@mui/material/styles";
+import styles from "./FileUpload.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import ValidationItem from "~/components/run/ValidationItem";
 import { valueChange } from "~/state/runState";
@@ -12,10 +12,6 @@ import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import LoadingDots from "~/components/common/LoadingDots";
 import { useService } from "~/hooks/use-service";
 import { fileTypesToMimesArray } from "~/state/design/addInstructions";
-
-const Input = styled("input")({
-  display: "none",
-});
 
 function FileUpload(props) {
   const runService = useService("run");
@@ -133,7 +129,8 @@ function FileUpload(props) {
   return (
     <div>
       <label htmlFor={`upload-file-${props.component.qualifiedCode}`}>
-        <Input
+        <input
+          className={styles.hiddenInput}
           id={`upload-file-${props.component.qualifiedCode}`}
           type="file"
           accept={accepted ? accepted.join(",") : undefined}
@@ -187,7 +184,7 @@ function FileUpload(props) {
       )}
 
       {isUploading ? (
-        <div style={{ textAlign: "center" }}>
+        <div className={styles.uploadingCenter}>
           <LoadingDots />
           <br />
           <span>{t("uploading")}</span>

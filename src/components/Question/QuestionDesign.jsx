@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 
 import styles from "./QuestionDesign.module.css";
@@ -155,15 +155,13 @@ function QuestionDesign({
   }, [lastAddedComponent, parentIndex, index]);
   const outlineColor = theme.palette.primary.main;
 
-  const customStyle = useMemo(() => {
-    return isInSetup
-      ? `background-color: ${contrastColor};color: ${textColor};outline: solid 3px ${outlineColor};outline-offset: -3px`
-      : hovered
-      ? `background-color: ${hoverColor};color: ${textColor};outline: solid 1px ${outlineColor};outline-offset: -1px`
-      : `opacity: ${isDragging ? "0.2" : "1"};border: ${
-          isDragging ? "dotted 1px " + contrastColor : "0"
-        };`;
-  }, [hovered, isDragging, isInSetup]);
+  const stateClass = isInSetup
+    ? styles.questionSetup
+    : hovered
+    ? styles.questionHovered
+    : isDragging
+    ? styles.questionDragging
+    : "";
 
   return (
     <div
@@ -183,10 +181,15 @@ function QuestionDesign({
       onMouseLeave={() => {
         setHovered(false);
       }}
-      css={css`
-        ${customStyle} ${question.customCss}
-      `}
-      className={`question ${isLast ? styles.groupQuestionLast : styles.groupQuestion }`}
+      className={`question ${isLast ? styles.groupQuestionLast : styles.groupQuestion} ${stateClass}`}
+      style={{
+        '--qlarr-contrast-color': contrastColor,
+        '--qlarr-hover-color': hoverColor,
+        '--qlarr-text-color': textColor,
+        '--qlarr-outline-color': outlineColor,
+        '--qlarr-question-font-size': theme.textStyles.question.size + 'px',
+      }}
+      css={question.customCss ? css`${question.customCss}` : undefined}
       data-code={code}
     >
       <Box className={styles.contentContainer}>
@@ -209,9 +212,6 @@ function QuestionDesign({
 
       <Box
         className={styles.titleContainer}
-        css={css`
-          font-size: ${theme.textStyles.question.size}px;
-        `}
       >
         <span style={{ width: "max-content", fontWeight: "bolder" }}>
           {order}.

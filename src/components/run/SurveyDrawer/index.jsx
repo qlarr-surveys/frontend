@@ -5,6 +5,7 @@ import React, { useMemo } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import { Close } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
+import { qlarrCssVars } from "~/components/Questions/qlarrVars";
 
 const drawerSx = {
   "& .MuiDrawer-paper": {
@@ -27,13 +28,7 @@ function SurveyDrawer({ expanded, toggleDrawer, t, onPendingScrollTarget }) {
   }, shallowEqual);
 
   const cssVars = useMemo(
-    () => ({
-      "--qlarr-on-paper": theme.palette.text.primary,
-      "--qlarr-hover-paper": theme.palette.action?.hover || "transparent",
-      "--qlarr-mild-border": theme.palette.divider,
-      "--qlarr-error": theme.palette.error?.main || "#d32f2f",
-      "--qlarr-primary": theme.palette.primary?.main || theme.palette.text.primary,
-    }),
+    () => qlarrCssVars(theme),
     [theme.palette],
   );
 

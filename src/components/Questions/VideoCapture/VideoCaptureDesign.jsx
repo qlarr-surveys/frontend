@@ -23,7 +23,7 @@ function VideoCaptureDesign({ code }) {
         variant="contained"
         color="primary"
       >
-        <VideocamIcon sx={{ fontSize: "48px" }} />
+        <VideocamIcon className={styles.largeIcon} />
       </Button>
       <br />
       {state.showHint && <span>{state.content?.[lang]?.hint || ""}</span>}

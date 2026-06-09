@@ -2,3 +2,16 @@
 .container {
   text-align: center;
 }
+
+.largeIcon {
+  font-size: 48px;
+}
+
+.photoContainer {
+  max-height: 400px;
+}
+
+.capturedImage {
+  max-height: 400px;
+  max-width: 100%;
+}

@@ -1,0 +1,9 @@
+.container {
+  text-align: center;
+  padding: 1em;
+}
+
+.image {
+  max-width: 100%;
+  width: var(--qlarr-image-width, auto);
+}

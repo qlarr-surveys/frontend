@@ -32,10 +32,8 @@ function IconScq(props) {
 
   return (
     <Box
-      sx={{
-        gap: `${props.component.spacing || 8}px`,
-      }}
       className={styles.iconFlexContainer}
+      style={{ '--qlarr-spacing': `${props.component.spacing || 8}px` }}
     >
       {props.component.answers.map((option) => {
         const isSelected = state.value == option.code;
@@ -45,20 +43,11 @@ function IconScq(props) {
           <Box
             data-code={option.code}
             key={option.code}
-            sx={{
-              flex: `0 1 calc(${100 / props.component.columns}% - ${
-                props.component.spacing || 8
-              }px)`,
-              textAlign: "center",
-              cursor: "pointer",
-            }}
+            className={styles.choiceItem}
+            style={{ '--qlarr-item-flex': `0 1 calc(${100 / props.component.columns}% - ${props.component.spacing || 8}px)` }}
           >
             <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-              }}
+              className={styles.iconCenter}
             >
               <DynamicSvg
                 onIconClick={() =>

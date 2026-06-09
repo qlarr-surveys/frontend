@@ -14,3 +14,15 @@
   text-align: center;
   vertical-align: middle;
 }
+
+.flexContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--qlarr-spacing);
+}
+
+.flexItem {
+  flex: var(--qlarr-item-flex);
+  max-width: var(--qlarr-item-max-width);
+}

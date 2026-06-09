@@ -6,16 +6,11 @@ import { Box } from "@mui/material";
 import { setDirty } from "~/state/templateState";
 import Content from "~/components/run/Content";
 import Validation from "~/components/run/Validation";
+import styles from "./MultipleText.module.css";
 
 function MultipleText(props) {
   return (
-    <Box
-      style={{
-        gap: "10px",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <Box className={styles.container}>
       {props.component.answers.map((option) => {
         return <MultipleTextItem key={option.qualifiedCode} item={option} />;
       })}
@@ -61,16 +56,11 @@ function MultipleTextItem({ item }) {
   return (
     <Box
       data-code={item.code}
-      sx={{
-        gap: "10px",
-        display: "flex",
-      }}
+      className={styles.itemRow}
     >
       <div
-        style={{
-          flex: "1",
-          fontSize: `${theme.textStyles.text.size}px`,
-        }}
+        className={styles.labelColumn}
+        style={{ '--qlarr-text-size': `${theme.textStyles.text.size}px` }}
       >
         <Content
           elementCode={item.code}
@@ -90,9 +80,7 @@ function MultipleTextItem({ item }) {
         fullWidth
         onChange={handleChange}
         required={item.validation?.required}
-        sx={{
-          flex: 2,
-        }}
+        className={styles.textField}
       />
     </Box>
   );

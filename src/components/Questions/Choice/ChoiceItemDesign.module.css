@@ -60,3 +60,20 @@
   margin-left: 43px;
   width: 50%;
 }
+
+.smallIcon {
+  font-size: 18px;
+}
+
+.textFieldOther :global(.MuiInputBase-input) {
+  color: var(--qlarr-text-disabled);
+}
+
+.textFieldOtherHighlight :global(.MuiInputBase-root) {
+  background-color: var(--qlarr-contrast-color);
+}
+
+.textFieldInert {
+  flex: 2;
+  pointer-events: none;
+}

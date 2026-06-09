@@ -70,24 +70,13 @@ function ArrayDesign(props) {
         </div>
       )}
 
-      <TableContainer
-        sx={{
-          overflowX: "auto",
-          maxWidth: "100%",
-        }}
-      >
-        <Table
-          sx={{
-            tableLayout: "fixed",
-          }}
-        >
+      <TableContainer className={styles.tableContainer}>
+        <Table className={styles.table}>
           <TableHead>
             <TableRow>
               <TableCell
-                sx={{
-                  padding: "2px",
-                  width: rowLabel + "px",
-                }}
+                className={styles.rowLabelHeader}
+                style={{ '--qlarr-cell-width': rowLabel + 'px' }}
                 key="move"
               ></TableCell>
               {columns.map((item, index) => {
@@ -106,10 +95,7 @@ function ArrayDesign(props) {
               })}
               {inDesign(props.designMode) && (
                 <TableCell
-                  sx={{
-                    width: "20px",
-                    padding: "0",
-                  }}
+                  className={styles.removeColumnHeader}
                   key="remove"
                 ></TableCell>
               )}
@@ -273,18 +259,13 @@ function ArrayRowDesign({
   return (
     <TableRow
       data-code={item.code}
-      style={{
-        opacity: isDragging ? "0.2" : "1",
-      }}
+      className={isDragging ? styles.dragging : ''}
       ref={ref}
       key={item.code}
       data-handler-id={handlerId}
     >
       <TableCell
-        sx={{
-          color: "inherit",
-          padding: "2px",
-        }}
+        className={styles.rowLabelCell}
       >
         <Box display="flex" alignItems="center">
           {inDesign(designMode) && (
@@ -320,9 +301,7 @@ function ArrayRowDesign({
             key={index}
             scope="row"
             align="center"
-            sx={{
-              padding: "0px",
-            }}
+            className={styles.choiceCell}
           >
             {type === "scq_array" ? <Radio /> : <Checkbox />}
           </TableCell>
@@ -337,10 +316,7 @@ function ArrayRowDesign({
             });
           }}
           key="remove"
-          sx={{
-            width: "30px",
-            padding: "0",
-          }}
+          className={styles.removeCellDesign}
         >
           <CloseIcon color="action" />
           {modal}
@@ -439,30 +415,19 @@ function ArrayHeaderDesign({
       ref={ref}
       data-handler-id={handlerId}
       align="center"
-      sx={{
-        color: "inherit",
-        opacity: isDragging ? "0.2" : "1",
-        padding: "2px",
-        width: width + "px",
-      }}
-      style={{ width: width + "px" }}
+      className={`${styles.headerCell} ${isDragging ? styles.dragging : ''}`}
+      style={{ '--qlarr-cell-width': width + 'px' }}
       key={item.qualifiedCode}
     >
       {inDesign(designMode) && (
-        <div style={{ display: "inline-flex" }}>
+        <div className={styles.inlineFlex}>
           <div
             ref={drag}
             key="move"
-            sx={{
-              padding: "0",
-            }}
           >
             <DragIndicatorIcon color="action" />
           </div>
           <div
-            sx={{
-              padding: "0",
-            }}
             onClick={(e) => {
               e.stopPropagation();
               guard(() => dispatch(removeAnswer(item.qualifiedCode)), {

@@ -1,4 +1,5 @@
 import { buildResourceUrl } from "~/networking/common";
+import styles from "./ImageDisplay.module.css";
 
 function ImageDisplay(props) {
   const imageUrl = props.component.resources?.imageUrl
@@ -6,13 +7,13 @@ function ImageDisplay(props) {
     : "";
   return (
     props.component.resources?.imageUrl && (
-      <div style={{ textAlign: "center", padding: "1em" }}>
+      <div className={styles.container}>
         <img
+          className={styles.image}
           style={{
-            width: props.component.imageWidth?.endsWith("%")
+            '--qlarr-image-width': props.component.imageWidth?.endsWith('%')
               ? props.component.imageWidth
               : undefined,
-            maxWidth:"100%"
           }}
           src={imageUrl}
         />

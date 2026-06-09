@@ -5,7 +5,7 @@ import Question from "~/components/Question";
 import Content, { replaceFormatInstructions } from "~/components/run/Content";
 
 import styles from "./Group.module.css";
-import { Box, css, Divider, useTheme } from "@mui/material";
+import { alpha, Box, css, Divider, useTheme } from "@mui/material";
 
 function Group(props) {
   const theme = useTheme();
@@ -37,11 +37,9 @@ function Group(props) {
       <Box
         data-code={props.group.code}
         className={styles.topLevel}
-        sx={{
-          width:"100%",
-          borderRadius: "12px",
-          boxShadow: "0 4px 20px rgba(22, 32, 91, 0.08)",
-          backgroundColor: theme.palette.background.paper,
+        style={{
+          '--qlarr-shadow-color': alpha(theme.textStyles.question.color, 0.15),
+          '--qlarr-bg-color': theme.palette.background.paper,
         }}
         css={css`
           ${replaceFormatInstructions(props.group.customCss, formatState, "custom_css")}

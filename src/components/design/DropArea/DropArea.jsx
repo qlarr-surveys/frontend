@@ -250,6 +250,7 @@ export function QuestionDropArea({
             justifyContent="center"
             alignItems="center"
             gap="16px"
+            sx={{ color: theme.textStyles.question.color }}
             className={styles.emptyGroupContent}
           >
             <span
@@ -257,7 +258,7 @@ export function QuestionDropArea({
             >
               <Trans t={t} i18nKey="end_page_empty_hint" />
             </span>
-            <Box className={styles.endPageActions}>
+            <Box className={styles.endPageActions} >
               <div
                 className={styles.endPageActionItem}
                 onClick={() =>

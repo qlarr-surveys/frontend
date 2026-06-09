@@ -25,4 +25,17 @@
 .iconFlexContainer {
   display: flex;
   flex-wrap: wrap;
+  gap: var(--qlarr-spacing);
+}
+
+.choiceItem {
+  flex: var(--qlarr-item-flex);
+  text-align: center;
+  cursor: pointer;
+}
+
+.iconCenter {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }

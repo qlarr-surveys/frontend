@@ -99,21 +99,18 @@ function Signature(props) {
   return (
     <>
       <Box
-        sx={{ backgroundColor: "background.default" }}
         className={styles.container}
       >
         <Box
           ref={containerRef}
-          sx={{ maxWidth: Math.min(canvasWidth, 400) + "px" }}
           className={styles.signatureCanvas}
+          style={{ '--qlarr-canvas-width': Math.min(canvasWidth, 400) + 'px' }}
         >
           {signature ? (
             <img
               src={signature}
-              style={{
-                width: Math.min(canvasWidth, 400) + "px",
-                height: "200px",
-              }}
+              className={styles.signatureImage}
+              style={{ '--qlarr-canvas-width': Math.min(canvasWidth, 400) + 'px' }}
             />
           ) : (
             <SignatureCanvas

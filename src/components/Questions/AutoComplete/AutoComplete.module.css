@@ -58,3 +58,40 @@
   padding: 1em;
   text-align: center;
 }
+
+.largerText {
+  font-size: larger;
+}
+
+.alertMarginBottom {
+  margin-bottom: 8px;
+}
+
+.autocompleteMarginTop {
+  margin-top: 8px;
+}
+
+.textFieldHalf {
+  width: 50%;
+}
+
+.dialogCloseButton {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+
+.textFieldMarginBottom {
+  margin-bottom: 12px;
+}
+
+.autocompleteResponsive {
+  width: 100%;
+  margin-top: 8px;
+}
+
+@media (min-width: 600px) {
+  .autocompleteResponsive {
+    width: 50%;
+  }
+}

@@ -76,22 +76,13 @@ function SCQIconArrayDesign(props) {
         </div>
       )}
 
-      <TableContainer
-        sx={{
-          overflowX: "auto",
-          maxWidth: "100%",
-        }}
-      >
-        <Table
-          sx={{ tableLayout: "fixed", minWidth: `${columns.length * 120}px` }}
-        >
+      <TableContainer className={styles.tableContainer}>
+        <Table className={styles.tableMinWidth} style={{ '--qlarr-table-min-width': `${columns.length * 120}px` }}>
           <TableHead>
             <TableRow>
               <TableCell
-                sx={{
-                  width: width,
-                  padding: "0px",
-                }}
+                className={styles.emptyHeader}
+                style={{ '--qlarr-cell-width': width }}
                 key="move"
               ></TableCell>
               {columns.map((item, index) => {
@@ -111,11 +102,7 @@ function SCQIconArrayDesign(props) {
               })}
               {inDesign && (
                 <TableCell
-                  sx={{
-                    width: "30px",
-
-                    padding: "0",
-                  }}
+                  className={styles.removeCellDesign}
                   key="remove"
                 ></TableCell>
               )}
@@ -263,19 +250,14 @@ function SCQArrayRowDesign({
   return (
     <TableRow
       data-code={item.code}
-      style={{
-        opacity: isDragging ? "0.2" : "1",
-      }}
+      className={isDragging ? styles.dragging : ''}
       ref={ref}
       key={item.code}
       data-handler-id={handlerId}
     >
       <TableCell
-        sx={{
-          padding: "2px",
-          color: "inherit",
-          width: width,
-        }}
+        className={styles.rowCellWithWidth}
+        style={{ '--qlarr-cell-width': width }}
       >
         <Box display="flex" alignItems="center">
           {inDesign && (
@@ -308,9 +290,7 @@ function SCQArrayRowDesign({
             key={index}
             scope="row"
             align="center"
-            sx={{
-              padding: "2px",
-            }}
+            className={styles.iconChoiceCell}
           >
             <DynamicSvg
               opacity={0.2}
@@ -331,10 +311,7 @@ function SCQArrayRowDesign({
             });
           }}
           key="remove"
-          sx={{
-            width: "30px",
-            padding: "0",
-          }}
+          className={styles.removeCellDesign}
         >
           <CloseIcon color="action" />
           {modal}
@@ -461,28 +438,18 @@ function SCQArrayHeaderDesign({
         ref={ref}
         data-handler-id={handlerId}
         align="center"
-        sx={{
-          color: "inherit",
-          opacity: isDragging ? "0.2" : "1",
-          padding: "2px",
-        }}
+        className={`${styles.headerCellIcon} ${isDragging ? styles.dragging : ''}`}
         key={item.qualifiedCode}
       >
         {inDesign && (
-          <div style={{ display: "inline-flex" }}>
+          <div className={styles.inlineFlex}>
             <div
               ref={drag}
               key="move"
-              sx={{
-                padding: "0",
-              }}
             >
               <DragIndicatorIcon color="action" />
             </div>
             <div
-              sx={{
-                padding: "0",
-              }}
               onClick={(e) => {
                 e.stopPropagation();
                 guard(() => dispatch(removeAnswer(item.qualifiedCode)), {

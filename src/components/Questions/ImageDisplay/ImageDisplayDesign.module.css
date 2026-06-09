@@ -15,3 +15,8 @@
   padding: 1em;
   text-align: center;
 }
+
+.image {
+  max-width: 100%;
+  width: var(--qlarr-image-width, auto);
+}

@@ -208,15 +208,12 @@ function IconChoiceItemDesign({
   return type == "add" ? (
     <Grid item xs={12 / columnNumber} key="add">
       <Box
-        className={styles.addAnswerButton}
+        className={`${styles.addAnswerButton} ${styles.addButtonBox}`}
         onClick={() => {
           addAnswer();
         }}
         style={{
-          height: cellHeight + "px",
-          borderRadius: "4px",
-          backgroundColor: theme.palette.background.default,
-          width: "100%",
+          "--qlarr-cell-height": cellHeight + "px",
         }}
       >
         <AddIcon className={styles.addAnswerIcon} color="action" />
@@ -225,9 +222,9 @@ function IconChoiceItemDesign({
   ) : (
     <>
       <Grid
+        className={`${isDragging ? styles.dragging : ""} ${styles.gridItemHeight}`}
         style={{
-          opacity: isDragging ? "0.2" : "1",
-          minHeight: cellHeight + "px",
+          "--qlarr-cell-height": cellHeight + "px",
         }}
         item
         data-code={code}
@@ -300,13 +297,7 @@ function IconChoiceItemDesign({
               </div>
             </div>
           )}
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
+          <div className={styles.iconCenter}>
             <DynamicSvg
               theme={theme}
               imageHeight={imageHeight + "px"}

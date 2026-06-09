@@ -16,3 +16,15 @@
 .wordCount {
   text-align: end;
 }
+
+.designTextField :global(.MuiInputBase-input) {
+  color: var(--qlarr-text-disabled);
+}
+
+.designTextField textarea {
+  color: var(--qlarr-text-disabled);
+}
+
+.noPointerEvents {
+  pointer-events: none;
+}

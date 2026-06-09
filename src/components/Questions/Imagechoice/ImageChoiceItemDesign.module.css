@@ -37,3 +37,28 @@
   vertical-align: middle;
   cursor: pointer;
 }
+
+.addButtonBox {
+  position: relative;
+  width: 100%;
+  padding-top: var(--qlarr-aspect-padding);
+  background-color: var(--qlarr-bg-default);
+  border-radius: 4px;
+}
+
+.addButtonOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dragging {
+  opacity: 0.2;
+}
+
+.imageContainerDynamic {
+  padding-top: var(--qlarr-aspect-padding);
+  background-image: var(--qlarr-bg-image);
+}

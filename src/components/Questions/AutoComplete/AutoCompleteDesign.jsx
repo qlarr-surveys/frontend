@@ -129,7 +129,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
     <>
       {!isUploading && state.autoComplete && (
         <>
-          <p style={{ fontSize: "larger" }}>
+          <p className={styles.largerText}>
             <strong>{t("data_uploaded")}</strong>
           </p>
           <p>
@@ -152,14 +152,14 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
 
       <Autocomplete
         id="readOnly"
-        sx={{ marginTop: "8px" }}
+        className={styles.autocompleteMarginTop}
         readOnly
         noOptionsText={t('logic_builder.no_options')}
         options={[]}
         renderInput={(params) => (
           <TextField
             {...params}
-            sx={{ width: "50%" }}
+            className={styles.textFieldHalf}
             value=""
             label={state.showHint && (state.content?.[lang]?.hint || "")}
             variant="outlined"
@@ -222,7 +222,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
           <IconButton
             aria-label="close"
             onClick={() => setDialogOpen(false)}
-            sx={{ position: "absolute", right: 8, top: 8 }}
+            className={styles.dialogCloseButton}
           >
             <CloseIcon />
           </IconButton>
@@ -230,7 +230,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
 
         <DialogContent dividers>
           {dialogError && (
-            <Alert severity="error" sx={{ mb: 1 }} onClose={() => setDialogError(null)}>
+            <Alert severity="error" className={styles.alertMarginBottom} onClose={() => setDialogError(null)}>
               {dialogError}
             </Alert>
           )}
@@ -243,7 +243,7 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
             placeholder={t("manual_entry_placeholder")}
             value={manualValues}
             onChange={(e) => setManualValues(e.target.value)}
-            sx={{ marginBottom: "12px" }}
+            className={styles.textFieldMarginBottom}
           />
         </DialogContent>
 

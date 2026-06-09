@@ -26,6 +26,7 @@ import Image from "~/components/image/image";
 import CompactLayout from "~/layouts/compact";
 import { isEquivalent } from "~/utils/design/utils";
 import RunLoadingDots from "~/components/common/RunLoadingDots";
+import { qlarrCssVars } from "~/components/Questions/qlarrVars";
 
 import SurveyDrawer, { COLLAPSE, EXPAND } from "~/components/run/SurveyDrawer";
 import SurveyAppBar from "~/components/run/SurveyAppBar";
@@ -349,6 +350,7 @@ function RunSurvey({
                 style={{
                   backgroundColor: theme.palette.background.default,
                   height: "calc(100vh - 48px)",
+                  ...qlarrCssVars(theme),
                 }}
               >
                 {!SURVEY_ENDED && (

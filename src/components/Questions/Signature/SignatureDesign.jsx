@@ -7,16 +7,10 @@ function SignatureDesign() {
   return (
     <Box
       className={styles.signatureCanvas}
-      sx={{ backgroundColor: "background.default" }}
     >
       <img
         src="/signature.png"
-        style={{
-          backgroundColor: "rgba(255,255,255,255)",
-          width: "80%",
-          maxWidth: "500px",
-          height: "200px",
-        }}
+        className={styles.signatureImage}
       />
     </Box>
   );

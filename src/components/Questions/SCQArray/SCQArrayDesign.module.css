@@ -36,3 +36,61 @@
   border-radius: 9999px;
   padding: 0.5rem 1rem;
 }
+
+:global(.MuiTableContainer-root).tableContainer {
+  overflow-x: auto;
+  max-width: 100%;
+}
+:global(.MuiTable-root).table {
+  table-layout: fixed;
+}
+:global(.MuiTableCell-root).rowLabelHeader {
+  padding: 2px;
+  width: var(--qlarr-cell-width);
+}
+:global(.MuiTableCell-root).removeColumnHeader {
+  width: 20px;
+  padding: 0;
+}
+.dragging {
+  opacity: 0.2;
+}
+:global(.MuiTableCell-root).rowLabelCell {
+  color: inherit;
+  padding: 2px;
+}
+:global(.MuiTableCell-root).choiceCell {
+  padding: 0;
+}
+:global(.MuiTableCell-root).removeCellDesign {
+  width: 30px;
+  padding: 0;
+}
+:global(.MuiTableCell-root).headerCell {
+  color: inherit;
+  padding: 2px;
+  width: var(--qlarr-cell-width);
+}
+.inlineFlex {
+  display: inline-flex;
+}
+:global(.MuiTable-root).tableMinWidth {
+  table-layout: fixed;
+  min-width: var(--qlarr-table-min-width);
+}
+:global(.MuiTableCell-root).emptyHeader {
+  width: var(--qlarr-cell-width);
+  padding: 0;
+}
+:global(.MuiTableCell-root).rowCellWithWidth {
+  padding: 2px;
+  color: inherit;
+  width: var(--qlarr-cell-width);
+}
+:global(.MuiTableCell-root).iconChoiceCell {
+  padding: 2px;
+}
+:global(.MuiTableCell-root).headerCellIcon {
+  color: inherit;
+  padding: 2px;
+}

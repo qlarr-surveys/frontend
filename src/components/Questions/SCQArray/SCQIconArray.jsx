@@ -14,6 +14,7 @@ import { buildResourceUrl } from "~/networking/common";
 import { TableHead } from "@mui/material";
 import { useColumnMinWidth } from "~/utils/design/utils";
 import Content from "~/components/run/Content";
+import styles from "./SCQIconArray.module.css";
 
 function SCQIconArray(props) {
   const theme = useTheme();
@@ -25,32 +26,20 @@ function SCQIconArray(props) {
   let rows = props.component.answers.filter((answer) => answer.type == "row");
 
   return (
-    <TableContainer
-      sx={{
-        overflowX: "auto",
-        maxWidth: "100%",
-      }}
-    >
-      <Table
-        sx={{ tableLayout: "fixed", minWidth: `${columns.length * width}px` }}
-      >
+    <TableContainer className={styles.tableContainer}>
+      <Table className={styles.table} style={{ '--qlarr-table-min-width': `${columns.length * width}px` }}>
         <TableHead>
           <TableRow>
             <TableCell
               key="content"
-              sx={{
-                width: width,
-                padding: "0px",
-              }}
+              className={styles.emptyHeader}
+              style={{ '--qlarr-cell-width': width }}
             ></TableCell>
             {columns.map((option) => {
               return (
                 <TableCell
-                  sx={{
-                    color: "inherit",
-                    textAlign: "center",
-                    width: width,
-                  }}
+                  className={styles.columnHeader}
+                  style={{ '--qlarr-cell-width': width }}
                   key={option.qualifiedCode}
                 >
                   <Content
@@ -115,11 +104,7 @@ function SCQArrayRow(props) {
     <React.Fragment>
       <TableRow key={props.answer.code} data-code={props.answer.code}>
         <TableCell
-          sx={{
-            color: "inherit",
-            borderBottom: invalid ? "0" : "",
-            padding: "2px",
-          }}
+          className={`${styles.rowLabelCell} ${invalid ? styles.noBorder : ''}`}
         >
           <Content
             elementCode={props.answer.qualifiedCode}
@@ -133,11 +118,8 @@ function SCQArrayRow(props) {
               key={option.code}
               component="th"
               scope="row"
-              sx={{
-                borderBottom: invalid ? "0" : "",
-                padding: "2px",
-                width: props.width,
-              }}
+              className={`${styles.choiceCell} ${invalid ? styles.noBorder : ''}`}
+              style={{ '--qlarr-cell-width': props.width }}
             >
               <DynamicSvg
                 onIconClick={() => handleChange(option.code)}
@@ -157,7 +139,7 @@ function SCQArrayRow(props) {
       {invalid ? (
         <TableRow>
           <TableCell
-            sx={{ padding: "2px" }}
+            className={styles.validationCell}
             colSpan={props.choices ? props.choices.length + 1 : 1}
           >
             <Validation component={props.answer} />

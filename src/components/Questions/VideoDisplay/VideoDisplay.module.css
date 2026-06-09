@@ -10,3 +10,16 @@
   text-align: center;
   margin-top: 24px;
 }
+
+.videoWrapper {
+  position: relative;
+  margin-top: 16px;
+  padding-top: var(--qlarr-video-padding);
+}
+
+.videoPlayer {
+  background-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+}

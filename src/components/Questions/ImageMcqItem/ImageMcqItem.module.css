@@ -1,7 +1,16 @@
 .imageContainer {
-  background-size: contain;
+  background-image: var(--qlarr-bg-image);
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  border-radius: 4px;
+  margin: var(--qlarr-spacing);
+  height: var(--qlarr-image-height);
+  border: 2px solid transparent;
+}
+
+.imageContainerSelected {
+  border-color: var(--qlarr-primary) !important;
 }
 
 .selection {

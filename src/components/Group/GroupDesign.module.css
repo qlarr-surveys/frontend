@@ -123,6 +123,25 @@
   ); /* Beige with partial transparency */
 }
 
+.groupBase {
+  padding: 1rem 0rem 0rem 0rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px var(--qlarr-shadow-color);
+  background-color: var(--qlarr-bg-color);
+}
+
+.groupSetup {
+  outline: solid 3px var(--qlarr-outline-color);
+  outline-offset: -3px;
+  background-image: linear-gradient(var(--qlarr-setup-bg), var(--qlarr-setup-bg));
+}
+
+.groupHovered {
+  outline: solid 1px var(--qlarr-outline-color);
+  outline-offset: -1px;
+  background-image: linear-gradient(var(--qlarr-hover-bg), var(--qlarr-hover-bg));
+}
+
 @keyframes fadeHighlight {
   0% {
     background-color: rgba(

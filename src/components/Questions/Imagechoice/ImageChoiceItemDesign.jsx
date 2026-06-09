@@ -212,27 +212,15 @@ function ImageChoiceItemDesign({
   return type == "add" ? (
     <Grid item xs={12 / columnNumber} key="add">
       <Box
-        className={styles.addAnswerButton}
+        className={`${styles.addAnswerButton} ${styles.addButtonBox}`}
         onClick={() => {
           addAnswer();
         }}
         style={{
-          position: "relative",
-          width: "100%",
-          paddingTop: 100 / imageAspectRatio + "%",
-          backgroundColor: theme.palette.background.default,
-          borderRadius: "4px",
+          "--qlarr-aspect-padding": 100 / imageAspectRatio + "%",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+        <div className={styles.addButtonOverlay}>
           <AddIcon className={styles.addAnswerIcon} color="action" />
         </div>
       </Box>
@@ -240,9 +228,7 @@ function ImageChoiceItemDesign({
   ) : (
     <>
       <Grid
-        style={{
-          opacity: isDragging ? "0.2" : "1",
-        }}
+        className={isDragging ? styles.dragging : ""}
         item
         data-code={code}
         position="relative"
@@ -256,10 +242,10 @@ function ImageChoiceItemDesign({
           />
         )}
         <div
-          className={styles.imageContainer}
+          className={`${styles.imageContainer} ${styles.imageContainerDynamic}`}
           style={{
-            paddingTop: 100 / imageAspectRatio + "%",
-            backgroundImage: backgroundImage,
+            "--qlarr-aspect-padding": 100 / imageAspectRatio + "%",
+            "--qlarr-bg-image": backgroundImage,
           }}
           ref={ref}
           data-handler-id={handlerId}

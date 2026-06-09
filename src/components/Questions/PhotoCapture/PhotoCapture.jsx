@@ -66,23 +66,20 @@ function PhotoCapture(props) {
   };
 
   return (
-    <Box className={styles.container} sx={{ maxHeight: "400px" }}>
+    <Box className={`${styles.container} ${styles.photoContainer}`}>
       {!state.value || !state.value.stored_filename ? (
         <Button
           onClick={onImageClick}
           variant="contained"
           color="primary"
         >
-          <PhotoCameraIcon sx={{ fontSize: "48px" }} />
+          <PhotoCameraIcon className={styles.largeIcon} />
         </Button>
       ) : (
         <img
           onClick={onImageClick}
           src={previewUrlByFilename(state.value.stored_filename)}
-          style={{
-            maxHeight: "400px",
-            maxWidth: "100%",
-          }}
+          className={styles.capturedImage}
         />
       )}
       <br />
