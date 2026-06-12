@@ -101,14 +101,19 @@ function setValueInState(state, payload) {
         "VALUE CHANGE"
       );
     } catch (e) {
-      // In a single-question design preview the survey is compiled in isolation,
-      // so an instruction can run against a half-initialised dependency (e.g. a
-      // list validation reading a not-yet-array value) and throw. Don't let that
-      // abort the whole reducer — record the user's input so the control still
-      // reflects the selection; dependent recomputation is best-effort here.
-      // Scoped to the single-question preview so real runs keep their behaviour.
-      if (!state.singleQuestion) throw e;
-      console.warn("Preview state machine skipped a failing instruction:", e);
+      // A preview can run an instruction against a value of the wrong shape and
+      // throw — e.g. a list validation (validation_list) calling .every() on a
+      // single-choice string, typically a stale validation left behind after a
+      // question's type was converted. Don't let that abort the whole reducer:
+      // record the user's input so the control still reflects the selection and
+      // surface the cause. Real respondent runs (preview=false) stay strict so
+      // we never silently accept invalid data on submit.
+      if (!state.preview) throw e;
+      console.warn(
+        `Preview skipped a failing instruction for "${componentCode}" ` +
+          `(likely a validation incompatible with the question type):`,
+        e
+      );
       element["value"] = value;
     }
     console.debug("NEW STATE in: " + (Date.now() - time) + " millis");
