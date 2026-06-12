@@ -76,9 +76,10 @@ export const refreshEnumForSingleChoice = (component, state) => {
     case "image_scq":
     case "icon_scq":
     case "scq":
-      let valueInstruction = component.instructionList.find(
+      let valueInstruction = component.instructionList?.find(
         (it) => it.code == "value",
       );
+      if (!valueInstruction) break;
       if (component.children && component.children.length) {
         valueInstruction.returnType = {
           type: "enum",
@@ -147,9 +148,10 @@ export const refreshListForMultipleChoice = (component, state) => {
     case "image_mcq":
     case "icon_mcq":
     case "mcq":
-      let valueInstruction = component.instructionList.find(
+      let valueInstruction = component.instructionList?.find(
         (it) => it.code == "value",
       );
+      if (!valueInstruction) break;
       if (component.children && component.children.length) {
         valueInstruction.returnType = {
           type: "list",

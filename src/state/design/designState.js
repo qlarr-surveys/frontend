@@ -20,7 +20,10 @@ import {
   setupOptions,
   themeSetup,
 } from "~/constants/design";
-import { convertChoiceQuestion } from "./convertChoiceQuestion";
+import {
+  convertChoiceQuestion,
+  normalizeChoiceValidations,
+} from "./convertChoiceQuestion";
 import { convertArrayQuestion } from "./convertArrayQuestion";
 import { convertTextQuestion } from "./convertTextQuestion";
 import { convertDateTimeQuestion } from "./convertDateTimeQuestion";
@@ -108,6 +111,29 @@ export const designState = createSlice({
       newKeys.forEach((key) => {
         state[key] = newState[key];
       });
+
+      // Self-heal drifted choice questions on load. A question's value handling
+      // must match its selection model. A question narrowed multi→single on an
+      // older build (before conversion cleaned this up) can keep a `list` value
+      // returnType and/or a stale multi-select validation; the engine then emits
+      // its list validation (validation_list), which calls .every() on the now
+      // single-choice string value and crashes the run/preview on selection.
+      // Re-derive the value returnType and strip selection-model-incompatible
+      // validations from the current type. All three helpers are type-guarded
+      // (non-choice nodes are no-ops) and only touch value returnType + the
+      // incompatible validations. `designStateReceived` isn't a save-triggering
+      // action, so this doesn't autosave on load; `latest` is snapshotted from
+      // the untouched payload, so the correction is a pending change that
+      // persists (reaching the backend, fixing real runs) on the next save.
+      newKeys.forEach((key) => {
+        const node = state[key];
+        if (node?.type) {
+          normalizeChoiceValidations(node);
+          refreshEnumForSingleChoice(node, state);
+          refreshListForMultipleChoice(node, state);
+        }
+      });
+
       state.versionDto = response.versionDto;
       state.componentIndex = response.designerInput.componentIndexList;
       state["latest"] = structuredClone(newState);
