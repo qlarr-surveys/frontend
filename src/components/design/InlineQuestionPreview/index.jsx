@@ -48,6 +48,7 @@ function InlineQuestionPreview({ code, onClose }) {
   const [reloadNonce, setReloadNonce] = useState(0);
 
   const wrapperRef = useRef(null);
+  const hasScrolledRef = useRef(false);
   const previewStoreRef = useRef(null);
   if (!previewStoreRef.current) {
     previewStoreRef.current = createPreviewStore();
@@ -74,13 +75,17 @@ function InlineQuestionPreview({ code, onClose }) {
     }
   }, [i18n]);
 
-  // Bring the freshly-opened preview into view (the design canvas is the scroller).
+  // Bring the preview into view once the first compile settles — the wrapper only
+  // reaches its real height when the rendered question (or the error box) lands.
+  // One-shot: later recomputes (every debounced edit) must never yank the view.
   useEffect(() => {
+    if (hasScrolledRef.current || (!response && !error)) return;
+    hasScrolledRef.current = true;
     const id = requestAnimationFrame(() => {
       wrapperRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
     return () => cancelAnimationFrame(id);
-  }, []);
+  }, [response, error]);
 
   // Debounced, fully client-side recompute. Reading getState() directly (rather
   // than dispatching a design action) keeps this off the autosave middleware.

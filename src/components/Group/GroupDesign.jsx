@@ -223,7 +223,14 @@ function GroupDesign({
           return (
             <React.Fragment key={quest.code}>
               {inDesign && (
-                <Collapse in={previewQuestionCode === quest.code} mountOnEnter unmountOnExit>
+                <Collapse
+                  in={previewQuestionCode === quest.code}
+                  mountOnEnter
+                  unmountOnExit
+                  onEntered={(node) =>
+                    node.scrollIntoView({ behavior: "smooth", block: "nearest" })
+                  }
+                >
                   <InlineQuestionPreview
                     code={quest.code}
                     onClose={() => dispatch(setPreviewQuestionCode(null))}
