@@ -111,35 +111,6 @@ export function truncateWithEllipsis(text, maxLength) {
 export const isQuestion = (code) => QUESTION_CODE_PATTERN.test(code);
 export const isGroup = (code) => GROUP_CODE_PATTERN.test(code);
 
-/**
- * Resolve a selected design component to the question that should be previewed.
- * - A question code returns itself.
- * - A group code returns its first question (if any).
- * - An answer/sub-component code returns its owning question.
- * Returns null when no question can be resolved (e.g. an empty group).
- */
-export const resolvePreviewQuestionCode = (designState, code) => {
-  if (!designState || !code) return null;
-  if (isQuestion(code)) return code;
-
-  if (isGroup(code)) {
-    return designState[code]?.children?.[0]?.code || null;
-  }
-
-  // Otherwise treat `code` as an answer/sub-component: find its owning question.
-  const groups = designState.Survey?.children || [];
-  for (const groupRef of groups) {
-    const questions = designState[groupRef.code]?.children || [];
-    for (const questionRef of questions) {
-      const owns = designState[questionRef.code]?.children?.some(
-        (child) => child.qualifiedCode === code || child.code === code
-      );
-      if (owns) return questionRef.code;
-    }
-  }
-  return null;
-};
-
 // Key used for a component's nested children at each tree depth, mirroring the
 // engine's design DSL (Survey -> groups -> questions -> answers -> answers...).
 const CHILDREN_KEY_BY_LEVEL = ["groups", "questions", "answers"];

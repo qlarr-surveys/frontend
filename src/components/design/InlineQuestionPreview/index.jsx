@@ -4,22 +4,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import {
-  Provider,
-  shallowEqual,
-  useDispatch,
-  useSelector,
-  useStore,
-} from "react-redux";
+import { Provider, shallowEqual, useSelector, useStore } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { useTranslation } from "react-i18next";
 
-import styles from "./PreviewPanel.module.css";
-import {
-  assembleSurveyJson,
-  resolvePreviewQuestionCode,
-} from "~/utils/design/utils";
-import { setPreviewPanelOpen } from "~/state/edit/editState";
+import styles from "./InlineQuestionPreview.module.css";
+import { assembleSurveyJson } from "~/utils/design/utils";
+import { rtlLanguage } from "~/utils/common";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import LoadingDots from "~/components/common/LoadingDots";
@@ -37,16 +28,18 @@ function createPreviewStore() {
 }
 
 /**
- * Live single-question preview docked beside the design canvas.
+ * Live single-question preview rendered inline, directly above the question being
+ * edited in the design canvas.
  *
- * Renders the currently-selected question through the real survey engine,
- * entirely in the browser (see ~/services/engine/qlarrEngine). It recompiles the
- * live, unsaved design on a short debounce, so edits to the question's label,
- * options or validation rules show up here within ~400ms — no save, no backend.
+ * Renders the question through the real survey engine, entirely in the browser
+ * (see ~/services/engine/qlarrEngine). It recompiles the live, unsaved design on a
+ * short debounce, so edits to the question's label, options or validation rules show
+ * up here within ~400ms — no save, no backend. One preview is mounted at a time
+ * (keyed by `code` in editState), so this component owns its own isolated run store
+ * for its lifetime and is torn down when the preview closes or moves.
  */
-function PreviewPanel() {
+function InlineQuestionPreview({ code, onClose }) {
   const { t, i18n } = useTranslation(NAMESPACES.DESIGN_CORE);
-  const dispatch = useDispatch();
   const store = useStore(); // the design (manage) store
 
   const [computing, setComputing] = useState(false);
@@ -54,29 +47,18 @@ function PreviewPanel() {
   const [response, setResponse] = useState(null);
   const [reloadNonce, setReloadNonce] = useState(0);
 
+  const wrapperRef = useRef(null);
   const previewStoreRef = useRef(null);
   if (!previewStoreRef.current) {
     previewStoreRef.current = createPreviewStore();
   }
 
-  const open = useSelector((state) => state.editState.previewPanelOpen);
-
-  // Resolve the current selection to the question that should be previewed.
-  const questionCode = useSelector((state) =>
-    state.editState.previewPanelOpen
-      ? resolvePreviewQuestionCode(
-          state.designState,
-          state.designState.setup?.code
-        )
-      : null
-  );
-
-  // Cheap, precise change signal: Immer hands back a new object reference for
-  // any edit to the selected question's node (label/option/validation/etc.),
-  // and `Survey.children` changes when the survey structure changes. Editing an
+  // Cheap, precise change signal: Immer hands back a new object reference for any
+  // edit to the previewed question's node (label/option/validation/etc.), and
+  // `Survey.children` changes when the survey structure changes. Editing an
   // unrelated question doesn't touch either, so the preview won't flash.
   const questionNode = useSelector((state) =>
-    questionCode ? state.designState[questionCode] : null
+    code ? state.designState[code] : null
   );
   const surveyChildren = useSelector(
     (state) => state.designState.Survey?.children,
@@ -87,15 +69,23 @@ function PreviewPanel() {
 
   // Run components translate against the "run" namespace.
   useEffect(() => {
-    if (open && !i18n.hasLoadedNamespace("run")) {
+    if (!i18n.hasLoadedNamespace("run")) {
       i18n.loadNamespaces("run");
     }
-  }, [open, i18n]);
+  }, [i18n]);
+
+  // Bring the freshly-opened preview into view (the design canvas is the scroller).
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      wrapperRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   // Debounced, fully client-side recompute. Reading getState() directly (rather
   // than dispatching a design action) keeps this off the autosave middleware.
   useEffect(() => {
-    if (!open || !questionCode) {
+    if (!code) {
       setResponse(null);
       setError(null);
       setComputing(false);
@@ -130,48 +120,52 @@ function PreviewPanel() {
       cancelled = true;
       clearTimeout(handle);
     };
-  }, [open, questionCode, questionNode, surveyChildren, lang, reloadNonce, store]);
+  }, [code, questionNode, surveyChildren, lang, reloadNonce, store]);
 
   const theme = useMemo(
-    () => createTheme(defualtTheme(response?.survey?.theme)),
-    [response?.survey?.theme]
+    () =>
+      createTheme({
+        ...defualtTheme(response?.survey?.theme),
+        direction: rtlLanguage.includes(lang) ? "rtl" : "ltr",
+      }),
+    [response?.survey?.theme, lang]
   );
-
-  if (!open) return null;
 
   const surveyTree = (
     <Provider store={previewStoreRef.current}>
       <ThemeProvider theme={theme}>
         <React.Suspense fallback={<LoadingDots />}>
-          <Survey singleQuestion onlyQuestionCode={questionCode} />
+          <Survey singleQuestion onlyQuestionCode={code} />
         </React.Suspense>
       </ThemeProvider>
     </Provider>
   );
 
   return (
-    <Box className={styles.panel} data-tour="question-preview-panel">
+    <Box
+      ref={wrapperRef}
+      className={`inline-preview ${styles.wrapper}`}
+      // Interaction island: the canvas (GroupDesign) calls preventDefault() on
+      // bubbled clicks to drive design selection, which would cancel a checkbox/
+      // radio's native toggle (its onChange is the click's default action) and
+      // swallow respondent input. Stop the click here so the preview stays live.
+      onClick={(e) => e.stopPropagation()}
+    >
       <Box className={styles.header}>
         <Box className={styles.titleWrap}>
+          <VisibilityOutlinedIcon className={styles.titleIcon} fontSize="small" />
           <Typography className={styles.title} variant="subtitle2" noWrap>
             {t("preview_panel.title")}
-            {questionCode ? (
+            {code ? (
               <Typography
                 component="span"
                 variant="subtitle2"
                 color="text.secondary"
                 className={styles.questionCode}
               >
-                {`· ${questionCode}`}
+                {`· ${code}`}
               </Typography>
             ) : null}
-          </Typography>
-          <Typography
-            className={styles.subtitle}
-            variant="caption"
-            color="text.secondary"
-          >
-            {t("preview_panel.subtitle")}
           </Typography>
         </Box>
         <Box className={styles.headerActions}>
@@ -181,10 +175,7 @@ function PreviewPanel() {
             </IconButton>
           </CustomTooltip>
           <CustomTooltip title={t("preview_panel.close")} showIcon={false}>
-            <IconButton
-              size="small"
-              onClick={() => dispatch(setPreviewPanelOpen(false))}
-            >
+            <IconButton size="small" onClick={onClose}>
               <CloseIcon fontSize="small" />
             </IconButton>
           </CustomTooltip>
@@ -194,22 +185,9 @@ function PreviewPanel() {
       {computing && <Box className={styles.savingBar} />}
 
       <Box className={styles.body}>
-        {!questionCode ? (
+        {error ? (
           <Box className={styles.empty}>
-            <VisibilityOutlinedIcon
-              className={styles.emptyIcon}
-              fontSize="large"
-            />
-            <Typography variant="body2" color="text.secondary">
-              {t("preview_panel.empty")}
-            </Typography>
-          </Box>
-        ) : error ? (
-          <Box className={styles.empty}>
-            <VisibilityOutlinedIcon
-              className={styles.emptyIcon}
-              fontSize="large"
-            />
+            <VisibilityOutlinedIcon className={styles.emptyIcon} fontSize="large" />
             <Typography variant="body2" color="text.secondary">
               {t("preview_panel.error")}
             </Typography>
@@ -232,4 +210,4 @@ function PreviewPanel() {
   );
 }
 
-export default React.memo(PreviewPanel);
+export default React.memo(InlineQuestionPreview);

@@ -90,15 +90,27 @@ function setValueInState(state, payload) {
   let element = state.values[componentCode];
   if (typeof element !== "undefined" && element["value"] !== value) {
     let time = Date.now();
-    window.qlarrStateMachine(
-      state.values,
-      qlarrDependents,
-      window.qlarrRuntime,
-      componentCode,
-      "value",
-      value,
-      "VALUE CHANGE"
-    );
+    try {
+      window.qlarrStateMachine(
+        state.values,
+        qlarrDependents,
+        window.qlarrRuntime,
+        componentCode,
+        "value",
+        value,
+        "VALUE CHANGE"
+      );
+    } catch (e) {
+      // In a single-question design preview the survey is compiled in isolation,
+      // so an instruction can run against a half-initialised dependency (e.g. a
+      // list validation reading a not-yet-array value) and throw. Don't let that
+      // abort the whole reducer — record the user's input so the control still
+      // reflects the selection; dependent recomputation is best-effort here.
+      // Scoped to the single-question preview so real runs keep their behaviour.
+      if (!state.singleQuestion) throw e;
+      console.warn("Preview state machine skipped a failing instruction:", e);
+      element["value"] = value;
+    }
     console.debug("NEW STATE in: " + (Date.now() - time) + " millis");
   }
 }

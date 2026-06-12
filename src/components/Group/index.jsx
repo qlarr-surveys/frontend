@@ -50,29 +50,31 @@ function Group(props) {
           ${replaceFormatInstructions(props.group.customCss, formatState, "custom_css")}
         `}
       >
-        <div className={styles.groupHeader}>
-          <Content
-            elementCode={props.group.code}
-            name="label"
-            customStyle={`
+        {!singleQuestion && (
+          <div className={styles.groupHeader}>
+            <Content
+              elementCode={props.group.code}
+              name="label"
+              customStyle={`
         font-size: ${theme.textStyles.group.size}px;
         `}
-            content={props.group.content?.label}
-          />
+              content={props.group.content?.label}
+            />
 
-          {props.group.showDescription && props.group.content?.description && (
-            <Box className={styles.textDescription}>
-              <Content
-                elementCode={props.group.code}
-                name="description"
-                customStyle={`
+            {props.group.showDescription && props.group.content?.description && (
+              <Box className={styles.textDescription}>
+                <Content
+                  elementCode={props.group.code}
+                  name="description"
+                  customStyle={`
         font-size: ${theme.textStyles.text.size}px;
         `}
-                content={props.group.content?.description}
-              />
-            </Box>
-          )}
-        </div>
+                  content={props.group.content?.description}
+                />
+              </Box>
+            )}
+          </div>
+        )}
 
         {props.group && props.group.questions
           ? (() => {

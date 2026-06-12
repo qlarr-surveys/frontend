@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setupOptions } from "~/constants/design";
 import { setup, cloneQuestion, deleteQuestion, deleteGroup, resetSetup } from "~/state/design/designState";
-import { setPreviewPanelOpen } from "~/state/edit/editState";
+import { togglePreviewQuestionCode } from "~/state/edit/editState";
 import { useTheme } from "@emotion/react";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { Preview, RuleOutlined, VisibilityOff } from "@mui/icons-material";
@@ -48,9 +48,10 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
   });
 
   const onPreview = useCallback(() => {
-    // Select this question so the preview panel follows it, then open the panel.
+    // Select this question (so its setup follows it) and toggle the inline preview
+    // that renders directly above the question card.
     dispatch(setup({ code, rules: setupOptions(type) }));
-    dispatch(setPreviewPanelOpen(true));
+    dispatch(togglePreviewQuestionCode(code));
   }, [dispatch, code, type]);
 
   const relevanceInstruction = useSelector((state) =>

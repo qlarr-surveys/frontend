@@ -9,11 +9,15 @@ export const editState = createSlice({
     isSaving: false,
     isUpdating: false,
     loading: false,
-    previewPanelOpen: false
+    previewQuestionCode: null
   },
   reducers: {
-    setPreviewPanelOpen: (state, action) => {
-      state.previewPanelOpen = action.payload;
+    setPreviewQuestionCode: (state, action) => {
+      state.previewQuestionCode = action.payload;
+    },
+    togglePreviewQuestionCode: (state, action) => {
+      state.previewQuestionCode =
+        state.previewQuestionCode === action.payload ? null : action.payload;
     },
     setSaving: (state, action) => {
       state.isSaving = action.payload;
@@ -59,7 +63,8 @@ export const {
   onEditErrorSeen,
   surveyAttributeChanged,
   surveyAttributeChangedImmediate,
-  setPreviewPanelOpen,
+  setPreviewQuestionCode,
+  togglePreviewQuestionCode,
 } = editState.actions;
 
 export default editState.reducer;
