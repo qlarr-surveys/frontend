@@ -101,7 +101,7 @@ function InlineQuestionPreview({ code, onClose }) {
     const handle = setTimeout(async () => {
       try {
         const surveyJson = assembleSurveyJson(store.getState().designState);
-        const computed = await compileAndNavigate(surveyJson, lang);
+        const computed = await compileAndNavigate(surveyJson, lang, "offline");
         if (cancelled) return;
         previewStoreRef.current.dispatch(
           stateReceived({

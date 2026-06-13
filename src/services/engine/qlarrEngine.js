@@ -85,21 +85,33 @@ function ensureRuntimeScripts() {
  *
  * @param {string} surveyJson - the design DSL as JSON (see assembleSurveyJson).
  * @param {string} lang - language code (e.g. "en").
+ * @param {"offline"|"online"} surveyMode - the survey mode the engine navigates in.
+ *   Defaults to "offline" so offline-only question types (barcode, photo_capture,
+ *   video_capture) are relevant and interactive in the preview — in "online" mode the
+ *   engine compiles their `mode: offline` instruction to `relevance = false`, hiding them.
+ *   Online question types are relevant in both modes, so this is safe for every question.
  * @returns {Promise<{survey: object, navigationIndex: object,
  *   state: {qlarrVariables: object, qlarrDependents: object}}>}
  * @throws if the engine bundle fails to load or the design has blocking errors.
  */
-export async function compileAndNavigate(surveyJson, lang = "en") {
+export async function compileAndNavigate(surveyJson, lang = "en", surveyMode = "offline") {
   const engine = await loadEngineBundle();
   ensureRuntimeScripts();
 
   const usecase = engine.com.qlarr.surveyengine.usecase;
   const exposed = engine.com.qlarr.surveyengine.model.exposed;
+  const mode =
+    surveyMode === "online" ? exposed.SurveyMode.ONLINE : exposed.SurveyMode.OFFLINE;
 
   // Validate the design -> runtime script + dependency/impact maps.
-  const validationJsonOutput = JSON.parse(
-    usecase.ValidationUseCaseWrapper.create(surveyJson).validate()
-  );
+  let validationJsonOutput;
+  try {
+    validationJsonOutput = JSON.parse(
+      usecase.ValidationUseCaseWrapper.create(surveyJson).validate()
+    );
+  } catch (e) {
+    throw new Error(`qlarr validate() failed: ${e?.message ?? e}`, { cause: e });
+  }
 
   // Define the per-survey qlarrRuntime (window.qlarrRuntime) for this compile.
   injectInlineScript(validationJsonOutput.script, RUNTIME_SCRIPT_ID);
@@ -110,18 +122,23 @@ export async function compileAndNavigate(surveyJson, lang = "en") {
     navigate: (script) => window.navigate(JSON.parse(script)),
   };
 
-  const navigationJsonOutput = JSON.parse(
-    usecase.NavigationUseCaseWrapper.init(
-      "{}",
-      JSON.stringify(validationJsonOutput),
-      lang,
-      exposed.NavigationMode.ALL_IN_ONE,
-      null,
-      exposed.NavigationDirection.Start,
-      true,
-      exposed.SurveyMode.ONLINE
-    ).navigate(scriptEngine)
-  );
+  let navigationJsonOutput;
+  try {
+    navigationJsonOutput = JSON.parse(
+      usecase.NavigationUseCaseWrapper.init(
+        "{}",
+        JSON.stringify(validationJsonOutput),
+        lang,
+        exposed.NavigationMode.ALL_IN_ONE,
+        null,
+        exposed.NavigationDirection.Start,
+        true,
+        mode
+      ).navigate(scriptEngine)
+    );
+  } catch (e) {
+    throw new Error(`qlarr navigate() failed: ${e?.message ?? e}`, { cause: e });
+  }
 
   return {
     survey: navigationJsonOutput.survey,

@@ -117,6 +117,16 @@ const CHILDREN_KEY_BY_LEVEL = ["groups", "questions", "answers"];
 const childrenKeyForLevel = (level) =>
   CHILDREN_KEY_BY_LEVEL[level] || "answers";
 
+// Instructions the survey engine *derives* during validation (and references when
+// composing a component's effective relevance) but does NOT accept back as design
+// input. The backend persists `mode_relevance` into the saved design of offline
+// questions (barcode / photo_capture / video_capture); the vendored client engine
+// generates it internally yet rejects it on input ("Invalid JSON for instruction"),
+// which broke the single-question preview for any survey containing an offline
+// question. We drop it here so the live design re-validates cleanly — the engine
+// recomputes offline relevance from the question's own `mode` instruction.
+const ENGINE_DERIVED_INSTRUCTION_CODES = new Set(["mode_relevance"]);
+
 // In the flat design tree, a node holds only its body (content, instructionList,
 // children, ...); its identity (code / qualifiedCode / type / groupType) lives on
 // the parent's child ref. We merge the ref with the node body so the assembled
@@ -127,6 +137,12 @@ const assembleNode = (designState, ref, level) => {
   if (!node) return null;
   const { children, ...body } = node;
   const assembled = { ...ref, ...body };
+  if (Array.isArray(assembled.instructionList)) {
+    assembled.instructionList = assembled.instructionList.filter(
+      (instruction) =>
+        instruction && !ENGINE_DERIVED_INSTRUCTION_CODES.has(instruction.code)
+    );
+  }
   if (Array.isArray(children) && children.length) {
     assembled[childrenKeyForLevel(level)] = children
       .map((child) => assembleNode(designState, child, level + 1))
