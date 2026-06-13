@@ -119,7 +119,7 @@ QlarrScripts = {
                 return day <= 30 && day >= 1;
             case 1:
             case 3:
-            case 4:
+            case 5:
             case 7:
             case 8:
             case 10:
@@ -193,7 +193,7 @@ QlarrScripts = {
             ('00' + time.getSeconds()).slice(-2);
     },
     isVoid: function(value) {
-        if (value === undefined || value === null || value === "") {
+        if (value === undefined || value === null || value.length == 0) {
             return true;
         } else {
             return false;

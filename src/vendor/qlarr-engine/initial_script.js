@@ -118,7 +118,7 @@ function defaultValue(code, returnType) {
     const returnTypeName = typeof returnType == "object" ? returnType.type?.toLowerCase() || "" : returnType?.toLowerCase()
     if (code == "value") {
         return undefined;
-    } else if (code == "relevance" || code == "conditional_relevance" || code == "validity") {
+    } else if (code == "relevance" || code == "conditional_relevance" || code == "validity" || code.startsWith("validation_")) {
         return true
     }
     switch (returnTypeName) {
