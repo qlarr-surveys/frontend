@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Single-Question Preview — Execution Flow</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel-2: #1d212d;
+    --border: #2a2f3d;
+    --text: #e6e9ef;
+    --muted: #9aa3b2;
+    --accent: #6ea8fe;
+    --accent-2: #7ee0c2;
+    --warn: #ffcf6e;
+    --pink: #ff8ab3;
+    --code-bg: #0b0d13;
+    --green: #8be9a0;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 40px 24px 120px; }
+  header.hero {
+    border: 1px solid var(--border); border-radius: 16px; padding: 28px 30px;
+    background: radial-gradient(1200px 300px at 0% 0%, #1b2740 0%, var(--panel) 55%);
+  }
+  header.hero h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: -0.3px; }
+  header.hero p { margin: 6px 0 0; color: var(--muted); }
+  .pill {
+    display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 10px;
+    border-radius: 999px; border: 1px solid var(--border); color: var(--accent-2);
+    background: #11261f; margin-right: 6px;
+  }
+  .pill.fe { color: var(--accent); background: #122036; }
+  h2 { margin: 44px 0 14px; font-size: 20px; letter-spacing: -0.2px; }
+  h2 .num {
+    display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 8px;
+    background: var(--accent); color: #06101f; font-size: 14px; font-weight: 800; margin-right: 10px;
+    vertical-align: middle;
+  }
+  h3 { margin: 26px 0 8px; font-size: 16px; color: var(--accent-2); }
+  p { margin: 10px 0; }
+  code.inline {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 5px;
+    padding: 1px 6px; font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 12.5px;
+    color: #d7e1ff;
+  }
+  .file { color: var(--warn); }
+  .muted { color: var(--muted); }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 16px; overflow-x: auto; margin: 12px 0;
+    font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 12.7px; line-height: 1.6;
+  }
+  pre .c { color: #6b7488; font-style: italic; }     /* comment */
+  pre .k { color: #ff8ab3; }                          /* keyword */
+  pre .s { color: #8be9a0; }                          /* string  */
+  pre .f { color: #6ea8fe; }                          /* fn/ident */
+  pre .n { color: #ffcf6e; }                          /* number/const */
+  .card {
+    border: 1px solid var(--border); background: var(--panel); border-radius: 12px;
+    padding: 18px 20px; margin: 14px 0;
+  }
+  .card .where { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .card .where b { color: var(--warn); font-weight: 600; }
+
+  /* pipeline diagram */
+  .flow { margin: 18px 0 6px; }
+  .step {
+    position: relative; border: 1px solid var(--border); background: var(--panel-2);
+    border-radius: 12px; padding: 14px 16px 14px 56px; margin: 0 0 10px;
+  }
+  .step .badge {
+    position: absolute; left: 12px; top: 14px; width: 30px; height: 30px; border-radius: 8px;
+    display: grid; place-items: center; font-weight: 800; font-size: 13px; color: #06101f; background: var(--accent-2);
+  }
+  .step.fe .badge { background: var(--accent); }
+  .step.eng .badge { background: var(--warn); }
+  .step h4 { margin: 0 0 3px; font-size: 14.5px; }
+  .step p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+  .arrow { text-align: center; color: var(--border); font-size: 18px; line-height: 1; margin: -4px 0 6px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 10px 0 0; font-size: 12.5px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+  .dot.fe { background: var(--accent); } .dot.app { background: var(--accent-2); } .dot.eng { background: var(--warn); }
+
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
+  th, td { border: 1px solid var(--border); padding: 9px 11px; text-align: left; vertical-align: top; }
+  th { background: var(--panel-2); color: var(--accent-2); font-weight: 600; }
+  td code { color: #d7e1ff; }
+  .note {
+    border-left: 3px solid var(--accent); background: #111927; padding: 10px 14px; border-radius: 0 8px 8px 0;
+    margin: 14px 0; color: #cdd6e6; font-size: 13.5px;
+  }
+  .note.warn { border-color: var(--warn); background: #20190f; }
+  .toc { columns: 2; column-gap: 28px; font-size: 13.5px; margin: 8px 0 0; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 60px; color: var(--muted); font-size: 12.5px; border-top: 1px solid var(--border); padding-top: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <span class="pill fe">100% client-side</span>
+  <span class="pill">no backend call</span>
+  <h1>Single-Question Inline Preview — How it executes</h1>
+  <p>From the moment a user clicks the <b>Preview</b> (👁) action on a question, to the live question
+  rendered in the design canvas — and the exact Qlarr engine functions that run in the browser.</p>
+  <div class="legend">
+    <span><i class="dot fe"></i> React / Redux (UI + state)</span>
+    <span><i class="dot app"></i> App service code</span>
+    <span><i class="dot eng"></i> Qlarr engine (Kotlin→JS) &amp; vendored runtime</span>
+  </div>
+</header>
+
+<h2>At a glance</h2>
+<p>The preview never talks to the server. It rebuilds the unsaved design into the engine's DSL, runs the
+<b>same Qlarr engine the backend uses</b> — compiled to JavaScript — entirely in the browser, trims the
+result down to the one question, and feeds it to the normal survey renderer inside an isolated Redux store.</p>
+
+<div class="toc">
+  <a href="#s1">1 · Click → editState</a><br>
+  <a href="#s2">2 · GroupDesign mounts the preview</a><br>
+  <a href="#s3">3 · Debounced recompute (the heartbeat)</a><br>
+  <a href="#s4">4 · assembleSurveyJson — flat → DSL</a><br>
+  <a href="#s5">5 · compileAndNavigate — the engine</a><br>
+  <a href="#s6">6 · Inside validate() &amp; navigate()</a><br>
+  <a href="#s7">7 · pruneToSingleQuestion</a><br>
+  <a href="#s8">8 · stateReceived → render</a><br>
+  <a href="#s9">9 · Reactive value-change loop</a><br>
+  <a href="#globals">· Globals &amp; glossary</a>
+</div>
+
+<h2>The pipeline</h2>
+<div class="flow">
+  <div class="step fe"><div class="badge">1</div><h4>User clicks 👁 Preview</h4><p>ActionToolbar dispatches <code class="inline">setup()</code> + <code class="inline">togglePreviewQuestionCode(code)</code></p></div>
+  <div class="arrow">▼</div>
+  <div class="step fe"><div class="badge">2</div><h4>editState.previewQuestionCode = code</h4><p>GroupDesign's <code class="inline">&lt;Collapse&gt;</code> opens &amp; mounts <code class="inline">InlineQuestionPreview</code></p></div>
+  <div class="arrow">▼</div>
+  <div class="step app"><div class="badge">3</div><h4>Debounced effect (~400 ms)</h4><p>reads the live design store directly (off the autosave path)</p></div>
+  <div class="arrow">▼</div>
+  <div class="step app"><div class="badge">4</div><h4>assembleSurveyJson(designState)</h4><p>flat Redux tree → nested engine DSL (JSON string)</p></div>
+  <div class="arrow">▼</div>
+  <div class="step eng"><div class="badge">5</div><h4>compileAndNavigate(dsl, lang, "offline")</h4><p>load engine bundle + runtime scripts → <b>validate()</b> → <b>navigate()</b></p></div>
+  <div class="arrow">▼</div>
+  <div class="step app"><div class="badge">6</div><h4>pruneToSingleQuestion(response, code)</h4><p>keep one group + one question, force relevance true</p></div>
+  <div class="arrow">▼</div>
+  <div class="step fe"><div class="badge">7</div><h4>dispatch stateReceived(pruned)</h4><p>into the preview's <b>isolated</b> run store</p></div>
+  <div class="arrow">▼</div>
+  <div class="step fe"><div class="badge">8</div><h4>&lt;Survey/&gt; → &lt;Group/&gt; → &lt;Question/&gt;</h4><p>the normal renderer draws exactly one question</p></div>
+</div>
+
+<!-- ───────────────────────── 1 ───────────────────────── -->
+<h2 id="s1"><span class="num">1</span>Click → editState</h2>
+<p>The 👁 button lives in the question's action toolbar. Its click is <code class="inline">stopPropagation()</code>'d
+(so it doesn't trigger canvas selection) and calls <code class="inline">onPreview</code>, which fires two Redux actions:
+one selects the question, one toggles the preview flag.</p>
+<div class="card">
+  <div class="where">📄 <b>src/components/design/ActionToolbar/index.jsx</b></div>
+<pre><span class="k">const</span> onPreview = <span class="f">useCallback</span>(() => {
+  <span class="c">// select this question so its setup follows it…</span>
+  <span class="f">dispatch</span>(<span class="f">setup</span>({ code, rules: <span class="f">setupOptions</span>(type) }));
+  <span class="c">// …and toggle the inline preview shown above the question card</span>
+  <span class="f">dispatch</span>(<span class="f">togglePreviewQuestionCode</span>(code));
+}, [dispatch, code, type]);</pre>
+</div>
+<div class="card">
+  <div class="where">📄 <b>src/state/edit/editState.js</b> — the only preview state in the design store</div>
+<pre><span class="f">togglePreviewQuestionCode</span>: (state, action) => {
+  state.previewQuestionCode =
+    state.previewQuestionCode === action.payload ? <span class="k">null</span> : action.payload;
+},</pre>
+</div>
+
+<!-- ───────────────────────── 2 ───────────────────────── -->
+<h2 id="s2"><span class="num">2</span>GroupDesign mounts the preview</h2>
+<p>Every question in the design canvas is wrapped by a collapsible region. When
+<code class="inline">previewQuestionCode</code> matches that question's code, the <code class="inline">&lt;Collapse&gt;</code>
+expands and <b>mounts</b> the preview component (<code class="inline">mountOnEnter</code> / <code class="inline">unmountOnExit</code>
+means it's created fresh on open and destroyed on close — only one is ever alive).</p>
+<div class="card">
+  <div class="where">📄 <b>src/components/Group/GroupDesign.jsx</b></div>
+<pre>&lt;<span class="f">Collapse</span> in={previewQuestionCode === quest.code} mountOnEnter unmountOnExit&gt;
+  &lt;<span class="f">InlineQuestionPreview</span>
+    code={quest.code}
+    onClose={() => <span class="f">dispatch</span>(<span class="f">setPreviewQuestionCode</span>(<span class="k">null</span>))} /&gt;
+&lt;/<span class="f">Collapse</span>&gt;</pre>
+</div>
+
+<h3>On mount: an isolated run store</h3>
+<p>The design page runs on the <code class="inline">manageStore</code>, which has no <code class="inline">runState</code>.
+A live survey runs on a different store entirely. So the preview spins up its <b>own private store</b> for its lifetime —
+it never collides with a real run session and never triggers the design autosave.</p>
+<div class="card">
+  <div class="where">📄 <b>src/components/design/InlineQuestionPreview/index.jsx</b></div>
+<pre><span class="k">function</span> <span class="f">createPreviewStore</span>() {
+  <span class="k">return</span> <span class="f">configureStore</span>({ reducer: { templateState, runState } });
+}
+<span class="c">// created once per mount, kept in a ref for the component's whole life</span></pre>
+</div>
+
+<!-- ───────────────────────── 3 ───────────────────────── -->
+<h2 id="s3"><span class="num">3</span>Debounced recompute — the heartbeat</h2>
+<p>One effect drives everything. It re-runs whenever the previewed question's node changes, the survey structure
+changes, or the language changes — but waits <b>400 ms</b> so typing doesn't recompile on every keystroke.
+It reads the design store with <code class="inline">store.getState()</code> directly (not a dispatch) to stay
+off the autosave middleware.</p>
+<div class="card">
+  <div class="where">📄 <b>InlineQuestionPreview/index.jsx</b> — inside the debounced <code>setTimeout</code></div>
+<pre><span class="k">const</span> surveyJson = <span class="f">assembleSurveyJson</span>(store.<span class="f">getState</span>().designState);   <span class="c">// step 4</span>
+<span class="k">const</span> computed   = <span class="k">await</span> <span class="f">compileAndNavigate</span>(surveyJson, lang, <span class="s">"offline"</span>); <span class="c">// step 5–6</span>
+<span class="k">const</span> pruned     = <span class="f">pruneToSingleQuestion</span>(computed, code);              <span class="c">// step 7</span>
+
+previewStoreRef.current.<span class="f">dispatch</span>(
+  <span class="f">stateReceived</span>({ response: pruned, preview: <span class="k">true</span>, singleQuestion: <span class="k">true</span> }) <span class="c">// step 8</span>
+);</pre>
+</div>
+<div class="note">Why <code class="inline">"offline"</code>? In <b>online</b> mode the engine compiles an offline-only question
+(barcode / photo / video capture) to <code class="inline">relevance = false</code> and hides it. Compiling in
+<b>offline</b> mode keeps every question type renderable in the preview.</div>
+
+<!-- ───────────────────────── 4 ───────────────────────── -->
+<h2 id="s4"><span class="num">4</span>assembleSurveyJson — flat tree → engine DSL</h2>
+<p>Redux stores the design <b>flat</b> (each node keyed by its code, children referenced by id). The engine wants a
+<b>nested</b> DSL: <code class="inline">Survey → groups → questions → answers</code>. <code class="inline">assembleSurveyJson</code>
+walks the flat tree and rebuilds that nesting, merging each child's identity ref with its body.</p>
+<div class="card">
+  <div class="where">📄 <b>src/utils/design/utils.js</b></div>
+<pre><span class="k">const</span> CHILDREN_KEY_BY_LEVEL = [<span class="s">"groups"</span>, <span class="s">"questions"</span>, <span class="s">"answers"</span>];
+
+<span class="k">const</span> <span class="f">assembleNode</span> = (designState, ref, level) => {
+  <span class="k">const</span> node = designState[ref.qualifiedCode ?? ref.code];
+  <span class="k">const</span> { children, ...body } = node;
+  <span class="k">const</span> assembled = { ...ref, ...body };
+
+  <span class="c">// strip mode_relevance: the engine DERIVES it internally but REJECTS it on input</span>
+  assembled.instructionList = assembled.instructionList
+    .<span class="f">filter</span>(i => i &amp;&amp; !ENGINE_DERIVED_INSTRUCTION_CODES.<span class="f">has</span>(i.code));
+
+  <span class="c">// recurse: this level's children become groups / questions / answers</span>
+  assembled[<span class="f">childrenKeyForLevel</span>(level)] = children.<span class="f">map</span>(c => <span class="f">assembleNode</span>(...));
+  <span class="k">return</span> assembled;
+};</pre>
+</div>
+<div class="note warn"><b>The <code class="inline">mode_relevance</code> gotcha.</b> The backend persists a derived
+<code class="inline">mode_relevance</code> instruction into saved offline questions. The vendored engine generates that
+instruction itself but throws <i>“Invalid JSON for instruction”</i> if you feed it back in. Stripping it here is what
+let offline questions preview without errors.</div>
+
+<!-- ───────────────────────── 5 ───────────────────────── -->
+<h2 id="s5"><span class="num">5</span>compileAndNavigate — the engine boundary</h2>
+<p>This is the heart. It mirrors, fully in-browser, what the backend does to turn a design into a runnable survey.
+Three things get injected into the page as <code class="inline">&lt;script&gt;</code> tags, then two engine use-cases run.</p>
+
+<h3>5a · Load the engine + runtime (once)</h3>
+<table>
+  <tr><th>What</th><th>Defines global</th><th>Source</th></tr>
+  <tr><td>Engine UMD bundle</td><td><code>window.surveyengine</code> (Kotlin→JS)</td><td><span class="file">public/qlarr-engine/surveyengine.js</span></td></tr>
+  <tr><td>Common runtime</td><td><code>qlarrStateMachine</code>, <code>QlarrScripts</code></td><td><span class="file">src/vendor/qlarr-engine/common_script.js</span></td></tr>
+  <tr><td>Initial runtime</td><td><code>navigate()</code></td><td><span class="file">src/vendor/qlarr-engine/initial_script.js</span></td></tr>
+</table>
+<div class="note">The engine bundle does <b>not</b> contain <code class="inline">navigate</code> or
+<code class="inline">qlarrStateMachine</code>. The Kotlin engine deliberately delegates all script evaluation
+(relevance, validation, skip logic — arbitrary JS) to a host-provided runtime. On the server that host is the backend;
+here those two vendored files <b>are</b> the host, which is what makes the preview backend-free.</div>
+
+<h3>5b · The two-stage engine run</h3>
+<div class="card">
+  <div class="where">📄 <b>src/services/engine/qlarrEngine.js</b></div>
+<pre><span class="k">const</span> usecase = engine.com.qlarr.surveyengine.usecase;
+
+<span class="c">// ── Stage 1: VALIDATE ───────────────────────────────────────────────</span>
+<span class="c">// parse the DSL → produce a runtime script + dependency/impact maps</span>
+validationJsonOutput = <span class="f">JSON.parse</span>(
+  usecase.ValidationUseCaseWrapper.<span class="f">create</span>(surveyJson).<span class="f">validate</span>()
+);
+
+<span class="c">// inject validationJsonOutput.script → defines window.qlarrRuntime</span>
+<span class="f">injectInlineScript</span>(validationJsonOutput.script, RUNTIME_SCRIPT_ID);
+
+<span class="c">// adapter the engine calls back into; we delegate to the vendored navigate()</span>
+<span class="k">const</span> scriptEngine = { navigate: (s) => window.<span class="f">navigate</span>(<span class="f">JSON.parse</span>(s)) };
+
+<span class="c">// ── Stage 2: NAVIGATE ───────────────────────────────────────────────</span>
+<span class="c">// compute the initial runtime state (values, relevance, validity…)</span>
+navigationJsonOutput = <span class="f">JSON.parse</span>(
+  usecase.NavigationUseCaseWrapper.<span class="f">init</span>(
+    <span class="s">"{}"</span>,                              <span class="c">// no saved responses</span>
+    <span class="f">JSON.stringify</span>(validationJsonOutput),
+    lang,
+    exposed.NavigationMode.ALL_IN_ONE,
+    <span class="k">null</span>,
+    exposed.NavigationDirection.Start,
+    <span class="k">true</span>,
+    mode                               <span class="c">// SurveyMode.OFFLINE</span>
+  ).<span class="f">navigate</span>(scriptEngine)             <span class="c">// ← engine calls scriptEngine.navigate(...)</span>
+);
+
+<span class="k">return</span> {
+  survey:          navigationJsonOutput.survey,
+  navigationIndex: navigationJsonOutput.navigationIndex,
+  state: {
+    qlarrVariables:  navigationJsonOutput.state.qlarrVariables,
+    qlarrDependents: navigationJsonOutput.state.qlarrDependents,
+  },
+};</pre>
+</div>
+<div class="note warn">Each stage is wrapped in its own <code class="inline">try/catch</code> that re-throws as
+<code class="inline">qlarr validate() failed: …</code> / <code class="inline">qlarr navigate() failed: …</code> so a
+broken design surfaces as the preview's error box instead of a cryptic stack.</div>
+
+<!-- ───────────────────────── 6 ───────────────────────── -->
+<h2 id="s6"><span class="num">6</span>Inside the engine: what validate() and navigate() actually do</h2>
+
+<h3>ValidationUseCaseWrapper.validate()  <span class="muted">(Kotlin→JS, in the bundle)</span></h3>
+<p>Parses the DSL, type-checks instructions, and emits <code class="inline">validationJsonOutput</code> containing:
+the per-survey <b>runtime script</b> (becomes <code class="inline">window.qlarrRuntime</code>), the resolved
+<code class="inline">survey</code> tree, the <code class="inline">impactMap</code> (which component affects which),
+schema, and the dependency graph. It does not run any survey logic yet — it builds the machinery.</p>
+
+<h3>NavigationUseCaseWrapper.navigate(scriptEngine)  <span class="muted">(Kotlin→JS)</span></h3>
+<p>Decides which components are on the current page and asks the host to compute their starting values. The crucial
+move: it <b>calls back</b> into <code class="inline">scriptEngine.navigate(script)</code> — i.e. the vendored
+<code class="inline">window.navigate()</code> below — to actually evaluate the instructions.</p>
+
+<h3>window.navigate(input)  <span class="muted">(vendored — initial_script.js)</span></h3>
+<p>This is the JS runtime that produces the initial <code class="inline">qlarrVariables</code> map — one object per
+component holding its <code class="inline">value</code>, <code class="inline">relevance</code>,
+<code class="inline">validity</code>, etc.</p>
+<div class="card">
+  <div class="where">📄 <b>src/vendor/qlarr-engine/initial_script.js</b> — the function the engine drives</div>
+<pre><span class="k">function</span> <span class="f">navigate</span>(navigationInput) {
+  qlarrVariables = {};
+  <span class="c">// 1. make an empty object per component code</span>
+  codes.<span class="f">forEach</span>(c => { <span class="f">eval</span>(c + <span class="s">" = {};"</span>); qlarrVariables[c] = <span class="f">eval</span>(c); });
+
+  <span class="c">// 2. seed values from saved data (type-checked)</span>
+  valuesKeys.<span class="f">forEach</span>(k => qlarrVariables[a][b] = <span class="f">verifyValue</span>(b, returnType, value));
+
+  <span class="c">// 3. run each instruction (relevance / validity / skip / format …)</span>
+  sequence.<span class="f">forEach</span>(si => {
+    <span class="k">if</span> (si.instruction.isActive)
+      qlarrVariables[si.componentCode][code] =
+        <span class="f">runInstruction</span>(code, text, returnType);   <span class="c">// eval the JS expression</span>
+    <span class="k">else</span> /* fall back to parsed text or defaultValue() */
+  });
+  <span class="k">return</span> <span class="f">JSON.stringify</span>(qlarrVariables);
+}</pre>
+</div>
+<table>
+  <tr><th>Helper</th><th>Role</th></tr>
+  <tr><td><code>runInstruction(code, text, type)</code></td><td><code>eval</code>s the instruction's JS expression; if it throws or returns the wrong type, falls back to <code>defaultValue()</code>.</td></tr>
+  <tr><td><code>verifyValue(code, type, value)</code></td><td>Keeps a stored value only if it matches the declared <code>returnType</code>, else uses a default.</td></tr>
+  <tr><td><code>isCorrectReturnType(type, value)</code></td><td>Type guard for <code>boolean / date / int / double / list / enum / string / map / file</code>.</td></tr>
+  <tr><td><code>defaultValue(code, type)</code></td><td>Safe default. Note: <code>relevance</code>, <code>conditional_relevance</code>, <code>validity</code> default to <code>true</code>; <code>value</code> to <code>undefined</code>.</td></tr>
+</table>
+
+<!-- ───────────────────────── 7 ───────────────────────── -->
+<h2 id="s7"><span class="num">7</span>pruneToSingleQuestion — focus on one question</h2>
+<p>The engine navigated the <b>whole</b> survey (it must, so cross-question logic resolves). This helper is the
+<b>only</b> place that knows the preview shows just one question: it returns a new response containing only the owning
+group with only the target question, and forces both their relevance on — so the shared renderer needs zero
+preview-specific branches.</p>
+<div class="card">
+  <div class="where">📄 <b>src/services/engine/qlarrEngine.js</b></div>
+<pre><span class="k">export function</span> <span class="f">pruneToSingleQuestion</span>(response, qualifiedCode) {
+  <span class="k">const</span> ownerGroup     = groups.<span class="f">find</span>(g => g.questions.<span class="f">some</span>(q => q.qualifiedCode === qualifiedCode));
+  <span class="k">const</span> targetQuestion = ownerGroup?.questions.<span class="f">find</span>(q => q.qualifiedCode === qualifiedCode);
+  <span class="k">if</span> (!ownerGroup || !targetQuestion) <span class="k">return</span> response;   <span class="c">// safe pass-through</span>
+
+  <span class="k">const</span> prunedGroup = { ...ownerGroup, inCurrentNavigation: <span class="k">true</span>,
+    questions: [{ ...targetQuestion, inCurrentNavigation: <span class="k">true</span> }] };
+
+  <span class="c">// full variables map kept (dependents still resolve); relevance forced true</span>
+  <span class="k">const</span> variables = { ...response.state.qlarrVariables };
+  variables[ownerGroup.code]  = { ...variables[ownerGroup.code],  relevance: <span class="k">true</span> };
+  variables[qualifiedCode]    = { ...variables[qualifiedCode],    relevance: <span class="k">true</span> };
+
+  <span class="k">return</span> { ...response, survey: { ...response.survey, groups: [prunedGroup] },
+           state: { ...response.state, qlarrVariables: variables } };
+}</pre>
+</div>
+<div class="note">These four forced fields — group + question <code class="inline">inCurrentNavigation</code> on the tree, and
+group + question <code class="inline">relevance</code> in the variables — are the <i>complete</i> set the renderer keys
+off. That's why <code class="inline">&lt;Survey/&gt;</code>, <code class="inline">&lt;Group/&gt;</code>, and
+<code class="inline">&lt;Question/&gt;</code> stay pristine.</div>
+
+<!-- ───────────────────────── 8 ───────────────────────── -->
+<h2 id="s8"><span class="num">8</span>stateReceived → render</h2>
+<p>The pruned response is dispatched into the isolated store. The reducer flattens it into the shape the renderer reads,
+and stashes the dependency graph in a module variable for the interaction loop.</p>
+<div class="card">
+  <div class="where">📄 <b>src/state/runState.js</b></div>
+<pre><span class="f">stateReceived</span>: (state, action) => {
+  state.preview        = action.payload.preview;        <span class="c">// true → lenient error handling</span>
+  state.singleQuestion = action.payload.singleQuestion; <span class="c">// true → hide group header + nav</span>
+  qlarrDependents      = response.state.qlarrDependents;<span class="c">// module-scope, used on value change</span>
+  state.values         = response.state.qlarrVariables; <span class="c">// per-component runtime vars</span>
+  state.data.survey    = response.survey;
+  state.data.navigationIndex = response.navigationIndex;
+},</pre>
+</div>
+<p>Then the component renders the <b>real</b> survey renderer inside the isolated store + a theme provider:</p>
+<div class="card">
+  <div class="where">📄 <b>InlineQuestionPreview/index.jsx</b></div>
+<pre>&lt;<span class="f">Provider</span> store={previewStoreRef.current}&gt;
+  &lt;<span class="f">ThemeProvider</span> theme={theme}&gt;
+    &lt;<span class="f">Survey</span> /&gt;   <span class="c">// no props — the data was already pruned to one question</span>
+  &lt;/<span class="f">ThemeProvider</span>&gt;
+&lt;/<span class="f">Provider</span>&gt;</pre>
+</div>
+<table>
+  <tr><th>Component</th><th>Reads</th><th>Result in preview</th></tr>
+  <tr><td><code>Survey</code></td><td><code>groups.filter(inCurrentNavigation)</code>; hides <code>&lt;Navigation&gt;</code> when <code>singleQuestion</code></td><td>renders the one pruned group, no Next/Finish footer</td></tr>
+  <tr><td><code>Group</code></td><td><code>values[group].relevance</code>; hides header when <code>singleQuestion</code></td><td>renders, header suppressed</td></tr>
+  <tr><td><code>Question</code></td><td><code>values[qualifiedCode].relevance</code></td><td><code>true</code> (forced) → always shown</td></tr>
+</table>
+
+<!-- ───────────────────────── 9 ───────────────────────── -->
+<h2 id="s9"><span class="num">9</span>Reactive value-change loop</h2>
+<p>The preview is fully interactive. When the respondent touches a control, the question dispatches
+<code class="inline">valueChange</code>; the reducer pushes that value through the dependency graph using the very same
+globals the engine produced — so relevance, validation and computed values update live, with no recompile.</p>
+<div class="card">
+  <div class="where">📄 <b>src/state/runState.js</b> — <code>setValueInState</code></div>
+<pre><span class="k">try</span> {
+  window.<span class="f">qlarrStateMachine</span>(           <span class="c">// ← from common_script.js</span>
+    state.values,                    <span class="c">// all component vars</span>
+    qlarrDependents,                 <span class="c">// who-affects-whom graph</span>
+    window.qlarrRuntime,             <span class="c">// per-survey script (from validate())</span>
+    componentCode, <span class="s">"value"</span>, value, <span class="s">"VALUE CHANGE"</span>
+  );
+} <span class="k">catch</span> (e) {
+  <span class="k">if</span> (!state.preview) <span class="k">throw</span> e;       <span class="c">// real runs stay strict</span>
+  element[<span class="s">"value"</span>] = value;            <span class="c">// preview: record input, warn, don't crash</span>
+}</pre>
+</div>
+<div class="note">A debounced edit in the design (label, option, validation rule) instead invalidates the
+<code class="inline">questionNode</code> selector → the <b>step 3</b> effect re-fires → the whole pipeline recompiles
+within ~400 ms. Two distinct loops: <b>respondent input</b> (instant, via <code class="inline">qlarrStateMachine</code>)
+vs. <b>design edits</b> (debounced full recompile).</div>
+
+<!-- ───────────────────────── globals ───────────────────────── -->
+<h2 id="globals">Globals &amp; glossary</h2>
+<table>
+  <tr><th>Global / term</th><th>Created by</th><th>Used for</th></tr>
+  <tr><td><code>window.surveyengine</code></td><td>UMD bundle (step 5a)</td><td>the Kotlin→JS engine: <code>ValidationUseCaseWrapper</code>, <code>NavigationUseCaseWrapper</code>, enums</td></tr>
+  <tr><td><code>window.navigate</code></td><td>initial_script.js</td><td>computes initial <code>qlarrVariables</code>; called back by the engine</td></tr>
+  <tr><td><code>window.qlarrStateMachine</code></td><td>common_script.js</td><td>propagates a value change through dependents (the live loop)</td></tr>
+  <tr><td><code>window.qlarrRuntime</code></td><td><code>validate().script</code> (step 5b)</td><td>the per-survey compiled logic the state machine executes</td></tr>
+  <tr><td><code>qlarrVariables</code></td><td><code>navigate()</code></td><td>per-component runtime state → becomes <code>runState.values</code></td></tr>
+  <tr><td><code>qlarrDependents</code></td><td><code>validate()/navigate()</code></td><td>dependency graph → module var in runState</td></tr>
+  <tr><td><code>navigationIndex</code></td><td><code>navigate()</code></td><td>which page/group is current; drives <code>&lt;Navigation&gt;</code></td></tr>
+  <tr><td><code>singleQuestion</code> / <code>preview</code></td><td>the preview's dispatch</td><td>flags that hide chrome and relax error handling for preview only</td></tr>
+</table>
+
+<footer>
+  Generated explainer for the <code>feat/single-question-preview-clientside</code> branch · Qlarr engine 0.1.6 ·
+  pure-frontend, no backend calls. File references are clickable paths relative to the repo root.
+</footer>
+
+</div>
+</body>
+</html>
