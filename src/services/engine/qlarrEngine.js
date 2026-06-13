@@ -149,3 +149,59 @@ export async function compileAndNavigate(surveyJson, lang = "en", surveyMode = "
     },
   };
 }
+
+/**
+ * Reduce a navigated survey to a single question for the inline design preview.
+ *
+ * Returns a NEW response whose `survey.groups` holds only the group that owns
+ * `qualifiedCode`, that group holding only that one question — both marked
+ * `inCurrentNavigation`. The FULL `qlarrVariables` map is preserved (so dependent
+ * instructions still resolve), but the target group's and question's `relevance`
+ * are forced true, so the question always shows even when its compiled relevance is
+ * false (offline types, or logic that depends on as-yet-unanswered questions).
+ * `navigationIndex` / `qlarrDependents` / theme pass through untouched.
+ *
+ * If the question (or its owning group) isn't found, the original response is
+ * returned unchanged — the renderer stays safe and simply shows the full result for
+ * one frame until the next recompile.
+ *
+ * This is the single place that knows "the preview shows one question": the shared
+ * run renderer (Survey/Group/Question) renders whatever survey it's handed, so it
+ * needs no preview-specific branches.
+ *
+ * @param {{survey: object, navigationIndex: object,
+ *   state: {qlarrVariables: object, qlarrDependents: object}}} response
+ * @param {string} qualifiedCode - the target question's qualifiedCode.
+ */
+export function pruneToSingleQuestion(response, qualifiedCode) {
+  const groups = response?.survey?.groups;
+  if (!Array.isArray(groups) || !qualifiedCode) return response;
+
+  const ownerGroup = groups.find((g) =>
+    (g.questions ?? []).some((q) => q.qualifiedCode === qualifiedCode)
+  );
+  const targetQuestion = ownerGroup?.questions?.find(
+    (q) => q.qualifiedCode === qualifiedCode
+  );
+  if (!ownerGroup || !targetQuestion) return response;
+
+  const prunedGroup = {
+    ...ownerGroup,
+    inCurrentNavigation: true,
+    questions: [{ ...targetQuestion, inCurrentNavigation: true }],
+  };
+
+  const variables = { ...response.state.qlarrVariables };
+  if (variables[ownerGroup.code]) {
+    variables[ownerGroup.code] = { ...variables[ownerGroup.code], relevance: true };
+  }
+  if (variables[qualifiedCode]) {
+    variables[qualifiedCode] = { ...variables[qualifiedCode], relevance: true };
+  }
+
+  return {
+    ...response,
+    survey: { ...response.survey, groups: [prunedGroup] },
+    state: { ...response.state, qlarrVariables: variables },
+  };
+}

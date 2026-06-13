@@ -23,8 +23,13 @@ const ALIGNMENT_TO_FLEX = {
   right: "flex-end",
 };
 
-function Survey({ singleQuestion = false, onlyQuestionCode }) {
+function Survey() {
   const theme = useTheme();
+
+  // The inline single-question preview dispatches this flag; it hides the survey
+  // Navigation footer (and the Group header) so only the question shows. A real
+  // respondent run never sets it, so the renderer behaves exactly as before.
+  const singleQuestion = useSelector((state) => state.runState.singleQuestion);
 
   const navigationIndex = useSelector((state) => {
     return state.runState.data?.navigationIndex;
@@ -87,25 +92,9 @@ function Survey({ singleQuestion = false, onlyQuestionCode }) {
         <div className={styles.surveyGroups}>
           {survey && survey.groups
             ? survey.groups
-                // Single-question preview: a content group may sit outside the
-                // current navigation (e.g. ALL_IN_ONE only pages the first
-                // group), so keep all groups when focusing one question.
-                .filter((group) => singleQuestion || group.inCurrentNavigation)
-                // Single-question preview: keep only the group that owns the target question.
-                .filter(
-                  (group) =>
-                    !onlyQuestionCode ||
-                    (group.questions ?? []).some(
-                      (q) => q.qualifiedCode === onlyQuestionCode
-                    )
-                )
+                .filter((group) => group.inCurrentNavigation)
                 .map((group, index) => (
-                  <Group
-                    key={group.code}
-                    group={group}
-                    groupIndex={index}
-                    onlyQuestionCode={onlyQuestionCode}
-                  />
+                  <Group key={group.code} group={group} groupIndex={index} />
                 ))
             : ""}
           {!singleQuestion && <Navigation navigationIndex={navigationIndex} />}

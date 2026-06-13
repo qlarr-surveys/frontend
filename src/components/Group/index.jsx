@@ -16,10 +16,7 @@ function Group(props) {
     let groupState = state.runState.values[props.group.code];
     return {
       showGroup:
-        // In a single-question preview, always render the containing group.
-        state.runState.singleQuestion ||
-        typeof groupState?.relevance === "undefined" ||
-        groupState.relevance,
+        typeof groupState?.relevance === "undefined" || groupState.relevance,
     };
   }, shallowEqual);
 
@@ -79,12 +76,7 @@ function Group(props) {
         {props.group && props.group.questions
           ? (() => {
               const visibleQuestions = props.group.questions.filter(
-                (quest) =>
-                  // Single-question preview: render the target question even if
-                  // it sits outside the current navigation.
-                  (singleQuestion || quest.inCurrentNavigation) &&
-                  (!props.onlyQuestionCode ||
-                    quest.qualifiedCode === props.onlyQuestionCode),
+                (quest) => quest.inCurrentNavigation,
               );
               return visibleQuestions.map((quest, idx) => (
                 <React.Fragment key={quest.code}>

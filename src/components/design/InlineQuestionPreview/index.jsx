@@ -18,7 +18,7 @@ import Survey from "~/components/run/Survey";
 import runState, { stateReceived } from "~/state/runState";
 import templateState from "~/state/templateState";
 import { defualtTheme } from "~/constants/theme";
-import { compileAndNavigate } from "~/services/engine/qlarrEngine";
+import { compileAndNavigate, pruneToSingleQuestion } from "~/services/engine/qlarrEngine";
 
 const RECOMPUTE_DEBOUNCE_MS = 400;
 
@@ -103,14 +103,17 @@ function InlineQuestionPreview({ code, onClose }) {
         const surveyJson = assembleSurveyJson(store.getState().designState);
         const computed = await compileAndNavigate(surveyJson, lang, "offline");
         if (cancelled) return;
+        // Reduce the compiled survey to just this question before handing it to the
+        // shared run renderer, so the renderer needs no single-question branches.
+        const pruned = pruneToSingleQuestion(computed, code);
         previewStoreRef.current.dispatch(
           stateReceived({
-            response: computed,
+            response: pruned,
             preview: true,
             singleQuestion: true,
           })
         );
-        setResponse(computed);
+        setResponse(pruned);
         setError(null);
       } catch (e) {
         if (!cancelled) {
@@ -140,7 +143,7 @@ function InlineQuestionPreview({ code, onClose }) {
     <Provider store={previewStoreRef.current}>
       <ThemeProvider theme={theme}>
         <React.Suspense fallback={<LoadingDots />}>
-          <Survey singleQuestion onlyQuestionCode={code} />
+          <Survey />
         </React.Suspense>
       </ThemeProvider>
     </Provider>
