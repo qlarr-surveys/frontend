@@ -94,7 +94,7 @@ function Survey() {
             ? survey.groups
                 .filter((group) => group.inCurrentNavigation)
                 .map((group, index) => (
-                  <Group key={group.code} group={group} groupIndex={index} />
+                    <Group key={group.code} group={group} groupIndex={index} />
                 ))
             : ""}
           {!singleQuestion && <Navigation navigationIndex={navigationIndex} />}

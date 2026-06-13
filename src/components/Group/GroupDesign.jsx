@@ -178,7 +178,7 @@ function GroupDesign({
         if (designMode === DESIGN_SURVEY_MODE.DESIGN) {
           setHovered(
             !e.target.closest(".question") &&
-              !e.target.closest(".separator") &&
+            !e.target.closest(".separator") &&
               !e.target.closest(".inline-preview"),
           );
         }
