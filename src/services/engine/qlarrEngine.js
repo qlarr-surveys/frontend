@@ -80,6 +80,83 @@ function ensureRuntimeScripts() {
 }
 
 /**
+ * Map every component to the codes of its active, design-authored validation rules.
+ *
+ * Walks the assembled design DSL and collects, per qualifiedCode, the `validation_*`
+ * instruction codes the survey author defined on that component (required, min/max
+ * char length, option counts, patterns, …). Engine-internal integrity checks
+ * (validation_enum / validation_list, auto-added during validate()) are NOT in the
+ * design's instructionList, so they're naturally excluded.
+ *
+ * @param {string} surveyJson - the assembled design DSL (see assembleSurveyJson).
+ * @returns {Object<string, string[]>} qualifiedCode -> active design validation codes.
+ */
+function collectDesignValidationCodes(surveyJson) {
+  const map = {};
+  let root;
+  try {
+    root = JSON.parse(surveyJson);
+  } catch {
+    return map;
+  }
+  const visit = (node) => {
+    if (!node || typeof node !== "object") return;
+    const code = node.qualifiedCode ?? node.code;
+    if (code && Array.isArray(node.instructionList)) {
+      const codes = node.instructionList
+        .filter(
+          (i) =>
+            i &&
+            typeof i.code === "string" &&
+            i.code.startsWith("validation_") &&
+            i.isActive !== false &&
+            !i.remove
+        )
+        .map((i) => i.code);
+      if (codes.length) map[code] = codes;
+    }
+    ["groups", "questions", "answers", "children"].forEach((key) => {
+      if (Array.isArray(node[key])) node[key].forEach(visit);
+    });
+  };
+  visit(root);
+  return map;
+}
+
+/**
+ * Correct the inverted leaf `validity` the vendored engine bundle produces.
+ *
+ * The bundle compiles each question's `validity` as the conjunction of NEGATED
+ * validation flags (`!validation_a && !validation_b && …`) — the pre-#223 "a flag is
+ * true when the rule is VIOLATED" convention. But the design DSL (and the backend)
+ * follow #223: validation flags are true when the rule PASSES (e.g.
+ * `validation_required = QlarrScripts.isNotVoid(value)`). So the bundle's negation
+ * inverts validity for every design-authored rule — any answer that satisfies its
+ * rules reads as INVALID in the preview. (The full/normal preview is unaffected: it
+ * runs through the backend, which computes validity correctly.)
+ *
+ * Until the vendored bundle is rebuilt to the #223 convention, recompute each
+ * question's `validity` to match it: valid ⇔ every active design rule passes. We fix
+ * both the initial value (in `variables`) and the reactive runtime function (in
+ * `window.qlarrRuntime`) that recomputes validity on value change.
+ *
+ * @param {object} variables - navigated qlarrVariables (mutated in place).
+ * @param {Object<string, string[]>} designValidations - from collectDesignValidationCodes.
+ */
+function correctValidityPolarity(variables, designValidations) {
+  for (const [code, validationCodes] of Object.entries(designValidations)) {
+    const valid = (state) =>
+      validationCodes.every((c) => state?.[code]?.[c] === true);
+    if (window.qlarrRuntime?.[code]) {
+      window.qlarrRuntime[code].validity = valid;
+    }
+    if (variables[code]) {
+      variables[code].validity = valid(variables);
+    }
+  }
+}
+
+/**
  * Compile a live design DSL and compute its initial runtime state, entirely in
  * the browser. Returns a shape ready for runState's `stateReceived`.
  *
@@ -140,11 +217,17 @@ export async function compileAndNavigate(surveyJson, lang = "en", surveyMode = "
     throw new Error(`qlarr navigate() failed: ${e?.message ?? e}`, { cause: e });
   }
 
+  // The vendored bundle inverts leaf `validity` (negates pass-polarity validation
+  // flags). Recompute it client-side to the #223 "true when valid" convention before
+  // handing the state to runState. See correctValidityPolarity.
+  const variables = navigationJsonOutput.state.qlarrVariables;
+  correctValidityPolarity(variables, collectDesignValidationCodes(surveyJson));
+
   return {
     survey: navigationJsonOutput.survey,
     navigationIndex: navigationJsonOutput.navigationIndex,
     state: {
-      qlarrVariables: navigationJsonOutput.state.qlarrVariables,
+      qlarrVariables: variables,
       qlarrDependents: navigationJsonOutput.state.qlarrDependents,
     },
   };
