@@ -54,6 +54,10 @@
     "saveForLater":"Guardar para más tarde",
     "linkCopied":"¡Enlace copiado al portapapeles!",
     "no_options": "No se encontraron opciones",
+    "ranking_move_up": "Subir",
+    "ranking_move_down": "Bajar",
+    "ranking_rank": "Clasificar",
+    "ranking_unrank": "Quitar",
     "preview_end_actions": {
         "heading": "Opciones de vista previa",
         "check_response": "Ver respuesta",

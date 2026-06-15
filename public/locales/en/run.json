@@ -54,6 +54,10 @@
     "saveForLater":"Save for later",
     "linkCopied":"Link copied to clipboard!",
     "no_options": "No options found",
+    "ranking_move_up": "Move up",
+    "ranking_move_down": "Move down",
+    "ranking_rank": "Rank",
+    "ranking_unrank": "Unrank",
     "preview_end_actions": {
         "heading": "Preview options",
         "check_response": "Check response",

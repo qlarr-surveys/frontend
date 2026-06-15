@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import React, { Fragment, useRef } from "react";
+import React, { Fragment, useRef, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { shallowEqual, useSelector } from "react-redux";
 import styles from "./Ranking.module.css";
@@ -10,11 +10,17 @@ import { useTheme } from "@emotion/react";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import CloseIcon from "@mui/icons-material/Close";
-import { Typography, IconButton } from "@mui/material";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { Typography, IconButton, Button, useMediaQuery } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 
 function Ranking(props) {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const isMobile = useMediaQuery("(max-width: 600px)");
+  const [flash, setFlash] = useState({ code: null, n: 0 });
 
   const visibleAnswers = useSelector(
     (state) =>
@@ -189,53 +195,92 @@ function Ranking(props) {
     }
   };
 
+  const onMove = (option, direction) => {
+    const currentRank = state[option.qualifiedCode];
+    const targetRank = direction === "up" ? currentRank - 1 : currentRank + 1;
+    if (targetRank < 1 || targetRank > withOrder.length) {
+      return;
+    }
+    const neighbor = withOrder.find(
+      (o) => state[o.qualifiedCode] === targetRank
+    );
+    if (!neighbor) {
+      return;
+    }
+    dispatch(
+      valueChange({ componentCode: option.qualifiedCode, value: targetRank })
+    );
+    dispatch(
+      valueChange({ componentCode: neighbor.qualifiedCode, value: currentRank })
+    );
+    setFlash((f) => ({ code: option.qualifiedCode, n: f.n + 1 }));
+  };
+
+  const renderContainer = (itemType, options, merged) => (
+    <RankingContainer
+      theme={theme}
+      onHover={onHover}
+      onItemTransfer={onItemTransfer}
+      onDoubleClick={onDoubleClick}
+      onClickMove={onClickMove}
+      onMove={onMove}
+      ordererLength={withOrder.length}
+      unordererLength={withoutOrder.length}
+      order={order}
+      itemType={itemType}
+      options={options}
+      state={state}
+      merged={merged}
+      flash={flash}
+    />
+  );
+
+  const optionsHeader = (
+    <div className={styles.columnHeader}>
+      <Typography variant="subtitle2" className={styles.textSecondary}>
+        Options
+      </Typography>
+      <Typography variant="caption" className={styles.textDisabled}>
+        {withoutOrder.length} remaining
+      </Typography>
+    </div>
+  );
+
+  const rankingHeader = (
+    <div className={styles.columnHeader}>
+      <Typography variant="subtitle2" className={styles.textSecondary}>
+        Your Ranking
+      </Typography>
+      <Typography variant="caption" className={styles.textDisabled}>
+        {withOrder.length} ranked
+      </Typography>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <div className={styles.rankingBox}>
+        <div className={styles.section}>
+          {rankingHeader}
+          {renderContainer("sorted", withOrder, true)}
+        </div>
+        <div className={`${styles.section} ${styles.sectionMuted}`}>
+          {optionsHeader}
+          {renderContainer("unsorted", withoutOrder, true)}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.rankingGrid}>
       <div className={styles.column}>
-        <div className={styles.columnHeader}>
-          <Typography variant="subtitle2" className={styles.textSecondary}>
-            Options
-          </Typography>
-          <Typography variant="caption" className={styles.textDisabled}>
-            {withoutOrder.length} remaining
-          </Typography>
-        </div>
-        <RankingContainer
-          theme={theme}
-          ordererLength={withOrder.length}
-          unordererLength={withoutOrder.length}
-          onHover={onHover}
-          order={order}
-          onItemTransfer={onItemTransfer}
-          onDoubleClick={onDoubleClick}
-          onClickMove={onClickMove}
-          itemType="unsorted"
-          options={withoutOrder}
-          state={state}
-        />
+        {optionsHeader}
+        {renderContainer("unsorted", withoutOrder, false)}
       </div>
       <div className={styles.column}>
-        <div className={styles.columnHeader}>
-          <Typography variant="subtitle2" className={styles.textSecondary}>
-            Your Ranking
-          </Typography>
-          <Typography variant="caption" className={styles.textDisabled}>
-            {withOrder.length} ranked
-          </Typography>
-        </div>
-        <RankingContainer
-          theme={theme}
-          onHover={onHover}
-          onItemTransfer={onItemTransfer}
-          onDoubleClick={onDoubleClick}
-          onClickMove={onClickMove}
-          ordererLength={withOrder.length}
-          unordererLength={withoutOrder.length}
-          order={order}
-          itemType="sorted"
-          options={withOrder}
-          state={state}
-        />
+        {rankingHeader}
+        {renderContainer("sorted", withOrder, false)}
       </div>
     </div>
   );
@@ -248,8 +293,11 @@ function RankingContainer({
   onItemTransfer,
   onDoubleClick,
   onClickMove,
+  onMove,
   onHover,
   state,
+  merged,
+  flash,
 }) {
   const containerRef = useRef(null);
   const [{ isOver }, containerDrop] = useDrop({
@@ -265,7 +313,13 @@ function RankingContainer({
   return (
     <Box
       ref={containerRef}
-      className={`${styles.dragContainer} ${isOver ? styles.dragContainerOver : styles.dragContainerDefault}`}
+      className={
+        merged
+          ? `${styles.mergedContainer} ${isOver ? styles.mergedContainerOver : ""}`
+          : `${styles.dragContainer} ${
+              isOver ? styles.dragContainerOver : styles.dragContainerDefault
+            }`
+      }
     >
       {options.length === 0 && (
         <DropArea
@@ -274,9 +328,7 @@ function RankingContainer({
           fillParent={true}
           onItemTransfer={onItemTransfer}
         >
-          <Box
-            className={styles.emptyState}
-          >
+          <Box className={merged ? styles.emptyStateMerged : styles.emptyState}>
             <Typography variant="body2" className={styles.textSecondary}>
               {isSorted
                 ? "Drag items here to rank them"
@@ -303,6 +355,11 @@ function RankingContainer({
               option={option}
               onDoubleClick={onDoubleClick}
               onClickMove={onClickMove}
+              onMove={onMove}
+              count={options.length}
+              mobile={merged}
+              muted={merged && !isSorted}
+              flash={flash}
               rank={isSorted ? state[option.qualifiedCode] : null}
             />
           </Fragment>
@@ -326,11 +383,17 @@ function RankingOption({
   option,
   onDoubleClick,
   onClickMove,
+  onMove,
+  count,
   index,
   onHover,
   itemType,
   rank,
+  mobile,
+  muted,
+  flash,
 }) {
+  const { t } = useTranslation(NAMESPACES.RUN);
   const containerRef = useRef();
   const item = {
     index: index,
@@ -380,6 +443,16 @@ function RankingOption({
   });
   drop(preview(containerRef));
 
+  useEffect(() => {
+    if (!flash || flash.code !== option.qualifiedCode) return;
+    const el = containerRef.current;
+    if (!el) return;
+    el.classList.remove(styles.flash);
+    // force reflow so the highlight animation restarts on every move
+    void el.offsetWidth;
+    el.classList.add(styles.flash);
+  }, [flash?.n]);
+
   const isSorted = itemType === "sorted";
 
   return (
@@ -388,35 +461,100 @@ function RankingOption({
         data-code={option.code}
         ref={containerRef}
         data-handler-id={handlerId}
-        className={isDragging ? styles.rankingItemDragging : styles.rankingItem}
+        className={`${
+          isDragging ? styles.rankingItemDragging : styles.rankingItem
+        } ${muted ? styles.rankingItemMuted : ""} ${
+          mobile ? styles.itemMobile : ""
+        }`}
         onDoubleClick={() => onDoubleClick(item)}
       >
-        {isSorted && rank != null && (
-          <Box className={styles.rankBadge}>
-            {rank}
-          </Box>
-        )}
-        <DragIndicatorIcon
-          className={styles.dragHandle}
-        />
-        <div className={styles.itemContent}>
-          <Content
-            elementCode={option.code}
-            customStyle={`font-size: ${theme.textStyles.text.size}px;`}
-            name="label"
-            content={option.content?.label}
-          />
+        <div className={styles.itemMain}>
+          {isSorted && rank != null && (
+            <Box className={styles.rankBadge}>{rank}</Box>
+          )}
+          {!mobile && <DragIndicatorIcon className={styles.dragHandle} />}
+          <div className={styles.itemContent}>
+            <Content
+              elementCode={option.code}
+              customStyle={`font-size: ${theme.textStyles.text.size}px;`}
+              name="label"
+              content={option.content?.label}
+            />
+          </div>
+          {!mobile ? (
+            <IconButton
+              size="small"
+              aria-label={isSorted ? t("ranking_unrank") : t("ranking_rank")}
+              className={styles.actionButton}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickMove(option);
+              }}
+            >
+              {isSorted ? (
+                <CloseIcon fontSize="small" />
+              ) : (
+                <ChevronRightIcon fontSize="small" />
+              )}
+            </IconButton>
+          ) : !isSorted ? (
+            <Button
+              size="small"
+              variant="outlined"
+              className={styles.rankButton}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickMove(option);
+              }}
+            >
+              {t("ranking_rank")}
+            </Button>
+          ) : null}
         </div>
-        <IconButton
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClickMove(option);
-          }}
-          className={styles.actionButton}
-        >
-          {isSorted ? <CloseIcon fontSize="small" /> : <ChevronRightIcon fontSize="small" />}
-        </IconButton>
+        {mobile && isSorted && (
+          <div className={styles.rankControls}>
+            <div className={styles.moveButtons}>
+              <IconButton
+                size="small"
+                color="primary"
+                disabled={rank <= 1}
+                aria-label={t("ranking_move_up")}
+                className={styles.moveButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMove(option, "up");
+                }}
+              >
+                <KeyboardArrowUpIcon fontSize="small" />
+              </IconButton>
+              <IconButton
+                size="small"
+                color="primary"
+                disabled={rank >= count}
+                aria-label={t("ranking_move_down")}
+                className={styles.moveButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMove(option, "down");
+                }}
+              >
+                <KeyboardArrowDownIcon fontSize="small" />
+              </IconButton>
+            </div>
+            <Button
+              size="small"
+              variant="text"
+              color="error"
+              className={styles.unrankControl}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickMove(option);
+              }}
+            >
+              {t("ranking_unrank")}
+            </Button>
+          </div>
+        )}
       </Box>
     </div>
   );

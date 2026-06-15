@@ -54,6 +54,10 @@
   "saveForLater": "Für später speichern",
   "linkCopied": "Link in die Zwischenablage kopiert!",
   "no_options": "Keine Optionen gefunden",
+  "ranking_move_up": "Nach oben",
+  "ranking_move_down": "Nach unten",
+  "ranking_rank": "Einordnen",
+  "ranking_unrank": "Entfernen",
   "preview_end_actions": {
     "heading": "Vorschauoptionen",
     "check_response": "Antwort prüfen",

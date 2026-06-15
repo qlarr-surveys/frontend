@@ -54,6 +54,10 @@
     "saveForLater":"Enregistrer pour plus tard",
     "linkCopied":"Lien copié dans le presse-papiers !",
     "no_options": "Aucune option trouvée",
+    "ranking_move_up": "Monter",
+    "ranking_move_down": "Descendre",
+    "ranking_rank": "Classer",
+    "ranking_unrank": "Retirer",
     "preview_end_actions": {
         "heading": "Options d'aperçu",
         "check_response": "Voir la réponse",
