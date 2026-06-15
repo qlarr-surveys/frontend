@@ -1232,7 +1232,7 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
       let type = getComponentType(capture(value[0]));
       let leftOperand =
         type == "date" || type == "date_time" || type == "time"
-          ? `QlarrScripts.sqlDateTimeToDate(${capture(value[0])}.value)`
+          ? `+QlarrScripts.sqlDateTimeToDate(${capture(value[0])}.value)`
           : `${capture(value[0])}.value`;
       if (["==", "!=", "<", "<=", ">", ">="].includes(key)) {
         return `${leftOperand}${key}${capture(value[1], type)}`;
@@ -1326,7 +1326,27 @@ const wrapIfNested = (nested, text) => {
   return (nested ? "(" : "") + text + (nested ? ")" : "");
 };
 
+// Builds a JS expression that coerces a logic-builder SQL date/time string to epoch-ms,
+// matching the (also coerced) stored answer so == / != / < / > / between all compare
+// numbers. The engine's sqlDateTimeToDate requires a full "YYYY-MM-DD HH:MM:SS" string
+// and returns a Date object, hence both the full form and the leading unary "+".
+const captureSqlDateTime = (value, type) => {
+  const sqlDateTime =
+    type == "time"
+      ? `1970-01-01 ${value}` // "13:00:00" -> "1970-01-01 13:00:00"
+      : type == "date"
+        ? `${value} 00:00:00` // "2025-06-15" -> "2025-06-15 00:00:00"
+        : `${value}`; // date_time already "YYYY-MM-DD HH:mm:ss"
+  return `+QlarrScripts.sqlDateTimeToDate(\"${sqlDateTime}\")`;
+};
+
 const capture = (value, type) => {
+  if (
+    typeof value === "string" &&
+    (type == "time" || type == "date" || type == "date_time")
+  ) {
+    return captureSqlDateTime(value, type);
+  }
   if (type == "time") {
     return `QlarrScripts.sqlDateTimeToDate(\"1970-01-01 ${integerToTime(
       value,
