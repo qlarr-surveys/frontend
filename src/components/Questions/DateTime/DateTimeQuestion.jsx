@@ -18,6 +18,15 @@ function DateTimeQuestion(props) {
   const theme = useTheme();
   const { i18n } = useTranslation(NAMESPACES.RUN);
 
+  // Adapt the picker popup to the survey theme so its text stays legible on both
+  // light and dark survey themes (instead of a hardcoded white background).
+  const pickerPaperProps = {
+    sx: {
+      backgroundColor: theme.palette.background.paper,
+      color: theme.palette.text.primary,
+    },
+  };
+
   const state = useSelector((state) => {
     let own = state.runState.values[props.component.qualifiedCode];
     let show_errors = state.runState.values.Survey.show_errors;
@@ -82,14 +91,7 @@ function DateTimeQuestion(props) {
                 " " +
                 (props.component.fullDayFormat ? "HH:mm" : "hh:mm A")
               }
-              PaperProps={{
-                sx: {
-                  backgroundColor: 'white',
-                  "& .MuiPickersDay-root": {
-                    backgroundColor: 'white',
-                  },
-                },
-              }}
+              PaperProps={pickerPaperProps}
 
               ampm={props.component.fullDayFormat ? false : true}
               openTo="year"
@@ -135,14 +137,7 @@ function DateTimeQuestion(props) {
             value={state.value}
             error={state.invalid}
             onChange={handleDateChange}
-            PaperProps={{
-              sx: {
-                backgroundColor: 'white',
-                "& .MuiPickersDay-root": {
-                  backgroundColor: 'white',
-                },
-              },
-            }}
+            PaperProps={pickerPaperProps}
           />
         ) : (
           <DatePicker
@@ -167,14 +162,7 @@ function DateTimeQuestion(props) {
                 )
                 : undefined
             }
-            PaperProps={{
-              sx: {
-                backgroundColor: 'white',
-                "& .MuiPickersDay-root": {
-                  backgroundColor: 'white',
-                },
-              },
-            }}
+            PaperProps={pickerPaperProps}
             maxDate={
               props.component.maxDate
                 ? window.QlarrScripts.dateStringToDate(
