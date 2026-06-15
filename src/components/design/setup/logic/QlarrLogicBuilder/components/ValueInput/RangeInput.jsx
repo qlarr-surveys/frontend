@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { FIELD_TYPES, DATE_FORMATS } from '../../config/constants';
+import { FIELD_TYPES, DATE_FORMATS, PICKER_POPPER_PROPS } from '../../config/constants';
 import { getCompactTextFieldProps } from '../../utils/inputProps';
 import { isRangeInverted } from '../../utils/rangeValidation';
 import styles from '../../QlarrLogicBuilder.module.css';
@@ -83,6 +83,7 @@ export const RangeInput = React.memo(function RangeInput({ fieldType, value, onC
               handleMinChange(newValue ? newValue.format(DATE_FORMATS.DATE_VALUE) : '');
             }}
             inputFormat={DATE_FORMATS.DATE_DISPLAY}
+            PopperProps={PICKER_POPPER_PROPS}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -100,6 +101,7 @@ export const RangeInput = React.memo(function RangeInput({ fieldType, value, onC
               handleMaxChange(newValue ? newValue.format(DATE_FORMATS.DATE_VALUE) : '');
             }}
             inputFormat={DATE_FORMATS.DATE_DISPLAY}
+            PopperProps={PICKER_POPPER_PROPS}
             renderInput={(params) => (
               <TextField
                 {...params}

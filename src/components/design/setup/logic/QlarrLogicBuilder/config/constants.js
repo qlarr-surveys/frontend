@@ -38,3 +38,10 @@ export const DATE_FORMATS = {
   TIME_VALUE: 'HH:mm:ss',
   DATETIME_VALUE: 'YYYY-MM-DD HH:mm:ss',
 };
+
+/**
+ * Popper props shared by all logic-builder date/time pickers.
+ * `bottom-start` anchors the popup to the field's start edge so it opens toward
+ * the canvas and never overflows left into the narrow design sidebar.
+ */
+export const PICKER_POPPER_PROPS = { placement: 'bottom-start' };
