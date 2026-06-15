@@ -306,7 +306,9 @@ function RankingContainer({
       return { isOver: monitor.isOver({ shallow: false }) };
     },
   });
-  containerDrop(containerRef);
+  if (!merged) {
+    containerDrop(containerRef);
+  }
 
   const isSorted = itemType === "sorted";
 
@@ -326,6 +328,7 @@ function RankingContainer({
           itemType={itemType}
           index={0}
           fillParent={true}
+          mobile={merged}
           onItemTransfer={onItemTransfer}
         >
           <Box className={merged ? styles.emptyStateMerged : styles.emptyState}>
@@ -344,6 +347,7 @@ function RankingContainer({
               itemType={itemType}
               index={index}
               key={"drop" + option.code}
+              mobile={merged}
               onItemTransfer={onItemTransfer}
             />
             <RankingOption
@@ -371,6 +375,7 @@ function RankingContainer({
           index={options.length}
           key="last"
           fillParent={true}
+          mobile={merged}
           onItemTransfer={onItemTransfer}
         />
       )}
@@ -441,7 +446,11 @@ function RankingOption({
       onHover(item, option, itemType, index);
     },
   });
-  drop(preview(containerRef));
+  // On mobile the explicit buttons handle everything; wiring drag/drop there
+  // lets the touch backend turn scroll gestures into accidental re-ranking.
+  if (!mobile) {
+    drop(preview(containerRef));
+  }
 
   useEffect(() => {
     if (!flash || flash.code !== option.qualifiedCode) return;
@@ -456,7 +465,7 @@ function RankingOption({
   const isSorted = itemType === "sorted";
 
   return (
-    <div ref={drag}>
+    <div ref={mobile ? undefined : drag}>
       <Box
         data-code={option.code}
         ref={containerRef}
@@ -466,7 +475,7 @@ function RankingOption({
         } ${muted ? styles.rankingItemMuted : ""} ${
           mobile ? styles.itemMobile : ""
         }`}
-        onDoubleClick={() => onDoubleClick(item)}
+        onDoubleClick={mobile ? undefined : () => onDoubleClick(item)}
       >
         <div className={styles.itemMain}>
           {isSorted && rank != null && (
@@ -560,7 +569,7 @@ function RankingOption({
   );
 }
 
-function DropArea({ index, onItemTransfer, itemType, fillParent, children }) {
+function DropArea({ index, onItemTransfer, itemType, fillParent, mobile, children }) {
   const containerRef = useRef();
   const [{ handlerId }, drop] = useDrop({
     accept: "rankingOption",
@@ -580,7 +589,9 @@ function DropArea({ index, onItemTransfer, itemType, fillParent, children }) {
       onItemTransfer(item, index, itemType);
     },
   });
-  drop(containerRef);
+  if (!mobile) {
+    drop(containerRef);
+  }
   return (
     <div
       className={fillParent ? styles.dropAreaFill : styles.dropArea}
