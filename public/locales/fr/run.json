@@ -58,6 +58,12 @@
     "ranking_move_down": "Descendre",
     "ranking_rank": "Classer",
     "ranking_unrank": "Retirer",
+    "ranking_options": "Options",
+    "ranking_remaining": "{{count}} restants",
+    "ranking_your_ranking": "Votre classement",
+    "ranking_ranked": "{{count}} classés",
+    "ranking_drag_hint": "Faites glisser les éléments ici pour les classer",
+    "ranking_all_ranked": "Tous les éléments ont été classés",
     "preview_end_actions": {
         "heading": "Options d'aperçu",
         "check_response": "Voir la réponse",

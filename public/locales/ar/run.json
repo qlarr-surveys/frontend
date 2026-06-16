@@ -58,6 +58,12 @@
   "ranking_move_down": "نقل لأسفل",
   "ranking_rank": "ترتيب",
   "ranking_unrank": "إزالة",
+  "ranking_options": "الخيارات",
+  "ranking_remaining": "{{count}} متبقٍ",
+  "ranking_your_ranking": "ترتيبك",
+  "ranking_ranked": "{{count}} مُرتَّبة",
+  "ranking_drag_hint": "اسحب العناصر هنا لترتيبها",
+  "ranking_all_ranked": "تم ترتيب جميع العناصر",
   "preview_end_actions": {
     "heading": "خيارات المعاينة",
     "check_response": "عرض الرد",

@@ -58,6 +58,12 @@
     "ranking_move_down": "Omlaag",
     "ranking_rank": "Rangschikken",
     "ranking_unrank": "Verwijderen",
+    "ranking_options": "Opties",
+    "ranking_remaining": "{{count}} resterend",
+    "ranking_your_ranking": "Jouw rangschikking",
+    "ranking_ranked": "{{count}} gerangschikt",
+    "ranking_drag_hint": "Sleep items hierheen om ze te rangschikken",
+    "ranking_all_ranked": "Alle items zijn gerangschikt",
     "preview_end_actions": {
         "heading": "Voorbeeldopties",
         "check_response": "Reactie bekijken",

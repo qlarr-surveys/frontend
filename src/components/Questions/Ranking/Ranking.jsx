@@ -19,6 +19,7 @@ import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 function Ranking(props) {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const { t } = useTranslation(NAMESPACES.RUN);
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [flash, setFlash] = useState({ code: null, n: 0 });
 
@@ -238,10 +239,10 @@ function Ranking(props) {
   const optionsHeader = (
     <div className={styles.columnHeader}>
       <Typography variant="subtitle2" className={styles.textSecondary}>
-        Options
+        {t("ranking_options")}
       </Typography>
       <Typography variant="caption" className={styles.textDisabled}>
-        {withoutOrder.length} remaining
+        {t("ranking_remaining", { count: withoutOrder.length })}
       </Typography>
     </div>
   );
@@ -249,10 +250,10 @@ function Ranking(props) {
   const rankingHeader = (
     <div className={styles.columnHeader}>
       <Typography variant="subtitle2" className={styles.textSecondary}>
-        Your Ranking
+        {t("ranking_your_ranking")}
       </Typography>
       <Typography variant="caption" className={styles.textDisabled}>
-        {withOrder.length} ranked
+        {t("ranking_ranked", { count: withOrder.length })}
       </Typography>
     </div>
   );
@@ -299,6 +300,7 @@ function RankingContainer({
   merged,
   flash,
 }) {
+  const { t } = useTranslation(NAMESPACES.RUN);
   const containerRef = useRef(null);
   const [{ isOver }, containerDrop] = useDrop({
     accept: "rankingOption",
@@ -333,9 +335,7 @@ function RankingContainer({
         >
           <Box className={merged ? styles.emptyStateMerged : styles.emptyState}>
             <Typography variant="body2" className={styles.textSecondary}>
-              {isSorted
-                ? "Drag items here to rank them"
-                : "All items have been ranked"}
+              {isSorted ? t("ranking_drag_hint") : t("ranking_all_ranked")}
             </Typography>
           </Box>
         </DropArea>

@@ -58,6 +58,12 @@
     "ranking_move_down": "Move down",
     "ranking_rank": "Rank",
     "ranking_unrank": "Unrank",
+    "ranking_options": "Options",
+    "ranking_remaining": "{{count}} remaining",
+    "ranking_your_ranking": "Your Ranking",
+    "ranking_ranked": "{{count}} ranked",
+    "ranking_drag_hint": "Drag items here to rank them",
+    "ranking_all_ranked": "All items have been ranked",
     "preview_end_actions": {
         "heading": "Preview options",
         "check_response": "Check response",
