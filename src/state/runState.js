@@ -1,4 +1,4 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice, current } from "@reduxjs/toolkit";
 
 let qlarrDependents = {};
 
@@ -153,6 +153,8 @@ export function getValues(values) {
         let value = element["value"];
         if (typeof value !== "undefined") {
           retrunObj[key + ".value"] = value;
+        } else {
+          retrunObj[key + ".value"] = null;
         }
       }
     }
