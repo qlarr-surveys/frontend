@@ -68,7 +68,7 @@ function SCQIconArrayDesign(props) {
           <Button
             size="small"
             onClick={(e) =>
-              dispatch(addNewAnswer({ code: props.code, type: "column" }))
+              dispatch(addNewAnswer({ questionCode: props.code, type: "column" }))
             }
           >
             {t("add_column")}
