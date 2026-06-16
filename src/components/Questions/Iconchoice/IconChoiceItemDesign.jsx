@@ -57,15 +57,8 @@ function IconChoiceItemDesign({
     return type == "add" ? undefined : state.designState[qualifiedCode];
   });
   const onMainLang = langInfo.lang === langInfo.mainLang;
-  const lang = langInfo.lang;
 
   const svgIconName = answer?.resources?.icon;
-
-  const content = type == "add" ? undefined : answer.content?.[lang]?.["label"];
-
-  const icon = type == "add" ? undefined : answer.icon;
-
-  const isRtl = rtlLanguage.includes(lang);
 
   const mainContent =
     type == "add" ? undefined : answer.content?.[langInfo.mainLang]?.["label"];
@@ -300,6 +293,7 @@ function IconChoiceItemDesign({
           <div className={styles.iconCenter}>
             <DynamicSvg
               theme={theme}
+              onIconClick={() => setIconSelectorOpen(true)}
               imageHeight={imageHeight + "px"}
               svgUrl={svgIconName ? buildResourceUrl(svgIconName) : undefined}
             />
