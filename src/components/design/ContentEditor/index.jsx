@@ -6,13 +6,13 @@ import React, {
 } from "react";
 import styles from "./ContentEditor.module.css";
 import "~/styles/tiptap-editor.css";
-import { Box, css } from "@mui/material";
+import { Box, css, useTheme } from "@mui/material";
 import TipTapEditor from "./TipTapEditor";
 import { rtlLanguage } from "~/utils/common";
 import { useDispatch } from "react-redux";
 import { changeContent, resetFocus } from "~/state/design/designState";
 import { useSelector } from "react-redux";
-import { isNotEmptyHtml } from "~/utils/design/utils";
+import { isNotEmptyHtml, appendRequiredAsterisk } from "~/utils/design/utils";
 import {
   useCollapsibleHandler,
   ensureCollapsiblesClosed,
@@ -33,8 +33,10 @@ function ContentEditor({
   customStyle,
   showToolbar = true,
   centerText = false,
+  required = false,
 }) {
   const dispatch = useDispatch();
+  const theme = useTheme();
 
   const content = useSelector((state) => {
     return state.designState[code].content;
@@ -144,7 +146,12 @@ function ContentEditor({
             styles.noPadding
           }`}
           dangerouslySetInnerHTML={{
-            __html: ensureCollapsiblesClosed(fixedValue),
+            __html: required
+              ? appendRequiredAsterisk(
+                  ensureCollapsiblesClosed(fixedValue),
+                  theme.palette.error.main
+                )
+              : ensureCollapsiblesClosed(fixedValue),
           }}
         />
       ) : (
