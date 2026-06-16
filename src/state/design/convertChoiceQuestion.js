@@ -1,4 +1,8 @@
-import { isSingleSelect, mediaGroup } from "~/constants/design";
+import {
+  CONVERTIBLE_CHOICE_TYPES,
+  isSingleSelect,
+  mediaGroup,
+} from "~/constants/design";
 import {
   addAnswerInstructions,
   addMaskedValuesInstructions,
@@ -9,6 +13,47 @@ import {
   refreshListForMultipleChoice,
   removeInstruction,
 } from "./addInstructions";
+
+// Validations that only make sense for one selection model: multi-select uses
+// option-count rules, single-select uses validation_required.
+const MULTI_ONLY_VALIDATIONS = [
+  "validation_min_option_count",
+  "validation_max_option_count",
+  "validation_option_count",
+];
+const SINGLE_ONLY_VALIDATIONS = ["validation_required"];
+
+// Engine-generated value validations that get persisted into the DSL: a list
+// value carries `validation_list` (membership check via .every()), a single
+// value carries `validation_enum`. After a question is narrowed multi→single, a
+// stale `validation_list` calls .every() on the now-string value and throws,
+// crashing the run/preview — so the one for the wrong model must be dropped too.
+const MULTI_ONLY_VALUE_VALIDATIONS = ["validation_list"];
+const SINGLE_ONLY_VALUE_VALIDATIONS = ["validation_enum"];
+
+/**
+ * Remove validation rules and instructions that don't apply to a choice
+ * question's current selection model. Idempotent and safe to call on any node —
+ * it no-ops for non-choice types. Used both when converting a question's type
+ * and when healing a survey on load.
+ */
+export function normalizeChoiceValidations(question) {
+  if (!question || !CONVERTIBLE_CHOICE_TYPES.includes(question.type)) {
+    return;
+  }
+  const single = isSingleSelect(question.type);
+  const codesToRemove = single
+    ? [...MULTI_ONLY_VALIDATIONS, ...MULTI_ONLY_VALUE_VALIDATIONS]
+    : [...SINGLE_ONLY_VALIDATIONS, ...SINGLE_ONLY_VALUE_VALIDATIONS];
+  codesToRemove.forEach((code) => {
+    if (question.validation && code in question.validation) {
+      delete question.validation[code];
+    }
+    if (question.instructionList) {
+      removeInstruction(question, code);
+    }
+  });
+}
 
 export function convertChoiceQuestion(
   state,
@@ -27,24 +72,10 @@ export function convertChoiceQuestion(
     delete currentQuestion.skip_logic;
   }
 
-  // Remove validation rules incompatible with the target selection model
-  if (currentQuestion.validation) {
-    const rulesNotSupportedInMulti = ["validation_required"];
-    const rulesNotSupportedInSingle = [
-      "validation_min_option_count",
-      "validation_max_option_count",
-      "validation_option_count",
-    ];
-    const rulesToRemove = dstSingle
-      ? rulesNotSupportedInSingle
-      : rulesNotSupportedInMulti;
-    rulesToRemove.forEach((rule) => {
-      if (rule in currentQuestion.validation) {
-        delete currentQuestion.validation[rule];
-        removeInstruction(currentQuestion, rule);
-      }
-    });
-  }
+  // Remove validations incompatible with the new selection model (and any stale
+  // engine value-validation for the old one). currentQuestion.type is already
+  // newType here, so this keys off the destination model.
+  normalizeChoiceValidations(currentQuestion);
 
   // Answer-level resource cleanup — remove resources irrelevant to target type
   if (srcGroup === "icon" && dstGroup !== "icon") {
