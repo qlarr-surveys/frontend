@@ -20,10 +20,7 @@ import {
   setupOptions,
   themeSetup,
 } from "~/constants/design";
-import {
-  convertChoiceQuestion,
-  normalizeChoiceValidations,
-} from "./convertChoiceQuestion";
+import { convertChoiceQuestion } from "./convertChoiceQuestion";
 import { convertArrayQuestion } from "./convertArrayQuestion";
 import { convertTextQuestion } from "./convertTextQuestion";
 import { convertDateTimeQuestion } from "./convertDateTimeQuestion";
