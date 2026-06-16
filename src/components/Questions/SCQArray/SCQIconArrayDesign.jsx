@@ -294,6 +294,7 @@ function SCQArrayRowDesign({
           >
             <DynamicSvg
               opacity={0.2}
+              inDesign={true}
               theme={theme}
               onIconClick={() => {}}
               imageHeight="64px"
@@ -466,6 +467,7 @@ function SCQArrayHeaderDesign({
         <DynamicSvg
           onIconClick={() => setIconSelectorOpen(true)}
           theme={theme}
+          inDesign={true}
           imageHeight="64px"
           svgUrl={icon ? buildResourceUrl(icon) : undefined}
         />

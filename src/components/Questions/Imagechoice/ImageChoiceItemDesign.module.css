@@ -62,3 +62,7 @@
   padding-top: var(--qlarr-aspect-padding);
   background-image: var(--qlarr-bg-image);
 }
+
+.clickableImage {
+  cursor: pointer;
+}

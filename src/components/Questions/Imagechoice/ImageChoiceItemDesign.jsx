@@ -46,6 +46,7 @@ function ImageChoiceItemDesign({
   const dispatch = useDispatch();
   const theme = useTheme();
   const ref = useRef();
+  const fileInputRef = useRef();
   const [isUploading, setUploading] = useState(false);
   const { guard, modal } = useReleaseGuard();
 
@@ -242,13 +243,27 @@ function ImageChoiceItemDesign({
           />
         )}
         <div
-          className={`${styles.imageContainer} ${styles.imageContainerDynamic}`}
+          className={`${styles.imageContainer} ${styles.imageContainerDynamic} ${
+            inDesign(designMode) ? styles.clickableImage : ""
+          }`}
           style={{
             "--qlarr-aspect-padding": 100 / imageAspectRatio + "%",
             "--qlarr-bg-image": backgroundImage,
           }}
           ref={ref}
           data-handler-id={handlerId}
+          title={inDesign(designMode) ? t("replace_image") : undefined}
+          onClick={
+            inDesign(designMode)
+              ? (e) => {
+                  // Only trigger when the image area itself is clicked,
+                  // not the overlaid buttons / drag handle.
+                  if (e.target === e.currentTarget) {
+                    fileInputRef.current?.click();
+                  }
+                }
+              : undefined
+          }
         >
           {inDesign(designMode) && (
             <div className={`${btnStyles.buttonContainers} ${styles.buttonContainersAbsolute}`}>
@@ -303,6 +318,7 @@ function ImageChoiceItemDesign({
                 >
                   <PhotoCamera />
                   <input
+                    ref={fileInputRef}
                     hidden
                     id={`file-input-${qualifiedCode}`}
                     accept="image/*"

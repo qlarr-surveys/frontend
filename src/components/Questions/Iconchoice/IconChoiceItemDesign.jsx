@@ -57,15 +57,8 @@ function IconChoiceItemDesign({
     return type == "add" ? undefined : state.designState[qualifiedCode];
   });
   const onMainLang = langInfo.lang === langInfo.mainLang;
-  const lang = langInfo.lang;
 
   const svgIconName = answer?.resources?.icon;
-
-  const content = type == "add" ? undefined : answer.content?.[lang]?.["label"];
-
-  const icon = type == "add" ? undefined : answer.icon;
-
-  const isRtl = rtlLanguage.includes(lang);
 
   const mainContent =
     type == "add" ? undefined : answer.content?.[langInfo.mainLang]?.["label"];
@@ -101,7 +94,7 @@ function IconChoiceItemDesign({
             code: qualifiedCode,
             key: "icon",
             value: response.name,
-          })
+          }),
         );
       })
       .catch((error) => {
@@ -126,7 +119,7 @@ function IconChoiceItemDesign({
       },
       collect: (monitor) => monitor.isDragging(),
     },
-    [index]
+    [index],
   );
 
   const [{ handlerId }, drop] = useDrop({
@@ -189,7 +182,7 @@ function IconChoiceItemDesign({
             id: item.draggableId,
             fromIndex: dragIndex,
             toIndex: hoverIndex,
-          })
+          }),
         );
 
         // Note: we're mutating the monitor item here!
@@ -281,7 +274,7 @@ function IconChoiceItemDesign({
                       setup({
                         code: qualifiedCode,
                         rules: setupOptions("options"),
-                      })
+                      }),
                     );
                   }}
                 >
@@ -299,7 +292,9 @@ function IconChoiceItemDesign({
           )}
           <div className={styles.iconCenter}>
             <DynamicSvg
+              inDesign={true}
               theme={theme}
+              onIconClick={() => setIconSelectorOpen(true)}
               imageHeight={imageHeight + "px"}
               svgUrl={svgIconName ? buildResourceUrl(svgIconName) : undefined}
             />
