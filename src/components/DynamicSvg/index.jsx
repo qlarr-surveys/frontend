@@ -8,6 +8,7 @@ function DynamicSvg({
   onIconClick,
   opacity = 1,
   isSelected = false,
+  inDesign = false,
   theme,
 }) {
   const [svgContent, setSvgContent] = useState("");
@@ -28,6 +29,7 @@ function DynamicSvg({
         maxHeight: maxHeight,
         maxWidth: maxHeight,
         height: imageHeight,
+        cursor : inDesign ? "pointer" : "inherit",
         aspectRatio: "1",
         padding: "2px",
         width: imageHeight,

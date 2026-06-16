@@ -94,7 +94,7 @@ function IconChoiceItemDesign({
             code: qualifiedCode,
             key: "icon",
             value: response.name,
-          })
+          }),
         );
       })
       .catch((error) => {
@@ -119,7 +119,7 @@ function IconChoiceItemDesign({
       },
       collect: (monitor) => monitor.isDragging(),
     },
-    [index]
+    [index],
   );
 
   const [{ handlerId }, drop] = useDrop({
@@ -182,7 +182,7 @@ function IconChoiceItemDesign({
             id: item.draggableId,
             fromIndex: dragIndex,
             toIndex: hoverIndex,
-          })
+          }),
         );
 
         // Note: we're mutating the monitor item here!
@@ -274,7 +274,7 @@ function IconChoiceItemDesign({
                       setup({
                         code: qualifiedCode,
                         rules: setupOptions("options"),
-                      })
+                      }),
                     );
                   }}
                 >
@@ -292,6 +292,7 @@ function IconChoiceItemDesign({
           )}
           <div className={styles.iconCenter}>
             <DynamicSvg
+              inDesign={true}
               theme={theme}
               onIconClick={() => setIconSelectorOpen(true)}
               imageHeight={imageHeight + "px"}
