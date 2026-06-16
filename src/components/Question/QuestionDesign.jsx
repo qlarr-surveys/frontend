@@ -107,7 +107,7 @@ function QuestionDesign({
           id: item.draggableId,
           fromIndex: dragIndex,
           toIndex: hoverIndex + 1,
-        })
+        }),
       );
 
       // Note: we're mutating the monitor item here!
@@ -158,10 +158,10 @@ function QuestionDesign({
   const stateClass = isInSetup
     ? styles.questionSetup
     : hovered
-    ? styles.questionHovered
-    : isDragging
-    ? styles.questionDragging
-    : "";
+      ? styles.questionHovered
+      : isDragging
+        ? styles.questionDragging
+        : "";
 
   return (
     <div
@@ -183,13 +183,19 @@ function QuestionDesign({
       }}
       className={`question ${isLast ? styles.groupQuestionLast : styles.groupQuestion} ${stateClass}`}
       style={{
-        '--qlarr-contrast-color': contrastColor,
-        '--qlarr-hover-color': hoverColor,
-        '--qlarr-text-color': textColor,
-        '--qlarr-outline-color': outlineColor,
-        '--qlarr-question-font-size': theme.textStyles.question.size + 'px',
+        "--qlarr-contrast-color": contrastColor,
+        "--qlarr-hover-color": hoverColor,
+        "--qlarr-text-color": textColor,
+        "--qlarr-outline-color": outlineColor,
+        "--qlarr-question-font-size": theme.textStyles.question.size + "px",
       }}
-      css={question.customCss ? css`${question.customCss}` : undefined}
+      css={
+        question.customCss
+          ? css`
+              ${question.customCss}
+            `
+          : undefined
+      }
       data-code={code}
     >
       <Box className={styles.contentContainer}>
@@ -210,9 +216,7 @@ function QuestionDesign({
         )}
       </Box>
 
-      <Box
-        className={styles.titleContainer}
-      >
+      <Box className={styles.titleContainer}>
         <span style={{ width: "max-content", fontWeight: "bolder" }}>
           {order}.
         </span>
@@ -228,6 +232,11 @@ function QuestionDesign({
               lng: langInfo.mainLang,
             })}
             contentKey="label"
+            required={
+              question.validation?.validation_required?.isActive ||
+              question.validation?.validation_min_option_count?.isActive ||
+              question.validation?.validation_min_ranking_count?.isActive
+            }
           />
         </div>
       </Box>
@@ -249,15 +258,15 @@ function QuestionDesign({
         </Box>
       )}
 
-    {!isDragging &&
-      <QuestionDesignBody
-        code={code}
-        type={type}
-        t={t}
-        designMode={designMode}
-        langInfo={langInfo}
-      />
-    }
+      {!isDragging && (
+        <QuestionDesignBody
+          code={code}
+          type={type}
+          t={t}
+          designMode={designMode}
+          langInfo={langInfo}
+        />
+      )}
       <ErrorDisplay code={code} />
     </div>
   );

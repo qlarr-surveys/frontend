@@ -124,6 +124,16 @@ export const isNotEmptyHtml = (value) => {
   return textContent.trim().length > 0 || hasImages;
 };
 
+export function appendRequiredAsterisk(html, color) {
+  if (!html) return html;
+  const asterisk = `<span style="color: ${color}; font-weight: 600; margin-inline-start: 5px;">*</span>`;
+  const lastCloseTagIndex = html.lastIndexOf("</");
+  if (lastCloseTagIndex !== -1) {
+    return html.slice(0, lastCloseTagIndex) + asterisk + html.slice(lastCloseTagIndex);
+  }
+  return html + asterisk;
+}
+
 export const useColumnMinWidth = (code, runComponent) => {
   const isDesktop = useResponsive("up", "lg");
   const isTablet = useResponsive("between", "md", "lg");

@@ -3,58 +3,58 @@ import { useSelector } from "react-redux";
 
 import { Box, css, useTheme } from "@mui/material";
 import styles from "./Question.module.css";
-import { stripTags } from "~/utils/design/utils";
+import { stripTags, appendRequiredAsterisk } from "~/utils/design/utils";
 import LoadingDots from "../common/LoadingDots";
 import Validation from "../run/Validation";
 import MultipleText from "../Questions/MultipleText/MultipleText";
 import AutoCompleteQuestion from "../Questions/AutoComplete/AutoCompleteQuestion";
-import { replaceFormatInstructions } from '../run/Content';
+import { replaceFormatInstructions } from "../run/Content";
 
-const DateTimeQuestion = React.lazy(() =>
-  import("../Questions/DateTime/DateTimeQuestion")
+const DateTimeQuestion = React.lazy(
+  () => import("../Questions/DateTime/DateTimeQuestion"),
 );
 const SCQ = React.lazy(() => import("../Questions/Scq/Scq"));
 const Array = React.lazy(() => import("../Questions/SCQArray/Array"));
 const Signature = React.lazy(() => import("../Questions/Signature/Signature"));
-const PhotoCapture = React.lazy(() =>
-  import("../Questions/PhotoCapture/PhotoCapture")
+const PhotoCapture = React.lazy(
+  () => import("../Questions/PhotoCapture/PhotoCapture"),
 );
-const VideoCapture = React.lazy(() =>
-  import("../Questions/VideoCapture/VideoCapture")
+const VideoCapture = React.lazy(
+  () => import("../Questions/VideoCapture/VideoCapture"),
 );
 const MCQ = React.lazy(() => import("../Questions/Mcq/Mcq"));
-const NumberQuestion = React.lazy(() =>
-  import("../Questions/Number/NumberQuestion")
+const NumberQuestion = React.lazy(
+  () => import("../Questions/Number/NumberQuestion"),
 );
 const TextQuestion = React.lazy(() => import("../Questions/Text/TextQuestion"));
-const VideoDisplay = React.lazy(() =>
-  import("../Questions/VideoDisplay/VideoDisplay")
+const VideoDisplay = React.lazy(
+  () => import("../Questions/VideoDisplay/VideoDisplay"),
 );
-const ImageDisplay = React.lazy(() =>
-  import("../Questions/ImageDisplay/ImageDisplay")
+const ImageDisplay = React.lazy(
+  () => import("../Questions/ImageDisplay/ImageDisplay"),
 );
-const ImageRanking = React.lazy(() =>
-  import("../Questions/ImageRanking/ImageRanking")
+const ImageRanking = React.lazy(
+  () => import("../Questions/ImageRanking/ImageRanking"),
 );
-const ParagraphQuestion = React.lazy(() =>
-  import("../Questions/Paragraph/ParagraphQuestion")
+const ParagraphQuestion = React.lazy(
+  () => import("../Questions/Paragraph/ParagraphQuestion"),
 );
 const Barcode = React.lazy(() => import("../Questions/Barcode/Barcode"));
-const EmailQuestion = React.lazy(() =>
-  import("../Questions/Email/EmailQuestion")
+const EmailQuestion = React.lazy(
+  () => import("../Questions/Email/EmailQuestion"),
 );
 const ImageScq = React.lazy(() => import("../Questions/ImageScq/ImageScq"));
 const ImageMcq = React.lazy(() => import("../Questions/ImageMcq/ImageMcq"));
 const Ranking = React.lazy(() => import("../Questions/Ranking/Ranking"));
 const NPS = React.lazy(() => import("../Questions/NPS/NPS"));
 const Content = React.lazy(() => import("../run/Content"));
-const FileUpload = React.lazy(() =>
-  import("../Questions/FileUpload/FileUpload")
+const FileUpload = React.lazy(
+  () => import("../Questions/FileUpload/FileUpload"),
 );
 const IconScq = React.lazy(() => import("../Questions/IconScq/IconScq"));
 const IconMcq = React.lazy(() => import("../Questions/IconMcq/IconMcq"));
-const SCQIconArray = React.lazy(() =>
-  import("../Questions/SCQArray/SCQIconArray")
+const SCQIconArray = React.lazy(
+  () => import("../Questions/SCQArray/SCQIconArray"),
 );
 
 const Question = forwardRef((props, ref) => {
@@ -290,7 +290,16 @@ const Question = forwardRef((props, ref) => {
         font-size: ${theme.textStyles.question.size}px;
         `}
               elementCode={props.component.qualifiedCode}
-              content={props.component.content?.label}
+              content={
+                props.component.validation?.validation_required?.isActive
+                || props.component.validation?.validation_min_option_count?.isActive
+                || props.component.validation?.validation_min_ranking_count?.isActive
+                  ? appendRequiredAsterisk(
+                      props.component.content?.label,
+                      theme.palette.error.main,
+                    )
+                  : props.component.content?.label
+              }
             />
           )}
           {showDescription && (
