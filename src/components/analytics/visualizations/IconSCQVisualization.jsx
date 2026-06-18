@@ -31,7 +31,7 @@ export default function IconSCQVisualization({ question }) {
   ];
 
   const galleryImages = images.map((img, i) => {
-    const pieItem = data.pieData[i];
+    const pieItem = data.pieData.find((p) => p.imageId === img.id);
     return {
       ...img,
       url: resolveImageUrl(img.url),

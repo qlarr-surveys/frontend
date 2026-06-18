@@ -538,6 +538,7 @@ export const transformIconSCQData = (question) => {
       value: item.count,
       count: item.count,
       iconUrl: resolveImageUrl(image?.url),
+      imageId: image?.id,
       fill: getChartColor(i),
     };
   });
@@ -574,6 +575,7 @@ export const transformIconMCQData = (question) => {
       value: item.count,
       count: item.count,
       iconUrl: resolveImageUrl(image?.url),
+      imageId: image?.id,
       fill: getChartColor(i),
     };
   });

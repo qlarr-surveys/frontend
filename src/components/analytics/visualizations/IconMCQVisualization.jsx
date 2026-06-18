@@ -21,7 +21,7 @@ export default function IconMCQVisualization({ question }) {
   ];
 
   const galleryImages = images.map((img, i) => {
-    const barItem = data.barData.find((d) => d.name === img.label);
+    const barItem = data.barData.find((d) => d.imageId === img.id);
     return {
       ...img,
       url: resolveImageUrl(img.url),
