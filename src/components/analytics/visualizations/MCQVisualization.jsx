@@ -8,6 +8,7 @@ import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
+import { formatTopChoice } from '../common/formatTopChoice';
 import DataTable from '../common/DataTable';
 import { transformMCQData } from '~/analytics/utils/dataTransformers';
 
@@ -23,7 +24,7 @@ export default function MCQVisualization({ question }) {
 
   const stats = [
     ...buildBaseStats(data, t),
-    { label: t('analytics.most_popular'), value: data.mostPopular || '-' },
+    { label: t('analytics.most_popular'), ...formatTopChoice(data.topChoice, t) },
   ];
 
   const tableData = data.barData.map((item) => ({
