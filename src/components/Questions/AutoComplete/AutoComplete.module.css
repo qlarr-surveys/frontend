@@ -75,12 +75,6 @@
   width: 50%;
 }
 
-.dialogCloseButton {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-}
-
 .textFieldMarginBottom {
   margin-bottom: 12px;
 }
