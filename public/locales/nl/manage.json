@@ -563,8 +563,8 @@
     "no_questions_detail": "Deze enquête bevat geen analyseerbare vragen.",
     "questions_count": "{{count}} vragen",
     "zero_responses": "0 reacties",
-    "viz_not_available": "Visualisatie niet beschikbaar voor vraagtype: {{type}}",
-    "data_preview": "Gegevens: {{data}}...",
+    "display_only_title": "Weergave-element",
+    "display_only_description": "Deze inhoud wordt getoond aan respondenten en verzamelt geen antwoorden.",
     "question_type_scq": "Enkelvoudige keuze",
     "question_type_mcq": "Meervoudige keuze",
     "question_type_nps": "Net Promoter Score",
@@ -590,6 +590,9 @@
     "question_type_file_upload": "Bestand uploaden",
     "question_type_signature": "Handtekening",
     "question_type_photo_capture": "Foto vastleggen",
-    "question_type_barcode": "Barcode"
+    "question_type_barcode": "Barcode",
+    "question_type_text_display": "Tekst Weergave",
+    "question_type_image_display": "Afbeelding Weergave",
+    "question_type_video_display": "Video Weergave"
   }
 }

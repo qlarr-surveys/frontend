@@ -1,8 +1,10 @@
 import React, { Suspense, lazy, useMemo } from 'react';
-import { Box, CircularProgress, Paper, Typography } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import NoResponsesMessage from './common/NoResponsesMessage';
+import DisplayContentMessage from './common/DisplayContentMessage';
+import { isDisplayType } from './questionTypes';
 
 const SCQVisualization = lazy(() => import('./visualizations/SCQVisualization'));
 const MCQVisualization = lazy(() => import('./visualizations/MCQVisualization'));
@@ -74,20 +76,21 @@ function QuestionCard({ question, totalResponses, incompleteResponses, previewRe
     previewResponses,
   }), [question, totalResponses, incompleteResponses, previewResponses]);
 
+  // Display-only elements (text/image/video) collect no responses — show a clean per-type state.
+  if (isDisplayType(enrichedQuestion.type)) {
+    return <DisplayContentMessage type={enrichedQuestion.type} />;
+  }
+
   // Auto-upgrade matrix visualizations to icon variants when images are available
   const VisualizationComponent = (question.images?.length > 0 && ICON_UPGRADE_MAP[enrichedQuestion.type])
     || QUESTION_TYPE_MAP[enrichedQuestion.type];
 
   if (!VisualizationComponent) {
     return (
-      <Paper variant="outlined" sx={{ p: 3, borderRadius: 2, bgcolor: 'grey.50' }}>
-        <Typography variant="body2" color="text.secondary">
-          {t('analytics.viz_not_available', { type: question.type })}
-        </Typography>
-        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-          {t('analytics.data_preview', { data: JSON.stringify(question).substring(0, 200) })}
-        </Typography>
-      </Paper>
+      <NoResponsesMessage
+        message={t('analytics.no_data_available')}
+        description={t('analytics.no_responses_description')}
+      />
     );
   }
 
