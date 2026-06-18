@@ -1230,10 +1230,7 @@ const jsonToJs = (json, nested, getComponentType, getQuestionType) => {
     case "between":
     case "not_between":
       let type = getComponentType(capture(value[0]));
-      let leftOperand =
-        type == "date" || type == "date_time" || type == "time"
-          ? `+QlarrScripts.sqlDateTimeToDate(${capture(value[0])}.value)`
-          : `${capture(value[0])}.value`;
+      let leftOperand = `${capture(value[0])}.value`;
       if (["==", "!=", "<", "<=", ">", ">="].includes(key)) {
         return `${leftOperand}${key}${capture(value[1], type)}`;
       } else if (key == "between") {
@@ -1326,10 +1323,9 @@ const wrapIfNested = (nested, text) => {
   return (nested ? "(" : "") + text + (nested ? ")" : "");
 };
 
-// Builds a JS expression that coerces a logic-builder SQL date/time string to epoch-ms,
-// matching the (also coerced) stored answer so == / != / < / > / between all compare
-// numbers. The engine's sqlDateTimeToDate requires a full "YYYY-MM-DD HH:MM:SS" string
-// and returns a Date object, hence both the full form and the leading unary "+".
+// Normalizes a logic-builder date/time value to the canonical full SQL string the
+// stored answer uses ("YYYY-MM-DD HH:MM:SS"). That format sorts lexicographically the
+// same as chronologically, so both sides are compared as plain strings.
 const captureSqlDateTime = (value, type) => {
   const sqlDateTime =
     type == "time"
@@ -1337,7 +1333,7 @@ const captureSqlDateTime = (value, type) => {
       : type == "date"
         ? `${value} 00:00:00` // "2025-06-15" -> "2025-06-15 00:00:00"
         : `${value}`; // date_time already "YYYY-MM-DD HH:mm:ss"
-  return `+QlarrScripts.sqlDateTimeToDate(\"${sqlDateTime}\")`;
+  return `\"${sqlDateTime}\"`;
 };
 
 const capture = (value, type) => {
