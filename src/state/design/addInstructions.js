@@ -1347,18 +1347,6 @@ const capture = (value, type) => {
   ) {
     return captureSqlDateTime(value, type);
   }
-  if (type == "time") {
-    return `QlarrScripts.sqlDateTimeToDate(\"1970-01-01 ${integerToTime(
-      value,
-    )}\")`;
-  } else if (
-    typeof value === "object" &&
-    Object.prototype.toString.call(value) === "[object Date]"
-  ) {
-    return type == "date_time"
-      ? `QlarrScripts.sqlDateTimeToDate(\"${toSqlDateTime(value)}\")`
-      : `QlarrScripts.sqlDateTimeToDate(\"${toSqlDateTimeIgnoreTime(value)}\")`;
-  }
   if (typeof value === "object") {
     return value[Object.keys(value)[0]];
   } else if (typeof value === "string") {
@@ -1366,42 +1354,6 @@ const capture = (value, type) => {
   } else {
     return value;
   }
-};
-
-const integerToTime = (time) => {
-  let hours = Math.floor(time / 3600);
-  let hoursString = hours >= 10 && hours <= 23 ? "" + hours : "0" + hours;
-  let minutes = (time % 3600) / 60;
-  let minutesString =
-    minutes >= 10 && minutes <= 59 ? "" + minutes : "0" + minutes;
-  return hoursString + ":" + minutesString + ":00";
-};
-
-const toSqlDateTime = (date) => {
-  return (
-    date.getFullYear() +
-    "-" +
-    ("00" + (date.getMonth() + 1)).slice(-2) +
-    "-" +
-    ("00" + date.getDate()).slice(-2) +
-    " " +
-    ("00" + date.getHours()).slice(-2) +
-    ":" +
-    ("00" + date.getMinutes()).slice(-2) +
-    ":" +
-    ("00" + date.getSeconds()).slice(-2)
-  );
-};
-
-const toSqlDateTimeIgnoreTime = (date) => {
-  return (
-    date.getFullYear() +
-    "-" +
-    ("00" + (date.getMonth() + 1)).slice(-2) +
-    "-" +
-    ("00" + date.getDate()).slice(-2) +
-    " 00:00:00"
-  );
 };
 
 export const instructionByCode = (component, code) =>
