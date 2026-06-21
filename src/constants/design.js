@@ -233,6 +233,32 @@ export const setupOptions = (type) => {
         },
       ];
 
+    case "text_item":
+      return [
+        {
+          title: "general",
+          key: "general",
+          rules: ["changeCode", "disabled", "maxChars"],
+        },
+        {
+          title: "logic",
+          key: "logic",
+          rules: ["relevance"],
+        },
+        {
+          title: "validation",
+          key: "validation",
+          rules: [
+            "validation_max_char_length",
+            "validation_min_char_length",
+            "validation_pattern",
+            "validation_contains",
+            "validation_not_contains",
+            "custom_validation_rules",
+          ],
+        },
+      ];
+
     case "number":
       return [
         {

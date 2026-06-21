@@ -309,7 +309,9 @@ function ChoiceItemDesign(props) {
                 dispatch(
                   setup({
                     code: props.qualifiedCode,
-                    rules: setupOptions("options"),
+                    rules: setupOptions(
+                      props.type === "text" ? "text_item" : "options",
+                    ),
                   })
                 );
               }}

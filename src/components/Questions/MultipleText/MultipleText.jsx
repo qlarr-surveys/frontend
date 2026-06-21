@@ -80,6 +80,7 @@ function MultipleTextItem({ item }) {
         fullWidth
         onChange={handleChange}
         required={item.validation?.required}
+        inputProps={{ maxLength: item.maxChars || undefined }}
         className={styles.textField}
       />
     </Box>
