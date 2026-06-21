@@ -217,12 +217,18 @@ function AutoCompleteQuestion({ code, t, onMainLang }) {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>
+        <DialogTitle
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           {t("manual_entry")}
           <IconButton
             aria-label="close"
             onClick={() => setDialogOpen(false)}
-            className={styles.dialogCloseButton}
+            sx={{ color: (theme) => theme.palette.grey[500], mr: -1 }}
           >
             <CloseIcon />
           </IconButton>
