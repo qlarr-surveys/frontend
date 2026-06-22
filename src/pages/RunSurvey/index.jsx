@@ -90,7 +90,10 @@ function RunSurvey({
   useEffect(() => {
     if (window["Android"]) {
       window["autoSaveValues"] = ()=>{
-        const valuesToSave = getValues(store.getState().runState.values)
+        const valuesToSave = {
+          events: store.getState().runState.timings,
+          values: getValues(store.getState().runState.values)
+        }
         window["Android"].autoSaveValues(JSON.stringify(valuesToSave))
 
       }

@@ -22,14 +22,31 @@
 
 .rankingItem {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
   margin: 0 0 8px 0;
   padding: 10px 12px;
   border-radius: 8px;
   cursor: grab;
   transition: box-shadow 0.2s ease, opacity 0.2s ease, transform 0.15s ease;
   background-color: var(--qlarr-bg-paper);
+}
+
+.itemMain {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.itemMobile {
+  padding: 8px 10px;
+  cursor: default;
+}
+
+.itemMobile .rankBadge {
+  width: 24px;
+  height: 24px;
+  font-size: 13px;
 }
 
 .rankingItem:hover {
@@ -43,6 +60,21 @@
 .rankingItemDragging {
   composes: rankingItem;
   opacity: 0.2;
+}
+
+@keyframes rankingFlash {
+  0% {
+    background-color: var(--qlarr-action-hover);
+    box-shadow: 0 0 0 2px var(--qlarr-primary);
+  }
+  100% {
+    background-color: var(--qlarr-bg-paper);
+    box-shadow: 0 0 0 2px transparent;
+  }
+}
+
+.flash {
+  animation: rankingFlash 0.6s ease-out;
 }
 
 .dragHandle {
@@ -83,6 +115,40 @@
   color: var(--qlarr-text-secondary);
 }
 
+.itemMain .rankButton {
+  flex-shrink: 0;
+  margin-left: auto;
+  white-space: nowrap;
+  text-transform: none;
+  border-radius: 999px;
+}
+
+.rankControls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.moveButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+}
+
+.moveButton {
+  padding: 4px;
+}
+
+.rankControls .unrankControl {
+  padding: 2px 8px;
+  white-space: nowrap;
+  text-transform: none;
+  border-radius: 999px;
+  color: var(--qlarr-error);
+}
+
 .emptyState {
   display: flex;
   align-items: center;
@@ -99,6 +165,53 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+}
+
+/* Mobile single-box layout: ranked items active on top, unranked muted at the bottom */
+.rankingBox {
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;
+  padding: 8px;
+  border: 1px solid var(--qlarr-divider);
+  border-radius: 12px;
+  background-color: var(--qlarr-bg-default);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionMuted {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px dashed var(--qlarr-divider);
+}
+
+.mergedContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border-radius: 8px;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.mergedContainerOver {
+  background-color: var(--qlarr-action-hover);
+}
+
+.emptyStateMerged {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 8px;
+}
+
+.rankingItemMuted {
+  opacity: 0.55;
 }
 
 .textSecondary {
