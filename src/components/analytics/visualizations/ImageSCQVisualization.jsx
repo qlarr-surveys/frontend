@@ -8,6 +8,7 @@ import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
+import { formatTopChoice } from '../common/formatTopChoice';
 import ImageGallery from '../common/ImageGallery';
 import CategoryLegend from '../common/CategoryLegend';
 import { transformImageSCQData, resolveImageUrl } from '~/analytics/utils/dataTransformers';
@@ -26,7 +27,7 @@ export default function ImageSCQVisualization({ question }) {
 
   const stats = [
     ...buildBaseStats(data, t),
-    { label: t('analytics.most_selected'), value: data.mode || '-' },
+    { label: t('analytics.most_selected'), ...formatTopChoice(data.topChoice, t) },
   ];
 
   const galleryImages = images.map((img, i) => {

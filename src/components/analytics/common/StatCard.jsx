@@ -29,6 +29,7 @@ const StatCard = React.memo(function StatCard({
         border: '1px solid',
         borderColor: 'divider',
         bgcolor: 'background.paper',
+        minWidth: 0,
       }}
     >
       <Typography
@@ -44,10 +45,14 @@ const StatCard = React.memo(function StatCard({
         {label}
       </Typography>
       <Typography
+        title={typeof value === 'string' || typeof value === 'number' ? `${prefix}${value}${suffix}` : undefined}
         sx={{
           fontWeight: 700,
           color: 'text.primary',
           fontSize: fontSizes[size].value,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
         }}
       >
         {prefix}
@@ -72,7 +77,7 @@ export const StatsRow = React.memo(function StatsRow({ stats, columns, minColumn
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: `repeat(${cols}, 1fr)`,
+        gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
         gap: 2,
       }}
     >

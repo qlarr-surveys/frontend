@@ -483,6 +483,10 @@
     "tab_pie_chart": "Gráfico circular",
     "most_selected": "Más seleccionado",
     "most_popular": "Más popular",
+    "tie_caption": "Empate",
+    "tie_separator": ", ",
+    "tie_more_one": "+{{count}} más",
+    "tie_more_other": "+{{count}} más",
     "col_option": "Opción",
     "col_count": "Cantidad",
     "col_percentage": "Porcentaje",
@@ -559,8 +563,8 @@
     "no_questions_detail": "Esta encuesta no contiene preguntas analizables.",
     "questions_count": "{{count}} preguntas",
     "zero_responses": "0 respuestas",
-    "viz_not_available": "Visualización no disponible para tipo de pregunta: {{type}}",
-    "data_preview": "Datos: {{data}}...",
+    "display_only_title": "Elemento de visualización",
+    "display_only_description": "Este contenido se muestra a los encuestados y no recopila ninguna respuesta.",
     "question_type_scq": "Opción única",
     "question_type_mcq": "Opción múltiple",
     "question_type_nps": "Net Promoter Score",
@@ -586,6 +590,9 @@
     "question_type_file_upload": "Subir archivo",
     "question_type_signature": "Firma",
     "question_type_photo_capture": "Captura de foto",
-    "question_type_barcode": "Código de barras"
+    "question_type_barcode": "Código de barras",
+    "question_type_text_display": "Visualización de Texto",
+    "question_type_image_display": "Visualización de Imagen",
+    "question_type_video_display": "Visualización de Video"
   }
 }

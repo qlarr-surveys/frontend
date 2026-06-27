@@ -5,6 +5,7 @@ import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
+import { formatTopChoice } from '../common/formatTopChoice';
 import ImageGallery from '../common/ImageGallery';
 import CategoryLegend from '../common/CategoryLegend';
 import { transformImageMCQData, resolveImageUrl } from '~/analytics/utils/dataTransformers';
@@ -15,7 +16,7 @@ export default function ImageMCQVisualization({ question }) {
 
   const stats = [
     ...buildBaseStats(data, t),
-    { label: t('analytics.most_popular'), value: data.mostPopular || '-' },
+    { label: t('analytics.most_popular'), ...formatTopChoice(data.topChoice, t) },
     { label: t('analytics.stat_images'), value: question.images.length },
   ];
 

@@ -8,6 +8,7 @@ import ChartContainer from '../common/ChartContainer';
 import ChartTabs from '../common/ChartTabs';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
+import { formatTopChoice } from '../common/formatTopChoice';
 import { transformAutocompleteData } from '~/analytics/utils/dataTransformers';
 
 export default function AutocompleteVisualization({ question }) {
@@ -22,7 +23,7 @@ export default function AutocompleteVisualization({ question }) {
 
   const stats = [
     ...buildBaseStats(data, t),
-    { label: t('analytics.most_selected'), value: data.mode },
+    { label: t('analytics.most_selected'), ...formatTopChoice(data.topChoice, t) },
   ];
 
   return (

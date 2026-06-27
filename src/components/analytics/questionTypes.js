@@ -27,9 +27,19 @@ const QUESTION_TYPE_KEYS = {
   SIGNATURE: 'analytics.question_type_signature',
   PHOTO_CAPTURE: 'analytics.question_type_photo_capture',
   BARCODE: 'analytics.question_type_barcode',
+  TEXT_DISPLAY: 'analytics.question_type_text_display',
+  IMAGE_DISPLAY: 'analytics.question_type_image_display',
+  VIDEO_DISPLAY: 'analytics.question_type_video_display',
 };
 
 export const getQuestionTypeLabel = (type, t) => {
   const key = QUESTION_TYPE_KEYS[type];
   return key ? t(key) : type;
 };
+
+// Display-only elements (text/image/video) are shown to respondents but collect no responses,
+// so they have no visualization. Note: these are the uppercase analytics tokens; the lowercase
+// design tokens used by isDisplay() in components/Questions/utils.jsx are a separate concern.
+export const DISPLAY_TYPES = ['TEXT_DISPLAY', 'IMAGE_DISPLAY', 'VIDEO_DISPLAY'];
+
+export const isDisplayType = (type) => DISPLAY_TYPES.includes(type);

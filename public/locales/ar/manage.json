@@ -483,6 +483,10 @@
     "tab_pie_chart": "مخطط دائري",
     "most_selected": "الأكثر اختياراً",
     "most_popular": "الأكثر شيوعاً",
+    "tie_caption": "تعادل",
+    "tie_separator": "، ",
+    "tie_more_one": "+{{count}} أخرى",
+    "tie_more_other": "+{{count}} أخرى",
     "col_option": "الخيار",
     "col_count": "العدد",
     "col_percentage": "النسبة",
@@ -559,8 +563,8 @@
     "no_questions_detail": "لا يحتوي هذا الاستبيان على أسئلة قابلة للتحليل.",
     "questions_count": "{{count}} سؤال",
     "zero_responses": "0 استجابة",
-    "viz_not_available": "التصور غير متاح لنوع السؤال: {{type}}",
-    "data_preview": "البيانات: {{data}}...",
+    "display_only_title": "عنصر عرض",
+    "display_only_description": "يُعرض هذا المحتوى على المشاركين ولا يجمع أي إجابات.",
     "question_type_scq": "اختيار واحد",
     "question_type_mcq": "اختيار متعدد",
     "question_type_nps": "مؤشر صافي المروّجين",
@@ -586,6 +590,9 @@
     "question_type_file_upload": "رفع ملف",
     "question_type_signature": "توقيع",
     "question_type_photo_capture": "التقاط صورة",
-    "question_type_barcode": "رمز شريطي"
+    "question_type_barcode": "رمز شريطي",
+    "question_type_text_display": "عرض النص",
+    "question_type_image_display": "عرض الصورة",
+    "question_type_video_display": "عرض الفيديو"
   }
 }

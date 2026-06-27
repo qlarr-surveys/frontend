@@ -58,6 +58,16 @@ const applyRoundedPercentages = (items, total) => {
   return items.map((item, i) => ({ ...item, percentage: percentages[i] }));
 };
 
+// Find all labels tied for the highest count among resolved chart items.
+// items: [{ name, count }] -> { topLabels: string[], topCount: number, tied: boolean }
+export const computeTopChoice = (items) => {
+  if (!items || items.length === 0) return { topLabels: [], topCount: 0, tied: false };
+  const maxCount = items.reduce((m, it) => Math.max(m, it.count ?? 0), 0);
+  if (maxCount <= 0) return { topLabels: [], topCount: 0, tied: false };
+  const topLabels = items.filter((it) => (it.count ?? 0) === maxCount).map((it) => it.name);
+  return { topLabels, topCount: maxCount, tied: topLabels.length > 1 };
+};
+
 // Resolve relative API image URLs to full URLs
 export const resolveImageUrl = (url) => {
   if (!url) return null;
@@ -132,8 +142,6 @@ export const transformSCQData = (question) => {
   const labelMap = buildLabelMap(question.options);
   const counts = question.frequencyCounts || [];
 
-  const sorted = [...counts].sort((a, b) => b.count - a.count);
-
   const rawItems = counts.map((item, i) => ({
     name: labelMap[item.code] || item.code,
     value: item.count,
@@ -141,13 +149,15 @@ export const transformSCQData = (question) => {
     fill: getChartColor(i),
   }));
   const chartData = applyRoundedPercentages(rawItems, metrics.completed);
+  const topChoice = computeTopChoice(chartData);
 
   return {
     pieData: chartData,
     barData: chartData,
     ...metrics,
-    mode: labelMap[sorted[0]?.code] || sorted[0]?.code,
-    modeCount: sorted[0]?.count,
+    mode: topChoice.topLabels[0],
+    modeCount: topChoice.topCount,
+    topChoice,
   };
 };
 
@@ -162,8 +172,6 @@ export const transformMCQData = (question) => {
     ? (totalSelections / metrics.answered).toFixed(1)
     : 0;
 
-  const sorted = [...counts].sort((a, b) => b.count - a.count);
-
   const rawItems = counts.map((item, i) => ({
     name: labelMap[item.code] || item.code,
     value: item.count,
@@ -171,13 +179,15 @@ export const transformMCQData = (question) => {
     fill: getChartColor(i),
   }));
   const chartData = applyRoundedPercentages(rawItems, totalSelections);
+  const topChoice = computeTopChoice(chartData);
 
   return {
     pieData: chartData,
     barData: chartData,
     ...metrics,
     avgSelections,
-    mostPopular: labelMap[sorted[0]?.code] || sorted[0]?.code,
+    mostPopular: topChoice.topLabels[0],
+    topChoice,
   };
 };
 
@@ -468,14 +478,16 @@ export const transformImageSCQData = (question) => {
     };
   }).sort((a, b) => b.value - a.value);
   const pieData = applyRoundedPercentages(rawItems, metrics.completed);
+  const topChoice = computeTopChoice(pieData);
 
   return {
     pieData,
     barData: pieData,
     images,
     ...metrics,
-    mode: pieData[0]?.name,
-    modeCount: pieData[0]?.count,
+    mode: topChoice.topLabels[0],
+    modeCount: topChoice.topCount,
+    topChoice,
   };
 };
 
@@ -489,9 +501,6 @@ export const transformImageMCQData = (question) => {
   const resolveIcon = buildImageLookup(images);
   const totalSelections = counts.reduce((sum, item) => sum + item.count, 0);
 
-  const sorted = [...counts].sort((a, b) => b.count - a.count);
-  const topImage = sorted[0] ? resolveIcon(sorted[0].code) : null;
-
   const rawItems = counts.map((item, i) => {
     const image = resolveIcon(item.code);
     return {
@@ -504,12 +513,14 @@ export const transformImageMCQData = (question) => {
     };
   });
   const barData = applyRoundedPercentages(rawItems, totalSelections);
+  const topChoice = computeTopChoice(barData);
 
   return {
     barData,
     images,
     ...metrics,
-    mostPopular: topImage?.label || sorted[0]?.code || '-',
+    mostPopular: topChoice.topLabels[0],
+    topChoice,
   };
 };
 
@@ -527,19 +538,20 @@ export const transformIconSCQData = (question) => {
       value: item.count,
       count: item.count,
       iconUrl: resolveImageUrl(image?.url),
+      imageId: image?.id,
       fill: getChartColor(i),
     };
   });
   const chartData = applyRoundedPercentages(rawItems, metrics.completed);
-
-  const sorted = [...counts].sort((a, b) => b.count - a.count);
+  const topChoice = computeTopChoice(chartData);
 
   return {
     pieData: chartData,
     barData: chartData,
     ...metrics,
-    mode: chartData[0]?.name,
-    modeCount: sorted[0]?.count,
+    mode: topChoice.topLabels[0],
+    modeCount: topChoice.topCount,
+    topChoice,
   };
 };
 
@@ -556,9 +568,6 @@ export const transformIconMCQData = (question) => {
 
   const resolveIcon = buildImageLookup(images);
 
-  const sorted = [...counts].sort((a, b) => b.count - a.count);
-  const topIcon = sorted[0] ? resolveIcon(sorted[0].code) : null;
-
   const rawItems = counts.map((item, i) => {
     const image = resolveIcon(item.code);
     return {
@@ -566,16 +575,19 @@ export const transformIconMCQData = (question) => {
       value: item.count,
       count: item.count,
       iconUrl: resolveImageUrl(image?.url),
+      imageId: image?.id,
       fill: getChartColor(i),
     };
   });
   const barData = applyRoundedPercentages(rawItems, totalSelections);
+  const topChoice = computeTopChoice(barData);
 
   return {
     barData,
     ...metrics,
     avgSelections,
-    mostPopular: topIcon?.label || sorted[0]?.code || '-',
+    mostPopular: topChoice.topLabels[0],
+    topChoice,
   };
 };
 

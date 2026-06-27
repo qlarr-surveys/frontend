@@ -5,6 +5,7 @@ import { NAMESPACES } from '~/hooks/useNamespaceLoader';
 import ChartContainer from '../common/ChartContainer';
 import { StatsRow } from '../common/StatCard';
 import { buildBaseStats } from '../common/buildBaseStats';
+import { formatTopChoice } from '../common/formatTopChoice';
 import ImageGallery from '../common/ImageGallery';
 import IconLegend from '../common/IconLegend';
 import { transformIconMCQData, resolveImageUrl } from '~/analytics/utils/dataTransformers';
@@ -16,11 +17,11 @@ export default function IconMCQVisualization({ question }) {
 
   const stats = [
     ...buildBaseStats(data, t),
-    { label: t('analytics.most_popular'), value: data.mostPopular || '-' },
+    { label: t('analytics.most_popular'), ...formatTopChoice(data.topChoice, t) },
   ];
 
   const galleryImages = images.map((img, i) => {
-    const barItem = data.barData.find((d) => d.name === img.label);
+    const barItem = data.barData.find((d) => d.imageId === img.id);
     return {
       ...img,
       url: resolveImageUrl(img.url),

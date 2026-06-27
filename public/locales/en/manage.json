@@ -456,6 +456,10 @@
     "tab_pie_chart": "Pie Chart",
     "most_selected": "Most Selected",
     "most_popular": "Most Popular",
+    "tie_caption": "Tied",
+    "tie_separator": ", ",
+    "tie_more_one": "+{{count}} more",
+    "tie_more_other": "+{{count}} more",
     "col_option": "Option",
     "col_count": "Count",
     "col_percentage": "Percentage",
@@ -532,8 +536,8 @@
     "no_questions_detail": "This survey doesn't contain any analyzable questions.",
     "questions_count": "{{count}} questions",
     "zero_responses": "0 responses",
-    "viz_not_available": "Visualization not available for question type: {{type}}",
-    "data_preview": "Data: {{data}}...",
+    "display_only_title": "Display element",
+    "display_only_description": "This content is shown to respondents and doesn't collect any responses.",
     "question_type_scq": "Single Choice",
     "question_type_mcq": "Multiple Choice",
     "question_type_nps": "Net Promoter Score",
@@ -559,7 +563,10 @@
     "question_type_file_upload": "File Upload",
     "question_type_signature": "Signature",
     "question_type_photo_capture": "Photo Capture",
-    "question_type_barcode": "Barcode"
+    "question_type_barcode": "Barcode",
+    "question_type_text_display": "Text Display",
+    "question_type_image_display": "Image Display",
+    "question_type_video_display": "Video Display"
   },
   "preview_page": {
     "navigation_mode": "Navigation Mode",
