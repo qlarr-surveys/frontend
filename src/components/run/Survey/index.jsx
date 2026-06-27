@@ -26,6 +26,11 @@ const ALIGNMENT_TO_FLEX = {
 function Survey() {
   const theme = useTheme();
 
+  // The inline single-question preview dispatches this flag; it hides the survey
+  // Navigation footer (and the Group header) so only the question shows. A real
+  // respondent run never sets it, so the renderer behaves exactly as before.
+  const singleQuestion = useSelector((state) => state.runState.singleQuestion);
+
   const navigationIndex = useSelector((state) => {
     return state.runState.data?.navigationIndex;
   }, shallowEqual);
@@ -89,12 +94,10 @@ function Survey() {
             ? survey.groups
                 .filter((group) => group.inCurrentNavigation)
                 .map((group, index) => (
-
-                    <Group group={group} groupIndex={index} />
-
+                    <Group key={group.code} group={group} groupIndex={index} />
                 ))
             : ""}
-          <Navigation navigationIndex={navigationIndex} />
+          {!singleQuestion && <Navigation navigationIndex={navigationIndex} />}
         </div>
       </form>
     </DndProvider>

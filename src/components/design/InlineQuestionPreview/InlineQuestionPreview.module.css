@@ -1,0 +1,114 @@
+/* Framed "respondent preview" surface that sits inline, directly above the
+   question card it previews. Visually distinct from the editable card so it
+   reads as a live preview rather than another editable copy. */
+.wrapper {
+  margin: 12px 16px 4px;
+  /* scroll alignment ignores normal margins */
+  scroll-margin: 12px;
+  border: 1px solid rgba(145, 158, 171, 0.32);
+  border-radius: 12px;
+  background-color: #fff;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(22, 32, 91, 0.06);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px 6px 12px;
+  border-bottom: 1px solid rgba(145, 158, 171, 0.2);
+  min-height: 44px;
+}
+
+.titleWrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.titleIcon {
+  color: #919eab;
+  flex: 0 0 auto;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.questionCode {
+  margin-inline-start: 6px;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.savingBar {
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--mui-palette-primary-main, #3f51b5),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: savingShimmer 1.2s linear infinite;
+}
+
+@keyframes savingShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Neutral "desk" mat that contains the survey's own theme and centers the
+   single question, plus the loading/error states. */
+.body {
+  position: relative;
+  overflow: auto;
+  background-color: #f4f6f8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 12px;
+}
+
+/* The previewed question, centered on the mat. The survey renders its own
+   card (border-radius + shadow), so no extra device chrome is needed. */
+.stage {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.empty {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  padding: 24px;
+}
+
+.emptyIcon {
+  color: #919eab;
+  opacity: 0.6;
+}
+
+.footer {
+  padding: 6px 12px;
+  border-top: 1px solid rgba(145, 158, 171, 0.2);
+}

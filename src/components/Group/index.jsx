@@ -10,6 +10,8 @@ import { alpha, Box, css, Divider, useTheme } from "@mui/material";
 function Group(props) {
   const theme = useTheme();
 
+  const singleQuestion = useSelector((state) => state.runState.singleQuestion);
+
   const state = useSelector((state) => {
     let groupState = state.runState.values[props.group.code];
     return {
@@ -45,6 +47,7 @@ function Group(props) {
           ${replaceFormatInstructions(props.group.customCss, formatState, "custom_css")}
         `}
       >
+      {!singleQuestion && (
         <div className={styles.groupHeader}>
           <Content
             elementCode={props.group.code}
@@ -68,6 +71,7 @@ function Group(props) {
             </Box>
           )}
         </div>
+      )} 
 
         {props.group && props.group.questions
           ? (() => {

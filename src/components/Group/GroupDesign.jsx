@@ -1,11 +1,13 @@
 import React, { useRef, useState } from "react";
 import QuestionDesign from "~/components/Question/QuestionDesign";
+import InlineQuestionPreview from "~/components/design/InlineQuestionPreview";
 import styles from "./GroupDesign.module.css";
 import { useSelector } from "react-redux";
 import { QuestionDropArea } from "../design/DropArea/DropArea";
 import GroupHeader from "./GroupHeader";
 import {
   Box,
+  Collapse,
   Divider,
   alpha,
   css,
@@ -16,6 +18,7 @@ import { useDrag, useDrop } from "react-dnd";
 import { useTheme } from "@emotion/react";
 import { useDispatch } from "react-redux";
 import { onDrag, setup } from "~/state/design/designState";
+import { setPreviewQuestionCode } from "~/state/edit/editState";
 import { DESIGN_SURVEY_MODE } from "~/routes";
 import { setupOptions } from "~/constants/design";
 import { blendColors } from '../Questions/utils';
@@ -37,6 +40,10 @@ function GroupDesign({
   });
 
   const [hovered, setHovered] = useState(false);
+
+  const previewQuestionCode = useSelector(
+    (state) => state.editState.previewQuestionCode
+  );
 
   const inDesign = designMode == DESIGN_SURVEY_MODE.DESIGN;
 
@@ -170,7 +177,9 @@ function GroupDesign({
       onMouseOver={(e) => {
         if (designMode === DESIGN_SURVEY_MODE.DESIGN) {
           setHovered(
-            !e.target.closest(".question") && !e.target.closest(".separator"),
+            !e.target.closest(".question") &&
+            !e.target.closest(".separator") &&
+              !e.target.closest(".inline-preview"),
           );
         }
       }}
@@ -213,6 +222,18 @@ function GroupDesign({
         {children?.map((quest, childIndex) => {
           return (
             <React.Fragment key={quest.code}>
+              {inDesign && (
+                <Collapse
+                  in={previewQuestionCode === quest.code}
+                  mountOnEnter
+                  unmountOnExit
+                >
+                  <InlineQuestionPreview
+                    code={quest.code}
+                    onClose={() => dispatch(setPreviewQuestionCode(null))}
+                  />
+                </Collapse>
+              )}
               <QuestionDesign
                 t={t}
                 key={quest.code}

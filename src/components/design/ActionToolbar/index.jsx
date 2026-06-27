@@ -8,9 +8,10 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setupOptions } from "~/constants/design";
 import { setup, cloneQuestion, deleteQuestion, deleteGroup, resetSetup } from "~/state/design/designState";
+import { togglePreviewQuestionCode } from "~/state/edit/editState";
 import { useTheme } from "@emotion/react";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
-import { RuleOutlined, VisibilityOff } from "@mui/icons-material";
+import { Preview, RuleOutlined, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import ConfirmActionModal from "~/components/common/ConfirmActionModal";
 import SurveyIcon from "~/components/common/SurveyIcons/SurveyIcon";
@@ -45,6 +46,13 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
       ? state.designState[code].groupType?.toLowerCase() || "group"
       : state.designState[code].type;
   });
+
+  const onPreview = useCallback(() => {
+    // Select this question (so its setup follows it) and toggle the inline preview
+    // that renders directly above the question card.
+    dispatch(setup({ code, rules: setupOptions(type) }));
+    dispatch(togglePreviewQuestionCode(code));
+  }, [dispatch, code, type]);
 
   const relevanceInstruction = useSelector((state) =>
     state.designState[code]?.instructionList?.find(
@@ -204,6 +212,19 @@ function ActionToolbar({ code, isGroup, parentCode, showActions }) {
             onClick={() => expandSkipLogic()}
           >
             <MoveDownIcon />
+          </IconButton>
+        </CustomTooltip>
+      )}
+      {!isGroup && showActions && type !== "end" && (
+        <CustomTooltip title={t("preview_question")} showIcon={false}>
+          <IconButton
+            className={styles.statusIcon}
+            onClick={(e) => {
+              e.stopPropagation();
+              onPreview();
+            }}
+          >
+            <Preview />
           </IconButton>
         </CustomTooltip>
       )}

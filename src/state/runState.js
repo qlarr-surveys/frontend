@@ -20,6 +20,9 @@ export const runState = createSlice({
       let keys = Object.keys(state);
       keys.forEach((key) => delete state[key]);
       state.preview = action.payload.preview;
+      // Single-question design preview: render the targeted question even if its
+      // default relevance is false (it depends on answers we don't have here).
+      state.singleQuestion = action.payload.singleQuestion;
       let response = action.payload.response;
       qlarrDependents = response.state.qlarrDependents;
       state.navigation = undefined;
@@ -87,15 +90,32 @@ function setValueInState(state, payload) {
   let element = state.values[componentCode];
   if (typeof element !== "undefined" && element["value"] !== value) {
     let time = Date.now();
-    window.qlarrStateMachine(
-      state.values,
-      qlarrDependents,
-      window.qlarrRuntime,
-      componentCode,
-      "value",
-      value,
-      "VALUE CHANGE"
-    );
+    try {
+      window.qlarrStateMachine(
+        state.values,
+        qlarrDependents,
+        window.qlarrRuntime,
+        componentCode,
+        "value",
+        value,
+        "VALUE CHANGE"
+      );
+    } catch (e) {
+      // A preview can run an instruction against a value of the wrong shape and
+      // throw — e.g. a list validation (validation_list) calling .every() on a
+      // single-choice string, typically a stale validation left behind after a
+      // question's type was converted. Don't let that abort the whole reducer:
+      // record the user's input so the control still reflects the selection and
+      // surface the cause. Real respondent runs (preview=false) stay strict so
+      // we never silently accept invalid data on submit.
+      if (!state.preview) throw e;
+      console.warn(
+        `Preview skipped a failing instruction for "${componentCode}" ` +
+          `(likely a validation incompatible with the question type):`,
+        e
+      );
+      element["value"] = value;
+    }
     console.debug("NEW STATE in: " + (Date.now() - time) + " millis");
   }
 }

@@ -111,6 +111,62 @@ export function truncateWithEllipsis(text, maxLength) {
 export const isQuestion = (code) => QUESTION_CODE_PATTERN.test(code);
 export const isGroup = (code) => GROUP_CODE_PATTERN.test(code);
 
+// Key used for a component's nested children at each tree depth, mirroring the
+// engine's design DSL (Survey -> groups -> questions -> answers -> answers...).
+const CHILDREN_KEY_BY_LEVEL = ["groups", "questions", "answers"];
+const childrenKeyForLevel = (level) =>
+  CHILDREN_KEY_BY_LEVEL[level] || "answers";
+
+// Instructions the survey engine *derives* during validation (and references when
+// composing a component's effective relevance) but does NOT accept back as design
+// input. The backend persists `mode_relevance` into the saved design of offline
+// questions (barcode / photo_capture / video_capture); the vendored client engine
+// generates it internally yet rejects it on input ("Invalid JSON for instruction"),
+// which broke the single-question preview for any survey containing an offline
+// question. We drop it here so the live design re-validates cleanly — the engine
+// recomputes offline relevance from the question's own `mode` instruction.
+const ENGINE_DERIVED_INSTRUCTION_CODES = new Set(["mode_relevance"]);
+
+// In the flat design tree, a node holds only its body (content, instructionList,
+// children, ...); its identity (code / qualifiedCode / type / groupType) lives on
+// the parent's child ref. We merge the ref with the node body so the assembled
+// DSL carries a code on every component. `children` is a storage artifact and is
+// replaced by the level-appropriate nested array.
+const assembleNode = (designState, ref, level) => {
+  const node = designState[ref.qualifiedCode ?? ref.code];
+  if (!node) return null;
+  const { children, ...body } = node;
+  const assembled = { ...ref, ...body };
+  if (Array.isArray(assembled.instructionList)) {
+    assembled.instructionList = assembled.instructionList.filter(
+      (instruction) =>
+        instruction && !ENGINE_DERIVED_INSTRUCTION_CODES.has(instruction.code)
+    );
+  }
+  if (Array.isArray(children) && children.length) {
+    assembled[childrenKeyForLevel(level)] = children
+      .map((child) => assembleNode(designState, child, level + 1))
+      .filter(Boolean);
+  }
+  return assembled;
+};
+
+/**
+ * Rebuild the nested survey design DSL (a JSON string) from the live, flat
+ * designState — including unsaved edits and added/removed components. This is
+ * the exact shape the survey engine's ValidationUseCaseWrapper.create() expects.
+ * The engine ignores unknown keys, so UI-only node props pass through harmlessly.
+ */
+export const assembleSurveyJson = (designState) => {
+  if (!designState?.Survey) return null;
+  const root = assembleNode(
+    designState,
+    { code: "Survey", qualifiedCode: "Survey" },
+    0
+  );
+  return root ? JSON.stringify(root) : null;
+};
+
 export const isNotEmptyHtml = (value) => {
   if (!value) return false;
 

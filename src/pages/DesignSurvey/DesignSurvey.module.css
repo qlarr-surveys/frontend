@@ -1,5 +1,6 @@
 .mainContainer {
   display: flex;
+  overflow: hidden;
 }
 
 .updateButtons {

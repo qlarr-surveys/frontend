@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useMemo, useRef } from "react";
+import React, { Suspense, useEffect, useMemo } from "react";
 import { Box, Chip, ThemeProvider, createTheme } from "@mui/material";
 import styles from "./DesignSurvey.module.css";
 
@@ -41,8 +41,6 @@ function DesignSurvey() {
       setContentElement(node);
     }
   }, []);
-
-  const containerRef = useRef();
 
   const langInfo = useSelector((state) => {
     return state.designState.langInfo;
@@ -116,7 +114,6 @@ function DesignSurvey() {
   return (
     <Box
       className={styles.mainContainer}
-      ref={containerRef}
       sx={backgroundStyle}
     >
       <DndProvider backend={isTouchDevice() ? TouchBackend : HTML5Backend}>
