@@ -1171,6 +1171,7 @@ export const updatePriorityByRule = (
     // prune existing group(s) to surviving child codes and re-clamp the limit
     const instruction = instructionByCode(componentState, "priority_groups");
     if (!instruction) {
+      componentState[priorityRule] = undefined;
       return;
     }
     const priorities = (instruction.priorities || [])

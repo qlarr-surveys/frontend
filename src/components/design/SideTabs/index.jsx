@@ -74,7 +74,9 @@ function SideTabs({ selectedPage, onPageChange, availablePages, surveyId }) {
             <SideTab
               tooltip={t("design")}
               buttonSx={getTabButtonSx(
-                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN && designMode == DESIGN_SURVEY_MODE.DESIGN
+                selectedPage == MANAGE_SURVEY_LANDING_PAGES.DESIGN &&
+                  designMode == DESIGN_SURVEY_MODE.DESIGN &&
+                  !orderPriorityActive
               )}
               link={routes.designSurvey.replace(":surveyId", surveyId)}
               icon={<Edit sx={{ color: "#fff" }} />}

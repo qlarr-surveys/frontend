@@ -71,8 +71,9 @@ export default function PrioritySetup({ t, rule, code }) {
     (relevantGroup?.weights || []).map((w) => w.code)
   );
   // Re-seed when prioritisation is toggled on/off (initialSetup populates the
-  // group). Component/axis switches remount via the SetupPanel key, so `value`
-  // is the only in-place change we need to react to.
+  // group). Switching component or axis remounts this via the SetupPanel
+  // key={code+rule} (for arrays the rows and columns instances render side by
+  // side as distinct keys), so `value` is the only in-place change to react to.
   React.useEffect(() => {
     setSelectedCodes((relevantGroup?.weights || []).map((w) => w.code));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,7 +133,7 @@ export default function PrioritySetup({ t, rule, code }) {
         <MenuItem value="PRIORITY">{t("prioritise")}</MenuItem>
       </Select>
 
-      {value !== "NONE" && value !== undefined && (
+      {value !== "NONE" && (
         <>
           <ul className={styles.list}>
             {children.map((item) => (
