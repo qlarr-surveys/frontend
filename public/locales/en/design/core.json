@@ -188,6 +188,7 @@
   "prioritise_rows": "Prioritise Rows",
   "priority_show": "Show",
   "priority_show_limit_from_count": "Show {{limit}} from {{count}}",
+  "priority_min_items": "Select at least 2 items to prioritise",
   "proceed_as_usual": "Proceed as usual",
   "question": "Question",
   "question_by_question": "Question By Question",

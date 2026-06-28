@@ -1,0 +1,44 @@
+.selectValue {
+  margin-bottom: 20px !important;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.list {
+  padding-left: 7px;
+  margin: 0 0 10px;
+  list-style-type: none;
+}
+
+.list li {
+  line-height: 24px;
+  margin-bottom: 6px;
+  padding-left: 0;
+  margin-left: -12px;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.itemLabel {
+  flex: 1;
+  word-break: break-word;
+}
+
+.limitRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 8px;
+}
+
+.summary {
+  margin-bottom: 8px;
+}

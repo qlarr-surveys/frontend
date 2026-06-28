@@ -32,6 +32,7 @@ import { ManageLanguages } from "~/pages/manage/ManageTranslations";
 import { useTheme } from "@emotion/react";
 import { questionIconByType } from "~/components/Questions/utils";
 import OrderSetup from "../random/OrderSetup";
+import PrioritySetup from "../random/PrioritySetup";
 import ScqDefaultValue from "../ScqDefaultValue";
 import DisabledToggle from "../Disabled";
 import MoveGroup from "../MoveGroup";
@@ -248,6 +249,12 @@ const SetupComponent = React.memo(({ code, rule, t, isQuickOptions }) => {
     case "randomize_rows":
     case "randomize_columns":
       return <OrderSetup t={t} key={code + rule} rule={rule} code={code} />;
+    case "prioritise_questions":
+    case "prioritise_groups":
+    case "prioritise_options":
+    case "prioritise_rows":
+    case "prioritise_columns":
+      return <PrioritySetup t={t} key={code + rule} rule={rule} code={code} />;
     case "maxDate":
       return (
         <SelectDate

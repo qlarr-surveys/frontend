@@ -6,6 +6,10 @@ import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 export default function RandomError({ errors }) {
   const { t } = useTranslation(NAMESPACES.DESIGN_CORE);
 
+  if (!errors?.length) {
+    return null;
+  }
+
   return (
     <Box key="box" className={styles.errorDisplay}>
       {errors.map((error) => {
