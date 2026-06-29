@@ -6,7 +6,7 @@ import styles from "./PrioritySetup.module.css";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { instructionByCode } from "~/state/design/addInstructions";
 import { stripTags } from "~/utils/design/utils";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import OrderPriorityError from "../OrderPriorityError";
 
@@ -168,10 +168,11 @@ export default function PrioritySetup({ t, rule, code }) {
                 variant="body2"
                 color="text.secondary"
               >
-                {t("priority_show_limit_from_count", {
-                  limit: effectiveLimit,
-                  count: selectedCount,
-                })}
+                <Trans
+                  t={t}
+                  i18nKey="priority_show_limit_from_count"
+                  values={{ limit: effectiveLimit, count: selectedCount }}
+                />
               </Typography>
             </>
           ) : (
@@ -189,9 +190,10 @@ export default function PrioritySetup({ t, rule, code }) {
 
 function PriorityChildRow({ item, onCheck }) {
   return (
-    <li className={styles.listItem}>
+    <li className={styles.listItem} onClick={() => onCheck(!item.inGroup)}>
       <Checkbox
         checked={item.inGroup}
+        onClick={(e) => e.stopPropagation()}
         onChange={(e) => onCheck(e.target.checked)}
       />
       <span className={styles.itemLabel}>

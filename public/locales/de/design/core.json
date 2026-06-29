@@ -187,7 +187,7 @@
   "prioritise_questions": "Fragen priorisieren",
   "prioritise_rows": "Zeilen priorisieren",
   "priority_show": "Anzeigen",
-  "priority_show_limit_from_count": "Zeige {{limit}} von {{count}}",
+  "priority_show_limit_from_count": "Zeige <strong>{{limit}}</strong> von <strong>{{count}}</strong>",
   "proceed_as_usual": "Wie gewohnt fortfahren",
   "question": "Frage",
   "question_by_question": "Frage für Frage",

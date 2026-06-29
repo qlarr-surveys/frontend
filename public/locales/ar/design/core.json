@@ -189,7 +189,7 @@
   "prioritise_questions": "الأسئلة ذات الأولوية",
   "prioritise_rows": "ترتيب الصفوف ذات الأولوية",
   "priority_show": "عرض",
-  "priority_show_limit_from_count": "عرض {{limit}} من {{count}}",
+  "priority_show_limit_from_count": "عرض <strong>{{limit}}</strong> من <strong>{{count}}</strong>",
   "proceed_as_usual": "تابع كالمعتاد",
   "question": "سؤال",
   "question_by_question": "سؤال بسؤال",

@@ -151,6 +151,7 @@ export default function OrderSetup({ t, rule, code }) {
         <CustomTooltip body={tTooltips(title)} />  <Typography fontWeight={700}>{t(`${title}`)}</Typography>
       </div>
       <Select
+        className={styles.selectValue}
         fullWidth
         id="select-value"
         value={value}
@@ -188,9 +189,10 @@ export default function OrderSetup({ t, rule, code }) {
 function RandomisedChildDisplay({ code, label, checked, handleChange }) {
 
   return (
-    <li className={styles.listItem}>
+    <li className={styles.listItem} onClick={() => handleChange(!checked)}>
       <Checkbox
         checked={checked}
+        onClick={(e) => e.stopPropagation()}
         onChange={(e) => handleChange(e.target.checked)}
       />
       {code}: {stripTags(label)}

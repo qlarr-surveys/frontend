@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-bottom: 8px;
 }
 
 
@@ -17,7 +18,7 @@
 
 .list li {
   line-height: 24px;
-  margin-bottom: 6px;
+  margin-bottom: 12px;
   padding-left: 0;
   margin-left: -12px;
 }
@@ -31,6 +32,7 @@
 .listItem {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .listItem .input {
