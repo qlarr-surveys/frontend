@@ -8,7 +8,7 @@ import { instructionByCode } from "~/state/design/addInstructions";
 import { stripTags } from "~/utils/design/utils";
 import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
-import RandomError from "../RandomError";
+import OrderPriorityError from "../OrderPriorityError";
 
 const clampLimit = (limit, size) =>
   Math.min(Math.max(limit ?? size - 1, 1), size - 1);
@@ -180,7 +180,7 @@ export default function PrioritySetup({ t, rule, code }) {
             </Typography>
           )}
 
-          <RandomError errors={errors} />
+          <OrderPriorityError errors={errors} />
         </>
       )}
     </>
