@@ -1,14 +1,23 @@
 import React from "react";
-import { Checkbox, MenuItem, Select, Typography } from "@mui/material";
+import {
+  Checkbox,
+  MenuItem,
+  Select,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { changeAttribute, updatePriority } from "~/state/design/designState";
 import styles from "./PrioritySetup.module.css";
 import CustomTooltip from "~/components/common/Tooltip/Tooltip";
 import { instructionByCode } from "~/state/design/addInstructions";
 import { stripTags } from "~/utils/design/utils";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { NAMESPACES } from "~/hooks/useNamespaceLoader";
 import OrderPriorityError from "../OrderPriorityError";
+import errorStyles from "~/components/design/ErrorDisplay/ErrorDisplay.module.css";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const clampLimit = (limit, size) =>
   Math.min(Math.max(limit ?? size - 1, 1), size - 1);
@@ -120,18 +129,23 @@ export default function PrioritySetup({ t, rule, code }) {
     <>
       <div className={styles.label}>
         <CustomTooltip body={tTooltips(title)} />
-        <Typography fontWeight={700}>{t(title)}</Typography>
+        <Typography fontWeight={700}>
+          {type ? t(title) : t("op_priority_section")}
+        </Typography>
       </div>
 
-      <Select
-        className={styles.selectValue}
-        fullWidth
+      <ToggleButtonGroup
+        className={styles.modeGroup}
+        size="small"
+        exclusive
         value={value}
-        onChange={(e) => onToggle(e.target.value)}
+        onChange={(_e, next) => {
+          if (next !== null) onToggle(next);
+        }}
       >
-        <MenuItem value="NONE">{t("no_priority")}</MenuItem>
-        <MenuItem value="PRIORITY">{t("prioritise")}</MenuItem>
-      </Select>
+        <ToggleButton value="NONE">{t("no_priority")}</ToggleButton>
+        <ToggleButton value="PRIORITY">{t("prioritise")}</ToggleButton>
+      </ToggleButtonGroup>
 
       {value !== "NONE" && (
         <>
@@ -162,23 +176,20 @@ export default function PrioritySetup({ t, rule, code }) {
                     )
                   )}
                 </Select>
+                <Typography>
+                  {t("priority_of_count", { count: selectedCount })}
+                </Typography>
               </div>
-              <Typography
-                className={styles.summary}
-                variant="body2"
-                color="text.secondary"
-              >
-                <Trans
-                  t={t}
-                  i18nKey="priority_show_limit_from_count"
-                  values={{ limit: effectiveLimit, count: selectedCount }}
-                />
-              </Typography>
             </>
           ) : (
-            <Typography variant="body2" color="text.secondary">
-              {t("priority_min_items")}
-            </Typography>
+            <div className={errorStyles.errorDisplay}>
+              <div className={errorStyles.errorItem}>
+                <ErrorOutlineIcon style={{ verticalAlign: "middle" }} />
+                <span className={errorStyles.errorMessage}>
+                  {t("priority_min_items")}
+                </span>
+              </div>
+            </div>
           )}
 
           <OrderPriorityError errors={errors} />
@@ -189,6 +200,7 @@ export default function PrioritySetup({ t, rule, code }) {
 }
 
 function PriorityChildRow({ item, onCheck }) {
+  const text = stripTags(item.label);
   return (
     <li className={styles.listItem} onClick={() => onCheck(!item.inGroup)}>
       <Checkbox
@@ -196,8 +208,11 @@ function PriorityChildRow({ item, onCheck }) {
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => onCheck(e.target.checked)}
       />
-      <span className={styles.itemLabel}>
-        {item.code}: {stripTags(item.label)}
+      <span className={styles.codeChip} title={item.code}>
+        {item.code}
+      </span>
+      <span className={styles.itemLabel} title={text}>
+        {text}
       </span>
     </li>
   );

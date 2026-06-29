@@ -31,7 +31,10 @@
 
 .itemLabel {
   flex: 1;
-  word-break: break-word;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .limitRow {
@@ -43,4 +46,36 @@
 
 .summary {
   margin-bottom: 8px;
+}
+
+.modeGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+/* Two equal-width toggle buttons per row; long labels wrap within the cell. */
+.modeGroup :global(.MuiToggleButtonGroup-grouped) {
+  margin: 0;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  text-transform: none;
+  line-height: 1.2;
+}
+
+.codeChip {
+  flex-shrink: 0;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.72rem;
+  font-family: monospace;
+  color: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  padding: 1px 5px;
+  line-height: 1.4;
 }
